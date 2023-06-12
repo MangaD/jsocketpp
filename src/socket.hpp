@@ -217,7 +217,10 @@ namespace sock{
 
 	template<>
 	inline std::string Socket::read(){
+		DIAGNOSTIC_PUSH()
+		DIAGNOSTIC_IGNORE("-Wuseless-cast")
 		int len = static_cast<int>(recv(clientSocket, buffer.data(), buffer.size(), 0));
+		DIAGNOSTIC_POP()
 		if (len == SOCKET_ERROR) throw socket_exception( GetSocketError(), SocketErrorMessage(GetSocketError()) );
 		if (len == 0) throw socket_exception(0, "Connection closed by remote host.");
 		return std::string(buffer.data(), static_cast<size_t>(len));

@@ -320,8 +320,10 @@ int Socket::write(std::string message) {
 #ifndef _WIN32
 	flags = MSG_NOSIGNAL;
 #endif
-
+	DIAGNOSTIC_PUSH()
+	DIAGNOSTIC_IGNORE("-Wuseless-cast")
 	int len = static_cast<int>(send(clientSocket, message.c_str(), message.length(), flags));
+	DIAGNOSTIC_POP()
 	if (len == SOCKET_ERROR) throw socket_exception( GetSocketError(), SocketErrorMessage(GetSocketError()) );
 	return len;
 }
