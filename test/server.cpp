@@ -19,6 +19,16 @@ int main() {
 		}
 		cout << "Error: Invalid port number. Port must be between 0 and 65535." << endl;
 	}
+	
+	/**
+	 * Initializing Winsock (for Windows)
+	 * Necessary to initialize sockets before using them.
+	 * The SocketInitializer object should only be destroyed when no longer using sockets.
+	 * It is advised to create it as a local variable in the main function so that it will
+	 * only be destroyed at the end of the program (when it gets out of scope).
+	 */
+	SocketInitializer sockInit;
+	
 	///Create ServerSocket
 	ServerSocket serverSocket(port);
 	
