@@ -10,6 +10,8 @@ CXX    ?= g++
 AR      = ar
 ARFLAGS = rcvs
 SRC_FOLDER = src
+# By default, we build for release
+BUILD=release
 
 DEFINES=
 
@@ -39,7 +41,7 @@ endif
 
 CXXFLAGS = $(ARCHITECTURE) -std=c++11 $(DEFINES) $(WARNINGS) $(OPTIMIZE)
 
-.PHONY: all clean release32 release64 32 64
+.PHONY: all clean debug release release32 release64 debug32 debug64
 
 all: libsocket.a
 
@@ -52,20 +54,18 @@ socket.o: $(SRC_FOLDER)/socket.cpp $(SRC_FOLDER)/socket.hpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 #$(CXX) -c socket.cpp -o socket.o $(CXXFLAGS)
 
+debug:
+	make BUILD=debug
 release:
 	make BUILD=release
-
 release32:
 	make BUILD=release ARCH=x64
-
 release64:
 	make BUILD=release ARCH=x64
-
-32:
-	make "ARCH=x86"
-
-64:
-	make "ARCH=x64"
+debug32:
+	make BUILD=debug ARCH=x86
+debug64:
+	make BUILD=debug ARCH=x64
 
 clean:
 ifeq ($(OS),Windows_NT)

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.2.2)
 
 if(${CMAKE_CURRENT_BINARY_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-	message(FATAL_ERROR "Please run cmake from the build folder.")
+	message(FATAL_ERROR "Building in-source is not supported! Create a build dir and remove ${CMAKE_SOURCE_DIR}/CMakeCache.txt")
 endif()
 
 project (libsocket)
