@@ -47,7 +47,7 @@ std::string sock::SocketErrorMessage(int error) {
 	}
 	std::string errString(buffer, size);
 	LocalFree(buffer);
-	
+
 	return errString;
 }
 #else
@@ -92,7 +92,7 @@ ServerSocket::ServerSocket (unsigned short port_)
 
 	// Resolve the local address and port to be used by the server
 	std::string s = std::to_string(port_);
-	
+
 	if ( getaddrinfo(nullptr, s.c_str(), &hints, &srv_addrinfo) != 0 )
 		throw socket_exception ( GetSocketError(), SocketErrorMessage(GetSocketError()) );
 
@@ -227,7 +227,7 @@ DIAGNOSTIC_POP()
 
 	// Resolve the local address and port to be used by the server
 	std::string s = std::to_string(port);
-	
+
 	if ( getaddrinfo(host.c_str(), s.c_str(), &hints, &cli_addrinfo) != 0 )
 		throw socket_exception ( GetSocketError(), SocketErrorMessage(GetSocketError()) );
 
@@ -384,7 +384,7 @@ std::vector<std::string> sock::getHostAddr() {
 	PIP_ADAPTER_UNICAST_ADDRESS pUnicast = nullptr;
 	PIP_ADAPTER_ANYCAST_ADDRESS pAnycast = nullptr;
 	PIP_ADAPTER_MULTICAST_ADDRESS pMulticast = nullptr;
-	
+
 	do {
 		pAddresses = (IP_ADAPTER_ADDRESSES *) HeapAlloc(GetProcessHeap(), 0, (outBufLen));
 		if (pAddresses == nullptr) {
@@ -400,7 +400,7 @@ std::vector<std::string> sock::getHostAddr() {
 		}
 		Iterations++;
 	} while ((dwRetVal == ERROR_BUFFER_OVERFLOW) && (Iterations < MAX_TRIES));
-	
+
 	if (dwRetVal == NO_ERROR) {
 		// If successful, output some information from the data we received
 		pCurrAddresses = pAddresses;
@@ -424,7 +424,7 @@ std::vector<std::string> sock::getHostAddr() {
 					pUnicast = pUnicast->Next;
 				}
 			}
-	
+
 			pAnycast = pCurrAddresses->FirstAnycastAddress;
 			if (pAnycast) {
 				for (i = 0; pAnycast != nullptr; i++) {
@@ -444,7 +444,7 @@ std::vector<std::string> sock::getHostAddr() {
 					pAnycast = pAnycast->Next;
 				}
 			}
-				
+
 			pMulticast = pCurrAddresses->FirstMulticastAddress;
 			if (pMulticast) {
 				for (i = 0; pMulticast != nullptr; i++) {
@@ -464,7 +464,7 @@ std::vector<std::string> sock::getHostAddr() {
 					pMulticast = pMulticast->Next;
 				}
 			}
-			
+
 			pCurrAddresses = pCurrAddresses->Next;
 		}
 	} else {
@@ -473,7 +473,7 @@ std::vector<std::string> sock::getHostAddr() {
 		}
 		socket_exception( dwRetVal, SocketErrorMessage(dwRetVal) );
 	}
-	
+
 	if (pAddresses) {
 		HeapFree(GetProcessHeap(), 0, (pAddresses));
 	}
@@ -481,15 +481,17 @@ std::vector<std::string> sock::getHostAddr() {
 	struct ifaddrs * ifAddrStruct=nullptr;
 	struct ifaddrs * ifa=nullptr;
 	void * tmpAddrPtr=nullptr;
-	
+
 	if(getifaddrs(&ifAddrStruct)) {
 		socket_exception( GetSocketError(), SocketErrorMessage(GetSocketError()) );
 	}
-	
+
 	for (ifa = ifAddrStruct; ifa != nullptr; ifa = ifa->ifa_next) {
 		if (!ifa->ifa_addr) {
 			continue;
 		}
+		DIAGNOSTIC_PUSH()
+		DIAGNOSTIC_IGNORE("-Wcast-align")
 		if (ifa->ifa_addr->sa_family == AF_INET) { // check it is IP4
 			// is a valid IP4 Address
 			tmpAddrPtr=&(reinterpret_cast<struct sockaddr_in *>(ifa->ifa_addr))->sin_addr;
@@ -502,11 +504,12 @@ std::vector<std::string> sock::getHostAddr() {
 			char addressBuffer[INET6_ADDRSTRLEN];
 			inet_ntop(AF_INET6, tmpAddrPtr, addressBuffer, INET6_ADDRSTRLEN);
 			ips.emplace_back(std::string(ifa->ifa_name) + " IPv6 Address " + addressBuffer);
-		} 
+		}
+		DIAGNOSTIC_POP()
 	}
 	if (ifAddrStruct != nullptr) freeifaddrs(ifAddrStruct);
 #endif
-	
+
 	return ips;
 }
 
