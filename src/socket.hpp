@@ -211,6 +211,7 @@ namespace sock{
 			void listen();
 			Socket accept();
 			void close();
+			void shutdown();
 			inline bool isValid() { return this->serverSocket != INVALID_SOCKET; }
 	};
 

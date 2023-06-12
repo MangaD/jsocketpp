@@ -13,7 +13,8 @@
 #include "socket.hpp"
 
 #include <exception>//SocketErrorMessageWrap
-#include <cstring>//Use memset()
+#include <cstring>//Use std::memset()
+#include <memory>
 
 using namespace sock;
 
@@ -74,7 +75,7 @@ ServerSocket::ServerSocket (unsigned short port_)
 
 	//The hints argument points to an addrinfo structure that specifies criteria for
 	//selecting the socket address structures returned in the list by getaddrinfo
-	memset( &hints, 0, sizeof(hints) );
+	std::memset( &hints, 0, sizeof(hints) );
 	hints.ai_family = AF_UNSPEC;//IPv4 (AF_INET) or IPv6 (AF_INET6)
 	hints.ai_socktype = SOCK_STREAM;//Used with TCP protocol
 	hints.ai_protocol = IPPROTO_TCP;
@@ -91,8 +92,8 @@ ServerSocket::ServerSocket (unsigned short port_)
 
 	// Resolve the local address and port to be used by the server
 	std::string s = std::to_string(port_);
-	char const *port_c = s.c_str();
-	if ( getaddrinfo(nullptr, port_c, &hints, &srv_addrinfo) != 0 )
+	
+	if ( getaddrinfo(nullptr, s.c_str(), &hints, &srv_addrinfo) != 0 )
 		throw socket_exception ( GetSocketError(), SocketErrorMessage(GetSocketError()) );
 
 	//Create a SOCKET for the server to listen for client connections
@@ -146,6 +147,19 @@ void ServerSocket::close() {
 			throw socket_exception ( GetSocketError(), SocketErrorMessageWrap(GetSocketError()) );
 		else
 			this->serverSocket = INVALID_SOCKET;
+	}
+}
+
+void ServerSocket::shutdown() {
+	int how;
+#ifdef _WIN32
+	how = SD_BOTH;
+#else
+	how = SHUT_RDWR;
+#endif
+	if (this->serverSocket != INVALID_SOCKET) {
+		if( ::shutdown(this->serverSocket, how) )
+			throw socket_exception ( GetSocketError(), SocketErrorMessageWrap(GetSocketError()) );
 	}
 }
 
@@ -206,15 +220,15 @@ Socket::Socket(std::string host, unsigned short port)
 DIAGNOSTIC_POP()
 	struct addrinfo hints;
 
-	memset( &hints, 0, sizeof(hints) );
+	std::memset( &hints, 0, sizeof(hints) );
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
 
 	// Resolve the local address and port to be used by the server
 	std::string s = std::to_string(port);
-	char const *port_c = s.c_str();
-	if ( getaddrinfo(host.c_str(), port_c, &hints, &cli_addrinfo) != 0 )
+	
+	if ( getaddrinfo(host.c_str(), s.c_str(), &hints, &cli_addrinfo) != 0 )
 		throw socket_exception ( GetSocketError(), SocketErrorMessage(GetSocketError()) );
 
 	clientSocket = socket(cli_addrinfo->ai_family, cli_addrinfo->ai_socktype, cli_addrinfo->ai_protocol);
@@ -283,7 +297,7 @@ std::string Socket::getRemoteSocketAddress() {
 			struct sockaddr_in6* addr6=(struct sockaddr_in6*)&remote_addr;
 			if (IN6_IS_ADDR_V4MAPPED(&addr6->sin6_addr)) {
 				struct sockaddr_in addr4;
-				memset(&addr4,0,sizeof(addr4));
+				std::memset(&addr4,0,sizeof(addr4));
 				addr4.sin_family=AF_INET;
 				addr4.sin_port=addr6->sin6_port;
 				memcpy(&addr4.sin_addr.s_addr,addr6->sin6_addr.s6_addr+12,sizeof(addr4.sin_addr.s_addr));
@@ -306,6 +320,7 @@ int Socket::write(std::string message) {
 #ifndef _WIN32
 	flags = MSG_NOSIGNAL;
 #endif
+
 	int len = static_cast<int>(send(clientSocket, message.c_str(), message.length(), flags));
 	if (len == SOCKET_ERROR) throw socket_exception( GetSocketError(), SocketErrorMessage(GetSocketError()) );
 	return len;
