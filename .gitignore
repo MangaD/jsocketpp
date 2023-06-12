@@ -1,4 +1,4 @@
-server(.exe)?
-client(.exe)?
+test/server(.exe)?
+test/client(.exe)?
 *.o
 *.a
