@@ -12,6 +12,17 @@
 
 #pragma once
 
+#ifdef __GNUC__
+	#define QUOTE(s) #s
+	#define DIAGNOSTIC_PUSH() _Pragma("GCC diagnostic push")
+	#define DIAGNOSTIC_IGNORE(warning) _Pragma(QUOTE(GCC diagnostic ignored warning))
+	#define DIAGNOSTIC_POP() _Pragma("GCC diagnostic pop")
+#else
+	#define DIAGNOSTIC_PUSH()
+	#define DIAGNOSTIC_IGNORE(warning)
+	#define DIAGNOSTIC_POP()
+#endif
+
 #include <iostream>
 #include <exception>
 #include <stdexcept>
@@ -65,7 +76,6 @@ namespace sock{
 	inline int InitSockets(){ WSADATA WSAData; return WSAStartup(MAKEWORD(2,2),&WSAData); }
 	inline int CleanupSockets(){ return WSACleanup(); }
 	inline int GetSocketError(){ return WSAGetLastError(); }
-	std::string SocketErrorMessage(int error);
 	inline int CloseSocket(SOCKET fd) { return closesocket(fd); }
 	
 	const char *inet_ntop_aux(int af, const void *src, char *dst, socklen_t size);
@@ -79,15 +89,13 @@ namespace sock{
 	constexpr int InitSockets(){ return 0; }
 	constexpr int CleanupSockets(){ return 0; }
 	inline int GetSocketError(){ return errno; }
-	inline std::string SocketErrorMessage(int error) { 
-		return std::strerror(error);
-	}
 	inline int CloseSocket(SOCKET fd){ return close(fd); }
 
 	inline int ioctlsocket(SOCKET fd,long cmd,u_long *argp){ return ioctl(fd,static_cast<unsigned long>(cmd),argp); }
 
 #endif
 
+	std::string SocketErrorMessage(int error);
 	std::string SocketErrorMessageWrap(int error);
 
 	class socket_exception : public std::exception {

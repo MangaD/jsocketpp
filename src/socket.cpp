@@ -49,6 +49,10 @@ std::string sock::SocketErrorMessage(int error) {
 	
 	return errString;
 }
+#else
+std::string sock::SocketErrorMessage(int error) {
+	return std::strerror(error);
+}
 #endif
 
 std::string sock::SocketErrorMessageWrap(int error) {
@@ -191,10 +195,14 @@ Socket::Socket(SOCKET client, struct sockaddr_storage addr, socklen_t len)
 	clientSocket = client;
 }
 
+
+DIAGNOSTIC_PUSH()
+DIAGNOSTIC_IGNORE("-Wmissing-field-initializers")
 //Socket Constructor - creates a client socket
 Socket::Socket(std::string host, unsigned short port)
-    : remote_addr{}, remote_addr_length(0)
+    : remote_addr{}, remote_addr_length{0}
 {
+DIAGNOSTIC_POP()
 	struct addrinfo hints;
 
 	memset( &hints, 0, sizeof(hints) );
