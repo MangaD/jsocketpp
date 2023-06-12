@@ -55,17 +55,17 @@ socket.o: $(SRC_FOLDER)/socket.cpp $(SRC_FOLDER)/socket.hpp
 #$(CXX) -c socket.cpp -o socket.o $(CXXFLAGS)
 
 debug:
-	make BUILD=debug
+	$(MAKE) BUILD=debug
 release:
-	make BUILD=release
+	$(MAKE) BUILD=release
 release32:
-	make BUILD=release ARCH=x64
+	$(MAKE) BUILD=release ARCH=x64
 release64:
-	make BUILD=release ARCH=x64
+	$(MAKE) BUILD=release ARCH=x64
 debug32:
-	make BUILD=debug ARCH=x86
+	$(MAKE) BUILD=debug ARCH=x86
 debug64:
-	make BUILD=debug ARCH=x64
+	$(MAKE) BUILD=debug ARCH=x64
 
 clean:
 ifeq ($(OS),Windows_NT)
