@@ -15,7 +15,7 @@ Cross-platform socket library for making sockets usage easy and clean. Only supp
 Compiling:
 
 - link against libsocket.a
-- On Windows, link against ws2_32.lib as well
+- On Windows, link against ws2_32.lib and iphlpapi.lib as well
 
 See the tests to learn how to use.
 

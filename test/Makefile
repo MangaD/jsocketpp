@@ -1,6 +1,6 @@
 LDLIBS = -lsocket
 ifeq ($(OS),Windows_NT)
-LDLIBS += -lws2_32
+LDLIBS += -lws2_32 -liphlpapi
 endif
 
 all: client.cpp server.cpp
