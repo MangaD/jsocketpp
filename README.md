@@ -18,3 +18,10 @@ Compiling:
 - On Windows, link against ws2_32.lib as well
 
 See the tests to learn how to use.
+
+## TODO
+
+- Improve README file
+- Document the source files
+- Add more methods to the classes
+- Add UDP support
