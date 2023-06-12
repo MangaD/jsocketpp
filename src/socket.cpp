@@ -137,6 +137,7 @@ ServerSocket::~ServerSocket() {
 	catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
+	freeaddrinfo(srv_addrinfo);
 }
 
 void ServerSocket::close() {
@@ -248,6 +249,7 @@ Socket::~Socket() {
 	catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
+	freeaddrinfo(cli_addrinfo);
 }
 
 void Socket::close() {
