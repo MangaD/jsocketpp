@@ -1,0 +1,4 @@
+server(.exe)?
+client(.exe)?
+*.o
+*.a
