@@ -9,7 +9,7 @@ all: client.cpp server.cpp
 
 clean:
 ifeq ($(OS),Windows_NT)
-	$(CMD) "del *.o *.a" 2>nul
+	$(CMD) "del *.o *.a client server" 2>nul
 else
-	rm -f *.o *.a
+	rm -f *.o *.a client server
 endif

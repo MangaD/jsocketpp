@@ -1,4 +1,4 @@
-/**
+/*
  * File: socket.cpp
  *
  * Contains the implementation of 'ServerSocket' and 'Socket' classes that attempt to provide
@@ -138,7 +138,7 @@ ServerSocket::~ServerSocket() {
 void ServerSocket::close() {
 	if(this->serverSocket != INVALID_SOCKET){
 		if( CloseSocket(this->serverSocket) )
-			throw socket_exception ( GetSocketError(), SocketErrorMessage(GetSocketError()) );
+			throw socket_exception ( GetSocketError(), SocketErrorMessageWrap(GetSocketError()) );
 		else
 			this->serverSocket = INVALID_SOCKET;
 	}
@@ -234,15 +234,33 @@ void Socket::connect() {
 
 //Socket Destructor - closes a client socket
 Socket::~Socket() {
-	close();
+	try{
+		close();
+	}
+	catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 
 void Socket::close() {
 	if(this->clientSocket != INVALID_SOCKET){
 		if( CloseSocket(this->clientSocket) )
-			std::cerr << "closesocket() failed: " << SocketErrorMessageWrap(GetSocketError()) << ": " << GetSocketError() << std::endl;
+			throw socket_exception ( GetSocketError(), SocketErrorMessageWrap(GetSocketError()) );
 		else
 			this->clientSocket = INVALID_SOCKET;
+	}
+}
+
+void Socket::shutdown() {
+	int how;
+#ifdef _WIN32
+	how = SD_BOTH;
+#else
+	how = SHUT_RDWR;
+#endif
+	if (this->clientSocket != INVALID_SOCKET) {
+		if( ::shutdown(this->clientSocket, how) )
+			throw socket_exception ( GetSocketError(), SocketErrorMessageWrap(GetSocketError()) );
 	}
 }
 
@@ -274,7 +292,11 @@ std::string Socket::getRemoteSocketAddress() {
 
 //Socket - write to client
 int Socket::write(std::string message) {
-	int len = static_cast<int>(send(clientSocket, message.c_str(), message.length(), 0));
+	int flags = 0;
+#ifndef _WIN32
+	flags = MSG_NOSIGNAL;
+#endif
+	int len = static_cast<int>(send(clientSocket, message.c_str(), message.length(), flags));
 	if (len == SOCKET_ERROR) throw socket_exception( GetSocketError(), SocketErrorMessage(GetSocketError()) );
 	return len;
 }
@@ -287,3 +309,177 @@ void Socket::setBufferSize(std::size_t newLen) {
 	buffer.resize(newLen);
 	buffer.shrink_to_fit();
 }
+
+#ifdef _WIN32
+/**
+ * Redefine because not available on Windows XP
+ * http://stackoverflow.com/questions/13731243/what-is-the-windows-xp-equivalent-of-inet-pton-or-inetpton
+ */
+const char * sock::inet_ntop_aux(int af, const void *src, char *dst, socklen_t size)
+{
+	struct sockaddr_storage ss;
+	unsigned long s = size;
+
+	ZeroMemory(&ss, sizeof(ss));
+	ss.ss_family = static_cast<short>(af);
+
+	switch(af) {
+		case AF_INET:
+			((struct sockaddr_in *)&ss)->sin_addr = *(struct in_addr *)src;
+			break;
+		case AF_INET6:
+			((struct sockaddr_in6 *)&ss)->sin6_addr = *(struct in6_addr *)src;
+			break;
+		default:
+			return NULL;
+	}
+	/* cannot direclty use &size because of strict aliasing rules */
+	return (WSAAddressToString((struct sockaddr *)&ss, sizeof(ss), nullptr, dst, &s) == 0)?dst : NULL;
+}
+#endif
+
+std::vector<std::string> sock::getHostAddr() {
+	std::vector<std::string> ips;
+
+#ifdef _WIN32
+	/* Declare and initialize variables */
+	const int MAX_TRIES = 3;
+	DWORD dwRetVal = 0;
+	unsigned int i = 0;
+	ULONG flags = GAA_FLAG_INCLUDE_PREFIX;// Set the flags to pass to GetAdaptersAddresses
+	ULONG family = AF_UNSPEC;// default to unspecified address family (both)
+	PIP_ADAPTER_ADDRESSES pAddresses = nullptr;
+	ULONG outBufLen = 15000;// Allocate a 15 KB buffer to start with.
+	ULONG Iterations = 0;
+	char buff[100];
+	DWORD bufflen=100;
+	PIP_ADAPTER_ADDRESSES pCurrAddresses = nullptr;
+	PIP_ADAPTER_UNICAST_ADDRESS pUnicast = nullptr;
+	PIP_ADAPTER_ANYCAST_ADDRESS pAnycast = nullptr;
+	PIP_ADAPTER_MULTICAST_ADDRESS pMulticast = nullptr;
+	
+	do {
+		pAddresses = (IP_ADAPTER_ADDRESSES *) HeapAlloc(GetProcessHeap(), 0, (outBufLen));
+		if (pAddresses == nullptr) {
+			std::cerr << "Memory allocation failed for IP_ADAPTER_ADDRESSES struct." << std::endl;
+			return ips;
+		}
+		dwRetVal = GetAdaptersAddresses(family, flags, nullptr, pAddresses, &outBufLen);
+		if (dwRetVal == ERROR_BUFFER_OVERFLOW) {
+			HeapFree(GetProcessHeap(), 0, (pAddresses));
+			pAddresses = nullptr;
+		} else {
+			break;
+		}
+		Iterations++;
+	} while ((dwRetVal == ERROR_BUFFER_OVERFLOW) && (Iterations < MAX_TRIES));
+	
+	if (dwRetVal == NO_ERROR) {
+		// If successful, output some information from the data we received
+		pCurrAddresses = pAddresses;
+		while (pCurrAddresses) {
+			pUnicast = pCurrAddresses->FirstUnicastAddress;
+			if (pUnicast) {
+				for (i = 0; pUnicast != nullptr; i++) {
+					if (pUnicast->Address.lpSockaddr->sa_family == AF_INET)
+					{
+						sockaddr_in *sa_in = (sockaddr_in *)pUnicast->Address.lpSockaddr;
+						ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv4 Address " +
+						                 inet_ntop_aux(AF_INET,&(sa_in->sin_addr),buff,bufflen));
+					}
+					else if (pUnicast->Address.lpSockaddr->sa_family == AF_INET6)
+					{
+						sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pUnicast->Address.lpSockaddr;
+						ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv6 Address " +
+						                 inet_ntop_aux(AF_INET6,&(sa_in6->sin6_addr),buff,bufflen));
+					}
+					//else{printf("\tUNSPEC");}
+					pUnicast = pUnicast->Next;
+				}
+			}
+	
+			pAnycast = pCurrAddresses->FirstAnycastAddress;
+			if (pAnycast) {
+				for (i = 0; pAnycast != nullptr; i++) {
+					if (pAnycast->Address.lpSockaddr->sa_family == AF_INET)
+					{
+						sockaddr_in *sa_in = (sockaddr_in *)pAnycast->Address.lpSockaddr;
+						ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv4 Address " +
+						                 inet_ntop_aux(AF_INET,&(sa_in->sin_addr),buff,bufflen));
+					}
+					else if (pUnicast->Address.lpSockaddr->sa_family == AF_INET6)
+					{
+						sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pAnycast->Address.lpSockaddr;
+						ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv6 Address " +
+						                 inet_ntop_aux(AF_INET6,&(sa_in6->sin6_addr),buff,bufflen));
+					}
+					//else{printf("\tUNSPEC");}
+					pAnycast = pAnycast->Next;
+				}
+			}
+				
+			pMulticast = pCurrAddresses->FirstMulticastAddress;
+			if (pMulticast) {
+				for (i = 0; pMulticast != nullptr; i++) {
+					if (pMulticast->Address.lpSockaddr->sa_family == AF_INET)
+					{
+						sockaddr_in *sa_in = (sockaddr_in *)pMulticast->Address.lpSockaddr;
+						ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv4 Address " +
+						                 inet_ntop_aux(AF_INET,&(sa_in->sin_addr),buff,bufflen));
+					}
+					else if (pMulticast->Address.lpSockaddr->sa_family == AF_INET6)
+					{
+						sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pMulticast->Address.lpSockaddr;
+						ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv6 Address " +
+						                 inet_ntop_aux(AF_INET6,&(sa_in6->sin6_addr),buff,bufflen));
+					}
+					//else{printf("\tUNSPEC");}
+					pMulticast = pMulticast->Next;
+				}
+			}
+			
+			pCurrAddresses = pCurrAddresses->Next;
+		}
+	} else {
+		if (pAddresses) {
+			HeapFree(GetProcessHeap(), 0, (pAddresses));
+		}
+		socket_exception( dwRetVal, SocketErrorMessage(dwRetVal) );
+	}
+	
+	if (pAddresses) {
+		HeapFree(GetProcessHeap(), 0, (pAddresses));
+	}
+#else
+	struct ifaddrs * ifAddrStruct=nullptr;
+	struct ifaddrs * ifa=nullptr;
+	void * tmpAddrPtr=nullptr;
+	
+	if(getifaddrs(&ifAddrStruct)) {
+		socket_exception( GetSocketError(), SocketErrorMessage(GetSocketError()) );
+	}
+	
+	for (ifa = ifAddrStruct; ifa != nullptr; ifa = ifa->ifa_next) {
+		if (!ifa->ifa_addr) {
+			continue;
+		}
+		if (ifa->ifa_addr->sa_family == AF_INET) { // check it is IP4
+			// is a valid IP4 Address
+			tmpAddrPtr=&(reinterpret_cast<struct sockaddr_in *>(ifa->ifa_addr))->sin_addr;
+			char addressBuffer[INET_ADDRSTRLEN];
+			inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+			ips.emplace_back(std::string(ifa->ifa_name) + " IPv4 Address " + addressBuffer);
+		} else if (ifa->ifa_addr->sa_family == AF_INET6) { // check it is IP6
+			// is a valid IP6 Address
+			tmpAddrPtr=&(reinterpret_cast<struct sockaddr_in6 *>(ifa->ifa_addr))->sin6_addr;
+			char addressBuffer[INET6_ADDRSTRLEN];
+			inet_ntop(AF_INET6, tmpAddrPtr, addressBuffer, INET6_ADDRSTRLEN);
+			ips.emplace_back(std::string(ifa->ifa_name) + " IPv6 Address " + addressBuffer);
+		} 
+	}
+	if (ifAddrStruct != nullptr) freeifaddrs(ifAddrStruct);
+#endif
+	
+	return ips;
+}
+

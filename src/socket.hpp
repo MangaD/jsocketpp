@@ -1,4 +1,4 @@
-/**
+/*
  * File: socket.hpp
  *
  * Contains declarations for the 'ServerSocket' and 'Socket' classes that attempt to provide
@@ -22,6 +22,7 @@
 
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
+	#include <iphlpapi.h>//GetAdaptersInfo
 
 	//https://msdn.microsoft.com/en-us/library/6sehtctf.aspx
 	#if !defined(WINVER) || (WINVER < 0x0501)
@@ -38,6 +39,7 @@
 	 */
 	#ifdef _MSC_VER
 		#pragma comment(lib, "Ws2_32.lib")
+		#pragma comment(lib, "iphlpapi.lib")////GetAdaptersInfo
 	#endif
 
 #else
@@ -52,6 +54,7 @@
 	#include <netinet/in.h>
 	#include <netdb.h>//for struct addrinfo
 	#include <arpa/inet.h>//for inet_ntoa
+	#include <ifaddrs.h>//getifaddrs
 
 #endif
 
@@ -64,6 +67,8 @@ namespace sock{
 	inline int GetSocketError(){ return WSAGetLastError(); }
 	std::string SocketErrorMessage(int error);
 	inline int CloseSocket(SOCKET fd) { return closesocket(fd); }
+	
+	const char *inet_ntop_aux(int af, const void *src, char *dst, socklen_t size);
 
 #else
 
@@ -169,6 +174,7 @@ namespace sock{
 				return r;
 			}
 			void close();
+			void shutdown();
 			int write(std::string message);
 			void setBufferSize(std::size_t newLen);
 			void setBufferLength(std::size_t newLen);
@@ -207,5 +213,7 @@ namespace sock{
 		if (len == 0) throw socket_exception(0, "Connection closed by remote host.");
 		return std::string(buffer.data(), static_cast<size_t>(len));
 	}
+	
+	std::vector<std::string> getHostAddr();
 
 }
