@@ -1,0 +1,688 @@
+{
+  "version": 7,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}"
+      }
+    },
+    {
+      "name": "base-windows",
+      "inherits": "base",
+      "hidden": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "Visual Studio"
+        }
+      }
+    },
+    {
+      "name": "base-linux",
+      "inherits": "base",
+      "hidden": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "base-macos",
+      "inherits": "base",
+      "hidden": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "base-wsl",
+      "inherits": "base-linux",
+      "hidden": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "WSL"
+      },
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "WSL"
+        }
+      }
+    },
+    {
+      "name": "base-arch-x64",
+      "inherits": "base",
+      "hidden": true,
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "base-arch-x86",
+      "inherits": "base",
+      "hidden": true,
+      "architecture": {
+        "value": "x86",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "base-arch-arm",
+      "inherits": "base",
+      "hidden": true,
+      "architecture": {
+        "value": "arm",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "base-arch-arm64",
+      "inherits": "base",
+      "hidden": true,
+      "architecture": {
+        "value": "arm64",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "base-arch-apple-arm64",
+      "inherits": "base",
+      "hidden": true,
+      "architecture": {
+        "value": "arm64",
+        "strategy": "external"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "base-debug",
+      "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "base-release",
+      "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "base-relwithdebinfo",
+      "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "base-minsizerel",
+      "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel"
+      }
+    },
+    {
+      "name": "base-static",
+      "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "OFF"
+      }
+    },
+    {
+      "name": "base-shared",
+      "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "ON"
+      }
+    },
+    {
+      "name": "base-msvc",
+      "inherits": [
+        "base-windows",
+        "base-arch-x64"
+      ],
+      "hidden": true,
+      "generator": "Visual Studio 17 2022",
+      "toolset": {
+        "value": "host=x64"
+      }
+    },
+    {
+      "name": "base-mingw",
+      "inherits": [
+        "base-windows",
+        "base-arch-x64"
+      ],
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "x86_64-w64-mingw32-gcc",
+        "CMAKE_CXX_COMPILER": "x86_64-w64-mingw32-g++"
+      }
+    },
+    {
+      "name": "base-gcc",
+      "inherits": [
+        "base-arch-x64"
+      ],
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "base-clang",
+      "inherits": [
+        "base-arch-x64"
+      ],
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "base-gcc-arm64",
+      "inherits": [
+        "base-arch-arm64"
+      ],
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "aarch64-linux-gnu-gcc",
+        "CMAKE_CXX_COMPILER": "aarch64-linux-gnu-g++"
+      }
+    },
+    {
+      "name": "base-gcc-arm",
+      "inherits": [
+        "base-arch-arm"
+      ],
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "arm-linux-gnueabihf-gcc",
+        "CMAKE_CXX_COMPILER": "arm-linux-gnueabihf-g++"
+      }
+    },
+    {
+      "name": "base-clang-arm64",
+      "inherits": [
+        "base-arch-arm64"
+      ],
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "base-clang-apple-arm64",
+      "inherits": [
+        "base-arch-apple-arm64"
+      ],
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "gcc-release-x64",
+      "inherits": [
+        "base-gcc",
+        "base-linux",
+        "base-release",
+        "base-static"
+      ],
+      "displayName": "GCC Release x64 (Static)"
+    },
+    {
+      "name": "gcc-debug-x64",
+      "inherits": [
+        "base-gcc",
+        "base-linux",
+        "base-debug",
+        "base-static"
+      ],
+      "displayName": "GCC Debug x64 (Static)"
+    },
+    {
+      "name": "gcc-release-x64-shared",
+      "inherits": [
+        "base-gcc",
+        "base-linux",
+        "base-release",
+        "base-shared"
+      ],
+      "displayName": "GCC Release x64 (Shared)"
+    },
+    {
+      "name": "clang-release-x64",
+      "inherits": [
+        "base-clang",
+        "base-linux",
+        "base-release",
+        "base-static"
+      ],
+      "displayName": "Clang Release x64 (Static)"
+    },
+    {
+      "name": "clang-debug-x64",
+      "inherits": [
+        "base-clang",
+        "base-linux",
+        "base-debug",
+        "base-static"
+      ],
+      "displayName": "Clang Debug x64 (Static)"
+    },
+    {
+      "name": "clang-release-x64-shared",
+      "inherits": [
+        "base-clang",
+        "base-linux",
+        "base-release",
+        "base-shared"
+      ],
+      "displayName": "Clang Release x64 (Shared)"
+    },
+    {
+      "name": "msvc-x64-static",
+      "inherits": [
+        "base-msvc",
+        "base-static"
+      ],
+      "displayName": "MSVC x64 (Static)"
+    },
+    {
+      "name": "msvc-x64-shared",
+      "inherits": [
+        "base-msvc",
+        "base-shared"
+      ],
+      "displayName": "MSVC x64 (Shared)"
+    },
+    {
+      "name": "mingw-gcc-release-x64",
+      "inherits": [
+        "base-mingw",
+        "base-release",
+        "base-static"
+      ],
+      "displayName": "MinGW GCC Release x64 (Static)"
+    },
+    {
+      "name": "mingw-gcc-debug-x64",
+      "inherits": [
+        "base-mingw",
+        "base-debug",
+        "base-static"
+      ],
+      "displayName": "MinGW GCC Debug x64 (Static)"
+    },
+    {
+      "name": "gcc-release-arm64",
+      "inherits": [
+        "base-gcc-arm64",
+        "base-linux",
+        "base-release",
+        "base-static"
+      ],
+      "displayName": "GCC Release ARM64 (Static)"
+    },
+    {
+      "name": "gcc-debug-arm64",
+      "inherits": [
+        "base-gcc-arm64",
+        "base-linux",
+        "base-debug",
+        "base-static"
+      ],
+      "displayName": "GCC Debug ARM64 (Static)"
+    },
+    {
+      "name": "clang-release-arm64",
+      "inherits": [
+        "base-clang-arm64",
+        "base-linux",
+        "base-release",
+        "base-static"
+      ],
+      "displayName": "Clang Release ARM64 (Static)"
+    },
+    {
+      "name": "clang-debug-arm64",
+      "inherits": [
+        "base-clang-arm64",
+        "base-linux",
+        "base-debug",
+        "base-static"
+      ],
+      "displayName": "Clang Debug ARM64 (Static)"
+    },
+    {
+      "name": "clang-release-apple-arm64",
+      "inherits": [
+        "base-clang-apple-arm64",
+        "base-macos",
+        "base-release",
+        "base-static"
+      ],
+      "displayName": "Clang Release Apple ARM64 (Static)"
+    },
+    {
+      "name": "clang-debug-apple-arm64",
+      "inherits": [
+        "base-clang-apple-arm64",
+        "base-macos",
+        "base-debug",
+        "base-static"
+      ],
+      "displayName": "Clang Debug Apple ARM64 (Static)"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "gcc-release-x64",
+      "configurePreset": "gcc-release-x64",
+      "description": "Build with GCC Release x64"
+    },
+    {
+      "name": "gcc-debug-x64",
+      "configurePreset": "gcc-debug-x64",
+      "description": "Build with GCC Debug x64"
+    },
+    {
+      "name": "gcc-release-x64-shared",
+      "configurePreset": "gcc-release-x64-shared",
+      "description": "Build with GCC Release x64 (shared)"
+    },
+    {
+      "name": "clang-release-x64",
+      "configurePreset": "clang-release-x64",
+      "description": "Build with Clang Release x64"
+    },
+    {
+      "name": "clang-debug-x64",
+      "configurePreset": "clang-debug-x64",
+      "description": "Build with Clang Debug x64"
+    },
+    {
+      "name": "clang-release-x64-shared",
+      "configurePreset": "clang-release-x64-shared",
+      "description": "Build with Clang Release x64 (shared)"
+    },
+    {
+      "name": "msvc-x64-static",
+      "configurePreset": "msvc-x64-static",
+      "description": "Build with MSVC Static x64"
+    },
+    {
+      "name": "msvc-x64-shared",
+      "configurePreset": "msvc-x64-shared",
+      "description": "Build with MSVC Shared x64"
+    },
+    {
+      "name": "mingw-gcc-release-x64",
+      "configurePreset": "mingw-gcc-release-x64",
+      "description": "Build with MinGW GCC Release x64"
+    },
+    {
+      "name": "mingw-gcc-debug-x64",
+      "configurePreset": "mingw-gcc-debug-x64",
+      "description": "Build with MinGW GCC Debug x64"
+    },
+    {
+      "name": "gcc-release-arm64",
+      "configurePreset": "gcc-release-arm64",
+      "description": "Build with GCC Release ARM64"
+    },
+    {
+      "name": "gcc-debug-arm64",
+      "configurePreset": "gcc-debug-arm64",
+      "description": "Build with GCC Debug ARM64"
+    },
+    {
+      "name": "clang-release-arm64",
+      "configurePreset": "clang-release-arm64",
+      "description": "Build with Clang Release ARM64"
+    },
+    {
+      "name": "clang-debug-arm64",
+      "configurePreset": "clang-debug-arm64",
+      "description": "Build with Clang Debug ARM64"
+    },
+    {
+      "name": "clang-release-apple-arm64",
+      "configurePreset": "clang-release-apple-arm64",
+      "description": "Build with Clang Release Apple ARM64"
+    },
+    {
+      "name": "clang-debug-apple-arm64",
+      "configurePreset": "clang-debug-apple-arm64",
+      "description": "Build with Clang Debug Apple ARM64"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "gcc-debug-x64",
+      "configurePreset": "gcc-debug-x64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "gcc-release-x64",
+      "configurePreset": "gcc-release-x64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "clang-debug-x64",
+      "configurePreset": "clang-debug-x64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "clang-release-x64",
+      "configurePreset": "clang-release-x64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "msvc-x64-static",
+      "configurePreset": "msvc-x64-static",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "msvc-x64-shared",
+      "configurePreset": "msvc-x64-shared",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "mingw-gcc-debug-x64",
+      "configurePreset": "mingw-gcc-debug-x64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "mingw-gcc-release-x64",
+      "configurePreset": "mingw-gcc-release-x64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "gcc-debug-arm64",
+      "configurePreset": "gcc-debug-arm64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "gcc-release-arm64",
+      "configurePreset": "gcc-release-arm64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "clang-debug-arm64",
+      "configurePreset": "clang-debug-arm64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "clang-release-arm64",
+      "configurePreset": "clang-release-arm64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "clang-debug-apple-arm64",
+      "configurePreset": "clang-debug-apple-arm64",
+      "execution": {
+        "parallel": true
+      }
+    },
+    {
+      "name": "clang-release-apple-arm64",
+      "configurePreset": "clang-release-apple-arm64",
+      "execution": {
+        "parallel": true
+      }
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "gcc-release-x64",
+      "configurePreset": "gcc-release-x64"
+    },
+    {
+      "name": "msvc-x64-static",
+      "configurePreset": "msvc-x64-static"
+    },
+    {
+      "name": "clang-release-x64",
+      "configurePreset": "clang-release-x64"
+    },
+    {
+      "name": "gcc-release-arm64",
+      "configurePreset": "gcc-release-arm64"
+    },
+    {
+      "name": "clang-release-arm64",
+      "configurePreset": "clang-release-arm64"
+    },
+    {
+      "name": "clang-release-apple-arm64",
+      "configurePreset": "clang-release-apple-arm64"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "ci-linux-gcc-release",
+      "displayName": "CI Linux GCC Release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "gcc-release-x64"
+        },
+        {
+          "type": "build",
+          "name": "gcc-release-x64"
+        },
+        {
+          "type": "test",
+          "name": "gcc-release-x64"
+        },
+        {
+          "type": "package",
+          "name": "gcc-release-x64"
+        }
+      ]
+    },
+    {
+      "name": "ci-windows-msvc-static",
+      "displayName": "CI Windows MSVC Static",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "msvc-x64-static"
+        },
+        {
+          "type": "build",
+          "name": "msvc-x64-static"
+        },
+        {
+          "type": "test",
+          "name": "msvc-x64-static"
+        },
+        {
+          "type": "package",
+          "name": "msvc-x64-static"
+        }
+      ]
+    },
+    {
+      "name": "ci-macos-clang-release",
+      "displayName": "CI macOS Clang Release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "clang-release-apple-arm64"
+        },
+        {
+          "type": "build",
+          "name": "clang-release-apple-arm64"
+        },
+        {
+          "type": "test",
+          "name": "clang-release-apple-arm64"
+        },
+        {
+          "type": "package",
+          "name": "clang-release-apple-arm64"
+        }
+      ]
+    }
+  ]
+}

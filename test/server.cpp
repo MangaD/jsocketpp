@@ -1,62 +1,126 @@
+// Modern libsocket server test: C++17, comments, and feature coverage
+#include "libsocket/UnixSocket.hpp"
 #include <iostream>
-#include <sstream>//stringstream
-///Include socket.hpp
-#include "socket.hpp"
+#include <sstream>
+#include <string_view>
+#include <vector>
 
 using namespace std;
-using namespace sock;///Use namespace sock
+using namespace libsocket;
 
-int main() {
-	///Get a port from user input
-	int port;
-	cout << "Type a port to start listening at: ";
-	while(true) {
-		string input;
-		getline(std::cin, input);
-		stringstream myStream(input);
-		if(myStream >> port && port >= 0 && port <= 65535) {
-			break;
-		}
-		cout << "Error: Invalid port number. Port must be between 0 and 65535." << endl;
-	}
-	
-	/**
-	 * Initializing Winsock (for Windows)
-	 * Necessary to initialize sockets before using them.
-	 * The SocketInitializer object should only be destroyed when no longer using sockets.
-	 * It is advised to create it as a local variable in the main function so that it will
-	 * only be destroyed at the end of the program (when it gets out of scope).
-	 */
-	SocketInitializer sockInit;
-	
-	///Create ServerSocket
-	ServerSocket serverSocket(port);
-	
-	while(true) {
-		try {
-			///Bind socket
-			serverSocket.bind();
-			///Listen on socket
-			serverSocket.listen();
-			break;
-		}
-		catch (socket_exception &se) {
-			cerr << "Error code: " << se.get_error_code() << endl;
-			cerr << "Error message: " << se.what() << endl;
-			exit(0);
-		}
-	}
+// Forward declarations
+void test_tcp(unsigned short port);
+void test_udp(unsigned short port);
+#ifndef _WIN32
+void test_unix(const std::string& path);
+#endif
+void test_error_handling();
 
-	cout << "Server has been activated. Waiting for client to connect." << endl;
-	
-	///Wait for client
-	Socket conn = serverSocket.accept();
-	///Get client address
-	cout << "Client has connected from: " << conn.getRemoteSocketAddress() << endl;
-	///Read from client
-	cout << "Client says: " << conn.read() << endl;
-	///Write to client
-	conn.write("Hello client!");
-	
-	return 0;
+/**
+ * @brief Test TCP server functionality: accept, receive, send, close.
+ */
+void test_tcp(unsigned short port)
+{
+    cout << "[TCP] Starting server on port " << port << endl;
+    ServerSocket serverSocket(port);
+    serverSocket.bind();
+    serverSocket.listen();
+    cout << "[TCP] Waiting for client..." << endl;
+    Socket conn = serverSocket.accept();
+    cout << "[TCP] Client connected from: " << conn.getRemoteSocketAddress() << endl;
+    string msg = conn.read<string>();
+    cout << "[TCP] Client says: " << msg << endl;
+    conn.writeAll("Hello client! (TCP)");
+    conn.close();
+    serverSocket.close();
+}
+
+/**
+ * @brief Test UDP server functionality: receive, send, close.
+ */
+void test_udp(unsigned short port)
+{
+    cout << "[UDP] Starting UDP server on port " << port << endl;
+    DatagramSocket udp(port);
+    udp.setTimeout(5000);
+    udp.setNonBlocking(false);
+    vector<char> buf(512);
+    string sender;
+    unsigned short senderPort;
+    int n = udp.recvFrom(buf.data(), buf.size(), sender, senderPort);
+    cout << "[UDP] Got " << n << " bytes from " << sender << ": " << string(buf.data(), static_cast<size_t>(n)) << endl;
+    string reply = "Hello client! (UDP)";
+    udp.sendTo(reply.data(), reply.size(), sender, senderPort);
+    udp.close();
+}
+
+#ifndef _WIN32
+/**
+ * @brief Test Unix domain socket server functionality (POSIX only).
+ */
+void test_unix(const string& path)
+{
+    cout << "[UNIX] Starting Unix domain socket server at " << path << endl;
+    UnixSocket usock(path, true); // Construct as server
+    usock.listen();
+    cout << "[UNIX] Waiting for client..." << endl;
+    UnixSocket client = usock.accept();
+    string msg = client.read<string>();
+    cout << "[UNIX] Client says: " << msg << endl;
+    client.write("Hello client! (UNIX)");
+    client.close();
+    usock.close();
+    unlink(path.c_str());
+}
+#endif
+
+/**
+ * @brief Test error handling by attempting to bind to an invalid port.
+ */
+void test_error_handling()
+{
+    cout << "[ERROR] Testing error handling..." << endl;
+    try
+    {
+        ServerSocket bad(0);
+        bad.bind();
+        bad.listen();
+    }
+    catch (const SocketException& se)
+    {
+        cout << "[ERROR] Caught expected: " << se.what() << endl;
+    }
+}
+
+int main()
+{
+    SocketInitializer sockInit;
+    unsigned short port;
+    cout << "Type a port to start listening at: ";
+    while (true)
+    {
+        string input;
+        getline(cin, input);
+        stringstream myStream(input);
+        if (myStream >> port)
+            break;
+        cout << "Error: Invalid port number. Port must be between 0 and 65535." << endl;
+    }
+    try
+    {
+        test_tcp(port);
+        test_udp(++port); // UDP server on port+1
+#ifndef _WIN32
+        test_unix("/tmp/libsocket_test.sock");
+#endif
+        test_error_handling();
+    }
+    catch (const SocketException& se)
+    {
+        cerr << "[FATAL] Error code: " << se.getErrorCode() << endl;
+        cerr << "[FATAL] Error message: " << se.what() << endl;
+        return 1;
+    }
+    cout << "All tests completed successfully." << endl;
+    return 0;
 }

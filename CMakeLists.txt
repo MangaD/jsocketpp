@@ -1,41 +1,68 @@
-cmake_minimum_required(VERSION 3.2.2)
+# Use latest CMake version features and modern CMake best practices
+cmake_minimum_required(VERSION 3.16)
 
-if(${CMAKE_CURRENT_BINARY_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-	message(FATAL_ERROR "Building in-source is not supported! Create a build dir and remove ${CMAKE_SOURCE_DIR}/CMakeCache.txt")
+# Prevent in-source builds (recommended CMake practice)
+if(CMAKE_CURRENT_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
+    message(FATAL_ERROR "In-source builds are not supported. Please create a build directory and remove CMakeCache.txt.")
 endif()
 
-project (libsocket)
-set(CMAKE_BUILD_TYPE Release)
+# Project declaration
+project(libsocket VERSION 1.0 LANGUAGES CXX)
 
-# Directory variables
-set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-
-# Use C++11
-set(CMAKE_CXX_STANDARD 11)
+# Set C++ standard requirement (C++17)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Set Warnings 
-if(MSVC)
-	# Force to always compile with W4
-	if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
-		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-	else()
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-	endif()
-elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGCC OR CMAKE_COMPILER_IS_CLANGCXX)
-	# Update if necessary
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wmain -Weffc++ -Wswitch-default \
-		-Wswitch-enum -Wmissing-include-dirs -Wmissing-declarations -Wunreachable-code -Winline \
-		-Wfloat-equal -Wundef -Wcast-align -Wredundant-decls -Winit-self -Wshadow -Wnon-virtual-dtor \
-		-Wconversion")
-	if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wzero-as-null-pointer-constant")
-	endif()
+# Define whether to build a shared or static library
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+
+# Add subdirectories
+add_subdirectory(src)
+add_subdirectory(test)
+
+# Install and packaging logic
+install(EXPORT libsocketTargets
+    FILE libsocketTargets.cmake
+    NAMESPACE libsocket::
+    DESTINATION lib/cmake/libsocket
+)
+
+# Create and install version file for CMake package compatibility
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/libsocketConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libsocketConfigVersion.cmake" DESTINATION lib/cmake/libsocket)
+
+# clang-format integration (if found)
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    find_program(CLANG_FORMAT_EXE NAMES clang-format)
+    if(CLANG_FORMAT_EXE)
+        file(GLOB_RECURSE ALL_SOURCE_FILES
+            "${CMAKE_SOURCE_DIR}/src/*.cpp"
+            "${CMAKE_SOURCE_DIR}/src/*.hpp"
+            "${CMAKE_SOURCE_DIR}/test/*.cpp"
+            "${CMAKE_SOURCE_DIR}/test/*.hpp"
+        )
+        add_custom_target(
+            clang-format
+            COMMAND ${CLANG_FORMAT_EXE} -i --style=file ${ALL_SOURCE_FILES}
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            COMMENT "Running clang-format on all source files"
+        )
+    endif()
 endif()
 
-#Generate the static library from the sources
-add_library(socket STATIC ${SOURCE_DIR}/socket.cpp)
+# Optional: Generate Doxygen documentation if Doxygen is found
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    include(cmake/doxygen.cmake)
+else()
+    message(WARNING "Doxygen not found, skipping documentation generation.")
+endif()
 
-#Install the library in the system
-install(TARGETS socket DESTINATION lib)
-install(FILES socket.hpp DESTINATION include)
+# Export targets for use with find_package()
+export(EXPORT libsocketTargets FILE "${CMAKE_CURRENT_BINARY_DIR}/libsocketTargets.cmake")

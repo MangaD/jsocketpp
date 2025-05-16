@@ -1,6 +1,64 @@
-doc
-build
-server*
-client*
+# Ignore user configuration files
+CMakeUserPresets.json
+
+# Ignore backup and temporary files
+*~
+*.swp
+*.bak
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Build directories
+/cmake-build-*/
+/build/
+/bin/
+/lib/
+/install/
+
+# CTest generated files
+/Testing/
+
+# Doxygen generated files
+/docs/doxygen/html/
+/docs/doxygen/latex/
+/docs/doxygen/xml/
+
+# Compiled object files and libraries
 *.o
+*.obj
+*.so
+*.dylib
+*.dll
 *.a
+*.lib
+
+# Executable files
+*.exe
+*.out
+*.app
+
+# Qt generated files (if applicable)
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+*.suo
+*.user
+*.userosscache
+*.sln
+*.vcxproj*
+.idea/
+.vscode/
