@@ -1,7 +1,7 @@
-#include "libsocket/UnixSocket.hpp"
-#include "libsocket/SocketException.hpp"
+#include "jsocketpp/UnixSocket.hpp"
+#include "jsocketpp/SocketException.hpp"
 
-using namespace libsocket;
+using namespace jsocketpp;
 
 #if defined(_WIN32) && defined(AF_UNIX) || defined(__unix__) || defined(__APPLE__)
 

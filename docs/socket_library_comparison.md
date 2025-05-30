@@ -1,10 +1,10 @@
-# Comparison: `libsocket` vs Other C++ Socket Libraries
+# Comparison: `jsocketpp` vs Other C++ Socket Libraries
 
-This document compares `libsocket` to other popular C++ libraries that provide socket functionality. It highlights the advantages and disadvantages of each, helping users choose the right tool for their needs.
+This document compares `jsocketpp` to other popular C++ libraries that provide socket functionality. It highlights the advantages and disadvantages of each, helping users choose the right tool for their needs.
 
 ---
 
-## 1. libsocket (this library)
+## 1. jsocketpp (this library)
 
 **Overview:**
 - Modern C++17 cross-platform abstraction for TCP, UDP, and Unix sockets.
@@ -108,7 +108,7 @@ This document compares `libsocket` to other popular C++ libraries that provide s
 
 | Library         | Cross-Platform | Async Support | High-Level API | SSL/TLS | Lightweight | Modern C++ | Easy Integration |
 |----------------|----------------|---------------|---------------|---------|-------------|------------|-----------------|
-| libsocket      | Yes            | No            | Yes           | No      | Yes         | Yes        | Yes             |
+| jsocketpp      | Yes            | No            | Yes           | No      | Yes         | Yes        | Yes             |
 | Boost.Asio     | Yes            | Yes           | Medium        | Yes     | Medium      | Yes        | Yes             |
 | Poco::Net      | Yes            | Yes           | Yes           | Yes     | No          | Partial    | Medium          |
 | Qt Network     | Yes            | Yes           | Yes           | Yes     | No          | Partial    | Only with Qt    |
@@ -118,7 +118,7 @@ This document compares `libsocket` to other popular C++ libraries that provide s
 
 ## Conclusion
 
-- Use **libsocket** for simple, modern, cross-platform socket programming with minimal dependencies.
+- Use **jsocketpp** for simple, modern, cross-platform socket programming with minimal dependencies.
 - Use **Boost.Asio** or **Poco::Net** for advanced networking, async/event-driven code, or protocol support.
 - Use **Qt Network** if you are already using Qt.
 - Use **native APIs** only if you need maximum control and are comfortable handling platform differences.

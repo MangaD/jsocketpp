@@ -12,7 +12,7 @@
 #include "SocketException.hpp"
 #include "common.hpp"
 
-namespace libsocket
+namespace jsocketpp
 {
 
 #if defined(_WIN32) && defined(AF_UNIX) || defined(__unix__) || defined(__APPLE__)
@@ -187,4 +187,4 @@ template <> inline std::string UnixSocket::read()
 
 #endif
 
-} // namespace libsocket
+} // namespace jsocketpp

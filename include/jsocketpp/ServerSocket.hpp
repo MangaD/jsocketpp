@@ -3,7 +3,7 @@
 #include "Socket.hpp"
 #include "common.hpp"
 
-namespace libsocket
+namespace jsocketpp
 {
 
 /**
@@ -156,4 +156,4 @@ class ServerSocket
     unsigned short _port;                  ///< Port number the server will listen on
 };
 
-} // namespace libsocket
+} // namespace jsocketpp

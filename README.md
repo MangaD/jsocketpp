@@ -1,8 +1,10 @@
-# libsocket: Modern C++17 Cross-Platform Socket Library
+# jsocketpp: Modern C++17 Cross-Platform Socket Library
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-libsocket is a modern, header-only C++17 library for cross-platform TCP, UDP, and Unix domain socket programming. It provides a clean, object-oriented API for both client and server sockets, supporting IPv4, IPv6, and local IPC, with robust error handling and full portability between Windows and Linux (and POSIX systems).
+jsocketpp is a modern, header-only C++17 library for cross-platform TCP, UDP, and Unix domain socket programming. It
+provides a clean, object-oriented API for both client and server sockets, supporting IPv4, IPv6, and local IPC, with
+robust error handling and full portability between Windows and Linux (and POSIX systems).
 
 ## Features
 
@@ -26,7 +28,7 @@ cmake ..
 make
 ```
 
-This will build `libsocket.a` (static library) in the root directory.
+This will build `jsocketpp.a` (static library) in the root directory.
 
 ### With Makefile
 
@@ -36,11 +38,11 @@ You can also build manually using the provided Makefile in the root directory:
 make
 ```
 
-This will produce `libsocket.a` in the project root.
+This will produce `jsocketpp.a` in the project root.
 
 ## Linking
 
-- Link against `libsocket.a` (or the shared library if you build one).
+- Link against `jsocketpp.a` (or the shared library if you build one).
 - On **Windows**, also link against `ws2_32.lib` and `iphlpapi.lib`.
 - On **Linux/POSIX**, no extra libraries are needed.
 
@@ -50,8 +52,8 @@ This will produce `libsocket.a` in the project root.
 #include "socket.hpp"
 
 int main() {
-    libsocket::SocketInitializer init; // RAII for WSAStartup/WSACleanup on Windows
-    libsocket::Socket client("example.com", 80);
+    jsocketpp::SocketInitializer init; // RAII for WSAStartup/WSACleanup on Windows
+    jsocketpp::Socket client("example.com", 80);
     client.connect();
     client.write("GET / HTTP/1.1\r\nHost: example.com\r\n\r\n");
     std::string response = client.read<std::string>();

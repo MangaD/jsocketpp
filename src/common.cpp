@@ -1,8 +1,8 @@
-#include "libsocket/common.hpp"
+#include "jsocketpp/common.hpp"
 
-using namespace libsocket;
+using namespace jsocketpp;
 
-std::string libsocket::SocketErrorMessage(int error, [[maybe_unused]] bool gaiStrerror)
+std::string jsocketpp::SocketErrorMessage(int error, [[maybe_unused]] bool gaiStrerror)
 {
 #ifdef _WIN32
     if (error == 0)
@@ -41,7 +41,7 @@ std::string libsocket::SocketErrorMessage(int error, [[maybe_unused]] bool gaiSt
 #endif
 }
 
-std::string libsocket::SocketErrorMessageWrap(const int error, [[maybe_unused]] const bool gaiStrerror)
+std::string jsocketpp::SocketErrorMessageWrap(const int error, [[maybe_unused]] const bool gaiStrerror)
 {
     std::string errString{};
     try
@@ -60,7 +60,7 @@ std::string libsocket::SocketErrorMessageWrap(const int error, [[maybe_unused]] 
  * Redefine because not available on Windows XP
  * http://stackoverflow.com/questions/13731243/what-is-the-windows-xp-equivalent-of-inet-pton-or-inetpton
  */
-const char* libsocket::inet_ntop_aux(const int af, const void* src, char* dst, socklen_t size)
+const char* jsocketpp::inet_ntop_aux(const int af, const void* src, char* dst, socklen_t size)
 {
     sockaddr_storage ss{};
 
@@ -104,7 +104,7 @@ const char* libsocket::inet_ntop_aux(const int af, const void* src, char* dst, s
 }
 #endif
 
-std::vector<std::string> libsocket::getHostAddr()
+std::vector<std::string> jsocketpp::getHostAddr()
 {
     std::vector<std::string> ips;
 

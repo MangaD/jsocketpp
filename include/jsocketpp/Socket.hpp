@@ -3,7 +3,7 @@
 #include "SocketException.hpp"
 #include "common.hpp"
 
-namespace libsocket
+namespace jsocketpp
 {
 
 /**
@@ -388,4 +388,4 @@ template <> inline std::string Socket::read()
     return {_buffer.data(), static_cast<size_t>(len)};
 }
 
-} // namespace libsocket
+} // namespace jsocketpp

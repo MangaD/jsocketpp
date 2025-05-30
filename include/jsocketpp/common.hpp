@@ -70,7 +70,7 @@
 
 #endif
 
-namespace libsocket
+namespace jsocketpp
 {
 #ifdef _WIN32
 
@@ -168,4 +168,4 @@ enum class ShutdownMode
     Both   ///< Shutdown both read and write operations (SHUT_RDWR or SD_BOTH)
 };
 
-} // namespace libsocket
+} // namespace jsocketpp

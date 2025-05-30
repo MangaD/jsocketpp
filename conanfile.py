@@ -2,12 +2,12 @@ from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
 import os
 
-class LibsocketConan(ConanFile):
-    name = "libsocket"
+class jsocketppConan(ConanFile):
+    name = "jsocketpp"
     version = "0.1.0"
     license = "MIT"
     author = "Your Name <your@email.com>"
-    url = "https://github.com/yourusername/libsocket"
+    url = "https://github.com/yourusername/jsocketpp"
     description = "A modern C++ socket library."
     topics = ("socket", "network", "tcp", "udp", "c++")
     settings = "os", "compiler", "build_type", "arch"

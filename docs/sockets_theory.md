@@ -198,4 +198,4 @@ A **socket** is an abstraction representing one endpoint of a two-way communicat
 
 ---
 
-*This document is part of the libsocket project. For usage examples and API documentation, see the main README and source code.*
+*This document is part of the jsocketpp project. For usage examples and API documentation, see the main README and source code.*

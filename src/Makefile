@@ -1,15 +1,15 @@
-# src/Makefile - Build the libsocket library (static and shared)
+# src/Makefile - Build the jsocketpp library (static and shared)
 
 CXX ?= g++
 AR = ar
 ARFLAGS = rcvs
 CXXFLAGS ?= -std=c++17 -O2 -Wall -I.
 SRC = socket.cpp
-LIB_STATIC = libsocket.a
-LIB_SHARED = libsocket.so
+LIB_STATIC = jsocketpp.a
+LIB_SHARED = jsocketpp.so
 
 ifeq ($(OS),Windows_NT)
-    LIB_SHARED = libsocket.dll
+    LIB_SHARED = jsocketpp.dll
     LDFLAGS = -lws2_32 -liphlpapi
 else
     LDFLAGS = 

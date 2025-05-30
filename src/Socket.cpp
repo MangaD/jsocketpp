@@ -1,7 +1,7 @@
 
-#include "libsocket/Socket.hpp"
+#include "jsocketpp/Socket.hpp"
 
-using namespace libsocket;
+using namespace jsocketpp;
 
 Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_t len, const std::size_t bufferSize)
     : _sockFd(client), _remoteAddr(addr), _remoteAddrLen(len), _buffer(bufferSize)

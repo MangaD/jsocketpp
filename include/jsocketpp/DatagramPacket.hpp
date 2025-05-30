@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace libsocket
+namespace jsocketpp
 {
 /**
  * @brief Represents a UDP datagram packet, including data buffer, remote address, and port.
@@ -96,4 +96,4 @@ class DatagramPacket
     }
 };
 
-} // namespace libsocket
+} // namespace jsocketpp

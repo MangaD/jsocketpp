@@ -1,12 +1,12 @@
-// Modern libsocket client test: C++17, comments, and feature coverage
-#include "libsocket/UnixSocket.hpp"
+// Modern jsocketpp client test: C++17, comments, and feature coverage
+#include "jsocketpp/UnixSocket.hpp"
 #include <iostream>
 #include <sstream>
 #include <string_view>
 #include <vector>
 
 using namespace std;
-using namespace libsocket;
+using namespace jsocketpp;
 
 // Forward declarations
 void test_tcp(const std::string& ip, unsigned short port);
@@ -105,7 +105,7 @@ int main()
         test_tcp(ip, port);
         test_udp(ip, ++port); // Assume UDP server is on port+1
 #ifndef _WIN32
-        test_unix("/tmp/libsocket_test.sock");
+        test_unix("/tmp/jsocketpp_test.sock");
 #endif
         test_error_handling();
     }

@@ -1,9 +1,9 @@
-// GoogleTest unit tests for libsocket
-#include "libsocket/UnixSocket.hpp"
+// GoogleTest unit tests for jsocketpp
+#include "jsocketpp/UnixSocket.hpp"
 #include <gtest/gtest.h>
 #include <string>
 
-using namespace libsocket;
+using namespace jsocketpp;
 
 TEST(SocketTest, TcpConnectInvalid)
 {

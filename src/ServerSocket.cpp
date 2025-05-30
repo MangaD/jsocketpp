@@ -1,6 +1,6 @@
-#include "libsocket/ServerSocket.hpp"
+#include "jsocketpp/ServerSocket.hpp"
 
-using namespace libsocket;
+using namespace jsocketpp;
 
 ServerSocket::ServerSocket(const unsigned short port) : _port(port)
 {

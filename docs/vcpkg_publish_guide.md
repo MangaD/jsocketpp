@@ -1,6 +1,7 @@
-# Publishing `libsocket` to the vcpkg Registry
+# Publishing `jsocketpp` to the vcpkg Registry
 
-This guide explains, step by step, how to prepare, test, and submit your C++ library `libsocket` to the vcpkg registry so it can be easily consumed by the C++ community.
+This guide explains, step by step, how to prepare, test, and submit your C++ library `jsocketpp` to the vcpkg registry
+so it can be easily consumed by the C++ community.
 
 ---
 
@@ -25,26 +26,29 @@ This guide explains, step by step, how to prepare, test, and submit your C++ lib
 ## 3. Create a vcpkg Portfile
 
 A vcpkg port consists of:
+
 - A `portfile.cmake` (build instructions)
 - A `vcpkg.json` (metadata)
 - Optionally, patches and usage files
 
 ### Example `vcpkg.json`
+
 ```json
 {
-    "name": "libsocket",
+    "name": "jsocketpp",
     "version-string": "0.1.0",
     "description": "A modern C++ socket library.",
-    "homepage": "https://github.com/yourusername/libsocket",
+    "homepage": "https://github.com/yourusername/jsocketpp",
     "license": "MIT"
 }
 ```
 
 ### Example `portfile.cmake`
+
 ```cmake
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO yourusername/libsocket
+    REPO yourusername/jsocketpp
     REF v0.1.0 # or the latest tag
     SHA512 <fill-in-sha512>
 )
@@ -57,8 +61,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libsocket RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jsocketpp RENAME copyright)
 ```
+
 - Replace `<fill-in-sha512>` with the actual SHA512 hash of the release archive (see below).
 
 ---
@@ -73,20 +78,20 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/li
    ```
 2. Create a new port directory:
    ```pwsh
-   mkdir ports\libsocket
+   mkdir ports\jsocketpp
    # Copy your portfile.cmake and vcpkg.json into this directory
    ```
 3. Download your release archive and compute its SHA512:
    ```pwsh
    # Download the release tarball from GitHub
-   curl -L -o libsocket-0.1.0.tar.gz https://github.com/yourusername/libsocket/archive/refs/tags/v0.1.0.tar.gz
+   curl -L -o jsocketpp-0.1.0.tar.gz https://github.com/yourusername/jsocketpp/archive/refs/tags/v0.1.0.tar.gz
    # Compute SHA512
-   certutil -hashfile libsocket-0.1.0.tar.gz SHA512
+   certutil -hashfile jsocketpp-0.1.0.tar.gz SHA512
    ```
    Copy the hash into your `portfile.cmake`.
 4. Build and test the port:
    ```pwsh
-   .\vcpkg install libsocket --overlay-ports=ports
+   .\vcpkg install jsocketpp --overlay-ports=ports
    ```
    Fix any errors and ensure the library installs and can be found by consumers.
 
@@ -98,8 +103,8 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/li
 2. Add your port to the `ports/` directory in your fork.
 3. Open a pull request to the main vcpkg repository.
 4. Follow the vcpkg PR template and guidelines:
-   - https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/adding-a-port.md
-   - https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/port-file-guidelines.md
+    - https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/adding-a-port.md
+    - https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/port-file-guidelines.md
 5. Address any feedback from the vcpkg team and automated CI.
 
 ---
@@ -108,7 +113,7 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/li
 
 - Your library will be available to all vcpkg users via:
   ```pwsh
-  vcpkg install libsocket
+  vcpkg install jsocketpp
   ```
 - Keep your port up to date as you release new versions.
 
@@ -124,6 +129,7 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/li
 ---
 
 ## References
+
 - [vcpkg Documentation](https://github.com/microsoft/vcpkg/tree/master/docs)
 - [Adding a port](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/adding-a-port.md)
 - [Port file guidelines](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/port-file-guidelines.md)

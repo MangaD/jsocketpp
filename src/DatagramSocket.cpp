@@ -1,7 +1,7 @@
-#include "libsocket/DatagramSocket.hpp"
-#include "libsocket/SocketException.hpp"
+#include "jsocketpp/DatagramSocket.hpp"
+#include "jsocketpp/SocketException.hpp"
 
-using namespace libsocket;
+using namespace jsocketpp;
 
 DatagramSocket::DatagramSocket(const unsigned short port, const std::size_t bufferSize)
     : DatagramSocket("", port, bufferSize) // Use nullptr for host to bind to all interfaces

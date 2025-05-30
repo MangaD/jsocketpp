@@ -1,16 +1,19 @@
-# libsocket: Build, Test, and Usage Guide
+# jsocketpp: Build, Test, and Usage Guide
 
-This document provides comprehensive instructions for building, testing, and using the `libsocket` C++17 cross-platform socket library on Windows, Linux, and macOS. It covers CMake, Makefile, and manual build approaches, as well as usage examples and troubleshooting tips.
+This document provides comprehensive instructions for building, testing, and using the `jsocketpp` C++17 cross-platform
+socket library on Windows, Linux, and macOS. It covers CMake, Makefile, and manual build approaches, as well as usage
+examples and troubleshooting tips.
 
 ---
 
 ## Table of Contents
+
 - [Prerequisites](#prerequisites)
 - [Building the Library](#building-the-library)
-  - [Using CMake Presets (Recommended)](#using-cmake-presets-recommended)
-  - [Manual CMake Build](#manual-cmake-build)
-  - [Using the Makefile](#using-the-makefile)
-  - [Manual Compilation](#manual-compilation)
+    - [Using CMake Presets (Recommended)](#using-cmake-presets-recommended)
+    - [Manual CMake Build](#manual-cmake-build)
+    - [Using the Makefile](#using-the-makefile)
+    - [Manual Compilation](#manual-compilation)
 - [Building and Running Tests](#building-and-running-tests)
 - [Linking the Library](#linking-the-library)
 - [Usage Example](#usage-example)
@@ -22,6 +25,7 @@ This document provides comprehensive instructions for building, testing, and usi
 ---
 
 ## Prerequisites
+
 - **C++17 compiler** (MSVC, GCC, or Clang)
 - **CMake 3.19+** (for presets support)
 - **Ninja** (recommended for fast builds, or use Visual Studio/MSBuild on Windows)
@@ -68,6 +72,7 @@ cmake --build .
 ```
 
 To build a shared library:
+
 ```sh
 cmake .. -DBUILD_SHARED_LIBS=ON
 ```
@@ -75,6 +80,7 @@ cmake .. -DBUILD_SHARED_LIBS=ON
 ### Using the Makefile
 
 A GNU Makefile is provided for quick builds (mainly for Linux/macOS):
+
 ```sh
 make           # Builds static lib, client, server
 make test      # Builds and runs GoogleTest unit tests
@@ -84,9 +90,10 @@ make clean     # Cleans build artifacts
 ### Manual Compilation
 
 You can also build the library manually:
+
 ```sh
 g++ -std=c++17 -O2 -Wall -I./src -c src/socket.cpp -o socket.o
-ar rcs libsocket.a socket.o
+ar rcs jsocketpp.a socket.o
 ```
 
 ---
@@ -105,15 +112,15 @@ ar rcs libsocket.a socket.o
   make test
   ```
 - **Test executables:**
-  - `socket_gtest` (unit tests)
-  - `client` and `server` (feature tests)
+    - `socket_gtest` (unit tests)
+    - `client` and `server` (feature tests)
 
 ---
 
 ## Linking the Library
 
-- **Static library:** Link against `libsocket.a` (or `libsocket.lib` on Windows)
-- **Shared library:** Link against `libsocket.so`/`libsocket.dll`/`libsocket.dylib` as appropriate
+- **Static library:** Link against `jsocketpp.a` (or `jsocketpp.lib` on Windows)
+- **Shared library:** Link against `jsocketpp.so`/`jsocketpp.dll`/`jsocketpp.dylib` as appropriate
 - **Windows:** Also link against `ws2_32.lib` and `iphlpapi.lib`
 - **Linux/POSIX:** No extra libraries needed
 
@@ -125,8 +132,8 @@ ar rcs libsocket.a socket.o
 #include "socket.hpp"
 
 int main() {
-    libsocket::SocketInitializer init; // RAII for WSAStartup/WSACleanup on Windows
-    libsocket::Socket client("example.com", 80);
+    jsocketpp::SocketInitializer init; // RAII for WSAStartup/WSACleanup on Windows
+    jsocketpp::Socket client("example.com", 80);
     client.connect();
     client.write("GET / HTTP/1.1\r\nHost: example.com\r\n\r\n");
     std::string response = client.read<std::string>();
@@ -140,26 +147,28 @@ See the `test/` directory for more complete TCP, UDP, and Unix domain socket cli
 
 ## CMake Integration in Your Project
 
-If you want to use `libsocket` in your own CMake project after installing:
+If you want to use `jsocketpp` in your own CMake project after installing:
 
 ```cmake
-find_package(libsocket REQUIRED)
+find_package(jsocketpp REQUIRED)
 add_executable(myapp main.cpp)
-target_link_libraries(myapp PRIVATE libsocket::libsocket)
+target_link_libraries(myapp PRIVATE jsocketpp::jsocketpp)
 ```
 
 Or, if using as a subdirectory:
+
 ```cmake
-add_subdirectory(path/to/libsocket)
+add_subdirectory(path/to/jsocketpp)
 add_executable(myapp main.cpp)
-target_link_libraries(myapp PRIVATE libsocket)
+target_link_libraries(myapp PRIVATE jsocketpp)
 ```
 
 ---
 
 ## Troubleshooting
 
-- **Cannot find `<sys/un.h>` on Windows:** This is expected; Unix domain sockets are only available on POSIX or Windows 10+ with AF_UNIX support.
+- **Cannot find `<sys/un.h>` on Windows:** This is expected; Unix domain sockets are only available on POSIX or Windows
+  10+ with AF_UNIX support.
 - **Link errors for `ws2_32` or `iphlpapi`:** Ensure you link these libraries on Windows.
 - **CMake version errors:** Use CMake 3.19 or newer for preset support.
 - **Build in-source error:** Always build in a separate directory (out-of-source build).
@@ -170,12 +179,12 @@ target_link_libraries(myapp PRIVATE libsocket)
 ## Platform Notes
 
 - **Windows:**
-  - Requires linking with `ws2_32` and `iphlpapi`.
-  - Unix domain sockets require Windows 10 (1803+) and Visual Studio 2019+.
+    - Requires linking with `ws2_32` and `iphlpapi`.
+    - Unix domain sockets require Windows 10 (1803+) and Visual Studio 2019+.
 - **Linux/macOS:**
-  - Full support for TCP, UDP, and Unix domain sockets.
+    - Full support for TCP, UDP, and Unix domain sockets.
 - **Cross-compiling:**
-  - Use the appropriate CMake preset or set toolchain variables manually.
+    - Use the appropriate CMake preset or set toolchain variables manually.
 
 ---
 

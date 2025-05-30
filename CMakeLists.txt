@@ -7,7 +7,7 @@ if(CMAKE_CURRENT_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
 endif()
 
 # Project declaration
-project(libsocket VERSION 1.0 LANGUAGES CXX)
+project(jsocketpp VERSION 1.0 LANGUAGES CXX)
 
 # Set C++ standard requirement (C++17)
 set(CMAKE_CXX_STANDARD 17)
@@ -22,20 +22,20 @@ add_subdirectory(src)
 add_subdirectory(test)
 
 # Install and packaging logic
-install(EXPORT libsocketTargets
-    FILE libsocketTargets.cmake
-    NAMESPACE libsocket::
-    DESTINATION lib/cmake/libsocket
+install(EXPORT jsocketppTargets
+    FILE jsocketppTargets.cmake
+    NAMESPACE jsocketpp::
+    DESTINATION lib/cmake/jsocketpp
 )
 
 # Create and install version file for CMake package compatibility
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/libsocketConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/jsocketppConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libsocketConfigVersion.cmake" DESTINATION lib/cmake/libsocket)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/jsocketppConfigVersion.cmake" DESTINATION lib/cmake/jsocketpp)
 
 # clang-format integration (if found)
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
@@ -65,4 +65,4 @@ else()
 endif()
 
 # Export targets for use with find_package()
-export(EXPORT libsocketTargets FILE "${CMAKE_CURRENT_BINARY_DIR}/libsocketTargets.cmake")
+export(EXPORT jsocketppTargets FILE "${CMAKE_CURRENT_BINARY_DIR}/jsocketppTargets.cmake")

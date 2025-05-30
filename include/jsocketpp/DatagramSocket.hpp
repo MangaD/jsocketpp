@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace libsocket
+namespace jsocketpp
 {
 /**
  * @brief UDP datagram socket abstraction (Java-like interface).
@@ -393,4 +393,4 @@ inline std::string DatagramSocket::recvFrom<std::string>(std::string* senderAddr
     return {_buffer.data(), static_cast<size_t>(n)};
 }
 
-} // namespace libsocket
+} // namespace jsocketpp

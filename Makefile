@@ -1,10 +1,10 @@
 # Platform-specific configuration
 ifeq ($(OS),Windows_NT)
     CMD = cmd /C
-    FIND = powershell -Command "Get-ChildItem -Recurse -Include *.cpp,*.hpp src, include\libsocket, test | ForEach-Object { $_.FullName }"
+    FIND = powershell -Command "Get-ChildItem -Recurse -Include *.cpp,*.hpp src, include\jsocketpp, test | ForEach-Object { $_.FullName }"
 else
     CMD =
-    FIND = find src include/libsocket test -name '*.cpp' -o -name '*.hpp'
+    FIND = find src include/jsocketpp test -name '*.cpp' -o -name '*.hpp'
 endif
 
 # Compiler and tools

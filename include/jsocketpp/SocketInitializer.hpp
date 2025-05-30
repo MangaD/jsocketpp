@@ -3,7 +3,7 @@
 #include "SocketException.h"
 #include "common.hpp"
 
-namespace libsocket
+namespace jsocketpp
 {
 /**
  * @brief Helper class to initialize and cleanup sockets (RAII).
@@ -46,4 +46,4 @@ class SocketInitializer
     SocketInitializer& operator=(const SocketInitializer& rhs) = delete;
 };
 
-} // namespace libsocket
+} // namespace jsocketpp

@@ -1,7 +1,7 @@
-# src/CMakeLists.txt - Build the libsocket library
+# src/CMakeLists.txt - Build the jsocketpp library
 
-# Create the libsocket library (STATIC or SHARED depending on your needs)
-add_library(libsocket
+# Create the jsocketpp library (STATIC or SHARED depending on your needs)
+add_library(jsocketpp
         common.cpp
         DatagramSocket.cpp
         ServerSocket.cpp
@@ -10,10 +10,10 @@ add_library(libsocket
 )
 
 # Set C++ standard requirement for the library (C++17)
-target_compile_features(libsocket PUBLIC cxx_std_17)
+target_compile_features(jsocketpp PUBLIC cxx_std_17)
 
-# Define the public headers (located in include/libsocket/)
-target_include_directories(libsocket
+# Define the public headers (located in include/jsocketpp/)
+target_include_directories(jsocketpp
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>  # For local builds
         $<INSTALL_INTERFACE:include>  # For installed headers
@@ -21,11 +21,11 @@ target_include_directories(libsocket
 
 # Platform-specific libraries for Windows
 if (WIN32)
-    target_link_libraries(libsocket PUBLIC ws2_32 iphlpapi)
+    target_link_libraries(jsocketpp PUBLIC ws2_32 iphlpapi)
 endif ()
 
 # Set to PRIVATE so that these definitions do not propagate to consumers of the library
-target_compile_definitions(libsocket PRIVATE
+target_compile_definitions(jsocketpp PRIVATE
         # Disable secure warnings on MSVC
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
         # Enable Unicode support on Windows
@@ -36,7 +36,7 @@ target_compile_definitions(libsocket PRIVATE
 # C standard section: http://port70.net/~nsz/c/c11/n1570.html#7.2
 
 # Enable warnings - inspired by: https://stackoverflow.com/a/50882216/3049315
-target_compile_options(libsocket PRIVATE
+target_compile_options(jsocketpp PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:/W4> # /WX
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Wmain -Weffc++ -Wswitch-default
         -Wswitch-enum -Wmissing-include-dirs -Wmissing-declarations -Wunreachable-code -Winline
@@ -48,33 +48,33 @@ target_compile_options(libsocket PRIVATE
 )
 
 # Use CMake's install command to specify where the library and headers should be placed when installed
-install(TARGETS libsocket
-        EXPORT libsocketTargets
+install(TARGETS jsocketpp
+        EXPORT jsocketppTargets
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin
-        PUBLIC_HEADER DESTINATION include/libsocket  # Place header in include/libsocket/
+        PUBLIC_HEADER DESTINATION include/jsocketpp  # Place header in include/jsocketpp/
 )
 
 # Export the targets to allow easy find_package usage
-install(EXPORT libsocketTargets
-        FILE libsocketTargets.cmake
-        NAMESPACE libsocket::
-        DESTINATION lib/cmake/libsocket
+install(EXPORT jsocketppTargets
+        FILE jsocketppTargets.cmake
+        NAMESPACE jsocketpp::
+        DESTINATION lib/cmake/jsocketpp
 )
 
 # Optionally, create a version file for the CMake package (useful for versioning)
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/libsocketConfigVersion.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/jsocketppConfigVersion.cmake"
         VERSION ${PROJECT_VERSION}
         COMPATIBILITY AnyNewerVersion
 )
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libsocketConfigVersion.cmake" DESTINATION lib/cmake/libsocket)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/jsocketppConfigVersion.cmake" DESTINATION lib/cmake/jsocketpp)
 
 # Optional: Ensure that shared libraries are built (if BUILD_SHARED_LIBS is set)
 if (BUILD_SHARED_LIBS)
-    set_target_properties(libsocket PROPERTIES
+    set_target_properties(jsocketpp PROPERTIES
             WINDOWS_EXPORT_ALL_SYMBOLS ON  # If targeting Windows, export all symbols for shared libraries
     )
 endif ()

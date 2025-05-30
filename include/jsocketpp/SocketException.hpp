@@ -5,7 +5,7 @@
 #include <exception>
 #include <string>
 
-namespace libsocket
+namespace jsocketpp
 {
 
 /**
@@ -30,4 +30,4 @@ class SocketException final : public std::exception
     std::string _errorMessage;
 };
 
-} // namespace libsocket
+} // namespace jsocketpp
