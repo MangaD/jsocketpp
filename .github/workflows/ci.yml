@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install CMake, Ninja, GCC
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build g++ clang-format
+
+      - name: Configure
+        run: cmake --preset=gcc-debug-x64
+
+      - name: Build
+        run: cmake --build --preset=gcc-debug-x64
+
+      - name: Test
+        run: ctest --preset=gcc-debug-x64 --output-on-failure
