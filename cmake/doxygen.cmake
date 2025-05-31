@@ -32,6 +32,7 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_STRIP_FROM_PATH ${CMAKE_SOURCE_DIR})
     #set(DOXYGEN_EXCLUDE "${CMAKE_SOURCE_DIR}/docs/doxygen" "${CMAKE_BINARY_DIR}")
     set(DOXYGEN_RECURSIVE YES)
+    set(DOXYGEN_ENABLE_PREPROCESSING NO) # https://stackoverflow.com/a/26043120/3049315
 
     set(DOXYGEN_GENERATE_HTML YES CACHE BOOL "Generate Doxygen HTML" FORCE)
     set(DOXYGEN_GENERATE_LATEX NO CACHE BOOL "Generate Doxygen LaTeX" FORCE)
@@ -77,6 +78,7 @@ if (DOXYGEN_FOUND)
 
     doxygen_add_docs(doxygen
             ${md_files}
+            ${CMAKE_SOURCE_DIR}/include/jsocketpp
             ${CMAKE_SOURCE_DIR}/src
             ${CMAKE_SOURCE_DIR}/tests
             COMMENT "Generating API documentation with Doxygen"

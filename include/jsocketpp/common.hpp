@@ -58,9 +58,9 @@
 #include <errno.h>       //errno
 #include <fcntl.h>       //fcntl
 #include <ifaddrs.h>     //getifaddrs
+#include <net/if.h>      //if_nametoindex
 #include <netdb.h>       //for struct addrinfo
-#include <netinet/in.h>  //for sockaddr_in
-#include <netinet/in.h>  //for sockaddr_in6
+#include <netinet/in.h>  //for sockaddr_in and sockaddr_in6
 #include <netinet/tcp.h> //TCP_NODELAY, TCP_MAXSEG
 #include <sys/ioctl.h>   //ioctl
 #include <sys/socket.h>  //socket
@@ -70,6 +70,37 @@
 
 #endif
 
+/**
+ * @namespace jsocketpp
+ * @brief A C++ socket library providing Java-style networking interfaces
+ *
+ * The jsocketpp namespace contains classes and utilities for network programming
+ * with an API design inspired by Java's networking classes. It provides:
+ *
+ * Core Socket Classes:
+ * - Socket: TCP client socket implementation for stream-based communication
+ * - ServerSocket: TCP server socket for accepting client connections
+ * - DatagramSocket: UDP socket implementation for connectionless communication
+ * - MulticastSocket: Extended UDP socket supporting IP multicast operations
+ * - UnixSocket: Unix domain socket implementation for local IPC
+ *
+ * Features:
+ * - Exception-based error handling (SocketException)
+ * - RAII-compliant resource management
+ * - Support for both IPv4 and IPv6
+ * - Cross-platform compatibility (Windows/Unix)
+ * - Modern C++ design with move semantics
+ *
+ * Design Philosophy:
+ * - Familiar interface for Java developers
+ * - Modern C++ practices and idioms
+ * - Exception-based error handling
+ * - Resource safety through RAII
+ * - Explicit over implicit behavior
+ *
+ * @note All classes in this namespace are not thread-safe unless explicitly stated.
+ *       Each socket should be used from a single thread at a time.
+ */
 namespace jsocketpp
 {
 #ifdef _WIN32
@@ -93,13 +124,6 @@ inline int CloseSocket(SOCKET fd)
 }
 
 const char* inet_ntop_aux(int af, const void* src, char* dst, socklen_t size);
-
-/**
- * @brief Get all local network interface addresses as strings.
- *
- * @return Vector of strings describing each interface and address.
- */
-std::vector<std::string> getHostAddr();
 
 #else
 
@@ -131,6 +155,13 @@ inline int ioctlsocket(SOCKET fd, long cmd, u_long* argp)
 }
 
 #endif
+
+/**
+ * @brief Get all local network interface addresses as strings.
+ *
+ * @return Vector of strings describing each interface and address.
+ */
+std::vector<std::string> getHostAddr();
 
 /**
  * @brief Returns a human-readable error message for a socket error code.

@@ -465,7 +465,7 @@ int DatagramSocket::getOption(const int level, const int optName) const
 #endif
     if (getsockopt(_sockFd, level, optName,
 #ifdef _WIN32
-                   reinterpret_cast<const char*>(&value),
+                   reinterpret_cast<char*>(&value),
 #else
                    &value,
 #endif

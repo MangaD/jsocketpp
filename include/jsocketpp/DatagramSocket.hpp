@@ -7,33 +7,70 @@
 
 namespace jsocketpp
 {
+
 /**
- * @brief UDP datagram socket abstraction (Java-like interface).
+ * @brief DatagramSocket: UDP socket implementation with a Java-style interface.
  *
- * Provides methods for sending and receiving datagrams (UDP packets),
- * binding to a port, and setting socket options. Handles both IPv4 and IPv6.
+ * A UDP (User Datagram Protocol) socket provides unreliable, connectionless packet delivery:
+ * - Unreliable: packets may be lost, duplicated, or arrive out of order
+ * - Connectionless: no dedicated connection between sender and receiver
+ * - Packet-based: data is sent in discrete chunks (datagrams)
  *
- * @note Not thread-safe. Each datagram socket should only be used from one thread at a time.
+ * Key Differences from TCP:
+ * - No guaranteed delivery
+ * - No automatic packet ordering
+ * - Faster transmission (no connection overhead)
+ * - Less network congestion control
+ *
+ * Common Use Cases:
+ * - Real-time applications (gaming, VoIP)
+ * - Streaming media
+ * - DNS queries
+ * - Simple network protocols where some packet loss is acceptable
+ *
+ * Example usage:
+ * ```cpp
+ * // Server
+ * DatagramSocket server(8888);  // Listen on port 8888
+ * std::vector<char> buffer(1024);
+ * std::string clientAddr;
+ * unsigned short clientPort;
+ * size_t received = server.receive(buffer, clientAddr, clientPort);
+ *
+ * // Client
+ * DatagramSocket client;
+ * std::string message = "Hello, UDP!";
+ * client.send(message.data(), message.size(), "127.0.0.1", 8888);
+ * ```
+ *
+ * @note Not thread-safe. Should be used from a single thread at a time.
  */
 class DatagramSocket
 {
   public:
     /**
-     * @brief Construct a datagram socket to be bound to a local port.
-     * @param port UDP port to bind to.
-     * @param bufferSize Size of the internal receive buffer (default: 512).
-     * @throws SocketException on failure.
+     * @brief Constructs a UDP socket optionally bound to a local port.
+     * @param port The local UDP port to bind to (0 means any available port).
+     *            Common scenarios:
+     *            - Server: Use specific port (e.g., 8888) that clients know
+     *            - Client: Use 0 to get any available port
+     * @param bufferSize Size of the receive buffer in bytes (default: 2048).
+     *                   Choose based on your expected maximum datagram size:
+     *                   - IPv4: Max 65,507 bytes
+     *                   - IPv6: Max 65,527 bytes
+     *                   - Typical values: 1024-8192 bytes
+     * @throws SocketException if socket creation or binding fails
      */
-    explicit DatagramSocket(unsigned short port, std::size_t bufferSize = 512);
+    explicit DatagramSocket(unsigned short port, std::size_t bufferSize = 2048);
 
     /**
      * @brief Construct a datagram socket to a remote host and port.
      * @param host Hostname or IP address to connect to.
      * @param port UDP port number.
-     * @param bufferSize Size of the internal receive buffer (default: 512).
+     * @param bufferSize Size of the internal receive buffer (default: 2048).
      * @throws SocketException on failure.
      */
-    DatagramSocket(std::string_view host, unsigned short port, std::size_t bufferSize = 512);
+    DatagramSocket(std::string_view host, unsigned short port, std::size_t bufferSize = 2048);
 
     /**
      * @brief Destructor. Closes the socket and frees resources.
@@ -57,9 +94,9 @@ class DatagramSocket
      * The moved-from object is left in a valid but unspecified state.
      */
     DatagramSocket(DatagramSocket&& other) noexcept
-        : _sockFd(other._sockFd), _localAddr(other._localAddr), _localAddrLen(other._localAddrLen),
-          _addrInfoPtr(other._addrInfoPtr), _selectedAddrInfo(other._selectedAddrInfo),
-          _buffer(std::move(other._buffer)), _port(other._port)
+        : _sockFd(other._sockFd), _addrInfoPtr(other._addrInfoPtr), _selectedAddrInfo(other._selectedAddrInfo),
+          _localAddr(other._localAddr), _localAddrLen(other._localAddrLen), _buffer(std::move(other._buffer)),
+          _port(other._port)
     {
         other._sockFd = INVALID_SOCKET;
         other._addrInfoPtr = nullptr;
@@ -257,9 +294,16 @@ class DatagramSocket
     void setNonBlocking(bool nonBlocking) const;
 
     /**
-     * @brief Set a timeout for datagram socket operations.
-     * @param millis Timeout in milliseconds.
-     * @throws SocketException on error.
+     * @brief Sets the socket's receive timeout.
+     *
+     * @param millis Timeout in milliseconds:
+     *                 - 0: No timeout (blocking mode)
+     *                 - >0: Wait up to specified milliseconds
+     *               Common values:
+     *                 - 1000 (1 second): Quick response time
+     *                 - 5000 (5 seconds): Balance between responsiveness and reliability
+     *                 - 30000 (30 seconds): Long-running operations
+     * @throws SocketException if setting timeout fails
      */
     void setTimeout(int millis) const;
 
@@ -324,15 +368,17 @@ class DatagramSocket
      */
     void cleanupAndThrow(int errorCode);
 
-  private:
+    // Also required for MulticastSocket, hence protected.
     SOCKET _sockFd = INVALID_SOCKET;       ///< Underlying socket file descriptor.
-    sockaddr_storage _localAddr{};         ///< Local address structure.
-    mutable socklen_t _localAddrLen = 0;   ///< Length of local address.
     addrinfo* _addrInfoPtr = nullptr;      ///< Address info pointer for bind/connect.
     addrinfo* _selectedAddrInfo = nullptr; ///< Selected address info for connection
-    std::vector<char> _buffer;             ///< Internal buffer for read operations.
-    unsigned short _port;                  ///< Port number the socket is bound to (if applicable).
-    bool _isConnected = false;             ///< True if the socket is connected to a remote host.
+
+  private:
+    sockaddr_storage _localAddr{};       ///< Local address structure.
+    mutable socklen_t _localAddrLen = 0; ///< Length of local address.
+    std::vector<char> _buffer;           ///< Internal buffer for read operations.
+    unsigned short _port;                ///< Port number the socket is bound to (if applicable).
+    bool _isConnected = false;           ///< True if the socket is connected to a remote host.
 };
 
 /**
@@ -346,7 +392,13 @@ template <> inline std::string DatagramSocket::read<std::string>()
         throw SocketException(0, "DatagramSocket is not connected.");
 
     _buffer.resize(_buffer.size()); // Ensure buffer is sized
-    const auto n = ::recv(_sockFd, _buffer.data(), static_cast<int>(_buffer.size()), 0);
+    const auto n = ::recv(_sockFd, _buffer.data(),
+#ifdef _WIN32
+                          static_cast<int>(_buffer.size()),
+#else
+                          _buffer.size(),
+#endif
+                          0);
     if (n == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (n == 0)
@@ -366,8 +418,13 @@ inline std::string DatagramSocket::recvFrom<std::string>(std::string* senderAddr
 {
     sockaddr_storage srcAddr{};
     socklen_t srcLen = sizeof(srcAddr);
-    const auto n = ::recvfrom(_sockFd, _buffer.data(), static_cast<int>(_buffer.size()), 0,
-                              reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
+    const auto n = ::recvfrom(_sockFd, _buffer.data(),
+#ifdef _WIN32
+                              static_cast<int>(_buffer.size()),
+#else
+                              _buffer.size(),
+#endif
+                              0, reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
     if (n == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (n == 0)

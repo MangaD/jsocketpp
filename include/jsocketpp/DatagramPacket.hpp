@@ -28,7 +28,7 @@ class DatagramPacket
      * - On send: set to the destination address.
      * - On receive: will be filled with sender's address.
      */
-    std::string address;
+    std::string address{};
 
     /**
      * @brief Remote UDP port for the destination/source.

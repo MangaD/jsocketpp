@@ -235,9 +235,9 @@ std::vector<std::string> jsocketpp::getHostAddr()
         HeapFree(GetProcessHeap(), 0, (pAddresses));
     }
 #else
-    struct ifaddrs* ifAddrStruct = nullptr;
-    struct ifaddrs* ifa = nullptr;
-    void* tmpAddrPtr = nullptr;
+    ifaddrs* ifAddrStruct = nullptr;
+    const ifaddrs* ifa = nullptr;
+    const void* tmpAddrPtr = nullptr;
 
     if (getifaddrs(&ifAddrStruct))
     {
