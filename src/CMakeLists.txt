@@ -4,6 +4,7 @@
 add_library(jsocketpp
         common.cpp
         DatagramSocket.cpp
+        MulticastSocket.cpp
         ServerSocket.cpp
         Socket.cpp
         UnixSocket.cpp
