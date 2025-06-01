@@ -54,23 +54,23 @@ CXXFLAGS = $(ARCHITECTURE) -std=c++17 $(DEFINES) $(WARNINGS) $(OPTIMIZE)
 # GoogleTest flags (requires GTest installed or built separately)
 GTEST_FLAGS = -I$(GTEST_DIR)/include -L$(GTEST_DIR)/lib -lgtest -lgtest_main -lpthread
 
-.PHONY: all clean debug release release32 release64 debug32 debug64 test format
+.PHONY: all clean debug release release32 release64 debug32 debug64 tests format
 
 # Default target (build everything)
-all: src test
+all: src tests
 
 # Build the source directory
 src:
 	$(MAKE) -C src
 
 # Build the test directory
-test:
-	$(MAKE) -C test
+tests:
+	$(MAKE) -C tests
 
 # Clean the build
 clean:
 	$(MAKE) -C src clean
-	$(MAKE) -C test clean
+	$(MAKE) -C tests clean
 
 # Build in debug mode
 debug:

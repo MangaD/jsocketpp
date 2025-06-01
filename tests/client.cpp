@@ -1,4 +1,6 @@
 // Modern jsocketpp client test: C++17, comments, and feature coverage
+#include "jsocketpp/DatagramSocket.hpp"
+#include "jsocketpp/Socket.hpp"
 #include "jsocketpp/UnixSocket.hpp"
 #include <iostream>
 #include <sstream>
@@ -27,7 +29,7 @@ void test_tcp(const string& ip, unsigned short port)
     conn.setNonBlocking(false);
     conn.connect();
     conn.writeAll("Hello server! (TCP)");
-    string response = conn.read<string>();
+    const string response = conn.read<string>();
     cout << "[TCP] Server says: " << response << endl;
     conn.close();
 }
@@ -38,11 +40,11 @@ void test_tcp(const string& ip, unsigned short port)
 void test_udp(const string& ip, unsigned short port)
 {
     cout << "[UDP] Sending to " << ip << ":" << port << endl;
-    DatagramSocket udp;
+    DatagramSocket udp{port};
     udp.setTimeout(2000);
     udp.setNonBlocking(false);
     string msg = "Hello server! (UDP)";
-    udp.sendTo(msg.data(), msg.size(), ip, port);
+    udp.write(msg.data(), msg.size(), ip, port);
     string sender;
     unsigned short senderPort;
     vector<char> buf(512);

@@ -141,7 +141,7 @@ int main() {
 }
 ````
 
-See the `test/` directory for more complete TCP, UDP, and Unix domain socket client/server examples.
+See the `tests/` directory for more complete TCP, UDP, and Unix domain socket client/server examples.
 
 ---
 

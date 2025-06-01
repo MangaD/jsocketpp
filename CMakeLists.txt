@@ -23,7 +23,7 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 # Add subdirectories
 add_subdirectory(src)
-add_subdirectory(test)
+add_subdirectory(tests)
 
 # Install and packaging logic
 install(EXPORT jsocketppTargets
@@ -48,8 +48,8 @@ if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
         file(GLOB_RECURSE ALL_SOURCE_FILES
                 "${CMAKE_SOURCE_DIR}/src/*.cpp"
                 "${CMAKE_SOURCE_DIR}/src/*.hpp"
-                "${CMAKE_SOURCE_DIR}/test/*.cpp"
-                "${CMAKE_SOURCE_DIR}/test/*.hpp"
+                "${CMAKE_SOURCE_DIR}/tests/*.cpp"
+                "${CMAKE_SOURCE_DIR}/tests/*.hpp"
         )
         add_custom_target(
                 clang-format
