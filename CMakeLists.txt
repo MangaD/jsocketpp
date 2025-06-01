@@ -2,12 +2,16 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Prevent in-source builds (recommended CMake practice)
-if(CMAKE_CURRENT_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
+if (CMAKE_CURRENT_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
     message(FATAL_ERROR "In-source builds are not supported. Please create a build directory and remove CMakeCache.txt.")
-endif()
+endif ()
 
 # Project declaration
-project(jsocketpp VERSION 1.0 LANGUAGES CXX)
+project(jsocketpp
+        VERSION 1.0
+        DESCRIPTION "A cross-platform C++17 socket library."
+        HOMEPAGE_URL "https://github.com/MangaD/jsocketpp"
+        LANGUAGES CXX)
 
 # Set C++ standard requirement (C++17)
 set(CMAKE_CXX_STANDARD 17)
@@ -23,46 +27,46 @@ add_subdirectory(test)
 
 # Install and packaging logic
 install(EXPORT jsocketppTargets
-    FILE jsocketppTargets.cmake
-    NAMESPACE jsocketpp::
-    DESTINATION lib/cmake/jsocketpp
+        FILE jsocketppTargets.cmake
+        NAMESPACE jsocketpp::
+        DESTINATION lib/cmake/jsocketpp
 )
 
 # Create and install version file for CMake package compatibility
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/jsocketppConfigVersion.cmake"
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion
+        "${CMAKE_CURRENT_BINARY_DIR}/jsocketppConfigVersion.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY AnyNewerVersion
 )
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/jsocketppConfigVersion.cmake" DESTINATION lib/cmake/jsocketpp)
 
 # clang-format integration (if found)
-if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     find_program(CLANG_FORMAT_EXE NAMES clang-format)
-    if(CLANG_FORMAT_EXE)
+    if (CLANG_FORMAT_EXE)
         file(GLOB_RECURSE ALL_SOURCE_FILES
-            "${CMAKE_SOURCE_DIR}/src/*.cpp"
-            "${CMAKE_SOURCE_DIR}/src/*.hpp"
-            "${CMAKE_SOURCE_DIR}/test/*.cpp"
-            "${CMAKE_SOURCE_DIR}/test/*.hpp"
+                "${CMAKE_SOURCE_DIR}/src/*.cpp"
+                "${CMAKE_SOURCE_DIR}/src/*.hpp"
+                "${CMAKE_SOURCE_DIR}/test/*.cpp"
+                "${CMAKE_SOURCE_DIR}/test/*.hpp"
         )
         add_custom_target(
-            clang-format
-            COMMAND ${CLANG_FORMAT_EXE} -i --style=file ${ALL_SOURCE_FILES}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            COMMENT "Running clang-format on all source files"
+                clang-format
+                COMMAND ${CLANG_FORMAT_EXE} -i --style=file ${ALL_SOURCE_FILES}
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                COMMENT "Running clang-format on all source files"
         )
-    endif()
-endif()
+    endif ()
+endif ()
 
 # Optional: Generate Doxygen documentation if Doxygen is found
 find_package(Doxygen)
-if(DOXYGEN_FOUND)
+if (DOXYGEN_FOUND)
     include(cmake/doxygen.cmake)
-else()
+else ()
     message(WARNING "Doxygen not found, skipping documentation generation.")
-endif()
+endif ()
 
 # Export targets for use with find_package()
 export(EXPORT jsocketppTargets FILE "${CMAKE_CURRENT_BINARY_DIR}/jsocketppTargets.cmake")

@@ -1,3 +1,8 @@
+/**
+ * @file ServerSocket.hpp
+ * @brief Declares the ServerSocket class for TCP server socket operations.
+ */
+
 #pragma once
 
 #include "Socket.hpp"
@@ -7,11 +12,80 @@ namespace jsocketpp
 {
 
 /**
- * @brief TCP server socket abstraction (Java-like interface).
+ * @class ServerSocket
+ * @ingroup tcp
+ * @brief TCP server socket abstraction for cross-platform C++ networking.
  *
- * Listens for incoming connections and accepts them as Socket objects.
+ * The `ServerSocket` class provides a high-level, Java-like interface to create TCP server sockets in C++17,
+ * supporting both IPv4 and IPv6, and working on both Windows and Unix-like systems.
  *
- * @note Not thread-safe. Each server socket should only be used from one thread at a time.
+ * ## Overview
+ * `ServerSocket` is designed to simplify the creation of network server applications. It allows you to:
+ * - Bind to a specified port (optionally on a specific address/interface)
+ * - Listen for incoming connections
+ * - Accept client connections as new `Socket` objects
+ * - Clean up resources automatically (RAII)
+ *
+ * This class handles platform differences (such as Winsock vs BSD Sockets) internally, so you can write portable code.
+ *
+ * ## Typical Usage
+ * Here’s how you can use `ServerSocket` to create a simple TCP echo server:
+ *
+ * @code{.cpp}
+ * #include <jsocketpp/ServerSocket.hpp>
+ * #include <jsocketpp/Socket.hpp>
+ * #include <iostream>
+ *
+ * int main() {
+ *     try {
+ *         // Create a server socket listening on port 12345 (all interfaces, dual-stack IPv4/IPv6)
+ *         ServerSocket server(12345);
+ *         server.bind();
+ *         server.listen();
+ *         std::cout << "Server is listening on port 12345..." << std::endl;
+ *
+ *         while (true) {
+ *             Socket client = server.accept();
+ *             std::string remoteAddr = client.getRemoteSocketAddress();
+ *             std::cout << "Accepted connection from " << remoteAddr << std::endl;
+ *
+ *             // Echo loop: read a string, send it back
+ *             std::string message = client.read<std::string>();
+ *             client.write(message);
+ *         }
+ *     } catch (const socket_exception& e) {
+ *         std::cerr << "Server error: " << e.what() << std::endl;
+ *     }
+ *     return 0;
+ * }
+ * @endcode
+ *
+ * ## Key Features
+ * - **Cross-platform**: Windows and Linux/Unix support
+ * - **IPv4 & IPv6**: Automatic dual-stack support if available
+ * - **Resource management**: RAII ensures sockets are closed automatically
+ * - **Error handling**: Throws exceptions on error for robust applications
+ * - **Customizable**: Control backlog, address reuse, blocking/non-blocking modes, etc.
+ *
+ * ## Basic API
+ * - `ServerSocket(port)`: Construct with a port to listen on.
+ * - `bind()`: Bind the server to the selected address and port.
+ * - `listen()`: Start listening for connections.
+ * - `accept()`: Accept a new client and return a `Socket`.
+ * - `close()`: Close the server socket (also called automatically in destructor).
+ *
+ * ## Notes
+ * - After calling `accept()`, you should use the returned `Socket` object to communicate with the client.
+ * - The server socket only accepts TCP connections. Use `DatagramSocket` for UDP.
+ * - Exceptions are thrown as `SocketException` for error conditions.
+ *
+ * ### See Also
+ * - @ref Socket "Socket" - for connecting to a remote host
+ * - @ref tcp - TCP socket group
+ *
+ * @author MangaD
+ * @date 2025
+ * @version 1.0
  */
 class ServerSocket
 {

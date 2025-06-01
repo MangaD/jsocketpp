@@ -9,39 +9,56 @@ namespace jsocketpp
 {
 
 /**
- * @brief MulticastSocket: a UDP socket with multicast support (Java-style interface).
+ * @class MulticastSocket
+ * @ingroup udp
+ * @brief Cross-platform multicast UDP socket class (IPv4/IPv6).
  *
- * Multicast is a form of communication that allows a single sender to transmit data to multiple
- * receivers simultaneously. It's like a radio broadcast where:
- * - Multiple receivers can "tune in" to receive the same data
- * - Receivers must explicitly join a multicast group (like tuning to a specific frequency)
- * - Data is sent once but received by all group members
+ * The `MulticastSocket` class extends @ref jsocketpp::DatagramSocket "DatagramSocket" to provide high-level,
+ * Java-inspired support for multicast networking. It works on both Windows and Linux, and supports both IPv4 and IPv6
+ * multicast groups.
  *
- * Key Concepts:
- * - Multicast Groups: Special IP addresses (224.0.0.0 to 239.255.255.255 for IPv4,
- *   or ff00::/8 for IPv6) that represent a group of interested receivers
- * - TTL (Time To Live): Controls how far multicast packets can travel through the network
- * - Loopback: Determines if the sender can receive its own multicast packets
+ * ### What is Multicast?
+ * - **Multicast** allows you to send a single UDP packet to multiple hosts subscribed to a multicast group address.
+ * - It is useful for applications such as real-time data feeds, streaming media, and network discovery protocols.
+ * - Each group is identified by a special IP address (224.0.0.0–239.255.255.255 for IPv4, `ff00::/8` for IPv6).
  *
- * Common Use Cases:
- * - Live video/audio streaming to multiple clients
- * - Service discovery in local networks
- * - Real-time data distribution (e.g., stock quotes)
+ * ### Usage Example (Receiving)
+ * @code
+ * using namespace jsocketpp;
+ * * // Create a multicast socket bound to port 5000
+ * MulticastSocket socket(5000);
+ * * // Join the multicast group "239.255.0.1" on the default interface
+ * socket.joinGroup("239.255.0.1");
+ * * // Receive a datagram packet (blocking)
+ * DatagramPacket packet(1500); // 1500-byte buffer
+ * size_t n = socket.read(packet);
+ * std::string data(packet.buffer.begin(), packet.buffer.begin() + n);
+ * std::cout << "Received: " << data << " from " << packet.address << ":" << packet.port << std::endl;
  *
- * Inherits from DatagramSocket and adds methods to join/leave multicast groups,
- * set multicast-specific socket options, and send/receive multicast datagrams.
+ * // Leave the group when done
+ * socket.leaveGroup("239.255.0.1");
+ * @endcode
  *
- * Example usage:
- * ```cpp
- * MulticastSocket socket(0);  // Create socket on any available port
- * socket.setTimeToLive(32);   // Allow packets to traverse multiple networks
- * socket.joinGroup("239.0.0.1"); // Join a multicast group
- * socket.send(data, length, "239.0.0.1", 8888); // Send to all group members
- * ```
+ * ### Usage Example (Sending)
+ * @code
+ * using namespace jsocketpp;
  *
- * Supports both IPv4 and IPv6.
+ * MulticastSocket socket;
+ * socket.setTimeToLive(2); // Limit to 2 router hops
+ * DatagramPacket packet("Hello, multicast!", "239.255.0.1", 5000);
+ * socket.write(packet);
+ * @endcode
  *
- * @note Not thread-safe. Should be used from a single thread at a time.
+ * ### Features
+ * - Join/leave multicast groups on a specific interface or all interfaces.
+ * - Works with both IPv4 and IPv6 multicast groups.
+ * - Set multicast TTL (time-to-live/hop limit).
+ * - Set outgoing interface for multicast packets.
+ * - Control whether multicast packets sent by this socket are received by itself (loopback).
+ * - Modern, Java-style, exception-safe C++ API.
+ *
+ * @see jsocketpp::DatagramSocket
+ * @see jsocketpp::DatagramPacket
  */
 class MulticastSocket : public DatagramSocket
 {

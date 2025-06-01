@@ -2,6 +2,8 @@
 
 #include "common.hpp"
 
+#include <string_view>
+
 // Enable AF_UNIX support on Windows 10+ (version 1803, build 17134) only
 #if defined(_MSC_VER) && (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
 // https://devblogs.microsoft.com/commandline/af_unix-comes-to-windows/
@@ -19,16 +21,62 @@ namespace jsocketpp
 
 /**
  * @class UnixSocket
- * @brief A cross-platform wrapper for Unix domain sockets.
+ * @ingroup unix
+ * @brief Cross-platform abstraction for Unix domain sockets.
  *
- * On POSIX, uses native AF_UNIX sockets. On Windows, only available on Windows 10 (version 1803, build 17134) and
- * later. Uses AF_UNIX support in Winsock2.
+ * The `UnixSocket` class provides a convenient, modern C++17-style interface for using Unix domain sockets,
+ * also known as AF_UNIX sockets. Unix sockets are used for fast inter-process communication (IPC) on the same host,
+ * and use a file path on the local file system for addressing.
  *
- * This class provides an interface for creating, binding, listening, accepting,
- * connecting, reading from, writing to, and closing Unix domain sockets.
- * It abstracts away platform-specific details for both Unix-like systems and Windows.
+ * On POSIX platforms (Linux, macOS), AF_UNIX sockets are widely supported.
+ * On Windows, support is available in Windows 10 (1803+, build 17134) and newer.
  *
- * @note Not thread-safe. Each UnixSocket should only be used from one thread at a time.
+ * ## Main Features
+ * - **Bind**: Create and bind a socket to a filesystem path for listening/accepting connections.
+ * - **Listen/Accept**: Wait for incoming connections and accept them (server-side).
+ * - **Connect**: Connect to a Unix domain socket path (client-side).
+ * - **Read/Write**: Send and receive data over the connection, supporting both binary and string types.
+ * - **Non-blocking & Timeout**: Support for non-blocking I/O and operation timeouts.
+ * - **Automatic cleanup**: Unlinks the socket file on destruction.
+ *
+ * @note Not thread-safe. Each `UnixSocket` should only be used from one thread at a time.
+ * @note On Windows, AF_UNIX is supported on Windows 10 1803 and later only. On unsupported platforms,
+ *       attempting to use this class will result in a compilation error.
+ *
+ * ## Example: Simple Echo Server
+ * @code{.cpp}
+ * #include <jsocketpp/UnixSocket.hpp>
+ * using namespace jsocketpp;
+ *
+ * int main() {
+ *     UnixSocket server("/tmp/echo.sock");
+ *     server.bind();
+ *     server.listen();
+ *
+ *     while (true) {
+ *         UnixSocket client = server.accept();
+ *         std::string data = client.read<std::string>();
+ *         client.write(data); // Echo back
+ *     }
+ * }
+ * @endcode
+ *
+ * ## Example: Simple Client
+ * @code{.cpp}
+ * #include <jsocketpp/UnixSocket.hpp>
+ * using namespace jsocketpp;
+ *
+ * int main() {
+ *     UnixSocket sock("/tmp/echo.sock");
+ *     sock.connect();
+ *     sock.write("Hello, Unix domain socket!");
+ *     std::string response = sock.read<std::string>();
+ * }
+ * @endcode
+ *
+ * ## Limitations
+ * - Not suitable for remote (network) connections; only for IPC on the same host.
+ * - The socket file is automatically deleted on destruction.
  */
 class UnixSocket
 {
@@ -38,7 +86,30 @@ class UnixSocket
      * @param path The filesystem path for the Unix domain socket.
      * @param bufferSize Size of the internal read buffer (default: 512).
      */
-    explicit UnixSocket(const std::string& path, std::size_t bufferSize = 512);
+    explicit UnixSocket(std::string_view path, std::size_t bufferSize = 512);
+
+    /**
+     * @brief Copy constructor deleted to prevent copying.
+     */
+    UnixSocket(const UnixSocket&) = delete;
+
+    /**
+     * @brief Copy assignment operator deleted to prevent copying.
+     */
+    UnixSocket& operator=(const UnixSocket&) = delete;
+
+    /**
+     * @brief Move constructor transfers ownership of socket resources.
+     * @param other The UnixSocket to move from.
+     */
+    UnixSocket(UnixSocket&& other) noexcept;
+
+    /**
+     * @brief Move assignment operator transfers ownership of socket resources.
+     * @param other The UnixSocket to move from.
+     * @return Reference to this UnixSocket.
+     */
+    UnixSocket& operator=(UnixSocket&& other) noexcept;
 
     /**
      * @brief Destructor.
@@ -82,7 +153,7 @@ class UnixSocket
      * @return The number of bytes written.
      * @throws std::socket_exception if writing fails.
      */
-    int write(std::string_view data) const;
+    size_t write(std::string_view data) const;
 
     /**
      * @brief Reads data from the socket into a buffer.
@@ -91,7 +162,7 @@ class UnixSocket
      * @return The number of bytes read.
      * @throws std::socket_exception if reading fails.
      */
-    int read(char* buffer, std::size_t len) const;
+    size_t read(char* buffer, std::size_t len) const;
 
     /**
      * @brief Reads a trivially copyable type from the socket.
@@ -103,7 +174,7 @@ class UnixSocket
     {
         static_assert(std::is_trivially_copyable_v<T>, "UnixSocket::read<T>() only supports trivially copyable types");
         T value;
-        const int len = ::recv(_sockfd, reinterpret_cast<char*>(&value),
+        const int len = ::recv(_sockFd, reinterpret_cast<char*>(&value),
 #ifdef _WIN32
                                static_cast<int>(sizeof(T)),
 #else
@@ -126,7 +197,13 @@ class UnixSocket
      * @brief Checks if the socket is valid (open).
      * @return true if the socket is valid, false otherwise.
      */
-    [[nodiscard]] bool isValid() const { return this->_sockfd != INVALID_SOCKET; }
+    [[nodiscard]] bool isValid() const { return this->_sockFd != INVALID_SOCKET; }
+
+    /**
+     * @brief Returns the path of the Unix domain socket.
+     * @return String containing the filesystem path of the socket.
+     */
+    std::string getSocketPath() const { return this->_socketPath; }
 
     /**
      * @brief Sets the socket to non-blocking or blocking mode.
@@ -149,12 +226,13 @@ class UnixSocket
     /**
      * @brief Default constructor for internal use (e.g., accept()).
      */
-    UnixSocket() : _sockfd(INVALID_SOCKET), _socketPath(), _addr(), _buffer(512) {}
+    UnixSocket() : _sockFd(INVALID_SOCKET), _socketPath(), _addr(), _buffer(512) {}
 
   private:
-    SOCKET _sockfd = INVALID_SOCKET; ///< Underlying socket file descriptor.
+    SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor.
+    bool _isListening = false;       ///< True if the socket is listening for connections.
     std::string _socketPath;         ///< Path for the Unix domain socket.
-    SOCKADDR_UN _addr;               ///< Address structure for Unix domain sockets.
+    SOCKADDR_UN _addr{};             ///< Address structure for Unix domain sockets.
     std::vector<char> _buffer;       ///< Internal buffer for read operations.
 };
 
@@ -171,7 +249,7 @@ class UnixSocket
  */
 template <> inline std::string UnixSocket::read()
 {
-    const auto len = static_cast<int>(recv(_sockfd, _buffer.data(),
+    const auto len = static_cast<int>(recv(_sockFd, _buffer.data(),
 #ifdef _WIN32
                                            static_cast<int>(_buffer.size()),
 #else

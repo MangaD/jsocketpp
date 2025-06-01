@@ -1,11 +1,15 @@
 # jsocketpp: Modern C++17 Cross-Platform Socket Library
 
-**Java-style sockets for modern C++17. Cross-platform, robust, and simple.**
-
 [![Build Status](https://img.shields.io/github/actions/workflow/status/MangaD/jsocketpp/ci.yml)](https://github.com/MangaD/jsocketpp/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Conan](https://img.shields.io/badge/conan-available-brightgreen)](https://conan.io/center/jsocketpp)
 [![vcpkg](https://img.shields.io/badge/vcpkg-available-blue)](https://vcpkg.io/en/packages.html#jsocketpp)
+
+**Java-style sockets for modern C++17. Cross-platform, robust, and simple.**
+
+<div align="center">
+<img alt="logo" src="docs/doxygen/logo.png" width="200">
+</div>
 
 ---
 

@@ -9,41 +9,68 @@ namespace jsocketpp
 {
 
 /**
- * @brief DatagramSocket: UDP socket implementation with a Java-style interface.
+ * @class DatagramSocket
+ * @ingroup udp
+ * @brief Cross-platform UDP socket class with Java-style interface.
  *
- * A UDP (User Datagram Protocol) socket provides unreliable, connectionless packet delivery:
- * - Unreliable: packets may be lost, duplicated, or arrive out of order
- * - Connectionless: no dedicated connection between sender and receiver
- * - Packet-based: data is sent in discrete chunks (datagrams)
+ * The `DatagramSocket` class provides a convenient, cross-platform abstraction for sending and receiving UDP datagrams,
+ * inspired by the Java API. It supports both IPv4 and IPv6, and works on Windows and Linux.
  *
- * Key Differences from TCP:
- * - No guaranteed delivery
- * - No automatic packet ordering
- * - Faster transmission (no connection overhead)
- * - Less network congestion control
+ * ## What is UDP?
+ * UDP (User Datagram Protocol) is a lightweight, connectionless protocol for sending packets over the network.
+ * Unlike TCP, UDP does **not** guarantee delivery, ordering, or duplicate protection—packets may be lost,
+ * arrive out of order, or duplicated. However, UDP is fast and simple, and widely used for real-time applications
+ * (such as online games, video streaming, and VoIP).
  *
- * Common Use Cases:
- * - Real-time applications (gaming, VoIP)
- * - Streaming media
- * - DNS queries
- * - Simple network protocols where some packet loss is acceptable
+ * ## Key Features
+ * - **Connectionless and connected modes:** You can send datagrams to any address/port, or "connect" the socket
+ *   to a default destination for simpler sending/receiving.
+ * - **Custom buffer size:** Easily set the size of the internal buffer for large or small datagrams.
+ * - **Broadcast support:** Easily enable broadcast packets.
+ * - **Timeouts and non-blocking mode:** Set timeouts and switch between blocking/non-blocking operations.
+ * - **Java-style interface:** Familiar to those who have used Java networking.
  *
- * Example usage:
- * ```cpp
- * // Server
- * DatagramSocket server(8888);  // Listen on port 8888
- * std::vector<char> buffer(1024);
- * std::string clientAddr;
- * unsigned short clientPort;
- * size_t received = server.receive(buffer, clientAddr, clientPort);
+ * ## Example: Simple UDP Echo Server and Client
+ * @code{.cpp}
+ * // --- Server ---
+ * #include <jsocketpp/DatagramSocket.hpp>
+ * #include <iostream>
  *
- * // Client
- * DatagramSocket client;
- * std::string message = "Hello, UDP!";
- * client.send(message.data(), message.size(), "127.0.0.1", 8888);
- * ```
+ * int main() {
+ *     jsocketpp::DatagramSocket server(12345); // Bind to port 12345
+ *     jsocketpp::DatagramPacket packet(2048);
+ *     while (true) {
+ *         size_t received = server.read(packet);
+ *         std::cout << "Received: " << std::string(packet.buffer.begin(), packet.buffer.end())
+ *                   << " from " << packet.address << ":" << packet.port << std::endl;
+ *         // Echo back
+ *         server.write(packet);
+ *     }
+ * }
+ * @endcode
  *
- * @note Not thread-safe. Should be used from a single thread at a time.
+ * @code{.cpp}
+ * // --- Client ---
+ * #include <jsocketpp/DatagramSocket.hpp>
+ * #include <iostream>
+ *
+ * int main() {
+ *     jsocketpp::DatagramSocket client;
+ *     std::string message = "Hello UDP!";
+ *     client.write(message, "127.0.0.1", 12345); // Send to server
+ *     jsocketpp::DatagramPacket response(2048);
+ *     client.read(response);
+ *     std::cout << "Server replied: " << std::string(response.buffer.begin(), response.buffer.end()) << std::endl;
+ * }
+ * @endcode
+ *
+ * ## Notes
+ * - Not thread-safe. Use each `DatagramSocket` instance from only one thread at a time.
+ * - Use the `DatagramPacket` class to store both the data and the address/port of the sender/receiver.
+ * - To receive the sender’s address and port, use the `read(DatagramPacket&)` method.
+ *
+ * @see jsocketpp::DatagramPacket
+ * @see jsocketpp::SocketException
  */
 class DatagramSocket
 {

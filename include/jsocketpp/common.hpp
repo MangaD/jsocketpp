@@ -71,6 +71,48 @@
 #endif
 
 /**
+ * @defgroup jsocketpp jsocketpp: C++17 cross-platform socket library
+ * @brief All core classes and functions of the jsocketpp networking library.
+ *
+ * jsocketpp is a modern, cross-platform C++17 networking library with a Java-like API.
+ * It supports TCP, UDP, and UNIX sockets, as well as advanced features like dual-stack IPv4/IPv6,
+ * easy resource management, and comprehensive error handling.
+ *
+ * This group contains all the primary classes (ServerSocket, Socket, DatagramSocket, MulticastSocket)
+ * and essential types and utilities provided by jsocketpp.
+ *
+ * Example usage:
+ * @code
+ * #include <jsocketpp/ServerSocket.hpp>
+ * #include <jsocketpp/Socket.hpp>
+ * @endcode
+ */
+
+/**
+ * @defgroup tcp TCP Sockets
+ * @ingroup jsocketpp
+ * @brief Classes and functions for TCP networking.
+ */
+
+/**
+ * @defgroup udp UDP Sockets
+ * @ingroup jsocketpp
+ * @brief Classes and functions for UDP datagram networking.
+ */
+
+/**
+ * @defgroup unix Unix Domain Sockets
+ * @ingroup jsocketpp
+ * @brief Classes and functions for Unix domain socket networking.
+ */
+
+/**
+ * @defgroup exceptions Exception Classes
+ * @ingroup jsocketpp
+ * @brief Exception types used in jsocketpp for error handling.
+ */
+
+/**
  * @namespace jsocketpp
  * @brief A C++ socket library providing Java-style networking interfaces
  *

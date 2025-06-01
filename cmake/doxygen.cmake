@@ -21,8 +21,10 @@
 
 if (DOXYGEN_FOUND)
     # Configure Doxygen settings directly
-    set(DOXYGEN_PROJECT_NAME "jsocketpp")
+    set(DOXYGEN_PROJECT_NAME "${PROJECT_NAME}")
+    set(DOXYGEN_PROJECT_BRIEF "${PROJECT_DESCRIPTION}")
     set(DOXYGEN_PROJECT_NUMBER "${PROJECT_VERSION}")
+    set(DOXYGEN_PROJECT_LOGO "docs/doxygen/logo.png")
     set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/docs/doxygen")
     set(DOXYGEN_EXTRACT_ALL YES)
     set(DOXYGEN_EXTRACT_PRIVATE YES)

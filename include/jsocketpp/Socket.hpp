@@ -7,11 +7,69 @@ namespace jsocketpp
 {
 
 /**
- * @brief TCP client socket abstraction (Java-like interface).
+ * @class Socket
+ * @ingroup tcp
+ * @brief TCP client connection abstraction (Java-like interface).
  *
- * Provides connect, read, write, close, and address info. Handles both IPv4 and IPv6.
+ * The `Socket` class represents a TCP connection between your application and a remote host.
+ * It provides a high-level, easy-to-use, and cross-platform API for creating, connecting, sending,
+ * and receiving data over TCP sockets. Its interface is inspired by Java's `Socket` class, but uses modern C++17
+ * features.
  *
- * @note Not thread-safe. Each socket should only be used from one thread at a time.
+ * ### Key Features
+ * - **Connect to remote hosts** using hostnames or IP addresses (IPv4/IPv6).
+ * - **Blocking or timeout-enabled connect** for fine-grained control over connection attempts.
+ * - **Safe resource management:** sockets are closed automatically when the object is destroyed.
+ * - **Read/write interface** for sending and receiving binary data or text.
+ * - **Move-only:** socket resources are never accidentally copied.
+ * - **Exception-based error handling** via `SocketException`.
+ * - **Fine-grained control**: configure timeouts, non-blocking mode, TCP_NODELAY, SO_KEEPALIVE, etc.
+ *
+ * ### Typical Usage Example
+ * @code
+ * #include <jsocketpp/Socket.hpp>
+ * #include <iostream>
+ *
+ * int main() {
+ *     try {
+ *         jsocketpp::Socket sock("example.com", 8080); // Connect to example.com:8080
+ *         sock.connect(3000); // Try to connect with 3-second timeout
+ *         sock.write("GET / HTTP/1.0\r\n\r\n");
+ *         std::string response = sock.read<std::string>();
+ *         std::cout << "Received: " << response << std::endl;
+ *         sock.close();
+ *     } catch (const jsocketpp::SocketException& ex) {
+ *         std::cerr << "Socket error: " << ex.what() << std::endl;
+ *     }
+ * }
+ * @endcode
+ *
+ * ### Internal Buffer
+ * - The socket maintains an internal read buffer (default: 512 bytes).
+ * - You can resize it with `setBufferSize()` if you expect to receive larger or smaller messages.
+ *
+ * ### Error Handling
+ * - Almost all methods throw `jsocketpp::SocketException` on error (e.g., connect failure, write error, etc).
+ * - You should catch exceptions to handle network errors gracefully.
+ *
+ * ### Thread Safety
+ * - Not thread-safe. Use a separate `Socket` object per thread if needed.
+ *
+ * ### Platform Support
+ * - Windows, Linux, macOS. Handles all necessary platform differences internally.
+ *
+ * ### Advanced Usage
+ * - Set non-blocking mode with `setNonBlocking()`.
+ * - Tune socket options with `enableNoDelay()`, `enableKeepAlive()`, or `setTimeout()`.
+ * - Check remote address with `getRemoteSocketAddress()`.
+ *
+ * ### See Also
+ * - @ref ServerSocket "ServerSocket" - for listening to incoming connections
+ * - @ref tcp - TCP socket group
+ *
+ * @author MangaD
+ * @date 2025
+ * @version 1.0
  */
 class Socket
 {

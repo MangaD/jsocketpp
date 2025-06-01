@@ -9,9 +9,37 @@ namespace jsocketpp
 {
 
 /**
- * @brief Exception class for socket errors.
+ * @class SocketException
+ * @ingroup exceptions
+ * @brief Represents socket-related errors in the jsocketpp library.
  *
- * Stores an error code and a descriptive error message. Thrown by all socket operations on error.
+ * SocketException is the standard exception type thrown by the jsocketpp socket library
+ * whenever a socket-related operation fails (such as connect, bind, send, or receive).
+ * It stores both an error code and a human-readable message describing the error.
+ *
+ * The exception can be caught using a standard C++ try-catch block, making error handling robust and portable.
+ *
+ * ### Example: Catching and Handling Socket Exceptions
+ * @code
+ * #include <jsocketpp/SocketException.hpp>
+ * #include <jsocketpp/Socket.hpp>
+ * using namespace jsocketpp;
+ *
+ * try {
+ *     Socket sock("example.com", 80);
+ *     sock.connect();
+ *     // ... other operations ...
+ * } catch (const SocketException& ex) {
+ *     std::cerr << "Socket error (" << ex.code() << "): " << ex.what() << std::endl;
+ * }
+ * @endcode
+ *
+ * @note This exception stores a copy of the error message and error code. It is not tied to any particular platform
+ *       error format—use the code/message for display or logging.
+ *
+ * @author MangaD
+ * @date 2025
+ * @version 1.0
  */
 class SocketException final : public std::exception
 {

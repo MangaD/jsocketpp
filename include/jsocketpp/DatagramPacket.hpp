@@ -5,12 +5,37 @@
 
 namespace jsocketpp
 {
+
 /**
- * @brief Represents a UDP datagram packet, including data buffer, remote address, and port.
+ * @class DatagramPacket
+ * @ingroup udp
+ * @brief Represents a UDP datagram packet, encapsulating both payload and addressing information.
  *
- * This class encapsulates the payload buffer and addressing information required
- * to send or receive a UDP datagram. Use with DatagramSocket::send() and
- * DatagramSocket::receive() methods.
+ * The `DatagramPacket` class provides a convenient way to manage the data and addressing needed
+ * for sending or receiving UDP packets using the `DatagramSocket` class. Each datagram packet
+ * can hold a buffer for the payload, a remote IP address, and a port number.
+ *
+ * Typical usage:
+ * @code
+ * jsocketpp::DatagramPacket packetToSend("Hello, world!", "192.168.1.10", 12345);
+ * socket.write(packetToSend);
+ *
+ * jsocketpp::DatagramPacket receivedPacket(1024); // Prepare a buffer for receiving
+ * socket.read(receivedPacket);
+ * std::cout << "Received from: " << receivedPacket.address << ":" << receivedPacket.port << std::endl;
+ * std::cout << "Data: " << std::string(receivedPacket.buffer.begin(), receivedPacket.buffer.end()) << std::endl;
+ * @endcode
+ *
+ * @note
+ * - For sending: set the buffer, address, and port before passing to `DatagramSocket::write`.
+ * - For receiving: use an empty `DatagramPacket` with a pre-sized buffer; after `read`, the address/port
+ *   will be filled in.
+ *
+ * @see jsocketpp::DatagramSocket
+ *
+ * @author MangaD
+ * @date 2025
+ * @version 1.0
  */
 class DatagramPacket
 {
@@ -18,8 +43,8 @@ class DatagramPacket
     /**
      * @brief Data buffer for the packet payload.
      *
-     * On sending: Contains the data to transmit.
-     * On receiving: Filled with received data (size indicates bytes received).
+     * - On sending: Contains the data to transmit.
+     * - On receiving: Filled with received data (size indicates bytes received).
      */
     std::vector<char> buffer;
 
