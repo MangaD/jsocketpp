@@ -43,7 +43,7 @@ applications.
 
 ```sh
 vcpkg install jsocketpp
-````
+```
 
 ### Conan
 
