@@ -192,11 +192,53 @@ void UnixSocket::setTimeout(int millis) const
             SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #else
-    timeval tv{millis / 1000, (millis % 1000) * 1000};
+    const timeval tv{millis / 1000, (millis % 1000) * 1000};
     if (setsockopt(_sockFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR ||
         setsockopt(_sockFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #endif
+}
+
+bool UnixSocket::isPathInUse(std::string_view path)
+{
+    if (path.empty())
+        return false;
+
+    // Create a UNIX domain socket
+    const SOCKET fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (fd == INVALID_SOCKET)
+        return false; // Could not create socket, assume not in use
+
+    // Setup sockaddr_un (for Linux) or SOCKADDR_UN (typedef from common.hpp for Windows)
+    SOCKADDR_UN addr{};
+    addr.sun_family = AF_UNIX;
+#ifdef _WIN32
+    // Windows: sun_path is wchar_t for Unicode, but the Win32 API supports char on recent versions.
+    // We assume char* for cross-platform simplicity (matching your code).
+#endif
+    std::strncpy(addr.sun_path, path.data(), sizeof(addr.sun_path) - 1);
+
+    bool inUse = false;
+    // Try to bind to the path
+    if (const int ret = ::bind(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)); ret == SOCKET_ERROR)
+    {
+        int err = jsocketpp::GetSocketError();
+#ifdef _WIN32
+        if (err == WSAEADDRINUSE)
+#else
+        if (err == EADDRINUSE)
+#endif
+            inUse = true;
+    }
+    else
+    {
+        // Not in use: remove file so we don't leave a stale socket file on Linux
+#ifndef _WIN32
+        unlink(path.data());
+#endif
+    }
+    CloseSocket(fd);
+    return inUse;
 }
 
 #endif

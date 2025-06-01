@@ -203,7 +203,7 @@ class UnixSocket
      * @brief Returns the path of the Unix domain socket.
      * @return String containing the filesystem path of the socket.
      */
-    std::string getSocketPath() const { return this->_socketPath; }
+    [[nodiscard]] std::string getSocketPath() const { return this->_socketPath; }
 
     /**
      * @brief Sets the socket to non-blocking or blocking mode.
@@ -221,6 +221,18 @@ class UnixSocket
      * @param millis Timeout in milliseconds.
      */
     void setTimeout(int millis) const;
+
+    /**
+     * @brief Checks whether a UNIX domain socket path is currently in use (i.e., a process is listening on it).
+     *
+     * This function attempts to connect to the given UNIX socket path. If the connection succeeds, the path is in use.
+     * If the connection fails with ECONNREFUSED or ENOENT, the path is not in use (either no process is listening,
+     * or the file does not exist).
+     *
+     * @param path The UNIX socket file system path to check.
+     * @return true if a process is listening on the socket at the given path, false otherwise.
+     */
+    static bool isPathInUse(std::string_view path);
 
   protected:
     /**
