@@ -80,7 +80,7 @@ if (DOXYGEN_FOUND)
             ${md_files}
             ${CMAKE_SOURCE_DIR}/include/jsocketpp
             ${CMAKE_SOURCE_DIR}/src
-            ${CMAKE_SOURCE_DIR}/tests
+            ${CMAKE_SOURCE_DIR}/test
             COMMENT "Generating API documentation with Doxygen"
     )
 
