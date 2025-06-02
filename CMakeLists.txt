@@ -6,24 +6,50 @@ if (CMAKE_CURRENT_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
     message(FATAL_ERROR "In-source builds are not supported. Please create a build directory and remove CMakeCache.txt.")
 endif ()
 
+# Options for building
+option(BUILD_SOURCE "Build primary libraries and executables." ON)
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(ENABLE_EXAMPLES "Build example programs" ON)
+option(BUILD_DOCS "Build documentation" ON)
+
+if (${BUILD_SOURCE})
+    set(PROJECT_LANGUAGES CXX)
+endif ()
+
 # Project declaration
 project(jsocketpp
         VERSION 1.0
         DESCRIPTION "A cross-platform C++17 socket library."
         HOMEPAGE_URL "https://github.com/MangaD/jsocketpp"
-        LANGUAGES CXX)
+        LANGUAGES ${PROJECT_LANGUAGES})
+
+# Optional: Generate Doxygen documentation if Doxygen is found
+if (${BUILD_DOCS})
+    find_package(Doxygen)
+    if (DOXYGEN_FOUND)
+        include(cmake/doxygen.cmake)
+    else ()
+        message(WARNING "Doxygen not found, skipping documentation generation.")
+    endif ()
+endif ()
+
+# Source will be built only if BUILD_SOURCE is ON
+if (NOT BUILD_SOURCE)
+    return()
+endif ()
 
 # Set C++ standard requirement (C++17)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Define whether to build a shared or static library
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-
 # Add subdirectories
 add_subdirectory(src)
 add_subdirectory(tests)
+
+if (ENABLE_EXAMPLES)
+    add_subdirectory(examples)
+endif ()
 
 # Install and packaging logic
 install(EXPORT jsocketppTargets
@@ -58,14 +84,6 @@ if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
                 COMMENT "Running clang-format on all source files"
         )
     endif ()
-endif ()
-
-# Optional: Generate Doxygen documentation if Doxygen is found
-find_package(Doxygen)
-if (DOXYGEN_FOUND)
-    include(cmake/doxygen.cmake)
-else ()
-    message(WARNING "Doxygen not found, skipping documentation generation.")
 endif ()
 
 # Export targets for use with find_package()
