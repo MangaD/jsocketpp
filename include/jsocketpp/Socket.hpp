@@ -409,6 +409,43 @@ class Socket
      */
     static void stringToAddress(const std::string& str, sockaddr_storage& addr);
 
+    /**
+     * @brief Set a socket option at the specified level.
+     *
+     * This method sets a low-level socket option on the underlying socket.
+     * Socket options allow advanced users to customize various aspects of socket behavior,
+     * such as timeouts, buffer sizes, and address reuse policies.
+     *
+     * Example usage to enable address reuse (SO_REUSEADDR):
+     * @code
+     * socket.setOption(SOL_SOCKET, SO_REUSEADDR, 1);
+     * @endcode
+     *
+     * @param level    The protocol level at which the option resides (e.g., SOL_SOCKET, IPPROTO_TCP).
+     * @param optName  The name of the option (e.g., SO_REUSEADDR, SO_RCVBUF).
+     * @param value    The integer value to set for the option.
+     * @throws SocketException if the operation fails (see the error code/message for details).
+     */
+    void setOption(int level, int optName, int value) const;
+
+    /**
+     * @brief Get the current value of a socket option at the specified level.
+     *
+     * This method retrieves the value of a low-level socket option from the underlying socket.
+     * This can be useful to check the current settings for options like buffer sizes or timeouts.
+     *
+     * Example usage to read the receive buffer size:
+     * @code
+     * int recvBuf = socket.getOption(SOL_SOCKET, SO_RCVBUF);
+     * @endcode
+     *
+     * @param level    The protocol level at which the option resides (e.g., SOL_SOCKET, IPPROTO_TCP).
+     * @param optName  The name of the option (e.g., SO_RCVBUF, SO_KEEPALIVE).
+     * @return         The integer value currently set for the option.
+     * @throws SocketException if the operation fails (see the error code/message for details).
+     */
+    [[nodiscard]] int getOption(int level, int optName) const;
+
   private:
     SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor.
     sockaddr_storage _remoteAddr;    ///< sockaddr_in for IPv4; sockaddr_in6 for IPv6; sockaddr_storage for both

@@ -223,6 +223,59 @@ class ServerSocket
      */
     [[nodiscard]] bool isValid() const { return this->_serverSocket != INVALID_SOCKET; }
 
+    /**
+     * @brief Set a socket option for the listening server socket.
+     *
+     * This method allows you to control low-level parameters of the listening (accepting)
+     * server socket. Because this socket is used only to accept new client connections,
+     * only certain options are meaningful here. Typical uses include:
+     *  - Allowing the server to quickly re-bind to a port after restart (SO_REUSEADDR)
+     *  - Configuring buffer sizes for incoming connections
+     *  - Tuning low-level TCP behaviors (e.g., SO_KEEPALIVE, SO_RCVBUF, SO_SNDBUF)
+     *
+     * @note
+     * - Changing some options on a listening socket (like SO_LINGER or SO_RCVBUF) only affects
+     *   the acceptor socket itself, **not** the individual sockets returned by `accept()`.
+     *   For per-client tuning, set options on the accepted `Socket` objects.
+     * - Attempting to set unsupported or inappropriate options may result in exceptions
+     *   or undefined behavior.
+     *
+     * Example: Enable port reuse (recommended for most servers):
+     * @code
+     * serverSocket.setOption(SOL_SOCKET, SO_REUSEADDR, 1);
+     * @endcode
+     *
+     * @param level   Protocol level at which the option resides (e.g., SOL_SOCKET, IPPROTO_TCP)
+     * @param optName Option name (e.g., SO_REUSEADDR, SO_RCVBUF)
+     * @param value   Integer value for the option
+     * @throws SocketException if the operation fails
+     */
+    void setOption(int level, int optName, int value) const;
+
+    /**
+     * @brief Retrieve the current value of a socket option for the listening server socket.
+     *
+     * This method lets you query the current setting of a socket option on the listening
+     * socket. This is most useful for debugging, for monitoring server configuration,
+     * or for verifying a platform's default values.
+     *
+     * @note
+     * - Only options relevant to listening sockets will reflect meaningful values here.
+     * - To check options for an individual client connection, call `getOption` on the
+     *   `Socket` object returned by `accept()`.
+     *
+     * Example: Get the current size of the receive buffer for new connections:
+     * @code
+     * int rcvBuf = serverSocket.getOption(SOL_SOCKET, SO_RCVBUF);
+     * @endcode
+     *
+     * @param level   Protocol level (e.g., SOL_SOCKET)
+     * @param optName Option name (e.g., SO_RCVBUF)
+     * @return        Integer value for the option
+     * @throws SocketException if the operation fails
+     */
+    [[nodiscard]] int getOption(int level, int optName) const;
+
   private:
     SOCKET _serverSocket = INVALID_SOCKET; ///< Underlying socket file descriptor.
     addrinfo* _srvAddrInfo = nullptr;      ///< Address info for binding (from getaddrinfo)

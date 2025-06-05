@@ -235,3 +235,34 @@ Socket ServerSocket::accept(const std::size_t bufferSize /* = 512 */) const
 
     return client;
 }
+
+void ServerSocket::setOption(const int level, const int optName, int value) const
+{
+    if (setsockopt(_serverSocket, level, optName,
+#ifdef _WIN32
+                   reinterpret_cast<const char*>(&value),
+#else
+                   &value,
+#endif
+                   sizeof(value)) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+}
+
+int ServerSocket::getOption(const int level, const int optName) const
+{
+    int value = 0;
+#ifdef _WIN32
+    int len = sizeof(value);
+#else
+    socklen_t len = sizeof(value);
+#endif
+    if (getsockopt(_serverSocket, level, optName,
+#ifdef _WIN32
+                   reinterpret_cast<char*>(&value),
+#else
+                   &value,
+#endif
+                   &len) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    return value;
+}

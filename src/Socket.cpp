@@ -515,3 +515,34 @@ void Socket::stringToAddress(const std::string& str, sockaddr_storage& addr)
     std::memcpy(&addr, res->ai_addr, res->ai_addrlen);
     freeaddrinfo(res); // ignore errors from freeaddrinfo
 }
+
+void Socket::setOption(const int level, const int optName, int value) const
+{
+    if (setsockopt(_sockFd, level, optName,
+#ifdef _WIN32
+                   reinterpret_cast<const char*>(&value),
+#else
+                   &value,
+#endif
+                   sizeof(value)) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+}
+
+int Socket::getOption(const int level, const int optName) const
+{
+    int value = 0;
+#ifdef _WIN32
+    int len = sizeof(value);
+#else
+    socklen_t len = sizeof(value);
+#endif
+    if (getsockopt(_sockFd, level, optName,
+#ifdef _WIN32
+                   reinterpret_cast<char*>(&value),
+#else
+                   &value,
+#endif
+                   &len) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    return value;
+}

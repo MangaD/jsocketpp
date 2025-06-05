@@ -350,7 +350,7 @@ class DatagramSocket
      * @return Integer value of the option.
      * @throws SocketException on error.
      */
-    int getOption(int level, int optName) const;
+    [[nodiscard]] int getOption(int level, int optName) const;
 
     /**
      * @brief Get the local socket's address as a string (ip:port).

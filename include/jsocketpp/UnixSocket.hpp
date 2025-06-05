@@ -234,6 +234,42 @@ class UnixSocket
      */
     static bool isPathInUse(std::string_view path);
 
+    /**
+     * @brief Set a socket option on the Unix domain socket.
+     *
+     * This method allows you to configure low-level behaviors of the Unix domain socket,
+     * such as buffer sizes, timeouts, or special features like SO_PASSCRED.
+     *
+     * @note Not all options available for TCP/UDP sockets are relevant for Unix domain sockets.
+     *       See your platform’s `setsockopt(2)` manpage for details.
+     *
+     * @param level   The protocol level (e.g., SOL_SOCKET).
+     * @param optName The option name (e.g., SO_RCVBUF, SO_SNDBUF, SO_PASSCRED).
+     * @param value   The integer value to set.
+     * @throws SocketException if the operation fails.
+     *
+     * Example:
+     * @code
+     * unixSocket.setOption(SOL_SOCKET, SO_SNDBUF, 65536);
+     * @endcode
+     */
+    void setOption(int level, int optName, int value) const;
+
+    /**
+     * @brief Retrieve the value of a socket option for the Unix domain socket.
+     *
+     * @param level   The protocol level (e.g., SOL_SOCKET).
+     * @param optName The option name (e.g., SO_RCVBUF, SO_PASSCRED).
+     * @return        The value of the option.
+     * @throws SocketException if the operation fails.
+     *
+     * Example:
+     * @code
+     * int bufSize = unixSocket.getOption(SOL_SOCKET, SO_RCVBUF);
+     * @endcode
+     */
+    [[nodiscard]] int getOption(int level, int optName) const;
+
   protected:
     /**
      * @brief Default constructor for internal use (e.g., accept()).
