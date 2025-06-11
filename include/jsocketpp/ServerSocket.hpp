@@ -96,12 +96,28 @@ class ServerSocket
 
   public:
     /**
-     * @brief Default buffer size for accepted sockets.
+     * @brief Default buffer size (in bytes) for newly accepted sockets.
      *
-     * By default, accepted sockets are constructed with a 4096-byte read buffer.
-     * This value offers a good trade-off between performance and memory usage
-     * for most applications. You can override this by specifying a different
-     * buffer size if your protocol requires it.
+     * This value determines the size of the internal read buffer allocated for each
+     * client socket accepted by the server. A default of 4096 bytes (4 KB) is chosen
+     * because it matches the most common memory page size on modern operating systems,
+     * resulting in efficient memory usage and reducing the likelihood of buffer overflows
+     * for typical application-layer protocols.
+     *
+     * 4 KB is also large enough to efficiently handle common payloads (such as HTTP headers,
+     * small WebSocket frames, or control messages) in a single read, while keeping per-connection
+     * memory usage reasonable for servers handling many clients concurrently.
+     *
+     * This default is suitable for most use cases, but you can override it by specifying a
+     * different buffer size when accepting a socket, or by using `setDefaultBufferSize()` to
+     * change the per-server default.
+     *
+     * @note If your application routinely expects larger messages or needs to optimize for
+     * very high throughput, you may increase this value. Conversely, for memory-constrained
+     * environments or when handling many thousands of connections, reducing the buffer size
+     * may be appropriate.
+     *
+     * @see setDefaultBufferSize()
      */
     static constexpr std::size_t DefaultBufferSize = 4096;
 
