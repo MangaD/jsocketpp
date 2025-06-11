@@ -78,7 +78,10 @@ namespace jsocketpp
  * - `accept()`: Accept a new client and return a `Socket`.
  * - `close()`: Close the server socket (also called automatically in destructor).
  *
- * ## Notes
+ * @note
+ * - Not thread-safe. Each `ServerSocket` instance should be used from a single thread at a time, unless
+ *       external synchronization is applied. Concurrent calls to methods like `accept()` from multiple threads
+ *       may result in undefined behavior.
  * - After calling `accept()`, you should use the returned `Socket` object to communicate with the client.
  * - The server socket only accepts TCP connections. Use `DatagramSocket` for UDP.
  * - Exceptions are thrown as `SocketException` for error conditions.
@@ -109,7 +112,7 @@ class ServerSocket
      * memory usage reasonable for servers handling many clients concurrently.
      *
      * This default is suitable for most use cases, but you can override it by specifying a
-     * different buffer size when accepting a socket, or by using `setDefaultBufferSize()` to
+     * different buffer size when accepting a socket, or by using `setReceiveBufferSize()` to
      * change the per-server default.
      *
      * @note If your application routinely expects larger messages or needs to optimize for
@@ -117,7 +120,7 @@ class ServerSocket
      * environments or when handling many thousands of connections, reducing the buffer size
      * may be appropriate.
      *
-     * @see setDefaultBufferSize()
+     * @see setReceiveBufferSize()
      */
     static constexpr std::size_t DefaultBufferSize = 4096;
 
@@ -223,21 +226,6 @@ class ServerSocket
     ServerSocket(const ServerSocket& rhs) = delete; //-Weffc++
 
     /**
-     * @brief Move constructor.
-     *
-     * Transfers ownership of socket resources from another ServerSocket object.
-     * The moved-from socket is left in a valid but empty state.
-     *
-     * @param rhs The ServerSocket to move from
-     */
-    ServerSocket(ServerSocket&& rhs) noexcept
-        : _serverSocket(rhs._serverSocket), _srvAddrInfo(rhs._srvAddrInfo), _port(rhs._port)
-    {
-        rhs._serverSocket = INVALID_SOCKET;
-        rhs._srvAddrInfo = nullptr;
-    }
-
-    /**
      * @brief Copy assignment operator (deleted).
      *
      * ServerSocket objects cannot be copied because they represent unique system resources.
@@ -249,6 +237,74 @@ class ServerSocket
      * @return Reference to this ServerSocket (never returns since deleted)
      */
     ServerSocket& operator=(const ServerSocket& rhs) = delete; //-Weffc++
+
+    /**
+     * @brief Move constructor.
+     *
+     * Transfers ownership of socket resources from another ServerSocket object.
+     * The moved-from socket is left in a valid but empty state.
+     *
+     * @param rhs The ServerSocket to move from
+     */
+    ServerSocket::ServerSocket(ServerSocket&& rhs) noexcept
+        : _serverSocket(rhs._serverSocket), _srvAddrInfo(rhs._srvAddrInfo), _selectedAddrInfo(rhs._selectedAddrInfo),
+          _port(rhs._port), _isBound(rhs._isBound), _isListening(rhs._isListening),
+          _soTimeoutMillis(rhs._soTimeoutMillis), _defaultBufferSize(rhs._defaultBufferSize)
+    {
+        rhs._serverSocket = INVALID_SOCKET;
+        rhs._srvAddrInfo = nullptr;
+        rhs._selectedAddrInfo = nullptr;
+        rhs._isBound = false;
+        rhs._isListening = false;
+    }
+
+    /**
+     * @brief Move assignment operator for ServerSocket.
+     *
+     * Transfers ownership of socket resources from another ServerSocket object to this one.
+     * If this socket already owns resources, they are properly cleaned up before the transfer.
+     *
+     * The operation is **noexcept** and provides the strong exception guarantee:
+     * - If this socket already owns resources, they are closed before the transfer.
+     * - The moved-from socket is left in a valid but empty state (closed socket, null pointers).
+     * - No system resources are leaked during the transfer.
+     *
+     * After the move:
+     * - This socket takes ownership of all resources from `rhs`.
+     * - The moved-from socket (`rhs`) becomes closed and can be safely destroyed.
+     * - All socket options, state flags, and configurations are transferred.
+     *
+     * @param rhs The ServerSocket to move resources from.
+     * @return Reference to this ServerSocket (containing the moved resources).
+     *
+     * @note This operation is thread-safe with respect to the moved-from socket,
+     *       but concurrent operations on either socket during the move may cause undefined behavior.
+     *
+     * @see ServerSocket(ServerSocket&&)
+     * @see close()
+     */
+    ServerSocket& operator=(ServerSocket&& rhs) noexcept
+    {
+        if (this != &rhs)
+        {
+            close(); // Clean up existing resources
+            _serverSocket = rhs._serverSocket;
+            _srvAddrInfo = rhs._srvAddrInfo;
+            _selectedAddrInfo = rhs._selectedAddrInfo;
+            _port = rhs._port;
+            _isBound = rhs._isBound;
+            _isListening = rhs._isListening;
+            _soTimeoutMillis = rhs._soTimeoutMillis;
+            _defaultBufferSize = rhs._defaultBufferSize;
+
+            rhs._serverSocket = INVALID_SOCKET;
+            rhs._srvAddrInfo = nullptr;
+            rhs._selectedAddrInfo = nullptr;
+            rhs._isBound = false;
+            rhs._isListening = false;
+        }
+        return *this;
+    }
 
     /**
      * @brief Destructor. Closes the server socket and frees resources.
@@ -317,8 +373,9 @@ class ServerSocket
      *
      * @note
      * - You must call `bind()` before calling `listen()`. If the socket is not bound, this call will fail.
-     * - The backlog parameter is a *hint* to the operating system; actual queue length may be limited by system
-     * configuration.
+     * - The backlog parameter is a hint to the operating system. The actual queue length may be capped by system
+     *   configuration (e.g., `/proc/sys/net/core/somaxconn` on Linux). On Windows, `SOMAXCONN` may be very large, so a
+     *   smaller value (e.g., 128) is recommended for most applications.
      * - On success, the socket is ready for calls to `accept()`.
      * - On error (e.g., socket not bound, invalid arguments, system resource exhaustion), a `SocketException` is thrown
      * with details.
@@ -340,7 +397,7 @@ class ServerSocket
      * }
      * @endcode
      */
-    void listen(int backlog = SOMAXCONN);
+    void listen(int backlog = 128);
 
     /**
      * @brief Check if the server socket is currently listening for incoming connections.
@@ -380,15 +437,35 @@ class ServerSocket
      * This race condition is inherent to all socket APIs and can only be avoided by synchronizing access
      * to the server socket across threads or processes.
      *
-     * @note Use `setSoTimeout()` and `getSoTimeout()` to configure the timeout.
+     * @note - Use `setSoTimeout()` and `getSoTimeout()` to configure the timeout.
      *       For manual non-blocking accept in an event loop, see `acceptNonBlocking()` and `waitReady()`.
+     *
+     * @note - To safely use `accept()` in a multithreaded environment, protect access to the `ServerSocket`
+     *       with a mutex. Example:
+     *       @code
+     *       std::mutex acceptMutex;
+     *       jsocketpp::ServerSocket server(8080);
+     *       server.bind();
+     *       server.listen();
+     *       std::vector<std::thread> workers;
+     *       for (int i = 0; i < 4; ++i) {
+     *           workers.emplace_back([&server, &acceptMutex]() {
+     *               while (true) {
+     *                   std::unique_lock<std::mutex> lock(acceptMutex);
+     *                   auto client = server.accept();
+     *                   lock.unlock();
+     *                   // Handle client...
+     *               }
+     *           });
+     *       }
+     *       @endcode
      *
      * @ingroup tcp
      *
      * @param bufferSize The internal buffer size for the newly accepted client socket.
-     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()` and
      *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                   changed via `setDefaultBufferSize()`.
+     *                   changed via `setReceiveBufferSize()`.
      * @return A `Socket` object representing the connected client.
      *
      * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
@@ -451,9 +528,9 @@ class ServerSocket
      *   - Zero: poll (return immediately).
      *   - Positive: wait up to this many milliseconds.
      * @param bufferSize The internal buffer size for the newly accepted client socket.
-     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()` and
      *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                   changed via `setDefaultBufferSize()`.
+     *                   changed via `setReceiveBufferSize()`.
      * @return A `Socket` object representing the connected client.
      *
      * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
@@ -507,9 +584,9 @@ class ServerSocket
      * @ingroup tcp
      *
      * @param bufferSize The internal buffer size for the newly accepted client socket.
-     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()` and
      *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                   changed via `setDefaultBufferSize()`.
+     *                   changed via `setReceiveBufferSize()`.
      * @return An `std::optional<Socket>` containing the accepted client socket, or `std::nullopt` if no client was
      * available before the timeout.
      *
@@ -569,9 +646,9 @@ class ServerSocket
      * @param timeoutMillis Timeout in milliseconds to wait for a client connection. Negative blocks indefinitely, zero
      * polls.
      * @param bufferSize The internal buffer size for the newly accepted client socket.
-     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()` and
      *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                   changed via `setDefaultBufferSize()`.
+     *                   changed via `setReceiveBufferSize()`.
      * @return An `std::optional<Socket>` containing the accepted client socket, or `std::nullopt` if no client
      * connected before the timeout.
      *
@@ -626,9 +703,9 @@ class ServerSocket
      * @ingroup tcp
      *
      * @param bufferSize The internal buffer size for the newly accepted client socket.
-     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()` and
      *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                   changed via `setDefaultBufferSize()`.
+     *                   changed via `setReceiveBufferSize()`.
      * @return A `Socket` object representing the connected client.
      *
      * @throws SocketException if the server socket is not initialized, closed, or if `accept()` fails (including with
@@ -687,9 +764,9 @@ class ServerSocket
      * @ingroup tcp
      *
      * @param bufferSize The internal buffer size for the newly accepted client socket.
-     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()` and
      *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                   changed via `setDefaultBufferSize()`.
+     *                   changed via `setReceiveBufferSize()`.
      * @return A `Socket` object if a client connection is ready; otherwise, `std::nullopt`.
      *
      * @throws SocketException if the server socket is not initialized, closed, or if an unrecoverable error occurs
@@ -805,7 +882,7 @@ class ServerSocket
      * @param value   Integer value for the option
      * @throws SocketException if the operation fails
      */
-    void setOption(int level, int optName, int value) const;
+    void setOption(int level, int optName, int value);
 
     /**
      * @brief Retrieve the current value of a socket option for the listening server socket.
@@ -872,7 +949,7 @@ class ServerSocket
      *
      * @see https://man7.org/linux/man-pages/man7/socket.7.html
      */
-    void setReuseAddress(bool enable) const;
+    void setReuseAddress(bool enable);
 
     /**
      * @brief Query whether the address reuse option is enabled on this server socket.
@@ -909,7 +986,7 @@ class ServerSocket
      * @param nonBlocking true to enable non-blocking mode, false for blocking (default).
      * @throws SocketException on error.
      */
-    void setNonBlocking(bool nonBlocking) const;
+    void setNonBlocking(bool nonBlocking);
 
     /**
      * @brief Check if the server socket is in non-blocking mode.
@@ -992,6 +1069,47 @@ class ServerSocket
      * @see accept()
      */
     std::size_t getReceiveBufferSize() const { return _defaultBufferSize; }
+
+#if defined(SO_REUSEPORT)
+    /**
+     * @brief Enable or disable the SO_REUSEPORT socket option.
+     *
+     * The SO_REUSEPORT option allows multiple sockets on the same host to bind to the same port number,
+     * enabling load balancing of incoming connections across multiple processes or threads.
+     * This can dramatically improve scalability for high-performance servers (such as web servers or proxies).
+     *
+     * @warning SO_REUSEPORT is **not supported on all platforms**. It is available on:
+     *   - Linux kernel 3.9 and later
+     *   - Many BSD systems (FreeBSD 10+, OpenBSD, macOS 10.9+)
+     *   - **Not supported on Windows**
+     *
+     * If you compile or run on a platform where SO_REUSEPORT is unavailable, this method will **not be present**.
+     * Use conditional compilation (`#ifdef SO_REUSEPORT`) if you require portability.
+     *
+     * Improper use of SO_REUSEPORT may result in complex behavior and should only be used if you fully understand
+     * its implications (e.g., distributing incoming connections evenly across processes).
+     *
+     * @param enable Set to `true` to enable SO_REUSEPORT, `false` to disable.
+     * @throws SocketException if setting the option fails.
+     *
+     * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     */
+    void setReusePort(bool enable);
+
+    /**
+     * @brief Query whether SO_REUSEPORT is enabled for this socket.
+     *
+     * This method returns the current status of the SO_REUSEPORT option on this socket.
+     * Like `setReusePort()`, this method is only available on platforms that define `SO_REUSEPORT`.
+     *
+     * @return `true` if SO_REUSEPORT is enabled, `false` otherwise.
+     * @throws SocketException if querying the option fails.
+     *
+     * @see setReusePort(bool)
+     * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     */
+    bool getReusePort() const;
+#endif
 
   protected:
     /**

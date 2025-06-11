@@ -53,13 +53,11 @@ ServerSocket::ServerSocket(const unsigned short port) : _port(port)
     );
     if (ret != 0)
     {
-        throw SocketException(
 #ifdef _WIN32
-            GetSocketError(),
+        cleanupAndThrow(GetSocketError());
 #else
-            ret,
+        cleanupAndThrow(ret);
 #endif
-            SocketErrorMessageWrap(GetSocketError(), true));
     }
 
     // First, try to create a socket with IPv6 (prioritized)
@@ -124,7 +122,8 @@ ServerSocket::ServerSocket(const unsigned short port) : _port(port)
 void ServerSocket::cleanupAndThrow(const int errorCode)
 {
     // Clean up addrinfo and throw exception with the error
-    freeaddrinfo(_srvAddrInfo); // ignore errors from freeaddrinfo
+    if (_srvAddrInfo != nullptr)
+        freeaddrinfo(_srvAddrInfo); // ignore errors from freeaddrinfo
     _srvAddrInfo = nullptr;
     _selectedAddrInfo = nullptr;
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
@@ -196,7 +195,8 @@ int ServerSocket::getSocketReuseOption()
 #endif
 }
 
-void ServerSocket::setReuseAddress(const bool enable) const
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void ServerSocket::setReuseAddress(const bool enable)
 {
     const int optVal = enable ? 1 : 0;
     const int result = setsockopt(_serverSocket, SOL_SOCKET, getSocketReuseOption(),
@@ -299,7 +299,7 @@ void ServerSocket::bind()
     _isBound = true;
 }
 
-void ServerSocket::listen(const int backlog /* = SOMAXCONN */)
+void ServerSocket::listen(const int backlog /* = 128 */)
 {
     if (::listen(_serverSocket, backlog) == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
@@ -420,7 +420,8 @@ std::optional<Socket> ServerSocket::acceptNonBlocking(std::size_t bufferSize) co
     return Socket(clientSocket, clientAddr, addrLen, bufferSize);
 }
 
-void ServerSocket::setOption(const int level, const int optName, int value) const
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void ServerSocket::setOption(const int level, const int optName, int value)
 {
     if (setsockopt(_serverSocket, level, optName,
 #ifdef _WIN32
@@ -451,7 +452,8 @@ int ServerSocket::getOption(const int level, const int optName) const
     return value;
 }
 
-void ServerSocket::setNonBlocking(bool nonBlocking) const
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void ServerSocket::setNonBlocking(bool nonBlocking)
 {
 #ifdef _WIN32
     u_long mode = nonBlocking ? 1 : 0;
@@ -534,3 +536,25 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     // If it's greater than 0, our server socket is ready to accept a connection.
     return result > 0;
 }
+
+#if defined(SO_REUSEPORT)
+void ServerSocket::setReusePort(bool enable)
+{
+    int opt = enable ? 1 : 0;
+    if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) < 0)
+    {
+        throw SocketException(GetSocketError(), "Failed to set SO_REUSEPORT.");
+    }
+}
+
+bool ServerSocket::getReusePort() const
+{
+    int opt = 0;
+    socklen_t len = sizeof(opt);
+    if (getsockopt(_serverSocket, SOL_SOCKET, SO_REUSEPORT, &opt, &len) < 0)
+    {
+        throw SocketException(GetSocketError(), "Failed to get SO_REUSEPORT.");
+    }
+    return opt != 0;
+}
+#endif
