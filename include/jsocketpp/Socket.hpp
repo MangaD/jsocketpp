@@ -321,6 +321,17 @@ class Socket
     void setNonBlocking(bool nonBlocking) const;
 
     /**
+     * @brief Check if the socket is currently in non-blocking mode.
+     *
+     * In non-blocking mode, operations like connect(), read(), and write()
+     * return immediately if they cannot proceed, rather than blocking.
+     *
+     * @return true if the socket is non-blocking, false if it is blocking.
+     * @throws SocketException if the socket state cannot be determined.
+     */
+    [[nodiscard]] bool getNonBlocking() const;
+
+    /**
      * @brief Set a timeout for socket operations.
      *
      * Sets the timeout for send and/or receive operations on the socket.
@@ -333,7 +344,7 @@ class Socket
      * @param forWrite If true, set send timeout (default: true).
      * @throws SocketException on error.
      */
-    void setTimeout(int millis, bool forRead = true, bool forWrite = true) const;
+    void setSoTimeout(int millis, bool forRead = true, bool forWrite = true) const;
 
     /**
      * @brief Wait for the socket to be ready for reading or writing.

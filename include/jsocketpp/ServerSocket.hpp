@@ -6,7 +6,11 @@
 #pragma once
 
 #include "Socket.hpp"
+#include "SocketException.hpp"
+#include "SocketTimeoutException.hpp"
 #include "common.hpp"
+
+#include <optional>
 
 namespace jsocketpp
 {
@@ -89,59 +93,110 @@ namespace jsocketpp
  */
 class ServerSocket
 {
-  protected:
-    /**
-     * @brief Cleans up server socket resources and throws a SocketException.
-     *
-     * This method performs cleanup of the address information structures (_srvAddrInfo)
-     * and throws a SocketException with the provided error code. It's typically called
-     * when an error occurs during socket initialization or configuration.
-     *
-     * @param errorCode The error code to include in the thrown exception
-     * @throws SocketException Always throws with the provided error code and corresponding message
-     */
-    void cleanupAndThrow(int errorCode);
-
-    /**
-     * @brief Get the platform-specific socket address reuse option.
-     *
-     * This method returns the appropriate socket option for controlling address reuse behavior,
-     * which varies between Windows and Unix-like systems:
-     *
-     * - On Windows: Returns SO_EXCLUSIVEADDRUSE, which prevents other sockets from binding
-     *   to the same address/port combination, even if SO_REUSEADDR is set. This provides
-     *   better security against port hijacking attacks.
-     *
-     * - On Unix/Linux: Returns SO_REUSEADDR, which allows the socket to bind to an address
-     *   that is already in use. This is particularly useful for server applications that
-     *   need to restart and rebind to their previous address immediately.
-     *
-     * @return int The platform-specific socket option constant (SO_EXCLUSIVEADDRUSE on Windows,
-     *             SO_REUSEADDR on Unix/Linux)
-     */
-    [[nodiscard]] static int getSocketReuseOption();
 
   public:
     /**
-     * @brief Constructs a ServerSocket object and prepares it to listen for incoming TCP connections on the specified
-     * port.
+     * @brief Default buffer size for accepted sockets.
      *
-     * This constructor initializes a server socket that can accept both IPv4 and IPv6 connections.
-     * It performs the following steps:
-     *   - Sets up address resolution hints for TCP sockets, supporting both IPv4 and IPv6.
-     *   - Uses getaddrinfo to resolve the local address and port for binding.
-     *   - Iterates through the resolved addresses, attempting to create a socket for each until successful.
-     *   - For IPv6 sockets, configures the socket to accept both IPv6 and IPv4 connections by disabling IPV6_V6ONLY.
-     *   - Sets socket options to control address reuse behavior:
-     *       - On Windows, uses SO_EXCLUSIVEADDRUSE to prevent port hijacking.
-     *       - On other platforms, uses SO_REUSEADDR to allow quick reuse of the port after closure.
-     *   - Throws socket_exception on failure at any step, providing error details.
+     * By default, accepted sockets are constructed with a 4096-byte read buffer.
+     * This value offers a good trade-off between performance and memory usage
+     * for most applications. You can override this by specifying a different
+     * buffer size if your protocol requires it.
+     */
+    static constexpr std::size_t DefaultBufferSize = 4096;
+
+    /**
+     * @brief Constructs a ServerSocket object for listening to incoming TCP connections on the specified port.
      *
-     * @param port The port number on which the server will listen for incoming connections.
+     * This constructor creates a TCP server socket that supports both IPv4 and IPv6, but does **not** bind or listen
+     * yet. It performs the following steps:
+     *   - Prepares address resolution hints to allow both IPv4 and IPv6 (dual-stack) TCP connections.
+     *   - Uses `getaddrinfo()` to resolve possible local addresses for the specified port.
+     *   - Iterates through the results, creating a socket for each address until one succeeds.
+     *   - If an IPv6 socket is chosen, disables `IPV6_V6ONLY` to allow both IPv4 and IPv6 connections by default.
+     *   - **Sets the socket's address reuse option to enabled by default**:
+     *       - On Windows, uses `SO_EXCLUSIVEADDRUSE` (prevents other processes from binding to the same port).
+     *       - On Unix-like systems, uses `SO_REUSEADDR` (allows quick reuse of the port after closure).
+     *
+     * @note
+     *   - The socket is **not bound or listening** when the constructor finishes. You must call `bind()` and `listen()`
+     * explicitly.
+     *   - The default address reuse setting is applied immediately after socket creation. You may change it by calling
+     *     `setReuseAddress()` before calling `bind()`. The last value set before `bind()` will be used.
+     *   - Once the socket is bound, further changes to the address reuse option will have no effect.
+     *
+     * @param port The port number to prepare the server socket for (binding will occur when `bind()` is called).
      *
      * @throws SocketException If address resolution, socket creation, or socket option configuration fails.
+     *
+     * @see setReuseAddress(), bind(), listen()
+     *
+     * @ingroup tcp
+     *
+     * @code
+     * // Example usage
+     * jsocketpp::ServerSocket server(8080);
+     * server.setReuseAddress(false); // (Optional) Override default before binding
+     * server.bind();
+     * server.listen();
+     * @endcode
      */
     explicit ServerSocket(unsigned short port);
+
+    /**
+     * @brief Get the local IP address to which the server socket is bound.
+     *
+     * Returns the string representation of the IP address (IPv4 or IPv6) the socket is bound to.
+     * Useful for debugging, especially when binding to specific interfaces or when binding to
+     * `"0.0.0.0"` or `"::"` (any address).
+     *
+     * @return The local IP address as a string, or an empty string if the socket is not bound.
+     * @throws SocketException if there is an error retrieving the address.
+     *
+     * @code
+     * ServerSocket server("127.0.0.1", 8080);
+     * server.bind();
+     * std::cout << "Server bound to address: " << server.getInetAddress() << std::endl;
+     * @endcode
+     */
+    [[nodiscard]] std::string getInetAddress() const;
+
+    /**
+     * @brief Retrieve the local port number to which the server socket is bound.
+     *
+     * This method returns the port number that the server socket is currently bound to.
+     * This is particularly useful when the socket is bound to port `0`, which tells the operating
+     * system to automatically assign an available port. You can use this method after binding to discover the actual
+     * port being used.
+     *
+     * @return The local port number, or `0` if the socket is not bound.
+     * @throws SocketException if there is an error retrieving the port number.
+     *
+     * @code
+     * ServerSocket server(0); // Bind to any available port
+     * server.bind();
+     * unsigned short port = server.getLocalPort();
+     * std::cout << "Server bound to port: " << port << std::endl;
+     * @endcode
+     */
+    [[nodiscard]] unsigned short getLocalPort() const;
+
+    /**
+     * @brief Get the local socket address (IP and port) to which the server socket is bound.
+     *
+     * Returns a string with the IP address and port in the format "ip:port" (e.g., "127.0.0.1:8080").
+     * Useful for debugging, logging, and displaying server status.
+     *
+     * @return The local socket address as a string, or an empty string if the socket is not bound.
+     * @throws SocketException if there is an error retrieving the address.
+     *
+     * @code
+     * ServerSocket server(8080);
+     * server.bind();
+     * std::cout << "Server bound to: " << server.getLocalSocketAddress() << std::endl;
+     * @endcode
+     */
+    [[nodiscard]] std::string getLocalSocketAddress() const;
 
     /**
      * @brief Copy constructor (deleted).
@@ -185,43 +240,527 @@ class ServerSocket
     ~ServerSocket() noexcept;
 
     /**
-     * @brief Bind the server socket to the configured port.
-     * @throws SocketException on error.
+     * @brief Binds the server socket to the configured port and network interface.
+     *
+     * This method assigns a local address and port number to the socket, making it ready to accept incoming TCP
+     * connections.
+     *
+     * - **Preconditions:** The socket must have been created successfully (via the constructor) but must not be already
+     * bound or listening.
+     * - **Typical usage:** Call `bind()` after configuring any desired socket options (such as address reuse) and
+     * before calling `listen()`.
+     * - **Effect:** Once `bind()` succeeds, the server socket is associated with the local port specified during
+     * construction, and is ready to transition to listening mode with `listen()`.
+     *
+     * @note
+     * - If you want to override the default address reuse behavior or other options, you must call the corresponding
+     * setter methods *before* calling `bind()`. After `bind()` is called, changes to those options will have no effect.
+     * - On error, this function throws a `SocketException` containing the specific error code and message.
+     * - This function is cross-platform and works on both Windows and Unix-like systems.
+     *
+     * @throws SocketException if the bind operation fails (for example, if the port is already in use or insufficient
+     * permissions).
+     *
+     * @see setReuseAddress(), listen(), ServerSocket(unsigned short)
+     *
+     * @ingroup tcp
+     *
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * server.setReuseAddress(true); // Optional: customize before binding
+     * server.bind();
+     * server.listen();
+     * @endcode
      */
-    void bind() const;
+    void bind();
 
     /**
-     * @brief Start listening for incoming connections.
-     * @param backlog Maximum length of the pending connections queue (default: SOMAXCONN).
-     * @throws SocketException on error.
+     * @brief Check if the server socket is bound to a local address.
+     *
+     * Returns `true` if the socket has been successfully bound to a local address and port using the `bind()` method,
+     * or `false` otherwise. This means the socket has reserved a port but is not necessarily accepting connections yet.
+     *
+     * Follows the naming and semantics of Java's `ServerSocket::isBound()`.
+     *
+     * @return `true` if the socket is bound, `false` otherwise.
      */
-    void listen(int backlog = SOMAXCONN) const;
+    [[nodiscard]] bool isBound() const { return _isBound; }
 
     /**
-     * @brief Accept an incoming connection.
-     * @param bufferSize Size of the internal read buffer for the accepted socket (default: 512).
-     * @return A Socket object for the client.
-     * @throws SocketException on error.
+     * @brief Marks the socket as a passive (listening) socket, ready to accept incoming TCP connection requests.
+     *
+     * This method puts the server socket into listening mode, so it can accept incoming client connections using
+     * `accept()`.
+     *
+     * - **How it works:** After binding the socket to a local address and port (via `bind()`), call `listen()` to have
+     * the operating system start queueing incoming connection requests. Only after calling `listen()` can the server
+     * accept connections.
+     * - **Backlog parameter:** The `backlog` argument specifies the maximum number of pending client connections that
+     * can be queued before connections are refused. If not specified, the system default (`SOMAXCONN`) is used.
+     * - **Usage sequence:** Typical usage is: `ServerSocket sock(port); sock.bind(); sock.listen();`
+     *
+     * @note
+     * - You must call `bind()` before calling `listen()`. If the socket is not bound, this call will fail.
+     * - The backlog parameter is a *hint* to the operating system; actual queue length may be limited by system
+     * configuration.
+     * - On success, the socket is ready for calls to `accept()`.
+     * - On error (e.g., socket not bound, invalid arguments, system resource exhaustion), a `SocketException` is thrown
+     * with details.
+     *
+     * @throws SocketException if the listen operation fails.
+     *
+     * @see bind(), accept(), ServerSocket(unsigned short)
+     *
+     * @ingroup tcp
+     *
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * server.setReuseAddress(true); // Optional: set before bind
+     * server.bind();
+     * server.listen();
+     * while (true) {
+     *     jsocketpp::Socket client = server.accept();
+     *     // Handle client connection
+     * }
+     * @endcode
      */
-    [[nodiscard]] Socket accept(std::size_t bufferSize = 512) const;
+    void listen(int backlog = SOMAXCONN);
 
     /**
-     * @brief Close the server socket.
-     * @throws SocketException on error.
+     * @brief Check if the server socket is currently listening for incoming connections.
+     *
+     * Returns `true` if the socket has successfully entered the listening state by calling the `listen()` method,
+     * and is ready to accept new client connections. Returns `false` otherwise.
+     *
+     * This complements `isBound()`, which only tells you if the socket has been bound to a local address.
+     *
+     * @return `true` if the socket is listening for connections, `false` otherwise.
+     */
+    [[nodiscard]] bool isListening() const { return _isListening; }
+
+    /**
+     * @brief Accept an incoming client connection, respecting the configured socket timeout.
+     *
+     * @note This method is **not thread safe**. Simultaneous calls to `accept()` or `acceptNonBlocking()` from
+     * multiple threads (or processes) may result in race conditions or unexpected exceptions.
+     *
+     * Waits for an incoming client connection using the timeout value configured by `setSoTimeout()`.
+     * - If the timeout is **negative** (default), the method blocks indefinitely until a client connects.
+     * - If the timeout is **zero**, the method polls and returns immediately if no client is waiting.
+     * - If the timeout is **positive**, the method waits up to that many milliseconds for a connection, then throws a
+     *   `SocketTimeoutException` if none arrives.
+     *
+     * Internally, this method uses `waitReady()` (which internally uses `select()`) to wait for readiness and
+     * only then calls `accept()`. If the timeout expires with no client, a `SocketTimeoutException` is thrown.
+     *
+     * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking()`) does not affect the
+     * waiting behavior of this method, since `select()` is used for waiting:
+     * - If the socket is in **blocking mode**, after readiness, `accept()` is called; in a rare race condition,
+     *   if no connection is available, `accept()` will block again (possibly beyond the timeout) until a client
+     * connects.
+     * - If the socket is in **non-blocking mode**, in the same race, `accept()` may fail with `EWOULDBLOCK` or `EAGAIN`
+     *   and a `SocketException` is thrown.
+     *
+     * This race condition is inherent to all socket APIs and can only be avoided by synchronizing access
+     * to the server socket across threads or processes.
+     *
+     * @note Use `setSoTimeout()` and `getSoTimeout()` to configure the timeout.
+     *       For manual non-blocking accept in an event loop, see `acceptNonBlocking()` and `waitReady()`.
+     *
+     * @ingroup tcp
+     *
+     * @param bufferSize The internal buffer size for the newly accepted client socket.
+     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
+     *                   changed via `setDefaultBufferSize()`.
+     * @return A `Socket` object representing the connected client.
+     *
+     * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
+     * @throws SocketTimeoutException if the timeout expires before a client connects.
+     *
+     * @see setSoTimeout(int)
+     * @see getSoTimeout()
+     * @see acceptBlocking()
+     * @see acceptNonBlocking()
+     * @see waitReady()
+     *
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * server.bind();
+     * server.listen();
+     * server.setSoTimeout(5000); // Wait up to 5 seconds for clients
+     * try {
+     *     jsocketpp::Socket client = server.accept();
+     *     // Handle client...
+     * } catch (const jsocketpp::SocketTimeoutException&) {
+     *     std::cout << "No client connected within timeout." << std::endl;
+     * }
+     * @endcode
+     */
+    Socket accept(std::size_t bufferSize = 0) const;
+
+    /**
+     * @brief Accept an incoming client connection, waiting up to the specified timeout.
+     *
+     * @note This method is **not thread safe**. Simultaneous calls to `accept()` or `acceptNonBlocking()` from
+     * multiple threads (or processes) may result in race conditions or unexpected exceptions.
+     *
+     * Waits for an incoming client connection using the timeout specified by the `timeoutMillis` parameter:
+     * - If `timeoutMillis` is **negative**, the method blocks indefinitely until a client connects.
+     * - If `timeoutMillis` is **zero**, the method polls and returns immediately if no client is waiting.
+     * - If `timeoutMillis` is **positive**, the method waits up to that many milliseconds for a connection,
+     *   then throws a `SocketTimeoutException` if none arrives.
+     *
+     * Internally, this method uses `waitReady(timeoutMillis)` (which uses `select()`) to wait for readiness, then
+     * calls `accept()`. If the timeout expires with no client, a `SocketTimeoutException` is thrown.
+     *
+     * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking()`) does not affect the
+     * waiting behavior of this method, since `select()` is used for waiting:
+     * - If the socket is in **blocking mode**, after readiness, `accept()` is called; in a rare race condition,
+     *   if no connection is available, `accept()` will block again (possibly beyond the timeout) until a client
+     * connects.
+     * - If the socket is in **non-blocking mode**, in the same race, `accept()` may fail with `EWOULDBLOCK` or `EAGAIN`
+     *   and a `SocketException` is thrown.
+     *
+     * This race condition is inherent to all socket APIs and can only be avoided by synchronizing access
+     * to the server socket across threads or processes.
+     *
+     * @note Use this method to specify a timeout **per call**; to set a default for all accepts, use `setSoTimeout()`.
+     *       For manual non-blocking accept in an event loop, see `acceptNonBlocking()` and `waitReady()`.
+     *
+     * @ingroup tcp
+     *
+     * @param timeoutMillis The maximum number of milliseconds to wait for a client connection:
+     *   - Negative: wait indefinitely.
+     *   - Zero: poll (return immediately).
+     *   - Positive: wait up to this many milliseconds.
+     * @param bufferSize The internal buffer size for the newly accepted client socket.
+     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
+     *                   changed via `setDefaultBufferSize()`.
+     * @return A `Socket` object representing the connected client.
+     *
+     * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
+     * @throws SocketTimeoutException if the timeout expires before a client connects.
+     *
+     * @see setSoTimeout(int)
+     * @see getSoTimeout()
+     * @see acceptBlocking()
+     * @see acceptNonBlocking()
+     * @see waitReady()
+     *
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * server.bind();
+     * server.listen();
+     * try {
+     *     // Wait up to 2 seconds for a client connection, then timeout.
+     *     jsocketpp::Socket client = server.accept(2000);
+     *     // Handle client...
+     * } catch (const jsocketpp::SocketTimeoutException&) {
+     *     std::cout << "No client connected within timeout." << std::endl;
+     * }
+     * @endcode
+     */
+    [[nodiscard]] Socket accept(int timeoutMillis, std::size_t bufferSize = 0) const;
+
+    /**
+     * @brief Attempt to accept an incoming client connection, returning immediately or after the configured timeout.
+     *
+     * This method waits for an incoming client connection using the timeout set by `setSoTimeout()`. If no timeout
+     * is configured (i.e., negative value), the method blocks indefinitely until a client connects. If the timeout is
+     * zero, the method polls and returns immediately if no client is waiting.
+     *
+     * Unlike `accept()`, this method does **not** throw a `SocketTimeoutException` if no client is available.
+     * Instead, it returns `std::nullopt`. This makes it suitable for event loops or non-blocking server designs.
+     *
+     * Internally, this method uses `waitReady()` (which uses `select()`) to check for pending connections. If a client
+     * is ready, `acceptBlocking()` is called to retrieve the connection. If not, `std::nullopt` is returned.
+     *
+     * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking()`) does not affect the waiting
+     * behavior of this method, since `select()` is used for waiting. In rare cases (see below), `accept()` may still
+     * fail with `EWOULDBLOCK` or `EAGAIN` if a connection is lost between the readiness check and the actual accept
+     * call, in which case a `SocketException` is thrown.
+     *
+     * @note This method is **not thread safe**. Simultaneous calls from multiple threads or processes may lead to race
+     * conditions. See `accept()` for further discussion of these edge cases.
+     *
+     * @note To specify a timeout for a single call, use `tryAccept(int timeoutMillis, std::size_t bufferSize)`.
+     *       For manual non-blocking accept, see `acceptNonBlocking()`.
+     *
+     * @ingroup tcp
+     *
+     * @param bufferSize The internal buffer size for the newly accepted client socket.
+     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
+     *                   changed via `setDefaultBufferSize()`.
+     * @return An `std::optional<Socket>` containing the accepted client socket, or `std::nullopt` if no client was
+     * available before the timeout.
+     *
+     * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
+     *
+     * @see setSoTimeout(int)
+     * @see getSoTimeout()
+     * @see accept()
+     * @see acceptBlocking()
+     * @see acceptNonBlocking()
+     * @see tryAccept(int, std::size_t)
+     * @see waitReady()
+     *
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * server.bind();
+     * server.listen();
+     * server.setSoTimeout(100); // Poll every 100 ms for new clients
+     * while (true) {
+     *     if (auto client = server.tryAccept()) {
+     *         // Handle client...
+     *     } else {
+     *         // No client ready yet; perform other tasks or continue loop
+     *     }
+     * }
+     * @endcode
+     */
+    [[nodiscard]] std::optional<Socket> tryAccept(std::size_t bufferSize = 0) const;
+
+    /**
+     * @brief Attempt to accept an incoming client connection, waiting up to a specified timeout.
+     *
+     * This method waits for an incoming client connection using the provided `timeoutMillis` value, overriding any
+     * global timeout set with `setSoTimeout()`. If `timeoutMillis` is negative, the method blocks indefinitely until a
+     * client connects. If `timeoutMillis` is zero, the method polls and returns immediately if no client is waiting.
+     *
+     * Unlike `accept(int timeoutMillis, ...)`, which throws a `SocketTimeoutException` if the timeout expires,
+     * this method returns `std::nullopt` in that case. This is useful for polling loops or event-driven servers.
+     *
+     * Internally, the method uses `waitReady(timeoutMillis)` (implemented with `select()`) to check for pending
+     * connections. If the socket is ready, `acceptBlocking(bufferSize)` is called; otherwise, `std::nullopt` is
+     * returned.
+     *
+     * The blocking or non-blocking mode of the server socket (via `setNonBlocking(true)`) does **not** affect the
+     * waiting behavior of this method. Readiness is determined entirely by `select()`. In rare cases, due to race
+     * conditions (see `accept()` documentation), `accept()` may still fail with `EWOULDBLOCK` or `EAGAIN` even after
+     * readiness was indicated; in this case, a `SocketException` is thrown.
+     *
+     * @note This method is **not thread safe**. Simultaneous calls from multiple threads or processes may lead to race
+     * conditions.
+     *
+     * @note To use the configured socket timeout instead, call `tryAccept(std::size_t bufferSize)`.
+     *       For manual non-blocking accept, see `acceptNonBlocking()`.
+     *
+     * @ingroup tcp
+     *
+     * @param timeoutMillis Timeout in milliseconds to wait for a client connection. Negative blocks indefinitely, zero
+     * polls.
+     * @param bufferSize The internal buffer size for the newly accepted client socket.
+     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
+     *                   changed via `setDefaultBufferSize()`.
+     * @return An `std::optional<Socket>` containing the accepted client socket, or `std::nullopt` if no client
+     * connected before the timeout.
+     *
+     * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
+     *
+     * @see accept(int, std::size_t)
+     * @see tryAccept(std::size_t)
+     * @see accept()
+     * @see acceptBlocking()
+     * @see acceptNonBlocking()
+     * @see waitReady()
+     *
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * server.bind();
+     * server.listen();
+     * while (true) {
+     *     if (auto client = server.tryAccept(100)) {
+     *         // Handle client connection
+     *     } else {
+     *         // No client; perform other tasks
+     *     }
+     * }
+     * @endcode
+     */
+    [[nodiscard]] std::optional<Socket> tryAccept(int timeoutMillis, std::size_t bufferSize = 0) const;
+
+    /**
+     * @brief Accept an incoming client connection, always blocking until a client connects (unless the socket is set to
+     * non-blocking).
+     *
+     * This method invokes the underlying system `accept()` on the listening server socket.
+     * - If the socket is in **blocking mode** (default), this method blocks until a client connects, regardless of any
+     * timeouts set by `setSoTimeout()`.
+     * - If the socket is in **non-blocking mode** (set via `setNonBlocking(true)`), the call returns immediately:
+     *   - If a client is ready, returns a connected `Socket`.
+     *   - If no client is pending, throws a `SocketException` with `EWOULDBLOCK`/`EAGAIN`.
+     *
+     * @par Comparison with acceptNonBlocking()
+     * - Both methods behave the same: their behavior depends on the blocking mode of the socket.
+     * - However, `acceptNonBlocking()` is typically used in event loop code, where you expect the socket to be in
+     * non-blocking mode and wish to distinguish "no client yet" (returns `std::nullopt`) from actual errors (throws).
+     * - `acceptBlocking()` throws on *all* failures and is idiomatic for classic blocking server loops.
+     *
+     * @note Both methods require the socket's blocking mode to be managed by the user via `setNonBlocking()`.
+     *       There is **no polling or timeout logic** in this method; if you need timeouts, use `accept()` or
+     * `tryAccept()` instead.
+     *
+     * @note Not thread safe: simultaneous accept calls from different threads or processes may result in race
+     * conditions or failures.
+     *
+     * @ingroup tcp
+     *
+     * @param bufferSize The internal buffer size for the newly accepted client socket.
+     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
+     *                   changed via `setDefaultBufferSize()`.
+     * @return A `Socket` object representing the connected client.
+     *
+     * @throws SocketException if the server socket is not initialized, closed, or if `accept()` fails (including with
+     * `EWOULDBLOCK`/`EAGAIN` in non-blocking mode).
+     *
+     * @see accept()
+     * @see acceptNonBlocking()
+     * @see tryAccept()
+     * @see setNonBlocking()
+     * @see waitReady()
+     *
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * server.bind();
+     * server.listen();
+     * // Classic blocking:
+     * jsocketpp::Socket client = server.acceptBlocking();
+     *
+     * // Non-blocking pattern:
+     * server.setNonBlocking(true);
+     * try {
+     *     jsocketpp::Socket client = server.acceptBlocking();
+     *     // Handle client
+     * } catch (const jsocketpp::SocketException& e) {
+     *     if (e.code() == EWOULDBLOCK) { // or platform equivalent
+     *         // No client yet, try again later
+     *     } else {
+     *         throw; // real error
+     *     }
+     * }
+     * @endcode
+     */
+    [[nodiscard]] Socket acceptBlocking(std::size_t bufferSize = 0) const;
+
+    /**
+     * @brief Attempt to accept a client connection in non-blocking fashion.
+     *
+     * This method attempts to accept an incoming client connection using the underlying system `accept()`.
+     * - If the server socket is in **blocking mode** (the default), this method will block until a client is ready,
+     *   and will return a connected `Socket` object.
+     * - If the server socket is in **non-blocking mode** (set via `setNonBlocking(true)`), this method will
+     *   return immediately:
+     *     - If a client connection is pending, returns a `Socket` object representing the client.
+     *     - If no client is pending, returns `std::nullopt` (no exception is thrown).
+     *
+     * This method does **not** perform any polling, waiting, or timeout logic. It is designed for use in event loops or
+     * with polling mechanisms, where you expect the socket to be non-blocking and want to check for new connections
+     * without waiting.
+     *
+     * @note The blocking or non-blocking behavior of this method depends entirely on the socket's current mode,
+     *       which can be set via `setNonBlocking(bool)`.
+     * @note For waiting with a timeout or blocking-until-ready semantics, see `accept()`, `tryAccept()`, or
+     * `acceptBlocking()`.
+     * @note Not thread safe: concurrent accept calls may result in race conditions.
+     *
+     * @ingroup tcp
+     *
+     * @param bufferSize The internal buffer size for the newly accepted client socket.
+     *                   If set to `0`, the per-instance default buffer size is used (see `setDefaultBufferSize()` and
+     *                   `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
+     *                   changed via `setDefaultBufferSize()`.
+     * @return A `Socket` object if a client connection is ready; otherwise, `std::nullopt`.
+     *
+     * @throws SocketException if the server socket is not initialized, closed, or if an unrecoverable error occurs
+     *         during accept (other than EWOULDBLOCK/EAGAIN in non-blocking mode).
+     *
+     * @see setNonBlocking(bool)
+     * @see acceptBlocking()
+     * @see accept()
+     * @see tryAccept()
+     * @see waitReady()
+     *
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * server.bind();
+     * server.listen();
+     * server.setNonBlocking(true); // Must be in non-blocking mode for true non-blocking behavior
+     * while (true) {
+     *     auto clientOpt = server.acceptNonBlocking();
+     *     if (clientOpt) {
+     *         // Handle client connection
+     *     } else {
+     *         // No client yet, can do other work (e.g. event loop)
+     *     }
+     * }
+     * @endcode
+     */
+    [[nodiscard]] std::optional<Socket> acceptNonBlocking(std::size_t bufferSize = 0) const;
+
+    /**
+     * @brief Closes the server socket and releases its associated system resources.
+     *
+     * This method closes the underlying server socket, making it no longer able to accept new client connections.
+     * After calling `close()`, the server socket enters the **CLOSED** state, and any further operations such as
+     * `accept()`, `bind()`, or `listen()` will fail with an exception.
+     *
+     * Key details:
+     * - All file descriptors or handles associated with the server socket are released.
+     * - This operation is **idempotent**: calling `close()` multiple times on the same socket is safe, but only the
+     * first call has effect.
+     * - Existing client sockets returned by `accept()` are unaffected; you must close them individually.
+     * - On many systems, closing a socket that is actively being used may result in a `SocketException` if a system
+     * error occurs.
+     * - After closing, you should not use this `ServerSocket` object for further network operations.
+     *
+     * Example usage:
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * server.bind();
+     * server.listen();
+     * // ... handle clients ...
+     * server.close(); // Clean up when done
+     * @endcode
+     *
+     * @throws SocketException If an error occurs while closing the socket (for example, if the underlying system call
+     * fails).
+     *
+     * @note On some systems, closing a socket with active client connections does not forcibly disconnect clients,
+     *       but simply prevents new connections from being accepted.
+     * @note Always close your sockets when finished to prevent resource leaks!
      */
     void close();
 
     /**
-     * @brief Shutdown the server socket for both send and receive.
-     * @throws SocketException on error.
-     */
-    void shutdown() const;
-
-    /**
-     * @brief Check if the server socket is valid (open).
-     * @return true if valid, false otherwise.
+     * @brief Check whether the server socket is currently open and valid.
+     *
+     * This method determines if the server socket has been successfully created and is ready for binding, listening,
+     * or accepting connections. It checks whether the underlying socket handle is valid on the current platform.
+     *
+     * @note
+     * - Returns `true` if the server socket has been created and not yet closed.
+     * - Returns `false` if the socket has not been created, or has already been closed (and resources released).
+     *
+     * @return `true` if the server socket is open and valid; `false` otherwise.
+     *
+     * @see close()
      */
     [[nodiscard]] bool isValid() const { return this->_serverSocket != INVALID_SOCKET; }
+
+    /**
+     * @brief Check if the server socket has been closed.
+     *
+     * This method returns `true` if the socket has been closed (and is no longer usable), or `false` if it is still
+     * open. The logic and naming follow the Java networking API for familiarity.
+     *
+     * @return `true` if the socket has been closed, `false` if it is still open.
+     */
+    [[nodiscard]] bool isClosed() const { return this->_serverSocket == INVALID_SOCKET; }
 
     /**
      * @brief Set a socket option for the listening server socket.
@@ -276,11 +815,191 @@ class ServerSocket
      */
     [[nodiscard]] int getOption(int level, int optName) const;
 
+    /**
+     * @brief Returns the correct socket option constant for address reuse, depending on the platform.
+     *
+     * - On **Unix/Linux** platforms, this returns @c SO_REUSEADDR, which allows a socket to bind to a local
+     * address/port that is in the TIME_WAIT state. This is commonly used for servers that need to restart without
+     * waiting for TCP connections to fully time out.
+     *
+     * - On **Windows**, this returns @c SO_EXCLUSIVEADDRUSE, which provides safer server semantics: only one socket can
+     *   bind to a given address/port at a time, but it allows quick server restarts. Using @c SO_REUSEADDR on Windows
+     * has different (and less safe) behavior, potentially allowing multiple sockets to bind to the same port
+     * simultaneously, which is almost never what you want for TCP servers.
+     *
+     * @return The socket option to use with setsockopt() for configuring address reuse in a cross-platform way.
+     *
+     * @note This function should be used to select the correct socket option when calling setsockopt() in your server
+     * code. Typically, this option must be set before calling bind().
+     */
+    [[nodiscard]] static int getSocketReuseOption();
+
+    /**
+     * @brief Enable or disable address reuse for this server socket.
+     *
+     * When address reuse is enabled (`enable = true`), the server socket can bind to a local address/port even if
+     * a previous socket on that port is still in the TIME_WAIT state. This is useful for restarting servers
+     * without waiting for old sockets to time out.
+     *
+     * On UNIX-like systems, this sets the `SO_REUSEADDR` socket option. On Windows, it sets the equivalent option,
+     * `SO_EXCLUSIVEADDRUSE`.
+     *
+     * @warning This method must be called before calling bind(), and only once the socket has been created
+     * (i.e., after construction, before bind).
+     *
+     * @param enable True to enable address reuse, false to disable (default OS behavior).
+     *
+     * @throws SocketException if setting the option fails (e.g., socket not open or system error).
+     *
+     * @note Improper use of address reuse can have security and protocol implications. For most server applications,
+     * enabling this is recommended. For advanced load-balancing, see also SO_REUSEPORT (not portable).
+     *
+     * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     */
+    void setReuseAddress(bool enable) const;
+
+    /**
+     * @brief Query whether the address reuse option is enabled on this server socket.
+     *
+     * This function checks whether the socket is currently configured to allow reuse of local addresses.
+     *
+     * - On UNIX-like systems, this checks the `SO_REUSEADDR` socket option.
+     * - On Windows, this checks `SO_EXCLUSIVEADDRUSE`, but note that this is semantically **opposite**:
+     *   enabling `SO_EXCLUSIVEADDRUSE` **disables** address reuse.
+     *
+     * @return `true` if address reuse is enabled (i.e., `SO_REUSEADDR` is set on UNIX-like systems or
+     * `SO_EXCLUSIVEADDRUSE` is unset on Windows); `false` otherwise.
+     *
+     * @throws SocketException if the socket is not valid or the option cannot be retrieved.
+     *
+     * @note This reflects the current state of the reuse flag, which may have been set manually or inherited
+     * from system defaults. Always call this *after* socket creation, and *before* `bind()` for accurate results.
+     *
+     * @see setReuseAddress()
+     */
+    [[nodiscard]] bool getReuseAddress() const;
+
+    /**
+     * @brief Set the server socket to non-blocking or blocking mode.
+     *
+     * When in non-blocking mode, the `accept()` call will return immediately if no connections are pending,
+     * instead of blocking until a client connects.
+     *
+     * This is useful for integrating the server socket into event loops or custom I/O polling systems.
+     *
+     * @note This only affects the listening server socket. The accepted sockets returned by `accept()`
+     * remain in blocking mode by default and must be configured separately.
+     *
+     * @param nonBlocking true to enable non-blocking mode, false for blocking (default).
+     * @throws SocketException on error.
+     */
+    void setNonBlocking(bool nonBlocking) const;
+
+    /**
+     * @brief Check if the server socket is in non-blocking mode.
+     *
+     * This function queries the socket's current blocking mode.
+     * In non-blocking mode, operations like accept() return immediately
+     * if no connection is available, instead of blocking.
+     *
+     * @return true if the socket is non-blocking, false if it is blocking.
+     * @throws SocketException if the socket flags cannot be retrieved.
+     */
+    [[nodiscard]] bool getNonBlocking() const;
+
+    /**
+     * @brief Wait for the server socket to become ready to accept a connection.
+     *
+     * This method uses a specified timeout (in milliseconds) if provided,
+     * otherwise it falls back to the timeout set via `setSoTimeout()`.
+     *
+     * Internally, it uses the `select()` system call to monitor readiness.
+     *
+     * - If the effective timeout is negative, it blocks indefinitely.
+     * - If it is zero, it polls and returns immediately.
+     * - If it is positive, it waits up to that duration.
+     *
+     * @param timeoutMillis Optional timeout in milliseconds. If not provided, uses `getSoTimeout()`.
+     * @return true if the socket is ready to accept a connection, false on timeout.
+     * @throws SocketException if a system error occurs while waiting.
+     *
+     * @see setSoTimeout(), getSoTimeout(), accept(), tryAccept()
+     */
+    [[nodiscard]] bool waitReady(std::optional<int> timeoutMillis = std::nullopt) const;
+
+    /**
+     * @brief Set the timeout for accept() operations on this server socket.
+     *
+     * This timeout controls how long accept() will block while waiting for an incoming connection.
+     * It does not affect other socket operations such as read/write.
+     *
+     * @param millis Timeout in milliseconds:
+     *   - If negative (default), blocks indefinitely.
+     *   - If zero, polls the socket and returns immediately if no client is waiting.
+     *   - If positive, waits up to the specified time for a client to connect.
+     */
+    void setSoTimeout(const int millis) { _soTimeoutMillis = millis; }
+
+    /**
+     * @brief Get the currently configured timeout for accept() operations.
+     *
+     * @return Timeout in milliseconds:
+     *   - Negative: accept() blocks indefinitely.
+     *   - Zero: accept() polls and returns immediately.
+     *   - Positive: maximum time to wait for a client connection.
+     */
+    [[nodiscard]] int getSoTimeout() const { return _soTimeoutMillis; }
+
+    /**
+     * @brief Set the default receive buffer size for accepted client sockets.
+     *
+     * This sets the initial buffer size used when accepting new client connections.
+     * The buffer size determines how much data can be buffered for reading from
+     * the socket before the underlying receive buffer overflows.
+     *
+     * @param size New buffer size in bytes
+     * @see getReceiveBufferSize()
+     * @see DefaultBufferSize
+     * @see accept()
+     */
+    void setReceiveBufferSize(const std::size_t size) { _defaultBufferSize = size; }
+
+    /**
+     * @brief Get the current default receive buffer size for accepted client sockets.
+     *
+     * Returns the buffer size that will be used when accepting new client connections.
+     * This is the value previously set by setReceiveBufferSize() or the default if not set.
+     *
+     * @return Current buffer size in bytes
+     * @see setReceiveBufferSize()
+     * @see DefaultBufferSize
+     * @see accept()
+     */
+    std::size_t getReceiveBufferSize() const { return _defaultBufferSize; }
+
+  protected:
+    /**
+     * @brief Cleans up server socket resources and throws a SocketException.
+     *
+     * This method performs cleanup of the address information structures (_srvAddrInfo)
+     * and throws a SocketException with the provided error code. It's typically called
+     * when an error occurs during socket initialization or configuration.
+     *
+     * @param errorCode The error code to include in the thrown exception
+     * @throws SocketException Always throws with the provided error code and corresponding message
+     */
+    void cleanupAndThrow(int errorCode);
+
   private:
     SOCKET _serverSocket = INVALID_SOCKET; ///< Underlying socket file descriptor.
     addrinfo* _srvAddrInfo = nullptr;      ///< Address info for binding (from getaddrinfo)
     addrinfo* _selectedAddrInfo = nullptr; ///< Selected address info for binding
     unsigned short _port;                  ///< Port number the server will listen on
+    bool _isBound = false;                 ///< True if the server socket is bound
+    bool _isListening = false;             ///< True if the server socket is listening
+    int _soTimeoutMillis = -1; ///< Timeout for accept(); -1 = no timeout, 0 = poll, >0 = timeout in milliseconds
+    std::size_t _defaultBufferSize =
+        DefaultBufferSize; ///< Default buffer size used for accepted client sockets when no specific size is provided
 };
 
 } // namespace jsocketpp

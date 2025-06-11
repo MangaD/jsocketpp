@@ -315,7 +315,26 @@ void Socket::setNonBlocking(bool nonBlocking) const
 #endif
 }
 
-void Socket::setTimeout(int millis, bool forRead, bool forWrite) const
+bool Socket::getNonBlocking() const
+{
+#ifdef _WIN32
+    u_long mode = 0;
+    if (ioctlsocket(_sockFd, FIONBIO, &mode) != 0)
+    {
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    }
+    return mode != 0;
+#else
+    int flags = fcntl(_sockFd, F_GETFL, 0);
+    if (flags == -1)
+    {
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    }
+    return (flags & O_NONBLOCK) != 0;
+#endif
+}
+
+void Socket::setSoTimeout(int millis, bool forRead, bool forWrite) const
 {
 #ifdef _WIN32
     const int timeout = millis;

@@ -41,7 +41,7 @@ namespace jsocketpp
  * @date 2025
  * @version 1.0
  */
-class SocketException final : public std::exception
+class SocketException : public std::exception
 {
   public:
     explicit SocketException(const int code, std::string message = "SocketException")

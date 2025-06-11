@@ -63,7 +63,9 @@
 #include <netinet/in.h>  //for sockaddr_in and sockaddr_in6
 #include <netinet/tcp.h> //TCP_NODELAY, TCP_MAXSEG
 #include <sys/ioctl.h>   //ioctl
+#include <sys/select.h>  //select
 #include <sys/socket.h>  //socket
+#include <sys/time.h>    //timeval
 #include <sys/types.h>   //socket
 #include <sys/un.h>      //for Unix domain sockets
 #include <unistd.h>      //close

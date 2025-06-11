@@ -1,4 +1,5 @@
 #include "jsocketpp/ServerSocket.hpp"
+#include "jsocketpp/SocketTimeoutException.hpp"
 
 using namespace jsocketpp;
 
@@ -75,7 +76,7 @@ ServerSocket::ServerSocket(const unsigned short port) : _port(port)
             _selectedAddrInfo = p;
 
             // Configure the socket for dual-stack (IPv4 + IPv6) if it's IPv6
-            const int optionValue = 0; // 0 means allow both IPv4 and IPv6 connections
+            constexpr int optionValue = 0; // 0 means allow both IPv4 and IPv6 connections
             if (setsockopt(_serverSocket, IPPROTO_IPV6, IPV6_V6ONLY, reinterpret_cast<const char*>(&optionValue),
                            sizeof(optionValue)) == SOCKET_ERROR)
             {
@@ -111,9 +112,11 @@ ServerSocket::ServerSocket(const unsigned short port) : _port(port)
     }
 
     // Set socket options for address reuse
-    constexpr int optVal = 1;
-    if (setsockopt(_serverSocket, SOL_SOCKET, getSocketReuseOption(), reinterpret_cast<const char*>(&optVal),
-                   sizeof(optVal)) == SOCKET_ERROR)
+    try
+    {
+        setReuseAddress(true);
+    }
+    catch (const SocketException&)
     {
         cleanupAndThrow(GetSocketError());
     }
@@ -127,12 +130,118 @@ void ServerSocket::cleanupAndThrow(const int errorCode)
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
+std::string ServerSocket::getInetAddress() const
+{
+    if (_serverSocket == INVALID_SOCKET)
+        return "";
+
+    sockaddr_storage addr{};
+    socklen_t len = sizeof(addr);
+    if (getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    char host[INET6_ADDRSTRLEN] = {0};
+    if (getnameinfo(reinterpret_cast<sockaddr*>(&addr), len, host, sizeof(host), nullptr, 0, NI_NUMERICHOST) != 0)
+        return "";
+
+    return {host};
+}
+
+unsigned short ServerSocket::getLocalPort() const
+{
+    if (_serverSocket == INVALID_SOCKET)
+        return 0;
+
+    sockaddr_storage addr{};
+    socklen_t len = sizeof(addr);
+    if (getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    if (addr.ss_family == AF_INET)
+    {
+        return ntohs(reinterpret_cast<sockaddr_in*>(&addr)->sin_port);
+    }
+    if (addr.ss_family == AF_INET6)
+    {
+        return ntohs(reinterpret_cast<sockaddr_in6*>(&addr)->sin6_port);
+    }
+    return 0;
+}
+
+std::string ServerSocket::getLocalSocketAddress() const
+{
+    if (_serverSocket == INVALID_SOCKET)
+        return "";
+
+    sockaddr_storage addr{};
+    socklen_t len = sizeof(addr);
+    if (getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    char host[INET6_ADDRSTRLEN]{};
+    char serv[6]{};
+    if (getnameinfo(reinterpret_cast<sockaddr*>(&addr), len, host, sizeof(host), serv, sizeof(serv),
+                    NI_NUMERICHOST | NI_NUMERICSERV) != 0)
+        return "";
+
+    return std::string(host) + ":" + serv;
+}
+
 int ServerSocket::getSocketReuseOption()
 {
 #ifdef _WIN32
     return SO_EXCLUSIVEADDRUSE; // Windows-specific
 #else
     return SO_REUSEADDR; // Unix/Linux-specific
+#endif
+}
+
+void ServerSocket::setReuseAddress(const bool enable) const
+{
+    const int optVal = enable ? 1 : 0;
+    const int result = setsockopt(_serverSocket, SOL_SOCKET, getSocketReuseOption(),
+
+#ifdef _WIN32
+                                  reinterpret_cast<const char*>(&optVal),
+#else
+                                  &optVal,
+#endif
+                                  sizeof(optVal));
+
+    if (result == SOCKET_ERROR)
+    {
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    }
+}
+
+bool ServerSocket::getReuseAddress() const
+{
+    if (_serverSocket == INVALID_SOCKET)
+        throw SocketException(0, "getReuseAddress() failed: socket not open.");
+
+    int value = 0;
+#ifdef _WIN32
+    int len = sizeof(value);
+#else
+    socklen_t len = sizeof(value);
+#endif
+
+    if (const int opt = getSocketReuseOption(); getsockopt(_serverSocket, SOL_SOCKET, opt,
+#ifdef _WIN32
+                                                           reinterpret_cast<char*>(&value),
+#else
+                                                           &value,
+#endif
+                                                           &len) == SOCKET_ERROR)
+    {
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    }
+
+#ifdef _WIN32
+    // On Windows, SO_EXCLUSIVEADDRUSE is the opposite of SO_REUSEADDR
+    return value == 0; // If exclusive use is *not* set, reuse is allowed
+#else
+    return value != 0;
 #endif
 }
 
@@ -157,40 +266,16 @@ void ServerSocket::close()
 {
     if (this->_serverSocket != INVALID_SOCKET)
     {
-        try
-        {
-            // It's good practice to call shutdown before closing a listening socket,
-            // to ensure all resources are released and connections are properly terminated.
-            shutdown();
-        }
-        catch (...)
-        {
-            // Ignore shutdown errors, proceed to close anyway.
-        }
         if (CloseSocket(this->_serverSocket))
             throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
 
         this->_serverSocket = INVALID_SOCKET;
+        _isBound = false;
+        _isListening = false;
     }
 }
 
-void ServerSocket::shutdown() const
-{
-    if (this->_serverSocket != INVALID_SOCKET)
-    {
-        constexpr int how =
-#ifdef _WIN32
-            SD_BOTH;
-#else
-            SHUT_RDWR;
-#endif
-
-        if (::shutdown(this->_serverSocket, how))
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
-    }
-}
-
-void ServerSocket::bind() const
+void ServerSocket::bind()
 {
     // Ensure that we have already selected an address during construction
     if (_selectedAddrInfo == nullptr)
@@ -210,30 +295,129 @@ void ServerSocket::bind() const
     {
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     }
+
+    _isBound = true;
 }
 
-void ServerSocket::listen(const int backlog /* = SOMAXCONN */) const
+void ServerSocket::listen(const int backlog /* = SOMAXCONN */)
 {
     if (::listen(_serverSocket, backlog) == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    _isListening = true;
 }
 
-Socket ServerSocket::accept(const std::size_t bufferSize /* = 512 */) const
+Socket ServerSocket::accept(std::size_t bufferSize /* = DefaultBufferSize */) const
 {
-    // Create structure to hold client address
-    sockaddr_storage cli_addr{};
-    socklen_t cliLen = sizeof(cli_addr);
+    if (_serverSocket == INVALID_SOCKET)
+        throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    // Accept an incoming connection
-    const SOCKET clientSocket = ::accept(_serverSocket, reinterpret_cast<struct sockaddr*>(&cli_addr), &cliLen);
+    if (bufferSize == 0)
+        bufferSize = _defaultBufferSize;
 
-    // Handle socket creation failure
+    if (!waitReady())
+    {
+        throw SocketTimeoutException(0, "Timed out waiting for client connection.");
+    }
+    return acceptBlocking(bufferSize);
+}
+
+Socket ServerSocket::accept(int timeoutMillis, std::size_t bufferSize /* = DefaultBufferSize */) const
+{
+    if (_serverSocket == INVALID_SOCKET)
+        throw SocketException(0, "Server socket is not initialized or already closed.");
+
+    if (bufferSize == 0)
+        bufferSize = _defaultBufferSize;
+
+    if (!waitReady(timeoutMillis))
+        throw SocketTimeoutException(0, "Timed out waiting for client connection.");
+
+    return acceptBlocking(bufferSize);
+}
+
+std::optional<Socket> ServerSocket::tryAccept(std::size_t bufferSize) const
+{
+    if (_serverSocket == INVALID_SOCKET)
+        throw SocketException(0, "Server socket is not initialized or already closed.");
+
+    if (bufferSize == 0)
+        bufferSize = _defaultBufferSize;
+
+    // Use the configured SO_RCVTIMEO timeout
+    if (!waitReady())
+    {
+        return std::nullopt;
+    }
+
+    return acceptBlocking(bufferSize);
+}
+
+std::optional<Socket> ServerSocket::tryAccept(int timeoutMillis, std::size_t bufferSize) const
+{
+    if (_serverSocket == INVALID_SOCKET)
+    {
+        throw SocketException(0, "Server socket is not initialized or already closed.");
+    }
+
+    if (bufferSize == 0)
+        bufferSize = _defaultBufferSize;
+
+    // Wait for readiness based on timeout
+    if (!waitReady(timeoutMillis))
+    {
+        return std::nullopt; // No client connected within timeout
+    }
+
+    // Attempt to accept the connection
+    return acceptBlocking(bufferSize);
+}
+
+Socket ServerSocket::acceptBlocking(std::size_t bufferSize) const
+{
+    if (_serverSocket == INVALID_SOCKET)
+        throw SocketException(0, "Server socket is not initialized or already closed.");
+
+    if (bufferSize == 0)
+        bufferSize = _defaultBufferSize;
+
+    sockaddr_storage clientAddr{};
+    socklen_t addrLen = sizeof(clientAddr);
+
+    const SOCKET clientSocket = ::accept(_serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &addrLen);
     if (clientSocket == INVALID_SOCKET)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
-    Socket client(clientSocket, cli_addr, cliLen, bufferSize);
+    return {clientSocket, clientAddr, addrLen, bufferSize};
+}
 
-    return client;
+std::optional<Socket> ServerSocket::acceptNonBlocking(std::size_t bufferSize) const
+{
+    if (_serverSocket == INVALID_SOCKET)
+        throw SocketException(0, "Server socket is not initialized or already closed.");
+
+    if (bufferSize == 0)
+        bufferSize = _defaultBufferSize;
+
+    sockaddr_storage clientAddr{};
+    socklen_t addrLen = sizeof(clientAddr);
+
+    const SOCKET clientSocket = ::accept(_serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &addrLen);
+    if (clientSocket == INVALID_SOCKET)
+    {
+        const int err = GetSocketError();
+#ifdef _WIN32
+        if (err == WSAEWOULDBLOCK)
+#else
+        if (err == EWOULDBLOCK || err == EAGAIN)
+#endif
+        {
+            return std::nullopt;
+        }
+        throw SocketException(err, "accept() failed");
+    }
+
+    return Socket(clientSocket, clientAddr, addrLen, bufferSize);
 }
 
 void ServerSocket::setOption(const int level, const int optName, int value) const
@@ -265,4 +449,88 @@ int ServerSocket::getOption(const int level, const int optName) const
                    &len) == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     return value;
+}
+
+void ServerSocket::setNonBlocking(bool nonBlocking) const
+{
+#ifdef _WIN32
+    u_long mode = nonBlocking ? 1 : 0;
+    if (ioctlsocket(_serverSocket, FIONBIO, &mode) != 0)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+#else
+    int flags = fcntl(_serverSocket, F_GETFL, 0);
+    if (flags == -1)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    if (nonBlocking)
+        flags |= O_NONBLOCK;
+    else
+        flags &= ~O_NONBLOCK;
+    if (fcntl(_serverSocket, F_SETFL, flags) == -1)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+#endif
+}
+
+bool ServerSocket::getNonBlocking() const
+{
+#ifdef _WIN32
+    u_long mode = 0;
+    if (ioctlsocket(_serverSocket, FIONBIO, &mode) != 0)
+    {
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    }
+    return mode != 0;
+#else
+    int flags = fcntl(_serverSocket, F_GETFL, 0);
+    if (flags == -1)
+    {
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    }
+    return (flags & O_NONBLOCK) != 0;
+#endif
+}
+
+bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
+{
+    // Determine the effective timeout to use.
+    // If a specific timeout was passed, use it; otherwise, use the socket's configured SO_TIMEOUT value.
+    const int millis = timeoutMillis.value_or(_soTimeoutMillis);
+
+    // Prepare the file descriptor set for select().
+    // We want to monitor this server socket for readability (i.e., incoming connection).
+    fd_set readFds;
+    FD_ZERO(&readFds);               // Clear the set of file descriptors
+    FD_SET(_serverSocket, &readFds); // Add our server socket to the set
+
+    // Prepare the timeout structure for select()
+    timeval tv{};
+    const timeval* tvPtr = nullptr; // Null pointer means select() will wait indefinitely
+
+    if (millis > 0)
+    {
+        // Convert milliseconds to seconds + microseconds for struct timeval
+        tv.tv_sec = millis / 1000;
+        tv.tv_usec = (millis % 1000) * 1000;
+        tvPtr = &tv; // Use this timeout in select()
+    }
+    else if (millis == 0)
+    {
+        // Zero timeout means select() returns immediately (polling)
+        tv.tv_sec = 0;
+        tv.tv_usec = 0;
+        tvPtr = &tv;
+    }
+    // If millis is negative, we leave tvPtr as nullptr — meaning select() will block indefinitely.
+
+    // Call select() to wait for the server socket to become readable (i.e., a client is attempting to connect).
+    const int result = select(static_cast<int>(_serverSocket) + 1, &readFds, nullptr, nullptr, tvPtr);
+
+    if (result < 0)
+    {
+        // select() failed — throw an exception with the error code and message.
+        throw SocketException(GetSocketError(), "Failed to wait for incoming connection.");
+    }
+
+    // select() returns the number of sockets that are ready.
+    // If it's greater than 0, our server socket is ready to accept a connection.
+    return result > 0;
 }
