@@ -132,9 +132,9 @@ class ServerSocket
      * The constructor performs the following steps:
      *   - Prepares address resolution hints for dual-stack TCP sockets (IPv4 and IPv6).
      *   - Uses `getaddrinfo()` to resolve the provided `localAddress` (IP address or hostname) and the given `port`.
-     *     - If `localAddress` is empty (`{}`), the socket will accept connections on **all local interfaces**.
-     *     - If non-empty, binds only to the specified address/interface (e.g., `"127.0.0.1"`, `"::1"`,
-     * `"192.168.1.10"`).
+     *     - If `localAddress` is empty (`{}`), the socket will accept connections on **ALL local interfaces**.
+     *     - If non-empty, binds only to the specified address/interface (e.g., "127.0.0.1", "::1",
+     * "192.168.1.10").
      *   - Iterates through the address results, attempting to create a socket for each until one succeeds.
      *   - For IPv6 sockets, disables `IPV6_V6ONLY` for dual-stack support, unless a specific address requires
      * otherwise.
@@ -153,6 +153,8 @@ class ServerSocket
      *   - Once bound, further changes to address reuse have no effect.
      *   - The timeout applies to all `accept()` and `tryAccept()` calls unless a per-call timeout is provided.
      *   - For maximum compatibility with both IPv4 and IPv6 clients, use an empty `localAddress` and default settings.
+     *
+     * @note This constructor is not thread safe. Do not share a ServerSocket instance between threads during construction.
      *
      * @param port            The port number to prepare the server socket for (binding will occur according to
      * `autoBindListen`).
@@ -190,7 +192,10 @@ class ServerSocket
      *
      * Returns the string representation of the IP address (IPv4 or IPv6) the socket is bound to.
      * Useful for debugging, especially when binding to specific interfaces or when binding to
-     * `"0.0.0.0"` or `"::"` (any address).
+     * "0.0.0.0" or "::" (any address).
+     *
+     * @note This method is thread safe.
+     * @ingroup tcp
      *
      * @return The local IP address as a string, or an empty string if the socket is not bound.
      * @throws SocketException if there is an error retrieving the address.
@@ -211,6 +216,9 @@ class ServerSocket
      * system to automatically assign an available port. You can use this method after binding to discover the actual
      * port being used.
      *
+     * @note This method is thread safe.
+     * @ingroup tcp
+     *
      * @return The local port number, or `0` if the socket is not bound.
      * @throws SocketException if there is an error retrieving the port number.
      *
@@ -228,6 +236,9 @@ class ServerSocket
      *
      * Returns a string with the IP address and port in the format "ip:port" (e.g., "127.0.0.1:8080").
      * Useful for debugging, logging, and displaying server status.
+     *
+     * @note This method is thread safe.
+     * @ingroup tcp
      *
      * @return The local socket address as a string, or an empty string if the socket is not bound.
      * @throws SocketException if there is an error retrieving the address.
@@ -331,6 +342,9 @@ class ServerSocket
 
     /**
      * @brief Destructor. Closes the server socket and frees resources.
+     *
+     * @note This method is not thread safe. If multiple threads may call close(), external synchronization is required.
+     * @ingroup tcp
      */
     ~ServerSocket() noexcept;
 
@@ -379,7 +393,7 @@ class ServerSocket
      *
      * @return `true` if the socket is bound, `false` otherwise.
      */
-    [[nodiscard]] bool isBound() const { return _isBound; }
+    [[nodiscard]] bool isBound() const noexcept { return _isBound; }
 
     /**
      * @brief Marks the socket as a passive (listening) socket, ready to accept incoming TCP connection requests.
@@ -432,7 +446,7 @@ class ServerSocket
      *
      * @return `true` if the socket is listening for connections, `false` otherwise.
      */
-    [[nodiscard]] bool isListening() const { return _isListening; }
+    [[nodiscard]] bool isListening() const noexcept { return _isListening; }
 
     /**
      * @brief Accept an incoming client connection, respecting the configured socket timeout.
@@ -866,7 +880,7 @@ class ServerSocket
      *
      * @see close()
      */
-    [[nodiscard]] bool isValid() const { return this->_serverSocket != INVALID_SOCKET; }
+    [[nodiscard]] bool isValid() const noexcept { return this->_serverSocket != INVALID_SOCKET; }
 
     /**
      * @brief Check if the server socket has been closed.
@@ -876,7 +890,7 @@ class ServerSocket
      *
      * @return `true` if the socket has been closed, `false` if it is still open.
      */
-    [[nodiscard]] bool isClosed() const { return this->_serverSocket == INVALID_SOCKET; }
+    [[nodiscard]] bool isClosed() const noexcept { return this->_serverSocket == INVALID_SOCKET; }
 
     /**
      * @brief Set a socket option for the listening server socket.
@@ -1088,7 +1102,7 @@ class ServerSocket
      *   - Zero: accept() polls and returns immediately.
      *   - Positive: maximum time to wait for a client connection.
      */
-    [[nodiscard]] int getSoTimeout() const { return _soTimeoutMillis; }
+    [[nodiscard]] int getSoTimeout() const noexcept { return _soTimeoutMillis; }
 
     /**
      * @brief Set the default receive buffer size for accepted client sockets.
@@ -1115,7 +1129,7 @@ class ServerSocket
      * @see DefaultBufferSize
      * @see accept()
      */
-    [[nodiscard]] std::size_t getReceiveBufferSize() const { return _defaultBufferSize; }
+    [[nodiscard]] std::size_t getReceiveBufferSize() const noexcept { return _defaultBufferSize; }
 
 #if defined(SO_REUSEPORT)
     /**
