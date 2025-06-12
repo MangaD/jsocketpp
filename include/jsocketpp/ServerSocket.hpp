@@ -125,42 +125,66 @@ class ServerSocket
     static constexpr std::size_t DefaultBufferSize = 4096;
 
     /**
-     * @brief Constructs a ServerSocket object for listening to incoming TCP connections on the specified port.
+     * @brief Constructs a ServerSocket for listening to incoming TCP connections with full configuration control.
      *
-     * This constructor creates a TCP server socket that supports both IPv4 and IPv6, but does **not** bind or listen
-     * yet. It performs the following steps:
-     *   - Prepares address resolution hints to allow both IPv4 and IPv6 (dual-stack) TCP connections.
-     *   - Uses `getaddrinfo()` to resolve possible local addresses for the specified port.
-     *   - Iterates through the results, creating a socket for each address until one succeeds.
-     *   - If an IPv6 socket is chosen, disables `IPV6_V6ONLY` to allow both IPv4 and IPv6 connections by default.
-     *   - **Sets the socket's address reuse option to enabled by default**:
-     *       - On Windows, uses `SO_EXCLUSIVEADDRUSE` (prevents other processes from binding to the same port).
-     *       - On Unix-like systems, uses `SO_REUSEADDR` (allows quick reuse of the port after closure).
+     * This constructor creates a TCP server socket that supports both IPv4 and IPv6, with flexible options
+     * for binding, listening, address selection, address reuse, and accept timeouts.
+     *
+     * The constructor performs the following steps:
+     *   - Prepares address resolution hints for dual-stack TCP sockets (IPv4 and IPv6).
+     *   - Uses `getaddrinfo()` to resolve the provided `localAddress` (IP address or hostname) and the given `port`.
+     *     - If `localAddress` is empty (`{}`), the socket will accept connections on **all local interfaces**.
+     *     - If non-empty, binds only to the specified address/interface (e.g., `"127.0.0.1"`, `"::1"`,
+     * `"192.168.1.10"`).
+     *   - Iterates through the address results, attempting to create a socket for each until one succeeds.
+     *   - For IPv6 sockets, disables `IPV6_V6ONLY` for dual-stack support, unless a specific address requires
+     * otherwise.
+     *   - Sets the address reuse option (`reuseAddress`) **before** binding:
+     *       - On Windows, uses `SO_EXCLUSIVEADDRUSE` (for exclusive binding).
+     *       - On Unix-like systems, uses `SO_REUSEADDR` (for fast port reuse).
+     *   - If `autoBindListen` is true, automatically calls `bind()` and `listen()` (with default backlog).
+     *     Otherwise, you must call them manually after construction.
+     *   - Sets the accept timeout (`soTimeoutMillis`) for all subsequent `accept()` operations.
      *
      * @note
-     *   - The socket is **not bound or listening** when the constructor finishes. You must call `bind()` and `listen()`
-     * explicitly.
-     *   - The default address reuse setting is applied immediately after socket creation. You may change it by calling
-     *     `setReuseAddress()` before calling `bind()`. The last value set before `bind()` will be used.
-     *   - Once the socket is bound, further changes to the address reuse option will have no effect.
+     *   - If you want to fine-tune socket options (e.g., reuse, timeouts) or bind on demand, use `autoBindListen =
+     * false` and set options before calling `bind()` and `listen()`.
+     *   - The final reuse address setting is determined by the last value set before `bind()` (either by parameter or
+     *     `setReuseAddress()`).
+     *   - Once bound, further changes to address reuse have no effect.
+     *   - The timeout applies to all `accept()` and `tryAccept()` calls unless a per-call timeout is provided.
+     *   - For maximum compatibility with both IPv4 and IPv6 clients, use an empty `localAddress` and default settings.
      *
-     * @param port The port number to prepare the server socket for (binding will occur when `bind()` is called).
+     * @param port            The port number to prepare the server socket for (binding will occur according to
+     * `autoBindListen`).
+     * @param localAddress    The local address/interface to bind to (empty for all interfaces).
+     * @param autoBindListen  If true (default), automatically binds and listens. If false, user must call them
+     * manually.
+     * @param reuseAddress    If true (default), enables address reuse (see above) before binding.
+     * @param soTimeoutMillis Accept timeout in milliseconds for `accept()`; -1 (default) means block indefinitely.
      *
-     * @throws SocketException If address resolution, socket creation, or socket option configuration fails.
+     * @throws SocketException If address resolution, socket creation, binding, or socket option configuration fails.
      *
-     * @see setReuseAddress(), bind(), listen()
+     * @see setReuseAddress(), setSoTimeout(), bind(), listen(), accept()
      *
      * @ingroup tcp
      *
      * @code
-     * // Example usage
+     * // Example: Minimal usage—listen on all interfaces, default options
      * jsocketpp::ServerSocket server(8080);
-     * server.setReuseAddress(false); // (Optional) Override default before binding
+     *
+     * // Example: Listen on all interfaces, enable address reuse, block up to 5 seconds for accept()
+     * jsocketpp::ServerSocket server(8080, {}, true, true, 5000);
+     *
+     * // Example: Manual control—bind and listen later
+     * jsocketpp::ServerSocket server(8080, "127.0.0.1", false, false);
+     * server.setReuseAddress(true); // Change before bind
      * server.bind();
      * server.listen();
      * @endcode
      */
-    explicit ServerSocket(unsigned short port);
+    explicit ServerSocket(unsigned short port, std::string_view localAddress = {}, bool autoBindListen = true,
+                          bool reuseAddress = true, int soTimeoutMillis = -1);
 
     /**
      * @brief Get the local IP address to which the server socket is bound.

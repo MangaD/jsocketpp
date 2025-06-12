@@ -79,18 +79,13 @@ sudo make install
 #include <jsocketpp/ServerSocket.hpp>
 
 int main() {
-    // Start a server
-    ServerSocket server(8080);
-    server.bind();
-    server.listen();
+    // Start a server with address reuse and 5s accept timeout, auto-bind/listen
+    ServerSocket server(8080, {}, true, true, 5000);
+    // (bind() and listen() are called automatically)
 
     Socket client = server.accept();
     std::string msg = client.read<std::string>();
     client.write("Hello from server!");
-
-    client.close();
-    server.close();
-    return 0;
 }
 ```
 
@@ -109,9 +104,6 @@ int main() {
 
     // Echo it back to sender
     socket.write(packet);
-
-    socket.close();
-    return 0;
 }
 ```
 

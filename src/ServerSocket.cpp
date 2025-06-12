@@ -3,7 +3,9 @@
 
 using namespace jsocketpp;
 
-ServerSocket::ServerSocket(const unsigned short port) : _port(port)
+ServerSocket::ServerSocket(const unsigned short port, std::string_view localAddress, bool autoBindListen,
+                           bool reuseAddress, int soTimeoutMillis)
+    : _port(port)
 {
     // Prepare the hints structure for getaddrinfo to specify the desired socket type and protocol.
     addrinfo hints{}; // Initialize the hints structure to zero
@@ -46,10 +48,11 @@ ServerSocket::ServerSocket(const unsigned short port) : _port(port)
 
     // Resolve the local address and port to be used by the server
     const std::string portStr = std::to_string(_port);
-    auto ret = getaddrinfo(nullptr,         // Node (hostname or IP address); nullptr means local host
-                           portStr.c_str(), // Service (port number or service name) as a C-string
-                           &hints,          // Pointer to struct addrinfo with hints about the type of socket
-                           &_srvAddrInfo    // Output: pointer to a linked list of results (set by getaddrinfo)
+    auto ret = getaddrinfo(
+        localAddress.empty() ? nullptr : localAddress.data(), // Node (hostname or IP address); nullptr means local host
+        portStr.c_str(),                                      // Service (port number or service name) as a C-string
+        &hints,       // Pointer to struct addrinfo with hints about the type of socket
+        &_srvAddrInfo // Output: pointer to a linked list of results (set by getaddrinfo)
     );
     if (ret != 0)
     {
@@ -112,13 +115,23 @@ ServerSocket::ServerSocket(const unsigned short port) : _port(port)
     // Set socket options for address reuse
     try
     {
-        setReuseAddress(true);
+        setReuseAddress(reuseAddress);
     }
     catch (const SocketException&)
     {
         cleanupAndThrow(GetSocketError());
     }
+
+    // Set accept timeout as requested
+    setSoTimeout(soTimeoutMillis);
+
+    if (autoBindListen)
+    {
+        bind();
+        listen();
+    }
 }
+
 void ServerSocket::cleanupAndThrow(const int errorCode)
 {
     // Clean up addrinfo and throw exception with the error
