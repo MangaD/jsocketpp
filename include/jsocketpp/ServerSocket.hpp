@@ -7,7 +7,6 @@
 
 #include "Socket.hpp"
 #include "SocketException.hpp"
-#include "SocketTimeoutException.hpp"
 #include "common.hpp"
 
 #include <optional>
@@ -270,7 +269,7 @@ class ServerSocket
      *
      * @param rhs The ServerSocket to move from
      */
-    ServerSocket::ServerSocket(ServerSocket&& rhs) noexcept
+    ServerSocket(ServerSocket&& rhs) noexcept
         : _serverSocket(rhs._serverSocket), _srvAddrInfo(rhs._srvAddrInfo), _selectedAddrInfo(rhs._selectedAddrInfo),
           _port(rhs._port), _isBound(rhs._isBound), _isListening(rhs._isListening),
           _soTimeoutMillis(rhs._soTimeoutMillis), _defaultBufferSize(rhs._defaultBufferSize)
@@ -514,7 +513,7 @@ class ServerSocket
      * }
      * @endcode
      */
-    Socket accept(std::size_t bufferSize = 0) const;
+    [[nodiscard]] Socket accept(std::size_t bufferSize = 0) const;
 
     /**
      * @brief Accept an incoming client connection, waiting up to the specified timeout.
@@ -1078,7 +1077,7 @@ class ServerSocket
      * @throws SocketException if the socket is not IPv6, not open, or on system error.
      * @see setIPv6Only()
      */
-    bool getIPv6Only() const;
+    [[nodiscard]] bool getIPv6Only() const;
 #endif
 
     /**
@@ -1116,7 +1115,7 @@ class ServerSocket
      * @see DefaultBufferSize
      * @see accept()
      */
-    std::size_t getReceiveBufferSize() const { return _defaultBufferSize; }
+    [[nodiscard]] std::size_t getReceiveBufferSize() const { return _defaultBufferSize; }
 
 #if defined(SO_REUSEPORT)
     /**
@@ -1156,7 +1155,7 @@ class ServerSocket
      * @see setReusePort(bool)
      * @see https://man7.org/linux/man-pages/man7/socket.7.html
      */
-    bool getReusePort() const;
+    [[nodiscard]] bool getReusePort() const;
 #endif
 
   protected:

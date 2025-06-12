@@ -54,8 +54,8 @@
 
 // Assuming Linux
 #include <arpa/inet.h>   //for inet_ntoa
+#include <cerrno>        //errno
 #include <cstring>       //strerror
-#include <errno.h>       //errno
 #include <fcntl.h>       //fcntl
 #include <ifaddrs.h>     //getifaddrs
 #include <net/if.h>      //if_nametoindex

@@ -214,20 +214,8 @@ int ServerSocket::getSocketReuseOption()
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
 void ServerSocket::setReuseAddress(const bool enable)
 {
-    const int optVal = enable ? 1 : 0;
-    const int result = setsockopt(_serverSocket, SOL_SOCKET, getSocketReuseOption(),
-
-#ifdef _WIN32
-                                  reinterpret_cast<const char*>(&optVal),
-#else
-                                  &optVal,
-#endif
-                                  sizeof(optVal));
-
-    if (result == SOCKET_ERROR)
-    {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    }
+    const int opt = enable ? 1 : 0;
+    setOption(SOL_SOCKET, getSocketReuseOption(), opt);
 }
 
 bool ServerSocket::getReuseAddress() const
@@ -235,23 +223,7 @@ bool ServerSocket::getReuseAddress() const
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "getReuseAddress() failed: socket not open.");
 
-    int value = 0;
-#ifdef _WIN32
-    int len = sizeof(value);
-#else
-    socklen_t len = sizeof(value);
-#endif
-
-    if (const int opt = getSocketReuseOption(); getsockopt(_serverSocket, SOL_SOCKET, opt,
-#ifdef _WIN32
-                                                           reinterpret_cast<char*>(&value),
-#else
-                                                           &value,
-#endif
-                                                           &len) == SOCKET_ERROR)
-    {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    }
+    auto value = getOption(SOL_SOCKET, getSocketReuseOption());
 
 #ifdef _WIN32
     // On Windows, SO_EXCLUSIVEADDRUSE is the opposite of SO_REUSEADDR
@@ -425,6 +397,7 @@ std::optional<Socket> ServerSocket::acceptNonBlocking(std::size_t bufferSize) co
 #ifdef _WIN32
         if (err == WSAEWOULDBLOCK)
 #else
+        // NOLINTNEXTLINE
         if (err == EWOULDBLOCK || err == EAGAIN)
 #endif
         {
@@ -498,7 +471,7 @@ bool ServerSocket::getNonBlocking() const
     }
     return mode != 0;
 #else
-    int flags = fcntl(_serverSocket, F_GETFL, 0);
+    const int flags = fcntl(_serverSocket, F_GETFL, 0);
     if (flags == -1)
     {
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
@@ -521,7 +494,10 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
 
     // Prepare the timeout structure for select()
     timeval tv{};
-    const timeval* tvPtr = nullptr; // Null pointer means select() will wait indefinitely
+#ifdef _WIN32
+    const
+#endif
+        timeval* tvPtr = nullptr; // Null pointer means select() will wait indefinitely
 
     if (millis > 0)
     {
@@ -554,24 +530,15 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
 }
 
 #if defined(SO_REUSEPORT)
-void ServerSocket::setReusePort(bool enable)
+void ServerSocket::setReusePort(const bool enable)
 {
-    int opt = enable ? 1 : 0;
-    if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) < 0)
-    {
-        throw SocketException(GetSocketError(), "Failed to set SO_REUSEPORT.");
-    }
+    const int opt = enable ? 1 : 0;
+    setOption(SOL_SOCKET, SO_REUSEPORT, opt);
 }
 
 bool ServerSocket::getReusePort() const
 {
-    int opt = 0;
-    socklen_t len = sizeof(opt);
-    if (getsockopt(_serverSocket, SOL_SOCKET, SO_REUSEPORT, &opt, &len) < 0)
-    {
-        throw SocketException(GetSocketError(), "Failed to get SO_REUSEPORT.");
-    }
-    return opt != 0;
+    return getOption(SOL_SOCKET, SO_REUSEPORT);
 }
 #endif
 
@@ -592,17 +559,8 @@ void ServerSocket::setIPv6Only(const bool enable)
     if (ss.ss_family != AF_INET6)
         throw SocketException(0, "setIPv6Only: Socket is not IPv6.");
 
-    int optVal = enable ? 1 : 0;
-    if (setsockopt(_serverSocket, IPPROTO_IPV6, IPV6_V6ONLY,
-#ifdef _WIN32
-                   reinterpret_cast<const char*>(&optVal),
-#else
-                   &optVal,
-#endif
-                   sizeof(optVal)) != 0)
-    {
-        throw SocketException(GetSocketError(), "setIPv6Only: setsockopt(IPV6_V6ONLY) failed.");
-    }
+    const int opt = enable ? 1 : 0;
+    setOption(IPPROTO_IPV6, IPV6_V6ONLY, opt);
 }
 
 bool ServerSocket::getIPv6Only() const
@@ -618,24 +576,7 @@ bool ServerSocket::getIPv6Only() const
     if (ss.ss_family != AF_INET6)
         throw SocketException(0, "getIPv6Only: Socket is not IPv6.");
 
-    int optVal = 0;
-    auto optLen =
-#ifdef _WIN32
-        static_cast<socklen_t>(sizeof(optVal));
-#else
-        sizeof(optVal);
-#endif
-    if (getsockopt(_serverSocket, IPPROTO_IPV6, IPV6_V6ONLY,
-#ifdef _WIN32
-                   reinterpret_cast<char*>(&optVal),
-#else
-                   &optval,
-#endif
-                   &optLen) != 0)
-    {
-        throw SocketException(GetSocketError(), "getIPv6Only: getsockopt(IPV6_V6ONLY) failed.");
-    }
-    return optVal != 0;
+    return getOption(IPPROTO_IPV6, IPV6_V6ONLY);
 }
 
 #endif // IPV6_V6ONLY
