@@ -4,7 +4,7 @@
 using namespace jsocketpp;
 
 ServerSocket::ServerSocket(const unsigned short port, const std::string_view localAddress, const bool autoBindListen,
-                           const bool reuseAddress, const int soTimeoutMillis)
+                           const bool reuseAddress, const int soTimeoutMillis, const bool dualStack)
     : _port(port)
 {
     // Prepare the hints structure for getaddrinfo to specify the desired socket type and protocol.
@@ -76,10 +76,10 @@ ServerSocket::ServerSocket(const unsigned short port, const std::string_view loc
             // Store the address that worked
             _selectedAddrInfo = p;
 
-            // Configure the socket for dual-stack (IPv4 + IPv6) if it's IPv6
+            // Configure the socket for dual-stack (IPv4 + IPv6) or IPv6-only as requested
             try
             {
-                setIPv6Only(false);
+                setIPv6Only(!dualStack);
             }
             catch (const SocketException& se)
             {

@@ -127,17 +127,19 @@ class ServerSocket
      * @brief Constructs a ServerSocket for listening to incoming TCP connections with full configuration control.
      *
      * This constructor creates a TCP server socket that supports both IPv4 and IPv6, with flexible options
-     * for binding, listening, address selection, address reuse, and accept timeouts.
+     * for binding, listening, address selection, address reuse, accept timeouts, and dual-stack (IPv4+IPv6) control.
      *
      * The constructor performs the following steps:
      *   - Prepares address resolution hints for dual-stack TCP sockets (IPv4 and IPv6).
      *   - Uses `getaddrinfo()` to resolve the provided `localAddress` (IP address or hostname) and the given `port`.
      *     - If `localAddress` is empty (`{}`), the socket will accept connections on **ALL local interfaces**.
      *     - If non-empty, binds only to the specified address/interface (e.g., "127.0.0.1", "::1",
-     * "192.168.1.10").
+     *       "192.168.1.10").
      *   - Iterates through the address results, attempting to create a socket for each until one succeeds.
-     *   - For IPv6 sockets, disables `IPV6_V6ONLY` for dual-stack support, unless a specific address requires
-     * otherwise.
+     *   - For IPv6 sockets, configures dual-stack or IPv6-only mode according to the `dualStack` parameter:
+     *       - If `dualStack` is true (default), disables `IPV6_V6ONLY` for dual-stack support (accepts both IPv4 and
+     * IPv6).
+     *       - If `dualStack` is false, enables `IPV6_V6ONLY` for IPv6-only operation (no IPv4-mapped addresses).
      *   - Sets the address reuse option (`reuseAddress`) **before** binding:
      *       - On Windows, uses `SO_EXCLUSIVEADDRUSE` (for exclusive binding).
      *       - On Unix-like systems, uses `SO_REUSEADDR` (for fast port reuse).
@@ -147,23 +149,27 @@ class ServerSocket
      *
      * @note
      *   - If you want to fine-tune socket options (e.g., reuse, timeouts) or bind on demand, use `autoBindListen =
-     * false` and set options before calling `bind()` and `listen()`.
+     *     false` and set options before calling `bind()` and `listen()`.
      *   - The final reuse address setting is determined by the last value set before `bind()` (either by parameter or
      *     `setReuseAddress()`).
      *   - Once bound, further changes to address reuse have no effect.
      *   - The timeout applies to all `accept()` and `tryAccept()` calls unless a per-call timeout is provided.
      *   - For maximum compatibility with both IPv4 and IPv6 clients, use an empty `localAddress` and default settings.
+     *   - Dual-stack mode is only relevant for IPv6 sockets. On platforms or addresses that do not support dual-stack,
+     *     the `dualStack` parameter may be ignored.
      *
      * @note This constructor is not thread safe. Do not share a ServerSocket instance between threads during
      * construction.
      *
      * @param port            The port number to prepare the server socket for (binding will occur according to
-     * `autoBindListen`).
+     *                        `autoBindListen`).
      * @param localAddress    The local address/interface to bind to (empty for all interfaces).
      * @param autoBindListen  If true (default), automatically binds and listens. If false, user must call them
-     * manually.
+     *                        manually.
      * @param reuseAddress    If true (default), enables address reuse (see above) before binding.
      * @param soTimeoutMillis Accept timeout in milliseconds for `accept()`; -1 (default) means block indefinitely.
+     * @param dualStack       If true (default), enables dual-stack (IPv4+IPv6) for IPv6 sockets. If false, enables
+     *                        IPv6-only mode (no IPv4-mapped addresses). Has no effect for IPv4 sockets.
      *
      * @throws SocketException If address resolution, socket creation, binding, or socket option configuration fails.
      *
@@ -183,10 +189,13 @@ class ServerSocket
      * server.setReuseAddress(true); // Change before bind
      * server.bind();
      * server.listen();
+     *
+     * // Example: IPv6-only server (no IPv4-mapped addresses)
+     * jsocketpp::ServerSocket server(8080, "::1", true, true, -1, false);
      * @endcode
      */
     explicit ServerSocket(unsigned short port, std::string_view localAddress = {}, bool autoBindListen = true,
-                          bool reuseAddress = true, int soTimeoutMillis = -1);
+                          bool reuseAddress = true, int soTimeoutMillis = -1, bool dualStack = true);
 
     /**
      * @brief Get the local IP address to which the server socket is bound.
