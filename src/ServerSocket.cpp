@@ -3,8 +3,8 @@
 
 using namespace jsocketpp;
 
-ServerSocket::ServerSocket(const unsigned short port, std::string_view localAddress, bool autoBindListen,
-                           bool reuseAddress, int soTimeoutMillis)
+ServerSocket::ServerSocket(const unsigned short port, const std::string_view localAddress, const bool autoBindListen,
+                           const bool reuseAddress, const int soTimeoutMillis)
     : _port(port)
 {
     // Prepare the hints structure for getaddrinfo to specify the desired socket type and protocol.
@@ -305,7 +305,7 @@ Socket ServerSocket::accept(std::size_t bufferSize /* = DefaultBufferSize */) co
 
     if (!waitReady())
     {
-        throw SocketTimeoutException(0, "Timed out waiting for client connection.");
+        throw SocketTimeoutException();
     }
     return acceptBlocking(bufferSize);
 }
@@ -319,7 +319,7 @@ Socket ServerSocket::accept(int timeoutMillis, std::size_t bufferSize /* = Defau
         bufferSize = _defaultBufferSize;
 
     if (!waitReady(timeoutMillis))
-        throw SocketTimeoutException(0, "Timed out waiting for client connection.");
+        throw SocketTimeoutException();
 
     return acceptBlocking(bufferSize);
 }

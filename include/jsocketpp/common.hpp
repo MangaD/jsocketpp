@@ -169,12 +169,16 @@ inline int CloseSocket(SOCKET fd)
 
 const char* inet_ntop_aux(int af, const void* src, char* dst, socklen_t size);
 
+#define JSOCKETPP_TIMEOUT_CODE WSAETIMEDOUT
+
 #else
 
 typedef int SOCKET;
 constexpr SOCKET INVALID_SOCKET = -1;
 constexpr SOCKET SOCKET_ERROR = -1;
 typedef sockaddr_un SOCKADDR_UN;
+
+#define JSOCKETPP_TIMEOUT_CODE ETIMEDOUT
 
 constexpr int InitSockets()
 {
@@ -210,11 +214,15 @@ std::vector<std::string> getHostAddr();
 /**
  * @brief Returns a human-readable error message for a socket error code.
  *
- * Converts a platform-specific socket error code (such as errno on POSIX or WSAGetLastError on Windows)
- * into a descriptive string. If `gaiStrerror` is true, uses getaddrinfo error strings.
+ * On Windows:
+ *   - For Winsock error codes (10000-11999), uses strerror (these include WSAETIMEDOUT).
+ *   - For system error codes (from GetLastError()), uses FormatMessageA.
+ * On POSIX:
+ *   - For getaddrinfo-related errors, uses gai_strerror if gaiStrerror is true.
+ *   - Otherwise, uses strerror.
  *
  * @param error The error code (platform-specific).
- * @param gaiStrerror If true, interpret error as a getaddrinfo error code.
+ * @param gaiStrerror If true, interpret error as a getaddrinfo error code (POSIX only).
  * @return A string describing the error.
  */
 std::string SocketErrorMessage(int error, [[maybe_unused]] bool gaiStrerror = false);
@@ -223,10 +231,11 @@ std::string SocketErrorMessage(int error, [[maybe_unused]] bool gaiStrerror = fa
  * @brief Returns a human-readable error message for a socket error code, with exception safety.
  *
  * Like SocketErrorMessage, but guarantees not to throw exceptions (e.g., for use in destructors).
- * If an error occurs while generating the message, returns a fallback string.
+ * If an error occurs while generating the message, returns a fallback string (on Windows, uses strerror for Winsock
+ * codes).
  *
  * @param error The error code (platform-specific).
- * @param gaiStrerror If true, interpret error as a getaddrinfo error code.
+ * @param gaiStrerror If true, interpret error as a getaddrinfo error code (POSIX only).
  * @return A string describing the error, or a fallback if an exception occurs.
  */
 std::string SocketErrorMessageWrap(int error, [[maybe_unused]] bool gaiStrerror = false);

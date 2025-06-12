@@ -8,6 +8,13 @@ std::string jsocketpp::SocketErrorMessage(int error, [[maybe_unused]] bool gaiSt
     if (error == 0)
         return {};
 
+    // Winsock error codes are in the range 10000-11999
+    if (error >= 10000 && error <= 11999)
+    {
+        // Use strerror for Winsock error codes (including WSAETIMEDOUT)
+        return std::string(strerror(error));
+    }
+
     LPSTR buffer = nullptr;
     DWORD size; // Use DWORD for FormatMessageA
 
@@ -29,7 +36,6 @@ std::string jsocketpp::SocketErrorMessage(int error, [[maybe_unused]] bool gaiSt
     }
     std::string errString(buffer, size);
     LocalFree(buffer);
-
     return errString;
 #else
     if (gaiStrerror)
@@ -51,6 +57,13 @@ std::string jsocketpp::SocketErrorMessageWrap(const int error, [[maybe_unused]] 
     catch (std::exception& e)
     {
         std::cerr << e.what() << std::endl;
+#ifdef _WIN32
+        // Fallback: try strerror for Winsock codes
+        if (error >= 10000 && error <= 11999)
+        {
+            errString = std::string(strerror(error));
+        }
+#endif
     }
     return errString;
 }
