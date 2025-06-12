@@ -77,12 +77,15 @@ ServerSocket::ServerSocket(const unsigned short port, std::string_view localAddr
             _selectedAddrInfo = p;
 
             // Configure the socket for dual-stack (IPv4 + IPv6) if it's IPv6
-            constexpr int optionValue = 0; // 0 means allow both IPv4 and IPv6 connections
-            if (setsockopt(_serverSocket, IPPROTO_IPV6, IPV6_V6ONLY, reinterpret_cast<const char*>(&optionValue),
-                           sizeof(optionValue)) == SOCKET_ERROR)
+            try
             {
-                cleanupAndThrow(GetSocketError());
+                setIPv6Only(false);
             }
+            catch (const SocketException& se)
+            {
+                cleanupAndThrow(se.getErrorCode());
+            }
+
             break; // Exit after successfully creating the IPv6 socket
         }
     }
@@ -571,3 +574,68 @@ bool ServerSocket::getReusePort() const
     return opt != 0;
 }
 #endif
+
+#if defined(IPV6_V6ONLY)
+
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void ServerSocket::setIPv6Only(const bool enable)
+{
+    // Check if the socket is valid and AF_INET6
+    if (_serverSocket == INVALID_SOCKET)
+        throw SocketException(0, "setIPv6Only: Socket is not open.");
+
+    sockaddr_storage ss{};
+    socklen_t len = sizeof(ss);
+    if (getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&ss), &len) != 0)
+        throw SocketException(GetSocketError(), "setIPv6Only: getsockname() failed.");
+
+    if (ss.ss_family != AF_INET6)
+        throw SocketException(0, "setIPv6Only: Socket is not IPv6.");
+
+    int optVal = enable ? 1 : 0;
+    if (setsockopt(_serverSocket, IPPROTO_IPV6, IPV6_V6ONLY,
+#ifdef _WIN32
+                   reinterpret_cast<const char*>(&optVal),
+#else
+                   &optVal,
+#endif
+                   sizeof(optVal)) != 0)
+    {
+        throw SocketException(GetSocketError(), "setIPv6Only: setsockopt(IPV6_V6ONLY) failed.");
+    }
+}
+
+bool ServerSocket::getIPv6Only() const
+{
+    if (_serverSocket == INVALID_SOCKET)
+        throw SocketException(0, "getIPv6Only: Socket is not open.");
+
+    sockaddr_storage ss{};
+    socklen_t len = sizeof(ss);
+    if (getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&ss), &len) != 0)
+        throw SocketException(GetSocketError(), "getIPv6Only: getsockname() failed.");
+
+    if (ss.ss_family != AF_INET6)
+        throw SocketException(0, "getIPv6Only: Socket is not IPv6.");
+
+    int optVal = 0;
+    auto optLen =
+#ifdef _WIN32
+        static_cast<socklen_t>(sizeof(optVal));
+#else
+        sizeof(optVal);
+#endif
+    if (getsockopt(_serverSocket, IPPROTO_IPV6, IPV6_V6ONLY,
+#ifdef _WIN32
+                   reinterpret_cast<char*>(&optVal),
+#else
+                   &optval,
+#endif
+                   &optLen) != 0)
+    {
+        throw SocketException(GetSocketError(), "getIPv6Only: getsockopt(IPV6_V6ONLY) failed.");
+    }
+    return optVal != 0;
+}
+
+#endif // IPV6_V6ONLY
