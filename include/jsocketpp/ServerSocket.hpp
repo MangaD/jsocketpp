@@ -154,7 +154,8 @@ class ServerSocket
      *   - The timeout applies to all `accept()` and `tryAccept()` calls unless a per-call timeout is provided.
      *   - For maximum compatibility with both IPv4 and IPv6 clients, use an empty `localAddress` and default settings.
      *
-     * @note This constructor is not thread safe. Do not share a ServerSocket instance between threads during construction.
+     * @note This constructor is not thread safe. Do not share a ServerSocket instance between threads during
+     * construction.
      *
      * @param port            The port number to prepare the server socket for (binding will occur according to
      * `autoBindListen`).
@@ -1063,6 +1064,8 @@ class ServerSocket
      * This timeout controls how long accept() will block while waiting for an incoming connection.
      * It does not affect other socket operations such as read/write.
      *
+     * @note Thread-safe if called before concurrent accept() calls.
+     *
      * @param millis Timeout in milliseconds:
      *   - If negative (default), blocks indefinitely.
      *   - If zero, polls the socket and returns immediately if no client is waiting.
@@ -1110,6 +1113,8 @@ class ServerSocket
      * This sets the initial buffer size used when accepting new client connections.
      * The buffer size determines how much data can be buffered for reading from
      * the socket before the underlying receive buffer overflows.
+     *
+     * @note Thread-safe if called before concurrent accept() calls.
      *
      * @param size New buffer size in bytes
      * @see getReceiveBufferSize()
@@ -1186,6 +1191,26 @@ class ServerSocket
     void cleanupAndThrow(int errorCode);
 
   private:
+    /**
+     * @brief Get the effective buffer size to use for socket operations.
+     *
+     * This helper method determines the actual buffer size to use based on the provided
+     * buffer size parameter and the default buffer size configured for the server socket.
+     * If the provided size is 0, it returns the default buffer size; otherwise, it returns
+     * the provided size.
+     *
+     * @param bufferSize The requested buffer size (0 means use default)
+     * @return The effective buffer size to use
+     *
+     * @see setReceiveBufferSize()
+     * @see getReceiveBufferSize()
+     * @see DefaultBufferSize
+     */
+    [[nodiscard]] std::size_t getEffectiveBufferSize(const std::size_t bufferSize) const
+    {
+        return bufferSize == 0 ? _defaultBufferSize : bufferSize;
+    }
+
     SOCKET _serverSocket = INVALID_SOCKET; ///< Underlying socket file descriptor.
     addrinfo* _srvAddrInfo = nullptr;      ///< Address info for binding (from getaddrinfo)
     addrinfo* _selectedAddrInfo = nullptr; ///< Selected address info for binding

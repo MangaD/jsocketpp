@@ -12,7 +12,7 @@ std::string jsocketpp::SocketErrorMessage(int error, [[maybe_unused]] bool gaiSt
     if (error >= 10000 && error <= 11999)
     {
         // Use strerror for Winsock error codes (including WSAETIMEDOUT)
-        return std::string(strerror(error));
+        return {strerror(error)};
     }
 
     LPSTR buffer = nullptr;
@@ -41,7 +41,7 @@ std::string jsocketpp::SocketErrorMessage(int error, [[maybe_unused]] bool gaiSt
     if (gaiStrerror)
     {
         // Use gai_strerror for getaddrinfo/freeaddrinfo/getnameinfo errors
-        return std::string(gai_strerror(error));
+        return {gai_strerror(error)};
     }
     return std::strerror(error);
 #endif

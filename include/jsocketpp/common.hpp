@@ -62,6 +62,7 @@
 #include <netdb.h>       //for struct addrinfo
 #include <netinet/in.h>  //for sockaddr_in and sockaddr_in6
 #include <netinet/tcp.h> //TCP_NODELAY, TCP_MAXSEG
+#include <poll.h>        //poll
 #include <sys/ioctl.h>   //ioctl
 #include <sys/select.h>  //select
 #include <sys/socket.h>  //socket
@@ -192,12 +193,12 @@ inline int GetSocketError()
 {
     return errno;
 }
-inline int CloseSocket(SOCKET fd)
+inline int CloseSocket(const SOCKET fd)
 {
     return close(fd);
 }
 
-inline int ioctlsocket(SOCKET fd, long cmd, u_long* argp)
+inline int ioctlsocket(const SOCKET fd, const long cmd, u_long* argp)
 {
     return ioctl(fd, static_cast<unsigned long>(cmd), argp);
 }

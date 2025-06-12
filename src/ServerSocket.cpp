@@ -48,7 +48,7 @@ ServerSocket::ServerSocket(const unsigned short port, const std::string_view loc
 
     // Resolve the local address and port to be used by the server
     const std::string portStr = std::to_string(_port);
-    auto ret = getaddrinfo(
+    const auto ret = getaddrinfo(
         localAddress.empty() ? nullptr : localAddress.data(), // Node (hostname or IP address); nullptr means local host
         portStr.c_str(),                                      // Service (port number or service name) as a C-string
         &hints,       // Pointer to struct addrinfo with hints about the type of socket
@@ -137,10 +137,16 @@ ServerSocket::ServerSocket(const unsigned short port, const std::string_view loc
 
 void ServerSocket::cleanupAndThrow(const int errorCode)
 {
-    // Clean up addrinfo and throw exception with the error
+    if (_serverSocket != INVALID_SOCKET)
+    {
+        CloseSocket(_serverSocket);
+        _serverSocket = INVALID_SOCKET;
+    }
     if (_srvAddrInfo != nullptr)
+    {
         freeaddrinfo(_srvAddrInfo); // ignore errors from freeaddrinfo
-    _srvAddrInfo = nullptr;
+        _srvAddrInfo = nullptr;
+    }
     _selectedAddrInfo = nullptr;
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
@@ -300,12 +306,11 @@ Socket ServerSocket::accept(std::size_t bufferSize /* = DefaultBufferSize */) co
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    if (bufferSize == 0)
-        bufferSize = _defaultBufferSize;
+    bufferSize = getEffectiveBufferSize(bufferSize);
 
     if (!waitReady())
     {
-        throw SocketTimeoutException();
+        throw SocketTimeoutException{};
     }
     return acceptBlocking(bufferSize);
 }
@@ -315,11 +320,10 @@ Socket ServerSocket::accept(int timeoutMillis, std::size_t bufferSize /* = Defau
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    if (bufferSize == 0)
-        bufferSize = _defaultBufferSize;
+    bufferSize = getEffectiveBufferSize(bufferSize);
 
     if (!waitReady(timeoutMillis))
-        throw SocketTimeoutException();
+        throw SocketTimeoutException{};
 
     return acceptBlocking(bufferSize);
 }
@@ -329,8 +333,7 @@ std::optional<Socket> ServerSocket::tryAccept(std::size_t bufferSize) const
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    if (bufferSize == 0)
-        bufferSize = _defaultBufferSize;
+    bufferSize = getEffectiveBufferSize(bufferSize);
 
     // Use the configured SO_RCVTIMEO timeout
     if (!waitReady())
@@ -348,8 +351,7 @@ std::optional<Socket> ServerSocket::tryAccept(int timeoutMillis, std::size_t buf
         throw SocketException(0, "Server socket is not initialized or already closed.");
     }
 
-    if (bufferSize == 0)
-        bufferSize = _defaultBufferSize;
+    bufferSize = getEffectiveBufferSize(bufferSize);
 
     // Wait for readiness based on timeout
     if (!waitReady(timeoutMillis))
@@ -366,8 +368,7 @@ Socket ServerSocket::acceptBlocking(std::size_t bufferSize) const
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    if (bufferSize == 0)
-        bufferSize = _defaultBufferSize;
+    bufferSize = getEffectiveBufferSize(bufferSize);
 
     sockaddr_storage clientAddr{};
     socklen_t addrLen = sizeof(clientAddr);
@@ -384,8 +385,7 @@ std::optional<Socket> ServerSocket::acceptNonBlocking(std::size_t bufferSize) co
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    if (bufferSize == 0)
-        bufferSize = _defaultBufferSize;
+    bufferSize = getEffectiveBufferSize(bufferSize);
 
     sockaddr_storage clientAddr{};
     socklen_t addrLen = sizeof(clientAddr);
@@ -480,12 +480,60 @@ bool ServerSocket::getNonBlocking() const
 #endif
 }
 
+/**
+ * @brief Wait for the server socket to become ready to accept a connection (incoming client).
+ *
+ * This method waits until the server socket is ready to accept a new client connection, using an optional timeout.
+ *
+ * - On POSIX systems, this uses `poll()` for readiness notification, which is more flexible and avoids the limitations
+ * of `select()` (such as FD_SETSIZE and bitmask management).
+ * - On Windows, this uses `select()` for compatibility, as it is the most portable and reliable approach on that
+ * platform.
+ *
+ * The timeout is specified in milliseconds:
+ *   - If negative, the call blocks indefinitely until a client is ready.
+ *   - If zero, the call polls and returns immediately.
+ *   - If positive, the call waits up to the specified number of milliseconds.
+ *
+ * @note This method is thread safe, but the underlying socket should not be closed or modified concurrently.
+ *
+ * @param timeoutMillis Optional timeout in milliseconds. If not provided, uses the socket's configured SO_TIMEOUT
+ * value.
+ * @return true if the socket is ready to accept a connection, false if the timeout expired.
+ * @throws SocketException if a system error occurs while waiting or if the socket is not initialized.
+ *
+ * @ingroup tcp
+ */
 bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
 {
+    if (_serverSocket == INVALID_SOCKET)
+    {
+        throw SocketException(EINVAL, "Socket is not initialized.");
+    }
+
     // Determine the effective timeout to use.
     // If a specific timeout was passed, use it; otherwise, use the socket's configured SO_TIMEOUT value.
     const int millis = timeoutMillis.value_or(_soTimeoutMillis);
 
+#ifndef _WIN32
+    // --- POSIX: Use poll() for readiness notification ---
+    pollfd pfd{};
+    pfd.fd = _serverSocket;
+    pfd.events = POLLIN; // Monitor for readability (incoming connection)
+    pfd.revents = 0;
+
+    // poll() timeout: <0 = infinite, 0 = poll, >0 = wait up to millis
+    const int timeout = (millis < 0) ? -1 : millis;
+    int result = poll(&pfd, 1, timeout);
+    if (result < 0)
+    {
+        // poll() failed — throw an exception with the error code and message.
+        throw SocketException(GetSocketError(), "Failed to wait for incoming connection.");
+    }
+    // poll() returns the number of fds with events. Check for POLLIN.
+    return result > 0 && (pfd.revents & POLLIN);
+#else
+    // --- Windows: Use select() for readiness notification ---
     // Prepare the file descriptor set for select().
     // We want to monitor this server socket for readability (i.e., incoming connection).
     fd_set readFds;
@@ -494,10 +542,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
 
     // Prepare the timeout structure for select()
     timeval tv{};
-#ifdef _WIN32
-    const
-#endif
-        timeval* tvPtr = nullptr; // Null pointer means select() will wait indefinitely
+    const timeval* tvPtr = nullptr; // Null pointer means select() will wait indefinitely
 
     if (millis > 0)
     {
@@ -516,17 +561,16 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     // If millis is negative, we leave tvPtr as nullptr — meaning select() will block indefinitely.
 
     // Call select() to wait for the server socket to become readable (i.e., a client is attempting to connect).
-    const int result = select(static_cast<int>(_serverSocket) + 1, &readFds, nullptr, nullptr, tvPtr);
-
+    int result = select(static_cast<int>(_serverSocket) + 1, &readFds, nullptr, nullptr, tvPtr);
     if (result < 0)
     {
         // select() failed — throw an exception with the error code and message.
         throw SocketException(GetSocketError(), "Failed to wait for incoming connection.");
     }
-
     // select() returns the number of sockets that are ready.
     // If it's greater than 0, our server socket is ready to accept a connection.
     return result > 0;
+#endif
 }
 
 #if defined(SO_REUSEPORT)
