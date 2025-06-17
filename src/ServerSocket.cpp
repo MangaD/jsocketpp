@@ -1,6 +1,8 @@
 #include "jsocketpp/ServerSocket.hpp"
 #include "jsocketpp/SocketTimeoutException.hpp"
 
+#include <thread>
+
 using namespace jsocketpp;
 
 ServerSocket::ServerSocket(const unsigned short port, const std::string_view localAddress, const bool autoBindListen,
@@ -419,6 +421,28 @@ std::future<Socket> ServerSocket::acceptAsync(std::size_t bufferSize) const
                           // This calls the existing blocking accept() method, which throws exceptions if errors occur.
                           return this->accept(bufferSize);
                       });
+}
+
+void ServerSocket::acceptAsync(std::function<void(std::optional<Socket>, std::exception_ptr)> callback,
+                               std::size_t bufferSize) const
+{
+    // Start a background thread to perform the blocking accept
+    std::thread(
+        [this, bufferSize, cb = std::move(callback)]() mutable
+        {
+            try
+            {
+                // Try to accept a client (may throw on error)
+                Socket client = this->accept(bufferSize);
+                cb(std::move(client), nullptr); // Success: call callback with client and null exception
+            }
+            catch (...)
+            {
+                // Failure: pass the exception to the callback
+                cb({}, std::current_exception());
+            }
+        })
+        .detach(); // Detach so thread runs independently; lifetime is managed by the OS
 }
 
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state

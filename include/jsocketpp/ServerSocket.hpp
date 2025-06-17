@@ -9,6 +9,8 @@
 #include "SocketException.hpp"
 #include "common.hpp"
 
+#include <exception>
+#include <functional>
 #include <future>
 #include <optional>
 
@@ -916,6 +918,60 @@ class ServerSocket
      * @see std::future, std::async
      */
     [[nodiscard]] std::future<Socket> acceptAsync(std::size_t bufferSize = 0) const;
+
+    /**
+     * @brief Asynchronously accept a client connection and invoke a callback upon completion.
+     *
+     * This method initiates a non-blocking accept operation on the server socket. When a client connects,
+     * or if an error occurs, the provided callback function is invoked. The callback receives either:
+     *   - a valid `std::optional<Socket>` containing the accepted client socket (on success), and a `nullptr` exception
+     * pointer,
+     *   - or an empty `std::optional<Socket>` (on error), and a non-null exception pointer describing the error.
+     *
+     * The accept operation runs in a detached background thread, so the callback may be executed on a different thread
+     * from the caller. This pattern is ideal for event-driven or highly concurrent servers, enabling your application
+     * to perform other work while waiting for incoming connections and to react immediately when a client is accepted.
+     *
+     * ### Usage Example
+     * @code
+     * server.acceptAsync(
+     *     [](std::optional<jsocketpp::Socket> clientOpt, std::exception_ptr eptr) {
+     *         if (eptr) {
+     *             try { std::rethrow_exception(eptr); }
+     *             catch (const jsocketpp::SocketException& ex) {
+     *                 std::cerr << "Accept failed: " << ex.what() << std::endl;
+     *             }
+     *         } else if (clientOpt) {
+     *             std::cout << "Accepted client from: " << clientOpt->getRemoteSocketAddress() << std::endl;
+     *             // Handle the client socket (e.g., read/write)
+     *         }
+     *     }
+     * );
+     * @endcode
+     *
+     * ### Thread Safety
+     * - This method is **not thread-safe** for concurrent calls. Do not call `acceptAsync`, `accept`, or other accept
+     *   methods concurrently on the same `ServerSocket` instance without external synchronization.
+     *   Use separate `ServerSocket` instances or synchronize access if parallel accepts are needed.
+     *
+     * ### Callback Details
+     * - The callback is always invoked exactly once per call to `acceptAsync`:
+     *   - On success: `clientOpt` contains a valid `Socket`, `eptr` is `nullptr`.
+     *   - On error: `clientOpt` is empty, `eptr` holds the exception. Use `std::rethrow_exception(eptr)` to rethrow it.
+     *
+     * ### Implementation Notes
+     * - By default, this function launches a detached background thread for each asynchronous accept.
+     *   For ultra-high concurrency, consider event-driven or coroutine-based backends in the future.
+     *
+     * @param callback The function to invoke on completion. Signature:
+     *                 `void callback(std::optional<Socket>, std::exception_ptr)`.
+     * @param bufferSize Internal buffer size (bytes) for the accepted client socket (default: server default).
+     *
+     * @see acceptAsync(std::future), accept(), tryAccept()
+     * @see std::optional, std::exception_ptr, std::rethrow_exception
+     */
+    void acceptAsync(std::function<void(std::optional<Socket>, std::exception_ptr)> callback,
+                     std::size_t bufferSize = 0) const;
 
     /**
      * @brief Closes the server socket and releases its associated system resources.
