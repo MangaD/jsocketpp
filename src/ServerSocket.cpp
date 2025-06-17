@@ -409,6 +409,18 @@ std::optional<Socket> ServerSocket::acceptNonBlocking(std::size_t bufferSize) co
     return Socket(clientSocket, clientAddr, addrLen, bufferSize);
 }
 
+std::future<Socket> ServerSocket::acceptAsync(std::size_t bufferSize) const
+{
+    // Note: capturing `this` is safe as long as the ServerSocket outlives the future.
+    // Document this in your thread-safety notes!
+    return std::async(std::launch::async,
+                      [this, bufferSize]()
+                      {
+                          // This calls the existing blocking accept() method, which throws exceptions if errors occur.
+                          return this->accept(bufferSize);
+                      });
+}
+
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
 void ServerSocket::setOption(const int level, const int optName, int value)
 {

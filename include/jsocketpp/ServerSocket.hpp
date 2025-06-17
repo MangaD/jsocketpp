@@ -9,6 +9,7 @@
 #include "SocketException.hpp"
 #include "common.hpp"
 
+#include <future>
 #include <optional>
 
 namespace jsocketpp
@@ -841,6 +842,80 @@ class ServerSocket
      * @endcode
      */
     [[nodiscard]] std::optional<Socket> acceptNonBlocking(std::size_t bufferSize = 0) const;
+
+    /**
+     * @brief Asynchronously accept an incoming client connection, returning a future.
+     *
+     * This method initiates an asynchronous accept operation on the server socket,
+     * returning a `std::future<Socket>` that will become ready when a client connects or an error occurs.
+     * The returned future allows you to wait for incoming connections in a non-blocking, event-driven way,
+     * which is ideal for scalable, modern C++ server architectures.
+     *
+     * Internally, this implementation launches the accept operation in a background thread
+     * using `std::async(std::launch::async, ...)` to ensure that the calling thread is never blocked.
+     * When a new client connection is accepted, the returned future becomes ready and yields a fully constructed
+     * `jsocketpp::Socket` object for communication with the client. If an error occurs (including timeouts),
+     * the future will rethrow a `SocketException` or `SocketTimeoutException` when `.get()` is called.
+     *
+     * ### Usage Example
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * // Start asynchronous accept operation
+     * std::future<jsocketpp::Socket> clientFuture = server.acceptAsync();
+     *
+     * // Do other work while waiting for a client...
+     * while (clientFuture.wait_for(std::chrono::milliseconds(100)) != std::future_status::ready) {
+     *     // Perform background tasks, handle shutdown signals, or update application state
+     * }
+     *
+     * // When ready, obtain the accepted client socket (may throw)
+     * try {
+     *     jsocketpp::Socket client = clientFuture.get();
+     *     // Use client socket for I/O...
+     * } catch (const jsocketpp::SocketException& ex) {
+     *     std::cerr << "Accept failed: " << ex.what() << std::endl;
+     * }
+     * @endcode
+     *
+     * ### Key Features
+     * - Non-blocking: Does not block the calling thread while waiting for connections.
+     * - Integrates with modern C++ asynchronous workflows (`std::future`, `std::async`).
+     * - Preserves exception semantics: socket errors are rethrown when the future is resolved.
+     * - Buffer size for the accepted client socket can be specified (default matches ServerSocket default).
+     * - Clean API: future and accepted Socket are managed with RAII and strong exception safety.
+     *
+     * ### Thread Safety
+     * - Not thread-safe: Do not call `accept()`, `acceptAsync()`, or other accept methods concurrently on the same
+     * ServerSocket instance. If you need to accept multiple connections in parallel, use one ServerSocket per thread or
+     * synchronize calls externally.
+     *
+     * ### Implementation Notes
+     * - This default implementation uses a separate thread for each asynchronous accept operation.
+     *   For most server workloads, this is sufficient. For ultra-high concurrency (thousands of clients),
+     *   consider integrating an event-driven backend (e.g., Boost.Asio, epoll, IOCP) in a future version.
+     *
+     * ### Platform Support
+     * - Works on all supported platforms (Windows, Linux, macOS). Uses portable C++17 primitives only.
+     *
+     * ### Error Handling
+     * - If an error occurs before or during accept, calling `.get()` on the returned future will rethrow the exception.
+     *   - Throws `jsocketpp::SocketException` on fatal socket errors.
+     *   - Throws `jsocketpp::SocketTimeoutException` if a timeout occurs (if configured).
+     *
+     * @note The ServerSocket must outlive the future.
+     *
+     * @param bufferSize The internal buffer size (in bytes) to use for the newly accepted client socket.
+     *                   If set to `0` (the default), the ServerSocket's default buffer size is used.
+     *                   Adjust this value if you expect larger or smaller messages.
+     *
+     * @return std::future<Socket>
+     *   A future that resolves to the accepted client socket when a client connects.
+     *   If an error occurs, the exception will be rethrown from the future.
+     *
+     * @see accept(), tryAccept(), acceptBlocking()
+     * @see std::future, std::async
+     */
+    [[nodiscard]] std::future<Socket> acceptAsync(std::size_t bufferSize = 0) const;
 
     /**
      * @brief Closes the server socket and releases its associated system resources.
