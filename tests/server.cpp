@@ -1,4 +1,8 @@
 // Modern jsocketpp server test: C++17, comments, and feature coverage
+#include "jsocketpp/DatagramSocket.hpp"
+#include "jsocketpp/ServerSocket.hpp"
+#include "jsocketpp/Socket.hpp"
+#include "jsocketpp/SocketInitializer.hpp"
 #include "jsocketpp/UnixSocket.hpp"
 #include <iostream>
 #include <sstream>
@@ -28,7 +32,7 @@ void test_tcp(unsigned short port)
     cout << "[TCP] Waiting for client..." << endl;
     Socket conn = serverSocket.accept();
     cout << "[TCP] Client connected from: " << conn.getRemoteSocketAddress() << endl;
-    string msg = conn.read<string>();
+    const string msg = conn.read<string>();
     cout << "[TCP] Client says: " << msg << endl;
     conn.writeAll("Hello client! (TCP)");
     conn.close();
