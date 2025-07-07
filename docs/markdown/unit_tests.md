@@ -43,10 +43,10 @@ TEST_F(MySocketTest, TestSocketRead) {
     // Mock the recv function to return a fixed value
     EXPECT_CALL(mockSocket, recv(::testing::_, ::testing::_, ::testing::_, ::testing::_))
         .WillOnce(::testing::Return(5));  // Simulate 5 bytes received
-    
+
     // Call the function in your library that uses recv
     int result = mySocketLibraryReadFunction(mockSocket);
-    
+
     ASSERT_EQ(result, 5);  // Assert that the result is as expected
 }
 ```

@@ -1,6 +1,6 @@
 # jsocketpp Examples
 
-Welcome to the `jsocketpp` **examples** directory!  
+Welcome to the `jsocketpp` **examples** directory!
 These examples demonstrate typical and advanced usage of the `jsocketpp` C++17 cross-platform socket library, inspired
 by Java’s socket API.
 

@@ -12,7 +12,7 @@ ifeq ($(OS),Windows_NT)
     LIB_SHARED = jsocketpp.dll
     LDFLAGS = -lws2_32 -liphlpapi
 else
-    LDFLAGS = 
+    LDFLAGS =
 endif
 
 # Default target is to build the static library

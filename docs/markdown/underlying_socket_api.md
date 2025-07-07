@@ -86,7 +86,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     server_socket.bind((HOST, PORT))
     server_socket.listen()
     print(f"Server listening on {HOST}:{PORT}")
-    
+
     conn, addr = server_socket.accept()
     with conn:
         print(f"Connected by {addr}")
@@ -465,11 +465,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     # Set socket options
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-    
+
     server_socket.bind((HOST, PORT))
     server_socket.listen()
     print(f"Server listening on {HOST}:{PORT}")
-    
+
     conn, addr = server_socket.accept()
     with conn:
         print(f"Connected by {addr}")
