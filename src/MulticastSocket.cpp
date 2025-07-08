@@ -399,8 +399,8 @@ void MulticastSocket::setTimeToLive(int ttl)
     if (ttl == _ttl)
         return;
 
-        // Set TTL for IPv4 multicast
-        // Windows wants a DWORD, Linux wants an int
+    // Set TTL for IPv4 multicast
+    // Windows wants a DWORD, Linux wants an int
 #ifdef _WIN32
     auto v4ttl = static_cast<DWORD>(ttl);
     if (setsockopt(_sockFd, IPPROTO_IP, IP_MULTICAST_TTL, reinterpret_cast<const char*>(&v4ttl), sizeof(v4ttl)) < 0)
@@ -411,7 +411,7 @@ void MulticastSocket::setTimeToLive(int ttl)
         throw SocketException(GetSocketError(), "Failed to set IPv4 multicast TTL");
 #endif
 
-        // Set hop limit for IPv6 multicast
+    // Set hop limit for IPv6 multicast
 #ifdef _WIN32
     auto v6hops = static_cast<DWORD>(ttl);
     if (setsockopt(_sockFd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, reinterpret_cast<const char*>(&v6hops), sizeof(v6hops)) <
