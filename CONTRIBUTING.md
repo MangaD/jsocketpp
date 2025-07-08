@@ -45,7 +45,27 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
 
 ---
 
-## 4. Testing
+## 4. Pre-commit Hooks
+
+* We recommend using [pre-commit](https://pre-commit.com/) to automatically check formatting and lint code before each commit.
+* To set up pre-commit hooks:
+  1. Install pre-commit (requires Python):
+     ```sh
+     pip install pre-commit
+     ```
+  2. Install the hooks defined in `.pre-commit-config.yaml`:
+     ```sh
+     pre-commit install
+     ```
+  3. Now, hooks will run automatically on `git commit`. You can manually run them on all files with:
+     ```sh
+     pre-commit run --all-files
+     ```
+* Please ensure all hooks pass before pushing your changes.
+
+---
+
+## 5. Testing
 
 * All PRs must pass existing tests and should include new unit tests for new features or bugfixes.
 * We use [GoogleTest](https://github.com/google/googletest).
@@ -59,14 +79,14 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
 
 ---
 
-## 5. Documentation
+## 6. Documentation
 
 * Update `README.md` and API comments for any new features or changes.
 * Public APIs require Doxygen documentation.
 
 ---
 
-## 6. Branching & Code of Conduct
+## 7. Branching & Code of Conduct
 
 * Base your PRs on `main`.
 * Use feature (`feature/xyz`) or bugfix (`bugfix/issue123`) branch names.
@@ -74,7 +94,7 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
 
 ---
 
-## 7. Questions
+## 8. Questions
 
 Open an [issue](https://github.com/youruser/jsocketpp/issues) or join the discussion tab.
 
