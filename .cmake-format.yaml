@@ -1,0 +1,7 @@
+format:
+  line_width: 128
+  tab_size: 4
+  enable_sort: True
+  autosort: True
+lint:
+  disabled_codes: [ ]

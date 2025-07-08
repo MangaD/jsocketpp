@@ -1,0 +1,7 @@
+# Development tools
+pre-commit
+
+# Required for cmakelang (cmake-format, cmake-lint)
+pyyaml
+jinja2
+cmakelang

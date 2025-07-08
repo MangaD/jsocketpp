@@ -22,8 +22,8 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
 
 * Make your changes.
 * **Format your code with the `.clang-format` file in the project root**:
-  * Use: `clang-format -i <your-changed-files>`
-  * Or configure your IDE (e.g., CLion) to auto-format using this file.
+    * Use: `clang-format -i <your-changed-files>`
+    * Or configure your IDE (e.g., CLion) to auto-format using this file.
 * Add or update unit tests if relevant.
 * Commit with a descriptive message.
 * Push and open a Pull Request (PR) against `main`.
@@ -32,13 +32,16 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
 
 ## 3. Code Style Guidelines
 
-* **Code style is enforced by the provided `.clang-format`** (LLVM-based, Allman braces, 4 spaces, left-aligned pointers, etc.).
-* **CLion users:** You should see live suggestions to match the style. Please accept these suggestions or run "Reformat Code" before committing.
+* **Code style is enforced by the provided `.clang-format`** (LLVM-based, Allman braces, 4 spaces, left-aligned
+  pointers, etc.).
+* **CLion users:** You should see live suggestions to match the style. Please accept these suggestions or run "Reformat
+  Code" before committing.
 * **Naming conventions:**
 
-  * **Private members:** Use `lowerCamelCase` and prefix with an underscore (e.g., `_sockFd`, `_buffer`, `_localAddr`).
-  * **Types:** `CamelCase` (e.g., `DatagramSocket`).
-  * **Methods:** `lowerCamelCase` (e.g., `setNonBlocking()`).
+    * **Private members:** Use `lowerCamelCase` and prefix with an underscore (e.g., `_sockFd`, `_buffer`,
+      `_localAddr`).
+    * **Types:** `CamelCase` (e.g., `DatagramSocket`).
+    * **Methods:** `lowerCamelCase` (e.g., `setNonBlocking()`).
 * Use modern C++17 features where appropriate.
 * Write cross-platform code (`#ifdef _WIN32` etc.) where required.
 * Document **all public classes and methods** with Doxygen-style comments.
@@ -47,20 +50,21 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
 
 ## 4. Pre-commit Hooks
 
-* We recommend using [pre-commit](https://pre-commit.com/) to automatically check formatting and lint code before each commit.
+* We recommend using [pre-commit](https://pre-commit.com/) to automatically check formatting and lint code before each
+  commit.
 * To set up pre-commit hooks:
-  1. Install pre-commit (requires Python):
-     ```sh
-     pip install pre-commit
-     ```
-  2. Install the hooks defined in `.pre-commit-config.yaml`:
-     ```sh
-     pre-commit install
-     ```
-  3. Now, hooks will run automatically on `git commit`. You can manually run them on all files with:
-     ```sh
-     pre-commit run --all-files
-     ```
+    1. Install Python dependencies (`pre-commit` and its dependencies):
+       ```sh
+       pip install -r requirements.txt
+       ```
+    2. Install the hooks defined in `.pre-commit-config.yaml`:
+       ```sh
+       pre-commit install
+       ```
+    3. Now, hooks will run automatically on `git commit`. You can manually run them on all files with:
+       ```sh
+       pre-commit run --all-files
+       ```
 * Please ensure all hooks pass before pushing your changes.
 
 ---
