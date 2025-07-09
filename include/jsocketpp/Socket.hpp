@@ -490,7 +490,7 @@ template <> inline std::string Socket::read()
 {
     const auto len = recv(_sockFd, _recvBuffer.data(),
 #ifdef _WIN32
-                          static_cast<int>(_buffer.size()),
+                          static_cast<int>(_recvBuffer.size()),
 #else
                           _recvBuffer.size(),
 #endif
