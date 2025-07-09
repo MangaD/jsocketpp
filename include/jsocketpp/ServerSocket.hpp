@@ -123,6 +123,8 @@ class ServerSocket
      * may be appropriate.
      *
      * @see setReceiveBufferSize()
+     *
+     * @ingroup tcp
      */
     static constexpr std::size_t DefaultBufferSize = 4096;
 
@@ -269,6 +271,8 @@ class ServerSocket
      *
      * ServerSocket objects cannot be copied because they represent unique system resources.
      * Use move semantics (ServerSocket&&) instead to transfer ownership.
+     *
+     * @ingroup tcp
      */
     ServerSocket(const ServerSocket& rhs) = delete; //-Weffc++
 
@@ -282,6 +286,8 @@ class ServerSocket
      *
      * @param rhs The ServerSocket to copy from (unused since deleted)
      * @return Reference to this ServerSocket (never returns since deleted)
+     *
+     * @ingroup tcp
      */
     ServerSocket& operator=(const ServerSocket& rhs) = delete; //-Weffc++
 
@@ -292,6 +298,8 @@ class ServerSocket
      * The moved-from socket is left in a valid but empty state.
      *
      * @param rhs The ServerSocket to move from
+     *
+     * @ingroup tcp
      */
     ServerSocket(ServerSocket&& rhs) noexcept
         : _serverSocket(rhs._serverSocket), _srvAddrInfo(rhs._srvAddrInfo), _selectedAddrInfo(rhs._selectedAddrInfo),
@@ -329,6 +337,8 @@ class ServerSocket
      *
      * @see ServerSocket(ServerSocket&&)
      * @see close()
+     *
+     * @ingroup tcp
      */
     ServerSocket& operator=(ServerSocket&& rhs) noexcept
     {
@@ -411,6 +421,8 @@ class ServerSocket
      * Follows the naming and semantics of Java's `ServerSocket::isBound()`.
      *
      * @return `true` if the socket is bound, `false` otherwise.
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] bool isBound() const noexcept { return _isBound; }
 
@@ -464,6 +476,8 @@ class ServerSocket
      * This complements `isBound()`, which only tells you if the socket has been bound to a local address.
      *
      * @return `true` if the socket is listening for connections, `false` otherwise.
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] bool isListening() const noexcept { return _isListening; }
 
@@ -954,6 +968,8 @@ class ServerSocket
      *
      * @see accept(), tryAccept(), acceptBlocking()
      * @see std::future, std::async
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] std::future<Socket> acceptAsync(std::size_t recvBufferSize = 0, std::size_t sendBufferSize = 0) const;
 
@@ -1011,6 +1027,8 @@ class ServerSocket
      *
      * @see acceptAsync(std::future), accept(), tryAccept()
      * @see std::optional, std::exception_ptr, std::rethrow_exception
+     *
+     * @ingroup tcp
      */
     void acceptAsync(std::function<void(std::optional<Socket>, std::exception_ptr)> callback,
                      std::size_t recvBufferSize = 0, std::size_t sendBufferSize = 0) const;
@@ -1046,6 +1064,8 @@ class ServerSocket
      * @note On some systems, closing a socket with active client connections does not forcibly disconnect clients,
      *       but simply prevents new connections from being accepted.
      * @note Always close your sockets when finished to prevent resource leaks!
+     *
+     * @ingroup tcp
      */
     void close();
 
@@ -1061,7 +1081,9 @@ class ServerSocket
      *
      * @return `true` if the server socket is open and valid; `false` otherwise.
      *
-     * @see close()
+     * @see close(), isClosed()
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] bool isValid() const noexcept { return this->_serverSocket != INVALID_SOCKET; }
 
@@ -1072,6 +1094,10 @@ class ServerSocket
      * open. The logic and naming follow the Java networking API for familiarity.
      *
      * @return `true` if the socket has been closed, `false` if it is still open.
+     *
+     * @see isValid(), close()
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] bool isClosed() const noexcept { return this->_serverSocket == INVALID_SOCKET; }
 
@@ -1101,6 +1127,10 @@ class ServerSocket
      * @param optName Option name (e.g., SO_REUSEADDR, SO_RCVBUF)
      * @param value   Integer value for the option
      * @throws SocketException if the operation fails
+     *
+     * @see getOption()
+     *
+     * @ingroup tcp
      */
     void setOption(int level, int optName, int value);
 
@@ -1125,6 +1155,10 @@ class ServerSocket
      * @param optName Option name (e.g., SO_RCVBUF)
      * @return        Integer value for the option
      * @throws SocketException if the operation fails
+     *
+     * @see setOption()
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] int getOption(int level, int optName) const;
 
@@ -1144,6 +1178,8 @@ class ServerSocket
      *
      * @note This function should be used to select the correct socket option when calling setsockopt() in your server
      * code. Typically, this option must be set before calling bind().
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] static int getSocketReuseOption();
 
@@ -1168,6 +1204,8 @@ class ServerSocket
      * enabling this is recommended. For advanced load-balancing, see also SO_REUSEPORT (not portable).
      *
      * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     *
+     * @ingroup tcp
      */
     void setReuseAddress(bool enable);
 
@@ -1189,6 +1227,8 @@ class ServerSocket
      * from system defaults. Always call this *after* socket creation, and *before* `bind()` for accurate results.
      *
      * @see setReuseAddress()
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] bool getReuseAddress() const;
 
@@ -1205,6 +1245,10 @@ class ServerSocket
      *
      * @param nonBlocking true to enable non-blocking mode, false for blocking (default).
      * @throws SocketException on error.
+     *
+     * @see acceptBlocking(), acceptNonBlocking()
+     *
+     * @ingroup tcp
      */
     void setNonBlocking(bool nonBlocking);
 
@@ -1217,6 +1261,8 @@ class ServerSocket
      *
      * @return true if the socket is non-blocking, false if it is blocking.
      * @throws SocketException if the socket flags cannot be retrieved.
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] bool getNonBlocking() const;
 
@@ -1260,6 +1306,8 @@ class ServerSocket
      *   - If negative (default), blocks indefinitely.
      *   - If zero, polls the socket and returns immediately if no client is waiting.
      *   - If positive, waits up to the specified time for a client to connect.
+     *
+     * @ingroup tcp
      */
     void setSoTimeout(const int millis) { _soTimeoutMillis = millis; }
 
@@ -1274,6 +1322,8 @@ class ServerSocket
      * @throws SocketException if the socket is not IPv6, already bound, or on system error.
      * @note Must be called before bind().
      * @see getIPv6Only()
+     *
+     * @ingroup tcp
      */
     void setIPv6Only(bool enable);
 
@@ -1283,6 +1333,8 @@ class ServerSocket
      * @return True if the socket is in IPv6-only mode, false if dual-stack.
      * @throws SocketException if the socket is not IPv6, not open, or on system error.
      * @see setIPv6Only()
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] bool getIPv6Only() const;
 #endif
@@ -1294,6 +1346,8 @@ class ServerSocket
      *   - Negative: accept() blocks indefinitely.
      *   - Zero: accept() polls and returns immediately.
      *   - Positive: maximum time to wait for a client connection.
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] int getSoTimeout() const noexcept { return _soTimeoutMillis; }
 
@@ -1309,7 +1363,9 @@ class ServerSocket
      * @param size New buffer size in bytes
      * @see getDefaultReceiveBufferSize()
      * @see DefaultBufferSize
-     * @see accept()
+     * @see accept(), acceptBlocking(), tryAccept()
+     *
+     * @ingroup tcp
      */
     void setDefaultReceiveBufferSize(const std::size_t size) { _defaultReceiveBufferSize = size; }
 
@@ -1323,6 +1379,8 @@ class ServerSocket
      * @see setDefaultReceiveBufferSize()
      * @see DefaultBufferSize
      * @see accept()
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] std::size_t getDefaultReceiveBufferSize() const noexcept { return _defaultReceiveBufferSize; }
 
@@ -1339,6 +1397,8 @@ class ServerSocket
      * @see getDefaultSendBufferSize()
      * @see DefaultBufferSize
      * @see accept()
+     *
+     * @ingroup tcp
      */
     void setDefaultSendBufferSize(const std::size_t size) { _defaultSendBufferSize = size; }
 
@@ -1352,6 +1412,8 @@ class ServerSocket
      * @see setDefaultSendBufferSize()
      * @see DefaultBufferSize
      * @see accept()
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] std::size_t getDefaultSendBufferSize() const noexcept { return _defaultSendBufferSize; }
 
@@ -1378,6 +1440,8 @@ class ServerSocket
      * @throws SocketException if setting the option fails.
      *
      * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     *
+     * @ingroup tcp
      */
     void setReusePort(bool enable);
 
@@ -1392,6 +1456,8 @@ class ServerSocket
      *
      * @see setReusePort(bool)
      * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] bool getReusePort() const;
 #endif
@@ -1422,6 +1488,10 @@ class ServerSocket
      *       It will be automatically closed when the ServerSocket is destroyed.
      *
      * @return The native socket handle/descriptor
+     *
+     * @see acceptBlocking(), setOption()
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] SOCKET getHandle() const { return _serverSocket; }
 
@@ -1436,6 +1506,8 @@ class ServerSocket
      *
      * @param errorCode The error code to include in the thrown exception
      * @throws SocketException Always throws with the provided error code and corresponding message
+     *
+     * @ingroup tcp
      */
     void cleanupAndThrow(int errorCode);
 
@@ -1454,6 +1526,8 @@ class ServerSocket
      * @see setReceiveBufferSize()
      * @see getReceiveBufferSize()
      * @see DefaultBufferSize
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] std::size_t getEffectiveReceiveBufferSize(const std::size_t recvBufferSize) const
     {
@@ -1474,6 +1548,8 @@ class ServerSocket
      * @see setSendBufferSize()
      * @see getSendBufferSize()
      * @see DefaultBufferSize
+     *
+     * @ingroup tcp
      */
     [[nodiscard]] std::size_t getEffectiveSendBufferSize(const std::size_t sendBufferSize) const
     {
