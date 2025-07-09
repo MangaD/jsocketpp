@@ -57,7 +57,8 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
        ```sh
        pip install -r requirements.txt
        ```
-    2. Install the hooks defined in `.pre-commit-config.yaml`:
+    2. Install the hooks defined in `.pre-commit-config.yaml`. Every time you clone a project using pre-commit running
+       `pre-commit install` should always be the first thing you do.
        ```sh
        pre-commit install
        ```
@@ -65,6 +66,9 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
        ```sh
        pre-commit run --all-files
        ```
+       The first time pre-commit runs on a file it will automatically download, install, and run the hook. Note that
+       running a hook for the first time may be slow. For example: If the machine does not have node installed,
+       pre-commit will download and build a copy of node.
 * Please ensure all hooks pass before pushing your changes.
 
 ---
