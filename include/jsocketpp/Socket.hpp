@@ -95,10 +95,12 @@ class Socket
      * @param client Already-connected socket descriptor from accept()
      * @param addr Remote peer's address information
      * @param len Length of the address structure
-     * @param bufferSize Size of internal read buffer for this socket
+     * @param recvBufferSize Size of internal read buffer for this socket
+     * @param sendBufferSize Size of internal write buffer for this socket
      * @see ServerSocket::accept()
      */
-    Socket(SOCKET client, const sockaddr_storage& addr, socklen_t len, std::size_t bufferSize);
+    Socket(SOCKET client, const sockaddr_storage& addr, socklen_t len, std::size_t recvBufferSize,
+           std::size_t sendBufferSize);
 
   public:
     /**
@@ -128,7 +130,8 @@ class Socket
      */
     Socket(Socket&& rhs) noexcept
         : _sockFd(rhs._sockFd), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
-          _cliAddrInfo(rhs._cliAddrInfo), _selectedAddrInfo(rhs._selectedAddrInfo), _buffer(std::move(rhs._buffer))
+          _cliAddrInfo(rhs._cliAddrInfo), _selectedAddrInfo(rhs._selectedAddrInfo),
+          _recvBuffer(std::move(rhs._recvBuffer))
     {
         rhs._sockFd = INVALID_SOCKET;
         rhs._cliAddrInfo = nullptr;
@@ -178,7 +181,7 @@ class Socket
             _remoteAddrLen = rhs._remoteAddrLen;
             _cliAddrInfo = rhs._cliAddrInfo;
             _selectedAddrInfo = rhs._selectedAddrInfo;
-            _buffer = std::move(rhs._buffer);
+            _recvBuffer = std::move(rhs._recvBuffer);
             rhs._sockFd = INVALID_SOCKET;
             rhs._cliAddrInfo = nullptr;
             rhs._selectedAddrInfo = nullptr;
@@ -464,7 +467,7 @@ class Socket
     mutable socklen_t _remoteAddrLen = 0;  ///< Length of remote address (for recvfrom/recvmsg)
     addrinfo* _cliAddrInfo = nullptr;      ///< Address info for connection (from getaddrinfo)
     addrinfo* _selectedAddrInfo = nullptr; ///< Selected address info for connection
-    std::vector<char> _buffer;             ///< Internal buffer for read operations
+    std::vector<char> _recvBuffer;         ///< Internal buffer for read operations
 };
 
 /**
@@ -480,18 +483,18 @@ class Socket
  */
 template <> inline std::string Socket::read()
 {
-    const auto len = recv(_sockFd, _buffer.data(),
+    const auto len = recv(_sockFd, _recvBuffer.data(),
 #ifdef _WIN32
                           static_cast<int>(_buffer.size()),
 #else
-                          _buffer.size(),
+                          _recvBuffer.size(),
 #endif
                           0);
     if (len == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (len == 0)
         throw SocketException(0, "Connection closed by remote host.");
-    return {_buffer.data(), static_cast<size_t>(len)};
+    return {_recvBuffer.data(), static_cast<size_t>(len)};
 }
 
 } // namespace jsocketpp

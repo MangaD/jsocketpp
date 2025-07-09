@@ -1,15 +1,16 @@
-
 #include "jsocketpp/Socket.hpp"
 
 using namespace jsocketpp;
 
-Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_t len, const std::size_t bufferSize)
-    : _sockFd(client), _remoteAddr(addr), _remoteAddrLen(len), _buffer(bufferSize)
+Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_t len, const std::size_t recvBufferSize,
+               std::size_t /*sendBufferSize*/)
+    : _sockFd(client), _remoteAddr(addr), _remoteAddrLen(len), _recvBuffer(recvBufferSize)
 {
+    // Optionally, you could add separate send/recv buffers if needed.
 }
 
 Socket::Socket(const std::string_view host, const unsigned short port, const std::size_t bufferSize)
-    : _remoteAddr{}, _buffer(bufferSize)
+    : _remoteAddr{}, _recvBuffer(bufferSize)
 {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
@@ -292,8 +293,8 @@ size_t Socket::writeAll(const std::string_view message) const
 
 void Socket::setBufferSize(std::size_t newLen)
 {
-    _buffer.resize(newLen);
-    _buffer.shrink_to_fit();
+    _recvBuffer.resize(newLen);
+    _recvBuffer.shrink_to_fit();
 }
 
 void Socket::setNonBlocking(bool nonBlocking) const

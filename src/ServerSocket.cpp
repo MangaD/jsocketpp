@@ -302,39 +302,42 @@ void ServerSocket::listen(const int backlog /* = 128 */)
     _isListening = true;
 }
 
-Socket ServerSocket::accept(std::size_t bufferSize /* = DefaultBufferSize */) const
+Socket ServerSocket::accept(std::size_t recvBufferSize, std::size_t sendBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    bufferSize = getEffectiveBufferSize(bufferSize);
+    recvBufferSize = getEffectiveReceiveBufferSize(recvBufferSize);
+    sendBufferSize = getEffectiveSendBufferSize(sendBufferSize);
 
     if (!waitReady())
     {
         throw SocketTimeoutException{};
     }
-    return acceptBlocking(bufferSize);
+    return acceptBlocking(recvBufferSize, sendBufferSize);
 }
 
-Socket ServerSocket::accept(int timeoutMillis, std::size_t bufferSize /* = DefaultBufferSize */) const
+Socket ServerSocket::accept(int timeoutMillis, std::size_t recvBufferSize, std::size_t sendBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    bufferSize = getEffectiveBufferSize(bufferSize);
+    recvBufferSize = getEffectiveReceiveBufferSize(recvBufferSize);
+    sendBufferSize = getEffectiveSendBufferSize(sendBufferSize);
 
     if (!waitReady(timeoutMillis))
         throw SocketTimeoutException{};
 
-    return acceptBlocking(bufferSize);
+    return acceptBlocking(recvBufferSize, sendBufferSize);
 }
 
-std::optional<Socket> ServerSocket::tryAccept(std::size_t bufferSize) const
+std::optional<Socket> ServerSocket::tryAccept(std::size_t recvBufferSize, std::size_t sendBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    bufferSize = getEffectiveBufferSize(bufferSize);
+    recvBufferSize = getEffectiveReceiveBufferSize(recvBufferSize);
+    sendBufferSize = getEffectiveSendBufferSize(sendBufferSize);
 
     // Use the configured SO_RCVTIMEO timeout
     if (!waitReady())
@@ -342,17 +345,19 @@ std::optional<Socket> ServerSocket::tryAccept(std::size_t bufferSize) const
         return std::nullopt;
     }
 
-    return acceptBlocking(bufferSize);
+    return acceptBlocking(recvBufferSize, sendBufferSize);
 }
 
-std::optional<Socket> ServerSocket::tryAccept(int timeoutMillis, std::size_t bufferSize) const
+std::optional<Socket> ServerSocket::tryAccept(int timeoutMillis, std::size_t recvBufferSize,
+                                              std::size_t sendBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
     {
         throw SocketException(0, "Server socket is not initialized or already closed.");
     }
 
-    bufferSize = getEffectiveBufferSize(bufferSize);
+    recvBufferSize = getEffectiveReceiveBufferSize(recvBufferSize);
+    sendBufferSize = getEffectiveSendBufferSize(sendBufferSize);
 
     // Wait for readiness based on timeout
     if (!waitReady(timeoutMillis))
@@ -361,15 +366,16 @@ std::optional<Socket> ServerSocket::tryAccept(int timeoutMillis, std::size_t buf
     }
 
     // Attempt to accept the connection
-    return acceptBlocking(bufferSize);
+    return acceptBlocking(recvBufferSize, sendBufferSize);
 }
 
-Socket ServerSocket::acceptBlocking(std::size_t bufferSize) const
+Socket ServerSocket::acceptBlocking(std::size_t recvBufferSize, std::size_t sendBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    bufferSize = getEffectiveBufferSize(bufferSize);
+    recvBufferSize = getEffectiveReceiveBufferSize(recvBufferSize);
+    sendBufferSize = getEffectiveSendBufferSize(sendBufferSize);
 
     sockaddr_storage clientAddr{};
     socklen_t addrLen = sizeof(clientAddr);
@@ -378,15 +384,16 @@ Socket ServerSocket::acceptBlocking(std::size_t bufferSize) const
     if (clientSocket == INVALID_SOCKET)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
-    return {clientSocket, clientAddr, addrLen, bufferSize};
+    return {clientSocket, clientAddr, addrLen, recvBufferSize, sendBufferSize};
 }
 
-std::optional<Socket> ServerSocket::acceptNonBlocking(std::size_t bufferSize) const
+std::optional<Socket> ServerSocket::acceptNonBlocking(std::size_t recvBufferSize, std::size_t sendBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
         throw SocketException(0, "Server socket is not initialized or already closed.");
 
-    bufferSize = getEffectiveBufferSize(bufferSize);
+    recvBufferSize = getEffectiveReceiveBufferSize(recvBufferSize);
+    sendBufferSize = getEffectiveSendBufferSize(sendBufferSize);
 
     sockaddr_storage clientAddr{};
     socklen_t addrLen = sizeof(clientAddr);
@@ -407,32 +414,32 @@ std::optional<Socket> ServerSocket::acceptNonBlocking(std::size_t bufferSize) co
         throw SocketException(err, "accept() failed");
     }
 
-    return Socket(clientSocket, clientAddr, addrLen, bufferSize);
+    return Socket(clientSocket, clientAddr, addrLen, recvBufferSize, sendBufferSize);
 }
 
-std::future<Socket> ServerSocket::acceptAsync(std::size_t bufferSize) const
+std::future<Socket> ServerSocket::acceptAsync(std::size_t recvBufferSize, std::size_t sendBufferSize) const
 {
     // Note: capturing `this` is safe as long as the ServerSocket outlives the future.
     // Document this in your thread-safety notes!
     return std::async(std::launch::async,
-                      [this, bufferSize]()
+                      [this, recvBufferSize, sendBufferSize]()
                       {
                           // This calls the existing blocking accept() method, which throws exceptions if errors occur.
-                          return this->accept(bufferSize);
+                          return this->accept(recvBufferSize, sendBufferSize);
                       });
 }
 
 void ServerSocket::acceptAsync(std::function<void(std::optional<Socket>, std::exception_ptr)> callback,
-                               std::size_t bufferSize) const
+                               std::size_t recvBufferSize, std::size_t sendBufferSize) const
 {
     // Start a background thread to perform the blocking accept
     std::thread(
-        [this, bufferSize, cb = std::move(callback)]() mutable
+        [this, recvBufferSize, sendBufferSize, cb = std::move(callback)]() mutable
         {
             try
             {
                 // Try to accept a client (may throw on error)
-                Socket client = this->accept(bufferSize);
+                Socket client = this->accept(recvBufferSize, sendBufferSize);
                 cb(std::move(client), nullptr); // Success: call callback with client and null exception
             }
             catch (...)
