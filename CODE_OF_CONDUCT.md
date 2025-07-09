@@ -2,7 +2,10 @@
 
 ## Our Pledge
 
-We as members, contributors, and leaders pledge to make participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
+We as members, contributors, and leaders pledge to make participation in our project and our community a harassment-free
+experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics,
+gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance,
+race, religion, or sexual identity and orientation.
 
 ## Our Standards
 
@@ -24,15 +27,19 @@ Examples of unacceptable behavior include:
 
 ## Our Responsibilities
 
-Project maintainers are responsible for clarifying the standards of acceptable behavior and will take appropriate and fair corrective action in response to any instances of unacceptable behavior.
+Project maintainers are responsible for clarifying the standards of acceptable behavior and will take appropriate and
+fair corrective action in response to any instances of unacceptable behavior.
 
 ## Scope
 
-This Code of Conduct applies within all project spaces and also applies when an individual is representing the project or its community in public spaces.
+This Code of Conduct applies within all project spaces and also applies when an individual is representing the project
+or its community in public spaces.
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting [@MangaD](https://github.com/MangaD) or via project issues. All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by
+contacting [\@MangaD](https://github.com/MangaD) or via project issues. All complaints will be reviewed and investigated
+and will result in a response that is deemed necessary and appropriate to the circumstances.
 
 ---
 

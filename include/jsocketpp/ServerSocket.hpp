@@ -1221,22 +1221,30 @@ class ServerSocket
     [[nodiscard]] bool getNonBlocking() const;
 
     /**
-     * @brief Wait for the server socket to become ready to accept a connection.
+     * @brief Wait for the server socket to become ready to accept an incoming connection.
      *
-     * This method uses a specified timeout (in milliseconds) if provided,
-     * otherwise it falls back to the timeout set via `setSoTimeout()`.
+     * This method blocks until the server socket is ready to accept a new client connection, using an optional timeout.
+     * It is used internally by `accept()` and `tryAccept()`, and can also be used directly in custom wait loops.
      *
-     * Internally, it uses the `select()` system call to monitor readiness.
+     * ### Platform Behavior
+     * - **POSIX:** Uses `poll()` for readiness notification, avoiding `select()` limitations (like FD_SETSIZE).
+     * - **Windows:** Uses `select()` for compatibility and reliability across all socket types.
      *
-     * - If the effective timeout is negative, it blocks indefinitely.
-     * - If it is zero, it polls and returns immediately.
-     * - If it is positive, it waits up to that duration.
+     * ### Timeout Semantics
+     * - If `timeoutMillis < 0`, the call blocks indefinitely.
+     * - If `timeoutMillis == 0`, the call polls and returns immediately.
+     * - If `timeoutMillis > 0`, it waits up to the specified time in milliseconds.
+     * - If no value is provided, the method uses the socket's configured `SO_TIMEOUT` (set via `setSoTimeout()`).
      *
-     * @param timeoutMillis Optional timeout in milliseconds. If not provided, uses `getSoTimeout()`.
-     * @return true if the socket is ready to accept a connection, false on timeout.
-     * @throws SocketException if a system error occurs while waiting.
+     * ### Thread Safety
+     * This method is thread-safe **as long as the server socket is not concurrently closed or modified.**
      *
-     * @see setSoTimeout(), getSoTimeout(), accept(), tryAccept()
+     * @param timeoutMillis Optional timeout in milliseconds. Defaults to the value set by `setSoTimeout()`.
+     * @return `true` if the socket is ready to accept a connection, `false` if the timeout expired.
+     * @throws SocketException if the socket is uninitialized or if a system error occurs during readiness check.
+     *
+     * @see accept(), tryAccept(), setSoTimeout(), getSoTimeout()
+     * @ingroup tcp
      */
     [[nodiscard]] bool waitReady(std::optional<int> timeoutMillis = std::nullopt) const;
 

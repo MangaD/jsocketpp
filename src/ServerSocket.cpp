@@ -522,30 +522,6 @@ bool ServerSocket::getNonBlocking() const
 #endif
 }
 
-/**
- * @brief Wait for the server socket to become ready to accept a connection (incoming client).
- *
- * This method waits until the server socket is ready to accept a new client connection, using an optional timeout.
- *
- * - On POSIX systems, this uses `poll()` for readiness notification, which is more flexible and avoids the limitations
- * of `select()` (such as FD_SETSIZE and bitmask management).
- * - On Windows, this uses `select()` for compatibility, as it is the most portable and reliable approach on that
- * platform.
- *
- * The timeout is specified in milliseconds:
- *   - If negative, the call blocks indefinitely until a client is ready.
- *   - If zero, the call polls and returns immediately.
- *   - If positive, the call waits up to the specified number of milliseconds.
- *
- * @note This method is thread safe, but the underlying socket should not be closed or modified concurrently.
- *
- * @param timeoutMillis Optional timeout in milliseconds. If not provided, uses the socket's configured SO_TIMEOUT
- * value.
- * @return true if the socket is ready to accept a connection, false if the timeout expired.
- * @throws SocketException if a system error occurs while waiting or if the socket is not initialized.
- *
- * @ingroup tcp
- */
 bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
 {
     if (_serverSocket == INVALID_SOCKET)
