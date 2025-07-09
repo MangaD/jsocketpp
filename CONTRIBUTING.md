@@ -62,7 +62,11 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
        ```sh
        pre-commit install
        ```
-    3. Now, hooks will run automatically on `git commit`. You can manually run them on all files with:
+    3. (Recommended) Periodically update the hooks to their latest versions:
+       ```sh
+       pre-commit autoupdate
+       ```
+    4. Now, hooks will run automatically on `git commit`. You can manually run them on all files with:
        ```sh
        pre-commit run --all-files
        ```
