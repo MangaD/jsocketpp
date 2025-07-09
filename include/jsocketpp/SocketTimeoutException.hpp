@@ -7,18 +7,21 @@ namespace jsocketpp
 {
 
 /**
- * @ingroup tcp
+ * @class SocketTimeoutException
+ * @ingroup exceptions
  * @brief Exception class for socket operations that time out.
  *
  * This exception is thrown when a socket operation (such as `accept()`, `read()`, or `connect()`) exceeds
- * its allotted timeout period without completing. It provides a clear, platform-appropriate error code and message.
+ * its allotted timeout period without completing. It provides a platform-appropriate error code and
+ * a human-readable message.
  *
- * Inherits from @ref SocketException and carries the same error code and message format.
+ * Inherits from @ref SocketException and uses a default platform-specific error code:
+ * - Windows: `WSAETIMEDOUT`
+ * - POSIX: `ETIMEDOUT`
  *
- * On Windows, the default error code is WSAETIMEDOUT; on POSIX systems, it is ETIMEDOUT.
- * The default message is generated using @ref SocketErrorMessageWrap for the timeout code.
+ * The default message is generated using @ref SocketErrorMessageWrap for the given timeout error code.
  *
- * ### Example:
+ * ### Example
  * @code
  * try {
  *     Socket client = server.accept(5000); // Wait up to 5 seconds
@@ -31,20 +34,14 @@ class SocketTimeoutException final : public SocketException
 {
   public:
     /**
-     * @brief Construct a new SocketTimeoutException.
-     *
-     * @param errorCode Platform-specific error code for timeouts (default: JSOCKETPP_TIMEOUT_CODE).
-     *        - On Windows: WSAETIMEDOUT
-     *        - On POSIX: ETIMEDOUT
-     * @param message Descriptive message for the timeout (default: result of SocketErrorMessageWrap for the timeout
-     * code).
-     *
-     * This constructor allows you to override the error code and message, but in most cases the defaults are correct.
+     * @brief Construct a new SocketTimeoutException with the specified or default timeout code and message.
+     * @param errorCode The platform-specific timeout code (default: JSOCKETPP_TIMEOUT_CODE).
+     * @param message Optional error message. If omitted, it will be generated from the error code.
      */
-    explicit SocketTimeoutException(const int errorCode = JSOCKETPP_TIMEOUT_CODE,
-                                    std::string message = SocketErrorMessageWrap(JSOCKETPP_TIMEOUT_CODE))
-        : SocketException(errorCode, std::move(message))
+    explicit SocketTimeoutException(int errorCode = JSOCKETPP_TIMEOUT_CODE, std::string message = "")
+        : SocketException(errorCode, message.empty() ? SocketErrorMessageWrap(errorCode) : std::move(message))
     {
     }
 };
+
 } // namespace jsocketpp
