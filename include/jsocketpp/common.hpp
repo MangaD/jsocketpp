@@ -1,3 +1,8 @@
+/**
+ * @file common.hpp
+ * @brief Common platform and utility includes for jsocketpp.
+ */
+
 #pragma once
 
 #include "SocketException.hpp"

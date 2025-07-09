@@ -1,3 +1,8 @@
+/**
+ * @file UnixSocket.hpp
+ * @brief Unix domain socket abstraction for jsocketpp.
+ */
+
 #pragma once
 
 #include "common.hpp"

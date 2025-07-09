@@ -1,6 +1,6 @@
 /**
  * @file ServerSocket.hpp
- * @brief Declares the ServerSocket class for TCP server socket operations.
+ * @brief TCP server socket abstraction for jsocketpp.
  */
 
 #pragma once
@@ -656,7 +656,6 @@ class ServerSocket
      *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
      *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
      *                       changed via `setSendBufferSize()`.
-     *
      * @return An `std::optional<Socket>` containing the accepted client socket, or `std::nullopt` if no client was
      * available before the timeout.
      *
@@ -1423,6 +1422,7 @@ class ServerSocket
      * @brief Cleans up server socket resources and throws a SocketException.
      *
      * This method performs cleanup of the address information structures (_srvAddrInfo)
+
      * and throws a SocketException with the provided error code. It's typically called
      * when an error occurs during socket initialization or configuration.
      *

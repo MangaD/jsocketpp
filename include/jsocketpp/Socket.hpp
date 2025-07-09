@@ -1,3 +1,8 @@
+/**
+ * @file Socket.hpp
+ * @brief TCP client socket abstraction for jsocketpp.
+ */
+
 #pragma once
 
 #include "SocketException.hpp"

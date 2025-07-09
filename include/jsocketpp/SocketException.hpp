@@ -1,3 +1,8 @@
+/**
+ * @file SocketException.hpp
+ * @brief Exception class for socket-related errors in jsocketpp.
+ */
+
 #pragma once
 
 #include "common.hpp"

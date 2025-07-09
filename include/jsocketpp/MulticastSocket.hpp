@@ -1,3 +1,8 @@
+/**
+ * @file MulticastSocket.hpp
+ * @brief Multicast UDP socket abstraction for jsocketpp.
+ */
+
 #pragma once
 
 #include "DatagramSocket.hpp"

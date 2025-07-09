@@ -1,3 +1,8 @@
+/**
+ * @file DatagramPacket.hpp
+ * @brief UDP datagram packet class for jsocketpp.
+ */
+
 #pragma once
 
 #include <string>

@@ -1,3 +1,8 @@
+/**
+ * @file SocketTimeoutException.hpp
+ * @brief Exception class for socket operation timeouts in jsocketpp.
+ */
+
 #pragma once
 
 #include "SocketException.hpp"

@@ -1,3 +1,8 @@
+/**
+ * @file SocketInitializer.hpp
+ * @brief Helper class for socket system initialization and cleanup (RAII) in jsocketpp.
+ */
+
 #pragma once
 
 #include "SocketException.h"
