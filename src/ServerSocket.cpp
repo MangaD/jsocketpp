@@ -247,9 +247,8 @@ ServerSocket::~ServerSocket() noexcept
     {
         close();
     }
-    catch (const std::exception& e)
+    catch (...)
     {
-        std::cerr << e.what() << std::endl;
     }
     if (_srvAddrInfo)
     {

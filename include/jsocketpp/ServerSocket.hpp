@@ -334,7 +334,13 @@ class ServerSocket
     {
         if (this != &rhs)
         {
-            close(); // Clean up existing resources
+            try
+            {
+                close(); // Clean up existing resources
+            }
+            catch (...)
+            {
+            }
             _serverSocket = rhs._serverSocket;
             _srvAddrInfo = rhs._srvAddrInfo;
             _selectedAddrInfo = rhs._selectedAddrInfo;
