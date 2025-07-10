@@ -166,14 +166,14 @@ class ServerSocket
      * @note This constructor is not thread safe. Do not share a ServerSocket instance between threads during
      * construction.
      *
-     * @param port            The port number to prepare the server socket for (binding will occur according to
+     * @param[in] port            The port number to prepare the server socket for (binding will occur according to
      *                        `autoBindListen`).
-     * @param localAddress    The local address/interface to bind to (empty for all interfaces).
-     * @param autoBindListen  If true (default), automatically binds and listens. If false, user must call them
+     * @param[in] localAddress    The local address/interface to bind to (empty for all interfaces).
+     * @param[in] autoBindListen  If true (default), automatically binds and listens. If false, user must call them
      *                        manually.
-     * @param reuseAddress    If true (default), enables address reuse (see above) before binding.
-     * @param soTimeoutMillis Accept timeout in milliseconds for `accept()`; -1 (default) means block indefinitely.
-     * @param dualStack       If true (default), enables dual-stack (IPv4+IPv6) for IPv6 sockets. If false, enables
+     * @param[in] reuseAddress    If true (default), enables address reuse (see above) before binding.
+     * @param[in] soTimeoutMillis Accept timeout in milliseconds for `accept()`; -1 (default) means block indefinitely.
+     * @param[in] dualStack       If true (default), enables dual-stack (IPv4+IPv6) for IPv6 sockets. If false, enables
      *                        IPv6-only mode (no IPv4-mapped addresses). Has no effect for IPv4 sockets.
      *
      * @throws SocketException If address resolution, socket creation, binding, or socket option configuration fails.
@@ -284,7 +284,7 @@ class ServerSocket
      * associated resources. Use move semantics (operator=(ServerSocket&&)) instead to
      * transfer ownership between ServerSocket objects.
      *
-     * @param rhs The ServerSocket to copy from (unused since deleted)
+     * @param[in] rhs The ServerSocket to copy from (unused since deleted)
      * @return Reference to this ServerSocket (never returns since deleted)
      *
      * @ingroup tcp
@@ -297,7 +297,7 @@ class ServerSocket
      * Transfers ownership of socket resources from another ServerSocket object.
      * The moved-from socket is left in a valid but empty state.
      *
-     * @param rhs The ServerSocket to move from
+     * @param[in] rhs The ServerSocket to move from
      *
      * @ingroup tcp
      */
@@ -329,7 +329,7 @@ class ServerSocket
      * - The moved-from socket (`rhs`) becomes closed and can be safely destroyed.
      * - All socket options, state flags, and configurations are transferred.
      *
-     * @param rhs The ServerSocket to move resources from.
+     * @param[in] rhs The ServerSocket to move resources from.
      * @return Reference to this ServerSocket (containing the moved resources).
      *
      * @note This operation is thread-safe with respect to the moved-from socket,
@@ -532,11 +532,10 @@ class ServerSocket
      *
      * @ingroup tcp
      *
-     * @param recvBufferSize The internal receive buffer size for the newly accepted client socket. If set to `0`, the
-     *                       per-instance default buffer size is used (see `setReceiveBufferSize()` and
-     *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                       changed via `setReceiveBufferSize()`.
-     * @param sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
+     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket. If set to `0`,
+     * the per-instance default buffer size is used (see `setReceiveBufferSize()` and `DefaultBufferSize`). If not
+     * specified, defaults to `DefaultBufferSize` (4096 bytes) unless changed via `setReceiveBufferSize()`.
+     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
      *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
      *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
      *                       changed via `setSendBufferSize()`.
@@ -597,15 +596,15 @@ class ServerSocket
      *
      * @ingroup tcp
      *
-     * @param timeoutMillis The maximum number of milliseconds to wait for a client connection:
+     * @param[in] timeoutMillis The maximum number of milliseconds to wait for a client connection:
      *   - Negative: wait indefinitely.
      *   - Zero: poll (return immediately).
      *   - Positive: wait up to this many milliseconds.
-     * @param recvBufferSize The internal receive buffer size for the newly accepted client socket.
+     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket.
      *                       If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()`
      *                       and `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes)
      *                       unless changed via `setReceiveBufferSize()`.
-     * @param sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
+     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
      *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
      *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
      *                       changed via `setSendBufferSize()`.
@@ -662,11 +661,11 @@ class ServerSocket
      *
      * @ingroup tcp
      *
-     * @param recvBufferSize The internal receive buffer size for the newly accepted client socket.
+     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket.
      *                       If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()`
      *                       and `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes)
      *                       unless changed via `setReceiveBufferSize()`.
-     * @param sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
+     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
      *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
      *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
      *                       changed via `setSendBufferSize()`.
@@ -726,13 +725,13 @@ class ServerSocket
      *
      * @ingroup tcp
      *
-     * @param timeoutMillis Timeout in milliseconds to wait for a client connection. Negative blocks indefinitely, zero
-     * polls.
-     * @param recvBufferSize The internal receive buffer size for the newly accepted client socket.
+     * @param[in] timeoutMillis Timeout in milliseconds to wait for a client connection. Negative blocks indefinitely,
+     * zero polls.
+     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket.
      *                       If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()`
      *                       and `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes)
      *                       unless changed via `setReceiveBufferSize()`.
-     * @param sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
+     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
      *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
      *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
      *                       changed via `setSendBufferSize()`.
@@ -791,11 +790,11 @@ class ServerSocket
      *
      * @ingroup tcp
      *
-     * @param recvBufferSize The internal receive buffer size for the newly accepted client socket.
+     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket.
      *                       If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()`
      *                       and `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes)
      *                       unless changed via `setReceiveBufferSize()`.
-     * @param sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
+     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
      *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
      *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
      *                       changed via `setSendBufferSize()`.
@@ -856,11 +855,11 @@ class ServerSocket
      *
      * @ingroup tcp
      *
-     * @param recvBufferSize The internal receive buffer size for the newly accepted client socket.
+     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket.
      *                       If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()`
      *                       and `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes)
      *                       unless changed via `setReceiveBufferSize()`.
-     * @param sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
+     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
      *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
      *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
      *                       changed via `setSendBufferSize()`.
@@ -955,10 +954,10 @@ class ServerSocket
      *
      * @note The ServerSocket must outlive the future.
      *
-     * @param recvBufferSize The internal receive buffer size (in bytes) to use for the newly accepted client socket.
-     *                   If set to `0` (the default), the ServerSocket's default buffer size is used.
-     *                   Adjust this value if you expect larger or smaller messages.
-     * @param sendBufferSize The internal send buffer size (in bytes) to use for the newly accepted client socket.
+     * @param[in] recvBufferSize The internal receive buffer size (in bytes) to use for the newly accepted client
+     * socket. If set to `0` (the default), the ServerSocket's default buffer size is used. Adjust this value if you
+     * expect larger or smaller messages.
+     * @param[in] sendBufferSize The internal send buffer size (in bytes) to use for the newly accepted client socket.
      *                   If set to `0` (the default), the ServerSocket's default send buffer size is used.
      *                   Adjust this value if you expect larger or smaller messages.
      *
@@ -1019,11 +1018,12 @@ class ServerSocket
      * - By default, this function launches a detached background thread for each asynchronous accept.
      *   For ultra-high concurrency, consider event-driven or coroutine-based backends in the future.
      *
-     * @param callback The function to invoke on completion. Signature:
+     * @param[in] callback The function to invoke on completion. Signature:
      *                 `void callback(std::optional<Socket>, std::exception_ptr)`.
-     * @param recvBufferSize Internal receive buffer size (bytes) for the accepted client socket (default: server
+     * @param[in] recvBufferSize Internal receive buffer size (bytes) for the accepted client socket (default: server
      * default).
-     * @param sendBufferSize Internal send buffer size (bytes) for the accepted client socket (default: server default).
+     * @param[in] sendBufferSize Internal send buffer size (bytes) for the accepted client socket (default: server
+     * default).
      *
      * @see acceptAsync(std::future), accept(), tryAccept()
      * @see std::optional, std::exception_ptr, std::rethrow_exception
@@ -1123,9 +1123,9 @@ class ServerSocket
      * serverSocket.setOption(SOL_SOCKET, SO_REUSEADDR, 1);
      * @endcode
      *
-     * @param level   Protocol level at which the option resides (e.g., SOL_SOCKET, IPPROTO_TCP)
-     * @param optName Option name (e.g., SO_REUSEADDR, SO_RCVBUF)
-     * @param value   Integer value for the option
+     * @param[in] level   Protocol level at which the option resides (e.g., SOL_SOCKET, IPPROTO_TCP)
+     * @param[in] optName Option name (e.g., SO_REUSEADDR, SO_RCVBUF)
+     * @param[in] value   Integer value for the option
      * @throws SocketException if the operation fails
      *
      * @see getOption()
@@ -1151,8 +1151,8 @@ class ServerSocket
      * int rcvBuf = serverSocket.getOption(SOL_SOCKET, SO_RCVBUF);
      * @endcode
      *
-     * @param level   Protocol level (e.g., SOL_SOCKET)
-     * @param optName Option name (e.g., SO_RCVBUF)
+     * @param[in] level   Protocol level (e.g., SOL_SOCKET)
+     * @param[in] optName Option name (e.g., SO_RCVBUF)
      * @return        Integer value for the option
      * @throws SocketException if the operation fails
      *
@@ -1196,7 +1196,7 @@ class ServerSocket
      * @warning This method must be called before calling bind(), and only once the socket has been created
      * (i.e., after construction, before bind).
      *
-     * @param enable True to enable address reuse, false to disable (default OS behavior).
+     * @param[in] enable True to enable address reuse, false to disable (default OS behavior).
      *
      * @throws SocketException if setting the option fails (e.g., socket not open or system error).
      *
@@ -1243,7 +1243,7 @@ class ServerSocket
      * @note This only affects the listening server socket. The accepted sockets returned by `accept()`
      * remain in blocking mode by default and must be configured separately.
      *
-     * @param nonBlocking true to enable non-blocking mode, false for blocking (default).
+     * @param[in] nonBlocking true to enable non-blocking mode, false for blocking (default).
      * @throws SocketException on error.
      *
      * @see acceptBlocking(), acceptNonBlocking()
@@ -1285,7 +1285,7 @@ class ServerSocket
      * ### Thread Safety
      * This method is thread-safe **as long as the server socket is not concurrently closed or modified.**
      *
-     * @param timeoutMillis Optional timeout in milliseconds. Defaults to the value set by `setSoTimeout()`.
+     * @param[in] timeoutMillis Optional timeout in milliseconds. Defaults to the value set by `setSoTimeout()`.
      * @return `true` if the socket is ready to accept a connection, `false` if the timeout expired.
      * @throws SocketException if the socket is uninitialized or if a system error occurs during readiness check.
      *
@@ -1302,7 +1302,7 @@ class ServerSocket
      *
      * @note Thread-safe if called before concurrent accept() calls.
      *
-     * @param millis Timeout in milliseconds:
+     * @param[in] millis Timeout in milliseconds:
      *   - If negative (default), blocks indefinitely.
      *   - If zero, polls the socket and returns immediately if no client is waiting.
      *   - If positive, waits up to the specified time for a client to connect.
@@ -1318,7 +1318,7 @@ class ServerSocket
      * By default, an IPv6 socket is configured in dual-stack mode (accepts both IPv6 and IPv4 connections)
      * on most platforms. Enabling IPv6-only mode restricts the socket to **only** IPv6 connections.
      *
-     * @param enable True to enable IPv6-only mode, false to allow dual-stack.
+     * @param[in] enable True to enable IPv6-only mode, false to allow dual-stack.
      * @throws SocketException if the socket is not IPv6, already bound, or on system error.
      * @note Must be called before bind().
      * @see getIPv6Only()
@@ -1360,7 +1360,7 @@ class ServerSocket
      *
      * @note Thread-safe if called before concurrent accept() calls.
      *
-     * @param size New buffer size in bytes
+     * @param[in] size New buffer size in bytes
      * @see getDefaultReceiveBufferSize()
      * @see DefaultBufferSize
      * @see accept(), acceptBlocking(), tryAccept()
@@ -1393,7 +1393,7 @@ class ServerSocket
      *
      * @note Thread-safe if called before concurrent accept() calls.
      *
-     * @param size New send buffer size in bytes
+     * @param[in] size New send buffer size in bytes
      * @see getDefaultSendBufferSize()
      * @see DefaultBufferSize
      * @see accept()
@@ -1436,7 +1436,7 @@ class ServerSocket
      * Improper use of SO_REUSEPORT may result in complex behavior and should only be used if you fully understand
      * its implications (e.g., distributing incoming connections evenly across processes).
      *
-     * @param enable Set to `true` to enable SO_REUSEPORT, `false` to disable.
+     * @param[in] enable Set to `true` to enable SO_REUSEPORT, `false` to disable.
      * @throws SocketException if setting the option fails.
      *
      * @see https://man7.org/linux/man-pages/man7/socket.7.html
@@ -1504,7 +1504,7 @@ class ServerSocket
      * and throws a SocketException with the provided error code. It's typically called
      * when an error occurs during socket initialization or configuration.
      *
-     * @param errorCode The error code to include in the thrown exception
+     * @param[in] errorCode The error code to include in the thrown exception
      * @throws SocketException Always throws with the provided error code and corresponding message
      *
      * @ingroup tcp
@@ -1520,7 +1520,7 @@ class ServerSocket
      * If the provided size is 0, it returns the default receive buffer size; otherwise, it returns
      * the provided size.
      *
-     * @param recvBufferSize The requested receive buffer size (0 means use default)
+     * @param[in] recvBufferSize The requested receive buffer size (0 means use default)
      * @return The effective receive buffer size to use
      *
      * @see setReceiveBufferSize()
@@ -1542,7 +1542,7 @@ class ServerSocket
      * If the provided size is 0, it returns the default send buffer size; otherwise, it returns
      * the provided size.
      *
-     * @param sendBufferSize The requested send buffer size (0 means use default)
+     * @param[in] sendBufferSize The requested send buffer size (0 means use default)
      * @return The effective send buffer size to use
      *
      * @see setSendBufferSize()
