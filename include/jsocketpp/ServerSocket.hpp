@@ -399,6 +399,10 @@ class ServerSocket
      * @throws SocketException if the bind operation fails (for example, if the port is already in use or insufficient
      * permissions).
      *
+     * @pre `_selectedAddrInfo` must not be null.
+     * @pre The socket must not be already bound.
+     * @post The socket is bound to the specified address and port.
+     *
      * @see setReuseAddress(), listen(), ServerSocket(unsigned short)
      *
      * @ingroup tcp
@@ -449,6 +453,9 @@ class ServerSocket
      * with details.
      *
      * @throws SocketException if the listen operation fails.
+     *
+     * @pre `bind()` must be called successfully before this.
+     * @post The server socket is now listening for incoming connections.
      *
      * @see bind(), accept(), ServerSocket(unsigned short)
      *
@@ -544,6 +551,9 @@ class ServerSocket
      * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
      * @throws SocketTimeoutException if the timeout expires before a client connects.
      *
+     * @pre Server socket must be valid, bound, and listening.
+     * @post A new connected `Socket` is returned on success.
+     *
      * @see setSoTimeout(int)
      * @see getSoTimeout()
      * @see acceptBlocking()
@@ -613,6 +623,9 @@ class ServerSocket
      * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
      * @throws SocketTimeoutException if the timeout expires before a client connects.
      *
+     * @pre Server socket must be valid, bound, and listening.
+     * @post A new connected `Socket` is returned on success.
+     *
      * @see setSoTimeout(int)
      * @see getSoTimeout()
      * @see acceptBlocking()
@@ -673,6 +686,9 @@ class ServerSocket
      * available before the timeout.
      *
      * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
+     *
+     * @pre Server socket must be valid, bound, and listening.
+     * @post Returns `std::nullopt` if timeout expires, or a connected `Socket` on success.
      *
      * @see setSoTimeout(int)
      * @see getSoTimeout()
@@ -740,6 +756,9 @@ class ServerSocket
      *
      * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
      *
+     * @pre Server socket must be valid, bound, and listening.
+     * @post Returns `std::nullopt` if timeout expires, or a connected `Socket` on success.
+     *
      * @see accept(int, std::size_t)
      * @see tryAccept(std::size_t)
      * @see accept()
@@ -802,6 +821,9 @@ class ServerSocket
      *
      * @throws SocketException if the server socket is not initialized, closed, or if `accept()` fails (including with
      * `EWOULDBLOCK`/`EAGAIN` in non-blocking mode).
+     *
+     * @pre Server socket must be valid, bound, and listening.
+     * @post A new connected `Socket` is returned on success.
      *
      * @see accept()
      * @see acceptNonBlocking()
@@ -868,6 +890,9 @@ class ServerSocket
      *
      * @throws SocketException if the server socket is not initialized, closed, or if an unrecoverable error occurs
      *         during accept (other than EWOULDBLOCK/EAGAIN in non-blocking mode).
+     *
+     * @pre Server socket must be valid, bound, and listening.
+     * @post Returns `std::nullopt` if no client is pending, or a connected `Socket` on success.
      *
      * @see setNonBlocking(bool)
      * @see acceptBlocking()
@@ -952,6 +977,9 @@ class ServerSocket
      *   - Throws `jsocketpp::SocketException` on fatal socket errors.
      *   - Throws `jsocketpp::SocketTimeoutException` if a timeout occurs (if configured).
      *
+     * @pre Server socket must be valid, bound, and listening.
+     * @post Returned future will yield a connected `Socket` or throw on error.
+     *
      * @note The ServerSocket must outlive the future.
      *
      * @param[in] recvBufferSize The internal receive buffer size (in bytes) to use for the newly accepted client
@@ -1017,6 +1045,9 @@ class ServerSocket
      * ### Implementation Notes
      * - By default, this function launches a detached background thread for each asynchronous accept.
      *   For ultra-high concurrency, consider event-driven or coroutine-based backends in the future.
+     *
+     * @pre Server socket must be valid, bound, and listening.
+     * @post Callback is invoked exactly once, either with a valid `Socket` or exception.
      *
      * @param[in] callback The function to invoke on completion. Signature:
      *                 `void callback(std::optional<Socket>, std::exception_ptr)`.
