@@ -1,6 +1,9 @@
 /**
  * @file ServerSocket.hpp
  * @brief TCP server socket abstraction for jsocketpp.
+ * @author MangaD
+ * @date 2025
+ * @version 1.0
  */
 
 #pragma once
@@ -91,10 +94,6 @@ namespace jsocketpp
  * ### See Also
  * - @ref Socket "Socket" - for connecting to a remote host
  * - @ref tcp - TCP socket group
- *
- * @author MangaD
- * @date 2025
- * @version 1.0
  */
 class ServerSocket
 {
