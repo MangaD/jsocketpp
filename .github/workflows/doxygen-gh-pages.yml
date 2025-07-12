@@ -1,0 +1,78 @@
+name: GH Doxygen
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DOXYGEN_VERSION: 1.14.0
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: Update Ubuntu package list
+        run: sudo apt-get update
+
+      - name: Install CMake
+        run: sudo apt-get install -y cmake
+
+      - name: Install Graphviz (for doxygen 'dot' component)
+        run: sudo apt-get install -y graphviz
+
+      - name: Prepare cache timestamp
+        id: cache_timestamp
+        shell: cmake -P {0}
+        run: |
+          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
+          file(APPEND "$ENV{GITHUB_OUTPUT}" "timestamp=${current_date}")
+
+      - name: Cache Doxygen
+        id: cache-doxygen
+        uses: actions/cache@v4
+        with:
+          path: doxygen-${{ env.DOXYGEN_VERSION }}
+          key: doxygen-cache-${{ steps.cache_timestamp.outputs.timestamp }}
+          restore-keys: |
+            doxygen-cache-
+
+      - name: Install Doxygen from GitHub
+        if: steps.cache-doxygen.outputs.cache-hit != 'true'
+        run: |
+          version_underscore=$(echo "$DOXYGEN_VERSION" | sed -r 's/\./_/g')
+          dirname=doxygen-$DOXYGEN_VERSION
+          filename_tar=$dirname.linux.bin.tar
+          filename_gz=$filename_tar.gz
+          url=https://github.com/doxygen/doxygen/releases/download/Release_$version_underscore/$filename_gz
+          wget $url
+          gunzip $filename_gz
+          tar xf $filename_tar
+          echo "${GITHUB_WORKSPACE}/$dirname/bin" >> $GITHUB_PATH
+
+      - name: Generate Doxygen Documentation
+        run: |
+          mkdir build && cd build
+          cmake .. -DBUILD_SOURCE=OFF
+          cmake --build . --target doxygen
+
+      # In the repository settings, go to Actions -> General -> Workflow permissions
+      # and enable Read and write permissions.
+      # After the workflow runs successfully, go to Settings -> Pages -> Branch
+      # select `gh-pages` and click "Save".
+      - name: Upload documentation to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/doxygen/html
