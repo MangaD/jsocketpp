@@ -57,15 +57,14 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_GENERATE_XML YES) # If you need XML for Sphinx or other tools.
 
     # Additional configuration for a nicer HTML output.
-    set(DOXYGEN_GENERATE_TREEVIEW YES)
-    set(DOXYGEN_DISABLE_INDEX NO)
-    set(DOXYGEN_FULL_SIDEBAR NO)
+    set(DOXYGEN_GENERATE_TREEVIEW YES) # Required by doxygen-awesome-css
+    set(DOXYGEN_DISABLE_INDEX NO) # Required by doxygen-awesome-css
+    set(DOXYGEN_FULL_SIDEBAR NO) # Required by doxygen-awesome-css
     set(DOXYGEN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen)
     # set(DOXYGEN_HTML_HEADER ${DOXYGEN_DIR}/header.html) set(DOXYGEN_HTML_FOOTER ${DOXYGEN_DIR}/footer.html)
+    # set(DOXYGEN_HTML_COLORSTYLE LIGHT) # Required by doxygen-awesome-css
     set(DOXYGEN_HTML_COLORSTYLE "TOGGLE")
-    set(DOXYGEN_HTML_EXTRA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/CONTRIBUTING.md
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/CODE_OF_CONDUCT.md)
-    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
+    # set(DOXYGEN_HTML_EXTRA_FILES ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
     # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js
     # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-paragraph-link.js
     # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-interactive-toc.js
@@ -109,6 +108,9 @@ if(DOXYGEN_FOUND)
 
     # Set the main page to the README.md in the project root.
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_BINARY_DIR}/md_files/README.md")
+
+    # Copy logo to destination dir
+    file(COPY "${CMAKE_SOURCE_DIR}/docs/doxygen/logo.png" DESTINATION "${CMAKE_SOURCE_DIR}/docs/doxygen/html/docs/doxygen/")
 
     doxygen_add_docs(doxygen ${md_files} ${CMAKE_SOURCE_DIR}/include/jsocketpp ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/tests
                      COMMENT "Generating API documentation with Doxygen")
