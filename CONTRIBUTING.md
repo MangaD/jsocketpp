@@ -108,6 +108,6 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
 
 ## 8. Questions
 
-Open an [issue](https://github.com/youruser/jsocketpp/issues) or join the discussion tab.
+Open an [issue](https://github.com/MangaD/jsocketpp/issues) or join the discussion tab.
 
 Thank you for your contributions!
