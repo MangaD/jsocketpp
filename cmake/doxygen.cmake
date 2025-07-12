@@ -26,7 +26,7 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_PROJECT_NUMBER
         "${PROJECT_VERSION}"
         CACHE INTERNAL "")
-    set(DOXYGEN_PROJECT_LOGO "docs/doxygen/logo.png")
+    # set(DOXYGEN_PROJECT_LOGO "docs/doxygen/logo.png")
     set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/docs/doxygen")
     set(DOXYGEN_EXTRACT_ALL YES)
     set(DOXYGEN_EXTRACT_PRIVATE YES)
@@ -59,28 +59,27 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_GENERATE_TREEVIEW YES)
     set(DOXYGEN_DISABLE_INDEX NO)
     set(DOXYGEN_FULL_SIDEBAR NO)
-    set(DOXYGEN_HTML_COLORSTYLE LIGHT)
     set(DOXYGEN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen)
-    set(DOXYGEN_HTML_HEADER ${DOXYGEN_DIR}/header.html)
-    set(DOXYGEN_HTML_FOOTER ${DOXYGEN_DIR}/footer.html)
-    set(DOXYGEN_HTML_EXTRA_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
-        ${CMAKE_CURRENT_SOURCE_DIR}/CONTRIBUTING.md
-        ${CMAKE_CURRENT_SOURCE_DIR}/CODE_OF_CONDUCT.md
-        ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
-        ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js
-        ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-paragraph-link.js
-        ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-interactive-toc.js
-        ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-tabs.js)
-    set(DOXYGEN_HTML_EXTRA_STYLESHEET
-        ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome.css
-        ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only.css
-        ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only-darkmode-toggle.css)
+    # set(DOXYGEN_HTML_HEADER ${DOXYGEN_DIR}/header.html) set(DOXYGEN_HTML_FOOTER ${DOXYGEN_DIR}/footer.html)
+    set(DOXYGEN_HTML_COLORSTYLE "TOGGLE")
+    set(DOXYGEN_HTML_EXTRA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/CONTRIBUTING.md
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/CODE_OF_CONDUCT.md)
+    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
+    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js
+    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-paragraph-link.js
+    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-interactive-toc.js
+    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-tabs.js) set(DOXYGEN_HTML_EXTRA_STYLESHEET
+    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome.css ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only.css
+    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only-darkmode-toggle.css)
 
     # Add Table of Contents to markdown files
     file(GLOB md_files "${CMAKE_SOURCE_DIR}/docs/markdown/*.md")
 
     file(COPY "${CMAKE_SOURCE_DIR}/README.md" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/md_files")
+    file(
+        WRITE "${CMAKE_CURRENT_BINARY_DIR}/md_files/index.md"
+        "\\defgroup docs User Guides\n\\hidegroupgraph\n\\brief Documentation for users of jsocketpp.\n\nThis group includes guides and references for getting started with jsocketpp, contributing to the project, and understanding the project's policies."
+    )
     file(COPY "${CMAKE_SOURCE_DIR}/CODE_OF_CONDUCT.md" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/md_files")
     file(COPY "${CMAKE_SOURCE_DIR}/CONTRIBUTING.md" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/md_files")
 
@@ -89,9 +88,20 @@ if(DOXYGEN_FOUND)
     file(GLOB_RECURSE md_files "${CMAKE_CURRENT_BINARY_DIR}/md_files/*.md")
     foreach(filename ${md_files})
         file(READ "${filename}" MD_TEXT)
-        # Insert [TOC] immediately after the first level-1 header line.
-        if(MD_TEXT MATCHES "^# [^\n]+\n")
-            string(REGEX REPLACE "^(# [^\n]+)\r?\n(.+)" "\\1\n[TOC]\n\\2" MD_TEXT_MODIFIED "${MD_TEXT}")
+        # Get the filename without path and extension
+        get_filename_component(fname "${filename}" NAME_WE)
+        get_filename_component(basename "${filename}" NAME)
+        # Insert [TOC] and Doxygen group declarations after the first level-1 header line.
+        if(MD_TEXT MATCHES "^# ([^\n]+)\n")
+            if(NOT filename MATCHES "md_files/docs/")
+                string(REGEX REPLACE "^# ([^\n]+)\r?\n(.+)" "# \\1\n[TOC]\n\\2" MD_TEXT_MODIFIED "${MD_TEXT}")
+            else()
+                string(
+                    REGEX
+                    REPLACE "^# ([^\n]+)\r?\n(.+)"
+                            "\\\\defgroup ${fname} \\1\n\\\\ingroup docs\n\\\\hidegroupgraph\n# \\1\n[TOC]\n\\2"
+                            MD_TEXT_MODIFIED "${MD_TEXT}")
+            endif()
             file(WRITE ${filename} "${MD_TEXT_MODIFIED}")
         endif()
     endforeach()
