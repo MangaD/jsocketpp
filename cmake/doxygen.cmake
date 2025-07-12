@@ -61,16 +61,24 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_DISABLE_INDEX NO) # Required by doxygen-awesome-css
     set(DOXYGEN_FULL_SIDEBAR NO) # Required by doxygen-awesome-css
     set(DOXYGEN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen)
-    # set(DOXYGEN_HTML_HEADER ${DOXYGEN_DIR}/header.html) set(DOXYGEN_HTML_FOOTER ${DOXYGEN_DIR}/footer.html)
-    # set(DOXYGEN_HTML_COLORSTYLE LIGHT) # Required by doxygen-awesome-css
     set(DOXYGEN_HTML_COLORSTYLE "TOGGLE")
-    # set(DOXYGEN_HTML_EXTRA_FILES ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
-    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js
-    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-paragraph-link.js
-    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-interactive-toc.js
-    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-tabs.js) set(DOXYGEN_HTML_EXTRA_STYLESHEET
-    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome.css ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only.css
-    # ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only-darkmode-toggle.css)
+
+    # === Doxygen Awesome CSS
+    if(DOXYGEN_VERSION VERSION_LESS 1.14.0)
+        set(DOXYGEN_HTML_HEADER ${DOXYGEN_DIR}/header.html)
+        set(DOXYGEN_HTML_FOOTER ${DOXYGEN_DIR}/footer.html)
+        set(DOXYGEN_HTML_COLORSTYLE LIGHT) # Required by doxygen-awesome-css
+        set(DOXYGEN_HTML_EXTRA_FILES
+            ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
+            ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js
+            ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-paragraph-link.js
+            ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-interactive-toc.js
+            ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-tabs.js)
+        set(DOXYGEN_HTML_EXTRA_STYLESHEET
+            ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome.css
+            ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only.css
+            ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only-darkmode-toggle.css)
+    endif()
 
     # Add Table of Contents to markdown files
     file(GLOB md_files "${CMAKE_SOURCE_DIR}/docs/markdown/*.md")
