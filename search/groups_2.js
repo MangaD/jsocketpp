@@ -1,0 +1,16 @@
+var searchData=
+[
+  ['address_20reuse_20in_20sockets_3a_20so_5freuseaddr_20vs_20so_5fexclusiveaddruse_0',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],
+  ['all_20interfaces_20vs_20specific_20interfaces_1',['Understanding &lt;span class=&quot;tt&quot;&gt;bind()&lt;/span&gt;: Binding to All Interfaces vs Specific Interfaces',['../group__bind__interfaces.html',1,'']]],
+  ['alternatives_2',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
+  ['and_20best_20practices_3',['ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices',['../group__ServerSocket__Lifecycle.html',1,'']]],
+  ['and_20epoll_20as_20alternatives_4',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
+  ['and_20integration_20guide_5',['Unit Testing and Integration Guide',['../group__unit__tests.html',1,'']]],
+  ['and_20listening_3a_20design_20patterns_20and_20best_20practices_6',['ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices',['../group__ServerSocket__Lifecycle.html',1,'']]],
+  ['and_20platform_20apis_7',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
+  ['and_20usage_20guide_8',['jsocketpp: Build, Test, and Usage Guide',['../group__BUILD__AND__USAGE.html',1,'']]],
+  ['api_9',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
+  ['apis_10',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
+  ['as_20alternatives_11',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
+  ['asynchronous_20i_20o_20operations_20does_20it_20make_20sense_20to_20provide_20poll_20and_20epoll_20as_20alternatives_12',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]]
+];

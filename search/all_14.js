@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['java’s_20approach_20and_20its_20limitations_0',['⚠️ Java’s Approach and Its Limitations',['../group__address__reuse.html#autotoc_md143',1,'']]],
+  ['java’s_20design_20trade_20off_1',['Summary of Java’s Design Trade-Off',['../group__address__reuse.html#autotoc_md147',1,'']]],
+  ['java_20comparison_2',['📚 Java Comparison',['../group__async__io.html#autotoc_md200',1,'']]],
+  ['java_20default_20style_3',['&lt;b&gt;a) Constructor Does All (Java Default Style)&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md90',1,'']]],
+  ['java_20does_4',['What Java Does',['../group__address__reuse.html#autotoc_md144',1,'']]],
+  ['java_20inspired_20api_5',['Java-Inspired API',['../index.html#autotoc_md39',1,'']]],
+  ['java_20serversocket_3a_20constructor_20does_20all_20steps_6',['2. Java ServerSocket: Constructor Does All Steps',['../group__ServerSocket__Lifecycle.html#autotoc_md79',1,'']]],
+  ['java_3a_7',['Java:',['../group__async__io.html#autotoc_md186',1,'Java:'],['../group__async__io.html#autotoc_md190',1,'Java:']]],
+  ['joingroup_8',['joinGroup',['../classjsocketpp_1_1MulticastSocket.html#ad0efe916fe4a309dca8889112ddbdf3f',1,'jsocketpp::MulticastSocket']]],
+  ['jsocketpp_9',['jsocketpp',['../group__address__reuse.html#autotoc_md151',1,'✅ Smarter Strategy for jsocketpp'],['../group__async__io.html',1,'Blocking vs Non-Blocking Sockets in jsocketpp'],['../group__async__io.html#autotoc_md169',1,'Blocking vs Non-Blocking Sockets in jsocketpp'],['../md_build_2md__files_2CONTRIBUTING.html',1,'Contributing to jsocketpp'],['../group__socket__states.html#autotoc_md312',1,'How This Relates to <span class="tt">jsocketpp</span>'],['../namespacejsocketpp.html',1,'jsocketpp'],['../group__socket-options.html',1,'Socket Options in jsocketpp'],['../group__socket-options.html#autotoc_md257',1,'Socket Options in jsocketpp']]],
+  ['jsocketpp_20_3a_10',['&lt;b&gt;With &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt; (default in jsocketpp)&lt;/b&gt;:',['../group__address__reuse.html#autotoc_md139',1,'']]],
+  ['jsocketpp_20api_20notes_11',['jsocketpp API Notes',['../group__bind__interfaces.html#autotoc_md214',1,'']]],
+  ['jsocketpp_20approach_3a_20port_20in_20constructor_20bind_20listen_20explicit_12',['3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit',['../group__ServerSocket__Lifecycle.html#autotoc_md81',1,'']]],
+  ['jsocketpp_20does_13',['A Better Alternative: What &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; Does',['../group__address__reuse.html#autotoc_md149',1,'']]],
+  ['jsocketpp_20gets_20right_14',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md164',1,'']]],
+  ['jsocketpp_20handles_20blocking_20and_20timeouts_15',['⏱ How jsocketpp Handles Blocking and Timeouts',['../group__async__io.html#autotoc_md179',1,'']]],
+  ['jsocketpp_20hybrid_16',['&lt;b&gt;c) jsocketpp Hybrid&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md92',1,'']]],
+  ['jsocketpp_20this_20library_17',['1. jsocketpp (this library)',['../group__socket__library__comparison.html#autotoc_md286',1,'']]],
+  ['jsocketpp_20to_20the_20conan_20center_20index_20cci_18',['jsocketpp to the Conan Center Index CCI',['../group__conan__publish__guide.html',1,'Publishing &lt;tt&gt;jsocketpp&lt;/tt&gt; to the Conan Center Index (CCI)'],['../group__conan__publish__guide.html#autotoc_md217',1,'Publishing <span class="tt">jsocketpp</span> to the Conan Center Index (CCI)']]],
+  ['jsocketpp_20to_20the_20vcpkg_20registry_19',['jsocketpp to the vcpkg Registry',['../group__vcpkg__publish__guide.html',1,'Publishing &lt;tt&gt;jsocketpp&lt;/tt&gt; to the vcpkg Registry'],['../group__vcpkg__publish__guide.html#autotoc_md402',1,'Publishing <span class="tt">jsocketpp</span> to the vcpkg Registry']]],
+  ['jsocketpp_20vs_20other_20c_20socket_20libraries_20',['jsocketpp vs Other C Socket Libraries',['../group__socket__library__comparison.html',1,'Comparison: &lt;tt&gt;jsocketpp&lt;/tt&gt; vs Other C++ Socket Libraries'],['../group__socket__library__comparison.html#autotoc_md284',1,'Comparison: <span class="tt">jsocketpp</span> vs Other C++ Socket Libraries']]],
+  ['jsocketpp_3a_20build_20test_20and_20usage_20guide_21',['jsocketpp: Build Test and Usage Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__BUILD__AND__USAGE.html#autotoc_md50',1,'jsocketpp: Build, Test, and Usage Guide']]],
+  ['jsocketpp_3a_20c_2017_20cross_20platform_20socket_20library_22',['jsocketpp: C++17 cross-platform socket library',['../group__jsocketpp.html',1,'']]],
+  ['jsocketpp_3a_20modern_20c_2017_20cross_20platform_20socket_20library_23',['jsocketpp: Modern C++17 Cross-Platform Socket Library',['../index.html',1,'']]],
+  ['json_24',['Example &lt;span class=&quot;tt&quot;&gt;vcpkg.json&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md409',1,'']]]
+];
