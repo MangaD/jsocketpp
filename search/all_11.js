@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['generic_20methods_0',['Dedicated Methods vs. Generic Methods',['../group__socket-options.html#autotoc_md276',1,'']]],
+  ['generic_20methods_0',['Dedicated Methods vs. Generic Methods',['../group__socket-options.html#autotoc_md219',1,'']]],
   ['getcurrentgroup_1',['getCurrentGroup',['../classjsocketpp_1_1MulticastSocket.html#a3fd7dbdf1bfffe953c6fa7a64dccdfad',1,'jsocketpp::MulticastSocket']]],
   ['getdefaultreceivebuffersize_2',['getDefaultReceiveBufferSize',['../group__tcp.html#ga29de003fbad91f7302115d26b89ac888',1,'jsocketpp::ServerSocket']]],
   ['getdefaultsendbuffersize_3',['getDefaultSendBufferSize',['../group__tcp.html#ga80d2d5fc59fa2b10e586287d6ffd84f7',1,'jsocketpp::ServerSocket']]],
@@ -20,16 +20,16 @@ var searchData=
   ['getremotesocketaddress_17',['getRemoteSocketAddress',['../classjsocketpp_1_1Socket.html#a47460d7512cb20e061a98f66fdcf90c1',1,'jsocketpp::Socket']]],
   ['getreuseaddress_18',['getReuseAddress',['../group__tcp.html#ga663e3d90aa82f14c2db9a16e3e5b3525',1,'jsocketpp::ServerSocket']]],
   ['getreuseport_19',['getReusePort',['../group__tcp.html#ga7c00ace5b0756299ea0cbd77074e856d',1,'jsocketpp::ServerSocket']]],
-  ['gets_20right_20',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md164',1,'']]],
+  ['gets_20right_20',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md107',1,'']]],
   ['getsocketerror_21',['GetSocketError',['../namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad',1,'jsocketpp']]],
   ['getsocketpath_22',['getSocketPath',['../classjsocketpp_1_1UnixSocket.html#a7595a11516389b7690e3f387d999b01c',1,'jsocketpp::UnixSocket']]],
   ['getsocketreuseoption_23',['getSocketReuseOption',['../group__tcp.html#gaf54c5a60a2d403df50674c261e86fbd5',1,'jsocketpp::ServerSocket']]],
   ['getsotimeout_24',['getSoTimeout',['../group__tcp.html#ga7829c558cb7bf5e0a46d882df82acc19',1,'jsocketpp::ServerSocket']]],
   ['gettimetolive_25',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]],
-  ['google_20mock_20to_20mock_20recv_20and_20send_3a_26',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md390',1,'']]],
-  ['google_20mock_3a_27',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md398',1,'']]],
-  ['guide_28',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__BUILD__AND__USAGE.html#autotoc_md50',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide'],['../group__unit__tests.html#autotoc_md386',1,'Unit Testing and Integration Guide']]],
-  ['guide_20to_20the_20socket_20api_29',['Guide to the Socket API',['../group__underlying__socket__api.html',1,'Comprehensive Guide to the Socket API'],['../group__underlying__socket__api.html#autotoc_md355',1,'Comprehensive Guide to the Socket API']]],
-  ['guidelines_30',['3. Code Style Guidelines',['../md_build_2md__files_2CONTRIBUTING.html#autotoc_md13',1,'']]],
+  ['google_20mock_20to_20mock_20recv_20and_20send_3a_26',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md333',1,'']]],
+  ['google_20mock_3a_27',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md341',1,'']]],
+  ['guide_28',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
+  ['guide_20to_20the_20socket_20api_29',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
+  ['guidelines_30',['3. Code Style Guidelines',['../md_CONTRIBUTING.html#autotoc_md397',1,'']]],
   ['guides_31',['User Guides',['../group__docs.html',1,'']]]
 ];

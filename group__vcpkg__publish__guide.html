@@ -95,12 +95,10 @@ $(function(){initNavTree('group__vcpkg__publish__guide.html','',''); });
   <div class="headertitle"><div class="title">Publishing <span class="tt">jsocketpp</span> to the vcpkg Registry <div class="ingroups"><a class="el" href="group__docs.html">User Guides</a></div></div></div>
 </div><!--header-->
 <div class="contents">
-<h1 class="doxsection"><a class="anchor" id="autotoc_md402"></a>
-Publishing <span class="tt">jsocketpp</span> to the vcpkg Registry</h1>
 <p>This guide explains, step by step, how to prepare, test, and submit your C++ library <span class="tt">jsocketpp</span> to the vcpkg registry so it can be easily consumed by the C++ community.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md404"></a>
-1. Prerequisites</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md347"></a>
+1. Prerequisites</h1>
 <ul>
 <li><b>vcpkg</b>: Install the latest vcpkg from <a href="https://github.com/microsoft/vcpkg">https://github.com/microsoft/vcpkg</a></li>
 <li><b>CMake</b>: Ensure CMake 3.19+ is installed.</li>
@@ -108,8 +106,8 @@ Publishing <span class="tt">jsocketpp</span> to the vcpkg Registry</h1>
 <li><b>A public repository</b>: Your library must be hosted on a public VCS (e.g., GitHub).</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md406"></a>
-2. Prepare Your Library for vcpkg</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md349"></a>
+2. Prepare Your Library for vcpkg</h1>
 <ul>
 <li>Ensure your <span class="tt">CMakeLists.txt</span> supports installation (<span class="tt">install(TARGETS ...)</span>, <span class="tt">install(FILES ...)</span>).</li>
 <li>Use standard CMake variables for headers and libraries.</li>
@@ -117,35 +115,35 @@ Publishing <span class="tt">jsocketpp</span> to the vcpkg Registry</h1>
 <li>Use semantic versioning and tag releases in your VCS.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md408"></a>
-3. Create a vcpkg Portfile</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md351"></a>
+3. Create a vcpkg Portfile</h1>
 <p>A vcpkg port consists of:</p>
 <ul>
 <li>A <span class="tt">portfile.cmake</span> (build instructions)</li>
 <li>A <span class="tt">vcpkg.json</span> (metadata)</li>
 <li>Optionally, patches and usage files</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md409"></a>
-Example <span class="tt">vcpkg.json</span></h3>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md352"></a>
+Example <span class="tt">vcpkg.json</span></h2>
 <div class="fragment"><div class="line">{</div>
-<div class="line">    &quot;name&quot;: &quot;jsocketpp&quot;,</div>
-<div class="line">    &quot;version-string&quot;: &quot;0.1.0&quot;,</div>
-<div class="line">    &quot;description&quot;: &quot;A modern C++ socket library.&quot;,</div>
-<div class="line">    &quot;homepage&quot;: &quot;https://github.com/yourusername/jsocketpp&quot;,</div>
-<div class="line">    &quot;license&quot;: &quot;MIT&quot;</div>
+<div class="line">  &quot;name&quot;: &quot;jsocketpp&quot;,</div>
+<div class="line">  &quot;version-string&quot;: &quot;0.1.0&quot;,</div>
+<div class="line">  &quot;description&quot;: &quot;A modern C++ socket library.&quot;,</div>
+<div class="line">  &quot;homepage&quot;: &quot;https://github.com/yourusername/jsocketpp&quot;,</div>
+<div class="line">  &quot;license&quot;: &quot;MIT&quot;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md410"></a>
-Example <span class="tt">portfile.cmake</span></h3>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md353"></a>
+Example <span class="tt">portfile.cmake</span></h2>
 <div class="fragment"><div class="line">vcpkg_from_github(</div>
-<div class="line">    OUT_SOURCE_PATH SOURCE_PATH</div>
-<div class="line">    REPO yourusername/jsocketpp</div>
-<div class="line">    REF v0.1.0 # or the latest tag</div>
-<div class="line">    SHA512 &lt;fill-in-sha512&gt;</div>
+<div class="line">        OUT_SOURCE_PATH SOURCE_PATH</div>
+<div class="line">        REPO yourusername/jsocketpp</div>
+<div class="line">        REF v0.1.0 # or the latest tag</div>
+<div class="line">        SHA512 &lt;fill-in-sha512&gt;</div>
 <div class="line">)</div>
 <div class="line"> </div>
 <div class="line">vcpkg_cmake_configure(</div>
-<div class="line">    SOURCE_PATH ${SOURCE_PATH}</div>
-<div class="line">    PREFER_NINJA</div>
+<div class="line">        SOURCE_PATH ${SOURCE_PATH}</div>
+<div class="line">        PREFER_NINJA</div>
 <div class="line">)</div>
 <div class="line"> </div>
 <div class="line">vcpkg_cmake_install()</div>
@@ -156,8 +154,8 @@ Example <span class="tt">portfile.cmake</span></h3>
 <li>Replace <span class="tt">&lt;fill-in-sha512&gt;</span> with the actual SHA512 hash of the release archive (see below).</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md412"></a>
-4. Test the Port Locally</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md355"></a>
+4. Test the Port Locally</h1>
 <ol type="1">
 <li>Clone the vcpkg repository and bootstrap it: <div class="fragment"><div class="line">git clone https://github.com/microsoft/vcpkg.git</div>
 <div class="line">cd vcpkg</div>
@@ -175,8 +173,8 @@ Example <span class="tt">portfile.cmake</span></h3>
 </div><!-- fragment --> Fix any errors and ensure the library installs and can be found by consumers.</li>
 </ol>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md414"></a>
-5. Submit to the vcpkg Registry</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md357"></a>
+5. Submit to the vcpkg Registry</h1>
 <ol type="1">
 <li>Fork the <a href="https://github.com/microsoft/vcpkg">vcpkg</a> repository on GitHub.</li>
 <li>Add your port to the <span class="tt">ports/</span> directory in your fork.</li>
@@ -189,16 +187,16 @@ Example <span class="tt">portfile.cmake</span></h3>
 <li>Address any feedback from the vcpkg team and automated CI.</li>
 </ol>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md416"></a>
-6. After Acceptance</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md359"></a>
+6. After Acceptance</h1>
 <ul>
 <li>Your library will be available to all vcpkg users via: <div class="fragment"><div class="line">vcpkg install jsocketpp</div>
 </div><!-- fragment --></li>
 <li>Keep your port up to date as you release new versions.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md418"></a>
-7. Tips and Best Practices</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md361"></a>
+7. Tips and Best Practices</h1>
 <ul>
 <li>Use semantic versioning and tag releases.</li>
 <li>Keep your portfile minimal and clean.</li>
@@ -206,8 +204,8 @@ Example <span class="tt">portfile.cmake</span></h3>
 <li>Respond promptly to vcpkg review comments.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md420"></a>
-References</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md363"></a>
+References</h1>
 <ul>
 <li><a href="https://github.com/microsoft/vcpkg/tree/master/docs">vcpkg Documentation</a></li>
 <li><a href="https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/adding-a-port.md">Adding a port</a></li>

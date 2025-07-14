@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🚀_20combining_20with_20so_5freuseport_0',['🚀 Combining with &lt;span class=&quot;tt&quot;&gt;SO_REUSEPORT&lt;/span&gt;',['../group__address__reuse.html#autotoc_md111',1,'']]]
+  ['🚦_20blocking_20vs_20non_20blocking_20sockets_0',['🚦 Blocking vs Non-Blocking Sockets',['../group__async__io.html#autotoc_md114',1,'']]]
 ];

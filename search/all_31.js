@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📥_20recv_20read_0',['📥 &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; / &lt;span class=&quot;tt&quot;&gt;read&lt;/span&gt;',['../group__async__io.html#autotoc_md191',1,'']]]
+  ['📦_20common_20use_20cases_0',['📦 Common use cases',['../group__address__reuse.html#autotoc_md57',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📚_20java_20comparison_0',['📚 Java Comparison',['../group__async__io.html#autotoc_md200',1,'']]]
+  ['📞_20accept_0',['📞 &lt;span class=&quot;tt&quot;&gt;accept&lt;/span&gt;',['../group__async__io.html#autotoc_md130',1,'']]]
 ];

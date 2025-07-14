@@ -95,12 +95,10 @@ $(function(){initNavTree('group__ServerSocket__Lifecycle.html','',''); });
   <div class="headertitle"><div class="title">ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices <div class="ingroups"><a class="el" href="group__docs.html">User Guides</a></div></div></div>
 </div><!--header-->
 <div class="contents">
-<h1 class="doxsection"><a class="anchor" id="autotoc_md75"></a>
-ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices</h1>
 <p>In network programming, <b>how and when you construct, bind, and listen with a server socket</b> has significant impact on flexibility, safety, and ease of use. This article explains the design adopted by <span class="tt">jsocketpp</span>, contrasts it with Java and POSIX, and justifies why the port is required at construction.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md77"></a>
-1. Traditional Socket Initialization: POSIX Approach</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+1. Traditional Socket Initialization: POSIX Approach</h1>
 <p>In classic C/POSIX code, creating a server socket is a multi-step, highly manual process:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> sockfd = socket(...);</div>
 <div class="line">setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, ...);</div>
@@ -116,8 +114,8 @@ ServerSocket Construction, Binding, and Listening: Design Patterns and Best Prac
 <p><b>Drawback:</b> The user is responsible for the correct sequence, handling errors at every step, and often for repeated IPv4/IPv6 logic with <span class="tt">getaddrinfo()</span>. </p>
 </blockquote>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md79"></a>
-2. Java ServerSocket: Constructor Does All Steps</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+2. Java ServerSocket: Constructor Does All Steps</h1>
 <p>Java’s <span class="tt">ServerSocket(int port)</span> <b>combines all steps</b> in its constructor:</p>
 <div class="fragment"><div class="line">ServerSocket server = <span class="keyword">new</span> ServerSocket(8080);</div>
 </div><!-- fragment --><ul>
@@ -132,8 +130,8 @@ ServerSocket Construction, Binding, and Listening: Design Patterns and Best Prac
 <li>This is more like POSIX, but less commonly used in Java code.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md81"></a>
-3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit</h1>
 <p><b>jsocketpp</b> aims for a <b>balance of safety, flexibility, and Java-inspired clarity</b>:</p>
 <ul>
 <li>The <span class="tt">ServerSocket</span> constructor <b>requires the port</b> (and optionally address/interface).</li>
@@ -147,8 +145,8 @@ ServerSocket Construction, Binding, and Listening: Design Patterns and Best Prac
 <div class="line">server.bind();                              <span class="comment">// Bind to address/port</span></div>
 <div class="line">server.listen();                            <span class="comment">// Begin listening</span></div>
 <div class="ttc" id="aclassjsocketpp_1_1ServerSocket_html"><div class="ttname"><a href="classjsocketpp_1_1ServerSocket.html">jsocketpp::ServerSocket</a></div><div class="ttdoc">TCP server socket abstraction for cross-platform C++ networking.</div><div class="ttdef"><b>Definition</b> ServerSocket.hpp:99</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md82"></a>
-Why require the port in the constructor?</h3>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+Why require the port in the constructor?</h2>
 <ul>
 <li><b>getaddrinfo() needs the port:</b> For cross-platform support and dual-stack (IPv4/IPv6), you want to call <span class="tt">getaddrinfo()</span> early, before bind.</li>
 <li><b>Socket creation depends on address info:</b> You must know the family/protocol/port before you can call <span class="tt">socket()</span>.</li>
@@ -168,32 +166,32 @@ Why require the port in the constructor?</h3>
 <td class="markdownTableBodyNone">Listen  </td><td class="markdownTableBodyNone"><span class="tt">listen()</span>  </td><td class="markdownTableBodyNone">in constructor  </td><td class="markdownTableBodyNone"><span class="tt">listen()</span>  </td></tr>
 </table>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md84"></a>
-4. Advantages and Rationale</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md85"></a>
-a) Flexibility and Safety</h3>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+4. Advantages and Rationale</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+a) Flexibility and Safety</h2>
 <ul>
 <li><b>Can set options at the right time</b> (after socket creation, before bind).</li>
 <li><b>No risk of binding without first setting key options</b> (as can happen in Java’s default constructor).</li>
 <li><b>Consistent with best practices:</b> This is the recommended sequence for most robust servers.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md86"></a>
-b) Portability</h3>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+b) Portability</h2>
 <ul>
 <li>Works well with both IPv4 and IPv6, on all platforms.</li>
 <li>Mirrors best practices for systems code while retaining a Java-inspired API.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md87"></a>
-c) Clear API</h3>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
+c) Clear API</h2>
 <ul>
 <li>New users get a familiar, simple Java-like experience.</li>
 <li>Advanced users can control every step, essential for custom protocols, security, or debugging.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md89"></a>
-5. Alternative Designs: Pros and Cons</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md90"></a>
-<b>a) Constructor Does All (Java Default Style)</b></h3>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+5. Alternative Designs: Pros and Cons</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
+<b>a) Constructor Does All (Java Default Style)</b></h2>
 <ul>
 <li><b>Pros:</b><ul>
 <li>One-liner for simple servers.</li>
@@ -206,8 +204,8 @@ c) Clear API</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md91"></a>
-<b>b) Fully Step-by-Step (POSIX Style)</b></h3>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+<b>b) Fully Step-by-Step (POSIX Style)</b></h2>
 <ul>
 <li><b>Pros:</b><ul>
 <li>Total control.</li>
@@ -219,8 +217,8 @@ c) Clear API</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md92"></a>
-<b>c) jsocketpp Hybrid</b></h3>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
+<b>c) jsocketpp Hybrid</b></h2>
 <ul>
 <li><b>Pros:</b><ul>
 <li>Safe, clear, and portable.</li>
@@ -235,15 +233,15 @@ c) Clear API</h3>
 </li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md94"></a>
-6. Advanced Scenarios</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
+6. Advanced Scenarios</h1>
 <ul>
 <li><b>Binding to wildcard or specific address:</b> Pass an address (IP, or empty for all interfaces) to the constructor.</li>
 <li><b>Dual-stack servers:</b> Handled transparently by using <span class="tt">getaddrinfo()</span> at construction.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md96"></a>
-7. Example Usage</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md46"></a>
+7. Example Usage</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="ServerSocket_8hpp.html">jsocketpp/ServerSocket.hpp</a>&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
@@ -261,16 +259,16 @@ c) Clear API</h3>
 <div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:58</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:88</div></div>
 </div><!-- fragment --><hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md98"></a>
-8. Recommendations</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
+8. Recommendations</h1>
 <ul>
 <li>Use the <b>jsocketpp</b> approach for safety and flexibility.</li>
 <li>If your server needs more complex lifecycle control, consider using advanced constructors or additional configuration methods as you would in Java.</li>
 <li>Remember that setting options like <span class="tt">SO_REUSEADDR</span> is only possible <em>after</em> socket creation but <em>before</em> bind.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md100"></a>
-9. Summary</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
+9. Summary</h1>
 <ul>
 <li><b>jsocketpp</b> provides a robust, cross-platform, and flexible approach by requiring the port in the constructor and separating <span class="tt">bind()</span>/<span class="tt">listen()</span>.</li>
 <li>This design enables both Java-like ease-of-use and POSIX-level control, without sacrificing safety or best practices. </li>

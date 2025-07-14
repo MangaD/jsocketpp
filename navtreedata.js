@@ -26,22 +26,22 @@ var NAVTREE =
 [
   [ "jsocketpp", "index.html", [
     [ "jsocketpp: Modern C++17 Cross-Platform Socket Library", "index.html", "index" ],
-    [ "Code of Conduct", "md_build_2md__files_2CODE__OF__CONDUCT.html", [
-      [ "Our Pledge", "md_build_2md__files_2CODE__OF__CONDUCT.html#autotoc_md1", null ],
-      [ "Our Standards", "md_build_2md__files_2CODE__OF__CONDUCT.html#autotoc_md2", null ],
-      [ "Our Responsibilities", "md_build_2md__files_2CODE__OF__CONDUCT.html#autotoc_md3", null ],
-      [ "Scope", "md_build_2md__files_2CODE__OF__CONDUCT.html#autotoc_md4", null ],
-      [ "Enforcement", "md_build_2md__files_2CODE__OF__CONDUCT.html#autotoc_md5", null ]
+    [ "Contributing to jsocketpp", "md_CONTRIBUTING.html", [
+      [ "1. Reporting Issues", "md_CONTRIBUTING.html#autotoc_md393", null ],
+      [ "2. Submitting Pull Requests", "md_CONTRIBUTING.html#autotoc_md395", null ],
+      [ "3. Code Style Guidelines", "md_CONTRIBUTING.html#autotoc_md397", null ],
+      [ "4. Pre-commit Hooks", "md_CONTRIBUTING.html#autotoc_md399", null ],
+      [ "5. Testing", "md_CONTRIBUTING.html#autotoc_md401", null ],
+      [ "6. Documentation", "md_CONTRIBUTING.html#autotoc_md403", null ],
+      [ "7. Branching &amp; Code of Conduct", "md_CONTRIBUTING.html#autotoc_md405", null ],
+      [ "8. Questions", "md_CONTRIBUTING.html#autotoc_md407", null ]
     ] ],
-    [ "Contributing to jsocketpp", "md_build_2md__files_2CONTRIBUTING.html", [
-      [ "1. Reporting Issues", "md_build_2md__files_2CONTRIBUTING.html#autotoc_md9", null ],
-      [ "2. Submitting Pull Requests", "md_build_2md__files_2CONTRIBUTING.html#autotoc_md11", null ],
-      [ "3. Code Style Guidelines", "md_build_2md__files_2CONTRIBUTING.html#autotoc_md13", null ],
-      [ "4. Pre-commit Hooks", "md_build_2md__files_2CONTRIBUTING.html#autotoc_md15", null ],
-      [ "5. Testing", "md_build_2md__files_2CONTRIBUTING.html#autotoc_md17", null ],
-      [ "6. Documentation", "md_build_2md__files_2CONTRIBUTING.html#autotoc_md19", null ],
-      [ "7. Branching &amp; Code of Conduct", "md_build_2md__files_2CONTRIBUTING.html#autotoc_md21", null ],
-      [ "8. Questions", "md_build_2md__files_2CONTRIBUTING.html#autotoc_md23", null ]
+    [ "Code of Conduct", "md_CODE__OF__CONDUCT.html", [
+      [ "Our Pledge", "md_CODE__OF__CONDUCT.html#autotoc_md409", null ],
+      [ "Our Standards", "md_CODE__OF__CONDUCT.html#autotoc_md410", null ],
+      [ "Our Responsibilities", "md_CODE__OF__CONDUCT.html#autotoc_md411", null ],
+      [ "Scope", "md_CODE__OF__CONDUCT.html#autotoc_md412", null ],
+      [ "Enforcement", "md_CODE__OF__CONDUCT.html#autotoc_md413", null ]
     ] ],
     [ "Topics", "topics.html", "topics" ],
     [ "Namespaces", "namespaces.html", [
@@ -78,7 +78,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "DatagramPacket_8hpp.html",
-"group__tcp.html#ga8347e566047718b056c6f371071d92d7"
+"group__tcp.html#ga91f77d98b601507dbdcfac412e79f52d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

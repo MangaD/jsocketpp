@@ -95,12 +95,10 @@ $(function(){initNavTree('group__BUILD__AND__USAGE.html','',''); });
   <div class="headertitle"><div class="title">jsocketpp: Build, Test, and Usage Guide <div class="ingroups"><a class="el" href="group__docs.html">User Guides</a></div></div></div>
 </div><!--header-->
 <div class="contents">
-<h1 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
-jsocketpp: Build, Test, and Usage Guide</h1>
 <p>This document provides comprehensive instructions for building, testing, and using the <span class="tt">jsocketpp</span> C++17 cross-platform socket library on Windows, Linux, and macOS. It covers CMake, Makefile, and manual build approaches, as well as usage examples and troubleshooting tips.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
-Table of Contents</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+Table of Contents</h1>
 <ul>
 <li>Prerequisites</li>
 <li>Building the Library<ul>
@@ -119,8 +117,8 @@ Table of Contents</h2>
 <li>License</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
-Prerequisites</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+Prerequisites</h1>
 <ul>
 <li><b>C++17 compiler</b> (MSVC, GCC, or Clang)</li>
 <li><b>CMake 3.19+</b> (for presets support)</li>
@@ -129,10 +127,10 @@ Prerequisites</h2>
 <li><b>Git</b> (for fetching dependencies)</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
-Building the Library</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
-Using CMake Presets (Recommended)</h3>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+Building the Library</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+Using CMake Presets (Recommended)</h2>
 <p>This project provides a <span class="tt">CMakePresets.json</span> file for easy, reproducible builds across platforms and configurations.</p>
 <ol type="1">
 <li><b>Configure the project:</b> <div class="fragment"><div class="line">cmake --preset=default</div>
@@ -149,28 +147,28 @@ Using CMake Presets (Recommended)</h3>
 <li><b>Install (optional):</b> <div class="fragment"><div class="line">cmake --install --preset=default</div>
 </div><!-- fragment --></li>
 </ol>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md58"></a>
-Manual CMake Build</h3>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+Manual CMake Build</h2>
 <div class="fragment"><div class="line">mkdir build</div>
 <div class="line">cd build</div>
 <div class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line">cmake --build .</div>
 </div><!-- fragment --><p>To build a shared library:</p>
 <div class="fragment"><div class="line">cmake .. -DBUILD_SHARED_LIBS=ON</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
-Using the Makefile</h3>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+Using the Makefile</h2>
 <p>A GNU Makefile is provided for quick builds (mainly for Linux/macOS):</p>
 <div class="fragment"><div class="line">make           # Builds static lib, client, server</div>
 <div class="line">make test      # Builds and runs GoogleTest unit tests</div>
 <div class="line">make clean     # Cleans build artifacts</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
-Manual Compilation</h3>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+Manual Compilation</h2>
 <p>You can also build the library manually:</p>
 <div class="fragment"><div class="line">g++ -std=c++17 -O2 -Wall -I./src -c src/socket.cpp -o socket.o</div>
 <div class="line">ar rcs jsocketpp.a socket.o</div>
 </div><!-- fragment --><hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md62"></a>
-Building and Running Tests</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+Building and Running Tests</h1>
 <ul>
 <li><b>With CMake:</b> <div class="fragment"><div class="line">cmake --build --preset=default</div>
 <div class="line">ctest --preset=default</div>
@@ -186,8 +184,8 @@ Building and Running Tests</h2>
 </li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md64"></a>
-Linking the Library</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+Linking the Library</h1>
 <ul>
 <li><b>Static library:</b> Link against <span class="tt">jsocketpp.a</span> (or <span class="tt">jsocketpp.lib</span> on Windows)</li>
 <li><b>Shared library:</b> Link against <span class="tt">jsocketpp.so</span>/<span class="tt">jsocketpp.dll</span>/<span class="tt">jsocketpp.dylib</span> as appropriate</li>
@@ -195,8 +193,8 @@ Linking the Library</h2>
 <li><b>Linux/POSIX:</b> No extra libraries needed</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
-Usage Example</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+Usage Example</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;socket.hpp&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
@@ -212,8 +210,8 @@ Usage Example</h2>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:88</div></div>
 </div><!-- fragment --><p>See the <span class="tt">tests/</span> directory for more complete TCP, UDP, and Unix domain socket client/server examples.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md68"></a>
-CMake Integration in Your Project</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+CMake Integration in Your Project</h1>
 <p>If you want to use <span class="tt">jsocketpp</span> in your own CMake project after installing:</p>
 <div class="fragment"><div class="line">find_package(jsocketpp REQUIRED)</div>
 <div class="line">add_executable(myapp main.cpp)</div>
@@ -223,8 +221,8 @@ CMake Integration in Your Project</h2>
 <div class="line">add_executable(myapp main.cpp)</div>
 <div class="line">target_link_libraries(myapp PRIVATE jsocketpp)</div>
 </div><!-- fragment --><hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md70"></a>
-Troubleshooting</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+Troubleshooting</h1>
 <ul>
 <li><b>Cannot find <span class="tt">&lt;sys/un.h&gt;</span> on Windows:</b> This is expected; Unix domain sockets are only available on POSIX or Windows 10+ with AF_UNIX support.</li>
 <li><b>Link errors for <span class="tt">ws2_32</span> or <span class="tt">iphlpapi</span>:</b> Ensure you link these libraries on Windows.</li>
@@ -233,8 +231,8 @@ Troubleshooting</h2>
 <li><b>GoogleTest not found:</b> The build will fetch and build GoogleTest automatically.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md72"></a>
-Platform Notes</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+Platform Notes</h1>
 <ul>
 <li><b>Windows:</b><ul>
 <li>Requires linking with <span class="tt">ws2_32</span> and <span class="tt">iphlpapi</span>.</li>
@@ -251,8 +249,8 @@ Platform Notes</h2>
 </li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md74"></a>
-License</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+License</h1>
 <p>MIT License. See <a href="../LICENSE">LICENSE</a> for details. </p>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -234,7 +234,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TCP server socket abstraction for cross-platform C++ networking. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> class provides a high-level, Java-like interface to create TCP server sockets in C++17, supporting both IPv4 and IPv6, and working on both Windows and Unix-like systems.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md430"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md423"></a>
 Overview</h2>
 <p><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> is designed to simplify the creation of network server applications. It allows you to:</p><ul>
 <li>Bind to a specified port (optionally on a specific address/interface)</li>
@@ -243,7 +243,7 @@ Overview</h2>
 <li>Clean up resources automatically (RAII)</li>
 </ul>
 <p>This class handles platform differences (such as Winsock vs BSD Sockets) internally, so you can write portable code.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md431"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md424"></a>
 Typical Usage</h2>
 <p>Here’s how you can use <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> to create a simple TCP echo server:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="ServerSocket_8hpp.html">jsocketpp/ServerSocket.hpp</a>&gt;</span></div>
@@ -280,7 +280,7 @@ Typical Usage</h2>
 <div class="ttc" id="aclassjsocketpp_1_1Socket_html_aa7498d51b547b52699055bdb16b9d68b"><div class="ttname"><a href="classjsocketpp_1_1Socket.html#aa7498d51b547b52699055bdb16b9d68b">jsocketpp::Socket::read</a></div><div class="ttdeci">T read()</div><div class="ttdoc">Read a trivially copyable type from the socket.</div><div class="ttdef"><b>Definition</b> Socket.hpp:247</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:88</div></div>
 <div class="ttc" id="agroup__tcp_html_gad39f5cb474532ee02539fb3eceaebda0"><div class="ttname"><a href="group__tcp.html#gad39f5cb474532ee02539fb3eceaebda0">jsocketpp::ServerSocket::ServerSocket</a></div><div class="ttdeci">ServerSocket(unsigned short port, std::string_view localAddress={}, bool autoBindListen=true, bool reuseAddress=true, int soTimeoutMillis=-1, bool dualStack=true)</div><div class="ttdoc">Constructs a ServerSocket for listening to incoming TCP connections with full configuration control.</div><div class="ttdef"><b>Definition</b> ServerSocket.cpp:8</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md432"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md425"></a>
 Key Features</h2>
 <ul>
 <li><b>Cross-platform</b>: Windows and Linux/Unix support</li>
@@ -289,7 +289,7 @@ Key Features</h2>
 <li><b>Error handling</b>: Throws exceptions on error for robust applications</li>
 <li><b>Customizable</b>: Control backlog, address reuse, blocking/non-blocking modes, etc.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md433"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md426"></a>
 Basic API</h2>
 <ul>
 <li><span class="tt">ServerSocket(port)</span>: Construct with a port to listen on.</li>
@@ -305,7 +305,7 @@ Basic API</h2>
 <li>Exceptions are thrown as <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> for error conditions.</li>
 </ul>
 </dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md434"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md427"></a>
 See Also</h3>
 <ul>
 <li><a class="el" href="classjsocketpp_1_1Socket.html">Socket</a> - for connecting to a remote host</li>

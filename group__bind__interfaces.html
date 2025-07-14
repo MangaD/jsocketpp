@@ -95,18 +95,16 @@ $(function(){initNavTree('group__bind__interfaces.html','',''); });
   <div class="headertitle"><div class="title">Understanding <span class="tt">bind()</span>: Binding to All Interfaces vs Specific Interfaces <div class="ingroups"><a class="el" href="group__docs.html">User Guides</a></div></div></div>
 </div><!--header-->
 <div class="contents">
-<h1 class="doxsection"><a class="anchor" id="autotoc_md207"></a>
-Understanding <span class="tt">bind()</span>: Binding to All Interfaces vs Specific Interfaces</h1>
 <p>Socket programming often involves choosing <b>which local addresses and interfaces</b> your server will listen on. This article explains what it means to “bind to all interfaces,” how it works under the hood, and how to select specific interfaces if needed.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md208"></a>
-What Does “Binding to All Interfaces” Mean?</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md151"></a>
+What Does “Binding to All Interfaces” Mean?</h1>
 <p>When you create a listening socket (e.g., for a server) you must “bind” it to a local address and port. This address determines:</p>
 <ul>
 <li>Which incoming connections or datagrams will be delivered to your socket.</li>
 <li>Which network interfaces (e.g., Ethernet, Wi-Fi, loopback) will be monitored.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md209"></a>
-Wildcard Addresses</h3>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md152"></a>
+Wildcard Addresses</h2>
 <ul>
 <li><b>IPv4:</b> <span class="tt">0.0.0.0</span></li>
 <li><b>IPv6:</b> <span class="tt">::</span></li>
@@ -115,8 +113,8 @@ Wildcard Addresses</h3>
 <p>“Accept connections or datagrams on <em>any</em> address of this machine, on the specified port, for this protocol family.” </p>
 </blockquote>
 <p>When you bind your socket to a wildcard address, the OS will deliver to you any incoming traffic on that port, no matter which network interface it arrives on.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md210"></a>
-Example: Binding to All Interfaces</h3>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md153"></a>
+Example: Binding to All Interfaces</h2>
 <div class="fragment"><div class="line"><span class="comment">// Using getaddrinfo with node=nullptr and AI_PASSIVE hint</span></div>
 <div class="line">addrinfo hints{};</div>
 <div class="line">hints.ai_family = AF_UNSPEC;     <span class="comment">// IPv4 or IPv6</span></div>
@@ -198,24 +196,24 @@ Example: Binding to All Interfaces</h3>
 </div><!-- fragment --><p> cpp // Linux only: restrict socket to eth0 setsockopt(sockfd, SOL_SOCKET, SO_BINDTODEVICE, "eth0", strlen("eth0")); ```</p>
 <p><em>Note: Not portable!</em></p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md212"></a>
-Best Practices</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md155"></a>
+Best Practices</h1>
 <ul>
 <li>For most servers, <b>binding to the wildcard address</b> (<span class="tt">0.0.0.0</span> or <span class="tt">::</span>) is best. This allows clients to connect regardless of which network they use to reach your server.</li>
 <li>Bind to a specific address <b>only</b> when you have a reason (security, access control, multiple processes, etc.).</li>
 <li>Let jsocketpp’s default behavior handle this for you unless you have advanced requirements.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md214"></a>
-jsocketpp API Notes</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md157"></a>
+jsocketpp API Notes</h1>
 <ul>
 <li>By default, jsocketpp binds to all local addresses for the protocol family (one socket).</li>
 <li>You can customize the address passed to the constructor to bind only to a specific interface/address if desired.</li>
 <li>The library prefers dual-stack (IPv6) when possible for maximum reach.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md216"></a>
-Conclusion</h2>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md159"></a>
+Conclusion</h1>
 <blockquote class="doxtable">
 <p><b>Binding to all interfaces</b> is simple, robust, and sufficient for most server applications. Advanced use-cases (multi-homing, interface binding) are supported but rarely needed. </p>
 </blockquote>

@@ -95,11 +95,11 @@ $(function(){initNavTree('index.html','',''); });
   <div class="headertitle"><div class="title">jsocketpp: Modern C++17 Cross-Platform Socket Library </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_build_2md__files_2README"></a></p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a></p>
 <p><a href="https://github.com/MangaD/jsocketpp/actions"><img src="https://img.shields.io/github/actions/workflow/status/MangaD/jsocketpp/ci.yml" alt="Build Status" class="inline"/></a> <a href="https://github.com/MangaD/jsocketpp/actions/workflows/doxygen-gh-pages.yml"><img src="https://github.com/MangaD/jsocketpp/actions/workflows/doxygen-gh-pages.yml/badge.svg" alt="GH Doxygen" style="pointer-events: none;" class="inline"/></a> [<img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT" style="pointer-events: none;" class="inline"/>](LICENSE) <a href="https://conan.io/center/jsocketpp"><img src="https://img.shields.io/badge/conan-available-brightgreen" alt="Conan" class="inline"/></a> <a href="https://vcpkg.io/en/packages.html#jsocketpp"><img src="https://img.shields.io/badge/vcpkg-available-blue" alt="vcpkg" class="inline"/></a></p>
 <p><b>Java-style sockets for modern C++17. Cross-platform, robust, and simple.</b></p>
 <div align="center"> <img src="docs/doxygen/logo.png" alt="logo" width="200" class="inline"/> </div><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md367"></a>
 Overview</h1>
 <p><span class="tt">jsocketpp</span> is a C++17 cross-platform socket library inspired by the Java networking API. It offers familiar and convenient classes (<span class="tt">Socket</span>, <span class="tt">ServerSocket</span>, <span class="tt">DatagramSocket</span>, <span class="tt">MulticastSocket</span>, etc.) to simplify TCP and UDP network programming in C++. The API is designed to be clear, robust, and portable—ideal for modern, high-performance C++ applications.</p>
 <ul>
@@ -109,7 +109,7 @@ Overview</h1>
 <li><b>Modern C++17</b> features</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md369"></a>
 Features</h1>
 <ul>
 <li>Object-oriented socket abstractions (like Java)</li>
@@ -123,15 +123,15 @@ Features</h1>
 <li>Unit tested with GoogleTest</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md371"></a>
 Installation</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md372"></a>
 vcpkg</h2>
 <div class="fragment"><div class="line">vcpkg install jsocketpp</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md373"></a>
 Conan</h2>
 <div class="fragment"><div class="line">conan install jsocketpp/[latest]@</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md374"></a>
 Manual</h2>
 <p>Clone and add to your project:</p>
 <div class="fragment"><div class="line">git clone https://github.com/MangaD/jsocketpp.git</div>
@@ -141,9 +141,9 @@ Manual</h2>
 <div class="line">make</div>
 <div class="line">sudo make install</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md376"></a>
 Quick Start</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md377"></a>
 TCP Example</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="Socket_8hpp.html">jsocketpp/Socket.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="ServerSocket_8hpp.html">jsocketpp/ServerSocket.hpp</a>&gt;</span></div>
@@ -160,7 +160,7 @@ TCP Example</h2>
 <div class="ttc" id="aServerSocket_8hpp_html"><div class="ttname"><a href="ServerSocket_8hpp.html">ServerSocket.hpp</a></div><div class="ttdoc">TCP server socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aSocket_8hpp_html"><div class="ttname"><a href="Socket_8hpp.html">Socket.hpp</a></div><div class="ttdoc">TCP client socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:88</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md378"></a>
 UDP Example</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="DatagramSocket_8hpp.html">jsocketpp/DatagramSocket.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="DatagramPacket_8hpp.html">jsocketpp/DatagramPacket.hpp</a>&gt;</span></div>
@@ -178,7 +178,7 @@ UDP Example</h2>
 <div class="ttc" id="aDatagramPacket_8hpp_html"><div class="ttname"><a href="DatagramPacket_8hpp.html">DatagramPacket.hpp</a></div><div class="ttdoc">UDP datagram packet class for jsocketpp.</div></div>
 <div class="ttc" id="aDatagramSocket_8hpp_html"><div class="ttname"><a href="DatagramSocket_8hpp.html">DatagramSocket.hpp</a></div><div class="ttdoc">UDP datagram socket abstraction for jsocketpp.</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md380"></a>
 Java-Inspired API</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -195,27 +195,27 @@ Java-Inspired API</h1>
 <td class="markdownTableBodyNone"><span class="tt">MulticastSocket</span>  </td><td class="markdownTableBodyNone"><span class="tt">jsocketpp::MulticastSocket</span>  </td></tr>
 </table>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md382"></a>
 Documentation</h1>
 <ul>
 <li><a href="https://github.com/MangaD/jsocketpp/wiki">Full API Reference</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md384"></a>
 Building &amp; Testing</h1>
 <div class="fragment"><div class="line">cmake --preset=debug</div>
 <div class="line">cmake --build --preset=debug</div>
 <div class="line">ctest --preset=debug</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md386"></a>
 License</h1>
 <p>MIT License. See [LICENSE](LICENSE).</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md388"></a>
 Contributing</h1>
-<p>Pull requests are welcome! Please read the contributing guidelines.</p>
+<p>Pull requests are welcome! Please read the <a class="el" href="md_CONTRIBUTING.html">contributing guidelines</a>.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md390"></a>
 Acknowledgements</h1>
 <ul>
 <li>Java’s networking API for inspiration</li>

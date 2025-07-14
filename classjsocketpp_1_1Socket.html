@@ -191,7 +191,7 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TCP client connection abstraction (Java-like interface). </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> class represents a TCP connection between your application and a remote host. It provides a high-level, easy-to-use, and cross-platform API for creating, connecting, sending, and receiving data over TCP sockets. Its interface is inspired by Java's <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> class, but uses modern C++17 features.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md448"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md441"></a>
 Key Features</h3>
 <ul>
 <li><b>Connect to remote hosts</b> using hostnames or IP addresses (IPv4/IPv6).</li>
@@ -202,7 +202,7 @@ Key Features</h3>
 <li><b>Exception-based error handling</b> via <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
 <li><b>Fine-grained control</b>: configure timeouts, non-blocking mode, TCP_NODELAY, SO_KEEPALIVE, etc.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md449"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md442"></a>
 Typical Usage Example</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="Socket_8hpp.html">jsocketpp/Socket.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -223,36 +223,36 @@ Typical Usage Example</h3>
 <div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:58</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:80</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:88</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md450"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md443"></a>
 Internal Buffer</h3>
 <ul>
 <li>The socket maintains an internal read buffer (default: 512 bytes).</li>
 <li>You can resize it with <span class="tt"><a class="el" href="#a69c03ae3850cd5d55a5e42ff63472009" title="Set the internal buffer size.">setBufferSize()</a></span> if you expect to receive larger or smaller messages.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md451"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md444"></a>
 Error Handling</h3>
 <ul>
 <li>Almost all methods throw <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">jsocketpp::SocketException</a></span> on error (e.g., connect failure, write error, etc).</li>
 <li>You should catch exceptions to handle network errors gracefully.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md452"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md445"></a>
 Thread Safety</h3>
 <ul>
 <li>Not thread-safe. Use a separate <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> object per thread if needed.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md453"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md446"></a>
 Platform Support</h3>
 <ul>
 <li>Windows, Linux, macOS. Handles all necessary platform differences internally.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md454"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md447"></a>
 Advanced Usage</h3>
 <ul>
 <li>Set non-blocking mode with <span class="tt"><a class="el" href="#a6cc57c26e230cb7ed7fa0174028811d5" title="Set the socket to non-blocking or blocking mode.">setNonBlocking()</a></span>.</li>
 <li>Tune socket options with <span class="tt"><a class="el" href="#ac2975ed8e1d02b5f823bc0af50c034c7" title="Enable or disable TCP_NODELAY (Nagle&#39;s algorithm) on the socket.">enableNoDelay()</a></span>, <span class="tt"><a class="el" href="#a4c37f604fb8534760e00e077f5c4c5cf" title="Enable or disable SO_KEEPALIVE on the socket.">enableKeepAlive()</a></span>, or <span class="tt">setTimeout()</span>.</li>
 <li>Check remote address with <span class="tt"><a class="el" href="#a47460d7512cb20e061a98f66fdcf90c1" title="Get the remote socket&#39;s address as a string (ip:port).">getRemoteSocketAddress()</a></span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md455"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md448"></a>
 See Also</h3>
 <ul>
 <li><a class="el" href="classjsocketpp_1_1ServerSocket.html">ServerSocket</a> - for listening to incoming connections</li>

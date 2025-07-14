@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['📦_20common_20use_20cases_0',['📦 Common use cases',['../group__address__reuse.html#autotoc_md107',1,'']]]
+  ['🔄_20operation_20specific_20behavior_3a_20connect_20accept_20recv_20and_20send_0',['🔄 Operation-Specific Behavior: &lt;span class=&quot;tt&quot;&gt;connect&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;accept&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt;, and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;',['../group__async__io.html#autotoc_md125',1,'']]],
+  ['🔄_20what_20it_20actually_20does_1',['🔄 What it actually does',['../group__address__reuse.html#autotoc_md56',1,'']]]
 ];
