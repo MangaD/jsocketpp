@@ -16,6 +16,7 @@
 # cmake --build . --target doxygen
 
 if(DOXYGEN_FOUND)
+    set(DOXYGEN_DIR ${CMAKE_SOURCE_DIR}/docs/doxygen)
     # Configure Doxygen settings directly
     set(DOXYGEN_PROJECT_NAME
         "${PROJECT_NAME}"
@@ -26,9 +27,9 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_PROJECT_NUMBER
         "${PROJECT_VERSION}"
         CACHE INTERNAL "")
-    set(DOXYGEN_PROJECT_LOGO "docs/doxygen/logo55px.png")
-    set(DOXYGEN_PROJECT_ICON "docs/doxygen/logo55px.png")
-    set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/docs/doxygen")
+    set(DOXYGEN_PROJECT_LOGO "${DOXYGEN_DIR}/logo55px.png")
+    set(DOXYGEN_PROJECT_ICON "${DOXYGEN_DIR}/logo55px.png")
+    set(DOXYGEN_OUTPUT_DIRECTORY "${DOXYGEN_DIR}")
     set(DOXYGEN_EXTRACT_ALL YES)
     set(DOXYGEN_EXTRACT_PRIVATE YES)
     set(DOXYGEN_EXTRACT_STATIC YES)
@@ -37,7 +38,7 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_WARN_IF_UNDOCUMENTED YES)
     set(DOXYGEN_WARN_NO_PARAMDOC YES)
     set(DOXYGEN_STRIP_FROM_PATH ${CMAKE_SOURCE_DIR})
-    # set(DOXYGEN_EXCLUDE "${CMAKE_SOURCE_DIR}/docs/doxygen"
+    # set(DOXYGEN_EXCLUDE "${DOXYGEN_DIR}"
     # "${CMAKE_BINARY_DIR}")
     set(DOXYGEN_RECURSIVE YES)
     set(DOXYGEN_ENABLE_PREPROCESSING NO) # https://stackoverflow.com/a/26043120/3049315
@@ -60,7 +61,6 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_GENERATE_TREEVIEW YES) # Required by doxygen-awesome-css
     set(DOXYGEN_DISABLE_INDEX NO) # Required by doxygen-awesome-css
     set(DOXYGEN_FULL_SIDEBAR NO) # Required by doxygen-awesome-css
-    set(DOXYGEN_DIR ${CMAKE_SOURCE_DIR}/docs/doxygen)
     set(DOXYGEN_HTML_COLORSTYLE "TOGGLE")
 
     # === Doxygen Awesome CSS
@@ -103,7 +103,7 @@ if(DOXYGEN_FOUND)
         COMMENT "Generating API documentation with Doxygen")
 
     # Copy logo to destination dir
-    file(COPY "${CMAKE_SOURCE_DIR}/docs/doxygen/logo.png" DESTINATION "${CMAKE_SOURCE_DIR}/docs/doxygen/html/docs/doxygen/")
+    file(COPY "${DOXYGEN_DIR}/logo.png" DESTINATION "${DOXYGEN_DIR}/html/docs/doxygen/")
 
     message(STATUS "Documentation will be output to: ${DOXYGEN_OUTPUT_DIRECTORY}")
 else()
