@@ -144,18 +144,14 @@ $(function(){initNavTree('md_CONTRIBUTING.html','',''); });
 <ul>
 <li>We recommend using <a href="https://pre-commit.com/">pre-commit</a> to automatically check formatting and lint code before each commit.</li>
 <li>To set up pre-commit hooks:<ol type="1">
-<li>Install Python dependencies (<span class="tt">pre-commit</span> and its dependencies): <span class="tt">sh
-       pip install -r requirements.txt
-       </span></li>
-<li>Install the hooks defined in <span class="tt">.pre-commit-config.yaml</span>. Every time you clone a project using pre-commit running <span class="tt">pre-commit install</span> should always be the first thing you do. <span class="tt">sh
-       pre-commit install
-       </span></li>
-<li>(Recommended) Periodically update the hooks to their latest versions: <span class="tt">sh
-       pre-commit autoupdate
-       </span></li>
-<li>Now, hooks will run automatically on <span class="tt">git commit</span>. You can manually run them on all files with: <span class="tt">sh
-       pre-commit run --all-files
-       </span> The first time pre-commit runs on a file it will automatically download, install, and run the hook. Note that running a hook for the first time may be slow. For example: If the machine does not have node installed, pre-commit will download and build a copy of node.</li>
+<li>Install Python dependencies (<span class="tt">pre-commit</span> and its dependencies): <div class="fragment"><div class="line">pip install -r requirements.txt</div>
+</div><!-- fragment --></li>
+<li>Install the hooks defined in <span class="tt">.pre-commit-config.yaml</span>. Every time you clone a project using pre-commit running <span class="tt">pre-commit install</span> should always be the first thing you do. <div class="fragment"><div class="line">pre-commit install</div>
+</div><!-- fragment --></li>
+<li>(Recommended) Periodically update the hooks to their latest versions: <div class="fragment"><div class="line">pre-commit autoupdate</div>
+</div><!-- fragment --></li>
+<li>Now, hooks will run automatically on <span class="tt">git commit</span>. You can manually run them on all files with: <div class="fragment"><div class="line">pre-commit run --all-files</div>
+</div><!-- fragment --> The first time pre-commit runs on a file it will automatically download, install, and run the hook. Note that running a hook for the first time may be slow. For example: If the machine does not have node installed, pre-commit will download and build a copy of node.</li>
 </ol>
 </li>
 <li>Please ensure all hooks pass before pushing your changes.</li>
