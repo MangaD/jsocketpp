@@ -5,6 +5,7 @@ var NAVTREEINDEX0 =
 "DatagramSocket_8cpp.html":[6,0,2,1],
 "DatagramSocket_8hpp.html":[6,0,1,0,2],
 "DatagramSocket_8hpp_source.html":[6,0,1,0,2],
+"LICENSE.html":[6,0,4],
 "MulticastSocket_8cpp.html":[6,0,2,2],
 "MulticastSocket_8hpp.html":[6,0,1,0,3],
 "MulticastSocket_8hpp_source.html":[6,0,1,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "group__tcp.html#ga7c00ace5b0756299ea0cbd77074e856d":[3,1,0,23],
 "group__tcp.html#ga7f61b723de35525525e190efe194b978":[3,1,0,5],
 "group__tcp.html#ga80d2d5fc59fa2b10e586287d6ffd84f7":[3,1,0,12],
-"group__tcp.html#ga82ef44f032a357bd470b4b756bdba37c":[3,1,0,31],
-"group__tcp.html#ga8347e566047718b056c6f371071d92d7":[3,1,0,14]
+"group__tcp.html#ga82ef44f032a357bd470b4b756bdba37c":[3,1,0,31]
 };
