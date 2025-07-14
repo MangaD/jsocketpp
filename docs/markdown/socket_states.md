@@ -1,5 +1,12 @@
 # Understanding Socket States
 
+<!--!
+\defgroup socket_states Understanding Socket States
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 Sockets are a fundamental building block of network programming. Whether you are writing a TCP server or client,
 understanding the various **states** a socket transitions through is essential for robust and efficient code. This guide
 explains the key socket states, why they matter, and their practical implications—particularly for developers using the

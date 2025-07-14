@@ -1,5 +1,12 @@
 # Understanding `bind()`: Binding to All Interfaces vs Specific Interfaces
 
+<!--!
+\defgroup bind_interfaces Understanding `bind()`: Binding to All Interfaces vs Specific Interfaces
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 Socket programming often involves choosing **which local addresses and interfaces** your server will listen on. This
 article explains what it means to “bind to all interfaces,” how it works under the hood, and how to select specific
 interfaces if needed.

@@ -1,5 +1,12 @@
 # jsocketpp: Build, Test, and Usage Guide
 
+<!--!
+\defgroup BUILD_AND_USAGE jsocketpp: Build, Test, and Usage Guide
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 This document provides comprehensive instructions for building, testing, and using the `jsocketpp` C++17 cross-platform
 socket library on Windows, Linux, and macOS. It covers CMake, Makefile, and manual build approaches, as well as usage
 examples and troubleshooting tips.

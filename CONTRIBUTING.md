@@ -1,5 +1,7 @@
 # Contributing to jsocketpp
 
+<!--! [TOC] -->
+
 Thank you for your interest in contributing to **jsocketpp**!
 We welcome issues, discussions, and pull requests. Please follow the guidelines below.
 
@@ -54,25 +56,26 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
   commit.
 * To set up pre-commit hooks:
     1. Install Python dependencies (`pre-commit` and its dependencies):
-       ```sh
-       pip install -r requirements.txt
-       ```
+    ```sh
+    pip install -r requirements.txt
+    ```
+
     2. Install the hooks defined in `.pre-commit-config.yaml`. Every time you clone a project using pre-commit running
        `pre-commit install` should always be the first thing you do.
-       ```sh
-       pre-commit install
-       ```
+    ```sh
+    pre-commit install
+    ```
     3. (Recommended) Periodically update the hooks to their latest versions:
-       ```sh
-       pre-commit autoupdate
-       ```
+    ```sh
+    pre-commit autoupdate
+    ```
     4. Now, hooks will run automatically on `git commit`. You can manually run them on all files with:
-       ```sh
-       pre-commit run --all-files
-       ```
-       The first time pre-commit runs on a file it will automatically download, install, and run the hook. Note that
-       running a hook for the first time may be slow. For example: If the machine does not have node installed,
-       pre-commit will download and build a copy of node.
+    ```sh
+    pre-commit run --all-files
+    ```
+  The first time pre-commit runs on a file it will automatically download, install, and run the hook. Note that
+  running a hook for the first time may be slow. For example: If the machine does not have node installed,
+  pre-commit will download and build a copy of node.
 * Please ensure all hooks pass before pushing your changes.
 
 ---
@@ -93,7 +96,7 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
 
 ## 6. Documentation
 
-* Update `README.md` and API comments for any new features or changes.
+* Update [README.md](README.md) and API comments for any new features or changes.
 * Public APIs require Doxygen documentation.
 
 ---

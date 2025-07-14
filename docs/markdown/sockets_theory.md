@@ -1,5 +1,12 @@
 # Sockets: Theory, Types, and Platform APIs
 
+<!--!
+\defgroup sockets_theory Sockets: Theory, Types, and Platform APIs
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 [![CC0](https://licensebuttons.net/p/zero/1.0/88x31.png)](https://creativecommons.org/publicdomain/zero/1.0/)
 
 *Disclaimer: ChatGPT generated document*.

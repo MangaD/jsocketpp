@@ -1,5 +1,12 @@
 # Publishing `jsocketpp` to the Conan Center Index (CCI)
 
+<!--!
+\defgroup conan_publish_guide Publishing `jsocketpp` to the Conan Center Index (CCI)
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 This guide explains, step by step, how to prepare, test, and submit your C++ library `jsocketpp` to the Conan Center
 Index (CCI) so it can be easily consumed by the C++ community.
 
@@ -29,6 +36,7 @@ A Conan recipe describes how to build, package, and consume your library. Your `
 ```python
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
+
 
 class jsocketppConan(ConanFile):
     name = "jsocketpp"

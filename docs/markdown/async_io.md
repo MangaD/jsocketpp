@@ -1,5 +1,12 @@
 # Blocking vs Non-Blocking Sockets in jsocketpp
 
+<!--!
+\defgroup async_io Blocking vs Non-Blocking Sockets in jsocketpp
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 Modern socket programming requires a solid understanding of how blocking, non-blocking, and asynchronous I/O work. These
 modes of operation directly impact performance, resource usage, and API design.
 

@@ -1,5 +1,12 @@
 # Address Reuse in Sockets: `SO_REUSEADDR` vs `SO_EXCLUSIVEADDRUSE`
 
+<!--!
+\defgroup address_reuse Address Reuse in Sockets: `SO_REUSEADDR` vs `SO_EXCLUSIVEADDRUSE`
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 Cross-platform socket programming requires careful handling of address reuse settings to avoid unexpected behavior,
 especially when dealing with server sockets that are frequently restarted.
 
@@ -61,20 +68,20 @@ use in this cross-platform C++ socket library.
     * It does **not** override exclusive binds from other users (permissions apply).
     * Used by almost every server daemon and framework on Unix.
 
-    ##### 🧪 Socket state handling
+  ##### 🧪 Socket state handling
 
-   | Previous socket state | Can bind with `SO_REUSEADDR`? |
-   | --------------------- | ----------------------------- |
-   | `TIME_WAIT`           | ✅ Yes                         |
-   | `CLOSE_WAIT`          | ✅ Yes                         |
-   | `ESTABLISHED`         | ❌ No                          |
-   | `LISTEN`              | ❌ No                          |
-   | Unbound               | ✅ N/A                         |
+  | Previous socket state | Can bind with `SO_REUSEADDR`? |
+         | --------------------- | ----------------------------- |
+  | `TIME_WAIT`           | ✅ Yes                         |
+  | `CLOSE_WAIT`          | ✅ Yes                         |
+  | `ESTABLISHED`         | ❌ No                          |
+  | `LISTEN`              | ❌ No                          |
+  | Unbound               | ✅ N/A                         |
 
-    In essence: `SO_REUSEADDR` **does not allow stealing a live port from another process.** It enables rebinding in
-    *transitional* states (e.g., `TIME_WAIT`) and makes controlled reuse easier within cooperating processes.
+  In essence: `SO_REUSEADDR` **does not allow stealing a live port from another process.** It enables rebinding in
+  *transitional* states (e.g., `TIME_WAIT`) and makes controlled reuse easier within cooperating processes.
 
-    ##### 🚀 Combining with `SO_REUSEPORT`
+  ##### 🚀 Combining with `SO_REUSEPORT`
 
     * When **used together**, `SO_REUSEADDR` and `SO_REUSEPORT` allow multiple sockets (in the same or different
       processes) to listen concurrently on the **same IP\:port** and receive connections in parallel.
@@ -99,8 +106,7 @@ use in this cross-platform C++ socket library.
       to race conditions, data loss, or application errors.
     * Hence, this is **not safe for use in server applications** on Windows.
 
-
-  #### On Windows:
+#### On Windows:
 
     The behavior of `SO_REUSEADDR` on Windows diverges significantly from its Unix counterpart — and **can be unsafe if misunderstood**.
 
@@ -167,7 +173,9 @@ use in this cross-platform C++ socket library.
 
 #### 🔐 Definition
 
-`SO_EXCLUSIVEADDRUSE` is a Windows-specific socket option that **guarantees exclusive access to a given IP and port**. When enabled, **no other socket** — in the same process or in other processes — can bind to the same address and port combination **until the socket is closed**.
+`SO_EXCLUSIVEADDRUSE` is a Windows-specific socket option that **guarantees exclusive access to a given IP and port**.
+When enabled, **no other socket** — in the same process or in other processes — can bind to the same address and port
+combination **until the socket is closed**.
 
 #### 🎯 Purpose
 
@@ -177,23 +185,34 @@ Its goal is to prevent:
 * **Accidental or malicious duplication** — where multiple server instances interfere with each other.
 * **Ambiguity** — where incoming data could be routed to any of multiple listeners.
 
-This option is especially important on Windows because its default behavior is much more permissive than on Unix-based systems.
+This option is especially important on Windows because its default behavior is much more permissive than on Unix-based
+systems.
 
 #### ⚙️ Behavior
 
 * Must be set **before** calling `bind()`.
 * Ensures **only one socket** may bind to a given port at a time.
-* Even if another socket attempts to bind using `SO_REUSEADDR`, it will **fail** if `SO_EXCLUSIVEADDRUSE` is in effect on the bound socket.
+* Even if another socket attempts to bind using `SO_REUSEADDR`, it will **fail** if `SO_EXCLUSIVEADDRUSE` is in effect
+  on the bound socket.
 * Once the socket is closed, the port becomes available again.
 
-> 🔄 Unlike Unix `SO_REUSEADDR`, it does **not** allow rebinding while in `TIME_WAIT`. You must wait for the OS to release the port or restart the process. If you close a socket and immediately try to bind a new one to the same port (e.g., on server restart), it will fail if the previous socket was not properly closed or if Windows still holds it in `TIME_WAIT`. To ensure a smooth restart: Properly close sockets before shutdown; Avoid forcibly terminating the server process; Consider using `netsh int tcp set global MaxUserPort=...` and related commands to manage port exhaustion if relevant; You could provide a fallback mechanism: e.g., if `bind()` fails due to `WSAEADDRINUSE`, show a clear error or delay retry.
+> 🔄 Unlike Unix `SO_REUSEADDR`, it does **not** allow rebinding while in `TIME_WAIT`. You must wait for the OS to
+> release the port or restart the process. If you close a socket and immediately try to bind a new one to the same
+> port (
+> e.g., on server restart), it will fail if the previous socket was not properly closed or if Windows still holds it in
+`TIME_WAIT`. To ensure a smooth restart: Properly close sockets before shutdown; Avoid forcibly terminating the server
+> process; Consider using `netsh int tcp set global MaxUserPort=...` and related commands to manage port exhaustion if
+> relevant; You could provide a fallback mechanism: e.g., if `bind()` fails due to `WSAEADDRINUSE`, show a clear error
+> or
+> delay retry.
 
 #### ⚠️ Incompatibility
 
 * **Cannot be combined meaningfully with `SO_REUSEADDR`**.
 
     * If both are set, `SO_EXCLUSIVEADDRUSE` takes precedence.
-    * In practice, this combination is discouraged because `SO_REUSEADDR` serves no useful purpose when exclusivity is enforced.
+    * In practice, this combination is discouraged because `SO_REUSEADDR` serves no useful purpose when exclusivity is
+      enforced.
 
 #### ✅ Use Case
 
@@ -212,22 +231,25 @@ This is the **recommended option** for **server applications on Windows**, espec
 #### 🧠 Summary
 
 | Behavior                                   | `SO_EXCLUSIVEADDRUSE` |
-| ------------------------------------------ | --------------------- |
+|--------------------------------------------|-----------------------|
 | Exclusive control over port                | ✅ Yes                 |
 | Prevents other binds to same port          | ✅ Yes                 |
 | Binds allowed while in `TIME_WAIT`         | ❌ No                  |
 | Safer alternative to `SO_REUSEADDR` on Win | ✅ Yes                 |
 | Useful for production servers              | ✅ Absolutely          |
 
-> 💡 `jsocketpp` automatically enables `SO_EXCLUSIVEADDRUSE` on Windows when `setReuseAddress(true)` is called (which happens by default in `ServerSocket`).
+> 💡 `jsocketpp` automatically enables `SO_EXCLUSIVEADDRUSE` on Windows when `setReuseAddress(true)` is called (which
+> happens by default in `ServerSocket`).
 
 ### `SO_REUSEPORT` (Unix/Linux only)
 
 * **Definition**:
-  `SO_REUSEPORT` allows multiple sockets within the **same host** to bind to the **same port and IP address**, enabling **kernel-level load balancing** between them.
+  `SO_REUSEPORT` allows multiple sockets within the **same host** to bind to the **same port and IP address**, enabling
+  **kernel-level load balancing** between them.
 
 * **Primary Purpose**:
-  Improve scalability and performance of **multi-threaded** or **multi-process** server applications. Each worker thread or process can bind its own socket to the same port, and the kernel distributes incoming packets.
+  Improve scalability and performance of **multi-threaded** or **multi-process** server applications. Each worker thread
+  or process can bind its own socket to the same port, and the kernel distributes incoming packets.
 
 * **How It Works**:
 
@@ -279,7 +301,7 @@ This is the **recommended option** for **server applications on Windows**, espec
 * **Comparison with `SO_REUSEADDR`**:
 
   | Feature               | `SO_REUSEADDR`           | `SO_REUSEPORT`                    |
-    | --------------------- | ------------------------ | --------------------------------- |
+          | --------------------- | ------------------------ | --------------------------------- |
   | Multiple bind allowed | Sometimes (see OS rules) | ✅ Always if `SO_REUSEPORT` is set |
   | Load balancing        | ❌ Only last wins         | ✅ Kernel distributes load         |
   | Thread/process safety | ❌ Risk of collisions     | ✅ Independent sockets             |
@@ -293,13 +315,15 @@ This is the **recommended option** for **server applications on Windows**, espec
     * You want **manual control over per-core listeners**.
     * You fully understand the implications.
 
-> 🛑 **Not portable!** Avoid making it the default behavior in a cross-platform library. Instead, provide a way for advanced users to enable it via `setOption(...)`.
+> 🛑 **Not portable!** Avoid making it the default behavior in a cross-platform library. Instead, provide a way for
+> advanced users to enable it via `setOption(...)`.
 
 ---
 
 ## 🧪 What Happens When Multiple Sockets Bind to the Same Port?
 
-This behavior depends heavily on which socket options are used and which operating system the code is running on. Here’s a breakdown of the possibilities:
+This behavior depends heavily on which socket options are used and which operating system the code is running on. Here’s
+a breakdown of the possibilities:
 
 ---
 
@@ -307,7 +331,8 @@ This behavior depends heavily on which socket options are used and which operati
 
 #### **With `SO_REUSEADDR` only**:
 
-* Multiple sockets in the same process or in different processes can bind to the same port, **but only if all of them set `SO_REUSEADDR` before binding**.
+* Multiple sockets in the same process or in different processes can bind to the same port, **but only if all of them
+  set `SO_REUSEADDR` before binding**.
 * However, **only the last socket to bind will receive incoming connections**.
 * The others remain bound but receive **no data**.
 * This behavior is often **misunderstood** and may lead to subtle bugs if used incorrectly.
@@ -315,11 +340,13 @@ This behavior depends heavily on which socket options are used and which operati
 
 #### **With `SO_REUSEADDR` + `SO_REUSEPORT`**:
 
-* All sockets that bind to the same port **and set both options** before binding can **receive connections concurrently**.
+* All sockets that bind to the same port **and set both options** before binding can **receive connections concurrently
+  **.
 * The kernel performs **load balancing** among the sockets.
 * Typically used by high-performance servers with **multi-threaded** or **multi-process** architectures.
 
-> ⚠️ You must still ensure all sockets bind to the same address and port with matching options. Any inconsistency can lead to undefined behavior or silent failure.
+> ⚠️ You must still ensure all sockets bind to the same address and port with matching options. Any inconsistency can
+> lead to undefined behavior or silent failure.
 
 ---
 
@@ -329,7 +356,8 @@ This behavior depends heavily on which socket options are used and which operati
 
 * **Highly permissive**, and potentially dangerous.
 * Allows **multiple processes** to bind to the **same port** even if another process is already using it.
-* If multiple sockets bind to the same port (even in different processes), **they may all receive the same data**, leading to:
+* If multiple sockets bind to the same port (even in different processes), **they may all receive the same data**,
+  leading to:
 
     * Data duplication
     * Message interleaving
@@ -347,7 +375,7 @@ This behavior depends heavily on which socket options are used and which operati
 ### Summary Table
 
 | Platform   | Socket Option(s)           | Multiple Binds | Who Receives Data?                | Safe?      |
-| ---------- | -------------------------- | -------------- | --------------------------------- | ---------- |
+|------------|----------------------------|----------------|-----------------------------------|------------|
 | Unix/Linux | `SO_REUSEADDR`             | ✅ (if all set) | ❌ Only the last one to bind       | ⚠️ Caution |
 | Unix/Linux | `SO_REUSEADDR + REUSEPORT` | ✅              | ✅ All sockets (load balanced)     | ✅ Yes      |
 | Windows    | `SO_REUSEADDR`             | ✅              | ❌ All sockets (data race, unsafe) | ❌ No       |
@@ -357,7 +385,8 @@ This behavior depends heavily on which socket options are used and which operati
 
 ## ⚠️ Java’s Approach and Its Limitations
 
-Java’s networking API attempts to simplify socket configuration across platforms, but this comes at a cost — particularly on Windows.
+Java’s networking API attempts to simplify socket configuration across platforms, but this comes at a cost —
+particularly on Windows.
 
 ### What Java Does
 
@@ -376,26 +405,28 @@ On Windows, enabling `SO_REUSEADDR` **does not behave the same way**:
     * **Security risks**: Malicious or accidental hijacking of network traffic.
     * **Debugging nightmares**: Symptoms may not appear until runtime, and are often non-deterministic.
 
-Java **does not use** `SO_EXCLUSIVEADDRUSE`, which would prevent this issue and is considered the safe default for Windows server sockets.
+Java **does not use** `SO_EXCLUSIVEADDRUSE`, which would prevent this issue and is considered the safe default for
+Windows server sockets.
 
 ---
 
 ### Summary of Java’s Design Trade-Off
 
 | Platform | Behavior                    | Consequence                                             |
-| -------- | --------------------------- | ------------------------------------------------------- |
+|----------|-----------------------------|---------------------------------------------------------|
 | Unix     | Enables `SO_REUSEADDR`      | Matches expectations. Allows restarts. Safe.            |
 | Windows  | Enables `SO_REUSEADDR` only | Unsafe. Allows multiple bindings. May cause data races. |
 
 * Java’s choice prioritizes **restartability and simplicity** over **strict correctness and security**.
-* While convenient on Linux, it leads to **risky behavior on Windows**, especially for long-running or concurrent server applications.
+* While convenient on Linux, it leads to **risky behavior on Windows**, especially for long-running or concurrent server
+  applications.
 
 ---
 
 ### A Better Alternative: What `jsocketpp` Does
 
 | Feature                 | Java           | jsocketpp                 |
-| ----------------------- | -------------- | ------------------------- |
+|-------------------------|----------------|---------------------------|
 | OS-aware address reuse  | ❌ No           | ✅ Yes                     |
 | Safe default on Windows | ❌ Uses `REUSE` | ✅ Uses `EXCLUSIVEADDRUSE` |
 | Allows override via API | ✅ Yes          | ✅ Yes                     |
@@ -407,7 +438,8 @@ By handling `SO_REUSEADDR` and `SO_EXCLUSIVEADDRUSE` appropriately for each plat
 * Compatibility with modern OS expectations.
 * Restartable servers without risk of hijacking.
 
-> ✅ This strategy avoids the shortcomings of Java’s one-size-fits-all approach while preserving flexibility for advanced users.
+> ✅ This strategy avoids the shortcomings of Java’s one-size-fits-all approach while preserving flexibility for advanced
+> users.
 
 ---
 
@@ -474,39 +506,49 @@ By handling `SO_REUSEADDR` and `SO_EXCLUSIVEADDRUSE` appropriately for each plat
 
 ## ✅ Conclusion
 
-Correct handling of socket address reuse options is essential for writing reliable and portable server applications, especially when targeting both Unix-like systems and Windows.
+Correct handling of socket address reuse options is essential for writing reliable and portable server applications,
+especially when targeting both Unix-like systems and Windows.
 
-By default, many programming environments (like Java) apply `SO_REUSEADDR` without considering the platform-specific nuances. While convenient on Unix, this can introduce serious issues on Windows due to how `SO_REUSEADDR` behaves there — enabling unintentional port sharing and data delivery ambiguity.
+By default, many programming environments (like Java) apply `SO_REUSEADDR` without considering the platform-specific
+nuances. While convenient on Unix, this can introduce serious issues on Windows due to how `SO_REUSEADDR` behaves
+there — enabling unintentional port sharing and data delivery ambiguity.
 
 ### ✔ What jsocketpp Gets Right
 
 The `jsocketpp` library provides **safe, OS-aware defaults** that follow best practices:
 
-* On **Windows**, `setReuseAddress(true)` internally applies `SO_EXCLUSIVEADDRUSE`, ensuring exclusive port ownership and eliminating race conditions.
-* On **Unix/Linux**, `setReuseAddress(true)` enables `SO_REUSEADDR`, allowing fast socket rebinding in typical server restart scenarios.
-* The library **does not expose unsafe behavior** such as `SO_REUSEADDR` on Windows, avoiding security and stability risks.
-* It provides clear, documented methods for advanced control (`setOption`, `getOption`), while giving safe defaults to newcomers.
+* On **Windows**, `setReuseAddress(true)` internally applies `SO_EXCLUSIVEADDRUSE`, ensuring exclusive port ownership
+  and eliminating race conditions.
+* On **Unix/Linux**, `setReuseAddress(true)` enables `SO_REUSEADDR`, allowing fast socket rebinding in typical server
+  restart scenarios.
+* The library **does not expose unsafe behavior** such as `SO_REUSEADDR` on Windows, avoiding security and stability
+  risks.
+* It provides clear, documented methods for advanced control (`setOption`, `getOption`), while giving safe defaults to
+  newcomers.
 
 ### 🧠 Beyond the Basics
 
-* Developers working on high-performance, multi-threaded servers can use `SO_REUSEPORT` (on Unix/Linux) for concurrency and graceful reloads.
-* With helper methods like `setReuseAddress()`, `isBound()`, and platform-adaptive behavior, `jsocketpp` strikes a thoughtful balance between **Java-style simplicity** and **system-level flexibility**.
+* Developers working on high-performance, multi-threaded servers can use `SO_REUSEPORT` (on Unix/Linux) for concurrency
+  and graceful reloads.
+* With helper methods like `setReuseAddress()`, `isBound()`, and platform-adaptive behavior, `jsocketpp` strikes a
+  thoughtful balance between **Java-style simplicity** and **system-level flexibility**.
 
 ---
 
 ### ✅ Best Practices Recap
 
 | Platform | Safe Reuse Option     | Default Behavior in jsocketpp       |
-| -------- | --------------------- | ----------------------------------- |
+|----------|-----------------------|-------------------------------------|
 | Unix     | `SO_REUSEADDR`        | Enabled via `setReuseAddress(true)` |
 | Windows  | `SO_EXCLUSIVEADDRUSE` | Enabled via `setReuseAddress(true)` |
 
 | Feature                       | Unix (`SO_REUSEADDR`)             | Windows (`SO_EXCLUSIVEADDRUSE`) |
-| ----------------------------- | --------------------------------- | ------------------------------- |
+|-------------------------------|-----------------------------------|---------------------------------|
 | Fast restart after TIME\_WAIT | ✅ Yes                             | ✅ Yes (if port is truly free)   |
 | Prevent other binds           | ⚠️ No                             | ✅ Yes                           |
 | Multiple sockets on one port  | ❌ No (unless with `SO_REUSEPORT`) | ❌ No                            |
 
 ---
 
-By designing with platform-specific behaviors in mind and exposing a clear, Java-inspired API, `jsocketpp` helps developers avoid subtle pitfalls while remaining flexible and powerful.
+By designing with platform-specific behaviors in mind and exposing a clear, Java-inspired API, `jsocketpp` helps
+developers avoid subtle pitfalls while remaining flexible and powerful.

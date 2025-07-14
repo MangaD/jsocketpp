@@ -1,5 +1,12 @@
 # jsocketpp: Modern C++17 Cross-Platform Socket Library
 
+<!--! [TOC] -->
+<!--
+- TOC should be placed after the header
+- https://www.doxygen.nl/manual/markdown.html#md_toc
+- https://www.doxygen.nl/manual/htmlcmds.html#htmltagcmds
+-->
+
 [![Build Status](https://img.shields.io/github/actions/workflow/status/MangaD/jsocketpp/ci.yml)](https://github.com/MangaD/jsocketpp/actions)
 [![GH Doxygen](https://github.com/MangaD/jsocketpp/actions/workflows/doxygen-gh-pages.yml/badge.svg)](https://github.com/MangaD/jsocketpp/actions/workflows/doxygen-gh-pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)

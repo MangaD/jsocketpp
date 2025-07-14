@@ -1,5 +1,12 @@
 # We use `select` for asynchronous I/O operations. Does it make sense to provide `poll` and `epoll` as alternatives?
 
+<!--!
+\defgroup select_poll_epoll_iocp We use `select` for asynchronous I/O operations. Does it make sense to provide `poll` and `epoll` as alternatives?
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 [![CC0](https://licensebuttons.net/p/zero/1.0/88x31.png)](https://creativecommons.org/publicdomain/zero/1.0/)
 
 *Disclaimer: ChatGPT generated document*.

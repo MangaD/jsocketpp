@@ -1,5 +1,12 @@
 # Socket Options in jsocketpp
 
+<!--!
+\defgroup socket-options Socket Options in jsocketpp
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 This document describes the various **socket options** supported by `jsocketpp`, how they relate to each socket type,
 and best practices for using them in your applications. It is intended as a practical reference for users and
 contributors.

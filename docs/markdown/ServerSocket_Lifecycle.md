@@ -1,5 +1,12 @@
 # ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices
 
+<!--!
+\defgroup ServerSocket_Lifecycle ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 In network programming, **how and when you construct, bind, and listen with a server socket** has significant impact on
 flexibility, safety, and ease of use. This article explains the design adopted by `jsocketpp`, contrasts it with Java
 and POSIX, and justifies why the port is required at construction.

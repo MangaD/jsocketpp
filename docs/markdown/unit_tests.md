@@ -1,5 +1,12 @@
 # Unit Testing and Integration Guide
 
+<!--!
+\defgroup unit_tests Unit Testing and Integration Guide
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 Unit and integration testing for a cross-platform C++17 socket library can be quite challenging, but with the right
 approach and tools, it can be done effectively. Here's a structured plan to guide you through setting up unit and
 integration tests for your library.

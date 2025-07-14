@@ -1,5 +1,12 @@
 # Publishing `jsocketpp` to the vcpkg Registry
 
+<!--!
+\defgroup vcpkg_publish_guide Publishing `jsocketpp` to the vcpkg Registry
+\ingroup docs
+\hidegroupgraph
+[TOC]
+-->
+
 This guide explains, step by step, how to prepare, test, and submit your C++ library `jsocketpp` to the vcpkg registry
 so it can be easily consumed by the C++ community.
 
@@ -35,11 +42,11 @@ A vcpkg port consists of:
 
 ```json
 {
-    "name": "jsocketpp",
-    "version-string": "0.1.0",
-    "description": "A modern C++ socket library.",
-    "homepage": "https://github.com/yourusername/jsocketpp",
-    "license": "MIT"
+  "name": "jsocketpp",
+  "version-string": "0.1.0",
+  "description": "A modern C++ socket library.",
+  "homepage": "https://github.com/yourusername/jsocketpp",
+  "license": "MIT"
 }
 ```
 
@@ -47,15 +54,15 @@ A vcpkg port consists of:
 
 ```cmake
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO yourusername/jsocketpp
-    REF v0.1.0 # or the latest tag
-    SHA512 <fill-in-sha512>
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO yourusername/jsocketpp
+        REF v0.1.0 # or the latest tag
+        SHA512 <fill-in-sha512>
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
 )
 
 vcpkg_cmake_install()

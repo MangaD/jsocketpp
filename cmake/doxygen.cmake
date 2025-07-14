@@ -65,6 +65,9 @@ if(DOXYGEN_FOUND)
 
     # === Doxygen Awesome CSS
     if(DOXYGEN_VERSION VERSION_LESS 1.14.0)
+        if(NOT EXISTS "${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome.css")
+            message(WARNING "doxygen-awesome-css submodule not found. Did you run `git submodule update --init --recursive`?")
+        endif()
         set(DOXYGEN_HTML_HEADER ${DOXYGEN_DIR}/header.html)
         set(DOXYGEN_HTML_FOOTER ${DOXYGEN_DIR}/footer.html)
         set(DOXYGEN_HTML_COLORSTYLE LIGHT) # Required by doxygen-awesome-css
@@ -80,52 +83,23 @@ if(DOXYGEN_FOUND)
             ${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only-darkmode-toggle.css)
     endif()
 
-    # Add Table of Contents to markdown files
+    # Set the main page to the README.md in the project root.
+    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
     file(GLOB md_files "${CMAKE_SOURCE_DIR}/docs/markdown/*.md")
 
-    file(COPY "${CMAKE_SOURCE_DIR}/README.md" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/md_files")
-    file(
-        WRITE "${CMAKE_CURRENT_BINARY_DIR}/md_files/index.md"
-        "\\defgroup docs User Guides\n\\hidegroupgraph\n\\brief Documentation for users of jsocketpp.\n\nThis group includes guides and references for getting started with jsocketpp, contributing to the project, and understanding the project's policies."
-    )
-    file(COPY "${CMAKE_SOURCE_DIR}/CODE_OF_CONDUCT.md" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/md_files")
-    file(COPY "${CMAKE_SOURCE_DIR}/CONTRIBUTING.md" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/md_files")
-
-    file(COPY ${md_files} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/md_files/docs")
-
-    file(GLOB_RECURSE md_files "${CMAKE_CURRENT_BINARY_DIR}/md_files/*.md")
-    foreach(filename ${md_files})
-        file(READ "${filename}" MD_TEXT)
-        # Get the filename without path and extension
-        get_filename_component(fname "${filename}" NAME_WE)
-        get_filename_component(basename "${filename}" NAME)
-        # Insert [TOC] and Doxygen group declarations after the first level-1 header line.
-        if(MD_TEXT MATCHES "^# ([^\n]+)\n")
-            if(NOT filename MATCHES "md_files/docs/")
-                string(REGEX REPLACE "^# ([^\n]+)\r?\n(.+)" "# \\1\n[TOC]\n\\2" MD_TEXT_MODIFIED "${MD_TEXT}")
-            else()
-                string(
-                    REGEX
-                    REPLACE "^# ([^\n]+)\r?\n(.+)"
-                            "\\\\defgroup ${fname} \\1\n\\\\ingroup docs\n\\\\hidegroupgraph\n# \\1\n[TOC]\n\\2"
-                            MD_TEXT_MODIFIED "${MD_TEXT}")
-            endif()
-            file(WRITE ${filename} "${MD_TEXT_MODIFIED}")
-        endif()
-    endforeach()
-
-    # Set the main page to the README.md in the project root.
-    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_BINARY_DIR}/md_files/README.md")
+    doxygen_add_docs(
+        doxygen
+        ${md_files}
+        ${CMAKE_SOURCE_DIR}/README.md
+        ${CMAKE_SOURCE_DIR}/CONTRIBUTING.md
+        ${CMAKE_SOURCE_DIR}/CODE_OF_CONDUCT.md
+        ${CMAKE_SOURCE_DIR}/include/jsocketpp
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/tests
+        COMMENT "Generating API documentation with Doxygen")
 
     # Copy logo to destination dir
     file(COPY "${CMAKE_SOURCE_DIR}/docs/doxygen/logo.png" DESTINATION "${CMAKE_SOURCE_DIR}/docs/doxygen/html/docs/doxygen/")
-
-    doxygen_add_docs(doxygen ${md_files} ${CMAKE_SOURCE_DIR}/include/jsocketpp ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/tests
-                     COMMENT "Generating API documentation with Doxygen")
-
-    if(NOT EXISTS "${DOXYGEN_DIR}/doxygen-awesome-css/doxygen-awesome.css")
-        message(WARNING "doxygen-awesome-css submodule not found. Did you run `git submodule update --init --recursive`?")
-    endif()
 
     message(STATUS "Documentation will be output to: ${DOXYGEN_OUTPUT_DIRECTORY}")
 else()
