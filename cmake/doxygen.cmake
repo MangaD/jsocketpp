@@ -60,7 +60,7 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_GENERATE_TREEVIEW YES) # Required by doxygen-awesome-css
     set(DOXYGEN_DISABLE_INDEX NO) # Required by doxygen-awesome-css
     set(DOXYGEN_FULL_SIDEBAR NO) # Required by doxygen-awesome-css
-    set(DOXYGEN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen)
+    set(DOXYGEN_DIR ${CMAKE_SOURCE_DIR}/docs/doxygen)
     set(DOXYGEN_HTML_COLORSTYLE "TOGGLE")
 
     # === Doxygen Awesome CSS
@@ -84,8 +84,11 @@ if(DOXYGEN_FOUND)
     endif()
 
     # Set the main page to the README.md in the project root.
-    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md")
     file(GLOB md_files "${CMAKE_SOURCE_DIR}/docs/markdown/*.md")
+
+    # Make these files available to Doxygen
+    set(DOXYGEN_HTML_EXTRA_FILES ${DOXYGEN_HTML_EXTRA_FILES} ${CMAKE_SOURCE_DIR}/LICENSE)
 
     doxygen_add_docs(
         doxygen
@@ -93,6 +96,7 @@ if(DOXYGEN_FOUND)
         ${CMAKE_SOURCE_DIR}/README.md
         ${CMAKE_SOURCE_DIR}/CONTRIBUTING.md
         ${CMAKE_SOURCE_DIR}/CODE_OF_CONDUCT.md
+        ${CMAKE_SOURCE_DIR}/LICENSE
         ${CMAKE_SOURCE_DIR}/include/jsocketpp
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/tests

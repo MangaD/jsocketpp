@@ -9,7 +9,7 @@
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/MangaD/jsocketpp/ci.yml)](https://github.com/MangaD/jsocketpp/actions)
 [![GH Doxygen](https://github.com/MangaD/jsocketpp/actions/workflows/doxygen-gh-pages.yml/badge.svg)](https://github.com/MangaD/jsocketpp/actions/workflows/doxygen-gh-pages.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![Conan](https://img.shields.io/badge/conan-available-brightgreen)](https://conan.io/center/jsocketpp)
 [![vcpkg](https://img.shields.io/badge/vcpkg-available-blue)](https://vcpkg.io/en/packages.html#jsocketpp)
 
@@ -147,7 +147,8 @@ ctest --preset=debug
 
 ## License
 
-MIT License. See [LICENSE](LICENSE).
+MIT License. See [LICENSE](./LICENSE).
+<!-- Path must have ./ for doxygen -->
 
 ---
 
