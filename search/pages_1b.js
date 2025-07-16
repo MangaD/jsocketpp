@@ -24,9 +24,11 @@ var searchData=
   ['request_20to_20cci_21',['6. Submit a Pull Request to CCI',['../group__conan__publish__guide.html#autotoc_md173',1,'']]],
   ['requests_22',['2. Submitting Pull Requests',['../md_CONTRIBUTING.html#autotoc_md395',1,'']]],
   ['require_20the_20port_20in_20the_20constructor_23',['Why require the port in the constructor?',['../group__ServerSocket__Lifecycle.html#autotoc_md32',1,'']]],
-  ['resources_24',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
-  ['responsibilities_25',['Our Responsibilities',['../md_CODE__OF__CONDUCT.html#autotoc_md411',1,'']]],
-  ['reuse_20options_26',['🔍 In-Depth Overview of Address Reuse Options',['../group__address__reuse.html#autotoc_md53',1,'']]],
-  ['right_27',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md107',1,'']]],
-  ['running_20tests_28',['Building and Running Tests',['../group__BUILD__AND__USAGE.html#autotoc_md12',1,'']]]
+  ['resource_20cleanup_24',['Resource Cleanup',['../group__tcp.html#autotoc_md428',1,'']]],
+  ['resource_20management_25',['Resource Management',['../group__tcp.html#autotoc_md481',1,'']]],
+  ['resources_26',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
+  ['responsibilities_27',['Our Responsibilities',['../md_CODE__OF__CONDUCT.html#autotoc_md411',1,'']]],
+  ['reuse_20options_28',['🔍 In-Depth Overview of Address Reuse Options',['../group__address__reuse.html#autotoc_md53',1,'']]],
+  ['right_29',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md107',1,'']]],
+  ['running_20tests_30',['Building and Running Tests',['../group__BUILD__AND__USAGE.html#autotoc_md12',1,'']]]
 ];
