@@ -119,6 +119,7 @@ $(function(){initNavTree('functions_func.html','',''); });
 <h3 class="doxsection"><a id="index_d" name="index_d"></a>- d -</h3><ul>
 <li>DatagramPacket()&#160;:&#160;<a class="el" href="classjsocketpp_1_1DatagramPacket.html#a867c818e26b61fa3c67ddbe787290360">jsocketpp::DatagramPacket</a></li>
 <li>DatagramSocket()&#160;:&#160;<a class="el" href="classjsocketpp_1_1DatagramSocket.html#a204d6931f5ff07541d663c7204de49b9">jsocketpp::DatagramSocket</a></li>
+<li>discard()&#160;:&#160;<a class="el" href="group__tcp.html#ga9188bb8da388b31e50493a09749bf06d">jsocketpp::Socket</a></li>
 </ul>
 
 
@@ -188,12 +189,19 @@ $(function(){initNavTree('functions_func.html','',''); });
 </ul>
 
 
+<h3 class="doxsection"><a id="index_p" name="index_p"></a>- p -</h3><ul>
+<li>peek()&#160;:&#160;<a class="el" href="group__tcp.html#ga5c413ef976df1e89528d9b3df6484c89">jsocketpp::Socket</a></li>
+</ul>
+
+
 <h3 class="doxsection"><a id="index_r" name="index_r"></a>- r -</h3><ul>
 <li>read()&#160;:&#160;<a class="el" href="classjsocketpp_1_1DatagramSocket.html#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket</a>, <a class="el" href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b">jsocketpp::Socket</a>, <a class="el" href="classjsocketpp_1_1UnixSocket.html#a7a0f2f8fdec5d7b48e53ed8560dcafaf">jsocketpp::UnixSocket</a></li>
 <li>readAtMost()&#160;:&#160;<a class="el" href="group__tcp.html#ga7c3a39505b6c65a9c4db03c081cd4de7">jsocketpp::Socket</a></li>
 <li>readAtMostWithTimeout()&#160;:&#160;<a class="el" href="group__tcp.html#ga3b61b5861d62f4e85be4a52aa9e0bcc9">jsocketpp::Socket</a></li>
+<li>readAvailable()&#160;:&#160;<a class="el" href="group__tcp.html#ga7a2c489a21a8b2f17bda4e70a296ad52">jsocketpp::Socket</a></li>
 <li>readExact()&#160;:&#160;<a class="el" href="group__tcp.html#ga3d194596258a3b1117b3437d969019b6">jsocketpp::Socket</a></li>
 <li>readInto()&#160;:&#160;<a class="el" href="group__tcp.html#gac2bfca99305ede78697fc0b39fbbeed8">jsocketpp::Socket</a></li>
+<li>readIntoAvailable()&#160;:&#160;<a class="el" href="group__tcp.html#gac12a8c2c7d3f5e90f58a7f2584bf11aa">jsocketpp::Socket</a></li>
 <li>readIntoExact()&#160;:&#160;<a class="el" href="group__tcp.html#gabb8631cb8242b3573a2679da0b6a4f4d">jsocketpp::Socket</a></li>
 <li>readIntoInternal()&#160;:&#160;<a class="el" href="group__tcp.html#ga756c4e2148cfe7974fe191099341fccf">jsocketpp::Socket</a></li>
 <li>readLine()&#160;:&#160;<a class="el" href="group__tcp.html#ga3123fc6000e0fe76a5909795e85d39a4">jsocketpp::Socket</a></li>
@@ -214,7 +222,7 @@ $(function(){initNavTree('functions_func.html','',''); });
 <li>setMulticastInterface()&#160;:&#160;<a class="el" href="classjsocketpp_1_1MulticastSocket.html#af0d5d684dcbfcf62907482ae3ac98948">jsocketpp::MulticastSocket</a></li>
 <li>setNonBlocking()&#160;:&#160;<a class="el" href="classjsocketpp_1_1DatagramSocket.html#ac341be6110a71d3fbe5438dd342b69eb">jsocketpp::DatagramSocket</a>, <a class="el" href="group__tcp.html#ga6da405f0212b736e027c7d2e16222b44">jsocketpp::ServerSocket</a>, <a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket</a>, <a class="el" href="classjsocketpp_1_1UnixSocket.html#ab5e5db3a3b7945d5fa15507265a7c657">jsocketpp::UnixSocket</a></li>
 <li>setOption()&#160;:&#160;<a class="el" href="classjsocketpp_1_1DatagramSocket.html#a2b519a124c72ca57d29ab4f04f66af2b">jsocketpp::DatagramSocket</a>, <a class="el" href="group__tcp.html#ga06c2651d2b46a22ca1a80dde4a74016e">jsocketpp::ServerSocket</a>, <a class="el" href="classjsocketpp_1_1Socket.html#aeb2c85baf767c3e362b1a9de64bada3c">jsocketpp::Socket</a>, <a class="el" href="classjsocketpp_1_1UnixSocket.html#a571420e517267586cbd7f223f7b01ebd">jsocketpp::UnixSocket</a></li>
-<li>setReceiveBufferSize()&#160;:&#160;<a class="el" href="group__tcp.html#ga0539576a97fe792c9cb67b8aee26477b">jsocketpp::Socket</a></li>
+<li>setReceiveBufferSize()&#160;:&#160;<a class="el" href="group__tcp.html#ga67700f13f17036f13ce5a30898a315dc">jsocketpp::Socket</a></li>
 <li>setReuseAddress()&#160;:&#160;<a class="el" href="group__tcp.html#ga32d53c151cb8b7aecc8da81f9e9aa1b6">jsocketpp::ServerSocket</a></li>
 <li>setReusePort()&#160;:&#160;<a class="el" href="group__tcp.html#ga6276b89030ccf50a67501f429a14e3a3">jsocketpp::ServerSocket</a></li>
 <li>setSendBufferSize()&#160;:&#160;<a class="el" href="group__tcp.html#ga243562caf78f87e481f657e26c59e1f0">jsocketpp::Socket</a></li>
@@ -224,7 +232,6 @@ $(function(){initNavTree('functions_func.html','',''); });
 <li>shutdown()&#160;:&#160;<a class="el" href="group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3">jsocketpp::Socket</a></li>
 <li>size()&#160;:&#160;<a class="el" href="classjsocketpp_1_1DatagramPacket.html#a56c2fe4797d236c1453be540e1fa5c6c">jsocketpp::DatagramPacket</a></li>
 <li>Socket()&#160;:&#160;<a class="el" href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">jsocketpp::Socket</a></li>
-<li>Socket::readPrefixed()&#160;:&#160;<a class="el" href="group__tcp.html#gaa8acc3e6e2d674cd76e5bf7873be49ca">jsocketpp::Socket</a></li>
 <li>SocketException()&#160;:&#160;<a class="el" href="classjsocketpp_1_1SocketException.html#a60e8542fe737e4ab26f9f6bb99bd848e">jsocketpp::SocketException</a></li>
 <li>SocketInitializer()&#160;:&#160;<a class="el" href="classjsocketpp_1_1SocketInitializer.html#a4ff790d2289ffdbef65a5cce8c06a112">jsocketpp::SocketInitializer</a></li>
 <li>SocketTimeoutException()&#160;:&#160;<a class="el" href="classjsocketpp_1_1SocketTimeoutException.html#a60f25c80265801631f7808b84980f59d">jsocketpp::SocketTimeoutException</a></li>

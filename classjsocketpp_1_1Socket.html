@@ -140,9 +140,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:gab1aaaa6572bcf756be7bcdb801e35812" id="r_gab1aaaa6572bcf756be7bcdb801e35812"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:gab1aaaa6572bcf756be7bcdb801e35812 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab1aaaa6572bcf756be7bcdb801e35812">readPrefixed</a> ()</td></tr>
 <tr class="memdesc:gab1aaaa6572bcf756be7bcdb801e35812"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a length-prefixed payload using a fixed-size prefix type.  <br /></td></tr>
-<tr class="memitem:gaa8acc3e6e2d674cd76e5bf7873be49ca" id="r_gaa8acc3e6e2d674cd76e5bf7873be49ca"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:gaa8acc3e6e2d674cd76e5bf7873be49ca template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaa8acc3e6e2d674cd76e5bf7873be49ca">Socket::readPrefixed</a> (const std::size_t maxPayloadLen)</td></tr>
-<tr class="memdesc:gaa8acc3e6e2d674cd76e5bf7873be49ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a length-prefixed message with an upper bound check.  <br /></td></tr>
+<tr class="memitem:gac504258fb38abd34abee4ea96868a9d2" id="r_gac504258fb38abd34abee4ea96868a9d2"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:gac504258fb38abd34abee4ea96868a9d2 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gac504258fb38abd34abee4ea96868a9d2">readPrefixed</a> (const std::size_t maxPayloadLen)</td></tr>
+<tr class="memdesc:gac504258fb38abd34abee4ea96868a9d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a length-prefixed message with an upper bound check.  <br /></td></tr>
+<tr class="memitem:ga7a2c489a21a8b2f17bda4e70a296ad52" id="r_ga7a2c489a21a8b2f17bda4e70a296ad52"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga7a2c489a21a8b2f17bda4e70a296ad52">readAvailable</a> () const</td></tr>
+<tr class="memdesc:ga7a2c489a21a8b2f17bda4e70a296ad52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads all bytes currently available on the socket without blocking.  <br /></td></tr>
+<tr class="memitem:gac12a8c2c7d3f5e90f58a7f2584bf11aa" id="r_gac12a8c2c7d3f5e90f58a7f2584bf11aa"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gac12a8c2c7d3f5e90f58a7f2584bf11aa">readIntoAvailable</a> (void *buffer, std::size_t bufferSize) const</td></tr>
+<tr class="memdesc:gac12a8c2c7d3f5e90f58a7f2584bf11aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads all currently available bytes into the provided buffer without blocking.  <br /></td></tr>
+<tr class="memitem:ga5c413ef976df1e89528d9b3df6484c89" id="r_ga5c413ef976df1e89528d9b3df6484c89"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga5c413ef976df1e89528d9b3df6484c89">peek</a> (std::size_t n) const</td></tr>
+<tr class="memdesc:ga5c413ef976df1e89528d9b3df6484c89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peeks at incoming data without consuming it.  <br /></td></tr>
+<tr class="memitem:ga9188bb8da388b31e50493a09749bf06d" id="r_ga9188bb8da388b31e50493a09749bf06d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga9188bb8da388b31e50493a09749bf06d">discard</a> (std::size_t n) const</td></tr>
+<tr class="memdesc:ga9188bb8da388b31e50493a09749bf06d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discards <span class="tt">n</span> bytes of data from the socket's input stream.  <br /></td></tr>
 <tr class="memitem:ga75ee749264ccbcfc4dfbf5442e55dcb8" id="r_ga75ee749264ccbcfc4dfbf5442e55dcb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8">close</a> ()</td></tr>
 <tr class="memdesc:ga75ee749264ccbcfc4dfbf5442e55dcb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the socket connection and releases associated resources.  <br /></td></tr>
 <tr class="memitem:gaacbacf59cf8239e66c80c66a09243ec3" id="r_gaacbacf59cf8239e66c80c66a09243ec3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3">shutdown</a> (<a class="el" href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174">ShutdownMode</a> how) const</td></tr>
@@ -154,8 +162,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ga983f06841d1af489990b78f9fd4f91a3" id="r_ga983f06841d1af489990b78f9fd4f91a3"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ga983f06841d1af489990b78f9fd4f91a3 template"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga983f06841d1af489990b78f9fd4f91a3">writePrefixed</a> (const std::string &amp;payload) const</td></tr>
 <tr class="memdesc:ga983f06841d1af489990b78f9fd4f91a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a payload prefixed with its length using a fixed-size integer type.  <br /></td></tr>
-<tr class="memitem:ga0539576a97fe792c9cb67b8aee26477b" id="r_ga0539576a97fe792c9cb67b8aee26477b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga0539576a97fe792c9cb67b8aee26477b">setReceiveBufferSize</a> (std::size_t size)</td></tr>
-<tr class="memdesc:ga0539576a97fe792c9cb67b8aee26477b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
+<tr class="memitem:ga67700f13f17036f13ce5a30898a315dc" id="r_ga67700f13f17036f13ce5a30898a315dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga67700f13f17036f13ce5a30898a315dc">setReceiveBufferSize</a> (std::size_t size) const</td></tr>
+<tr class="memdesc:ga67700f13f17036f13ce5a30898a315dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
 <tr class="memitem:ga243562caf78f87e481f657e26c59e1f0" id="r_ga243562caf78f87e481f657e26c59e1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga243562caf78f87e481f657e26c59e1f0">setSendBufferSize</a> (std::size_t size)</td></tr>
 <tr class="memdesc:ga243562caf78f87e481f657e26c59e1f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's send buffer size (SO_SNDBUF).  <br /></td></tr>
 <tr class="memitem:ga53a0a6980058ce02034033b05f6ca389" id="r_ga53a0a6980058ce02034033b05f6ca389"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga53a0a6980058ce02034033b05f6ca389">getReceiveBufferSize</a> () const</td></tr>
@@ -353,21 +361,21 @@ See Also</h3>
 <p>SO_KEEPALIVE is a socket option that enables periodic transmission of keepalive probes on an otherwise idle TCP connection. When enabled (set to true), the operating system will periodically send keepalive messages to the remote peer if no data has been exchanged for a certain period. If the peer does not respond, the connection is considered broken and will be closed.</p>
 <p>This feature is useful for detecting dead peers or broken network links, especially for long-lived connections where silent disconnects would otherwise go unnoticed. It is commonly used in server applications, remote control systems, and protocols that require reliable detection of dropped connections.</p>
 <p>By default, SO_KEEPALIVE is disabled (i.e., keepalive probes are not sent) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md516"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md524"></a>
 Platform-Specific Details</h3>
 <ul>
 <li>Linux: Configure via /proc/sys/net/ipv4/tcp_keepalive_*</li>
 <li>Windows: Default 2-hour idle time before first probe</li>
 <li>macOS: System-wide keepalive settings apply</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md517"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md525"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Enable keepalive for long-lived connection</span></div>
 <div class="line">sock.enableKeepAlive(<span class="keyword">true</span>);</div>
-<div class="ttc" id="agroup__tcp_html_ga35351a964f0ff1df19dfbe630afb7167"><div class="ttname"><a href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:5</div></div>
+<div class="ttc" id="agroup__tcp_html_ga35351a964f0ff1df19dfbe630afb7167"><div class="ttname"><a href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:7</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">enable</td><td>true to enable keepalive probes (SO_KEEPALIVE), false to disable (default). </td></tr>
@@ -407,7 +415,7 @@ Example Usage</h3>
 <p>When TCP_NODELAY is enabled (set to true), Nagle's algorithm is disabled. This means that small packets of data are sent immediately over the network, without waiting to accumulate more data. This can reduce latency for applications that require fast, interactive communication (such as games, real-time systems, or protocols where low latency is more important than bandwidth efficiency).</p>
 <p>When TCP_NODELAY is disabled (set to false), Nagle's algorithm is enabled. This causes the socket to buffer small outgoing packets and send them together, which can reduce network congestion and improve throughput for bulk data transfers, but may introduce slight delays for small messages.</p>
 <p>By default, TCP_NODELAY is disabled (i.e., Nagle's algorithm is enabled) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md515"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md523"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -501,7 +509,7 @@ Example Usage</h3>
 
 <p>Check if the socket is still connected (TCP only). </p>
 <p>This method performs a non-destructive check of the socket's connection status by attempting a zero-byte send (on Windows) or checking socket errors (on POSIX). While not 100% reliable due to the nature of TCP/IP, it provides a best-effort indication of connection status.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md513"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md521"></a>
 Implementation Details</h3>
 <ul>
 <li>Windows: Uses send() with zero bytes</li>
@@ -509,7 +517,7 @@ Implementation Details</h3>
 <li>Does not generate network traffic</li>
 <li>Non-blocking operation</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md514"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md522"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
