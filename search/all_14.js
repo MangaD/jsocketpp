@@ -22,7 +22,7 @@ var searchData=
   ['jsocketpp_20to_20the_20vcpkg_20registry_19',['Publishing &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; to the vcpkg Registry',['../group__vcpkg__publish__guide.html',1,'']]],
   ['jsocketpp_20vs_20other_20c_20socket_20libraries_20',['Comparison: &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; vs Other C++ Socket Libraries',['../group__socket__library__comparison.html',1,'']]],
   ['jsocketpp_3a_20build_20test_20and_20usage_20guide_21',['jsocketpp: Build, Test, and Usage Guide',['../group__BUILD__AND__USAGE.html',1,'']]],
-  ['jsocketpp_3a_20c_2017_20cross_20platform_20socket_20library_22',['jsocketpp: C++17 cross-platform socket library',['../group__jsocketpp.html',1,'']]],
-  ['jsocketpp_3a_20modern_20c_2017_20cross_20platform_20socket_20library_23',['jsocketpp: Modern C++17 Cross-Platform Socket Library',['../index.html',1,'']]],
+  ['jsocketpp_3a_20c_2020_20cross_20platform_20socket_20library_22',['jsocketpp: C++20 cross-platform socket library',['../group__jsocketpp.html',1,'']]],
+  ['jsocketpp_3a_20modern_20c_2020_20cross_20platform_20socket_20library_23',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
   ['json_24',['Example &lt;span class=&quot;tt&quot;&gt;vcpkg.json&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md352',1,'']]]
 ];

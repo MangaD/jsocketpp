@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['c_2017_20cross_20platform_20socket_20library_0',['jsocketpp: Modern C++17 Cross-Platform Socket Library',['../index.html',1,'']]],
-  ['c_2017_3a_1',['Tools for Unit Testing in C++17:',['../group__unit__tests.html#autotoc_md331',1,'']]],
+  ['c_2020_20cross_20platform_20socket_20library_0',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
+  ['c_2020_3a_1',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md331',1,'']]],
   ['c_20af_5finet_2',['5.2 UDP Server and Client (C, AF_INET)',['../group__underlying__socket__api.html#autotoc_md311',1,'']]],
   ['c_20clear_20api_3',['c) Clear API',['../group__ServerSocket__Lifecycle.html#autotoc_md37',1,'']]],
   ['c_20jsocketpp_20hybrid_4',['&lt;b&gt;c) jsocketpp Hybrid&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md42',1,'']]],
@@ -74,7 +74,7 @@ var searchData=
   ['coverage_20for_20cross_20platform_3a_71',['3. &lt;b&gt;Test Coverage for Cross-Platform&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md338',1,'']]],
   ['create_20a_20vcpkg_20portfile_72',['3. Create a vcpkg Portfile',['../group__vcpkg__publish__guide.html#autotoc_md351',1,'']]],
   ['cross_20platform_20api_20considerations_73',['6. &lt;b&gt;Cross-Platform API Considerations&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md193',1,'']]],
-  ['cross_20platform_20socket_20library_74',['jsocketpp: Modern C++17 Cross-Platform Socket Library',['../index.html',1,'']]],
+  ['cross_20platform_20socket_20library_74',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
   ['cross_20platform_20support_75',['Cross-Platform Support',['../group__socket-options.html#autotoc_md205',1,'']]],
   ['cross_20platform_3a_76',['3. &lt;b&gt;Test Coverage for Cross-Platform&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md338',1,'']]],
   ['custom_20timeouts_20via_20select_77',['Custom Timeouts via &lt;span class=&quot;tt&quot;&gt;select()&lt;/span&gt;',['../group__async__io.html#autotoc_md120',1,'']]]

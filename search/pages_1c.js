@@ -52,7 +52,7 @@ var searchData=
   ['socket_20exceptions_49',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md529',1,'']]],
   ['socket_20initialization_20and_20cleanup_3a_50',['1.2 &lt;b&gt;Testing Socket Initialization and Cleanup&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md334',1,'']]],
   ['socket_20initialization_3a_20posix_20approach_51',['1. Traditional Socket Initialization: POSIX Approach',['../group__ServerSocket__Lifecycle.html#autotoc_md27',1,'']]],
-  ['socket_20library_52',['jsocketpp: Modern C++17 Cross-Platform Socket Library',['../index.html',1,'']]],
+  ['socket_20library_52',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
   ['socket_20lifecycle_53',['TCP Socket Lifecycle',['../group__socket__states.html#autotoc_md246',1,'']]],
   ['socket_20options_54',['Socket Options',['../group__underlying__socket__api.html#autotoc_md314',1,'6.2 Socket Options'],['../group__underlying__socket__api.html#autotoc_md324',1,'6.2 Socket Options'],['../group__socket-options.html#autotoc_md203',1,'What Are Socket Options?']]],
   ['socket_20serversocket_55',['2. TCP Sockets (&lt;span class=&quot;tt&quot;&gt;Socket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ServerSocket&lt;/span&gt;)',['../group__socket-options.html#autotoc_md210',1,'']]],

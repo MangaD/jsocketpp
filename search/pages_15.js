@@ -1,7 +1,7 @@
 var searchData=
 [
   ['level_20timeouts_0',['OS-Level Timeouts',['../group__async__io.html#autotoc_md119',1,'']]],
-  ['library_1',['Library',['../group__BUILD__AND__USAGE.html#autotoc_md6',1,'Building the Library'],['../index.html',1,'jsocketpp: Modern C++17 Cross-Platform Socket Library'],['../group__BUILD__AND__USAGE.html#autotoc_md14',1,'Linking the Library']]],
+  ['library_1',['Library',['../group__BUILD__AND__USAGE.html#autotoc_md6',1,'Building the Library'],['../index.html',1,'jsocketpp: Modern C++20 Cross-Platform Socket Library'],['../group__BUILD__AND__USAGE.html#autotoc_md14',1,'Linking the Library']]],
   ['library_2',['1. jsocketpp (this library)',['../group__socket__library__comparison.html#autotoc_md229',1,'']]],
   ['library_20authors_3',['📌 Notes for Library Authors',['../group__address__reuse.html#autotoc_md102',1,'']]],
   ['library_20for_20vcpkg_4',['2. Prepare Your Library for vcpkg',['../group__vcpkg__publish__guide.html#autotoc_md349',1,'']]],

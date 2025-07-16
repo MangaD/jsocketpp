@@ -23,7 +23,7 @@ var searchData=
   ['mode_3a_20',['mode:',['../group__async__io.html#autotoc_md127',1,'Blocking mode:'],['../group__async__io.html#autotoc_md131',1,'Blocking mode:'],['../group__async__io.html#autotoc_md135',1,'Blocking mode:'],['../group__async__io.html#autotoc_md138',1,'Blocking mode:'],['../group__async__io.html#autotoc_md128',1,'Non-blocking mode:'],['../group__async__io.html#autotoc_md132',1,'Non-blocking mode:'],['../group__async__io.html#autotoc_md136',1,'Non-blocking mode:'],['../group__async__io.html#autotoc_md139',1,'Non-blocking mode:']]],
   ['model_21',['Model',['../group__underlying__socket__api.html#autotoc_md305',1,'3.1 Client-Server Model'],['../group__underlying__socket__api.html#autotoc_md306',1,'3.2 Peer-to-Peer Model']]],
   ['models_22',['3. Communication Models',['../group__underlying__socket__api.html#autotoc_md304',1,'']]],
-  ['modern_20c_2017_20cross_20platform_20socket_20library_23',['jsocketpp: Modern C++17 Cross-Platform Socket Library',['../index.html',1,'']]],
+  ['modern_20c_2020_20cross_20platform_20socket_20library_23',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
   ['modes_24',['Modes',['../group__tcp.html#autotoc_md454',1,'Connection Modes'],['../group__tcp.html#autotoc_md490',1,'Shutdown Modes']]],
   ['modes_20of_20operation_25',['Modes of Operation',['../group__tcp.html#autotoc_md526',1,'']]],
   ['module_26',['4. Qt Network Module',['../group__socket__library__comparison.html#autotoc_md235',1,'']]],

@@ -1,4 +1,4 @@
-<map id="jsocketpp: C++17 cross&#45;platform socket library" name="jsocketpp: C++17 cross&#45;platform socket library">
+<map id="jsocketpp: C++20 cross&#45;platform socket library" name="jsocketpp: C++20 cross&#45;platform socket library">
 <area shape="rect" id="Node000005" href="$group__exceptions.html" title="Exception types used in jsocketpp for error handling." alt="" coords="241,5,381,31"/>
 <area shape="rect" id="Node000001" title="All core classes and functions of the jsocketpp networking library." alt="" coords="5,73,183,113"/>
 <area shape="rect" id="Node000002" href="$group__tcp.html" title="Classes and functions for TCP networking." alt="" coords="261,55,361,80"/>

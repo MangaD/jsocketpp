@@ -13,7 +13,7 @@ var searchData=
   ['understanding_20bind_20_3a_20binding_20to_20all_20interfaces_20vs_20specific_20interfaces_10',['Understanding &lt;span class=&quot;tt&quot;&gt;bind()&lt;/span&gt;: Binding to All Interfaces vs Specific Interfaces',['../group__bind__interfaces.html',1,'']]],
   ['understanding_20socket_20states_11',['Understanding Socket States',['../group__socket__states.html',1,'']]],
   ['unit_20testing_20and_20integration_20guide_12',['Unit Testing and Integration Guide',['../group__unit__tests.html',1,'']]],
-  ['unit_20testing_20in_20c_2017_3a_13',['Tools for Unit Testing in C++17:',['../group__unit__tests.html#autotoc_md331',1,'']]],
+  ['unit_20testing_20in_20c_2020_3a_13',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md331',1,'']]],
   ['unit_20tests_3a_14',['Unit Tests:',['../group__unit__tests.html#autotoc_md330',1,'1. <b>Unit Tests</b>:'],['../group__unit__tests.html#autotoc_md340',1,'4. <b>Mocking or Stubbing Socket API for Unit Tests</b>:']]],
   ['unit_5ftests_2emd_15',['unit_tests.md',['../unit__tests_8md.html',1,'']]],
   ['unix_16',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md289',1,'']]],

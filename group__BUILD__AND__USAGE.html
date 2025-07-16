@@ -31,7 +31,7 @@
   <td id="projectalign">
    <div id="projectname">jsocketpp<span id="projectnumber">&#160;1.0</span>
    </div>
-   <div id="projectbrief">A cross-platform C++17 socket library.</div>
+   <div id="projectbrief">A cross-platform C++20 socket library.</div>
   </td>
  </tr>
  </tbody>
@@ -95,7 +95,7 @@ $(function(){initNavTree('group__BUILD__AND__USAGE.html','',''); });
   <div class="headertitle"><div class="title">jsocketpp: Build, Test, and Usage Guide <div class="ingroups"><a class="el" href="group__docs.html">User Guides</a></div></div></div>
 </div><!--header-->
 <div class="contents">
-<p>This document provides comprehensive instructions for building, testing, and using the <span class="tt">jsocketpp</span> C++17 cross-platform socket library on Windows, Linux, and macOS. It covers CMake, Makefile, and manual build approaches, as well as usage examples and troubleshooting tips.</p>
+<p>This document provides comprehensive instructions for building, testing, and using the <span class="tt">jsocketpp</span> C++20 cross-platform socket library on Windows, Linux, and macOS. It covers CMake, Makefile, and manual build approaches, as well as usage examples and troubleshooting tips.</p>
 <hr  />
 <h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
 Table of Contents</h1>
@@ -120,7 +120,7 @@ Table of Contents</h1>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Prerequisites</h1>
 <ul>
-<li><b>C++17 compiler</b> (MSVC, GCC, or Clang)</li>
+<li><b>C++20 compiler</b> (MSVC, GCC, or Clang)</li>
 <li><b>CMake 3.19+</b> (for presets support)</li>
 <li><b>Ninja</b> (recommended for fast builds, or use Visual Studio/MSBuild on Windows)</li>
 <li><b>GoogleTest</b> (automatically fetched for unit tests)</li>
@@ -164,7 +164,7 @@ Using the Makefile</h2>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 Manual Compilation</h2>
 <p>You can also build the library manually:</p>
-<div class="fragment"><div class="line">g++ -std=c++17 -O2 -Wall -I./src -c src/socket.cpp -o socket.o</div>
+<div class="fragment"><div class="line">g++ -std=c++20 -O2 -Wall -I./src -c src/socket.cpp -o socket.o</div>
 <div class="line">ar rcs jsocketpp.a socket.o</div>
 </div><!-- fragment --><hr  />
 <h1 class="doxsection"><a class="anchor" id="autotoc_md12"></a>

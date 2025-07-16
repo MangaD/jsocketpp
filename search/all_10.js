@@ -13,7 +13,7 @@ var searchData=
   ['for_20multicast_3a_10',['For Multicast:',['../group__socket-options.html#autotoc_md213',1,'']]],
   ['for_20platform_20specific_20tests_3a_11',['3.1 &lt;b&gt;Using CMake for Platform-Specific Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md339',1,'']]],
   ['for_20readiness_12',['✅ Summary Table: Waiting for Readiness',['../group__async__io.html#autotoc_md141',1,'']]],
-  ['for_20unit_20testing_20in_20c_2017_3a_13',['Tools for Unit Testing in C++17:',['../group__unit__tests.html#autotoc_md331',1,'']]],
+  ['for_20unit_20testing_20in_20c_2020_3a_13',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md331',1,'']]],
   ['for_20unit_20tests_3a_14',['4. &lt;b&gt;Mocking or Stubbing Socket API for Unit Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md340',1,'']]],
   ['for_20vcpkg_15',['2. Prepare Your Library for vcpkg',['../group__vcpkg__publish__guide.html#autotoc_md349',1,'']]],
   ['format_16',['Format',['../group__tcp.html#autotoc_md476',1,'Protocol Format'],['../group__tcp.html#autotoc_md479',1,'Protocol Format'],['../group__tcp.html#autotoc_md499',1,'Protocol Format']]],

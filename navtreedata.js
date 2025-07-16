@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "jsocketpp", "index.html", [
-    [ "jsocketpp: Modern C++17 Cross-Platform Socket Library", "index.html", "index" ],
+    [ "jsocketpp: Modern C++20 Cross-Platform Socket Library", "index.html", "index" ],
     [ "Contributing to jsocketpp", "md_CONTRIBUTING.html", [
       [ "1. Reporting Issues", "md_CONTRIBUTING.html#autotoc_md393", null ],
       [ "2. Submitting Pull Requests", "md_CONTRIBUTING.html#autotoc_md395", null ],

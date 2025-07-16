@@ -7,7 +7,7 @@ var searchData=
   ['so_5freuseaddr_20vs_20so_5fexclusiveaddruse_4',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],
   ['socket_20api_5',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
   ['socket_20libraries_6',['Comparison: &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; vs Other C++ Socket Libraries',['../group__socket__library__comparison.html',1,'']]],
-  ['socket_20library_7',['jsocketpp: C++17 cross-platform socket library',['../group__jsocketpp.html',1,'']]],
+  ['socket_20library_7',['jsocketpp: C++20 cross-platform socket library',['../group__jsocketpp.html',1,'']]],
   ['socket_20options_20in_20jsocketpp_8',['Socket Options in jsocketpp',['../group__socket-options.html',1,'']]],
   ['socket_20states_9',['Understanding Socket States',['../group__socket__states.html',1,'']]],
   ['sockets_10',['Sockets',['../group__tcp.html',1,'TCP Sockets'],['../group__udp.html',1,'UDP Sockets'],['../group__unix.html',1,'Unix Domain Sockets']]],

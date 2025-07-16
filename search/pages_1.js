@@ -28,5 +28,7 @@ var searchData=
   ['2_20testing_20socket_20initialization_20and_20cleanup_3a_25',['1.2 &lt;b&gt;Testing Socket Initialization and Cleanup&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md334',1,'']]],
   ['2_20types_20of_20sockets_20in_20depth_26',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md264',1,'']]],
   ['2_20udp_20server_20and_20client_20c_20af_5finet_27',['5.2 UDP Server and Client (C, AF_INET)',['../group__underlying__socket__api.html#autotoc_md311',1,'']]],
-  ['2_20windows_20winsock_28',['6.2. Windows (Winsock)',['../group__sockets__theory.html#autotoc_md290',1,'']]]
+  ['2_20windows_20winsock_28',['6.2. Windows (Winsock)',['../group__sockets__theory.html#autotoc_md290',1,'']]],
+  ['20_20cross_20platform_20socket_20library_29',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
+  ['20_3a_30',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md331',1,'']]]
 ];

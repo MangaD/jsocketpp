@@ -8,7 +8,7 @@ var searchData=
   ['udp_20sockets_20datagramsocket_20multicastsocket_5',['3. UDP Sockets (&lt;span class=&quot;tt&quot;&gt;DatagramSocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;MulticastSocket&lt;/span&gt;)',['../group__socket-options.html#autotoc_md212',1,'']]],
   ['under_20the_20hood_3a_20how_20socket_20types_20work_6',['2.6. Under the Hood: How Socket Types Work',['../group__sockets__theory.html#autotoc_md272',1,'']]],
   ['under_20the_20hood_3a_20how_20sockets_20operate_7',['5. Under the Hood: How Sockets Operate',['../group__sockets__theory.html#autotoc_md286',1,'']]],
-  ['unit_20testing_20in_20c_2017_3a_8',['Tools for Unit Testing in C++17:',['../group__unit__tests.html#autotoc_md331',1,'']]],
+  ['unit_20testing_20in_20c_2020_3a_8',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md331',1,'']]],
   ['unit_20tests_3a_9',['Unit Tests:',['../group__unit__tests.html#autotoc_md330',1,'1. <b>Unit Tests</b>:'],['../group__unit__tests.html#autotoc_md340',1,'4. <b>Mocking or Stubbing Socket API for Unit Tests</b>:']]],
   ['unix_10',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md289',1,'']]],
   ['unix_20domain_20sockets_11',['Unix Domain Sockets',['../group__sockets__theory.html#autotoc_md276',1,'']]],

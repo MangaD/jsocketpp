@@ -22,7 +22,5 @@ var searchData=
   ['1_20using_20cmake_20for_20platform_20specific_20tests_3a_19',['3.1 &lt;b&gt;Using CMake for Platform-Specific Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md339',1,'']]],
   ['1_20what_20is_20a_20socket_20',['1. What is a Socket?',['../group__sockets__theory.html#autotoc_md262',1,'']]],
   ['1_20why_20select_20is_20used_21',['1. &lt;b&gt;Why &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; is Used&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md183',1,'']]],
-  ['10_20conclusion_22',['10. Conclusion',['../group__underlying__socket__api.html#autotoc_md320',1,'']]],
-  ['17_20cross_20platform_20socket_20library_23',['jsocketpp: Modern C++17 Cross-Platform Socket Library',['../index.html',1,'']]],
-  ['17_3a_24',['Tools for Unit Testing in C++17:',['../group__unit__tests.html#autotoc_md331',1,'']]]
+  ['10_20conclusion_22',['10. Conclusion',['../group__underlying__socket__api.html#autotoc_md320',1,'']]]
 ];

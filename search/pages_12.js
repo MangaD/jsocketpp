@@ -6,7 +6,7 @@ var searchData=
   ['implications_3',['Practical Implications',['../group__socket__states.html#autotoc_md253',1,'']]],
   ['implications_4',['🧠 Practical implications',['../group__address__reuse.html#autotoc_md59',1,'']]],
   ['in_20action_3a_20practical_20examples_5',['5. Socket API in Action: Practical Examples',['../group__underlying__socket__api.html#autotoc_md309',1,'']]],
-  ['in_20c_2017_3a_6',['Tools for Unit Testing in C++17:',['../group__unit__tests.html#autotoc_md331',1,'']]],
+  ['in_20c_2020_3a_6',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md331',1,'']]],
   ['in_20constructor_20bind_20listen_20explicit_7',['3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit',['../group__ServerSocket__Lifecycle.html#autotoc_md31',1,'']]],
   ['in_20depth_8',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md264',1,'']]],
   ['in_20depth_20overview_20of_20address_20reuse_20options_9',['🔍 In-Depth Overview of Address Reuse Options',['../group__address__reuse.html#autotoc_md53',1,'']]],

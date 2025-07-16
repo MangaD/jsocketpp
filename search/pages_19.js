@@ -6,7 +6,7 @@ var searchData=
   ['platform_20api_20considerations_3',['6. &lt;b&gt;Cross-Platform API Considerations&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md193',1,'']]],
   ['platform_20behavior_4',['Platform Behavior',['../group__tcp.html#autotoc_md440',1,'']]],
   ['platform_20notes_5',['Platform Notes',['../group__BUILD__AND__USAGE.html#autotoc_md22',1,'']]],
-  ['platform_20socket_20library_6',['jsocketpp: Modern C++17 Cross-Platform Socket Library',['../index.html',1,'']]],
+  ['platform_20socket_20library_6',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
   ['platform_20specific_20apis_7',['6. Platform-Specific APIs',['../group__sockets__theory.html#autotoc_md288',1,'']]],
   ['platform_20specific_20considerations_8',['9. Platform-Specific Considerations',['../group__underlying__socket__api.html#autotoc_md319',1,'']]],
   ['platform_20specific_20details_9',['Platform-Specific Details',['../classjsocketpp_1_1Socket.html#autotoc_md524',1,'']]],

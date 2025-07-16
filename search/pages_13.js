@@ -17,6 +17,6 @@ var searchData=
   ['jsocketpp_20handles_20blocking_20and_20timeouts_14',['⏱ How jsocketpp Handles Blocking and Timeouts',['../group__async__io.html#autotoc_md122',1,'']]],
   ['jsocketpp_20hybrid_15',['&lt;b&gt;c) jsocketpp Hybrid&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md42',1,'']]],
   ['jsocketpp_20this_20library_16',['1. jsocketpp (this library)',['../group__socket__library__comparison.html#autotoc_md229',1,'']]],
-  ['jsocketpp_3a_20modern_20c_2017_20cross_20platform_20socket_20library_17',['jsocketpp: Modern C++17 Cross-Platform Socket Library',['../index.html',1,'']]],
+  ['jsocketpp_3a_20modern_20c_2020_20cross_20platform_20socket_20library_17',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
   ['json_18',['Example &lt;span class=&quot;tt&quot;&gt;vcpkg.json&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md352',1,'']]]
 ];
