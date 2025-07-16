@@ -1,12 +1,16 @@
 #include "jsocketpp/Socket.hpp"
 
+#include <array>
+
 using namespace jsocketpp;
 
 Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_t len, const std::size_t recvBufferSize,
-               std::size_t /*sendBufferSize*/)
+               std::size_t sendBufferSize)
     : _sockFd(client), _remoteAddr(addr), _remoteAddrLen(len), _recvBuffer(recvBufferSize)
 {
-    // Optionally, you could add separate send/recv buffers if needed.
+    setInternalBufferSize(recvBufferSize);
+    setReceiveBufferSize(recvBufferSize);
+    setSendBufferSize(sendBufferSize);
 }
 
 Socket::Socket(const std::string_view host, const unsigned short port, const std::size_t bufferSize)
@@ -142,9 +146,8 @@ Socket::~Socket() noexcept
     {
         close();
     }
-    catch (std::exception& e)
+    catch (std::exception&)
     {
-        std::cerr << e.what() << std::endl;
     }
 }
 
@@ -291,7 +294,28 @@ size_t Socket::writeAll(const std::string_view message) const
     return totalSent;
 }
 
-void Socket::setBufferSize(std::size_t newLen)
+void Socket::setReceiveBufferSize(const std::size_t size) const
+{
+    setOption(SOL_SOCKET, SO_RCVBUF, static_cast<int>(size));
+}
+
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void Socket::setSendBufferSize(const std::size_t size)
+{
+    setOption(SOL_SOCKET, SO_SNDBUF, static_cast<int>(size));
+}
+
+int Socket::getReceiveBufferSize() const
+{
+    return getOption(SOL_SOCKET, SO_RCVBUF);
+}
+
+int Socket::getSendBufferSize() const
+{
+    return getOption(SOL_SOCKET, SO_SNDBUF);
+}
+
+void Socket::setInternalBufferSize(const std::size_t newLen)
 {
     _recvBuffer.resize(newLen);
     _recvBuffer.shrink_to_fit();
@@ -565,4 +589,308 @@ int Socket::getOption(const int level, const int optName) const
                    &len) == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     return value;
+}
+
+std::string Socket::readExact(const std::size_t n) const
+{
+    if (n == 0)
+        return {};
+
+    std::string result;
+    result.resize(n); // pre-allocate for performance
+
+    std::size_t totalRead = 0;
+    while (totalRead < n)
+    {
+        const auto remaining = n - totalRead;
+
+        const auto len = recv(_sockFd, result.data() + totalRead,
+#ifdef _WIN32
+                              static_cast<int>(remaining),
+#else
+                              remaining,
+#endif
+                              0);
+
+        if (len == SOCKET_ERROR)
+            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+        if (len == 0)
+            throw SocketException(0, "Connection closed before reading all data.");
+
+        totalRead += static_cast<std::size_t>(len);
+    }
+
+    return result;
+}
+
+std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, const bool includeDelimiter) const
+{
+    std::string result;
+    result.reserve(128); // optimistic allocation
+
+    char ch = 0;
+    std::size_t totalRead = 0;
+
+    while (totalRead < maxLen)
+    {
+        const auto len = recv(_sockFd, &ch,
+#ifdef _WIN32
+                              1,
+#else
+                              1,
+#endif
+                              0);
+        if (len == SOCKET_ERROR)
+            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        if (len == 0)
+            throw SocketException(0, "Connection closed before delimiter was found.");
+
+        result.push_back(ch);
+        ++totalRead;
+
+        if (ch == delimiter)
+        {
+            if (!includeDelimiter)
+                result.pop_back(); // Remove delimiter before returning
+            break;
+        }
+    }
+
+    if (totalRead >= maxLen && (includeDelimiter || (!includeDelimiter && result.size() == maxLen)))
+    {
+        throw SocketException(0, "Maximum line length exceeded before delimiter was found.");
+    }
+
+    return result;
+}
+
+std::string Socket::readAtMost(std::size_t n) const
+{
+    if (n == 0)
+        return {};
+
+    std::string result;
+    result.resize(n); // preallocate n bytes
+
+    const auto len = recv(_sockFd, result.data(),
+#ifdef _WIN32
+                          static_cast<int>(n),
+#else
+                          n,
+#endif
+                          0);
+
+    if (len == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    if (len == 0)
+        throw SocketException(0, "Connection closed by remote host.");
+
+    result.resize(static_cast<std::size_t>(len)); // trim to actual length
+    return result;
+}
+
+std::size_t Socket::readIntoInternal(void* buffer, std::size_t len, const bool exact) const
+{
+    if (buffer == nullptr || len == 0)
+        return 0;
+
+    const auto out = static_cast<char*>(buffer);
+    std::size_t totalRead = 0;
+
+    do
+    {
+        const auto bytesRead = recv(_sockFd, out + totalRead,
+#ifdef _WIN32
+                                    static_cast<int>(len - totalRead),
+#else
+                                    len - totalRead,
+#endif
+                                    0);
+
+        if (bytesRead == SOCKET_ERROR)
+            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+        if (bytesRead == 0)
+        {
+            if (exact)
+                throw SocketException(0, "Connection closed before full read completed.");
+            break; // return what we got so far
+        }
+
+        totalRead += static_cast<std::size_t>(bytesRead);
+    } while (exact && totalRead < len);
+
+    return totalRead;
+}
+
+std::string Socket::readAtMostWithTimeout(std::size_t n, const int timeoutMillis) const
+{
+    if (n == 0)
+        return {};
+
+    if (!waitReady(false /* forRead */, timeoutMillis))
+        throw SocketException(0, "Read timed out after waiting " + std::to_string(timeoutMillis) + " ms");
+
+    std::string result;
+    result.resize(n); // max allocation
+
+    const auto len = recv(_sockFd, result.data(),
+#ifdef _WIN32
+                          static_cast<int>(n),
+#else
+                          n,
+#endif
+                          0);
+
+    if (len == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    if (len == 0)
+        throw SocketException(0, "Connection closed before data could be read.");
+
+    result.resize(static_cast<std::size_t>(len)); // shrink to actual
+    return result;
+}
+
+std::string Socket::readAvailable() const
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException(0, "readAvailable() called on invalid socket");
+
+#ifdef _WIN32
+    u_long bytesAvailable = 0;
+    if (ioctlsocket(_sockFd, FIONREAD, &bytesAvailable) != 0)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+#else
+    int bytesAvailable = 0;
+    if (ioctl(_sockFd, FIONREAD, &bytesAvailable) < 0)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+#endif
+
+    if (bytesAvailable <= 0)
+        return {};
+
+    std::string result;
+    result.resize(static_cast<std::size_t>(bytesAvailable));
+
+    const auto len = recv(_sockFd, result.data(),
+#ifdef _WIN32
+                          static_cast<int>(bytesAvailable),
+#else
+                          static_cast<std::size_t>(bytesAvailable),
+#endif
+                          0);
+
+    if (len == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    if (len == 0)
+        throw SocketException(0, "Connection closed while attempting to read available data.");
+
+    result.resize(static_cast<std::size_t>(len)); // shrink to actual read
+    return result;
+}
+
+std::size_t Socket::readIntoAvailable(void* buffer, const std::size_t bufferSize) const
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException(0, "readIntoAvailable() called on invalid socket");
+
+    if (buffer == nullptr || bufferSize == 0)
+        return 0;
+
+#ifdef _WIN32
+    u_long bytesAvailable = 0;
+    if (ioctlsocket(_sockFd, FIONREAD, &bytesAvailable) != 0)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+#else
+    int bytesAvailable = 0;
+    if (ioctl(_sockFd, FIONREAD, &bytesAvailable) < 0)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+#endif
+
+    if (bytesAvailable <= 0)
+        return 0;
+
+    const std::size_t toRead = std::min<std::size_t>(static_cast<std::size_t>(bytesAvailable), bufferSize);
+
+    const auto len = recv(_sockFd,
+#ifdef _WIN32
+                          static_cast<char*>(buffer), static_cast<int>(toRead),
+#else
+                          buffer, toRead,
+#endif
+                          0);
+
+    if (len == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    if (len == 0)
+        throw SocketException(0, "Connection closed while attempting to read available data.");
+
+    return static_cast<std::size_t>(len);
+}
+
+std::string Socket::peek(std::size_t n) const
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException(0, "peek() called on invalid socket");
+
+    if (n == 0)
+        return {};
+
+    std::string result;
+    result.resize(n);
+
+    const auto len = recv(_sockFd, result.data(),
+#ifdef _WIN32
+                          static_cast<int>(n),
+#else
+                          n,
+#endif
+                          MSG_PEEK);
+
+    if (len == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    if (len == 0)
+        throw SocketException(0, "Connection closed during peek operation.");
+
+    result.resize(static_cast<std::size_t>(len)); // trim to actual
+    return result;
+}
+
+void Socket::discard(std::size_t n) const
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException(0, "discard() called on invalid socket");
+
+    if (n == 0)
+        return;
+
+    constexpr std::size_t chunkSize = 1024;
+    std::array<char, chunkSize> tempBuffer{};
+
+    std::size_t totalDiscarded = 0;
+    while (totalDiscarded < n)
+    {
+        std::size_t toRead = (std::min)(chunkSize, n - totalDiscarded);
+        const auto len = recv(_sockFd, tempBuffer.data(),
+#ifdef _WIN32
+                              static_cast<int>(toRead),
+#else
+                              toRead,
+#endif
+                              0);
+
+        if (len == SOCKET_ERROR)
+            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+        if (len == 0)
+            throw SocketException(0, "Connection closed before all bytes were discarded.");
+
+        totalDiscarded += static_cast<std::size_t>(len);
+    }
 }
