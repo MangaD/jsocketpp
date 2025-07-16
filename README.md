@@ -1,4 +1,4 @@
-# jsocketpp: Modern C++17 Cross-Platform Socket Library
+# jsocketpp: Modern C++20 Cross-Platform Socket Library
 
 <!--! [TOC] -->
 <!--
@@ -13,7 +13,7 @@
 [![Conan](https://img.shields.io/badge/conan-available-brightgreen)](https://conan.io/center/jsocketpp)
 [![vcpkg](https://img.shields.io/badge/vcpkg-available-blue)](https://vcpkg.io/en/packages.html#jsocketpp)
 
-**Java-style sockets for modern C++17. Cross-platform, robust, and simple.**
+**Java-style sockets for modern C++20. Cross-platform, robust, and simple.**
 
 <div align="center">
 <img alt="logo" src="docs/doxygen/logo.png" width="200">
@@ -23,7 +23,7 @@
 
 ## Overview
 
-`jsocketpp` is a C++17 cross-platform socket library inspired by the Java networking API. It offers familiar and
+`jsocketpp` is a C++20 cross-platform socket library inspired by the Java networking API. It offers familiar and
 convenient classes (`Socket`, `ServerSocket`, `DatagramSocket`, `MulticastSocket`, etc.) to simplify TCP and UDP network
 programming in C++. The API is designed to be clear, robust, and portable—ideal for modern, high-performance C++
 applications.
@@ -31,7 +31,7 @@ applications.
 - **Cross-platform**: Windows, Linux, macOS
 - **Supports**: TCP, UDP, and UNIX domain sockets
 - **Easy-to-use** Java-style interface
-- **Modern C++17** features
+- **Modern C++20** features
 
 ---
 

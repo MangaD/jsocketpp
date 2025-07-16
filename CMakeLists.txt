@@ -20,7 +20,7 @@ endif()
 project(
     jsocketpp
     VERSION 1.0
-    DESCRIPTION "A cross-platform C++17 socket library."
+    DESCRIPTION "A cross-platform C++20 socket library."
     HOMEPAGE_URL "https://github.com/MangaD/jsocketpp"
     LANGUAGES ${PROJECT_LANGUAGES})
 
@@ -39,8 +39,8 @@ if(NOT BUILD_SOURCE)
     return()
 endif()
 
-# Set C++ standard requirement (C++17)
-set(CMAKE_CXX_STANDARD 17)
+# Set C++ standard requirement (C++20)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

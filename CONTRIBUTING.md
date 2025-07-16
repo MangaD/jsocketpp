@@ -44,7 +44,7 @@ We welcome issues, discussions, and pull requests. Please follow the guidelines 
       `_localAddr`).
     * **Types:** `CamelCase` (e.g., `DatagramSocket`).
     * **Methods:** `lowerCamelCase` (e.g., `setNonBlocking()`).
-* Use modern C++17 features where appropriate.
+* Use modern C++20 features where appropriate.
 * Write cross-platform code (`#ifdef _WIN32` etc.) where required.
 * Document **all public classes and methods** with Doxygen-style comments.
 

@@ -7,7 +7,7 @@
 [TOC]
 -->
 
-Unit and integration testing for a cross-platform C++17 socket library can be quite challenging, but with the right
+Unit and integration testing for a cross-platform C++20 socket library can be quite challenging, but with the right
 approach and tools, it can be done effectively. Here's a structured plan to guide you through setting up unit and
 integration tests for your library.
 
@@ -16,7 +16,7 @@ integration tests for your library.
 Unit tests for a socket library typically test individual components of the library in isolation. You will mock or
 simulate socket-related functionality in your unit tests to avoid real network activity.
 
-#### Tools for Unit Testing in C++17:
+#### Tools for Unit Testing in C++20:
 
 * **Google Test (gtest)**: This is one of the most popular C++ testing frameworks, providing powerful features such as
   assertions, fixtures, and mock support. It works seamlessly on both **Windows** and **Linux** and integrates easily

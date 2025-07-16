@@ -1,4 +1,4 @@
-// Modern jsocketpp client test: C++17, comments, and feature coverage
+// Modern jsocketpp client test: C++20, comments, and feature coverage
 #include "jsocketpp/DatagramSocket.hpp"
 #include "jsocketpp/Socket.hpp"
 #include "jsocketpp/UnixSocket.hpp"

@@ -1,7 +1,7 @@
 # jsocketpp Examples
 
 Welcome to the `jsocketpp` **examples** directory!
-These examples demonstrate typical and advanced usage of the `jsocketpp` C++17 cross-platform socket library, inspired
+These examples demonstrate typical and advanced usage of the `jsocketpp` C++20 cross-platform socket library, inspired
 by Java’s socket API.
 
 Below you’ll find a list of example programs with brief descriptions.
@@ -34,7 +34,7 @@ Below you’ll find a list of example programs with brief descriptions.
 **Prerequisites:**
 
 - You have built and installed `jsocketpp`.
-- Your C++ compiler supports C++17.
+- Your C++ compiler supports C++20.
 - Platform supports the socket type used (e.g., UNIX domain sockets may not work on Windows).
 
 **Build:**

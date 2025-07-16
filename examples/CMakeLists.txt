@@ -27,8 +27,8 @@ foreach(EXAMPLE_SRC ${EXAMPLE_SOURCES})
     add_executable(${EXAMPLE_NAME} ${EXAMPLE_SRC})
     target_link_libraries(${EXAMPLE_NAME} PRIVATE jsocketpp)
 
-    # Set C++17 standard
-    target_compile_features(${EXAMPLE_NAME} PRIVATE cxx_std_17)
+    # Set C++20 standard
+    target_compile_features(${EXAMPLE_NAME} PRIVATE cxx_std_20)
 
     # On Unix, link pthread if necessary (some socket APIs require it)
     if(UNIX AND NOT APPLE)

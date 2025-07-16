@@ -29,7 +29,7 @@ namespace jsocketpp
  * @ingroup unix
  * @brief Cross-platform abstraction for Unix domain sockets.
  *
- * The `UnixSocket` class provides a convenient, modern C++17-style interface for using Unix domain sockets,
+ * The `UnixSocket` class provides a convenient, modern C++20-style interface for using Unix domain sockets,
  * also known as AF_UNIX sockets. Unix sockets are used for fast inter-process communication (IPC) on the same host,
  * and use a file path on the local file system for addressing.
  *

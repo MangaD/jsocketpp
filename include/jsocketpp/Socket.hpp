@@ -27,7 +27,7 @@ namespace jsocketpp
  *
  * The `Socket` class represents a TCP connection between your application and a remote host.
  * It provides a high-level, easy-to-use, and cross-platform API for creating, connecting, sending,
- * and receiving data over TCP sockets. Its interface is inspired by Java's `Socket` class, but uses modern C++17
+ * and receiving data over TCP sockets. Its interface is inspired by Java's `Socket` class, but uses modern C++20
  * features.
  *
  * ### Key Features

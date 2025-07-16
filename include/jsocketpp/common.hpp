@@ -79,10 +79,10 @@
 #endif
 
 /**
- * @defgroup jsocketpp jsocketpp: C++17 cross-platform socket library
+ * @defgroup jsocketpp jsocketpp: C++20 cross-platform socket library
  * @brief All core classes and functions of the jsocketpp networking library.
  *
- * jsocketpp is a modern, cross-platform C++17 networking library with a Java-like API.
+ * jsocketpp is a modern, cross-platform C++20 networking library with a Java-like API.
  * It supports TCP, UDP, and UNIX sockets, as well as advanced features like dual-stack IPv4/IPv6,
  * easy resource management, and comprehensive error handling.
  *

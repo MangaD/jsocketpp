@@ -49,7 +49,7 @@ else
 endif
 
 # Combine all flags
-CXXFLAGS = $(ARCHITECTURE) -std=c++17 $(DEFINES) $(WARNINGS) $(OPTIMIZE)
+CXXFLAGS = $(ARCHITECTURE) -std=c++20 $(DEFINES) $(WARNINGS) $(OPTIMIZE)
 
 # GoogleTest flags (requires GTest installed or built separately)
 GTEST_FLAGS = -I$(GTEST_DIR)/include -L$(GTEST_DIR)/lib -lgtest -lgtest_main -lpthread

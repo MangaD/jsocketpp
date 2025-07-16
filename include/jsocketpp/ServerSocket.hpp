@@ -25,7 +25,7 @@ namespace jsocketpp
  * @ingroup tcp
  * @brief TCP server socket abstraction for cross-platform C++ networking.
  *
- * The `ServerSocket` class provides a high-level, Java-like interface to create TCP server sockets in C++17,
+ * The `ServerSocket` class provides a high-level, Java-like interface to create TCP server sockets in C++20,
  * supporting both IPv4 and IPv6, and working on both Windows and Unix-like systems.
  *
  * ## Overview
@@ -1029,7 +1029,7 @@ class ServerSocket
      *   consider integrating an event-driven backend (e.g., Boost.Asio, epoll, IOCP) in a future version.
      *
      * ### Platform Support
-     * - Works on all supported platforms (Windows, Linux, macOS). Uses portable C++17 primitives only.
+     * - Works on all supported platforms (Windows, Linux, macOS). Uses portable C++20 primitives only.
      *
      * ### Error Handling
      * - If an error occurs before or during accept, calling `.get()` on the returned future will rethrow the exception.

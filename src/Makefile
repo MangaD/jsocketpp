@@ -3,7 +3,7 @@
 CXX ?= g++
 AR = ar
 ARFLAGS = rcvs
-CXXFLAGS ?= -std=c++17 -O2 -Wall -I.
+CXXFLAGS ?= -std=c++20 -O2 -Wall -I.
 SRC = socket.cpp
 LIB_STATIC = jsocketpp.a
 LIB_SHARED = jsocketpp.so

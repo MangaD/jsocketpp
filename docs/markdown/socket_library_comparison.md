@@ -16,7 +16,7 @@ advantages and disadvantages of each, helping users choose the right tool for th
 
 **Overview:**
 
-- Modern C++17 cross-platform abstraction for TCP, UDP, and Unix sockets.
+- Modern C++20 cross-platform abstraction for TCP, UDP, and Unix sockets.
 - Java-like API for ease of use.
 - Supports Windows, Linux, and POSIX systems.
 - Focuses on simplicity, exception safety, and clear error reporting.

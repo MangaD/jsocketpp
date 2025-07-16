@@ -7,7 +7,7 @@
 [TOC]
 -->
 
-This document provides comprehensive instructions for building, testing, and using the `jsocketpp` C++17 cross-platform
+This document provides comprehensive instructions for building, testing, and using the `jsocketpp` C++20 cross-platform
 socket library on Windows, Linux, and macOS. It covers CMake, Makefile, and manual build approaches, as well as usage
 examples and troubleshooting tips.
 
@@ -33,7 +33,7 @@ examples and troubleshooting tips.
 
 ## Prerequisites
 
-- **C++17 compiler** (MSVC, GCC, or Clang)
+- **C++20 compiler** (MSVC, GCC, or Clang)
 - **CMake 3.19+** (for presets support)
 - **Ninja** (recommended for fast builds, or use Visual Studio/MSBuild on Windows)
 - **GoogleTest** (automatically fetched for unit tests)
@@ -99,7 +99,7 @@ make clean     # Cleans build artifacts
 You can also build the library manually:
 
 ```sh
-g++ -std=c++17 -O2 -Wall -I./src -c src/socket.cpp -o socket.o
+g++ -std=c++20 -O2 -Wall -I./src -c src/socket.cpp -o socket.o
 ar rcs jsocketpp.a socket.o
 ```
 
