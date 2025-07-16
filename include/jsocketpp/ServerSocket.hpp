@@ -268,8 +268,18 @@ class ServerSocket
     /**
      * @brief Copy constructor (deleted).
      *
-     * ServerSocket objects cannot be copied because they represent unique system resources.
-     * Use move semantics (ServerSocket&&) instead to transfer ownership.
+     * This constructor is explicitly deleted because ServerSocket instances manage unique system resources (socket
+     * descriptors) that cannot be safely shared or duplicated. Each socket must have exclusive ownership of its
+     * underlying system resources to ensure proper cleanup and avoid resource leaks.
+     *
+     * Instead of copying, use move semantics (ServerSocket&&) to transfer ownership of a socket between objects.
+     *
+     * @param[in] rhs The ServerSocket to copy from (unused since deleted).
+     *
+     * @note This deletion helps prevent accidental copying of socket resources and enforces RAII principles.
+     *
+     * @see ServerSocket(ServerSocket&&)
+     * @see operator=(ServerSocket&&)
      *
      * @ingroup tcp
      */
@@ -286,17 +296,41 @@ class ServerSocket
      * @param[in] rhs The ServerSocket to copy from (unused since deleted)
      * @return Reference to this ServerSocket (never returns since deleted)
      *
+     * @note This deletion enforces RAII principles and prevents resource leaks.
+     *
+     * @see operator=(ServerSocket&&)
+     * @see ServerSocket(ServerSocket&&)
+     *
      * @ingroup tcp
      */
     ServerSocket& operator=(const ServerSocket& rhs) = delete; //-Weffc++
 
     /**
-     * @brief Move constructor.
+     * @brief Move constructor that transfers ownership of server socket resources.
      *
-     * Transfers ownership of socket resources from another ServerSocket object.
-     * The moved-from socket is left in a valid but empty state.
+     * This constructor implements move semantics to efficiently transfer ownership of
+     * socket resources from one ServerSocket object to another. It's particularly useful
+     * when you need to transfer socket ownership (e.g., returning from functions or
+     * storing in containers) without copying the underlying system resources.
      *
-     * @param[in] rhs The ServerSocket to move from
+     * The operation provides the strong exception guarantee and is marked noexcept:
+     * - All resources are transferred from `rhs` to the new object.
+     * - The moved-from object (`rhs`) is left in a valid but empty state.
+     * - No system resources are duplicated or leaked during the transfer.
+     *
+     * After the move:
+     * - The new object takes full ownership of the socket and its state.
+     * - The moved-from object becomes closed (invalid socket, null pointers).
+     * - All socket options and state flags are transferred.
+     *
+     * @param[in] rhs The ServerSocket to move resources from.
+     *
+     * @note This operation is thread-safe with respect to the moved-from socket,
+     *       but concurrent operations on either socket during the move may cause
+     *       undefined behavior.
+     *
+     * @see operator=(ServerSocket&&)
+     * @see close()
      *
      * @ingroup tcp
      */
@@ -369,9 +403,35 @@ class ServerSocket
     }
 
     /**
-     * @brief Destructor. Closes the server socket and frees resources.
+     * @brief Destructor that automatically closes the server socket and releases all associated resources.
      *
-     * @note This method is not thread safe. If multiple threads may call close(), external synchronization is required.
+     * This destructor ensures proper cleanup of system resources when a ServerSocket object is destroyed:
+     * - Closes the underlying socket handle/descriptor if still open
+     * - Frees any allocated memory for address structures
+     * - Releases system socket resources
+     * - Sets internal state to closed/invalid
+     *
+     * The destructor is marked `noexcept` to prevent exception propagation during stack unwinding,
+     * as per C++ best practices. Any errors that occur during cleanup are logged but not thrown.
+     *
+     * ### Resource Cleanup
+     * - Socket handle is closed via close()
+     * - Address info structures (_srvAddrInfo) are freed
+     * - Internal buffers and state are reset
+     *
+     * ### Thread Safety
+     * - This destructor is **not thread-safe**
+     * - The ServerSocket must not be used by other threads during destruction
+     * - If multiple threads might access the socket during shutdown, external synchronization is required
+     *
+     * @warning
+     * - Do not destroy a ServerSocket while other threads are using it
+     * - Ensure all client operations are complete before destruction
+     * - Use proper synchronization if the socket might be accessed during shutdown
+     *
+     * @see close()
+     * @see Socket
+     *
      * @ingroup tcp
      */
     ~ServerSocket() noexcept;
