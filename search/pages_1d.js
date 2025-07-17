@@ -42,7 +42,7 @@ var searchData=
   ['this_20relates_20to_20jsocketpp_39',['How This Relates to &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt;',['../group__socket__states.html#autotoc_md255',1,'']]],
   ['thoughts_20and_20best_20practices_40',['🧠 Final Thoughts and Best Practices',['../group__async__io.html#autotoc_md146',1,'']]],
   ['thread_20safety_41',['Thread Safety',['../group__tcp.html#autotoc_md429',1,'Thread Safety'],['../group__tcp.html#autotoc_md432',1,'Thread Safety'],['../group__tcp.html#autotoc_md437',1,'Thread Safety'],['../group__tcp.html#autotoc_md442',1,'Thread Safety'],['../classjsocketpp_1_1Socket.html#autotoc_md447',1,'Thread Safety'],['../group__tcp.html#autotoc_md460',1,'Thread Safety']]],
-  ['timeout_20behavior_42',['Timeout Behavior',['../group__tcp.html#autotoc_md527',1,'']]],
+  ['timeout_20behavior_42',['Timeout Behavior',['../group__tcp.html#autotoc_md537',1,'']]],
   ['timeout_20semantics_43',['Timeout Semantics',['../group__tcp.html#autotoc_md441',1,'']]],
   ['timeouts_44',['Timeouts',['../group__async__io.html#autotoc_md122',1,'⏱ How jsocketpp Handles Blocking and Timeouts'],['../group__async__io.html#autotoc_md118',1,'🕐 Socket Timeouts'],['../group__async__io.html#autotoc_md119',1,'OS-Level Timeouts']]],
   ['timeouts_20via_20select_45',['Custom Timeouts via &lt;span class=&quot;tt&quot;&gt;select()&lt;/span&gt;',['../group__async__io.html#autotoc_md120',1,'']]],

@@ -110,6 +110,8 @@ Collaboration diagram for TCP Sockets:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:jsocketpp_3A_3ABufferView" id="r_jsocketpp_3A_3ABufferView"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjsocketpp_1_1BufferView.html">jsocketpp::BufferView</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a raw writable memory region for scatter/gather I/O.  <a href="structjsocketpp_1_1BufferView.html#details">More...</a><br /></td></tr>
 <tr class="memitem:jsocketpp_3A_3AServerSocket" id="r_jsocketpp_3A_3AServerSocket"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1ServerSocket.html">jsocketpp::ServerSocket</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">TCP server socket abstraction for cross-platform C++ networking.  <a href="classjsocketpp_1_1ServerSocket.html#details">More...</a><br /></td></tr>
 <tr class="memitem:jsocketpp_3A_3ASocket" id="r_jsocketpp_3A_3ASocket"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></td></tr>
@@ -255,6 +257,14 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga7a2c489a21a8b2f17bda4e70a296ad52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads all bytes currently available on the socket without blocking.  <br /></td></tr>
 <tr class="memitem:gac12a8c2c7d3f5e90f58a7f2584bf11aa" id="r_gac12a8c2c7d3f5e90f58a7f2584bf11aa"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac12a8c2c7d3f5e90f58a7f2584bf11aa">jsocketpp::Socket::readIntoAvailable</a> (void *buffer, std::size_t bufferSize) const</td></tr>
 <tr class="memdesc:gac12a8c2c7d3f5e90f58a7f2584bf11aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads all currently available bytes into the provided buffer without blocking.  <br /></td></tr>
+<tr class="memitem:ga90e5544f6d058709cc342e07554a59d5" id="r_ga90e5544f6d058709cc342e07554a59d5"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga90e5544f6d058709cc342e07554a59d5">jsocketpp::Socket::readv</a> (std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers) const</td></tr>
+<tr class="memdesc:ga90e5544f6d058709cc342e07554a59d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a vectorized read into multiple buffers using a single system call.  <br /></td></tr>
+<tr class="memitem:gadc68c056253b4d1c23828c2df73e6642" id="r_gadc68c056253b4d1c23828c2df73e6642"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadc68c056253b4d1c23828c2df73e6642">jsocketpp::Socket::readvAll</a> (std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers) const</td></tr>
+<tr class="memdesc:gadc68c056253b4d1c23828c2df73e6642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads exactly the full contents of all provided buffers.  <br /></td></tr>
+<tr class="memitem:gaf4b83c97cc8ca1fd97b0b9dfaac533b0" id="r_gaf4b83c97cc8ca1fd97b0b9dfaac533b0"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf4b83c97cc8ca1fd97b0b9dfaac533b0">jsocketpp::Socket::readvAllWithTotalTimeout</a> (std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers, int timeoutMillis) const</td></tr>
+<tr class="memdesc:gaf4b83c97cc8ca1fd97b0b9dfaac533b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads exactly the full contents of all buffers within a timeout.  <br /></td></tr>
+<tr class="memitem:ga6a8b2fada7df0ddec9b6f2c491f4f92b" id="r_ga6a8b2fada7df0ddec9b6f2c491f4f92b"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6a8b2fada7df0ddec9b6f2c491f4f92b">jsocketpp::Socket::readvAtMostWithTimeout</a> (std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers, int timeoutMillis) const</td></tr>
+<tr class="memdesc:ga6a8b2fada7df0ddec9b6f2c491f4f92b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts a single vectorized read into multiple buffers with a timeout.  <br /></td></tr>
 <tr class="memitem:ga5c413ef976df1e89528d9b3df6484c89" id="r_ga5c413ef976df1e89528d9b3df6484c89"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5c413ef976df1e89528d9b3df6484c89">jsocketpp::Socket::peek</a> (std::size_t n) const</td></tr>
 <tr class="memdesc:ga5c413ef976df1e89528d9b3df6484c89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peeks at incoming data without consuming it.  <br /></td></tr>
 <tr class="memitem:ga9188bb8da388b31e50493a09749bf06d" id="r_ga9188bb8da388b31e50493a09749bf06d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9188bb8da388b31e50493a09749bf06d">jsocketpp::Socket::discard</a> (std::size_t n) const</td></tr>
@@ -279,6 +289,14 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga804a69fa791fc8adb91f32ab37244a0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all buffers fully using vectorized I/O with automatic retry on partial sends.  <br /></td></tr>
 <tr class="memitem:ga16bb8c36a3fd9a3a97a0d4f5d5036550" id="r_ga16bb8c36a3fd9a3a97a0d4f5d5036550"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga16bb8c36a3fd9a3a97a0d4f5d5036550">jsocketpp::Socket::writeAtMostWithTimeout</a> (std::string_view data, int timeoutMillis) const</td></tr>
 <tr class="memdesc:ga16bb8c36a3fd9a3a97a0d4f5d5036550"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a best-effort write with a total timeout.  <br /></td></tr>
+<tr class="memitem:gab4484254fc3c113a373718198c382dd9" id="r_gab4484254fc3c113a373718198c382dd9"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab4484254fc3c113a373718198c382dd9">jsocketpp::Socket::writeFrom</a> (const void *data, std::size_t len) const</td></tr>
+<tr class="memdesc:gab4484254fc3c113a373718198c382dd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes up to <span class="tt">len</span> bytes from a raw memory buffer in a single send call.  <br /></td></tr>
+<tr class="memitem:ga686c95af72f4193d1a7c6dd6e658e4ba" id="r_ga686c95af72f4193d1a7c6dd6e658e4ba"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga686c95af72f4193d1a7c6dd6e658e4ba">jsocketpp::Socket::writeFromAll</a> (const void *data, std::size_t len) const</td></tr>
+<tr class="memdesc:ga686c95af72f4193d1a7c6dd6e658e4ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all bytes from a raw memory buffer, retrying until complete.  <br /></td></tr>
+<tr class="memitem:ga964bb0e901179bc5eac126d77b0590eb" id="r_ga964bb0e901179bc5eac126d77b0590eb"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga964bb0e901179bc5eac126d77b0590eb">jsocketpp::Socket::writeWithTotalTimeout</a> (std::string_view data, int timeoutMillis) const</td></tr>
+<tr class="memdesc:ga964bb0e901179bc5eac126d77b0590eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the full payload with a total timeout across all retries.  <br /></td></tr>
+<tr class="memitem:ga8e539c866c9fcad3578f9be78cbfdaf4" id="r_ga8e539c866c9fcad3578f9be78cbfdaf4"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8e539c866c9fcad3578f9be78cbfdaf4">jsocketpp::Socket::writevWithTotalTimeout</a> (std::span&lt; const std::string_view &gt; buffers, int timeoutMillis) const</td></tr>
+<tr class="memdesc:ga8e539c866c9fcad3578f9be78cbfdaf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all buffers fully within a total timeout using vectorized I/O.  <br /></td></tr>
 <tr class="memitem:ga67700f13f17036f13ce5a30898a315dc" id="r_ga67700f13f17036f13ce5a30898a315dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga67700f13f17036f13ce5a30898a315dc">jsocketpp::Socket::setReceiveBufferSize</a> (std::size_t size) const</td></tr>
 <tr class="memdesc:ga67700f13f17036f13ce5a30898a315dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
 <tr class="memitem:ga243562caf78f87e481f657e26c59e1f0" id="r_ga243562caf78f87e481f657e26c59e1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga243562caf78f87e481f657e26c59e1f0">jsocketpp::Socket::setSendBufferSize</a> (std::size_t size)</td></tr>
@@ -401,7 +419,7 @@ Variables</h2></td></tr>
 <div class="line">}</div>
 <div class="ttc" id="aclassjsocketpp_1_1ServerSocket_html"><div class="ttname"><a href="classjsocketpp_1_1ServerSocket.html">jsocketpp::ServerSocket</a></div><div class="ttdoc">TCP server socket abstraction for cross-platform C++ networking.</div><div class="ttdef"><b>Definition</b> ServerSocket.hpp:99</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1SocketTimeoutException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketTimeoutException.html">jsocketpp::SocketTimeoutException</a></div><div class="ttdoc">Exception class for socket operations that time out.</div><div class="ttdef"><b>Definition</b> SocketTimeoutException.hpp:39</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:87</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:101</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -771,7 +789,7 @@ Not thread safe: simultaneous accept calls from different threads or processes m
 <div class="line">        <span class="keywordflow">throw</span>; <span class="comment">// real error</span></div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Set the socket to non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:324</div></div>
+<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Set the socket to non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:325</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1008,14 +1026,14 @@ Always close your sockets when finished to prevent resource leaks! </dd></dl>
 <li>Resets internal state</li>
 </ol>
 <p>The method ensures proper cleanup even if the socket is already closed. After calling <a class="el" href="#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a>, the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object remains valid but disconnected (<a class="el" href="#gae2b10ef466023b380a34b062359c0f65" title="Check if the socket is valid and open for communication.">isValid()</a> will return false).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md488"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md492"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
 <div class="line">sock.connect();</div>
 <div class="line"><span class="comment">// ... use socket ...</span></div>
 <div class="line">sock.close();  <span class="comment">// Explicitly close when done</span></div>
-<div class="ttc" id="agroup__tcp_html_ga35351a964f0ff1df19dfbe630afb7167"><div class="ttname"><a href="#ga35351a964f0ff1df19dfbe630afb7167">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:7</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md489"></a>
+<div class="ttc" id="agroup__tcp_html_ga35351a964f0ff1df19dfbe630afb7167"><div class="ttname"><a href="#ga35351a964f0ff1df19dfbe630afb7167">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:8</div></div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md493"></a>
 Resource Management</h3>
 <ul>
 <li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> is automatically closed in destructor if not done explicitly</li>
@@ -1167,7 +1185,7 @@ Implementation Details</h3>
 
 <p>Discards <span class="tt">n</span> bytes of data from the socket's input stream. </p>
 <p>This method reads and silently drops exactly <span class="tt">n</span> bytes from the socket's input buffer. It is useful when you need to skip over known headers, padding, or unwanted segments in a protocol without storing them.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md486"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md490"></a>
 Implementation Details</h3>
 <ul>
 <li>Loops until <span class="tt">n</span> bytes are discarded</li>
@@ -1175,7 +1193,7 @@ Implementation Details</h3>
 <li>Performs one or more <span class="tt">recv()</span> calls to drain the data</li>
 <li>Does not store or return any of the read bytes</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md487"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md491"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><span class="comment">// Discard a 16-byte padding block</span></div>
 <div class="line">sock.discard(16);</div>
@@ -1620,7 +1638,7 @@ getSendBufferSize() </dd>
 
 <p>Check if the socket is currently in non-blocking mode. </p>
 <p>Returns the current blocking mode of the socket. A socket in non-blocking mode will return immediately from operations that would normally block, such as <a class="el" href="#ga647272fa39f462dd40aa4a87e335352c" title="Establishes a TCP connection to the remote host with optional timeout control.">connect()</a>, <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Read a trivially copyable type from the socket.">read()</a>, or <a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Writes data to the socket, handling partial writes.">write()</a>, with an error code (usually EWOULDBLOCK/WSAEWOULDBLOCK) if the operation cannot be completed immediately.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md525"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md535"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses platform-specific APIs (ioctlsocket on Windows, fcntl on POSIX)</li>
@@ -1628,7 +1646,7 @@ Implementation Details</h3>
 <li>Performs a system call to check current socket state</li>
 <li>O(1) operation complexity</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md526"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md536"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line"> </div>
@@ -1750,7 +1768,7 @@ Example Usage</h3>
 
 <p>Get the socket's receive buffer size (SO_RCVBUF). </p>
 <p>Retrieves the current size of the operating system's receive buffer for this socket. The receive buffer is used by the OS to store incoming data before it is read by the application. A larger buffer can help prevent data loss during high-bandwidth transfers or when the application cannot read data quickly enough.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md513"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md523"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses getsockopt() with SO_RCVBUF option</li>
@@ -1758,7 +1776,7 @@ Implementation Details</h3>
 <li>On Linux, returned value may be twice the requested size due to kernel overhead</li>
 <li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md514"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md524"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -1937,7 +1955,7 @@ Example Usage</h3>
 
 <p>Get the socket's send buffer size (SO_SNDBUF). </p>
 <p>Retrieves the current size of the operating system's send buffer for this socket. The send buffer is used by the OS to store outgoing data before it is transmitted over the network. A larger buffer can help improve performance during high-bandwidth transfers or when the network is temporarily congested.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md515"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md525"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses getsockopt() with SO_SNDBUF option</li>
@@ -1945,7 +1963,7 @@ Implementation Details</h3>
 <li>On Linux, returned value may be twice the requested size due to kernel overhead</li>
 <li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md516"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md526"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -2196,7 +2214,7 @@ Example Usage</h3>
 
 <p>Check if the socket is valid and open for communication. </p>
 <p>This method checks if the socket has a valid file descriptor and is ready for communication. A socket is considered valid if it has been successfully created and has not been closed. However, a valid socket is not necessarily connected; use <a class="el" href="classjsocketpp_1_1Socket.html#a969dad8dab10b5862aea7200af238d82" title="Check if the socket is still connected (TCP only).">isConnected()</a> to check the connection status.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md520"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md530"></a>
 Implementation Details</h3>
 <ul>
 <li>Checks if internal socket descriptor (_sockFd) is not INVALID_SOCKET</li>
@@ -2204,7 +2222,7 @@ Implementation Details</h3>
 <li>Thread-safe (const noexcept)</li>
 <li>Does not perform any system calls</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md521"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md531"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line"><span class="keywordflow">if</span> (sock.isValid()) {</div>
@@ -2475,7 +2493,7 @@ Example Usage</h3>
 
 <p>Peeks at incoming data without consuming it. </p>
 <p>This method performs a non-destructive read of up to <span class="tt">n</span> bytes using the <span class="tt">MSG_PEEK</span> flag. It allows inspecting the contents of the socket's receive buffer without removing the data from the queue. This is useful for implementing lookahead parsing, protocol sniffing, or waiting for specific patterns before consuming data.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md484"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md488"></a>
 Implementation Details</h3>
 <ul>
 <li>Performs a single <span class="tt">recv()</span> call with <span class="tt">MSG_PEEK</span></li>
@@ -2483,7 +2501,7 @@ Implementation Details</h3>
 <li>May return fewer bytes than requested if less data is available</li>
 <li>Does not block indefinitely if the socket is non-blocking or has a timeout</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md485"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md489"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line">std::string preview = sock.peek(4);</div>
 <div class="line"><span class="keywordflow">if</span> (preview == <span class="stringliteral">&quot;PING&quot;</span>) {</div>
@@ -3264,7 +3282,7 @@ Example Usage</h3>
 
 <p>Reads data from the socket into a user-supplied buffer. </p>
 <p>This method provides direct access to the socket's receive functionality by reading data into a caller-provided buffer. It supports both "best-effort" single reads and exact-length reads that ensure all requested bytes are received.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md535"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md545"></a>
 Modes of Operation</h3>
 <ul>
 <li><b>Best-effort mode</b> (exact=false):<ul>
@@ -3282,7 +3300,7 @@ Modes of Operation</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md536"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md546"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -3296,7 +3314,7 @@ Example Usage</h3>
 <div class="line">uint32_t length;</div>
 <div class="line">sock.readInto(&amp;length, <span class="keyword">sizeof</span>(length), <span class="keyword">true</span>);</div>
 <div class="line"><span class="comment">// Always reads exactly 4 bytes or throws</span></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md537"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md547"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses recv() internally for actual reads</li>
@@ -3663,6 +3681,222 @@ Example Usage</h3>
 
 </div>
 </div>
+<a id="ga90e5544f6d058709cc342e07554a59d5" name="ga90e5544f6d058709cc342e07554a59d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga90e5544f6d058709cc342e07554a59d5">&#9670;&#160;</a></span>readv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Socket::readv </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>buffers</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Performs a vectorized read into multiple buffers using a single system call. </p>
+<p>Reads data into the specified sequence of buffers using scatter/gather I/O. This method fills each buffer in order and returns the total number of bytes read. It is the counterpart to <span class="tt"><a class="el" href="#gadf5094228dfdef090b0d49a3a9e9e78d" title="Writes multiple buffers in a single system call using scatter/gather I/O.">writev()</a></span> and uses <span class="tt"><a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a></span> or <span class="tt">WSARecv()</span> internally.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md484"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line">std::array&lt;std::byte, 4&gt; header;</div>
+<div class="line">std::array&lt;std::byte, 128&gt; payload;</div>
+<div class="line">std::array&lt;BufferView, 2&gt; views = {</div>
+<div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">BufferView</a>{header.data(), header.size()},</div>
+<div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">BufferView</a>{payload.data(), payload.size()}</div>
+<div class="line">};</div>
+<div class="line">std::size_t received = sock.readv(views);</div>
+<div class="ttc" id="astructjsocketpp_1_1BufferView_html"><div class="ttname"><a href="structjsocketpp_1_1BufferView.html">jsocketpp::BufferView</a></div><div class="ttdoc">Represents a raw writable memory region for scatter/gather I/O.</div><div class="ttdef"><b>Definition</b> Socket.hpp:33</div></div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffers</td><td>A span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> objects describing writable regions. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The total number of bytes read into the buffer sequence.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The socket is invalid</li>
+<li>recv() or <a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a> fails</li>
+<li>Connection is closed prematurely</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This method performs a single recv()-style call. It does not retry. For full delivery into multiple buffers, use <span class="tt"><a class="el" href="#gadc68c056253b4d1c23828c2df73e6642" title="Reads exactly the full contents of all provided buffers.">readvAll()</a></span> (future).</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gadf5094228dfdef090b0d49a3a9e9e78d" title="Writes multiple buffers in a single system call using scatter/gather I/O.">writev()</a> For the write-side equivalent </dd>
+<dd>
+<a class="el" href="#gac2bfca99305ede78697fc0b39fbbeed8" title="Reads available data from the socket into the provided buffer.">readInto()</a> For single-buffer reading </dd></dl>
+
+</div>
+</div>
+<a id="gadc68c056253b4d1c23828c2df73e6642" name="gadc68c056253b4d1c23828c2df73e6642"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadc68c056253b4d1c23828c2df73e6642">&#9670;&#160;</a></span>readvAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Socket::readvAll </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>buffers</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reads exactly the full contents of all provided buffers. </p>
+<p>This method performs a reliable scatter read operation. It guarantees that all bytes described by the buffer span are filled by repeatedly calling <span class="tt"><a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a></span> until the entire memory region is received or an error occurs.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md485"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line">std::array&lt;std::byte, 4&gt; header;</div>
+<div class="line">std::vector&lt;std::byte&gt; payload(1024);</div>
+<div class="line"> </div>
+<div class="line">std::array&lt;BufferView, 2&gt; views = {</div>
+<div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">BufferView</a>{header.data(), header.size()},</div>
+<div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">BufferView</a>{payload.data(), payload.size()}</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line">sock.readvAll(views);</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffers</td><td>A span of writable buffer views to fill completely. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Total number of bytes read (equal to sum of buffer sizes).</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The connection is closed before all data is read</li>
+<li>A system or network error occurs</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This is a high-level, blocking call. For partial reads, use <span class="tt"><a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a></span>. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a> For non-retrying variant </dd></dl>
+
+</div>
+</div>
+<a id="gaf4b83c97cc8ca1fd97b0b9dfaac533b0" name="gaf4b83c97cc8ca1fd97b0b9dfaac533b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf4b83c97cc8ca1fd97b0b9dfaac533b0">&#9670;&#160;</a></span>readvAllWithTotalTimeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Socket::readvAllWithTotalTimeout </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>buffers</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>timeoutMillis</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reads exactly the full contents of all buffers within a timeout. </p>
+<p>This method repeatedly performs vectorized reads into the given sequence of buffers until all bytes are read or the timeout expires. It uses a steady clock to track the total time spent across all retries.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md486"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line">std::array&lt;std::byte, 4&gt; header;</div>
+<div class="line">std::vector&lt;std::byte&gt; payload(1024);</div>
+<div class="line">std::array&lt;BufferView, 2&gt; views = {</div>
+<div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">BufferView</a>{header.data(), header.size()},</div>
+<div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">BufferView</a>{payload.data(), payload.size()}</div>
+<div class="line">};</div>
+<div class="line">sock.readvAllWithTotalTimeout(views, 2000); <span class="comment">// Must finish in 2 seconds</span></div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffers</td><td>Span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> objects describing writable regions. </td></tr>
+    <tr><td class="paramname">timeoutMillis</td><td>Maximum allowed time to read all bytes (in milliseconds). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Total number of bytes read (equal to sum of buffer sizes on success).</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The timeout expires before all data is read</li>
+<li>recv() or <a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a> fails</li>
+<li>Connection is closed prematurely</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This method is fully blocking but timeout-bounded. Use <span class="tt"><a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a></span> or <span class="tt"><a class="el" href="#gadc68c056253b4d1c23828c2df73e6642" title="Reads exactly the full contents of all provided buffers.">readvAll()</a></span> for simpler variants.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gadc68c056253b4d1c23828c2df73e6642" title="Reads exactly the full contents of all provided buffers.">readvAll()</a> For unbounded retry version </dd>
+<dd>
+<a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a> For best-effort single-attempt vectorized <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Read a trivially copyable type from the socket.">read</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga6a8b2fada7df0ddec9b6f2c491f4f92b" name="ga6a8b2fada7df0ddec9b6f2c491f4f92b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6a8b2fada7df0ddec9b6f2c491f4f92b">&#9670;&#160;</a></span>readvAtMostWithTimeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Socket::readvAtMostWithTimeout </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>buffers</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>timeoutMillis</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Attempts a single vectorized read into multiple buffers with a timeout. </p>
+<p>Waits up to <span class="tt">timeoutMillis</span> for the socket to become readable, then performs a single <span class="tt"><a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a></span> operation. May read less than the total buffer size. This is the timeout-aware version of <span class="tt"><a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a></span>, useful for polling or best-effort I/O.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md487"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line">std::array&lt;std::byte, 8&gt; header;</div>
+<div class="line">std::array&lt;std::byte, 256&gt; body;</div>
+<div class="line"> </div>
+<div class="line">std::array&lt;BufferView, 2&gt; bufs = {</div>
+<div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">BufferView</a>{header.data(), header.size()},</div>
+<div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">BufferView</a>{body.data(), body.size()}</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line">std::size_t n = sock.readvAtMostWithTimeout(bufs, 300); <span class="comment">// wait up to 300 ms</span></div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffers</td><td>Writable buffer views to receive incoming data. </td></tr>
+    <tr><td class="paramname">timeoutMillis</td><td>Time to wait for readability before giving up. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of bytes read (can be 0).</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The socket is not readable within timeout</li>
+<li>recv() or <a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a> fails</li>
+<li>Connection is closed</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This performs exactly one system read. It does not retry.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">readv()</a> For non-timed scatter <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Read a trivially copyable type from the socket.">read</a> </dd>
+<dd>
+<a class="el" href="#gaf4b83c97cc8ca1fd97b0b9dfaac533b0" title="Reads exactly the full contents of all buffers within a timeout.">readvAllWithTotalTimeout()</a> For full delivery </dd></dl>
+
+</div>
+</div>
 <a id="gac6eeb69e3b15334e7c224edf30248fe3" name="gac6eeb69e3b15334e7c224edf30248fe3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gac6eeb69e3b15334e7c224edf30248fe3">&#9670;&#160;</a></span>ServerSocket() <span class="overload">[1/3]</span></h2>
 
@@ -3964,14 +4198,14 @@ This constructor is not thread safe. Do not share a <a class="el" href="classjso
 
 <p>Sets the size of the internal read buffer used for string operations. </p>
 <p>This method controls the size of the internal buffer used by <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> operations. This is distinct from <a class="el" href="#ga67700f13f17036f13ce5a30898a315dc" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a>, which controls the operating system's socket buffer (SO_RCVBUF).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md517"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md527"></a>
 Purpose</h3>
 <ul>
 <li>Controls maximum size of data readable in one <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> call</li>
 <li>Affects memory usage of the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object</li>
 <li>Does not affect system socket buffers or network behavior</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md518"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md528"></a>
 Implementation Details</h3>
 <ul>
 <li>Resizes internal std::vector&lt;char&gt; buffer</li>
@@ -3979,7 +4213,7 @@ Implementation Details</h3>
 <li>Not used for fixed-size <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Read a trivially copyable type from the socket.">read&lt;T&gt;()</a> operations</li>
 <li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md519"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md529"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -4095,7 +4329,7 @@ Example Usage</h3>
 
 <p>Set the socket to non-blocking or blocking mode. </p>
 <p>Controls whether socket operations (connect, read, write) block until completion or return immediately. In non-blocking mode, operations return immediately with an error (usually EWOULDBLOCK/WSAEWOULDBLOCK) if they cannot be completed, allowing the application to perform other tasks while waiting.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md522"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md532"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses platform-specific APIs (ioctlsocket on Windows, fcntl on POSIX)</li>
@@ -4103,7 +4337,7 @@ Implementation Details</h3>
 <li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
 <li>State persists until explicitly changed</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md523"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md533"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line"> </div>
@@ -4121,7 +4355,7 @@ Example Usage</h3>
 <div class="line">        }</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md524"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md534"></a>
 Common Use Cases</h3>
 <ul>
 <li>Implementing select/poll-based I/O multiplexing</li>
@@ -4225,7 +4459,7 @@ Common Use Cases</h3>
 
 <p>Sets the socket's receive buffer size (SO_RCVBUF). </p>
 <p>Configures the size of the operating system's receive buffer for this socket. A larger buffer can improve performance for high-bandwidth connections by allowing the system to buffer more incoming data, reducing the risk of packet loss during temporary processing delays.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md509"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md519"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses setsockopt() with SO_RCVBUF option to set kernel socket buffer size</li>
@@ -4238,7 +4472,7 @@ Implementation Details</h3>
 <li>Changes affect subsequent receives only, not data already in the buffer</li>
 <li>System limits may constrain maximum size based on available memory and OS policy</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md510"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md520"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
 <div class="line"> </div>
@@ -4369,7 +4603,7 @@ Example Usage</h3>
 
 <p>Sets the socket's send buffer size (SO_SNDBUF). </p>
 <p>Configures the size of the operating system's send buffer for this socket. A larger buffer can improve performance for high-bandwidth connections by allowing the system to buffer more outgoing data, reducing the risk of blocking during write operations when the network is temporarily congested.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md511"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md521"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses setsockopt() with SO_SNDBUF option to set kernel socket buffer size</li>
@@ -4382,7 +4616,7 @@ Implementation Details</h3>
 <li>Changes affect subsequent sends only, not data already in the buffer</li>
 <li>System limits may constrain maximum size based on available memory and OS policy</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md512"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md522"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
 <div class="line"> </div>
@@ -4485,7 +4719,7 @@ Example Usage</h3>
 
 <p>Set timeout for socket send and/or receive operations. </p>
 <p>Configures timeouts for socket operations, allowing fine-grained control over how long the socket will wait during blocking send or receive operations before failing. This provides an alternative to non-blocking mode for handling slow or unresponsive peers.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md527"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md537"></a>
 Timeout Behavior</h3>
 <ul>
 <li>Read timeout (SO_RCVTIMEO): Maximum time to wait for incoming data</li>
@@ -4493,7 +4727,7 @@ Timeout Behavior</h3>
 <li>Zero timeout: Operations return immediately if they would block</li>
 <li>Negative timeout: Blocking mode (wait indefinitely)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md528"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md538"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses setsockopt() with SO_RCVTIMEO and/or SO_SNDTIMEO</li>
@@ -4501,7 +4735,7 @@ Implementation Details</h3>
 <li>Affects all subsequent operations until changed</li>
 <li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md529"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md539"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -4569,7 +4803,7 @@ Example Usage</h3>
 
 <p>Shutdown specific communication aspects of the socket. </p>
 <p>This method allows for a controlled shutdown of socket communications in one or both directions without closing the socket itself. Unlike <a class="el" href="#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a>, which immediately terminates all communications, <a class="el" href="#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a> provides finer control over how the connection is terminated.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md490"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md494"></a>
 Shutdown Modes</h3>
 <ul>
 <li><b><a class="el" href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a7a1a5f3e79fdc91edf2f5ead9d66abb4" title="Shutdown read operations (SHUT_RD or SD_RECEIVE)">ShutdownMode::Read</a></b>: Disables further receive operations<ul>
@@ -4590,7 +4824,7 @@ Shutdown Modes</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md491"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md495"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
 <div class="line">sock.connect();</div>
@@ -4608,7 +4842,7 @@ Example Usage</h3>
 <div class="line">sock.shutdown(<a class="code hl_enumvalue" href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e">ShutdownMode::Both</a>);</div>
 <div class="ttc" id="anamespacejsocketpp_html_a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6"><div class="ttname"><a href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6">jsocketpp::ShutdownMode::Write</a></div><div class="ttdeci">@ Write</div><div class="ttdoc">Shutdown write operations (SHUT_WR or SD_SEND)</div><div class="ttdef"><b>Definition</b> common.hpp:258</div></div>
 <div class="ttc" id="anamespacejsocketpp_html_a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e"><div class="ttname"><a href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e">jsocketpp::ShutdownMode::Both</a></div><div class="ttdeci">@ Both</div><div class="ttdoc">Shutdown both read and write operations (SHUT_RDWR or SD_BOTH)</div><div class="ttdef"><b>Definition</b> common.hpp:259</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md492"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md496"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses platform-specific <a class="el" href="#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a> system call</li>
@@ -5122,7 +5356,7 @@ Thread Safety</h3>
 
 <p>Writes data to the socket, handling partial writes. </p>
 <p>Attempts to write the provided string data to the connected socket. This method may perform a partial write, meaning not all data may be sent in a single call. The return value indicates exactly how many bytes were successfully written.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md493"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md497"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses send() system call internally</li>
@@ -5130,7 +5364,7 @@ Implementation Details</h3>
 <li>May write fewer bytes than requested</li>
 <li>Does not retry on partial writes</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md494"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md498"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
 <div class="line">sock.connect();</div>
@@ -5188,7 +5422,7 @@ Example Usage</h3>
 
 <p>Writes the entire contents of a message to the socket, handling partial writes. </p>
 <p>Ensures that the complete message is transmitted by handling partial writes and retrying until all data is sent or an error occurs. This method is particularly useful when dealing with large messages that may require multiple write operations.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md495"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md499"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses <a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Writes data to the socket, handling partial writes.">write()</a> internally for actual socket operations</li>
@@ -5196,7 +5430,7 @@ Implementation Details</h3>
 <li>Continues writing until all data is sent</li>
 <li>Handles platform differences (Windows/POSIX)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md496"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md500"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
 <div class="line">sock.connect();</div>
@@ -5264,14 +5498,14 @@ Example Usage</h3>
 
 <p>Performs a best-effort write with a total timeout. </p>
 <p>Waits up to <span class="tt">timeoutMillis</span> for the socket to become writable, then attempts a single <span class="tt">send()</span> of up to <span class="tt">data.size()</span> bytes. This method does not retry. It is suitable for time-sensitive or polling-based write loops.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md507"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md511"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses <span class="tt">waitReady(true, timeoutMillis)</span> once</li>
 <li>Calls <span class="tt">send()</span> once to write as much as possible</li>
 <li>Returns the number of bytes actually written</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md508"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md512"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line">std::string payload = <span class="stringliteral">&quot;POST /data&quot;</span>;</div>
 <div class="line">std::size_t sent = sock.writeAtMostWithTimeout(payload, 500);</div>
@@ -5298,6 +5532,112 @@ Example Usage</h3>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga3b61b5861d62f4e85be4a52aa9e0bcc9" title="Performs a best-effort read up to n bytes, with a maximum timeout.">readAtMostWithTimeout()</a> </dd>
 <dd>
 <a class="el" href="#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, handling partial writes.">writeAll()</a> </dd></dl>
+
+</div>
+</div>
+<a id="gab4484254fc3c113a373718198c382dd9" name="gab4484254fc3c113a373718198c382dd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab4484254fc3c113a373718198c382dd9">&#9670;&#160;</a></span>writeFrom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Socket::writeFrom </td>
+          <td>(</td>
+          <td class="paramtype">const void *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>len</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Writes up to <span class="tt">len</span> bytes from a raw memory buffer in a single send call. </p>
+<p>This method sends data directly from a raw memory pointer using a best-effort write. It may write fewer bytes than requested, depending on socket buffer availability. It is the low-level counterpart to <span class="tt">write(std::string_view)</span> and avoids constructing or copying into strings.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md513"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><span class="keyword">const</span> uint8_t buffer[] = { 0x01, 0x02, 0x03 };</div>
+<div class="line">std::size_t sent = sock.writeFrom(buffer, <span class="keyword">sizeof</span>(buffer));</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Pointer to the memory to write. </td></tr>
+    <tr><td class="paramname">len</td><td>Number of bytes to send. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of bytes successfully written (can be &lt; len).</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The socket is invalid</li>
+<li>send() fails due to a network error</li>
+<li>Connection is closed</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This method does not guarantee full delivery. Use <span class="tt"><a class="el" href="#ga686c95af72f4193d1a7c6dd6e658e4ba" title="Writes all bytes from a raw memory buffer, retrying until complete.">writeFromAll()</a></span> for that.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Writes data to the socket, handling partial writes.">write()</a> For std::string_view interface </dd>
+<dd>
+<a class="el" href="#ga686c95af72f4193d1a7c6dd6e658e4ba" title="Writes all bytes from a raw memory buffer, retrying until complete.">writeFromAll()</a> To guarantee full transmission </dd>
+<dd>
+<a class="el" href="#gac2bfca99305ede78697fc0b39fbbeed8" title="Reads available data from the socket into the provided buffer.">readInto()</a> For symmetric <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Read a trivially copyable type from the socket.">read</a> into raw buffer </dd></dl>
+
+</div>
+</div>
+<a id="ga686c95af72f4193d1a7c6dd6e658e4ba" name="ga686c95af72f4193d1a7c6dd6e658e4ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga686c95af72f4193d1a7c6dd6e658e4ba">&#9670;&#160;</a></span>writeFromAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Socket::writeFromAll </td>
+          <td>(</td>
+          <td class="paramtype">const void *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>len</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Writes all bytes from a raw memory buffer, retrying until complete. </p>
+<p>This method repeatedly calls <span class="tt">send()</span> until the full <span class="tt">len</span> bytes of the buffer are successfully transmitted. It guarantees that all bytes are written, or throws an exception on failure. This is the raw-buffer equivalent of <span class="tt"><a class="el" href="#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, handling partial writes.">writeAll()</a></span>.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md514"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line">std::vector&lt;uint8_t&gt; payload = generateMessage();</div>
+<div class="line">sock.writeFromAll(payload.data(), payload.size());</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Pointer to the binary buffer to send. </td></tr>
+    <tr><td class="paramname">len</td><td>Number of bytes to transmit. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The total number of bytes written (equal to <span class="tt">len</span> on success).</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The socket is invalid</li>
+<li>send() fails</li>
+<li>The connection is closed prematurely</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This method blocks until all data is sent or an error occurs. For partial/best-effort sends, use <span class="tt"><a class="el" href="#gab4484254fc3c113a373718198c382dd9" title="Writes up to len bytes from a raw memory buffer in a single send call.">writeFrom()</a></span> instead.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gab4484254fc3c113a373718198c382dd9" title="Writes up to len bytes from a raw memory buffer in a single send call.">writeFrom()</a> For best-effort version </dd>
+<dd>
+<a class="el" href="#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, handling partial writes.">writeAll()</a> For string-based equivalent </dd>
+<dd>
+<a class="el" href="#gabb8631cb8242b3573a2679da0b6a4f4d" title="Reads exactly len bytes into the given buffer (looped recv).">readIntoExact()</a> For guaranteed binary reads </dd></dl>
 
 </div>
 </div>
@@ -5328,7 +5668,7 @@ template&lt;typename T&gt; </div>
 
 <p>Writes a payload prefixed with its length using a fixed-size integer type. </p>
 <p>Sends a length-prefixed message where the prefix is a fixed-size integral type <span class="tt">T</span>, followed by the raw payload data. This is useful for protocols that encode the message size before transmitting variable-length payloads, allowing the receiver to determine message boundaries.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md497"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md501"></a>
 Implementation Details</h3>
 <ul>
 <li>First converts <span class="tt">payload.size()</span> into a fixed-size integer of type <span class="tt">T</span></li>
@@ -5338,14 +5678,14 @@ Implementation Details</h3>
 <li>Uses <span class="tt"><a class="el" href="#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, handling partial writes.">writeAll()</a></span> to ensure both prefix and payload are fully transmitted</li>
 <li>No endianness conversion is applied (caller must convert if needed)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md498"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md502"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
 <div class="line"> </div>
 <div class="line">std::string msg = <span class="stringliteral">&quot;Hello from client!&quot;</span>;</div>
 <div class="line">sock.writePrefixed&lt;uint32_t&gt;(msg); <span class="comment">// Sends [4-byte length][data]</span></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md499"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md503"></a>
 Protocol Format</h3>
 <pre>
 +----------------+----------------------+
@@ -5416,7 +5756,7 @@ template&lt;typename T&gt; </div>
 
 <p>Writes a binary payload prefixed with its length using a fixed-size integer type. </p>
 <p>Sends a length-prefixed binary message, where the prefix is a fixed-size integral type <span class="tt">T</span>, followed by a raw data buffer. This version avoids allocating a temporary <span class="tt">std::string</span>, making it suitable for binary protocols, zero-copy send paths, or memory-efficient I/O.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md500"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md504"></a>
 Implementation Details</h3>
 <ul>
 <li>Validates that <span class="tt">len</span> can be safely cast to <span class="tt">T</span></li>
@@ -5424,11 +5764,11 @@ Implementation Details</h3>
 <li>Sends <span class="tt">len</span> bytes of payload immediately afterward</li>
 <li>Uses <span class="tt"><a class="el" href="#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, handling partial writes.">writeAll()</a></span> to guarantee full delivery of both parts</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md501"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md505"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line">std::vector&lt;uint8_t&gt; imageData = loadImage();</div>
 <div class="line">sock.writePrefixed&lt;uint32_t&gt;(imageData.data(), imageData.size());</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md502"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md506"></a>
 Protocol Format</h3>
 <pre>
 +----------------+----------------------+
@@ -5486,7 +5826,7 @@ writePrefixed(std::string) For string-based variant </dd></dl>
 
 <p>Writes multiple buffers in a single system call using scatter/gather I/O. </p>
 <p>This method efficiently writes multiple non-contiguous buffers to the socket using platform-specific vectorized I/O calls. It is ideal for sending structured packets, headers + body, or other segmented data without concatenating them.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md503"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md507"></a>
 Implementation Details</h3>
 <ul>
 <li>On POSIX: uses <span class="tt"><a class="el" href="#gadf5094228dfdef090b0d49a3a9e9e78d" title="Writes multiple buffers in a single system call using scatter/gather I/O.">writev()</a></span> with <span class="tt">struct iovec[]</span></li>
@@ -5494,7 +5834,7 @@ Implementation Details</h3>
 <li>Handles up to IOV_MAX or WSABUF_MAX entries (platform limit)</li>
 <li>Ensures the total byte count written is returned</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md504"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md508"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line">std::string_view header = <span class="stringliteral">&quot;Content-Length: 12\r\n\r\n&quot;</span>;</div>
 <div class="line">std::string_view body   = <span class="stringliteral">&quot;Hello world!&quot;</span>;</div>
@@ -5543,7 +5883,7 @@ Example Usage</h3>
 
 <p>Writes all buffers fully using vectorized I/O with automatic retry on partial sends. </p>
 <p>Ensures that the entire contents of all buffers in the given span are fully transmitted, retrying as needed. This is the guaranteed-delivery counterpart to <span class="tt"><a class="el" href="#gadf5094228dfdef090b0d49a3a9e9e78d" title="Writes multiple buffers in a single system call using scatter/gather I/O.">writev()</a></span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md505"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md509"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses <span class="tt"><a class="el" href="#gadf5094228dfdef090b0d49a3a9e9e78d" title="Writes multiple buffers in a single system call using scatter/gather I/O.">writev()</a></span> or <span class="tt">WSASend()</span> to send as much as possible</li>
@@ -5551,7 +5891,7 @@ Implementation Details</h3>
 <li>Rebuilds the buffer list on each retry to resume from the last offset</li>
 <li>Stops only when all buffers are fully transmitted or an error occurs</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md506"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md510"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line">std::array&lt;std::string_view, 3&gt; fragments = {</div>
 <div class="line">    <span class="stringliteral">&quot;HTTP/1.1 200 OK\r\n&quot;</span>,</div>
@@ -5582,6 +5922,127 @@ Example Usage</h3>
 <a class="el" href="#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, handling partial writes.">writeAll()</a> For full single-buffer delivery </dd>
 <dd>
 <a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Writes data to the socket, handling partial writes.">write()</a> For low-level single-buffer writes </dd></dl>
+
+</div>
+</div>
+<a id="ga8e539c866c9fcad3578f9be78cbfdaf4" name="ga8e539c866c9fcad3578f9be78cbfdaf4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8e539c866c9fcad3578f9be78cbfdaf4">&#9670;&#160;</a></span>writevWithTotalTimeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Socket::writevWithTotalTimeout </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; const std::string_view &gt;</td>          <td class="paramname"><span class="paramname"><em>buffers</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>timeoutMillis</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Writes all buffers fully within a total timeout using vectorized I/O. </p>
+<p>Sends the contents of all buffers in the given span using scatter/gather I/O. Retries on partial sends until either all buffers are sent or the timeout expires. This is the timeout-aware counterpart to <span class="tt"><a class="el" href="#ga804a69fa791fc8adb91f32ab37244a0a" title="Writes all buffers fully using vectorized I/O with automatic retry on partial sends.">writevAll()</a></span>.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md517"></a>
+Implementation Details</h3>
+<ul>
+<li>Uses a <span class="tt">std::chrono::steady_clock</span> deadline internally</li>
+<li>Each iteration waits for socket writability using remaining time</li>
+<li>Uses <span class="tt"><a class="el" href="#gadf5094228dfdef090b0d49a3a9e9e78d" title="Writes multiple buffers in a single system call using scatter/gather I/O.">writev()</a></span> to transmit multiple buffers at once</li>
+<li>Rebuilds the span as needed to resume after partial sends</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md518"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line">std::array&lt;std::string_view, 3&gt; parts = {</div>
+<div class="line">    <span class="stringliteral">&quot;Header: &quot;</span>,</div>
+<div class="line">    <span class="stringliteral">&quot;value\r\n\r\n&quot;</span>,</div>
+<div class="line">    <span class="stringliteral">&quot;Body content&quot;</span></div>
+<div class="line">};</div>
+<div class="line">sock.writevWithTotalTimeout(parts, 1500);</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffers</td><td>A span of buffers to send in order. </td></tr>
+    <tr><td class="paramname">timeoutMillis</td><td>Maximum total time allowed for the operation, in milliseconds. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Total number of bytes sent (equal to the sum of buffer sizes on success).</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The timeout expires before full delivery</li>
+<li>A network or socket error occurs</li>
+<li>The connection is closed prematurely</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This method guarantees atomic full delivery within a strict time budget. Use <span class="tt"><a class="el" href="#ga804a69fa791fc8adb91f32ab37244a0a" title="Writes all buffers fully using vectorized I/O with automatic retry on partial sends.">writevAll()</a></span> if timeout control is not needed.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga804a69fa791fc8adb91f32ab37244a0a" title="Writes all buffers fully using vectorized I/O with automatic retry on partial sends.">writevAll()</a> For unbounded full delivery </dd>
+<dd>
+<a class="el" href="#ga964bb0e901179bc5eac126d77b0590eb" title="Writes the full payload with a total timeout across all retries.">writeWithTotalTimeout()</a> For single-buffer variant </dd></dl>
+
+</div>
+</div>
+<a id="ga964bb0e901179bc5eac126d77b0590eb" name="ga964bb0e901179bc5eac126d77b0590eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga964bb0e901179bc5eac126d77b0590eb">&#9670;&#160;</a></span>writeWithTotalTimeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Socket::writeWithTotalTimeout </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>timeoutMillis</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Writes the full payload with a total timeout across all retries. </p>
+<p>Repeatedly attempts to write all bytes from <span class="tt">data</span>, retrying partial writes as needed. The entire operation must complete within <span class="tt">timeoutMillis</span> milliseconds. If the timeout expires before all data is sent, the method throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md515"></a>
+Implementation Details</h3>
+<ul>
+<li>Uses a <span class="tt">std::chrono::steady_clock</span> deadline internally</li>
+<li>Each iteration waits for socket writability using remaining time</li>
+<li>Behaves like <span class="tt"><a class="el" href="#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, handling partial writes.">writeAll()</a></span> but bounded by a total wall-clock timeout</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md516"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line">std::string json = buildPayload();</div>
+<div class="line">sock.writeWithTotalTimeout(json, 1000); <span class="comment">// Must finish in 1 second</span></div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>The data to send. </td></tr>
+    <tr><td class="paramname">timeoutMillis</td><td>Maximum total duration (in milliseconds) to complete the operation. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Total number of bytes written (equals data.size() on success).</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The timeout expires before full delivery</li>
+<li>A network or socket error occurs</li>
+<li>Connection is closed during send</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This is the timeout-aware counterpart to <span class="tt"><a class="el" href="#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, handling partial writes.">writeAll()</a></span>. Prefer this when responsiveness or time-bound delivery is required.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, handling partial writes.">writeAll()</a> For unbounded full delivery </dd>
+<dd>
+<a class="el" href="#ga16bb8c36a3fd9a3a97a0d4f5d5036550" title="Performs a best-effort write with a total timeout.">writeAtMostWithTimeout()</a> For best-effort single attempt </dd></dl>
 
 </div>
 </div>

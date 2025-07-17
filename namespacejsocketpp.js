@@ -1,5 +1,6 @@
 var namespacejsocketpp =
 [
+    [ "BufferView", "structjsocketpp_1_1BufferView.html", "structjsocketpp_1_1BufferView" ],
     [ "DatagramPacket", "classjsocketpp_1_1DatagramPacket.html", "classjsocketpp_1_1DatagramPacket" ],
     [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html", "classjsocketpp_1_1DatagramSocket" ],
     [ "MulticastSocket", "classjsocketpp_1_1MulticastSocket.html", "classjsocketpp_1_1MulticastSocket" ],

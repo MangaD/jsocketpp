@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "jsocketpp::BufferView", "structjsocketpp_1_1BufferView.html", null ],
     [ "jsocketpp::DatagramPacket", "classjsocketpp_1_1DatagramPacket.html", null ],
     [ "jsocketpp::DatagramSocket", "classjsocketpp_1_1DatagramSocket.html", [
       [ "jsocketpp::MulticastSocket", "classjsocketpp_1_1MulticastSocket.html", null ]

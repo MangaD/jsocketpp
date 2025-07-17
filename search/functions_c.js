@@ -12,6 +12,10 @@ var searchData=
   ['readline_9',['readLine',['../group__tcp.html#ga3123fc6000e0fe76a5909795e85d39a4',1,'jsocketpp::Socket']]],
   ['readprefixed_10',['readPrefixed',['../group__tcp.html#gab1aaaa6572bcf756be7bcdb801e35812',1,'jsocketpp::Socket::readPrefixed()'],['../group__tcp.html#gac504258fb38abd34abee4ea96868a9d2',1,'jsocketpp::Socket::readPrefixed(const std::size_t maxPayloadLen)']]],
   ['readuntil_11',['readUntil',['../group__tcp.html#ga3c694c2f5c8debc3b26af1971f1cdfc1',1,'jsocketpp::Socket']]],
-  ['recvfrom_12',['recvFrom',['../classjsocketpp_1_1DatagramSocket.html#a67133e9ad368acfe004d7efb956778ea',1,'jsocketpp::DatagramSocket']]],
-  ['resize_13',['resize',['../classjsocketpp_1_1DatagramPacket.html#a2c99540d2136dae10a56f781c1b20c5f',1,'jsocketpp::DatagramPacket']]]
+  ['readv_12',['readv',['../group__tcp.html#ga90e5544f6d058709cc342e07554a59d5',1,'jsocketpp::Socket']]],
+  ['readvall_13',['readvAll',['../group__tcp.html#gadc68c056253b4d1c23828c2df73e6642',1,'jsocketpp::Socket']]],
+  ['readvallwithtotaltimeout_14',['readvAllWithTotalTimeout',['../group__tcp.html#gaf4b83c97cc8ca1fd97b0b9dfaac533b0',1,'jsocketpp::Socket']]],
+  ['readvatmostwithtimeout_15',['readvAtMostWithTimeout',['../group__tcp.html#ga6a8b2fada7df0ddec9b6f2c491f4f92b',1,'jsocketpp::Socket']]],
+  ['recvfrom_16',['recvFrom',['../classjsocketpp_1_1DatagramSocket.html#a67133e9ad368acfe004d7efb956778ea',1,'jsocketpp::DatagramSocket']]],
+  ['resize_17',['resize',['../classjsocketpp_1_1DatagramPacket.html#a2c99540d2136dae10a56f781c1b20c5f',1,'jsocketpp::DatagramPacket']]]
 ];

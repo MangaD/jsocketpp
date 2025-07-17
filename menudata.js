@@ -83,7 +83,8 @@ var menudata={children:[
 {text:"a",url:"functions_vars.html#index_a"},
 {text:"b",url:"functions_vars.html#index_b"},
 {text:"d",url:"functions_vars.html#index_d"},
-{text:"p",url:"functions_vars.html#index_p"}]},
+{text:"p",url:"functions_vars.html#index_p"},
+{text:"s",url:"functions_vars.html#index_s"}]},
 {text:"Related Symbols",url:"functions_rela.html"}]}]},
 {text:"Files",url:"files.html",children:[
 {text:"File List",url:"files.html"},
