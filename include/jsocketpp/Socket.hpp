@@ -13,12 +13,27 @@
 
 #include <array>
 #include <limits>
+#include <span>
 #include <string_view>
 #include <type_traits>
 #include <vector>
 
 namespace jsocketpp
 {
+
+/**
+ * @brief Represents a raw writable memory region for scatter/gather I/O.
+ * @ingroup tcp
+ *
+ * This struct defines a mutable buffer segment for use with readv-style
+ * scatter/gather operations. It holds a pointer to a writable memory region
+ * and the number of bytes available at that address.
+ */
+struct BufferView
+{
+    void* data;       ///< Pointer to the writable memory region
+    std::size_t size; ///< Size in bytes of the writable region
+};
 
 /**
  * @class Socket
@@ -1046,7 +1061,7 @@ class Socket
 
         T length = read<T>(); // uses existing fixed-size read
 
-        const std::size_t payloadLen = static_cast<std::size_t>(length);
+        const auto payloadLen = static_cast<std::size_t>(length);
         if (payloadLen > maxPayloadLen)
         {
             throw SocketException(0, "readPrefixed: Prefix length " + std::to_string(payloadLen) +
@@ -1149,6 +1164,147 @@ class Socket
      * @see readInto() For controlled-length reading (blocking)
      */
     std::size_t readIntoAvailable(void* buffer, std::size_t bufferSize) const;
+
+    /**
+     * @brief Performs a vectorized read into multiple buffers using a single system call.
+     * @ingroup tcp
+     *
+     * Reads data into the specified sequence of buffers using scatter/gather I/O.
+     * This method fills each buffer in order and returns the total number of bytes read.
+     * It is the counterpart to `writev()` and uses `readv()` or `WSARecv()` internally.
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::array<std::byte, 4> header;
+     * std::array<std::byte, 128> payload;
+     * std::array<BufferView, 2> views = {
+     *     BufferView{header.data(), header.size()},
+     *     BufferView{payload.data(), payload.size()}
+     * };
+     * std::size_t received = sock.readv(views);
+     * @endcode
+     *
+     * @param buffers A span of BufferView objects describing writable regions.
+     * @return The total number of bytes read into the buffer sequence.
+     *
+     * @throws SocketException If:
+     *         - The socket is invalid
+     *         - recv() or readv() fails
+     *         - Connection is closed prematurely
+     *
+     * @note This method performs a single recv()-style call. It does not retry.
+     *       For full delivery into multiple buffers, use `readvAll()` (future).
+     *
+     * @see writev() For the write-side equivalent
+     * @see readInto() For single-buffer reading
+     */
+    std::size_t readv(std::span<BufferView> buffers) const;
+
+    /**
+     * @brief Reads exactly the full contents of all provided buffers.
+     * @ingroup tcp
+     *
+     * This method performs a reliable scatter read operation. It guarantees that
+     * all bytes described by the buffer span are filled by repeatedly calling
+     * `readv()` until the entire memory region is received or an error occurs.
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::array<std::byte, 4> header;
+     * std::vector<std::byte> payload(1024);
+     *
+     * std::array<BufferView, 2> views = {
+     *     BufferView{header.data(), header.size()},
+     *     BufferView{payload.data(), payload.size()}
+     * };
+     *
+     * sock.readvAll(views);
+     * @endcode
+     *
+     * @param buffers A span of writable buffer views to fill completely.
+     * @return Total number of bytes read (equal to sum of buffer sizes).
+     *
+     * @throws SocketException If:
+     *         - The connection is closed before all data is read
+     *         - A system or network error occurs
+     *
+     * @note This is a high-level, blocking call. For partial reads, use `readv()`.
+     * @see readv() For non-retrying variant
+     */
+    std::size_t readvAll(std::span<BufferView> buffers) const;
+
+    /**
+     * @brief Reads exactly the full contents of all buffers within a timeout.
+     * @ingroup tcp
+     *
+     * This method repeatedly performs vectorized reads into the given sequence
+     * of buffers until all bytes are read or the timeout expires. It uses a
+     * steady clock to track the total time spent across all retries.
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::array<std::byte, 4> header;
+     * std::vector<std::byte> payload(1024);
+     * std::array<BufferView, 2> views = {
+     *     BufferView{header.data(), header.size()},
+     *     BufferView{payload.data(), payload.size()}
+     * };
+     * sock.readvAllWithTotalTimeout(views, 2000); // Must finish in 2 seconds
+     * @endcode
+     *
+     * @param buffers Span of BufferView objects describing writable regions.
+     * @param timeoutMillis Maximum allowed time to read all bytes (in milliseconds).
+     * @return Total number of bytes read (equal to sum of buffer sizes on success).
+     *
+     * @throws SocketException If:
+     *         - The timeout expires before all data is read
+     *         - recv() or readv() fails
+     *         - Connection is closed prematurely
+     *
+     * @note This method is fully blocking but timeout-bounded.
+     *       Use `readv()` or `readvAll()` for simpler variants.
+     *
+     * @see readvAll() For unbounded retry version
+     * @see readv() For best-effort single-attempt vectorized read
+     */
+    std::size_t readvAllWithTotalTimeout(std::span<BufferView> buffers, int timeoutMillis) const;
+
+    /**
+     * @brief Attempts a single vectorized read into multiple buffers with a timeout.
+     * @ingroup tcp
+     *
+     * Waits up to `timeoutMillis` for the socket to become readable, then performs
+     * a single `readv()` operation. May read less than the total buffer size.
+     * This is the timeout-aware version of `readv()`, useful for polling or best-effort I/O.
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::array<std::byte, 8> header;
+     * std::array<std::byte, 256> body;
+     *
+     * std::array<BufferView, 2> bufs = {
+     *     BufferView{header.data(), header.size()},
+     *     BufferView{body.data(), body.size()}
+     * };
+     *
+     * std::size_t n = sock.readvAtMostWithTimeout(bufs, 300); // wait up to 300 ms
+     * @endcode
+     *
+     * @param buffers Writable buffer views to receive incoming data.
+     * @param timeoutMillis Time to wait for readability before giving up.
+     * @return Number of bytes read (can be 0).
+     *
+     * @throws SocketException If:
+     *         - The socket is not readable within timeout
+     *         - recv() or readv() fails
+     *         - Connection is closed
+     *
+     * @note This performs exactly one system read. It does not retry.
+     *
+     * @see readv() For non-timed scatter read
+     * @see readvAllWithTotalTimeout() For full delivery
+     */
+    std::size_t readvAtMostWithTimeout(std::span<BufferView> buffers, int timeoutMillis) const;
 
     /**
      * @brief Peeks at incoming data without consuming it.
@@ -1519,6 +1675,336 @@ class Socket
 
         return prefixSent + dataSent;
     }
+
+    /**
+     * @brief Writes a binary payload prefixed with its length using a fixed-size integer type.
+     * @ingroup tcp
+     *
+     * Sends a length-prefixed binary message, where the prefix is a fixed-size integral type `T`,
+     * followed by a raw data buffer. This version avoids allocating a temporary `std::string`,
+     * making it suitable for binary protocols, zero-copy send paths, or memory-efficient I/O.
+     *
+     * ### Implementation Details
+     * - Validates that `len` can be safely cast to `T`
+     * - Sends `sizeof(T)` bytes of the length prefix (no endianness conversion)
+     * - Sends `len` bytes of payload immediately afterward
+     * - Uses `writeAll()` to guarantee full delivery of both parts
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::vector<uint8_t> imageData = loadImage();
+     * sock.writePrefixed<uint32_t>(imageData.data(), imageData.size());
+     * @endcode
+     *
+     * ### Protocol Format
+     * <pre>
+     * +----------------+----------------------+
+     * | Length (T)     | Payload (n bytes)   |
+     * +----------------+----------------------+
+     * |<- sizeof(T) ->|<---- len --------->|
+     * </pre>
+     *
+     * @tparam T The integral type used for the length prefix (e.g., uint16_t, uint32_t).
+     *           Must be trivially copyable.
+     *
+     * @param data Pointer to the binary payload data.
+     * @param len Number of bytes to write from `data`.
+     *
+     * @return Total number of bytes written (sizeof(T) + len).
+     *
+     * @throws SocketException If:
+     *         - `len` exceeds what can be encoded in `T`
+     *         - Connection is closed before completion
+     *         - writeAll() fails for prefix or payload
+     *
+     * @note No endianness conversion is performed.
+     *       If network-order is required, the caller must handle it.
+     *
+     * @see readPrefixed() For corresponding read
+     * @see writeAll() For guaranteed single-buffer write
+     * @see writePrefixed(std::string) For string-based variant
+     */
+    template <typename T> std::size_t writePrefixed(const void* data, std::size_t len) const
+    {
+        static_assert(std::is_integral_v<T> && std::is_trivially_copyable_v<T>,
+                      "Prefix type must be a trivially copyable integral type");
+
+        if (!data && len > 0)
+            throw SocketException(0, "writePrefixed: Null data pointer with non-zero length");
+
+        if (len > static_cast<std::size_t>((std::numeric_limits<T>::max)()))
+        {
+            throw SocketException(0, "writePrefixed: Payload length exceeds capacity of prefix type");
+        }
+
+        T prefix = static_cast<T>(len);
+
+        // Send prefix
+        writeAll(std::string_view(reinterpret_cast<const char*>(&prefix), sizeof(T)));
+
+        // Send payload
+        if (len > 0)
+        {
+            writeAll(std::string_view(static_cast<const char*>(data), len));
+        }
+
+        return sizeof(T) + len;
+    }
+
+    /**
+     * @brief Writes multiple buffers in a single system call using scatter/gather I/O.
+     * @ingroup tcp
+     *
+     * This method efficiently writes multiple non-contiguous buffers to the socket
+     * using platform-specific vectorized I/O calls. It is ideal for sending structured
+     * packets, headers + body, or other segmented data without concatenating them.
+     *
+     * ### Implementation Details
+     * - On POSIX: uses `writev()` with `struct iovec[]`
+     * - On Windows: uses `WSASend()` with `WSABUF[]`
+     * - Handles up to IOV_MAX or WSABUF_MAX entries (platform limit)
+     * - Ensures the total byte count written is returned
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::string_view header = "Content-Length: 12\r\n\r\n";
+     * std::string_view body   = "Hello world!";
+     *
+     * std::array<std::string_view, 2> segments = {header, body};
+     * std::size_t sent = sock.writev(segments);
+     * @endcode
+     *
+     * @param buffers A span of string views to send as a scatter/gather I/O batch.
+     * @return Total number of bytes sent.
+     *
+     * @throws SocketException If:
+     *         - Socket is not connected
+     *         - System I/O call fails
+     *         - Connection is broken or interrupted
+     *
+     * @note This function does not retry partial writes. You must manually check
+     *       the return value and retry unsent segments if needed.
+     *
+     * @see write() For single-buffer sends
+     * @see writeAll() To send all bytes in a single string
+     */
+    std::size_t writev(std::span<const std::string_view> buffers) const;
+
+    /**
+     * @brief Writes all buffers fully using vectorized I/O with automatic retry on partial sends.
+     * @ingroup tcp
+     *
+     * Ensures that the entire contents of all buffers in the given span are fully transmitted,
+     * retrying as needed. This is the guaranteed-delivery counterpart to `writev()`.
+     *
+     * ### Implementation Details
+     * - Uses `writev()` or `WSASend()` to send as much as possible
+     * - Tracks which buffers are partially sent
+     * - Rebuilds the buffer list on each retry to resume from the last offset
+     * - Stops only when all buffers are fully transmitted or an error occurs
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::array<std::string_view, 3> fragments = {
+     *     "HTTP/1.1 200 OK\r\n",
+     *     "Content-Length: 5\r\n\r\n",
+     *     "Hello"
+     * };
+     * sock.writevAll(fragments);
+     * @endcode
+     *
+     * @param buffers A span of string fragments to send as a contiguous logical payload.
+     * @return Total number of bytes written (equal to sum of all buffer sizes).
+     *
+     * @throws SocketException If:
+     *         - A send error occurs
+     *         - The connection is closed mid-transmission
+     *
+     * @note This method guarantees full delivery, unlike writev(), which may send only part.
+     *
+     * @see writev() For single-shot scatter/gather write
+     * @see writeAll() For full single-buffer delivery
+     * @see write() For low-level single-buffer writes
+     */
+    std::size_t writevAll(std::span<const std::string_view> buffers) const;
+
+    /**
+     * @brief Performs a best-effort write with a total timeout.
+     * @ingroup tcp
+     *
+     * Waits up to `timeoutMillis` for the socket to become writable, then attempts
+     * a single `send()` of up to `data.size()` bytes. This method does not retry.
+     * It is suitable for time-sensitive or polling-based write loops.
+     *
+     * ### Implementation Details
+     * - Uses `waitReady(true, timeoutMillis)` once
+     * - Calls `send()` once to write as much as possible
+     * - Returns the number of bytes actually written
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::string payload = "POST /data";
+     * std::size_t sent = sock.writeAtMostWithTimeout(payload, 500);
+     * @endcode
+     *
+     * @param data The data to send.
+     * @param timeoutMillis The maximum time to wait before sending.
+     *
+     * @return The number of bytes written (can be 0).
+     *
+     * @throws SocketException If:
+     *         - Timeout occurs before socket becomes writable
+     *         - send() fails
+     *         - Connection is closed
+     *
+     * @note This is a best-effort, low-latency write. Use `writeAll()` or
+     *       `writeWithTimeoutRetry()` for full delivery.
+     *
+     * @see readAtMostWithTimeout()
+     * @see writeAll()
+     */
+    std::size_t writeAtMostWithTimeout(std::string_view data, int timeoutMillis) const;
+
+    /**
+     * @brief Writes up to `len` bytes from a raw memory buffer in a single send call.
+     * @ingroup tcp
+     *
+     * This method sends data directly from a raw memory pointer using a best-effort write.
+     * It may write fewer bytes than requested, depending on socket buffer availability.
+     * It is the low-level counterpart to `write(std::string_view)` and avoids constructing
+     * or copying into strings.
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * const uint8_t buffer[] = { 0x01, 0x02, 0x03 };
+     * std::size_t sent = sock.writeFrom(buffer, sizeof(buffer));
+     * @endcode
+     *
+     * @param data Pointer to the memory to write.
+     * @param len Number of bytes to send.
+     * @return The number of bytes successfully written (can be < len).
+     *
+     * @throws SocketException If:
+     *         - The socket is invalid
+     *         - send() fails due to a network error
+     *         - Connection is closed
+     *
+     * @note This method does not guarantee full delivery. Use `writeFromAll()` for that.
+     *
+     * @see write() For std::string_view interface
+     * @see writeFromAll() To guarantee full transmission
+     * @see readInto() For symmetric read into raw buffer
+     */
+    std::size_t writeFrom(const void* data, std::size_t len) const;
+
+    /**
+     * @brief Writes all bytes from a raw memory buffer, retrying until complete.
+     * @ingroup tcp
+     *
+     * This method repeatedly calls `send()` until the full `len` bytes of the buffer
+     * are successfully transmitted. It guarantees that all bytes are written, or
+     * throws an exception on failure. This is the raw-buffer equivalent of `writeAll()`.
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::vector<uint8_t> payload = generateMessage();
+     * sock.writeFromAll(payload.data(), payload.size());
+     * @endcode
+     *
+     * @param data Pointer to the binary buffer to send.
+     * @param len Number of bytes to transmit.
+     * @return The total number of bytes written (equal to `len` on success).
+     *
+     * @throws SocketException If:
+     *         - The socket is invalid
+     *         - send() fails
+     *         - The connection is closed prematurely
+     *
+     * @note This method blocks until all data is sent or an error occurs.
+     *       For partial/best-effort sends, use `writeFrom()` instead.
+     *
+     * @see writeFrom() For best-effort version
+     * @see writeAll() For string-based equivalent
+     * @see readIntoExact() For guaranteed binary reads
+     */
+    std::size_t writeFromAll(const void* data, std::size_t len) const;
+
+    /**
+     * @brief Writes the full payload with a total timeout across all retries.
+     * @ingroup tcp
+     *
+     * Repeatedly attempts to write all bytes from `data`, retrying partial writes as needed.
+     * The entire operation must complete within `timeoutMillis` milliseconds. If the timeout
+     * expires before all data is sent, the method throws a SocketException.
+     *
+     * ### Implementation Details
+     * - Uses a `std::chrono::steady_clock` deadline internally
+     * - Each iteration waits for socket writability using remaining time
+     * - Behaves like `writeAll()` but bounded by a total wall-clock timeout
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::string json = buildPayload();
+     * sock.writeWithTotalTimeout(json, 1000); // Must finish in 1 second
+     * @endcode
+     *
+     * @param data The data to send.
+     * @param timeoutMillis Maximum total duration (in milliseconds) to complete the operation.
+     * @return Total number of bytes written (equals data.size() on success).
+     *
+     * @throws SocketException If:
+     *         - The timeout expires before full delivery
+     *         - A network or socket error occurs
+     *         - Connection is closed during send
+     *
+     * @note This is the timeout-aware counterpart to `writeAll()`.
+     *       Prefer this when responsiveness or time-bound delivery is required.
+     *
+     * @see writeAll() For unbounded full delivery
+     * @see writeAtMostWithTimeout() For best-effort single attempt
+     */
+    std::size_t writeWithTotalTimeout(std::string_view data, int timeoutMillis) const;
+
+    /**
+     * @brief Writes all buffers fully within a total timeout using vectorized I/O.
+     * @ingroup tcp
+     *
+     * Sends the contents of all buffers in the given span using scatter/gather I/O.
+     * Retries on partial sends until either all buffers are sent or the timeout expires.
+     * This is the timeout-aware counterpart to `writevAll()`.
+     *
+     * ### Implementation Details
+     * - Uses a `std::chrono::steady_clock` deadline internally
+     * - Each iteration waits for socket writability using remaining time
+     * - Uses `writev()` to transmit multiple buffers at once
+     * - Rebuilds the span as needed to resume after partial sends
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::array<std::string_view, 3> parts = {
+     *     "Header: ",
+     *     "value\r\n\r\n",
+     *     "Body content"
+     * };
+     * sock.writevWithTotalTimeout(parts, 1500);
+     * @endcode
+     *
+     * @param buffers A span of buffers to send in order.
+     * @param timeoutMillis Maximum total time allowed for the operation, in milliseconds.
+     * @return Total number of bytes sent (equal to the sum of buffer sizes on success).
+     *
+     * @throws SocketException If:
+     *         - The timeout expires before full delivery
+     *         - A network or socket error occurs
+     *         - The connection is closed prematurely
+     *
+     * @note This method guarantees atomic full delivery within a strict time budget.
+     *       Use `writevAll()` if timeout control is not needed.
+     *
+     * @see writevAll() For unbounded full delivery
+     * @see writeWithTotalTimeout() For single-buffer variant
+     */
+    std::size_t writevWithTotalTimeout(std::span<const std::string_view> buffers, int timeoutMillis) const;
 
     /**
      * @brief Sets the socket's receive buffer size (SO_RCVBUF).

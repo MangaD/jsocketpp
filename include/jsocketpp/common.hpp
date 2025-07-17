@@ -73,6 +73,7 @@
 #include <sys/socket.h>  //socket
 #include <sys/time.h>    //timeval
 #include <sys/types.h>   //socket
+#include <sys/uio.h>     //writev
 #include <sys/un.h>      //for Unix domain sockets
 #include <unistd.h>      //close
 
