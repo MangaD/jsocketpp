@@ -1,7 +1,7 @@
 var searchData=
 [
   ['macos_20unix_0',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md289',1,'']]],
-  ['main_20features_1',['Main Features',['../classjsocketpp_1_1UnixSocket.html#autotoc_md531',1,'']]],
+  ['main_20features_1',['Main Features',['../classjsocketpp_1_1UnixSocket.html#autotoc_md540',1,'']]],
   ['main_20tcp_20socket_20states_2',['Main TCP Socket States',['../group__socket__states.html#autotoc_md247',1,'']]],
   ['make_20your_20cmake_20project_20conan_20friendly_3',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md166',1,'']]],
   ['makefile_4',['Using the Makefile',['../group__BUILD__AND__USAGE.html#autotoc_md9',1,'']]],
@@ -25,7 +25,7 @@ var searchData=
   ['models_22',['3. Communication Models',['../group__underlying__socket__api.html#autotoc_md304',1,'']]],
   ['modern_20c_2020_20cross_20platform_20socket_20library_23',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
   ['modes_24',['Modes',['../group__tcp.html#autotoc_md454',1,'Connection Modes'],['../group__tcp.html#autotoc_md490',1,'Shutdown Modes']]],
-  ['modes_20of_20operation_25',['Modes of Operation',['../group__tcp.html#autotoc_md526',1,'']]],
+  ['modes_20of_20operation_25',['Modes of Operation',['../group__tcp.html#autotoc_md535',1,'']]],
   ['module_26',['4. Qt Network Module',['../group__socket__library__comparison.html#autotoc_md235',1,'']]],
   ['more_20resources_27',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
   ['multicast_28',['What is Multicast?',['../classjsocketpp_1_1MulticastSocket.html#autotoc_md419',1,'']]],

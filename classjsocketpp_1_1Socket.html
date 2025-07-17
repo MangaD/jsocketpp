@@ -162,6 +162,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ga983f06841d1af489990b78f9fd4f91a3" id="r_ga983f06841d1af489990b78f9fd4f91a3"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ga983f06841d1af489990b78f9fd4f91a3 template"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga983f06841d1af489990b78f9fd4f91a3">writePrefixed</a> (const std::string &amp;payload) const</td></tr>
 <tr class="memdesc:ga983f06841d1af489990b78f9fd4f91a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a payload prefixed with its length using a fixed-size integer type.  <br /></td></tr>
+<tr class="memitem:gab0b48a69153c1ed31dd158ec7afb901c" id="r_gab0b48a69153c1ed31dd158ec7afb901c"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:gab0b48a69153c1ed31dd158ec7afb901c template"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab0b48a69153c1ed31dd158ec7afb901c">writePrefixed</a> (const void *data, std::size_t len) const</td></tr>
+<tr class="memdesc:gab0b48a69153c1ed31dd158ec7afb901c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a binary payload prefixed with its length using a fixed-size integer type.  <br /></td></tr>
+<tr class="memitem:gadf5094228dfdef090b0d49a3a9e9e78d" id="r_gadf5094228dfdef090b0d49a3a9e9e78d"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gadf5094228dfdef090b0d49a3a9e9e78d">writev</a> (std::span&lt; const std::string_view &gt; buffers) const</td></tr>
+<tr class="memdesc:gadf5094228dfdef090b0d49a3a9e9e78d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes multiple buffers in a single system call using scatter/gather I/O.  <br /></td></tr>
+<tr class="memitem:ga804a69fa791fc8adb91f32ab37244a0a" id="r_ga804a69fa791fc8adb91f32ab37244a0a"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga804a69fa791fc8adb91f32ab37244a0a">writevAll</a> (std::span&lt; const std::string_view &gt; buffers) const</td></tr>
+<tr class="memdesc:ga804a69fa791fc8adb91f32ab37244a0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all buffers fully using vectorized I/O with automatic retry on partial sends.  <br /></td></tr>
+<tr class="memitem:ga16bb8c36a3fd9a3a97a0d4f5d5036550" id="r_ga16bb8c36a3fd9a3a97a0d4f5d5036550"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga16bb8c36a3fd9a3a97a0d4f5d5036550">writeAtMostWithTimeout</a> (std::string_view data, int timeoutMillis) const</td></tr>
+<tr class="memdesc:ga16bb8c36a3fd9a3a97a0d4f5d5036550"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a best-effort write with a total timeout.  <br /></td></tr>
 <tr class="memitem:ga67700f13f17036f13ce5a30898a315dc" id="r_ga67700f13f17036f13ce5a30898a315dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga67700f13f17036f13ce5a30898a315dc">setReceiveBufferSize</a> (std::size_t size) const</td></tr>
 <tr class="memdesc:ga67700f13f17036f13ce5a30898a315dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
 <tr class="memitem:ga243562caf78f87e481f657e26c59e1f0" id="r_ga243562caf78f87e481f657e26c59e1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga243562caf78f87e481f657e26c59e1f0">setSendBufferSize</a> (std::size_t size)</td></tr>
@@ -263,7 +272,7 @@ Typical Usage Example</h3>
 <div class="line">}</div>
 <div class="ttc" id="aSocket_8hpp_html"><div class="ttname"><a href="Socket_8hpp.html">Socket.hpp</a></div><div class="ttdoc">TCP client socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:58</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:86</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:87</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:88</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md445"></a>
 Internal Buffer</h3>
@@ -361,14 +370,14 @@ See Also</h3>
 <p>SO_KEEPALIVE is a socket option that enables periodic transmission of keepalive probes on an otherwise idle TCP connection. When enabled (set to true), the operating system will periodically send keepalive messages to the remote peer if no data has been exchanged for a certain period. If the peer does not respond, the connection is considered broken and will be closed.</p>
 <p>This feature is useful for detecting dead peers or broken network links, especially for long-lived connections where silent disconnects would otherwise go unnoticed. It is commonly used in server applications, remote control systems, and protocols that require reliable detection of dropped connections.</p>
 <p>By default, SO_KEEPALIVE is disabled (i.e., keepalive probes are not sent) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md524"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md533"></a>
 Platform-Specific Details</h3>
 <ul>
 <li>Linux: Configure via /proc/sys/net/ipv4/tcp_keepalive_*</li>
 <li>Windows: Default 2-hour idle time before first probe</li>
 <li>macOS: System-wide keepalive settings apply</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md525"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md534"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -415,7 +424,7 @@ Example Usage</h3>
 <p>When TCP_NODELAY is enabled (set to true), Nagle's algorithm is disabled. This means that small packets of data are sent immediately over the network, without waiting to accumulate more data. This can reduce latency for applications that require fast, interactive communication (such as games, real-time systems, or protocols where low latency is more important than bandwidth efficiency).</p>
 <p>When TCP_NODELAY is disabled (set to false), Nagle's algorithm is enabled. This causes the socket to buffer small outgoing packets and send them together, which can reduce network congestion and improve throughput for bulk data transfers, but may introduce slight delays for small messages.</p>
 <p>By default, TCP_NODELAY is disabled (i.e., Nagle's algorithm is enabled) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md523"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md532"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -509,7 +518,7 @@ Example Usage</h3>
 
 <p>Check if the socket is still connected (TCP only). </p>
 <p>This method performs a non-destructive check of the socket's connection status by attempting a zero-byte send (on Windows) or checking socket errors (on POSIX). While not 100% reliable due to the nature of TCP/IP, it provides a best-effort indication of connection status.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md521"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md530"></a>
 Implementation Details</h3>
 <ul>
 <li>Windows: Uses send() with zero bytes</li>
@@ -517,7 +526,7 @@ Implementation Details</h3>
 <li>Does not generate network traffic</li>
 <li>Non-blocking operation</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md522"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md531"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
