@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "common.hpp"
+
 #include <string>
 #include <vector>
 
@@ -65,7 +67,7 @@ class DatagramPacket
      * - On send: set to the destination port.
      * - On receive: will be filled with sender's port.
      */
-    unsigned short port = 0;
+    Port port = 0;
 
     /**
      * @brief Construct an empty DatagramPacket with a specified buffer size.
@@ -79,7 +81,7 @@ class DatagramPacket
      * @param addr     Destination address.
      * @param prt      Destination UDP port.
      */
-    DatagramPacket(std::string_view data, std::string addr, const unsigned short prt)
+    DatagramPacket(std::string_view data, std::string addr, const Port prt)
         : buffer(data.begin(), data.end()), address(std::move(addr)), port(prt)
     {
     }
@@ -92,7 +94,7 @@ class DatagramPacket
      * @param addr     Destination address.
      * @param prt      Destination UDP port.
      */
-    DatagramPacket(const char* data, size_t len, std::string addr, unsigned short prt)
+    DatagramPacket(const char* data, const size_t len, std::string addr, const Port prt)
         : buffer(data, data + len), address(std::move(addr)), port(prt)
     {
     }

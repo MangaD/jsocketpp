@@ -1,4 +1,8 @@
 // GoogleTest unit tests for jsocketpp
+#include "jsocketpp/DatagramSocket.hpp"
+#include "jsocketpp/ServerSocket.hpp"
+#include "jsocketpp/Socket.hpp"
+#include "jsocketpp/SocketInitializer.hpp"
 #include "jsocketpp/UnixSocket.hpp"
 #include <gtest/gtest.h>
 #include <string>
@@ -10,7 +14,7 @@ TEST(SocketTest, TcpConnectInvalid)
     SocketInitializer init;
     EXPECT_THROW(
         {
-            Socket s("256.256.256.256", 12345);
+            const Socket s("256.256.256.256", 12345);
             s.connect();
         },
         SocketException);
@@ -38,14 +42,14 @@ TEST(SocketTest, TcpConnectTimeout)
 {
     SocketInitializer init;
     Socket s("10.255.255.1", 65000); // unroutable IP
-    s.setTimeout(100);               // 100ms
+    s.setSoTimeout(100);             // 100ms
     EXPECT_THROW(s.connect(), SocketException);
 }
 
 TEST(SocketTest, TcpNonBlocking)
 {
     SocketInitializer init;
-    Socket s("10.255.255.1", 65000);
+    const Socket s("10.255.255.1", 65000);
     s.setNonBlocking(true);
     // connect() should fail immediately or throw
     EXPECT_ANY_THROW(s.connect());
@@ -56,7 +60,7 @@ TEST(SocketTest, TcpSetGetOption)
     SocketInitializer init;
     Socket s("127.0.0.1", 1); // port 1 is usually closed
     // setTimeout and setNonBlocking should not throw
-    EXPECT_NO_THROW(s.setTimeout(100));
+    EXPECT_NO_THROW(s.setSoTimeout(100));
     EXPECT_NO_THROW(s.setNonBlocking(true));
 }
 
@@ -68,7 +72,7 @@ TEST(SocketTest, UdpSendRecvLoopback)
     std::string msg = "gtest-udp";
     EXPECT_NO_THROW(client.sendTo(msg.data(), msg.size(), "127.0.0.1", 54321));
     std::string sender;
-    unsigned short senderPort;
+    Port senderPort;
     std::vector<char> buf(32);
     int n = server.recvFrom(buf.data(), buf.size(), sender, senderPort);
     EXPECT_GT(n, 0);
@@ -83,7 +87,7 @@ TEST(SocketTest, UdpTimeout)
     DatagramSocket s(54322);
     s.setTimeout(100); // 100ms
     std::string sender;
-    unsigned short senderPort;
+    Port senderPort;
     std::vector<char> buf(32);
     EXPECT_THROW(s.recvFrom(buf.data(), buf.size(), sender, senderPort), SocketException);
     s.close();

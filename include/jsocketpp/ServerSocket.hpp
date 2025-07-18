@@ -17,6 +17,8 @@
 #include <future>
 #include <optional>
 
+using jsocketpp::DefaultBufferSize;
+
 namespace jsocketpp
 {
 
@@ -100,34 +102,6 @@ class ServerSocket
 
   public:
     /**
-     * @brief Default buffer size (in bytes) for newly accepted sockets.
-     *
-     * This value determines the size of the internal read buffer allocated for each
-     * client socket accepted by the server. A default of 4096 bytes (4 KB) is chosen
-     * because it matches the most common memory page size on modern operating systems,
-     * resulting in efficient memory usage and reducing the likelihood of buffer overflows
-     * for typical application-layer protocols.
-     *
-     * 4 KB is also large enough to efficiently handle common payloads (such as HTTP headers,
-     * small WebSocket frames, or control messages) in a single read, while keeping per-connection
-     * memory usage reasonable for servers handling many clients concurrently.
-     *
-     * This default is suitable for most use cases, but you can override it by specifying a
-     * different buffer size when accepting a socket, or by using `setReceiveBufferSize()` to
-     * change the per-server default.
-     *
-     * @note If your application routinely expects larger messages or needs to optimize for
-     * very high throughput, you may increase this value. Conversely, for memory-constrained
-     * environments or when handling many thousands of connections, reducing the buffer size
-     * may be appropriate.
-     *
-     * @see setReceiveBufferSize()
-     *
-     * @ingroup tcp
-     */
-    static constexpr std::size_t DefaultBufferSize = 4096;
-
-    /**
      * @brief Constructs a ServerSocket for listening to incoming TCP connections with full configuration control.
      *
      * This constructor creates a TCP server socket that supports both IPv4 and IPv6, with flexible options
@@ -198,7 +172,7 @@ class ServerSocket
      * jsocketpp::ServerSocket server(8080, "::1", true, true, -1, false);
      * @endcode
      */
-    explicit ServerSocket(unsigned short port, std::string_view localAddress = {}, bool autoBindListen = true,
+    explicit ServerSocket(Port port, std::string_view localAddress = {}, bool autoBindListen = true,
                           bool reuseAddress = true, int soTimeoutMillis = -1, bool dualStack = true);
 
     /**
@@ -239,11 +213,11 @@ class ServerSocket
      * @code
      * ServerSocket server(0); // Bind to any available port
      * server.bind();
-     * unsigned short port = server.getLocalPort();
+     * Port port = server.getLocalPort();
      * std::cout << "Server bound to port: " << port << std::endl;
      * @endcode
      */
-    [[nodiscard]] unsigned short getLocalPort() const;
+    [[nodiscard]] Port getLocalPort() const;
 
     /**
      * @brief Get the local socket address (IP and port) to which the server socket is bound.
@@ -462,7 +436,7 @@ class ServerSocket
      * @pre The socket must not be already bound.
      * @post The socket is bound to the specified address and port.
      *
-     * @see setReuseAddress(), listen(), ServerSocket(unsigned short)
+     * @see setReuseAddress(), listen(), ServerSocket(Port)
      *
      * @ingroup tcp
      *
@@ -516,7 +490,7 @@ class ServerSocket
      * @pre `bind()` must be called successfully before this.
      * @post The server socket is now listening for incoming connections.
      *
-     * @see bind(), accept(), ServerSocket(unsigned short)
+     * @see bind(), accept(), ServerSocket(Port)
      *
      * @ingroup tcp
      *
@@ -1649,7 +1623,7 @@ class ServerSocket
     SOCKET _serverSocket = INVALID_SOCKET; ///< Underlying socket file descriptor.
     addrinfo* _srvAddrInfo = nullptr;      ///< Address info for binding (from getaddrinfo)
     addrinfo* _selectedAddrInfo = nullptr; ///< Selected address info for binding
-    unsigned short _port;                  ///< Port number the server will listen on
+    Port _port;                            ///< Port number the server will listen on
     bool _isBound = false;                 ///< True if the server socket is bound
     bool _isListening = false;             ///< True if the server socket is listening
     int _soTimeoutMillis = -1; ///< Timeout for accept(); -1 = no timeout, 0 = poll, >0 = timeout in milliseconds

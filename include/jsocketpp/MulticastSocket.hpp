@@ -77,7 +77,7 @@ class MulticastSocket : public DatagramSocket
      *                   may be needed for high-volume data reception.
      * @throws SocketException on failure.
      */
-    explicit MulticastSocket(unsigned short port = 0, std::size_t bufferSize = 2048);
+    explicit MulticastSocket(Port port = 0, std::size_t bufferSize = 2048);
 
     /**
      * @brief Joins a multicast group.

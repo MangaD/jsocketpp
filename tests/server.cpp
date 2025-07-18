@@ -13,8 +13,8 @@ using namespace std;
 using namespace jsocketpp;
 
 // Forward declarations
-void test_tcp(unsigned short port);
-void test_udp(unsigned short port);
+void test_tcp(Port port);
+void test_udp(Port port);
 #ifndef _WIN32
 void test_unix(const std::string& path);
 #endif
@@ -23,7 +23,7 @@ void test_error_handling();
 /**
  * @brief Test TCP server functionality: accept, receive, send, close.
  */
-void test_tcp(unsigned short port)
+void test_tcp(const Port port)
 {
     cout << "[TCP] Starting server on port " << port << endl;
     ServerSocket serverSocket(port);
@@ -42,7 +42,7 @@ void test_tcp(unsigned short port)
 /**
  * @brief Test UDP server functionality: receive, send, close.
  */
-void test_udp(unsigned short port)
+void test_udp(const Port port)
 {
     cout << "[UDP] Starting UDP server on port " << port << endl;
     DatagramSocket udp(port);
@@ -50,7 +50,7 @@ void test_udp(unsigned short port)
     udp.setNonBlocking(false);
     vector<char> buf(512);
     string sender;
-    unsigned short senderPort;
+    Port senderPort;
     int n = udp.recvFrom(buf.data(), buf.size(), sender, senderPort);
     cout << "[UDP] Got " << n << " bytes from " << sender << ": " << string(buf.data(), static_cast<size_t>(n)) << endl;
     string reply = "Hello client! (UDP)";
@@ -99,7 +99,7 @@ void test_error_handling()
 int main()
 {
     SocketInitializer sockInit;
-    unsigned short port;
+    Port port;
     cout << "Type a port to start listening at: ";
     while (true)
     {

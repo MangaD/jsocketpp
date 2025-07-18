@@ -14,7 +14,7 @@ Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_
     setSendBufferSize(sendBufferSize);
 }
 
-Socket::Socket(const std::string_view host, const unsigned short port, const std::size_t bufferSize)
+Socket::Socket(const std::string_view host, const Port port, const std::size_t bufferSize)
     : _remoteAddr{}, _recvBuffer(bufferSize)
 {
     addrinfo hints{};
@@ -1347,4 +1347,150 @@ std::size_t Socket::readvAtMostWithTimeout(const std::span<BufferView> buffers, 
         throw SocketException(0, "Socket not readable within timeout");
 
     return readv(buffers);
+}
+
+std::size_t Socket::writevFrom(std::span<const BufferView> buffers) const
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException(0, "writevFrom() called on invalid socket");
+
+    if (buffers.empty())
+        return 0;
+
+#ifdef _WIN32
+    std::vector<WSABUF> wsaBufs;
+    wsaBufs.reserve(buffers.size());
+
+    for (const auto& [data, size] : buffers)
+    {
+        WSABUF w;
+        w.buf = static_cast<char*>(const_cast<void*>(data));
+        w.len = static_cast<ULONG>(size);
+        wsaBufs.push_back(w);
+    }
+
+    DWORD bytesSent = 0;
+    if (const int result =
+            WSASend(_sockFd, wsaBufs.data(), static_cast<DWORD>(wsaBufs.size()), &bytesSent, 0, nullptr, nullptr);
+        result == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    return static_cast<std::size_t>(bytesSent);
+
+#else
+    std::vector<iovec> ioVecs;
+    ioVecs.reserve(buffers.size());
+
+    for (const auto& [data, size] : buffers)
+    {
+        iovec io{};
+        io.iov_base = const_cast<void*>(data);
+        io.iov_len = size;
+        ioVecs.push_back(io);
+    }
+
+    ssize_t written = ::writev(_sockFd, ioVecs.data(), static_cast<int>(ioVecs.size()));
+    if (written < 0)
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    return static_cast<std::size_t>(written);
+#endif
+}
+
+std::size_t Socket::writevFromAll(std::span<BufferView> buffers) const
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException(0, "writevFromAll() called on invalid socket");
+
+    std::vector pending(buffers.begin(), buffers.end());
+    std::size_t totalSent = 0;
+
+    while (!pending.empty())
+    {
+        const std::size_t bytesSent = writevFrom(pending);
+        totalSent += bytesSent;
+
+        std::size_t advanced = 0;
+        std::size_t remaining = bytesSent;
+
+        for (const auto& [data, size] : pending)
+        {
+            if (remaining >= size)
+            {
+                remaining -= size;
+                ++advanced;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        pending.erase(pending.begin(),
+                      pending.begin() + static_cast<std::vector<BufferView>::difference_type>(advanced));
+
+        // Adjust first partially sent buffer
+        if (!pending.empty() && remaining > 0)
+        {
+            pending[0].data = static_cast<std::byte*>(pending[0].data) + remaining;
+            pending[0].size -= remaining;
+        }
+    }
+
+    return totalSent;
+}
+
+std::size_t Socket::writevFromWithTotalTimeout(std::span<BufferView> buffers, const int timeoutMillis) const
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException(0, "writevFromWithTotalTimeout() called on invalid socket");
+
+    if (buffers.empty())
+        return 0;
+
+    std::vector pending(buffers.begin(), buffers.end());
+    std::size_t totalSent = 0;
+
+    const auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeoutMillis);
+
+    while (!pending.empty())
+    {
+        auto now = std::chrono::steady_clock::now();
+        if (now >= deadline)
+            throw SocketException(0, "Timeout while writing binary buffers");
+
+        if (const auto remainingTime = std::chrono::duration_cast<std::chrono::milliseconds>(deadline - now).count();
+            !waitReady(true /* forWrite */, static_cast<int>(remainingTime)))
+            throw SocketException(0, "Socket not writable within remaining timeout");
+
+        const std::size_t bytesSent = writevFrom(pending);
+        totalSent += bytesSent;
+
+        std::size_t advanced = 0;
+        std::size_t left = bytesSent;
+
+        for (const auto& [data, size] : pending)
+        {
+            if (left >= size)
+            {
+                left -= size;
+                ++advanced;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        pending.erase(pending.begin(),
+                      pending.begin() + static_cast<std::vector<BufferView>::difference_type>(advanced));
+
+        if (!pending.empty() && left > 0)
+        {
+            pending[0].data = static_cast<std::byte*>(pending[0].data) + left;
+            pending[0].size -= left;
+        }
+    }
+
+    return totalSent;
 }

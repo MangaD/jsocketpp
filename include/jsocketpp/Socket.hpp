@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "BufferView.hpp"
 #include "SocketException.hpp"
 #include "common.hpp"
 
@@ -18,22 +19,10 @@
 #include <type_traits>
 #include <vector>
 
+using jsocketpp::DefaultBufferSize;
+
 namespace jsocketpp
 {
-
-/**
- * @brief Represents a raw writable memory region for scatter/gather I/O.
- * @ingroup tcp
- *
- * This struct defines a mutable buffer segment for use with readv-style
- * scatter/gather operations. It holds a pointer to a writable memory region
- * and the number of bytes available at that address.
- */
-struct BufferView
-{
-    void* data;       ///< Pointer to the writable memory region
-    std::size_t size; ///< Size in bytes of the writable region
-};
 
 /**
  * @class Socket
@@ -75,7 +64,7 @@ struct BufferView
  * @endcode
  *
  * ### Internal Buffer
- * - The socket maintains an internal read buffer (default: 512 bytes).
+ * - The socket maintains an internal read buffer (default: @ref DefaultBufferSize).
  * - You can resize it with `setInternalBufferSize()` if you expect to receive larger or smaller messages.
  *
  * ### Error Handling
@@ -147,6 +136,29 @@ class Socket
 
   public:
     /**
+     * @brief Default constructor (deleted) for Socket class.
+     * @ingroup tcp
+     *
+     * The default constructor is explicitly deleted to prevent the creation of
+     * uninitialized `Socket` objects. Each socket must be explicitly constructed
+     * with a valid host/port combination or from an accepted client connection.
+     *
+     * ### Rationale
+     * - Prevents accidental creation of an invalid socket
+     * - Enforces explicit resource ownership and initialization
+     * - Avoids ambiguity around object state (e.g., _sockFd = INVALID_SOCKET)
+     *
+     * @code{.cpp}
+     * Socket s;               // ❌ Compilation error (deleted constructor)
+     * Socket s("host", 1234); // ✅ Correct usage
+     * @endcode
+     *
+     * @see Socket(std::string_view, Port, std::size_t) Primary constructor
+     * @see Socket(SOCKET, const sockaddr_storage&, socklen_t, std::size_t, std::size_t) Server-side accept constructor
+     */
+    Socket() = delete;
+
+    /**
      * @brief Creates a new Socket object configured to connect to the specified host and port.
      * @ingroup tcp
      *
@@ -162,7 +174,7 @@ class Socket
      * @param[in] host The hostname or IP address (IPv4/IPv6) to connect to. Can be a DNS name
      *                 (e.g., "example.com") or an IP address (e.g., "192.168.1.1" or "::1").
      * @param[in] port The TCP port number to connect to (1-65535).
-     * @param[in] bufferSize Size of the internal read buffer in bytes (default: 512). This buffer
+     * @param[in] bufferSize Size of the internal read buffer in bytes (default: @ref DefaultBufferSize). This buffer
      *                       is used for string-based read operations. Larger values may improve
      *                       performance for applications that receive large messages.
      *
@@ -178,7 +190,7 @@ class Socket
      * @see connect() To establish the connection after construction
      * @see setInternalBufferSize() To change the buffer size after construction
      */
-    explicit Socket(std::string_view host, unsigned short port, std::size_t bufferSize = 512);
+    explicit Socket(std::string_view host, Port port, std::size_t bufferSize = DefaultBufferSize);
 
     /**
      * @brief Copy constructor (deleted) for Socket class.
@@ -993,7 +1005,8 @@ class Socket
         static_assert(std::is_integral_v<T> && std::is_trivially_copyable_v<T>,
                       "Prefix type must be a trivially copyable integral type");
 
-        T length = read<T>(); // already implemented method
+        T netLen = read<T>();
+        T length = net::fromNetwork(netLen);
         return readExact(static_cast<std::size_t>(length));
     }
 
@@ -1059,7 +1072,8 @@ class Socket
         static_assert(std::is_integral_v<T> && std::is_trivially_copyable_v<T>,
                       "Prefix type must be a trivially copyable integral type");
 
-        T length = read<T>(); // uses existing fixed-size read
+        T netLen = read<T>();
+        T length = net::fromNetwork(netLen);
 
         const auto payloadLen = static_cast<std::size_t>(length);
         if (payloadLen > maxPayloadLen)
@@ -1665,7 +1679,7 @@ class Socket
                                          " exceeds maximum encodable size for prefix type");
         }
 
-        T len = static_cast<T>(payloadSize);
+        T len = net::toNetwork(static_cast<T>(payloadSize));
 
         // Write the length prefix
         const std::size_t prefixSent = writeAll(std::string_view(reinterpret_cast<const char*>(&len), sizeof(T)));
@@ -1737,7 +1751,7 @@ class Socket
             throw SocketException(0, "writePrefixed: Payload length exceeds capacity of prefix type");
         }
 
-        T prefix = static_cast<T>(len);
+        T prefix = net::toNetwork(static_cast<T>(len));
 
         // Send prefix
         writeAll(std::string_view(reinterpret_cast<const char*>(&prefix), sizeof(T)));
@@ -2005,6 +2019,112 @@ class Socket
      * @see writeWithTotalTimeout() For single-buffer variant
      */
     std::size_t writevWithTotalTimeout(std::span<const std::string_view> buffers, int timeoutMillis) const;
+
+    /**
+     * @brief Writes multiple raw memory regions using vectorized I/O.
+     * @ingroup tcp
+     *
+     * Sends the contents of all buffers in the given span using scatter/gather I/O.
+     * This performs a single system call (`writev()` on POSIX, `WSASend()` on Windows),
+     * and may transmit fewer bytes than requested. Use `writevFromAll()` for full delivery.
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::array<std::byte, 4> header = ...;
+     * std::vector<std::byte> body = ...;
+     *
+     * std::array<BufferView, 2> buffers = {
+     *     BufferView{header.data(), header.size()},
+     *     BufferView{body.data(), body.size()}
+     * };
+     *
+     * std::size_t sent = sock.writevFrom(buffers);
+     * @endcode
+     *
+     * @param buffers A span of BufferView elements (data + size).
+     * @return Number of bytes successfully written (can be < total).
+     *
+     * @throws SocketException If:
+     *         - The socket is invalid
+     *         - sendv fails (e.g., WSA error, broken pipe)
+     *
+     * @see writevFromAll() For full-delivery retry logic
+     * @see writev() For string-based scatter I/O
+     */
+    std::size_t writevFrom(std::span<const BufferView> buffers) const;
+
+    /**
+     * @brief Writes all raw memory regions fully using scatter/gather I/O.
+     * @ingroup tcp
+     *
+     * This method guarantees full delivery of all bytes across the given buffer span.
+     * Internally retries `writevFrom()` until every buffer is fully written.
+     * This is the binary-safe, zero-copy equivalent of `writevAll()`.
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::array<std::byte, 8> header;
+     * std::vector<std::byte> body;
+     *
+     * std::array<BufferView, 2> buffers = {
+     *     BufferView{header.data(), header.size()},
+     *     BufferView{body.data(), body.size()}
+     * };
+     *
+     * sock.writevFromAll(buffers);
+     * @endcode
+     *
+     * @param buffers A span of raw buffers to send completely.
+     * @return Total number of bytes written (equal to sum of buffer sizes).
+     *
+     * @throws SocketException If:
+     *         - A socket error occurs during send
+     *         - The connection is closed prematurely
+     *
+     * @note This method blocks until completion or error.
+     *       Use `writevFrom()` for best-effort, single-attempt version.
+     *
+     * @see writevFrom() For non-retrying variant
+     * @see writevAll() For string-view based equivalent
+     */
+    std::size_t writevFromAll(std::span<BufferView> buffers) const;
+
+    /**
+     * @brief Writes all raw memory buffers fully within a timeout using scatter I/O.
+     * @ingroup tcp
+     *
+     * Sends multiple binary buffers using scatter/gather I/O, retrying as needed to
+     * ensure that all bytes are delivered within the specified timeout window.
+     * Fails if not all buffers can be sent before the timeout expires.
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * std::array<std::byte, 4> hdr = ...;
+     * std::vector<std::byte> body = ...;
+     *
+     * std::array<BufferView, 2> bufs = {
+     *     BufferView{hdr.data(), hdr.size()},
+     *     BufferView{body.data(), body.size()}
+     * };
+     * sock.writevFromWithTotalTimeout(bufs, 2000); // must finish in 2s
+     * @endcode
+     *
+     * @param buffers A span of raw memory buffers to fully write.
+     * @param timeoutMillis Total timeout in milliseconds across all retries.
+     *
+     * @return Total bytes written (equal to sum of buffer sizes on success).
+     *
+     * @throws SocketException If:
+     *         - The timeout expires before all data is written
+     *         - The socket becomes unwritable
+     *         - Connection is closed prematurely
+     *
+     * @note This is the binary-buffer equivalent of `writevWithTotalTimeout()`.
+     *
+     * @see writevFromAll() For blocking, unbounded version
+     * @see writevWithTotalTimeout() For `string_view` variant
+     */
+    std::size_t writevFromWithTotalTimeout(std::span<BufferView> buffers, int timeoutMillis) const;
 
     /**
      * @brief Sets the socket's receive buffer size (SO_RCVBUF).
@@ -2688,7 +2808,7 @@ class Socket
     mutable socklen_t _remoteAddrLen = 0;  ///< Length of remote address (for recvfrom/recvmsg)
     addrinfo* _cliAddrInfo = nullptr;      ///< Address info for connection (from getaddrinfo)
     addrinfo* _selectedAddrInfo = nullptr; ///< Selected address info for connection
-    std::vector<char> _recvBuffer;         ///< Internal buffer for read operations
+    std::vector<char> _recvBuffer;         ///< Internal buffer for read operations, not thread-safe
 };
 
 /**
@@ -2716,7 +2836,7 @@ class Socket
  * Socket sock("example.com", 8080);
  * sock.connect();
  *
- * // Read with default buffer size (512 bytes)
+ * // Read with default buffer size (@ref DefaultBufferSize)
  * std::string data = sock.read<std::string>();
  *
  * // Read with custom buffer size

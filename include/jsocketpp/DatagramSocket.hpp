@@ -93,7 +93,7 @@ class DatagramSocket
      *                   - Typical values: 1024-8192 bytes
      * @throws SocketException if socket creation or binding fails
      */
-    explicit DatagramSocket(unsigned short port, std::size_t bufferSize = 2048);
+    explicit DatagramSocket(Port port, std::size_t bufferSize = 2048);
 
     /**
      * @brief Construct a datagram socket to a remote host and port.
@@ -102,7 +102,7 @@ class DatagramSocket
      * @param bufferSize Size of the internal receive buffer (default: 2048).
      * @throws SocketException on failure.
      */
-    DatagramSocket(std::string_view host, unsigned short port, std::size_t bufferSize = 2048);
+    DatagramSocket(std::string_view host, Port port, std::size_t bufferSize = 2048);
 
     /**
      * @brief Destructor. Closes the socket and frees resources.
@@ -228,7 +228,7 @@ class DatagramSocket
      * @return Number of bytes sent.
      * @throws SocketException on error.
      */
-    [[nodiscard]] size_t write(std::string_view message, std::string_view host, unsigned short port) const;
+    [[nodiscard]] size_t write(std::string_view message, std::string_view host, Port port) const;
 
     /**
      * @brief Receives a UDP datagram and fills the provided DatagramPacket.
@@ -278,7 +278,7 @@ class DatagramSocket
      * @return The received value of type T.
      * @throws SocketException on error.
      */
-    template <typename T> T recvFrom(std::string* senderAddr, unsigned short* senderPort)
+    template <typename T> T recvFrom(std::string* senderAddr, Port* senderPort)
     {
         static_assert(std::is_trivially_copyable_v<T>, "recvFrom<T>() only supports trivially copyable types");
 
@@ -300,7 +300,7 @@ class DatagramSocket
             if (senderAddr)
                 *senderAddr = hostBuf;
             if (senderPort)
-                *senderPort = static_cast<unsigned short>(std::stoul(portBuf));
+                *senderPort = static_cast<Port>(std::stoul(portBuf));
         }
         else
         {
@@ -409,7 +409,7 @@ class DatagramSocket
     sockaddr_storage _localAddr{};       ///< Local address structure.
     mutable socklen_t _localAddrLen = 0; ///< Length of local address.
     std::vector<char> _buffer;           ///< Internal buffer for read operations.
-    unsigned short _port;                ///< Port number the socket is bound to (if applicable).
+    Port _port;                          ///< Port number the socket is bound to (if applicable).
     bool _isConnected = false;           ///< True if the socket is connected to a remote host.
 };
 
@@ -445,8 +445,7 @@ template <> inline std::string DatagramSocket::read<std::string>()
  * @return The received message as a std::string.
  * @throws SocketException on error.
  */
-template <>
-inline std::string DatagramSocket::recvFrom<std::string>(std::string* senderAddr, unsigned short* senderPort)
+template <> inline std::string DatagramSocket::recvFrom<std::string>(std::string* senderAddr, Port* senderPort)
 {
     sockaddr_storage srcAddr{};
     socklen_t srcLen = sizeof(srcAddr);
@@ -470,7 +469,7 @@ inline std::string DatagramSocket::recvFrom<std::string>(std::string* senderAddr
         if (senderAddr)
             *senderAddr = hostBuf;
         if (senderPort)
-            *senderPort = static_cast<unsigned short>(std::stoul(portBuf));
+            *senderPort = static_cast<Port>(std::stoul(portBuf));
     }
     else
     {

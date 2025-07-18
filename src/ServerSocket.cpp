@@ -5,7 +5,7 @@
 
 using namespace jsocketpp;
 
-ServerSocket::ServerSocket(const unsigned short port, const std::string_view localAddress, const bool autoBindListen,
+ServerSocket::ServerSocket(const Port port, const std::string_view localAddress, const bool autoBindListen,
                            const bool reuseAddress, const int soTimeoutMillis, const bool dualStack)
     : _port(port)
 {
@@ -170,7 +170,7 @@ std::string ServerSocket::getInetAddress() const
     return {host};
 }
 
-unsigned short ServerSocket::getLocalPort() const
+Port ServerSocket::getLocalPort() const
 {
     if (_serverSocket == INVALID_SOCKET)
         return 0;

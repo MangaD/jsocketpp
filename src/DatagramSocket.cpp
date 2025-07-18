@@ -3,12 +3,12 @@
 
 using namespace jsocketpp;
 
-DatagramSocket::DatagramSocket(const unsigned short port, const std::size_t bufferSize)
+DatagramSocket::DatagramSocket(const Port port, const std::size_t bufferSize)
     : DatagramSocket("", port, bufferSize) // Use nullptr for host to bind to all interfaces
 {
 }
 
-DatagramSocket::DatagramSocket(const std::string_view host, const unsigned short port, const std::size_t bufferSize)
+DatagramSocket::DatagramSocket(const std::string_view host, const Port port, const std::size_t bufferSize)
     : _buffer(bufferSize), _port(port)
 {
     // Prepare the hints structure for getaddrinfo to specify the desired socket type and protocol.
@@ -291,7 +291,7 @@ size_t DatagramSocket::write(const DatagramPacket& packet) const
     return static_cast<size_t>(sent);
 }
 
-size_t DatagramSocket::write(std::string_view message, const std::string_view host, const unsigned short port) const
+size_t DatagramSocket::write(std::string_view message, const std::string_view host, const Port port) const
 {
     if (message.empty())
         return 0; // Nothing to send
@@ -377,7 +377,7 @@ size_t DatagramSocket::read(DatagramPacket& packet, const bool resizeBuffer) con
     }
 
     packet.address = std::string(hostBuf);
-    packet.port = static_cast<unsigned short>(std::stoul(portBuf));
+    packet.port = static_cast<Port>(std::stoul(portBuf));
 
     if (resizeBuffer)
     {

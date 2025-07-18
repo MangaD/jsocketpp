@@ -2,8 +2,7 @@
 
 using namespace jsocketpp;
 
-MulticastSocket::MulticastSocket(const unsigned short port, const std::size_t bufferSize)
-    : DatagramSocket(port, bufferSize)
+MulticastSocket::MulticastSocket(const Port port, const std::size_t bufferSize) : DatagramSocket(port, bufferSize)
 {
     setTimeToLive(_ttl);
     setLoopbackMode(_loopbackEnabled);

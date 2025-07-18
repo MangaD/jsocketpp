@@ -1,6 +1,7 @@
 // Modern jsocketpp client test: C++20, comments, and feature coverage
 #include "jsocketpp/DatagramSocket.hpp"
 #include "jsocketpp/Socket.hpp"
+#include "jsocketpp/SocketInitializer.hpp"
 #include "jsocketpp/UnixSocket.hpp"
 #include <iostream>
 #include <sstream>
@@ -11,8 +12,8 @@ using namespace std;
 using namespace jsocketpp;
 
 // Forward declarations
-void test_tcp(const std::string& ip, unsigned short port);
-void test_udp(const std::string& ip, unsigned short port);
+void test_tcp(const std::string& ip, Port port);
+void test_udp(const std::string& ip, Port port);
 #ifndef _WIN32
 void test_unix(const std::string& path);
 #endif
@@ -21,11 +22,11 @@ void test_error_handling();
 /**
  * @brief Test TCP client functionality: connect, send, receive, close.
  */
-void test_tcp(const string& ip, unsigned short port)
+void test_tcp(const string& ip, const Port port)
 {
     cout << "[TCP] Connecting to " << ip << ":" << port << endl;
     Socket conn(ip, port);
-    conn.setTimeout(2000); // 2s timeout
+    conn.setSoTimeout(2000); // 2s timeout
     conn.setNonBlocking(false);
     conn.connect();
     conn.writeAll("Hello server! (TCP)");
@@ -37,7 +38,7 @@ void test_tcp(const string& ip, unsigned short port)
 /**
  * @brief Test UDP client functionality: send, receive, close.
  */
-void test_udp(const string& ip, unsigned short port)
+void test_udp(const string& ip, Port port)
 {
     cout << "[UDP] Sending to " << ip << ":" << port << endl;
     DatagramSocket udp{port};
@@ -46,9 +47,9 @@ void test_udp(const string& ip, unsigned short port)
     string msg = "Hello server! (UDP)";
     udp.write(msg.data(), msg.size(), ip, port);
     string sender;
-    unsigned short senderPort;
+    Port senderPort;
     vector<char> buf(512);
-    int n = udp.recvFrom(buf.data(), buf.size(), sender, senderPort);
+    const int n = udp.recvFrom(buf.data(), buf.size(), sender, senderPort);
     cout << "[UDP] Got " << n << " bytes from " << sender << ": " << string(buf.data(), static_cast<size_t>(n)) << endl;
     udp.close();
 }
@@ -89,7 +90,7 @@ int main()
 {
     SocketInitializer sockInit;
     string ip;
-    unsigned short port;
+    Port port;
     cout << "Type the IP to connect to (127.0.0.1 for this machine): ";
     getline(cin, ip);
     cout << "Type the port to connect to: ";
