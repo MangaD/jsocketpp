@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['rationale_0',['Rationale',['../group__ServerSocket__Lifecycle.html#autotoc_md34',1,'4. Advantages and Rationale'],['../group__async__io.html#autotoc_md123',1,'Design Rationale']]],
+  ['rationale_0',['Rationale',['../group__ServerSocket__Lifecycle.html#autotoc_md34',1,'4. Advantages and Rationale'],['../group__async__io.html#autotoc_md123',1,'Design Rationale'],['../group__tcp.html#autotoc_md454',1,'Rationale']]],
   ['raw_20socket_20communication_1',['3.3 Raw Socket Communication',['../group__underlying__socket__api.html#autotoc_md307',1,'']]],
   ['raw_20sockets_2',['Raw Sockets',['../group__sockets__theory.html#autotoc_md267',1,'2.3. Raw Sockets'],['../group__sockets__theory.html#autotoc_md275',1,'Raw Sockets']]],
   ['read_3',['📥 &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; / &lt;span class=&quot;tt&quot;&gt;read&lt;/span&gt;',['../group__async__io.html#autotoc_md134',1,'']]],
@@ -25,7 +25,7 @@ var searchData=
   ['requests_22',['2. Submitting Pull Requests',['../md_CONTRIBUTING.html#autotoc_md395',1,'']]],
   ['require_20the_20port_20in_20the_20constructor_23',['Why require the port in the constructor?',['../group__ServerSocket__Lifecycle.html#autotoc_md32',1,'']]],
   ['resource_20cleanup_24',['Resource Cleanup',['../group__tcp.html#autotoc_md428',1,'']]],
-  ['resource_20management_25',['Resource Management',['../group__tcp.html#autotoc_md493',1,'']]],
+  ['resource_20management_25',['Resource Management',['../group__tcp.html#autotoc_md494',1,'']]],
   ['resources_26',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
   ['responsibilities_27',['Our Responsibilities',['../md_CODE__OF__CONDUCT.html#autotoc_md411',1,'']]],
   ['reuse_20options_28',['🔍 In-Depth Overview of Address Reuse Options',['../group__address__reuse.html#autotoc_md53',1,'']]],

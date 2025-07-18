@@ -1,7 +1,7 @@
 var classjsocketpp_1_1DatagramSocket =
 [
-    [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#a204d6931f5ff07541d663c7204de49b9", null ],
-    [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#aea81e5f97ccf96ac8369a3f129ba5cff", null ],
+    [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#a9c44b1cef3fe97aeab9052fd81798ff9", null ],
+    [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#af6d82bc3786b10031c711cd796b5eabc", null ],
     [ "~DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#a357b56bb2b775c3b272f50e249cb8275", null ],
     [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#a3d08597b24d9c7a3fe43dd291ee85148", null ],
     [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#a9dc7555c20b961c642309a618379e254", null ],
@@ -18,19 +18,19 @@ var classjsocketpp_1_1DatagramSocket =
     [ "operator=", "classjsocketpp_1_1DatagramSocket.html#a2fe1f3577cdbe471088751818a051799", null ],
     [ "read", "classjsocketpp_1_1DatagramSocket.html#a61dfe82025f17e3041c5b5acca2369eb", null ],
     [ "read", "classjsocketpp_1_1DatagramSocket.html#a58152e567e2d41ee6d612355ac0eb548", null ],
-    [ "recvFrom", "classjsocketpp_1_1DatagramSocket.html#a67133e9ad368acfe004d7efb956778ea", null ],
+    [ "recvFrom", "classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06", null ],
     [ "setNonBlocking", "classjsocketpp_1_1DatagramSocket.html#ac341be6110a71d3fbe5438dd342b69eb", null ],
     [ "setOption", "classjsocketpp_1_1DatagramSocket.html#a2b519a124c72ca57d29ab4f04f66af2b", null ],
     [ "setTimeout", "classjsocketpp_1_1DatagramSocket.html#a540c0e48e02529eec6b9605e141433c5", null ],
     [ "write", "classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0", null ],
     [ "write", "classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29", null ],
-    [ "write", "classjsocketpp_1_1DatagramSocket.html#a9f76b7c4547e78d03c14aea3232f398f", null ],
+    [ "write", "classjsocketpp_1_1DatagramSocket.html#a7e2b02ba6e9a630fdbde52b88863ec99", null ],
     [ "_addrInfoPtr", "classjsocketpp_1_1DatagramSocket.html#aed79ee75a2f86f6f137ea33fcfb9f1ca", null ],
     [ "_buffer", "classjsocketpp_1_1DatagramSocket.html#ae157621acf76031b55ce263898d18aa7", null ],
     [ "_isConnected", "classjsocketpp_1_1DatagramSocket.html#acc0850711b172f6c6c8bf0649c530ea0", null ],
     [ "_localAddr", "classjsocketpp_1_1DatagramSocket.html#a87523b567e1963c683584ed19c1d6f84", null ],
     [ "_localAddrLen", "classjsocketpp_1_1DatagramSocket.html#a471ce3677773b7fb9fb7766e247bc76f", null ],
-    [ "_port", "classjsocketpp_1_1DatagramSocket.html#aa9a827f82cf23f2d4d59d0134b61139e", null ],
+    [ "_port", "classjsocketpp_1_1DatagramSocket.html#ac4995ba9286d5dc4ad521a80a43c634a", null ],
     [ "_selectedAddrInfo", "classjsocketpp_1_1DatagramSocket.html#ac91cdd138597ae9cf75389cf41a24d83", null ],
     [ "_sockFd", "classjsocketpp_1_1DatagramSocket.html#ad6f0154db35669c0aa1929d415e71048", null ]
 ];

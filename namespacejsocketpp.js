@@ -10,6 +10,7 @@ var namespacejsocketpp =
     [ "SocketInitializer", "classjsocketpp_1_1SocketInitializer.html", "classjsocketpp_1_1SocketInitializer" ],
     [ "SocketTimeoutException", "classjsocketpp_1_1SocketTimeoutException.html", "classjsocketpp_1_1SocketTimeoutException" ],
     [ "UnixSocket", "classjsocketpp_1_1UnixSocket.html", "classjsocketpp_1_1UnixSocket" ],
+    [ "Port", "namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7", null ],
     [ "SOCKADDR_UN", "namespacejsocketpp.html#a981f7d65e550398e8ab29db83092f119", null ],
     [ "SOCKET", "namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda", null ],
     [ "ShutdownMode", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174", [
@@ -20,7 +21,7 @@ var namespacejsocketpp =
     [ "CleanupSockets", "namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c", null ],
     [ "CloseSocket", "namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931", null ],
     [ "DatagramSocket::read< std::string >", "namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f", null ],
-    [ "DatagramSocket::recvFrom< std::string >", "namespacejsocketpp.html#ad284c11be5f348cea8af35a1b8487958", null ],
+    [ "DatagramSocket::recvFrom< std::string >", "namespacejsocketpp.html#aa5ff7535f7cd1c89724bcfd6715e55ba", null ],
     [ "getHostAddr", "namespacejsocketpp.html#a09423d4d9f10bd09813732010662ee43", null ],
     [ "GetSocketError", "namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad", null ],
     [ "inet_ntop_aux", "namespacejsocketpp.html#a403588c277f89591897408faed72a910", null ],

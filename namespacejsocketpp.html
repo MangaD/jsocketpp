@@ -126,6 +126,8 @@ Classes</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:ac484f9eb8a74658aa491da1d1bc15eda" id="r_ac484f9eb8a74658aa491da1d1bc15eda"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a></td></tr>
 <tr class="memitem:a981f7d65e550398e8ab29db83092f119" id="r_a981f7d65e550398e8ab29db83092f119"><td class="memItemLeft" align="right" valign="top">typedef sockaddr_un&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a981f7d65e550398e8ab29db83092f119">SOCKADDR_UN</a></td></tr>
+<tr class="memitem:a1a7be273748ae3d91bc5ebe6499788a7" id="r_a1a7be273748ae3d91bc5ebe6499788a7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> = std::uint16_t</td></tr>
+<tr class="memdesc:a1a7be273748ae3d91bc5ebe6499788a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type alias representing a TCP or UDP port number (1–65535).  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -152,9 +154,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a30deb297e9c8fae8da50947d4a29c95f" id="r_a30deb297e9c8fae8da50947d4a29c95f"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:a30deb297e9c8fae8da50947d4a29c95f template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30deb297e9c8fae8da50947d4a29c95f">DatagramSocket::read&lt; std::string &gt;</a> ()</td></tr>
 <tr class="memdesc:a30deb297e9c8fae8da50947d4a29c95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a string from the socket (connected UDP).  <br /></td></tr>
-<tr class="memitem:ad284c11be5f348cea8af35a1b8487958" id="r_ad284c11be5f348cea8af35a1b8487958"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:ad284c11be5f348cea8af35a1b8487958 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad284c11be5f348cea8af35a1b8487958">DatagramSocket::recvFrom&lt; std::string &gt;</a> (std::string *senderAddr, unsigned short *senderPort)</td></tr>
-<tr class="memdesc:ad284c11be5f348cea8af35a1b8487958"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a datagram as a string (connectionless).  <br /></td></tr>
+<tr class="memitem:aa5ff7535f7cd1c89724bcfd6715e55ba" id="r_aa5ff7535f7cd1c89724bcfd6715e55ba"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:aa5ff7535f7cd1c89724bcfd6715e55ba template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5ff7535f7cd1c89724bcfd6715e55ba">DatagramSocket::recvFrom&lt; std::string &gt;</a> (std::string *senderAddr, <a class="el" href="#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort)</td></tr>
+<tr class="memdesc:aa5ff7535f7cd1c89724bcfd6715e55ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a datagram as a string (connectionless).  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -187,6 +189,29 @@ Variables</h2></td></tr>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>All classes in this namespace are not thread-safe unless explicitly stated. Each socket should be used from a single thread at a time. </dd></dl>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
+<a id="a1a7be273748ae3d91bc5ebe6499788a7" name="a1a7be273748ae3d91bc5ebe6499788a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a7be273748ae3d91bc5ebe6499788a7">&#9670;&#160;</a></span>Port</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a1a7be273748ae3d91bc5ebe6499788a7">jsocketpp::Port</a> = std::uint16_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type alias representing a TCP or UDP port number (1–65535). </p>
+<p>This alias provides strong typing for network port numbers across the <span class="tt">jsocketpp</span> library. It improves readability and makes function signatures semantically clearer when dealing with socket operations.</p>
+<p>Using <span class="tt"><a class="el" href="#a1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a></span> instead of a plain <span class="tt">uint16_t</span> or <span class="tt">unsigned short</span> helps:</p><ul>
+<li>Differentiate port values from other numeric parameters</li>
+<li>Assist with static analysis and overload resolution</li>
+<li>Align with best practices in modern C++ design</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>Although a <span class="tt"><a class="el" href="#a1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a></span> is technically an integer, it represents a well-defined semantic domain (TCP/UDP port number). </dd></dl>
+
+</div>
+</div>
 <a id="a981f7d65e550398e8ab29db83092f119" name="a981f7d65e550398e8ab29db83092f119"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a981f7d65e550398e8ab29db83092f119">&#9670;&#160;</a></span>SOCKADDR_UN</h2>
 
@@ -336,8 +361,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="ad284c11be5f348cea8af35a1b8487958" name="ad284c11be5f348cea8af35a1b8487958"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad284c11be5f348cea8af35a1b8487958">&#9670;&#160;</a></span>DatagramSocket::recvFrom&lt; std::string &gt;()</h2>
+<a id="aa5ff7535f7cd1c89724bcfd6715e55ba" name="aa5ff7535f7cd1c89724bcfd6715e55ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5ff7535f7cd1c89724bcfd6715e55ba">&#9670;&#160;</a></span>DatagramSocket::recvFrom&lt; std::string &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -348,14 +373,14 @@ template&lt;&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string <a class="el" href="classjsocketpp_1_1DatagramSocket.html#a67133e9ad368acfe004d7efb956778ea">jsocketpp::DatagramSocket::recvFrom</a>&lt; std::string &gt; </td>
+          <td class="memname">std::string <a class="el" href="classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06">jsocketpp::DatagramSocket::recvFrom</a>&lt; std::string &gt; </td>
           <td>(</td>
           <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>senderAddr</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned short *</td>          <td class="paramname"><span class="paramname"><em>senderPort</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> *</td>          <td class="paramname"><span class="paramname"><em>senderPort</em></span>&#160;)</td>
         </tr>
       </table>
   </td>

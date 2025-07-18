@@ -103,8 +103,10 @@ $(function(){initNavTree('classjsocketpp_1_1Socket.html','','classjsocketpp_1_1S
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ga0b2a699505298870f70a1c97f716d645" id="r_ga0b2a699505298870f70a1c97f716d645"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga0b2a699505298870f70a1c97f716d645">Socket</a> (std::string_view host, unsigned short port, std::size_t bufferSize=512)</td></tr>
-<tr class="memdesc:ga0b2a699505298870f70a1c97f716d645"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object configured to connect to the specified host and port.  <br /></td></tr>
+<tr class="memitem:gabc4e14475484e596ac62509e627a9baf" id="r_gabc4e14475484e596ac62509e627a9baf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gabc4e14475484e596ac62509e627a9baf">Socket</a> ()=delete</td></tr>
+<tr class="memdesc:gabc4e14475484e596ac62509e627a9baf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> class.  <br /></td></tr>
+<tr class="memitem:ga6e4ff9526f858ae810b352925838c248" id="r_ga6e4ff9526f858ae810b352925838c248"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga6e4ff9526f858ae810b352925838c248">Socket</a> (std::string_view host, <a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::size_t bufferSize=512)</td></tr>
+<tr class="memdesc:ga6e4ff9526f858ae810b352925838c248"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object configured to connect to the specified host and port.  <br /></td></tr>
 <tr class="memitem:gaf5a4ddebfbca7bfe6c9a88462cc9ada8" id="r_gaf5a4ddebfbca7bfe6c9a88462cc9ada8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaf5a4ddebfbca7bfe6c9a88462cc9ada8">Socket</a> (const <a class="el" href="classjsocketpp_1_1Socket.html">Socket</a> &amp;rhs)=delete</td></tr>
 <tr class="memdesc:gaf5a4ddebfbca7bfe6c9a88462cc9ada8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor (deleted) for <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> class.  <br /></td></tr>
 <tr class="memitem:gad0612bda82c378dbaf99e0839f5aa815" id="r_gad0612bda82c378dbaf99e0839f5aa815"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gad0612bda82c378dbaf99e0839f5aa815">Socket</a> (<a class="el" href="classjsocketpp_1_1Socket.html">Socket</a> &amp;&amp;rhs) noexcept</td></tr>
@@ -187,6 +189,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga964bb0e901179bc5eac126d77b0590eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the full payload with a total timeout across all retries.  <br /></td></tr>
 <tr class="memitem:ga8e539c866c9fcad3578f9be78cbfdaf4" id="r_ga8e539c866c9fcad3578f9be78cbfdaf4"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga8e539c866c9fcad3578f9be78cbfdaf4">writevWithTotalTimeout</a> (std::span&lt; const std::string_view &gt; buffers, int timeoutMillis) const</td></tr>
 <tr class="memdesc:ga8e539c866c9fcad3578f9be78cbfdaf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all buffers fully within a total timeout using vectorized I/O.  <br /></td></tr>
+<tr class="memitem:ga650e041e62870ef5710b0e45401e679d" id="r_ga650e041e62870ef5710b0e45401e679d"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga650e041e62870ef5710b0e45401e679d">writevFrom</a> (std::span&lt; const <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers) const</td></tr>
+<tr class="memdesc:ga650e041e62870ef5710b0e45401e679d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes multiple raw memory regions using vectorized I/O.  <br /></td></tr>
+<tr class="memitem:ga7b3ab7a896b7fbfeba9b80672c41b236" id="r_ga7b3ab7a896b7fbfeba9b80672c41b236"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga7b3ab7a896b7fbfeba9b80672c41b236">writevFromAll</a> (std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers) const</td></tr>
+<tr class="memdesc:ga7b3ab7a896b7fbfeba9b80672c41b236"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all raw memory regions fully using scatter/gather I/O.  <br /></td></tr>
+<tr class="memitem:ga3e2b5bd60122d459134cd5b0a3a27077" id="r_ga3e2b5bd60122d459134cd5b0a3a27077"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga3e2b5bd60122d459134cd5b0a3a27077">writevFromWithTotalTimeout</a> (std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers, int timeoutMillis) const</td></tr>
+<tr class="memdesc:ga3e2b5bd60122d459134cd5b0a3a27077"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all raw memory buffers fully within a timeout using scatter I/O.  <br /></td></tr>
 <tr class="memitem:ga67700f13f17036f13ce5a30898a315dc" id="r_ga67700f13f17036f13ce5a30898a315dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga67700f13f17036f13ce5a30898a315dc">setReceiveBufferSize</a> (std::size_t size) const</td></tr>
 <tr class="memdesc:ga67700f13f17036f13ce5a30898a315dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
 <tr class="memitem:ga243562caf78f87e481f657e26c59e1f0" id="r_ga243562caf78f87e481f657e26c59e1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga243562caf78f87e481f657e26c59e1f0">setSendBufferSize</a> (std::size_t size)</td></tr>
@@ -289,7 +297,7 @@ Typical Usage Example</h3>
 <div class="ttc" id="aSocket_8hpp_html"><div class="ttname"><a href="Socket_8hpp.html">Socket.hpp</a></div><div class="ttdoc">TCP client socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:58</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:101</div></div>
-<div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:88</div></div>
+<div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md445"></a>
 Internal Buffer</h3>
 <ul>
@@ -386,14 +394,14 @@ See Also</h3>
 <p>SO_KEEPALIVE is a socket option that enables periodic transmission of keepalive probes on an otherwise idle TCP connection. When enabled (set to true), the operating system will periodically send keepalive messages to the remote peer if no data has been exchanged for a certain period. If the peer does not respond, the connection is considered broken and will be closed.</p>
 <p>This feature is useful for detecting dead peers or broken network links, especially for long-lived connections where silent disconnects would otherwise go unnoticed. It is commonly used in server applications, remote control systems, and protocols that require reliable detection of dropped connections.</p>
 <p>By default, SO_KEEPALIVE is disabled (i.e., keepalive probes are not sent) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md543"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md547"></a>
 Platform-Specific Details</h3>
 <ul>
 <li>Linux: Configure via /proc/sys/net/ipv4/tcp_keepalive_*</li>
 <li>Windows: Default 2-hour idle time before first probe</li>
 <li>macOS: System-wide keepalive settings apply</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md544"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md548"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -440,7 +448,7 @@ Example Usage</h3>
 <p>When TCP_NODELAY is enabled (set to true), Nagle's algorithm is disabled. This means that small packets of data are sent immediately over the network, without waiting to accumulate more data. This can reduce latency for applications that require fast, interactive communication (such as games, real-time systems, or protocols where low latency is more important than bandwidth efficiency).</p>
 <p>When TCP_NODELAY is disabled (set to false), Nagle's algorithm is enabled. This causes the socket to buffer small outgoing packets and send them together, which can reduce network congestion and improve throughput for bulk data transfers, but may introduce slight delays for small messages.</p>
 <p>By default, TCP_NODELAY is disabled (i.e., Nagle's algorithm is enabled) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md542"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md546"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -534,7 +542,7 @@ Example Usage</h3>
 
 <p>Check if the socket is still connected (TCP only). </p>
 <p>This method performs a non-destructive check of the socket's connection status by attempting a zero-byte send (on Windows) or checking socket errors (on POSIX). While not 100% reliable due to the nature of TCP/IP, it provides a best-effort indication of connection status.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md540"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md544"></a>
 Implementation Details</h3>
 <ul>
 <li>Windows: Uses send() with zero bytes</li>
@@ -542,7 +550,7 @@ Implementation Details</h3>
 <li>Does not generate network traffic</li>
 <li>Non-blocking operation</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md541"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md545"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>

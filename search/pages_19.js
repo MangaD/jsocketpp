@@ -9,7 +9,7 @@ var searchData=
   ['platform_20socket_20library_6',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
   ['platform_20specific_20apis_7',['6. Platform-Specific APIs',['../group__sockets__theory.html#autotoc_md288',1,'']]],
   ['platform_20specific_20considerations_8',['9. Platform-Specific Considerations',['../group__underlying__socket__api.html#autotoc_md319',1,'']]],
-  ['platform_20specific_20details_9',['Platform-Specific Details',['../classjsocketpp_1_1Socket.html#autotoc_md543',1,'']]],
+  ['platform_20specific_20details_9',['Platform-Specific Details',['../classjsocketpp_1_1Socket.html#autotoc_md547',1,'']]],
   ['platform_20specific_20tests_3a_10',['3.1 &lt;b&gt;Using CMake for Platform-Specific Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md339',1,'']]],
   ['platform_20support_11',['Platform Support',['../group__socket-options.html#autotoc_md205',1,'Cross-Platform Support'],['../group__tcp.html#autotoc_md434',1,'Platform Support'],['../classjsocketpp_1_1Socket.html#autotoc_md448',1,'Platform Support']]],
   ['platform_3a_12',['3. &lt;b&gt;Test Coverage for Cross-Platform&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md338',1,'']]],
@@ -43,11 +43,11 @@ var searchData=
   ['project_40',['CMake Integration in Your Project',['../group__BUILD__AND__USAGE.html#autotoc_md18',1,'']]],
   ['project_20conan_20friendly_41',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md166',1,'']]],
   ['pros_20and_20cons_42',['5. Alternative Designs: Pros and Cons',['../group__ServerSocket__Lifecycle.html#autotoc_md39',1,'']]],
-  ['protocol_20format_43',['Protocol Format',['../group__tcp.html#autotoc_md476',1,'Protocol Format'],['../group__tcp.html#autotoc_md479',1,'Protocol Format'],['../group__tcp.html#autotoc_md503',1,'Protocol Format'],['../group__tcp.html#autotoc_md506',1,'Protocol Format']]],
+  ['protocol_20format_43',['Protocol Format',['../group__tcp.html#autotoc_md477',1,'Protocol Format'],['../group__tcp.html#autotoc_md480',1,'Protocol Format'],['../group__tcp.html#autotoc_md504',1,'Protocol Format'],['../group__tcp.html#autotoc_md507',1,'Protocol Format']]],
   ['protocols_20and_20the_20socket_20api_44',['4. Protocols and the Socket API',['../group__underlying__socket__api.html#autotoc_md308',1,'']]],
   ['pull_20request_20to_20cci_45',['6. Submit a Pull Request to CCI',['../group__conan__publish__guide.html#autotoc_md173',1,'']]],
   ['pull_20requests_46',['2. Submitting Pull Requests',['../md_CONTRIBUTING.html#autotoc_md395',1,'']]],
-  ['purpose_47',['Purpose',['../group__address__reuse.html#autotoc_md66',1,'🎯 Purpose'],['../group__tcp.html#autotoc_md527',1,'Purpose']]],
+  ['purpose_47',['Purpose',['../group__address__reuse.html#autotoc_md66',1,'🎯 Purpose'],['../group__tcp.html#autotoc_md531',1,'Purpose']]],
   ['py_48',['2. Conan Recipe (&lt;span class=&quot;tt&quot;&gt;conanfile.py&lt;/span&gt;)',['../group__conan__publish__guide.html#autotoc_md164',1,'']]],
   ['python_20af_5finet_49',['5.1 TCP Server and Client (Python, AF_INET)',['../group__underlying__socket__api.html#autotoc_md310',1,'']]]
 ];

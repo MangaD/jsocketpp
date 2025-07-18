@@ -42,7 +42,7 @@ var searchData=
   ['work_3a_20the_20lifecycle_39',['4. How Sockets Work: The Lifecycle',['../group__sockets__theory.html#autotoc_md282',1,'']]],
   ['works_20internally_40',['🛠️ How it works internally',['../group__address__reuse.html#autotoc_md70',1,'']]],
   ['write_41',['Write',['../namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6',1,'jsocketpp']]],
-  ['write_42',['write',['../group__async__io.html#autotoc_md137',1,'📤 <span class="tt">send</span> / <span class="tt">write</span>'],['../classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0',1,'jsocketpp::DatagramSocket::write(const DatagramPacket &amp;packet) const'],['../classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29',1,'jsocketpp::DatagramSocket::write(std::string_view message) const'],['../classjsocketpp_1_1DatagramSocket.html#a9f76b7c4547e78d03c14aea3232f398f',1,'jsocketpp::DatagramSocket::write(std::string_view message, std::string_view host, unsigned short port) const'],['../group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa',1,'jsocketpp::Socket::write()'],['../classjsocketpp_1_1UnixSocket.html#abecab540df2b16e50b09de7b8d38c43e',1,'jsocketpp::UnixSocket::write()']]],
+  ['write_42',['write',['../group__async__io.html#autotoc_md137',1,'📤 <span class="tt">send</span> / <span class="tt">write</span>'],['../classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0',1,'jsocketpp::DatagramSocket::write(const DatagramPacket &amp;packet) const'],['../classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29',1,'jsocketpp::DatagramSocket::write(std::string_view message) const'],['../classjsocketpp_1_1DatagramSocket.html#a7e2b02ba6e9a630fdbde52b88863ec99',1,'jsocketpp::DatagramSocket::write(std::string_view message, std::string_view host, Port port) const'],['../group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa',1,'jsocketpp::Socket::write()'],['../classjsocketpp_1_1UnixSocket.html#abecab540df2b16e50b09de7b8d38c43e',1,'jsocketpp::UnixSocket::write()']]],
   ['writeall_43',['writeAll',['../group__tcp.html#gad1803ae12c1562ec09c28d19c1067914',1,'jsocketpp::Socket']]],
   ['writeatmostwithtimeout_44',['writeAtMostWithTimeout',['../group__tcp.html#ga16bb8c36a3fd9a3a97a0d4f5d5036550',1,'jsocketpp::Socket']]],
   ['writefrom_45',['writeFrom',['../group__tcp.html#gab4484254fc3c113a373718198c382dd9',1,'jsocketpp::Socket']]],
@@ -50,6 +50,9 @@ var searchData=
   ['writeprefixed_47',['writePrefixed',['../group__tcp.html#ga983f06841d1af489990b78f9fd4f91a3',1,'jsocketpp::Socket::writePrefixed(const std::string &amp;payload) const'],['../group__tcp.html#gab0b48a69153c1ed31dd158ec7afb901c',1,'jsocketpp::Socket::writePrefixed(const void *data, std::size_t len) const']]],
   ['writev_48',['writev',['../group__tcp.html#gadf5094228dfdef090b0d49a3a9e9e78d',1,'jsocketpp::Socket']]],
   ['writevall_49',['writevAll',['../group__tcp.html#ga804a69fa791fc8adb91f32ab37244a0a',1,'jsocketpp::Socket']]],
-  ['writevwithtotaltimeout_50',['writevWithTotalTimeout',['../group__tcp.html#ga8e539c866c9fcad3578f9be78cbfdaf4',1,'jsocketpp::Socket']]],
-  ['writewithtotaltimeout_51',['writeWithTotalTimeout',['../group__tcp.html#ga964bb0e901179bc5eac126d77b0590eb',1,'jsocketpp::Socket']]]
+  ['writevfrom_50',['writevFrom',['../group__tcp.html#ga650e041e62870ef5710b0e45401e679d',1,'jsocketpp::Socket']]],
+  ['writevfromall_51',['writevFromAll',['../group__tcp.html#ga7b3ab7a896b7fbfeba9b80672c41b236',1,'jsocketpp::Socket']]],
+  ['writevfromwithtotaltimeout_52',['writevFromWithTotalTimeout',['../group__tcp.html#ga3e2b5bd60122d459134cd5b0a3a27077',1,'jsocketpp::Socket']]],
+  ['writevwithtotaltimeout_53',['writevWithTotalTimeout',['../group__tcp.html#ga8e539c866c9fcad3578f9be78cbfdaf4',1,'jsocketpp::Socket']]],
+  ['writewithtotaltimeout_54',['writeWithTotalTimeout',['../group__tcp.html#ga964bb0e901179bc5eac126d77b0590eb',1,'jsocketpp::Socket']]]
 ];

@@ -1,6 +1,6 @@
 var classjsocketpp_1_1MulticastSocket =
 [
-    [ "MulticastSocket", "classjsocketpp_1_1MulticastSocket.html#af327d64e7f61699c269230476c71fa6b", null ],
+    [ "MulticastSocket", "classjsocketpp_1_1MulticastSocket.html#a4671cefd5b0b7f7e936b0d436c6fd308", null ],
     [ "getCurrentGroup", "classjsocketpp_1_1MulticastSocket.html#a3fd7dbdf1bfffe953c6fa7a64dccdfad", null ],
     [ "getLoopbackMode", "classjsocketpp_1_1MulticastSocket.html#aef04ca6c33896469f8be76b3f2f9da1c", null ],
     [ "getMulticastInterface", "classjsocketpp_1_1MulticastSocket.html#aa47a2a344af40c080a860d5ee0883fd0", null ],

@@ -15,7 +15,7 @@ var searchData=
   ['_5flocaladdr_12',['_localAddr',['../classjsocketpp_1_1DatagramSocket.html#a87523b567e1963c683584ed19c1d6f84',1,'jsocketpp::DatagramSocket']]],
   ['_5flocaladdrlen_13',['_localAddrLen',['../classjsocketpp_1_1DatagramSocket.html#a471ce3677773b7fb9fb7766e247bc76f',1,'jsocketpp::DatagramSocket']]],
   ['_5floopbackenabled_14',['_loopbackEnabled',['../classjsocketpp_1_1MulticastSocket.html#afee075e307c36c143cf62a119a8f7e9a',1,'jsocketpp::MulticastSocket']]],
-  ['_5fport_15',['_port',['../classjsocketpp_1_1DatagramSocket.html#aa9a827f82cf23f2d4d59d0134b61139e',1,'jsocketpp::DatagramSocket::_port'],['../classjsocketpp_1_1ServerSocket.html#a208fa07f391309ec0d5aa2d2b37d1d91',1,'jsocketpp::ServerSocket::_port']]],
+  ['_5fport_15',['_port',['../classjsocketpp_1_1DatagramSocket.html#ac4995ba9286d5dc4ad521a80a43c634a',1,'jsocketpp::DatagramSocket::_port'],['../classjsocketpp_1_1ServerSocket.html#a1f46490b73ad2133a735c221fe481f4e',1,'jsocketpp::ServerSocket::_port']]],
   ['_5frecvbuffer_16',['_recvBuffer',['../classjsocketpp_1_1Socket.html#a874972e15aef00b650a8ce6d2d96d8be',1,'jsocketpp::Socket']]],
   ['_5fremoteaddr_17',['_remoteAddr',['../classjsocketpp_1_1Socket.html#afde2fd1d94981d579025ffee115c877c',1,'jsocketpp::Socket']]],
   ['_5fremoteaddrlen_18',['_remoteAddrLen',['../classjsocketpp_1_1Socket.html#a9b495d6a442ffc2ead89a1e3d3232970',1,'jsocketpp::Socket']]],

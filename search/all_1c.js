@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['rationale_0',['Rationale',['../group__ServerSocket__Lifecycle.html#autotoc_md34',1,'4. Advantages and Rationale'],['../group__async__io.html#autotoc_md123',1,'Design Rationale']]],
+  ['rationale_0',['Rationale',['../group__ServerSocket__Lifecycle.html#autotoc_md34',1,'4. Advantages and Rationale'],['../group__async__io.html#autotoc_md123',1,'Design Rationale'],['../group__tcp.html#autotoc_md454',1,'Rationale']]],
   ['raw_20socket_20communication_1',['3.3 Raw Socket Communication',['../group__underlying__socket__api.html#autotoc_md307',1,'']]],
   ['raw_20sockets_2',['Raw Sockets',['../group__sockets__theory.html#autotoc_md267',1,'2.3. Raw Sockets'],['../group__sockets__theory.html#autotoc_md275',1,'Raw Sockets']]],
   ['read_3',['Read',['../namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a7a1a5f3e79fdc91edf2f5ead9d66abb4',1,'jsocketpp']]],
@@ -34,7 +34,7 @@ var searchData=
   ['recv_20and_20send_31',['🔄 Operation-Specific Behavior: &lt;span class=&quot;tt&quot;&gt;connect&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;accept&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt;, and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;',['../group__async__io.html#autotoc_md125',1,'']]],
   ['recv_20and_20send_3a_32',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md333',1,'']]],
   ['recv_20read_33',['📥 &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; / &lt;span class=&quot;tt&quot;&gt;read&lt;/span&gt;',['../group__async__io.html#autotoc_md134',1,'']]],
-  ['recvfrom_34',['recvFrom',['../classjsocketpp_1_1DatagramSocket.html#a67133e9ad368acfe004d7efb956778ea',1,'jsocketpp::DatagramSocket']]],
+  ['recvfrom_34',['recvFrom',['../classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06',1,'jsocketpp::DatagramSocket']]],
   ['references_35',['References',['../group__address__reuse.html#autotoc_md104',1,'🔗 References'],['../group__sockets__theory.html#autotoc_md296',1,'9. References'],['../group__conan__publish__guide.html#autotoc_md179',1,'References'],['../group__vcpkg__publish__guide.html#autotoc_md363',1,'References']]],
   ['registry_36',['Registry',['../group__vcpkg__publish__guide.html#autotoc_md357',1,'5. Submit to the vcpkg Registry'],['../group__vcpkg__publish__guide.html',1,'Publishing &lt;tt&gt;jsocketpp&lt;/tt&gt; to the vcpkg Registry']]],
   ['relates_20to_20jsocketpp_37',['How This Relates to &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt;',['../group__socket__states.html#autotoc_md255',1,'']]],
@@ -44,7 +44,7 @@ var searchData=
   ['require_20the_20port_20in_20the_20constructor_41',['Why require the port in the constructor?',['../group__ServerSocket__Lifecycle.html#autotoc_md32',1,'']]],
   ['resize_42',['resize',['../classjsocketpp_1_1DatagramPacket.html#a2c99540d2136dae10a56f781c1b20c5f',1,'jsocketpp::DatagramPacket']]],
   ['resource_20cleanup_43',['Resource Cleanup',['../group__tcp.html#autotoc_md428',1,'']]],
-  ['resource_20management_44',['Resource Management',['../group__tcp.html#autotoc_md493',1,'']]],
+  ['resource_20management_44',['Resource Management',['../group__tcp.html#autotoc_md494',1,'']]],
   ['resources_45',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
   ['responsibilities_46',['Our Responsibilities',['../md_CODE__OF__CONDUCT.html#autotoc_md411',1,'']]],
   ['reuse_20in_20sockets_3a_20so_5freuseaddr_20vs_20so_5fexclusiveaddruse_47',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],

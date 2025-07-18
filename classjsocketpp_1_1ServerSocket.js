@@ -1,6 +1,6 @@
 var classjsocketpp_1_1ServerSocket =
 [
-    [ "ServerSocket", "group__tcp.html#gad39f5cb474532ee02539fb3eceaebda0", null ],
+    [ "ServerSocket", "group__tcp.html#gad389848c3e0fcadcfe5f581ab8c8fbb8", null ],
     [ "ServerSocket", "group__tcp.html#gac6eeb69e3b15334e7c224edf30248fe3", null ],
     [ "ServerSocket", "group__tcp.html#gace3560ea1b99e15c1564e430e8848500", null ],
     [ "~ServerSocket", "group__tcp.html#gaa848f0054a9915aaa3864248736205c9", null ],
@@ -20,7 +20,7 @@ var classjsocketpp_1_1ServerSocket =
     [ "getHandle", "group__tcp.html#ga41041b0802d4d9e00bdfbe046902e500", null ],
     [ "getInetAddress", "group__tcp.html#gaadf146f3938388a2af394bd51aeba39c", null ],
     [ "getIPv6Only", "group__tcp.html#gaf92910f35cea80082897f0767eb76933", null ],
-    [ "getLocalPort", "group__tcp.html#gaeceadddaf28dd2b7e245332d8e3b9d48", null ],
+    [ "getLocalPort", "group__tcp.html#gad3b2807577129c652044f17626c6e01a", null ],
     [ "getLocalSocketAddress", "group__tcp.html#ga5e035235b554db37df4492b5725e78cc", null ],
     [ "getNonBlocking", "group__tcp.html#ga36a682afc71359dc6889357bf7394b70", null ],
     [ "getOption", "group__tcp.html#gaed297b8a5f1097ca9d78b5c8faf38af4", null ],
@@ -50,7 +50,7 @@ var classjsocketpp_1_1ServerSocket =
     [ "_defaultSendBufferSize", "classjsocketpp_1_1ServerSocket.html#a4c7bda2d03e2039dfa177a8a565e96ae", null ],
     [ "_isBound", "classjsocketpp_1_1ServerSocket.html#a7eab52c9455b134172f3b71ba0b2722a", null ],
     [ "_isListening", "classjsocketpp_1_1ServerSocket.html#a1a1cb37f9d062197674a9129d51f1e44", null ],
-    [ "_port", "classjsocketpp_1_1ServerSocket.html#a208fa07f391309ec0d5aa2d2b37d1d91", null ],
+    [ "_port", "classjsocketpp_1_1ServerSocket.html#a1f46490b73ad2133a735c221fe481f4e", null ],
     [ "_selectedAddrInfo", "classjsocketpp_1_1ServerSocket.html#a3d85400180a3ee56838c165e7b459e80", null ],
     [ "_serverSocket", "classjsocketpp_1_1ServerSocket.html#a7286800af0502d88ff1460f875cd178d", null ],
     [ "_soTimeoutMillis", "classjsocketpp_1_1ServerSocket.html#a21ecaaf4b757a2dd9cee37231381706f", null ],

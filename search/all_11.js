@@ -11,7 +11,7 @@ var searchData=
   ['gethostaddr_8',['getHostAddr',['../namespacejsocketpp.html#a09423d4d9f10bd09813732010662ee43',1,'jsocketpp']]],
   ['getinetaddress_9',['getInetAddress',['../group__tcp.html#gaadf146f3938388a2af394bd51aeba39c',1,'jsocketpp::ServerSocket']]],
   ['getipv6only_10',['getIPv6Only',['../group__tcp.html#gaf92910f35cea80082897f0767eb76933',1,'jsocketpp::ServerSocket']]],
-  ['getlocalport_11',['getLocalPort',['../group__tcp.html#gaeceadddaf28dd2b7e245332d8e3b9d48',1,'jsocketpp::ServerSocket']]],
+  ['getlocalport_11',['getLocalPort',['../group__tcp.html#gad3b2807577129c652044f17626c6e01a',1,'jsocketpp::ServerSocket']]],
   ['getlocalsocketaddress_12',['getLocalSocketAddress',['../classjsocketpp_1_1DatagramSocket.html#a7f5db1dfd005c2541ecee41fbd160eb1',1,'jsocketpp::DatagramSocket::getLocalSocketAddress()'],['../group__tcp.html#ga5e035235b554db37df4492b5725e78cc',1,'jsocketpp::ServerSocket::getLocalSocketAddress()']]],
   ['getloopbackmode_13',['getLoopbackMode',['../classjsocketpp_1_1MulticastSocket.html#aef04ca6c33896469f8be76b3f2f9da1c',1,'jsocketpp::MulticastSocket']]],
   ['getmulticastinterface_14',['getMulticastInterface',['../classjsocketpp_1_1MulticastSocket.html#aa47a2a344af40c080a860d5ee0883fd0',1,'jsocketpp::MulticastSocket']]],

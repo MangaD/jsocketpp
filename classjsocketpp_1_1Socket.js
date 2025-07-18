@@ -1,7 +1,8 @@
 var classjsocketpp_1_1Socket =
 [
     [ "Socket", "group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167", null ],
-    [ "Socket", "group__tcp.html#ga0b2a699505298870f70a1c97f716d645", null ],
+    [ "Socket", "group__tcp.html#gabc4e14475484e596ac62509e627a9baf", null ],
+    [ "Socket", "group__tcp.html#ga6e4ff9526f858ae810b352925838c248", null ],
     [ "Socket", "group__tcp.html#gaf5a4ddebfbca7bfe6c9a88462cc9ada8", null ],
     [ "Socket", "group__tcp.html#gad0612bda82c378dbaf99e0839f5aa815", null ],
     [ "~Socket", "group__tcp.html#ga2d1b014c3f33bb2b0400baf08681f973", null ],
@@ -57,6 +58,9 @@ var classjsocketpp_1_1Socket =
     [ "writePrefixed", "group__tcp.html#gab0b48a69153c1ed31dd158ec7afb901c", null ],
     [ "writev", "group__tcp.html#gadf5094228dfdef090b0d49a3a9e9e78d", null ],
     [ "writevAll", "group__tcp.html#ga804a69fa791fc8adb91f32ab37244a0a", null ],
+    [ "writevFrom", "group__tcp.html#ga650e041e62870ef5710b0e45401e679d", null ],
+    [ "writevFromAll", "group__tcp.html#ga7b3ab7a896b7fbfeba9b80672c41b236", null ],
+    [ "writevFromWithTotalTimeout", "group__tcp.html#ga3e2b5bd60122d459134cd5b0a3a27077", null ],
     [ "writevWithTotalTimeout", "group__tcp.html#ga8e539c866c9fcad3578f9be78cbfdaf4", null ],
     [ "writeWithTotalTimeout", "group__tcp.html#ga964bb0e901179bc5eac126d77b0590eb", null ],
     [ "ServerSocket", "classjsocketpp_1_1Socket.html#a11a8bb11feaafab939278a8285afa567", null ],
