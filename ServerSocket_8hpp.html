@@ -110,13 +110,82 @@ Classes</h2></td></tr>
 Namespaces</h2></td></tr>
 <tr class="memitem:jsocketpp" id="r_jsocketpp"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejsocketpp.html">jsocketpp</a></td></tr>
 <tr class="memdesc:namespacejsocketpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C++ socket library providing Java-style networking interfaces. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:afa19c7cbeb622b106835021215b8d6b7" id="r_afa19c7cbeb622b106835021215b8d6b7"><td class="memItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a></td></tr>
+<tr class="memdesc:afa19c7cbeb622b106835021215b8d6b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default internal buffer size (in bytes) for TCP socket read operations.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TCP server socket abstraction for jsocketpp. </p>
 <dl class="section author"><dt>Author</dt><dd>MangaD </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2025 </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
-</div></div><!-- contents -->
+</div><a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="afa19c7cbeb622b106835021215b8d6b7" name="afa19c7cbeb622b106835021215b8d6b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa19c7cbeb622b106835021215b8d6b7">&#9670;&#160;</a></span>DefaultBufferSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t jsocketpp::DefaultBufferSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default internal buffer size (in bytes) for TCP socket read operations. </p>
+<p>This constant defines the default size (4096 bytes / 4 KB) of the internal read buffer used by both <span class="tt">Socket</span> and <span class="tt">ServerSocket</span> instances unless explicitly overridden.</p>
+<p>It applies to:</p><ul>
+<li>Client-side <span class="tt">Socket</span> instances constructed without a custom buffer size</li>
+<li>Server-accepted <span class="tt">Socket</span> instances created via <span class="tt">ServerSocket::accept()</span></li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md421"></a>
+Rationale</h3>
+<ul>
+<li><b>Memory-efficient:</b> 4096 bytes matches the typical memory page size on most operating systems.</li>
+<li><b>Performance-optimized:</b> Large enough to hold common protocol messages (e.g., HTTP headers, WebSocket frames) without reallocation or multiple reads.</li>
+<li><b>Concurrency-friendly:</b> Balances throughput and memory footprint across thousands of concurrent connections.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md422"></a>
+Customization</h3>
+<ul>
+<li>You may override this value by:<ul>
+<li>Passing a custom <span class="tt">bufferSize</span> to <span class="tt">Socket</span> or <span class="tt">ServerSocket::accept()</span></li>
+<li>Calling <span class="tt">setInternalBufferSize()</span> after construction</li>
+<li>Setting <span class="tt">SO_RCVBUF</span> via <span class="tt">setReceiveBufferSize()</span> for kernel buffer tuning</li>
+</ul>
+</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md423"></a>
+When to Adjust</h3>
+<ul>
+<li>Increase if your application routinely expects:<ul>
+<li>High-throughput data transfers</li>
+<li>Large protocol frames (e.g., file uploads, streaming)</li>
+</ul>
+</li>
+<li>Decrease for memory-constrained or embedded environments</li>
+</ul>
+<dl class="section see"><dt>See also</dt><dd>Socket </dd>
+<dd>
+ServerSocket </dd>
+<dd>
+Socket::setInternalBufferSize() </dd>
+<dd>
+Socket::setReceiveBufferSize() </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

@@ -103,11 +103,11 @@ $(function(){initNavTree('classjsocketpp_1_1ServerSocket.html','','classjsocketp
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:gad389848c3e0fcadcfe5f581ab8c8fbb8" id="r_gad389848c3e0fcadcfe5f581ab8c8fbb8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gad389848c3e0fcadcfe5f581ab8c8fbb8">ServerSocket</a> (<a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::string_view localAddress={}, bool autoBindListen=true, bool reuseAddress=true, int soTimeoutMillis=-1, bool dualStack=true)</td></tr>
+<tr class="memitem:gad389848c3e0fcadcfe5f581ab8c8fbb8" id="r_gad389848c3e0fcadcfe5f581ab8c8fbb8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gad389848c3e0fcadcfe5f581ab8c8fbb8">ServerSocket</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::string_view localAddress={}, bool autoBindListen=true, bool reuseAddress=true, int soTimeoutMillis=-1, bool dualStack=true)</td></tr>
 <tr class="memdesc:gad389848c3e0fcadcfe5f581ab8c8fbb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> for listening to incoming TCP connections with full configuration control.  <br /></td></tr>
 <tr class="memitem:gaadf146f3938388a2af394bd51aeba39c" id="r_gaadf146f3938388a2af394bd51aeba39c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaadf146f3938388a2af394bd51aeba39c">getInetAddress</a> () const</td></tr>
 <tr class="memdesc:gaadf146f3938388a2af394bd51aeba39c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the local IP address to which the server socket is bound.  <br /></td></tr>
-<tr class="memitem:gad3b2807577129c652044f17626c6e01a" id="r_gad3b2807577129c652044f17626c6e01a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gad3b2807577129c652044f17626c6e01a">getLocalPort</a> () const</td></tr>
+<tr class="memitem:gad3b2807577129c652044f17626c6e01a" id="r_gad3b2807577129c652044f17626c6e01a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gad3b2807577129c652044f17626c6e01a">getLocalPort</a> () const</td></tr>
 <tr class="memdesc:gad3b2807577129c652044f17626c6e01a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the local port number to which the server socket is bound.  <br /></td></tr>
 <tr class="memitem:ga5e035235b554db37df4492b5725e78cc" id="r_ga5e035235b554db37df4492b5725e78cc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga5e035235b554db37df4492b5725e78cc">getLocalSocketAddress</a> () const</td></tr>
 <tr class="memdesc:ga5e035235b554db37df4492b5725e78cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the local socket address (IP and port) to which the server socket is bound.  <br /></td></tr>
@@ -193,11 +193,6 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:gaf54c5a60a2d403df50674c261e86fbd5" id="r_gaf54c5a60a2d403df50674c261e86fbd5"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaf54c5a60a2d403df50674c261e86fbd5">getSocketReuseOption</a> ()</td></tr>
 <tr class="memdesc:gaf54c5a60a2d403df50674c261e86fbd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the correct socket option constant for address reuse, depending on the platform.  <br /></td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:gac3918d461f3d297d6c7ea30f3ff8c3ad" id="r_gac3918d461f3d297d6c7ea30f3ff8c3ad"><td class="memItemLeft" align="right" valign="top">static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gac3918d461f3d297d6c7ea30f3ff8c3ad">DefaultBufferSize</a> = 4096</td></tr>
-<tr class="memdesc:gac3918d461f3d297d6c7ea30f3ff8c3ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default buffer size (in bytes) for newly accepted sockets.  <br /></td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:gab5572cb795d9b45ee50a0ddf9cb9c075" id="r_gab5572cb795d9b45ee50a0ddf9cb9c075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab5572cb795d9b45ee50a0ddf9cb9c075">cleanupAndThrow</a> (int errorCode)</td></tr>
@@ -218,8 +213,8 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:aa27d2f032363fb8faa4b09eb81cdff31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address info for binding (from getaddrinfo)  <br /></td></tr>
 <tr class="memitem:a3d85400180a3ee56838c165e7b459e80" id="r_a3d85400180a3ee56838c165e7b459e80"><td class="memItemLeft" align="right" valign="top">addrinfo *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d85400180a3ee56838c165e7b459e80">_selectedAddrInfo</a> = nullptr</td></tr>
 <tr class="memdesc:a3d85400180a3ee56838c165e7b459e80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selected address info for binding.  <br /></td></tr>
-<tr class="memitem:a1f46490b73ad2133a735c221fe481f4e" id="r_a1f46490b73ad2133a735c221fe481f4e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f46490b73ad2133a735c221fe481f4e">_port</a></td></tr>
-<tr class="memdesc:a1f46490b73ad2133a735c221fe481f4e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number the server will listen on.  <br /></td></tr>
+<tr class="memitem:a1f46490b73ad2133a735c221fe481f4e" id="r_a1f46490b73ad2133a735c221fe481f4e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f46490b73ad2133a735c221fe481f4e">_port</a></td></tr>
+<tr class="memdesc:a1f46490b73ad2133a735c221fe481f4e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number the server will listen on.  <br /></td></tr>
 <tr class="memitem:a7eab52c9455b134172f3b71ba0b2722a" id="r_a7eab52c9455b134172f3b71ba0b2722a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7eab52c9455b134172f3b71ba0b2722a">_isBound</a> = false</td></tr>
 <tr class="memdesc:a7eab52c9455b134172f3b71ba0b2722a"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the server socket is bound.  <br /></td></tr>
 <tr class="memitem:a1a1cb37f9d062197674a9129d51f1e44" id="r_a1a1cb37f9d062197674a9129d51f1e44"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a1cb37f9d062197674a9129d51f1e44">_isListening</a> = false</td></tr>
@@ -228,13 +223,13 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a21ecaaf4b757a2dd9cee37231381706f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timeout for <a class="el" href="group__tcp.html#ga51152280c07200cdbfa7a7bb81f19dbc" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a>; -1 = no timeout, 0 = poll, &gt;0 = timeout in milliseconds.  <br /></td></tr>
 <tr class="memitem:a379cd49443199046abc16d0761e1b03a" id="r_a379cd49443199046abc16d0761e1b03a"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a379cd49443199046abc16d0761e1b03a">_defaultReceiveBufferSize</a></td></tr>
 <tr class="memdesc:a379cd49443199046abc16d0761e1b03a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default buffer size used for accepted client sockets when no specific size is provided.  <br /></td></tr>
-<tr class="memitem:a4c7bda2d03e2039dfa177a8a565e96ae" id="r_a4c7bda2d03e2039dfa177a8a565e96ae"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c7bda2d03e2039dfa177a8a565e96ae">_defaultSendBufferSize</a> = <a class="el" href="group__tcp.html#gac3918d461f3d297d6c7ea30f3ff8c3ad">DefaultBufferSize</a></td></tr>
+<tr class="memitem:a4c7bda2d03e2039dfa177a8a565e96ae" id="r_a4c7bda2d03e2039dfa177a8a565e96ae"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c7bda2d03e2039dfa177a8a565e96ae">_defaultSendBufferSize</a> = <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a></td></tr>
 <tr class="memdesc:a4c7bda2d03e2039dfa177a8a565e96ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default send buffer size for accepted client sockets.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TCP server socket abstraction for cross-platform C++ networking. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> class provides a high-level, Java-like interface to create TCP server sockets in C++20, supporting both IPv4 and IPv6, and working on both Windows and Unix-like systems.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md423"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md433"></a>
 Overview</h2>
 <p><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> is designed to simplify the creation of network server applications. It allows you to:</p><ul>
 <li>Bind to a specified port (optionally on a specific address/interface)</li>
@@ -243,7 +238,7 @@ Overview</h2>
 <li>Clean up resources automatically (RAII)</li>
 </ul>
 <p>This class handles platform differences (such as Winsock vs BSD Sockets) internally, so you can write portable code.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md424"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md434"></a>
 Typical Usage</h2>
 <p>Here’s how you can use <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> to create a simple TCP echo server:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="ServerSocket_8hpp.html">jsocketpp/ServerSocket.hpp</a>&gt;</span></div>
@@ -274,13 +269,13 @@ Typical Usage</h2>
 <div class="line">}</div>
 <div class="ttc" id="aServerSocket_8hpp_html"><div class="ttname"><a href="ServerSocket_8hpp.html">ServerSocket.hpp</a></div><div class="ttdoc">TCP server socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aSocket_8hpp_html"><div class="ttname"><a href="Socket_8hpp.html">Socket.hpp</a></div><div class="ttdoc">TCP client socket abstraction for jsocketpp.</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:101</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:90</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
 <div class="ttc" id="agroup__tcp_html_ga47460d7512cb20e061a98f66fdcf90c1"><div class="ttname"><a href="group__tcp.html#ga47460d7512cb20e061a98f66fdcf90c1">jsocketpp::Socket::getRemoteSocketAddress</a></div><div class="ttdeci">std::string getRemoteSocketAddress() const</div><div class="ttdoc">Get the remote peer&#39;s address and port as a formatted string.</div><div class="ttdef"><b>Definition</b> Socket.cpp:223</div></div>
 <div class="ttc" id="agroup__tcp_html_ga8b952bd8912694754bb34ab763aa8daa"><div class="ttname"><a href="group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa">jsocketpp::Socket::write</a></div><div class="ttdeci">size_t write(std::string_view message) const</div><div class="ttdoc">Writes data to the socket, handling partial writes.</div><div class="ttdef"><b>Definition</b> Socket.cpp:263</div></div>
-<div class="ttc" id="agroup__tcp_html_gaa7498d51b547b52699055bdb16b9d68b"><div class="ttname"><a href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b">jsocketpp::Socket::read</a></div><div class="ttdeci">T read()</div><div class="ttdoc">Read a trivially copyable type from the socket.</div><div class="ttdef"><b>Definition</b> Socket.hpp:567</div></div>
+<div class="ttc" id="agroup__tcp_html_gaa7498d51b547b52699055bdb16b9d68b"><div class="ttname"><a href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b">jsocketpp::Socket::read</a></div><div class="ttdeci">T read()</div><div class="ttdoc">Read a trivially copyable type from the socket.</div><div class="ttdef"><b>Definition</b> Socket.hpp:556</div></div>
 <div class="ttc" id="agroup__tcp_html_gad389848c3e0fcadcfe5f581ab8c8fbb8"><div class="ttname"><a href="group__tcp.html#gad389848c3e0fcadcfe5f581ab8c8fbb8">jsocketpp::ServerSocket::ServerSocket</a></div><div class="ttdeci">ServerSocket(Port port, std::string_view localAddress={}, bool autoBindListen=true, bool reuseAddress=true, int soTimeoutMillis=-1, bool dualStack=true)</div><div class="ttdoc">Constructs a ServerSocket for listening to incoming TCP connections with full configuration control.</div><div class="ttdef"><b>Definition</b> ServerSocket.cpp:8</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md425"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md435"></a>
 Key Features</h2>
 <ul>
 <li><b>Cross-platform</b>: Windows and Linux/Unix support</li>
@@ -289,7 +284,7 @@ Key Features</h2>
 <li><b>Error handling</b>: Throws exceptions on error for robust applications</li>
 <li><b>Customizable</b>: Control backlog, address reuse, blocking/non-blocking modes, etc.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md426"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md436"></a>
 Basic API</h2>
 <ul>
 <li><span class="tt">ServerSocket(port)</span>: Construct with a port to listen on.</li>
@@ -305,7 +300,7 @@ Basic API</h2>
 <li>Exceptions are thrown as <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> for error conditions.</li>
 </ul>
 </dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md427"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md437"></a>
 See Also</h3>
 <ul>
 <li><a class="el" href="classjsocketpp_1_1Socket.html">Socket</a> - for connecting to a remote host</li>
@@ -332,8 +327,8 @@ See Also</h3>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        <a class="code hl_variable" href="group__tcp.html#gac3918d461f3d297d6c7ea30f3ff8c3ad">DefaultBufferSize</a></div>
-<div class="ttc" id="agroup__tcp_html_gac3918d461f3d297d6c7ea30f3ff8c3ad"><div class="ttname"><a href="group__tcp.html#gac3918d461f3d297d6c7ea30f3ff8c3ad">jsocketpp::ServerSocket::DefaultBufferSize</a></div><div class="ttdeci">static constexpr std::size_t DefaultBufferSize</div><div class="ttdoc">Default buffer size (in bytes) for newly accepted sockets.</div><div class="ttdef"><b>Definition</b> ServerSocket.hpp:128</div></div>
+<div class="line">        <a class="code hl_variable" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a></div>
+<div class="ttc" id="agroup__core_html_gafa19c7cbeb622b106835021215b8d6b7"><div class="ttname"><a href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">jsocketpp::DefaultBufferSize</a></div><div class="ttdeci">constexpr std::size_t DefaultBufferSize</div><div class="ttdoc">Default internal buffer size (in bytes) for TCP socket read operations.</div><div class="ttdef"><b>Definition</b> common.hpp:340</div></div>
 </div><!-- fragment -->
 <p>Default buffer size used for accepted client sockets when no specific size is provided. </p>
 
@@ -349,7 +344,7 @@ See Also</h3>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::size_t jsocketpp::ServerSocket::_defaultSendBufferSize = <a class="el" href="group__tcp.html#gac3918d461f3d297d6c7ea30f3ff8c3ad">DefaultBufferSize</a></td>
+          <td class="memname">std::size_t jsocketpp::ServerSocket::_defaultSendBufferSize = <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a></td>
         </tr>
       </table>
   </td>
@@ -421,7 +416,7 @@ See Also</h3>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> jsocketpp::ServerSocket::_port</td>
+          <td class="memname"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> jsocketpp::ServerSocket::_port</td>
         </tr>
       </table>
   </td>
@@ -431,7 +426,7 @@ See Also</h3>
 </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number the server will listen on. </p>
+<p><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number the server will listen on. </p>
 
 </div>
 </div>

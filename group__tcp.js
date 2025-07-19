@@ -1,9 +1,5 @@
 var group__tcp =
 [
-    [ "jsocketpp::BufferView", "structjsocketpp_1_1BufferView.html", [
-      [ "data", "structjsocketpp_1_1BufferView.html#a70b3f827c5fe2653a564d70c3c487f0e", null ],
-      [ "size", "structjsocketpp_1_1BufferView.html#ab394f54c74a9af0ca509add49c6aa229", null ]
-    ] ],
     [ "jsocketpp::ServerSocket", "classjsocketpp_1_1ServerSocket.html", [
       [ "ServerSocket", "group__tcp.html#gad389848c3e0fcadcfe5f581ab8c8fbb8", null ],
       [ "ServerSocket", "group__tcp.html#gac6eeb69e3b15334e7c224edf30248fe3", null ],
@@ -59,13 +55,12 @@ var group__tcp =
       [ "_selectedAddrInfo", "classjsocketpp_1_1ServerSocket.html#a3d85400180a3ee56838c165e7b459e80", null ],
       [ "_serverSocket", "classjsocketpp_1_1ServerSocket.html#a7286800af0502d88ff1460f875cd178d", null ],
       [ "_soTimeoutMillis", "classjsocketpp_1_1ServerSocket.html#a21ecaaf4b757a2dd9cee37231381706f", null ],
-      [ "_srvAddrInfo", "classjsocketpp_1_1ServerSocket.html#aa27d2f032363fb8faa4b09eb81cdff31", null ],
-      [ "DefaultBufferSize", "group__tcp.html#gac3918d461f3d297d6c7ea30f3ff8c3ad", null ]
+      [ "_srvAddrInfo", "classjsocketpp_1_1ServerSocket.html#aa27d2f032363fb8faa4b09eb81cdff31", null ]
     ] ],
     [ "jsocketpp::Socket", "classjsocketpp_1_1Socket.html", [
       [ "Socket", "group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167", null ],
       [ "Socket", "group__tcp.html#gabc4e14475484e596ac62509e627a9baf", null ],
-      [ "Socket", "group__tcp.html#ga6e4ff9526f858ae810b352925838c248", null ],
+      [ "Socket", "group__tcp.html#ga3d4f752639c4dcaa8502055a64594d48", null ],
       [ "Socket", "group__tcp.html#gaf5a4ddebfbca7bfe6c9a88462cc9ada8", null ],
       [ "Socket", "group__tcp.html#gad0612bda82c378dbaf99e0839f5aa815", null ],
       [ "~Socket", "group__tcp.html#ga2d1b014c3f33bb2b0400baf08681f973", null ],
@@ -215,7 +210,7 @@ var group__tcp =
     [ "jsocketpp::Socket::Socket", "group__tcp.html#gaf5a4ddebfbca7bfe6c9a88462cc9ada8", null ],
     [ "jsocketpp::Socket::Socket", "group__tcp.html#gad0612bda82c378dbaf99e0839f5aa815", null ],
     [ "jsocketpp::Socket::Socket", "group__tcp.html#ga35351a964f0ff1df19dfbe630afb7167", null ],
-    [ "jsocketpp::Socket::Socket", "group__tcp.html#ga6e4ff9526f858ae810b352925838c248", null ],
+    [ "jsocketpp::Socket::Socket", "group__tcp.html#ga3d4f752639c4dcaa8502055a64594d48", null ],
     [ "jsocketpp::ServerSocket::tryAccept", "group__tcp.html#gafcb23ec016d8c8ff4313b43b40f53b42", null ],
     [ "jsocketpp::ServerSocket::tryAccept", "group__tcp.html#ga39c2929caa5fc35e079157974a52bddd", null ],
     [ "jsocketpp::ServerSocket::waitReady", "group__tcp.html#ga61c1904213b0971817ec917fd2a01ccf", null ],
@@ -234,6 +229,5 @@ var group__tcp =
     [ "jsocketpp::Socket::writevWithTotalTimeout", "group__tcp.html#ga8e539c866c9fcad3578f9be78cbfdaf4", null ],
     [ "jsocketpp::Socket::writeWithTotalTimeout", "group__tcp.html#ga964bb0e901179bc5eac126d77b0590eb", null ],
     [ "jsocketpp::ServerSocket::~ServerSocket", "group__tcp.html#gaa848f0054a9915aaa3864248736205c9", null ],
-    [ "jsocketpp::Socket::~Socket", "group__tcp.html#ga2d1b014c3f33bb2b0400baf08681f973", null ],
-    [ "jsocketpp::ServerSocket::DefaultBufferSize", "group__tcp.html#gac3918d461f3d297d6c7ea30f3ff8c3ad", null ]
+    [ "jsocketpp::Socket::~Socket", "group__tcp.html#ga2d1b014c3f33bb2b0400baf08681f973", null ]
 ];

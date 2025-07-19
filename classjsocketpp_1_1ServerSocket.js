@@ -54,6 +54,5 @@ var classjsocketpp_1_1ServerSocket =
     [ "_selectedAddrInfo", "classjsocketpp_1_1ServerSocket.html#a3d85400180a3ee56838c165e7b459e80", null ],
     [ "_serverSocket", "classjsocketpp_1_1ServerSocket.html#a7286800af0502d88ff1460f875cd178d", null ],
     [ "_soTimeoutMillis", "classjsocketpp_1_1ServerSocket.html#a21ecaaf4b757a2dd9cee37231381706f", null ],
-    [ "_srvAddrInfo", "classjsocketpp_1_1ServerSocket.html#aa27d2f032363fb8faa4b09eb81cdff31", null ],
-    [ "DefaultBufferSize", "group__tcp.html#gac3918d461f3d297d6c7ea30f3ff8c3ad", null ]
+    [ "_srvAddrInfo", "classjsocketpp_1_1ServerSocket.html#aa27d2f032363fb8faa4b09eb81cdff31", null ]
 ];

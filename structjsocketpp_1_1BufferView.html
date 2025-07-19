@@ -92,25 +92,45 @@ $(function(){initNavTree('structjsocketpp_1_1BufferView.html','','structjsocketp
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">jsocketpp::BufferView Struct Reference<div class="ingroups"><a class="el" href="group__jsocketpp.html">jsocketpp: C++20 cross-platform socket library</a> &raquo; <a class="el" href="group__tcp.html">TCP Sockets</a></div></div></div>
+  <div class="headertitle"><div class="title">jsocketpp::BufferView Struct Reference<div class="ingroups"><a class="el" href="group__jsocketpp.html">jsocketpp: C++20 cross-platform socket library</a> &raquo; <a class="el" href="group__core.html">Core Utilities and Types</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
 <p>Represents a raw writable memory region for scatter/gather I/O.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="Socket_8hpp_source.html">Socket.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="BufferView_8hpp_source.html">BufferView.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a70b3f827c5fe2653a564d70c3c487f0e" id="r_a70b3f827c5fe2653a564d70c3c487f0e"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70b3f827c5fe2653a564d70c3c487f0e">data</a></td></tr>
+<tr class="memitem:a70b3f827c5fe2653a564d70c3c487f0e" id="r_a70b3f827c5fe2653a564d70c3c487f0e"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70b3f827c5fe2653a564d70c3c487f0e">data</a> {}</td></tr>
 <tr class="memdesc:a70b3f827c5fe2653a564d70c3c487f0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the writable memory region.  <br /></td></tr>
-<tr class="memitem:ab394f54c74a9af0ca509add49c6aa229" id="r_ab394f54c74a9af0ca509add49c6aa229"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab394f54c74a9af0ca509add49c6aa229">size</a></td></tr>
+<tr class="memitem:ab394f54c74a9af0ca509add49c6aa229" id="r_ab394f54c74a9af0ca509add49c6aa229"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab394f54c74a9af0ca509add49c6aa229">size</a> {}</td></tr>
 <tr class="memdesc:ab394f54c74a9af0ca509add49c6aa229"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size in bytes of the writable region.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a raw writable memory region for scatter/gather I/O. </p>
-<p>This struct defines a mutable buffer segment for use with readv-style scatter/gather operations. It holds a pointer to a writable memory region and the number of bytes available at that address. </p>
+<p><span class="tt"><a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a></span> is used to describe non-contiguous writable memory ranges for use with vectorized socket operations (e.g., <span class="tt">readv</span>, <span class="tt">writev</span>, <span class="tt">readvAll</span>).</p>
+<p>It allows efficient I/O without copying or concatenating buffers, enabling zero-copy messaging and protocol framing.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md415"></a>
+Fields</h3>
+<ul>
+<li><span class="tt">data</span>: Pointer to writable memory</li>
+<li><span class="tt">size</span>: Size in bytes of the memory region</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md416"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line">std::array&lt;std::byte, 4&gt; header;</div>
+<div class="line">std::array&lt;std::byte, 128&gt; payload;</div>
+<div class="line">std::array&lt;jsocketpp::BufferView, 2&gt; views = {</div>
+<div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">jsocketpp::BufferView</a>{header.data(), header.size()},</div>
+<div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">jsocketpp::BufferView</a>{payload.data(), payload.size()}</div>
+<div class="line">};</div>
+<div class="line">socket.readvAll(views);</div>
+<div class="ttc" id="astructjsocketpp_1_1BufferView_html"><div class="ttname"><a href="structjsocketpp_1_1BufferView.html">jsocketpp::BufferView</a></div><div class="ttdoc">Represents a raw writable memory region for scatter/gather I/O.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:41</div></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="group__tcp.html#ga90e5544f6d058709cc342e07554a59d5" title="Performs a vectorized read into multiple buffers using a single system call.">Socket::readv()</a> </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga650e041e62870ef5710b0e45401e679d" title="Writes multiple raw memory regions using vectorized I/O.">Socket::writevFrom()</a> </dd></dl>
 </div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
 <a id="a70b3f827c5fe2653a564d70c3c487f0e" name="a70b3f827c5fe2653a564d70c3c487f0e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a70b3f827c5fe2653a564d70c3c487f0e">&#9670;&#160;</a></span>data</h2>
@@ -119,7 +139,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* jsocketpp::BufferView::data</td>
+          <td class="memname">void* jsocketpp::BufferView::data {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -135,7 +155,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::size_t jsocketpp::BufferView::size</td>
+          <td class="memname">std::size_t jsocketpp::BufferView::size {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -145,7 +165,7 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/jsocketpp/<a class="el" href="Socket_8hpp_source.html">Socket.hpp</a></li>
+<li>include/jsocketpp/<a class="el" href="BufferView_8hpp_source.html">BufferView.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -1,6 +1,6 @@
 var common_8hpp =
 [
-    [ "jsocketpp::Port", "namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7", null ],
+    [ "jsocketpp::Port", "group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7", null ],
     [ "jsocketpp::SOCKADDR_UN", "namespacejsocketpp.html#a981f7d65e550398e8ab29db83092f119", null ],
     [ "jsocketpp::SOCKET", "namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda", null ],
     [ "jsocketpp::ShutdownMode", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174", [
@@ -10,13 +10,20 @@ var common_8hpp =
     ] ],
     [ "jsocketpp::CleanupSockets", "namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c", null ],
     [ "jsocketpp::CloseSocket", "namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931", null ],
+    [ "jsocketpp::convertIPv4MappedIPv6ToIPv4", "group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d", null ],
+    [ "jsocketpp::net::fromNetwork", "namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37", null ],
+    [ "jsocketpp::net::fromNetwork", "namespacejsocketpp_1_1net.html#acca9e860a0a33d2508bfa9986049db8c", null ],
     [ "jsocketpp::getHostAddr", "namespacejsocketpp.html#a09423d4d9f10bd09813732010662ee43", null ],
     [ "jsocketpp::GetSocketError", "namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad", null ],
     [ "jsocketpp::inet_ntop_aux", "namespacejsocketpp.html#a403588c277f89591897408faed72a910", null ],
     [ "jsocketpp::InitSockets", "namespacejsocketpp.html#aef7428a3f4d80452442ecf3edfdbc89a", null ],
     [ "jsocketpp::ioctlsocket", "namespacejsocketpp.html#a771a44f3967222b2e3221ed3120220af", null ],
+    [ "jsocketpp::isIPv4MappedIPv6", "group__core.html#gab0ac1b9850480abafeb047a4f96792a0", null ],
     [ "jsocketpp::SocketErrorMessage", "namespacejsocketpp.html#a1d0357025eb782be52907801696556ca", null ],
     [ "jsocketpp::SocketErrorMessageWrap", "namespacejsocketpp.html#a2eae999aa2ba7973dc6c3acc40e51e5a", null ],
+    [ "jsocketpp::net::toNetwork", "namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5", null ],
+    [ "jsocketpp::net::toNetwork", "namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a", null ],
+    [ "jsocketpp::DefaultBufferSize", "group__core.html#gafa19c7cbeb622b106835021215b8d6b7", null ],
     [ "jsocketpp::INVALID_SOCKET", "namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405", null ],
     [ "jsocketpp::SOCKET_ERROR", "namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2", null ]
 ];

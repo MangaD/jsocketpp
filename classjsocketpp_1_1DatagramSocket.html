@@ -113,9 +113,9 @@ Inheritance diagram for jsocketpp::DatagramSocket:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9c44b1cef3fe97aeab9052fd81798ff9" id="r_a9c44b1cef3fe97aeab9052fd81798ff9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c44b1cef3fe97aeab9052fd81798ff9">DatagramSocket</a> (<a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::size_t bufferSize=2048)</td></tr>
+<tr class="memitem:a9c44b1cef3fe97aeab9052fd81798ff9" id="r_a9c44b1cef3fe97aeab9052fd81798ff9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c44b1cef3fe97aeab9052fd81798ff9">DatagramSocket</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::size_t bufferSize=2048)</td></tr>
 <tr class="memdesc:a9c44b1cef3fe97aeab9052fd81798ff9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a UDP socket optionally bound to a local port.  <br /></td></tr>
-<tr class="memitem:af6d82bc3786b10031c711cd796b5eabc" id="r_af6d82bc3786b10031c711cd796b5eabc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6d82bc3786b10031c711cd796b5eabc">DatagramSocket</a> (std::string_view host, <a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::size_t bufferSize=2048)</td></tr>
+<tr class="memitem:af6d82bc3786b10031c711cd796b5eabc" id="r_af6d82bc3786b10031c711cd796b5eabc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6d82bc3786b10031c711cd796b5eabc">DatagramSocket</a> (std::string_view host, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::size_t bufferSize=2048)</td></tr>
 <tr class="memdesc:af6d82bc3786b10031c711cd796b5eabc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a datagram socket to a remote host and port.  <br /></td></tr>
 <tr class="memitem:a357b56bb2b775c3b272f50e249cb8275" id="r_a357b56bb2b775c3b272f50e249cb8275"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a357b56bb2b775c3b272f50e249cb8275">~DatagramSocket</a> () noexcept</td></tr>
 <tr class="memdesc:a357b56bb2b775c3b272f50e249cb8275"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. Closes the socket and frees resources.  <br /></td></tr>
@@ -135,7 +135,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:af34dc33d47f23ca13e9a63d4b1fcdee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write data to a remote host using a <a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a>.  <br /></td></tr>
 <tr class="memitem:ab17c043006b0c35944a1809996b30c29" id="r_ab17c043006b0c35944a1809996b30c29"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab17c043006b0c35944a1809996b30c29">write</a> (std::string_view message) const</td></tr>
 <tr class="memdesc:ab17c043006b0c35944a1809996b30c29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write data to the socket (connected UDP) from a string_view.  <br /></td></tr>
-<tr class="memitem:a7e2b02ba6e9a630fdbde52b88863ec99" id="r_a7e2b02ba6e9a630fdbde52b88863ec99"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e2b02ba6e9a630fdbde52b88863ec99">write</a> (std::string_view message, std::string_view host, <a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> port) const</td></tr>
+<tr class="memitem:a7e2b02ba6e9a630fdbde52b88863ec99" id="r_a7e2b02ba6e9a630fdbde52b88863ec99"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e2b02ba6e9a630fdbde52b88863ec99">write</a> (std::string_view message, std::string_view host, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port) const</td></tr>
 <tr class="memdesc:a7e2b02ba6e9a630fdbde52b88863ec99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a datagram to a specific host and port (connectionless UDP).  <br /></td></tr>
 <tr class="memitem:a58152e567e2d41ee6d612355ac0eb548" id="r_a58152e567e2d41ee6d612355ac0eb548"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58152e567e2d41ee6d612355ac0eb548">read</a> (<a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> &amp;packet, bool resizeBuffer=true) const</td></tr>
 <tr class="memdesc:a58152e567e2d41ee6d612355ac0eb548"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a UDP datagram and fills the provided <a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a>.  <br /></td></tr>
@@ -143,7 +143,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a61dfe82025f17e3041c5b5acca2369eb template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61dfe82025f17e3041c5b5acca2369eb">read</a> ()</td></tr>
 <tr class="memdesc:a61dfe82025f17e3041c5b5acca2369eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a trivially copyable type from the socket (connected UDP).  <br /></td></tr>
 <tr class="memitem:a227984f842fa768c2e7cc9a4b585bf06" id="r_a227984f842fa768c2e7cc9a4b585bf06"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a227984f842fa768c2e7cc9a4b585bf06 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a227984f842fa768c2e7cc9a4b585bf06">recvFrom</a> (std::string *senderAddr, <a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort)</td></tr>
+<tr class="memitem:a227984f842fa768c2e7cc9a4b585bf06 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a227984f842fa768c2e7cc9a4b585bf06">recvFrom</a> (std::string *senderAddr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort)</td></tr>
 <tr class="memdesc:a227984f842fa768c2e7cc9a4b585bf06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a datagram into a trivially copyable type.  <br /></td></tr>
 <tr class="memitem:a9d0a9582b3a2a72bf62f182dbc33c352" id="r_a9d0a9582b3a2a72bf62f182dbc33c352"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d0a9582b3a2a72bf62f182dbc33c352">close</a> ()</td></tr>
 <tr class="memdesc:a9d0a9582b3a2a72bf62f182dbc33c352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the datagram socket.  <br /></td></tr>
@@ -186,18 +186,18 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a471ce3677773b7fb9fb7766e247bc76f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Length of local address.  <br /></td></tr>
 <tr class="memitem:ae157621acf76031b55ce263898d18aa7" id="r_ae157621acf76031b55ce263898d18aa7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae157621acf76031b55ce263898d18aa7">_buffer</a></td></tr>
 <tr class="memdesc:ae157621acf76031b55ce263898d18aa7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal buffer for read operations.  <br /></td></tr>
-<tr class="memitem:ac4995ba9286d5dc4ad521a80a43c634a" id="r_ac4995ba9286d5dc4ad521a80a43c634a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4995ba9286d5dc4ad521a80a43c634a">_port</a></td></tr>
-<tr class="memdesc:ac4995ba9286d5dc4ad521a80a43c634a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number the socket is bound to (if applicable).  <br /></td></tr>
+<tr class="memitem:ac4995ba9286d5dc4ad521a80a43c634a" id="r_ac4995ba9286d5dc4ad521a80a43c634a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4995ba9286d5dc4ad521a80a43c634a">_port</a></td></tr>
+<tr class="memdesc:ac4995ba9286d5dc4ad521a80a43c634a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number the socket is bound to (if applicable).  <br /></td></tr>
 <tr class="memitem:acc0850711b172f6c6c8bf0649c530ea0" id="r_acc0850711b172f6c6c8bf0649c530ea0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc0850711b172f6c6c8bf0649c530ea0">_isConnected</a> = false</td></tr>
 <tr class="memdesc:acc0850711b172f6c6c8bf0649c530ea0"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the socket is connected to a remote host.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Cross-platform UDP socket class with Java-style interface. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> class provides a convenient, cross-platform abstraction for sending and receiving UDP datagrams, inspired by the Java API. It supports both IPv4 and IPv6, and works on Windows and Linux.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md415"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md425"></a>
 What is UDP?</h2>
 <p>UDP (User Datagram Protocol) is a lightweight, connectionless protocol for sending packets over the network. Unlike TCP, UDP does <b>not</b> guarantee delivery, ordering, or duplicate protection—packets may be lost, arrive out of order, or duplicated. However, UDP is fast and simple, and widely used for real-time applications (such as online games, video streaming, and VoIP).</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md416"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md426"></a>
 Key Features</h2>
 <ul>
 <li><b>Connectionless and connected modes:</b> You can send datagrams to any address/port, or "connect" the socket to a default destination for simpler sending/receiving.</li>
@@ -206,7 +206,7 @@ Key Features</h2>
 <li><b>Timeouts and non-blocking mode:</b> Set timeouts and switch between blocking/non-blocking operations.</li>
 <li><b>Java-style interface:</b> Familiar to those who have used Java networking.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md417"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md427"></a>
 Example: Simple UDP Echo Server and Client</h2>
 <div class="fragment"><div class="line"><span class="comment">// --- Server ---</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="DatagramSocket_8hpp.html">jsocketpp/DatagramSocket.hpp</a>&gt;</span></div>
@@ -241,7 +241,7 @@ Example: Simple UDP Echo Server and Client</h2>
 <div class="line">}</div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_a58152e567e2d41ee6d612355ac0eb548"><div class="ttname"><a href="#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket::read</a></div><div class="ttdeci">size_t read(DatagramPacket &amp;packet, bool resizeBuffer=true) const</div><div class="ttdoc">Receives a UDP datagram and fills the provided DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:343</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_af34dc33d47f23ca13e9a63d4b1fcdee0"><div class="ttname"><a href="#af34dc33d47f23ca13e9a63d4b1fcdee0">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">size_t write(const DatagramPacket &amp;packet) const</div><div class="ttdoc">Write data to a remote host using a DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:232</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md418"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md428"></a>
 Notes</h2>
 <ul>
 <li>Not thread-safe. Use each <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> instance from only one thread at a time.</li>
@@ -264,7 +264,7 @@ Notes</h2>
         <tr>
           <td class="memname">DatagramSocket::DatagramSocket </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>, </td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -319,7 +319,7 @@ Notes</h2>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>, </td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -868,7 +868,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> *</td>          <td class="paramname"><span class="paramname"><em>senderPort</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *</td>          <td class="paramname"><span class="paramname"><em>senderPort</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1116,7 +1116,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>&#160;) const</td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>&#160;) const</td>
         </tr>
       </table>
   </td>
@@ -1276,7 +1276,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> jsocketpp::DatagramSocket::_port</td>
+          <td class="memname"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> jsocketpp::DatagramSocket::_port</td>
         </tr>
       </table>
   </td>
@@ -1286,7 +1286,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number the socket is bound to (if applicable). </p>
+<p><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number the socket is bound to (if applicable). </p>
 
 </div>
 </div>

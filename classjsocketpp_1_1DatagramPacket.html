@@ -105,9 +105,9 @@ $(function(){initNavTree('classjsocketpp_1_1DatagramPacket.html','','classjsocke
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a867c818e26b61fa3c67ddbe787290360" id="r_a867c818e26b61fa3c67ddbe787290360"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a867c818e26b61fa3c67ddbe787290360">DatagramPacket</a> (const size_t <a class="el" href="#a56c2fe4797d236c1453be540e1fa5c6c">size</a>=0)</td></tr>
 <tr class="memdesc:a867c818e26b61fa3c67ddbe787290360"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an empty <a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a> with a specified buffer size.  <br /></td></tr>
-<tr class="memitem:a5803e1a27c20cb4d14de90d0684fbf6a" id="r_a5803e1a27c20cb4d14de90d0684fbf6a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5803e1a27c20cb4d14de90d0684fbf6a">DatagramPacket</a> (std::string_view data, std::string addr, const <a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> prt)</td></tr>
+<tr class="memitem:a5803e1a27c20cb4d14de90d0684fbf6a" id="r_a5803e1a27c20cb4d14de90d0684fbf6a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5803e1a27c20cb4d14de90d0684fbf6a">DatagramPacket</a> (std::string_view data, std::string addr, const <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> prt)</td></tr>
 <tr class="memdesc:a5803e1a27c20cb4d14de90d0684fbf6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a> from a string_view and destination info.  <br /></td></tr>
-<tr class="memitem:a070f1208a81266d23623603e34c91307" id="r_a070f1208a81266d23623603e34c91307"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a070f1208a81266d23623603e34c91307">DatagramPacket</a> (const char *data, const size_t len, std::string addr, const <a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> prt)</td></tr>
+<tr class="memitem:a070f1208a81266d23623603e34c91307" id="r_a070f1208a81266d23623603e34c91307"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a070f1208a81266d23623603e34c91307">DatagramPacket</a> (const char *data, const size_t len, std::string addr, const <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> prt)</td></tr>
 <tr class="memdesc:a070f1208a81266d23623603e34c91307"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a> from a raw pointer/size and destination info.  <br /></td></tr>
 <tr class="memitem:aa49b8c37fb337e2e5471b34a87a3b5fb" id="r_aa49b8c37fb337e2e5471b34a87a3b5fb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa49b8c37fb337e2e5471b34a87a3b5fb">DatagramPacket</a> (const <a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> &amp;)=default</td></tr>
 <tr class="memitem:a5eaf290d360b39c612a4c8724a0d9e6f" id="r_a5eaf290d360b39c612a4c8724a0d9e6f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5eaf290d360b39c612a4c8724a0d9e6f">DatagramPacket</a> (<a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> &amp;&amp;) noexcept=default</td></tr>
@@ -126,7 +126,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a5a52a853827976d996fb0f85ae54bfd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data buffer for the packet payload.  <br /></td></tr>
 <tr class="memitem:a9f0c6f68dc00926fdea15ce77504e954" id="r_a9f0c6f68dc00926fdea15ce77504e954"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f0c6f68dc00926fdea15ce77504e954">address</a> {}</td></tr>
 <tr class="memdesc:a9f0c6f68dc00926fdea15ce77504e954"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remote address (IPv4/IPv6) for the destination/source.  <br /></td></tr>
-<tr class="memitem:a6619b7fcd476199e4a9c454d06f1bcd4" id="r_a6619b7fcd476199e4a9c454d06f1bcd4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6619b7fcd476199e4a9c454d06f1bcd4">port</a> = 0</td></tr>
+<tr class="memitem:a6619b7fcd476199e4a9c454d06f1bcd4" id="r_a6619b7fcd476199e4a9c454d06f1bcd4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6619b7fcd476199e4a9c454d06f1bcd4">port</a> = 0</td></tr>
 <tr class="memdesc:a6619b7fcd476199e4a9c454d06f1bcd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remote UDP port for the destination/source.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
@@ -205,7 +205,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>prt</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>prt</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -254,7 +254,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>prt</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>prt</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -514,7 +514,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7">Port</a> jsocketpp::DatagramPacket::port = 0</td>
+          <td class="memname"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> jsocketpp::DatagramPacket::port = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">

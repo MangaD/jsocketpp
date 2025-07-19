@@ -1,5 +1,11 @@
 var namespacejsocketpp =
 [
+    [ "net", "namespacejsocketpp_1_1net.html", [
+      [ "fromNetwork", "namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37", null ],
+      [ "fromNetwork", "namespacejsocketpp_1_1net.html#acca9e860a0a33d2508bfa9986049db8c", null ],
+      [ "toNetwork", "namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5", null ],
+      [ "toNetwork", "namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a", null ]
+    ] ],
     [ "BufferView", "structjsocketpp_1_1BufferView.html", "structjsocketpp_1_1BufferView" ],
     [ "DatagramPacket", "classjsocketpp_1_1DatagramPacket.html", "classjsocketpp_1_1DatagramPacket" ],
     [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html", "classjsocketpp_1_1DatagramSocket" ],
@@ -10,7 +16,7 @@ var namespacejsocketpp =
     [ "SocketInitializer", "classjsocketpp_1_1SocketInitializer.html", "classjsocketpp_1_1SocketInitializer" ],
     [ "SocketTimeoutException", "classjsocketpp_1_1SocketTimeoutException.html", "classjsocketpp_1_1SocketTimeoutException" ],
     [ "UnixSocket", "classjsocketpp_1_1UnixSocket.html", "classjsocketpp_1_1UnixSocket" ],
-    [ "Port", "namespacejsocketpp.html#a1a7be273748ae3d91bc5ebe6499788a7", null ],
+    [ "Port", "group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7", null ],
     [ "SOCKADDR_UN", "namespacejsocketpp.html#a981f7d65e550398e8ab29db83092f119", null ],
     [ "SOCKET", "namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda", null ],
     [ "ShutdownMode", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174", [
@@ -20,6 +26,7 @@ var namespacejsocketpp =
     ] ],
     [ "CleanupSockets", "namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c", null ],
     [ "CloseSocket", "namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931", null ],
+    [ "convertIPv4MappedIPv6ToIPv4", "group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d", null ],
     [ "DatagramSocket::read< std::string >", "namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f", null ],
     [ "DatagramSocket::recvFrom< std::string >", "namespacejsocketpp.html#aa5ff7535f7cd1c89724bcfd6715e55ba", null ],
     [ "getHostAddr", "namespacejsocketpp.html#a09423d4d9f10bd09813732010662ee43", null ],
@@ -27,8 +34,10 @@ var namespacejsocketpp =
     [ "inet_ntop_aux", "namespacejsocketpp.html#a403588c277f89591897408faed72a910", null ],
     [ "InitSockets", "namespacejsocketpp.html#aef7428a3f4d80452442ecf3edfdbc89a", null ],
     [ "ioctlsocket", "namespacejsocketpp.html#a771a44f3967222b2e3221ed3120220af", null ],
+    [ "isIPv4MappedIPv6", "group__core.html#gab0ac1b9850480abafeb047a4f96792a0", null ],
     [ "SocketErrorMessage", "namespacejsocketpp.html#a1d0357025eb782be52907801696556ca", null ],
     [ "SocketErrorMessageWrap", "namespacejsocketpp.html#a2eae999aa2ba7973dc6c3acc40e51e5a", null ],
+    [ "DefaultBufferSize", "group__core.html#gafa19c7cbeb622b106835021215b8d6b7", null ],
     [ "INVALID_SOCKET", "namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405", null ],
     [ "SOCKET_ERROR", "namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2", null ]
 ];

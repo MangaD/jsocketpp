@@ -12,5 +12,6 @@ var searchData=
   ['to_20the_20conan_20center_20index_20cci_9',['Publishing &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; to the Conan Center Index (CCI)',['../group__conan__publish__guide.html',1,'']]],
   ['to_20the_20socket_20api_10',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
   ['to_20the_20vcpkg_20registry_11',['Publishing &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; to the vcpkg Registry',['../group__vcpkg__publish__guide.html',1,'']]],
-  ['types_20and_20platform_20apis_12',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]]
+  ['types_12',['Core Utilities and Types',['../group__core.html',1,'']]],
+  ['types_20and_20platform_20apis_13',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]]
 ];

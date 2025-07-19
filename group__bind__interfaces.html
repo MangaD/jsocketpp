@@ -159,7 +159,7 @@ Example: Binding to All Interfaces</h2>
 <div class="line"> </div>
 <div class="line">**How?**</div>
 <div class="line">Instead of passing `<span class="keyword">nullptr</span>` to `getaddrinfo`, you specify the address you want to bind to:</div>
-<div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div></div>
+<div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:11</div></div>
 </div><!-- fragment --><p> cpp // Only listen on localhost getaddrinfo("127.0.0.1", "8080", &amp;hints, &amp;res); // ... bind as usual</p>
 <p>// Only listen on a specific IP getaddrinfo("192.168.1.123", "8080", &amp;hints, &amp;res); </p><div class="fragment"><div class="line">The kernel will only deliver incoming connections or datagrams **addressed to that specific IP/interface** to your</div>
 <div class="line">socket.</div>
