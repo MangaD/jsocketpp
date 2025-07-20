@@ -43,7 +43,7 @@ var classjsocketpp_1_1ServerSocket =
     [ "setOption", "group__tcp.html#ga06c2651d2b46a22ca1a80dde4a74016e", null ],
     [ "setReuseAddress", "group__tcp.html#ga32d53c151cb8b7aecc8da81f9e9aa1b6", null ],
     [ "setReusePort", "group__tcp.html#ga6276b89030ccf50a67501f429a14e3a3", null ],
-    [ "setSoTimeout", "group__tcp.html#ga91f77d98b601507dbdcfac412e79f52d", null ],
+    [ "setSoTimeout", "group__tcp.html#ga2087f337f22de16821132208b94b1441", null ],
     [ "tryAccept", "group__tcp.html#ga1957722b31677f0ab5efb17398e95156", null ],
     [ "tryAccept", "group__tcp.html#ga05869effa85fd68fc91686a56a665ab0", null ],
     [ "waitReady", "group__tcp.html#ga61c1904213b0971817ec917fd2a01ccf", null ],

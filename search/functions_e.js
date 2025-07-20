@@ -14,7 +14,7 @@ var searchData=
   ['setreuseaddress_11',['setReuseAddress',['../group__tcp.html#ga32d53c151cb8b7aecc8da81f9e9aa1b6',1,'jsocketpp::ServerSocket']]],
   ['setreuseport_12',['setReusePort',['../group__tcp.html#ga6276b89030ccf50a67501f429a14e3a3',1,'jsocketpp::ServerSocket']]],
   ['setsendbuffersize_13',['setSendBufferSize',['../group__tcp.html#ga243562caf78f87e481f657e26c59e1f0',1,'jsocketpp::Socket']]],
-  ['setsotimeout_14',['setSoTimeout',['../group__tcp.html#ga91f77d98b601507dbdcfac412e79f52d',1,'jsocketpp::ServerSocket::setSoTimeout()'],['../group__tcp.html#ga3369e71b7e6f2c8aaf8c090379f8f843',1,'jsocketpp::Socket::setSoTimeout()']]],
+  ['setsotimeout_14',['setSoTimeout',['../group__tcp.html#ga2087f337f22de16821132208b94b1441',1,'jsocketpp::ServerSocket::setSoTimeout()'],['../group__tcp.html#ga3369e71b7e6f2c8aaf8c090379f8f843',1,'jsocketpp::Socket::setSoTimeout()']]],
   ['settimeout_15',['setTimeout',['../classjsocketpp_1_1DatagramSocket.html#a540c0e48e02529eec6b9605e141433c5',1,'jsocketpp::DatagramSocket::setTimeout()'],['../classjsocketpp_1_1UnixSocket.html#a4b599e3ea9497908dbf3d7a2cc79f1c8',1,'jsocketpp::UnixSocket::setTimeout()']]],
   ['settimetolive_16',['setTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#a72172a10bc5ba13a908f31c791c90ec5',1,'jsocketpp::MulticastSocket']]],
   ['shutdown_17',['shutdown',['../group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3',1,'jsocketpp::Socket']]],

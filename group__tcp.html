@@ -181,14 +181,14 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga36a682afc71359dc6889357bf7394b70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the server socket is in non-blocking mode.  <br /></td></tr>
 <tr class="memitem:ga61c1904213b0971817ec917fd2a01ccf" id="r_ga61c1904213b0971817ec917fd2a01ccf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga61c1904213b0971817ec917fd2a01ccf">jsocketpp::ServerSocket::waitReady</a> (std::optional&lt; int &gt; timeoutMillis=std::nullopt) const</td></tr>
 <tr class="memdesc:ga61c1904213b0971817ec917fd2a01ccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for the server socket to become ready to accept an incoming connection.  <br /></td></tr>
-<tr class="memitem:ga91f77d98b601507dbdcfac412e79f52d" id="r_ga91f77d98b601507dbdcfac412e79f52d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d">jsocketpp::ServerSocket::setSoTimeout</a> (const int millis)</td></tr>
-<tr class="memdesc:ga91f77d98b601507dbdcfac412e79f52d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the timeout for <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> operations on this server socket.  <br /></td></tr>
+<tr class="memitem:ga2087f337f22de16821132208b94b1441" id="r_ga2087f337f22de16821132208b94b1441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2087f337f22de16821132208b94b1441">jsocketpp::ServerSocket::setSoTimeout</a> (const int timeoutMillis)</td></tr>
+<tr class="memdesc:ga2087f337f22de16821132208b94b1441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the logical timeout (in milliseconds) for accepting client connections.  <br /></td></tr>
+<tr class="memitem:ga7829c558cb7bf5e0a46d882df82acc19" id="r_ga7829c558cb7bf5e0a46d882df82acc19"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19">jsocketpp::ServerSocket::getSoTimeout</a> () const noexcept</td></tr>
+<tr class="memdesc:ga7829c558cb7bf5e0a46d882df82acc19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the logical timeout (in milliseconds) for accept operations.  <br /></td></tr>
 <tr class="memitem:ga41b156c31f7b6d0ce08112c466a32719" id="r_ga41b156c31f7b6d0ce08112c466a32719"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga41b156c31f7b6d0ce08112c466a32719">jsocketpp::ServerSocket::setIPv6Only</a> (bool enable)</td></tr>
 <tr class="memdesc:ga41b156c31f7b6d0ce08112c466a32719"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable IPv6-only mode for this server socket.  <br /></td></tr>
 <tr class="memitem:gaf92910f35cea80082897f0767eb76933" id="r_gaf92910f35cea80082897f0767eb76933"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf92910f35cea80082897f0767eb76933">jsocketpp::ServerSocket::getIPv6Only</a> () const</td></tr>
 <tr class="memdesc:gaf92910f35cea80082897f0767eb76933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether IPv6-only mode is enabled.  <br /></td></tr>
-<tr class="memitem:ga7829c558cb7bf5e0a46d882df82acc19" id="r_ga7829c558cb7bf5e0a46d882df82acc19"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19">jsocketpp::ServerSocket::getSoTimeout</a> () const noexcept</td></tr>
-<tr class="memdesc:ga7829c558cb7bf5e0a46d882df82acc19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the currently configured timeout for <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> operations.  <br /></td></tr>
 <tr class="memitem:gaf644d3fccaebced95dd6bc2055bbed3e" id="r_gaf644d3fccaebced95dd6bc2055bbed3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e">jsocketpp::ServerSocket::setDefaultReceiveBufferSize</a> (const std::size_t size)</td></tr>
 <tr class="memdesc:gaf644d3fccaebced95dd6bc2055bbed3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the default receive buffer size for accepted client sockets.  <br /></td></tr>
 <tr class="memitem:ga29de003fbad91f7302115d26b89ac888" id="r_ga29de003fbad91f7302115d26b89ac888"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga29de003fbad91f7302115d26b89ac888">jsocketpp::ServerSocket::getDefaultReceiveBufferSize</a> () const noexcept</td></tr>
@@ -373,7 +373,7 @@ Functions</h2></td></tr>
 </ul>
 <p>Internally, this method uses <span class="tt">waitReady(timeoutMillis)</span> (which uses <span class="tt">select()</span>) to wait for readiness, then calls <span class="tt"><a class="el" href="#ga8a8b491eb1ce67b53a652a1048ba5097" title="Accept an incoming client connection, always blocking until a client connects (unless the socket is s...">acceptBlocking()</a></span> with the resolved buffer sizes. If the timeout expires with no client, a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a></span> is thrown.</p>
 <p>The <b>blocking or non-blocking mode</b> of the server socket (via <span class="tt"><a class="el" href="#ga6da405f0212b736e027c7d2e16222b44" title="Set the server socket to non-blocking or blocking mode.">setNonBlocking()</a></span>) does not affect the waiting behavior of this method, since <span class="tt">select()</span> is used for readiness detection.</p>
-<dl class="section note"><dt>Note</dt><dd>Use this method to specify a timeout <b>per call</b>. To configure a default for all accepts, use <span class="tt"><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a></span>. For non-blocking polling, use <span class="tt"><a class="el" href="#ga05869effa85fd68fc91686a56a665ab0" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a></span> or <span class="tt"><a class="el" href="#gaf8bf4d482f850281571fc0f7a9892fc8" title="Attempt to accept a client connection in non-blocking fashion.">acceptNonBlocking()</a></span>.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Use this method to specify a timeout <b>per call</b>. To configure a default for all accepts, use <span class="tt"><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a></span>. For non-blocking polling, use <span class="tt"><a class="el" href="#ga05869effa85fd68fc91686a56a665ab0" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a></span> or <span class="tt"><a class="el" href="#gaf8bf4d482f850281571fc0f7a9892fc8" title="Attempt to accept a client connection in non-blocking fashion.">acceptNonBlocking()</a></span>.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">timeoutMillis</td><td>Timeout in milliseconds to wait for a client connection:<ul>
@@ -403,7 +403,7 @@ Functions</h2></td></tr>
 <dd>
 <a class="el" href="#ga8a8b491eb1ce67b53a652a1048ba5097" title="Accept an incoming client connection, always blocking until a client connects (unless the socket is s...">acceptBlocking()</a> </dd>
 <dd>
-<a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a> </dd>
+<a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a> </dd>
 <dd>
 <a class="el" href="#ga61c1904213b0971817ec917fd2a01ccf" title="Wait for the server socket to become ready to accept an incoming connection.">waitReady()</a></dd></dl>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1ServerSocket.html">jsocketpp::ServerSocket</a> server(8080);</div>
@@ -450,14 +450,14 @@ Functions</h2></td></tr>
 
 <p>Accept an incoming client connection, respecting the configured socket timeout. </p>
 <dl class="section note"><dt>Note</dt><dd>This method is <b>not thread safe</b>. Simultaneous calls to <span class="tt"><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> or <span class="tt"><a class="el" href="#gaf8bf4d482f850281571fc0f7a9892fc8" title="Attempt to accept a client connection in non-blocking fashion.">acceptNonBlocking()</a></span> from multiple threads (or processes) may result in race conditions or unexpected exceptions.</dd></dl>
-<p>Waits for an incoming client connection using the timeout value configured by <span class="tt"><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a></span>.</p><ul>
+<p>Waits for an incoming client connection using the timeout value configured by <span class="tt"><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a></span>.</p><ul>
 <li>If the timeout is <b>negative</b> (default), the method blocks indefinitely until a client connects.</li>
 <li>If the timeout is <b>zero</b>, the method polls and returns immediately if no client is waiting.</li>
 <li>If the timeout is <b>positive</b>, the method waits up to that many milliseconds for a connection, then throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a></span> if none arrives.</li>
 </ul>
 <p>Internally, this method uses <span class="tt"><a class="el" href="#ga61c1904213b0971817ec917fd2a01ccf" title="Wait for the server socket to become ready to accept an incoming connection.">waitReady()</a></span> (which internally uses <span class="tt">select()</span>) to wait for readiness and only then calls <span class="tt"><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span>. If the timeout expires with no client, a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a></span> is thrown.</p>
 <p>The <b>blocking or non-blocking mode</b> of the server socket (via <span class="tt"><a class="el" href="#ga6da405f0212b736e027c7d2e16222b44" title="Set the server socket to non-blocking or blocking mode.">setNonBlocking()</a></span>) does not affect the waiting behavior of this method, since <span class="tt">select()</span> is used for waiting.</p>
-<dl class="section note"><dt>Note</dt><dd>- Use <span class="tt"><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a></span> and <span class="tt"><a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19" title="Get the currently configured timeout for accept() operations.">getSoTimeout()</a></span> to configure the timeout. For manual non-blocking accept in an event loop, see <span class="tt"><a class="el" href="#gaf8bf4d482f850281571fc0f7a9892fc8" title="Attempt to accept a client connection in non-blocking fashion.">acceptNonBlocking()</a></span> and <span class="tt"><a class="el" href="#ga61c1904213b0971817ec917fd2a01ccf" title="Wait for the server socket to become ready to accept an incoming connection.">waitReady()</a></span>.</dd>
+<dl class="section note"><dt>Note</dt><dd>- Use <span class="tt"><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a></span> and <span class="tt"><a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19" title="Get the logical timeout (in milliseconds) for accept operations.">getSoTimeout()</a></span> to configure the timeout. For manual non-blocking accept in an event loop, see <span class="tt"><a class="el" href="#gaf8bf4d482f850281571fc0f7a9892fc8" title="Attempt to accept a client connection in non-blocking fashion.">acceptNonBlocking()</a></span> and <span class="tt"><a class="el" href="#ga61c1904213b0971817ec917fd2a01ccf" title="Wait for the server socket to become ready to accept an incoming connection.">waitReady()</a></span>.</dd>
 <dd>
 - To safely use <span class="tt"><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> in a multithreaded environment, protect access to the <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> with a mutex.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -477,9 +477,9 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section pre"><dt>Precondition</dt><dd>Server socket must be valid, bound, and listening. </dd></dl>
 <dl class="section post"><dt>Postcondition</dt><dd>A new connected <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> is returned on success.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout(int)</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout(int)</a> </dd>
 <dd>
-<a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19" title="Get the currently configured timeout for accept() operations.">getSoTimeout()</a> </dd>
+<a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19" title="Get the logical timeout (in milliseconds) for accept operations.">getSoTimeout()</a> </dd>
 <dd>
 <a class="el" href="#ga8a8b491eb1ce67b53a652a1048ba5097" title="Accept an incoming client connection, always blocking until a client connects (unless the socket is s...">acceptBlocking()</a> </dd>
 <dd>
@@ -662,7 +662,7 @@ std::future, std::async</dd></dl>
 
 <p>Accept an incoming client connection, always blocking until a client connects (unless the socket is set to non-blocking). </p>
 <p>This method directly invokes the underlying system <span class="tt"><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> on the listening socket.</p><ul>
-<li>If the socket is in <b>blocking mode</b> (default), this method blocks until a client connects. It ignores any timeout set by <span class="tt"><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a></span>.</li>
+<li>If the socket is in <b>blocking mode</b> (default), this method blocks until a client connects. It ignores any timeout set by <span class="tt"><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a></span>.</li>
 <li>If the socket is in <b>non-blocking mode</b>, the call returns immediately:<ul>
 <li>If a client is pending, returns a connected <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>.</li>
 <li>If no client is waiting, throws <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> with <span class="tt">EWOULDBLOCK</span> or <span class="tt">EAGAIN</span>.</li>
@@ -1987,13 +1987,15 @@ Example Usage</h3>
 </table>
 </div><div class="memdoc">
 
-<p>Get the currently configured timeout for <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> operations. </p>
-<dl class="section return"><dt>Returns</dt><dd>Timeout in milliseconds:<ul>
-<li>Negative: <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> blocks indefinitely.</li>
-<li>Zero: <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> polls and returns immediately.</li>
-<li>Positive: maximum time to wait for a client connection. </li>
-</ul>
-</dd></dl>
+<p>Get the logical timeout (in milliseconds) for accept operations. </p>
+<p>This value determines how long methods like <span class="tt"><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> and <span class="tt"><a class="el" href="#ga05869effa85fd68fc91686a56a665ab0" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a></span> will wait for an incoming client connection before timing out. It is used internally by <span class="tt">select()</span> or similar readiness mechanisms.</p>
+<dl class="section note"><dt>Note</dt><dd>This timeout is a logical userland timeout and does <b>not</b> affect the socket descriptor via <span class="tt">setsockopt()</span> (unlike <span class="tt">Socket::getSoTimeout()</span>).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The configured accept timeout in milliseconds.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a> </dd>
+<dd>
+<a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> </dd>
+<dd>
+<a class="el" href="#ga05869effa85fd68fc91686a56a665ab0" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a> </dd></dl>
 
 </div>
 </div>
@@ -4002,7 +4004,7 @@ This constructor is not thread safe. Do not share a <a class="el" href="classjso
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga32d53c151cb8b7aecc8da81f9e9aa1b6" title="Enable or disable address reuse for this server socket.">setReuseAddress()</a>, <a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a>, <a class="el" href="#ga1ca989ba16d32862dd4fa9bbb2b165b5" title="Binds the server socket to the configured port and network interface.">bind()</a>, <a class="el" href="#ga4780ea0cf2fb98d0081ed91d8dbecfa3" title="Marks the socket as a passive (listening) socket, ready to accept incoming TCP connection requests.">listen()</a>, <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga32d53c151cb8b7aecc8da81f9e9aa1b6" title="Enable or disable address reuse for this server socket.">setReuseAddress()</a>, <a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a>, <a class="el" href="#ga1ca989ba16d32862dd4fa9bbb2b165b5" title="Binds the server socket to the configured port and network interface.">bind()</a>, <a class="el" href="#ga4780ea0cf2fb98d0081ed91d8dbecfa3" title="Marks the socket as a passive (listening) socket, ready to accept incoming TCP connection requests.">listen()</a>, <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></dd></dl>
 <div class="fragment"><div class="line"><span class="comment">// Example: Minimal usage—listen on all interfaces, default options</span></div>
 <div class="line"><a class="code hl_class" href="classjsocketpp_1_1ServerSocket.html">jsocketpp::ServerSocket</a> server(8080);</div>
 <div class="line"> </div>
@@ -4620,8 +4622,8 @@ Example Usage</h3>
 
 </div>
 </div>
-<a id="ga91f77d98b601507dbdcfac412e79f52d" name="ga91f77d98b601507dbdcfac412e79f52d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga91f77d98b601507dbdcfac412e79f52d">&#9670;&#160;</a></span>setSoTimeout() <span class="overload">[1/2]</span></h2>
+<a id="ga2087f337f22de16821132208b94b1441" name="ga2087f337f22de16821132208b94b1441"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2087f337f22de16821132208b94b1441">&#9670;&#160;</a></span>setSoTimeout() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4632,7 +4634,7 @@ Example Usage</h3>
         <tr>
           <td class="memname">void jsocketpp::ServerSocket::setSoTimeout </td>
           <td>(</td>
-          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>millis</em></span></td><td>)</td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>timeoutMillis</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -4643,20 +4645,28 @@ Example Usage</h3>
 </table>
 </div><div class="memdoc">
 
-<p>Set the timeout for <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> operations on this server socket. </p>
-<p>This timeout controls how long <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> will block while waiting for an incoming connection. It does not affect other socket operations such as read/write.</p>
-<dl class="section note"><dt>Note</dt><dd>Thread-safe if called before concurrent <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> calls.</dd></dl>
+<p>Set the logical timeout (in milliseconds) for accepting client connections. </p>
+<p>This timeout applies to methods like <span class="tt"><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> and <span class="tt"><a class="el" href="#ga05869effa85fd68fc91686a56a665ab0" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a></span>, and determines how long the server socket will wait for a client connection before timing out.</p>
+<p>Unlike <span class="tt"><a class="el" href="#ga3369e71b7e6f2c8aaf8c090379f8f843" title="Set timeout for socket send and/or receive operations.">Socket::setSoTimeout()</a></span>, this method does <b>not</b> call <span class="tt">setsockopt()</span> and does <b>not</b> affect the underlying socket descriptor. Instead, it is used internally to control the behavior of <span class="tt">select()</span> during accept operations.</p>
+<dl class="section note"><dt>Note</dt><dd>Use:<ul>
+<li>Negative value: wait indefinitely (blocking behavior)</li>
+<li>Zero: poll mode (non-blocking)</li>
+<li>Positive value: wait up to the specified milliseconds</li>
+</ul>
+</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">millis</td><td>Timeout in milliseconds:<ul>
-<li>If negative (default), blocks indefinitely.</li>
-<li>If zero, polls the socket and returns immediately if no client is waiting.</li>
-<li>If positive, waits up to the specified time for a client to connect. </li>
-</ul>
-</td></tr>
+    <tr><td class="paramname">timeoutMillis</td><td>Timeout value in milliseconds</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19" title="Get the logical timeout (in milliseconds) for accept operations.">getSoTimeout()</a> </dd>
+<dd>
+<a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> </dd>
+<dd>
+<a class="el" href="#ga05869effa85fd68fc91686a56a665ab0" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a> </dd>
+<dd>
+<a class="el" href="#ga61c1904213b0971817ec917fd2a01ccf" title="Wait for the server socket to become ready to accept an incoming connection.">waitReady()</a> </dd></dl>
 
 </div>
 </div>
@@ -5151,7 +5161,7 @@ Rationale</h3>
 </div><div class="memdoc">
 
 <p>Attempt to accept an incoming client connection, waiting up to a specified timeout. </p>
-<p>This method waits for an incoming client connection using the provided <span class="tt">timeoutMillis</span> value, overriding any global timeout set with <span class="tt"><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a></span>. If <span class="tt">timeoutMillis</span> is negative, the method blocks indefinitely until a client connects. If <span class="tt">timeoutMillis</span> is zero, the method polls and returns immediately if no client is waiting.</p>
+<p>This method waits for an incoming client connection using the provided <span class="tt">timeoutMillis</span> value, overriding any global timeout set with <span class="tt"><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a></span>. If <span class="tt">timeoutMillis</span> is negative, the method blocks indefinitely until a client connects. If <span class="tt">timeoutMillis</span> is zero, the method polls and returns immediately if no client is waiting.</p>
 <p>Unlike <span class="tt">accept(int timeoutMillis, ...)</span>, which throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a></span> if the timeout expires, this method returns <span class="tt">std::nullopt</span> in that case. This makes it ideal for polling loops or event-driven servers.</p>
 <p>Internally, this method uses <span class="tt">waitReady(timeoutMillis)</span> (via <span class="tt">select()</span>) to check for connection readiness. If the socket is ready, <span class="tt">acceptBlocking(...)</span> is called to retrieve the connection. Otherwise, <span class="tt">std::nullopt</span> is returned.</p>
 <p>The <b>blocking or non-blocking mode</b> of the server socket (via <span class="tt">setNonBlocking(true)</span>) does <b>not</b> affect the behavior of this method. Readiness is determined exclusively via <span class="tt">select()</span>. However, due to inherent race conditions in all socket APIs, it’s still possible for <span class="tt"><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> to fail with <span class="tt">EWOULDBLOCK</span> or <span class="tt">EAGAIN</span> after readiness has been reported. In such cases, a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> is thrown.</p>
@@ -5228,13 +5238,15 @@ Rationale</h3>
 </div><div class="memdoc">
 
 <p>Attempt to accept an incoming client connection, returning immediately or after the configured timeout. </p>
-<p>This method waits for an incoming client connection using the timeout set by <span class="tt"><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a></span>. If no timeout is configured (i.e., negative value), the method blocks indefinitely until a client connects. If the timeout is zero, the method polls and returns immediately if no client is waiting.</p>
+<p>This method waits for an incoming client connection using the timeout set by <span class="tt"><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a></span>. If no timeout is configured (i.e., negative value), the method blocks indefinitely until a client connects. If the timeout is zero, the method polls and returns immediately if no client is waiting.</p>
 <p>Unlike <span class="tt"><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span>, this method does <b>not</b> throw a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a></span> if no client is available. Instead, it returns <span class="tt">std::nullopt</span>. This makes it suitable for event loops or non-blocking server designs.</p>
 <p>Internally, this method uses <span class="tt"><a class="el" href="#ga61c1904213b0971817ec917fd2a01ccf" title="Wait for the server socket to become ready to accept an incoming connection.">waitReady()</a></span> (which uses <span class="tt">select()</span>) to check for pending connections. If a client is ready, <span class="tt"><a class="el" href="#ga8a8b491eb1ce67b53a652a1048ba5097" title="Accept an incoming client connection, always blocking until a client connects (unless the socket is s...">acceptBlocking()</a></span> is called to retrieve the connection. If not, <span class="tt">std::nullopt</span> is returned.</p>
 <p>The <b>blocking or non-blocking mode</b> of the server socket (via <span class="tt"><a class="el" href="#ga6da405f0212b736e027c7d2e16222b44" title="Set the server socket to non-blocking or blocking mode.">setNonBlocking()</a></span>) does not affect the waiting behavior of this method, since <span class="tt">select()</span> is used for readiness. In rare cases, <span class="tt"><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> may still fail with <span class="tt">EWOULDBLOCK</span> or <span class="tt">EAGAIN</span> if the connection is lost between readiness check and accept call, in which case a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> is thrown.</p>
 <dl class="section note"><dt>Note</dt><dd>This method is <b>not thread safe</b>. Simultaneous calls from multiple threads or processes may lead to race conditions. See <span class="tt"><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> for a discussion of those edge cases.</dd>
 <dd>
-To specify a timeout for a single call, use <span class="tt">tryAccept(int timeoutMillis, ...)</span>.</dd></dl>
+To specify a timeout for a single call, use <span class="tt">tryAccept(int timeoutMillis, ...)</span>.</dd>
+<dd>
+This method uses the logical timeout configured via <span class="tt"><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a></span> and does not rely on kernel-level socket timeouts. To control socket-level I/O timeout (for client sockets), see <span class="tt"><a class="el" href="#ga3369e71b7e6f2c8aaf8c090379f8f843" title="Set timeout for socket send and/or receive operations.">Socket::setSoTimeout()</a></span>.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>Optional internal receive buffer size for the accepted socket. If <span class="tt">std::nullopt</span>, the default buffer size is used. </td></tr>
@@ -5251,9 +5263,9 @@ To specify a timeout for a single call, use <span class="tt">tryAccept(int timeo
 </dl>
 <dl class="section pre"><dt>Precondition</dt><dd>Server socket must be valid, bound, and listening. </dd></dl>
 <dl class="section post"><dt>Postcondition</dt><dd>Returns <span class="tt">std::nullopt</span> if timeout expires, or a connected <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> on success.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout(int)</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout(int)</a> </dd>
 <dd>
-<a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19" title="Get the currently configured timeout for accept() operations.">getSoTimeout()</a> </dd>
+<a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19" title="Get the logical timeout (in milliseconds) for accept operations.">getSoTimeout()</a> </dd>
 <dd>
 <a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> </dd>
 <dd>
@@ -5313,14 +5325,15 @@ Timeout Semantics</h3>
 <li>If <span class="tt">timeoutMillis &lt; 0</span>, the call blocks indefinitely.</li>
 <li>If <span class="tt">timeoutMillis == 0</span>, the call polls and returns immediately.</li>
 <li>If <span class="tt">timeoutMillis &gt; 0</span>, it waits up to the specified time in milliseconds.</li>
-<li>If no value is provided, the method uses the socket's configured <span class="tt">SO_TIMEOUT</span> (set via <span class="tt"><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a></span>).</li>
+<li>If no value is provided, the method uses the <b>server socket's logical timeout</b> as configured by <span class="tt"><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a></span>.</li>
 </ul>
+<dl class="section note"><dt>Note</dt><dd>This method does <b>not</b> use or affect kernel-level socket timeouts (<span class="tt">SO_RCVTIMEO</span>). It relies purely on event polling with <span class="tt">poll()</span> or <span class="tt">select()</span> and your configured logical timeout.</dd></dl>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md442"></a>
 Thread Safety</h3>
 <p>This method is thread-safe <b>as long as the server socket is not concurrently closed or modified.</b></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">timeoutMillis</td><td>Optional timeout in milliseconds. Defaults to the value set by <span class="tt"><a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a></span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timeoutMillis</td><td>Optional timeout in milliseconds. Defaults to the value set by <span class="tt"><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a></span>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -5331,7 +5344,7 @@ Thread Safety</h3>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a>, <a class="el" href="#ga05869effa85fd68fc91686a56a665ab0" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a>, <a class="el" href="#ga91f77d98b601507dbdcfac412e79f52d" title="Set the timeout for accept() operations on this server socket.">setSoTimeout()</a>, <a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19" title="Get the currently configured timeout for accept() operations.">getSoTimeout()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a>, <a class="el" href="#ga05869effa85fd68fc91686a56a665ab0" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a>, <a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a>, <a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19" title="Get the logical timeout (in milliseconds) for accept operations.">getSoTimeout()</a> </dd></dl>
 
 </div>
 </div>
