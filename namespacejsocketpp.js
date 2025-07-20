@@ -1,5 +1,6 @@
 var namespacejsocketpp =
 [
+    [ "internal", "namespacejsocketpp_1_1internal.html", "namespacejsocketpp_1_1internal" ],
     [ "net", "namespacejsocketpp_1_1net.html", [
       [ "fromNetwork", "namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37", null ],
       [ "fromNetwork", "namespacejsocketpp_1_1net.html#acca9e860a0a33d2508bfa9986049db8c", null ],

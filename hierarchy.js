@@ -13,6 +13,7 @@ var hierarchy =
     [ "std::runtime_error", null, [
       [ "jsocketpp::SocketException", "classjsocketpp_1_1SocketException.html", null ]
     ] ],
+    [ "jsocketpp::internal::ScopedBlockingMode", "classjsocketpp_1_1internal_1_1ScopedBlockingMode.html", null ],
     [ "jsocketpp::ServerSocket", "classjsocketpp_1_1ServerSocket.html", null ],
     [ "jsocketpp::Socket", "classjsocketpp_1_1Socket.html", null ],
     [ "jsocketpp::SocketInitializer", "classjsocketpp_1_1SocketInitializer.html", null ],

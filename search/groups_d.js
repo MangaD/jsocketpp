@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['non_20blocking_20sockets_20in_20jsocketpp_0',['Blocking vs Non-Blocking Sockets in jsocketpp',['../group__async__io.html',1,'']]]
+  ['make_20sense_20to_20provide_20poll_20and_20epoll_20as_20alternatives_0',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]]
 ];

@@ -10,7 +10,7 @@ var indexSectionsWithContent =
   7: "s",
   8: "brw",
   9: "s",
-  10: "2:abcdefgijlmnoprstuvw",
+  10: "2:abcdefghijlmnoprstuvw",
   11: "123456789:abcdefghijklmnopqrstuvwy“⏱⚙⚠✅✔🎯💡📌📚📞📤📥📦🔄🔌🔍🔐🔗🕐🚀🚦🛠🧠🧪"
 };
 

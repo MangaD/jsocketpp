@@ -21,9 +21,11 @@ var searchData=
   ['_5fremoteaddrlen_18',['_remoteAddrLen',['../classjsocketpp_1_1Socket.html#a9b495d6a442ffc2ead89a1e3d3232970',1,'jsocketpp::Socket']]],
   ['_5fselectedaddrinfo_19',['_selectedAddrInfo',['../classjsocketpp_1_1DatagramSocket.html#ac91cdd138597ae9cf75389cf41a24d83',1,'jsocketpp::DatagramSocket::_selectedAddrInfo'],['../classjsocketpp_1_1ServerSocket.html#a3d85400180a3ee56838c165e7b459e80',1,'jsocketpp::ServerSocket::_selectedAddrInfo'],['../classjsocketpp_1_1Socket.html#ac4ae016cffe61f7c8ba9572ed98922aa',1,'jsocketpp::Socket::_selectedAddrInfo']]],
   ['_5fserversocket_20',['_serverSocket',['../classjsocketpp_1_1ServerSocket.html#a7286800af0502d88ff1460f875cd178d',1,'jsocketpp::ServerSocket']]],
-  ['_5fsocketpath_21',['_socketPath',['../classjsocketpp_1_1UnixSocket.html#a324077c9d23ae6de38014520beca8c24',1,'jsocketpp::UnixSocket']]],
-  ['_5fsockfd_22',['_sockFd',['../classjsocketpp_1_1DatagramSocket.html#ad6f0154db35669c0aa1929d415e71048',1,'jsocketpp::DatagramSocket::_sockFd'],['../classjsocketpp_1_1Socket.html#a9a1c3578c781b51d5f59313c6c4aef6c',1,'jsocketpp::Socket::_sockFd'],['../classjsocketpp_1_1UnixSocket.html#a6acdbdcd8197d46742a65be96df0eaec',1,'jsocketpp::UnixSocket::_sockFd']]],
-  ['_5fsotimeoutmillis_23',['_soTimeoutMillis',['../classjsocketpp_1_1ServerSocket.html#a21ecaaf4b757a2dd9cee37231381706f',1,'jsocketpp::ServerSocket']]],
-  ['_5fsrvaddrinfo_24',['_srvAddrInfo',['../classjsocketpp_1_1ServerSocket.html#aa27d2f032363fb8faa4b09eb81cdff31',1,'jsocketpp::ServerSocket']]],
-  ['_5fttl_25',['_ttl',['../classjsocketpp_1_1MulticastSocket.html#ac0001a7d48ce8157b9c487963599f2b5',1,'jsocketpp::MulticastSocket']]]
+  ['_5fsock_21',['_sock',['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#a1c11185c53ef3f7ce4d579d9604af40f',1,'jsocketpp::internal::ScopedBlockingMode']]],
+  ['_5fsocketpath_22',['_socketPath',['../classjsocketpp_1_1UnixSocket.html#a324077c9d23ae6de38014520beca8c24',1,'jsocketpp::UnixSocket']]],
+  ['_5fsockfd_23',['_sockFd',['../classjsocketpp_1_1DatagramSocket.html#ad6f0154db35669c0aa1929d415e71048',1,'jsocketpp::DatagramSocket::_sockFd'],['../classjsocketpp_1_1Socket.html#a9a1c3578c781b51d5f59313c6c4aef6c',1,'jsocketpp::Socket::_sockFd'],['../classjsocketpp_1_1UnixSocket.html#a6acdbdcd8197d46742a65be96df0eaec',1,'jsocketpp::UnixSocket::_sockFd']]],
+  ['_5fsotimeoutmillis_24',['_soTimeoutMillis',['../classjsocketpp_1_1ServerSocket.html#a21ecaaf4b757a2dd9cee37231381706f',1,'jsocketpp::ServerSocket']]],
+  ['_5fsrvaddrinfo_25',['_srvAddrInfo',['../classjsocketpp_1_1ServerSocket.html#aa27d2f032363fb8faa4b09eb81cdff31',1,'jsocketpp::ServerSocket']]],
+  ['_5fttl_26',['_ttl',['../classjsocketpp_1_1MulticastSocket.html#ac0001a7d48ce8157b9c487963599f2b5',1,'jsocketpp::MulticastSocket']]],
+  ['_5fwasblocking_27',['_wasBlocking',['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#a58ebaaf8ebaf3a5add20e838663a3dff',1,'jsocketpp::internal::ScopedBlockingMode']]]
 ];

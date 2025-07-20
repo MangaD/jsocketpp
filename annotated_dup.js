@@ -1,6 +1,9 @@
 var annotated_dup =
 [
     [ "jsocketpp", "namespacejsocketpp.html", [
+      [ "internal", "namespacejsocketpp_1_1internal.html", [
+        [ "ScopedBlockingMode", "classjsocketpp_1_1internal_1_1ScopedBlockingMode.html", "classjsocketpp_1_1internal_1_1ScopedBlockingMode" ]
+      ] ],
       [ "BufferView", "structjsocketpp_1_1BufferView.html", "structjsocketpp_1_1BufferView" ],
       [ "DatagramPacket", "classjsocketpp_1_1DatagramPacket.html", "classjsocketpp_1_1DatagramPacket" ],
       [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html", "classjsocketpp_1_1DatagramSocket" ],

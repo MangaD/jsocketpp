@@ -722,7 +722,7 @@ This method is <b>not thread safe</b>. Simultaneous <span class="tt">accept</spa
 <div class="line">        <span class="keywordflow">throw</span>;</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Set the socket to non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:320</div></div>
+<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Set the socket to non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:316</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -964,7 +964,7 @@ Example Usage</h3>
 <div class="line">sock.connect();</div>
 <div class="line"><span class="comment">// ... use socket ...</span></div>
 <div class="line">sock.close();  <span class="comment">// Explicitly close when done</span></div>
-<div class="ttc" id="agroup__tcp_html_ga35351a964f0ff1df19dfbe630afb7167"><div class="ttname"><a href="#ga35351a964f0ff1df19dfbe630afb7167">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:8</div></div>
+<div class="ttc" id="agroup__tcp_html_ga35351a964f0ff1df19dfbe630afb7167"><div class="ttname"><a href="#ga35351a964f0ff1df19dfbe630afb7167">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:11</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md494"></a>
 Resource Management</h3>
 <ul>
@@ -1468,7 +1468,7 @@ getSendBufferSize() </dd>
 <div class="line">server.bind();</div>
 <div class="line"><a class="code hl_typedef" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port = server.getLocalPort();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Server bound to port: &quot;</span> &lt;&lt; port &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__core_html_ga1a7be273748ae3d91bc5ebe6499788a7"><div class="ttname"><a href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">jsocketpp::Port</a></div><div class="ttdeci">std::uint16_t Port</div><div class="ttdoc">Type alias representing a TCP or UDP port number (1–65535).</div><div class="ttdef"><b>Definition</b> common.hpp:304</div></div>
+<div class="ttc" id="agroup__core_html_ga1a7be273748ae3d91bc5ebe6499788a7"><div class="ttname"><a href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">jsocketpp::Port</a></div><div class="ttdeci">std::uint16_t Port</div><div class="ttdoc">Type alias representing a TCP or UDP port number (1–65535).</div><div class="ttdef"><b>Definition</b> common.hpp:315</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1740,7 +1740,7 @@ Example Usage</h3>
 <dd>
 <a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get send buffer size </dd>
 <dd>
-<a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set internal string buffer size </dd></dl>
+<a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html">internal</a> string buffer size </dd></dl>
 
 </div>
 </div>
@@ -1927,7 +1927,7 @@ Example Usage</h3>
 <dd>
 <a class="el" href="#ga53a0a6980058ce02034033b05f6ca389" title="Get the socket&#39;s receive buffer size (SO_RCVBUF).">getReceiveBufferSize()</a> Get receive buffer size </dd>
 <dd>
-<a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set internal string buffer size </dd></dl>
+<a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html">internal</a> string buffer size </dd></dl>
 
 </div>
 </div>
@@ -2572,7 +2572,7 @@ Memory Safety:<ul>
 <dd>
 <a class="el" href="#gab1aaaa6572bcf756be7bcdb801e35812" title="Reads a length-prefixed payload using a fixed-size prefix type.">readPrefixed()</a> For reading size-prefixed dynamic data </dd>
 <dd>
-<a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> To adjust internal string buffer size </dd>
+<a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> To adjust <a class="el" href="namespacejsocketpp_1_1internal.html">internal</a> string buffer size </dd>
 <dd>
 <a class="el" href="#ga3369e71b7e6f2c8aaf8c090379f8f843" title="Set timeout for socket send and/or receive operations.">setSoTimeout()</a> To set socket <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size trivially copyable value of type T from the socket.">read</a> timeout </dd>
 <dd>
@@ -2722,7 +2722,7 @@ Example Usage</h3>
 <dl class="section note"><dt>Note</dt><dd>This method differs from <a class="el" href="#ga3d194596258a3b1117b3437d969019b6" title="Read exactly n bytes from the socket into a string.">readExact()</a> in that it won't attempt to collect exactly n bytes. It returns as soon as any data is available.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga3d194596258a3b1117b3437d969019b6" title="Read exactly n bytes from the socket into a string.">readExact()</a> For reading exact number of bytes </dd>
 <dd>
-<a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> For reading with internal buffer </dd>
+<a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> For reading with <a class="el" href="namespacejsocketpp_1_1internal.html">internal</a> buffer </dd>
 <dd>
 <a class="el" href="#ga6cc57c26e230cb7ed7fa0174028811d5" title="Set the socket to non-blocking or blocking mode.">setNonBlocking()</a> To control blocking behavior </dd>
 <dd>
@@ -3631,7 +3631,7 @@ Example Usage</h3>
 <div class="line">    <a class="code hl_struct" href="structjsocketpp_1_1BufferView.html">BufferView</a>{payload.data(), payload.size()}</div>
 <div class="line">};</div>
 <div class="line">std::size_t received = sock.readv(views);</div>
-<div class="ttc" id="astructjsocketpp_1_1BufferView_html"><div class="ttname"><a href="structjsocketpp_1_1BufferView.html">jsocketpp::BufferView</a></div><div class="ttdoc">Represents a raw writable memory region for scatter/gather I/O.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:41</div></div>
+<div class="ttc" id="astructjsocketpp_1_1BufferView_html"><div class="ttname"><a href="structjsocketpp_1_1BufferView.html">jsocketpp::BufferView</a></div><div class="ttdoc">Represents a raw writable memory region for scatter/gather I/O.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:43</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">buffers</td><td>A span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> objects describing writable regions. </td></tr>
@@ -4470,7 +4470,7 @@ Example Usage</h3>
 <dl class="section note"><dt>Note</dt><dd>Some systems may double the specified size internally. Use <a class="el" href="#ga53a0a6980058ce02034033b05f6ca389" title="Get the socket&#39;s receive buffer size (SO_RCVBUF).">getReceiveBufferSize()</a> to verify the actual size.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get current send buffer size </dd>
 <dd>
-<a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set internal buffer size </dd>
+<a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html">internal</a> buffer size </dd>
 <dd>
 <a class="el" href="#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> Set send buffer size </dd></dl>
 
@@ -4807,8 +4807,8 @@ Example Usage</h3>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Complete shutdown</span></div>
 <div class="line">sock.shutdown(<a class="code hl_enumvalue" href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e">ShutdownMode::Both</a>);</div>
-<div class="ttc" id="anamespacejsocketpp_html_a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6"><div class="ttname"><a href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6">jsocketpp::ShutdownMode::Write</a></div><div class="ttdeci">@ Write</div><div class="ttdoc">Shutdown write operations (SHUT_WR or SD_SEND)</div><div class="ttdef"><b>Definition</b> common.hpp:283</div></div>
-<div class="ttc" id="anamespacejsocketpp_html_a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e"><div class="ttname"><a href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e">jsocketpp::ShutdownMode::Both</a></div><div class="ttdeci">@ Both</div><div class="ttdoc">Shutdown both read and write operations (SHUT_RDWR or SD_BOTH)</div><div class="ttdef"><b>Definition</b> common.hpp:284</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6"><div class="ttname"><a href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6">jsocketpp::ShutdownMode::Write</a></div><div class="ttdeci">@ Write</div><div class="ttdoc">Shutdown write operations (SHUT_WR or SD_SEND)</div><div class="ttdef"><b>Definition</b> common.hpp:294</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e"><div class="ttname"><a href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e">jsocketpp::ShutdownMode::Both</a></div><div class="ttdeci">@ Both</div><div class="ttdoc">Shutdown both read and write operations (SHUT_RDWR or SD_BOTH)</div><div class="ttdef"><b>Definition</b> common.hpp:295</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md497"></a>
 Implementation Details</h3>
 <ul>
@@ -6295,7 +6295,6 @@ Thread Safety</h3>
 </div><div class="memdoc">
 
 <p>Destructs the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object, closing connections and freeing resources. </p>
-<p>Destructor. Closes the socket and frees resources.</p>
 <p>This destructor ensures proper cleanup of all resources owned by the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a>:</p><ul>
 <li>Closes the socket file descriptor if still open</li>
 <li>Frees any allocated address information structures</li>

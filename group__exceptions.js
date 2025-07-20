@@ -7,6 +7,6 @@ var group__exceptions =
       [ "_errorCode", "classjsocketpp_1_1SocketException.html#ad5935c3ed7b7e0e4ee34e5cdbb3c232b", null ]
     ] ],
     [ "jsocketpp::SocketTimeoutException", "classjsocketpp_1_1SocketTimeoutException.html", [
-      [ "SocketTimeoutException", "classjsocketpp_1_1SocketTimeoutException.html#a60f25c80265801631f7808b84980f59d", null ]
+      [ "SocketTimeoutException", "classjsocketpp_1_1SocketTimeoutException.html#a83c08928ca631472282ca3b0ce3c952a", null ]
     ] ]
 ];
