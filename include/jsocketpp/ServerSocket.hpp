@@ -654,6 +654,10 @@ class ServerSocket
      *
      * @note To specify a timeout for a single call, use `tryAccept(int timeoutMillis, ...)`.
      *
+     * @note This method uses the logical timeout configured via `setSoTimeout()` and does not rely on
+     *       kernel-level socket timeouts. To control socket-level I/O timeout (for client sockets), see
+     *       `Socket::setSoTimeout()`.
+     *
      * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
      *                           If `std::nullopt`, the default buffer size is used.
      * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
@@ -1242,7 +1246,11 @@ class ServerSocket
      * - If `timeoutMillis < 0`, the call blocks indefinitely.
      * - If `timeoutMillis == 0`, the call polls and returns immediately.
      * - If `timeoutMillis > 0`, it waits up to the specified time in milliseconds.
-     * - If no value is provided, the method uses the socket's configured `SO_TIMEOUT` (set via `setSoTimeout()`).
+     * - If no value is provided, the method uses the **server socket's logical timeout** as configured by
+     * `setSoTimeout()`.
+     *
+     * @note This method does **not** use or affect kernel-level socket timeouts (`SO_RCVTIMEO`). It relies purely on
+     *       event polling with `poll()` or `select()` and your configured logical timeout.
      *
      * ### Thread Safety
      * This method is thread-safe **as long as the server socket is not concurrently closed or modified.**
@@ -1257,21 +1265,48 @@ class ServerSocket
     [[nodiscard]] bool waitReady(std::optional<int> timeoutMillis = std::nullopt) const;
 
     /**
-     * @brief Set the timeout for accept() operations on this server socket.
+     * @brief Set the logical timeout (in milliseconds) for accepting client connections.
      *
-     * This timeout controls how long accept() will block while waiting for an incoming connection.
-     * It does not affect other socket operations such as read/write.
+     * This timeout applies to methods like `accept()` and `tryAccept()`, and determines how long
+     * the server socket will wait for a client connection before timing out.
      *
-     * @note Thread-safe if called before concurrent accept() calls.
+     * Unlike `Socket::setSoTimeout()`, this method does **not** call `setsockopt()` and does **not**
+     * affect the underlying socket descriptor. Instead, it is used internally to control the behavior
+     * of `select()` during accept operations.
      *
-     * @param[in] millis Timeout in milliseconds:
-     *   - If negative (default), blocks indefinitely.
-     *   - If zero, polls the socket and returns immediately if no client is waiting.
-     *   - If positive, waits up to the specified time for a client to connect.
+     * @note Use:
+     * - Negative value: wait indefinitely (blocking behavior)
+     * - Zero: poll mode (non-blocking)
+     * - Positive value: wait up to the specified milliseconds
+     *
+     * @param timeoutMillis Timeout value in milliseconds
+     *
+     * @see getSoTimeout()
+     * @see accept()
+     * @see tryAccept()
+     * @see waitReady()
      *
      * @ingroup tcp
      */
-    void setSoTimeout(const int millis) { _soTimeoutMillis = millis; }
+    void setSoTimeout(const int timeoutMillis) { _soTimeoutMillis = timeoutMillis; }
+
+    /**
+     * @brief Get the logical timeout (in milliseconds) for accept operations.
+     *
+     * This value determines how long methods like `accept()` and `tryAccept()` will wait for an incoming
+     * client connection before timing out. It is used internally by `select()` or similar readiness mechanisms.
+     *
+     * @note This timeout is a logical userland timeout and does **not** affect the socket descriptor
+     *       via `setsockopt()` (unlike `Socket::getSoTimeout()`).
+     *
+     * @return The configured accept timeout in milliseconds.
+     *
+     * @see setSoTimeout()
+     * @see accept()
+     * @see tryAccept()
+     * @ingroup tcp
+     */
+    [[nodiscard]] int getSoTimeout() const noexcept { return _soTimeoutMillis; }
 
 #if defined(IPV6_V6ONLY)
     /**
@@ -1300,18 +1335,6 @@ class ServerSocket
      */
     [[nodiscard]] bool getIPv6Only() const;
 #endif
-
-    /**
-     * @brief Get the currently configured timeout for accept() operations.
-     *
-     * @return Timeout in milliseconds:
-     *   - Negative: accept() blocks indefinitely.
-     *   - Zero: accept() polls and returns immediately.
-     *   - Positive: maximum time to wait for a client connection.
-     *
-     * @ingroup tcp
-     */
-    [[nodiscard]] int getSoTimeout() const noexcept { return _soTimeoutMillis; }
 
     /**
      * @brief Set the default receive buffer size for accepted client sockets.
