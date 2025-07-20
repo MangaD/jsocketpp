@@ -1,7 +1,7 @@
 var searchData=
 [
   ['_7edatagramsocket_0',['~DatagramSocket',['../classjsocketpp_1_1DatagramSocket.html#a357b56bb2b775c3b272f50e249cb8275',1,'jsocketpp::DatagramSocket']]],
-  ['_7escopedblockingmode_1',['~ScopedBlockingMode',['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#a413d5e88aaee47a98645a9760884bec0',1,'jsocketpp::internal::ScopedBlockingMode']]],
+  ['_7escopedblockingmode_1',['~ScopedBlockingMode',['../group__internal.html#ga413d5e88aaee47a98645a9760884bec0',1,'jsocketpp::internal::ScopedBlockingMode']]],
   ['_7eserversocket_2',['~ServerSocket',['../group__tcp.html#gaa848f0054a9915aaa3864248736205c9',1,'jsocketpp::ServerSocket']]],
   ['_7esocket_3',['~Socket',['../group__tcp.html#ga2d1b014c3f33bb2b0400baf08681f973',1,'jsocketpp::Socket']]],
   ['_7esocketexception_4',['~SocketException',['../classjsocketpp_1_1SocketException.html#aaa33a3bf7a190d99131ec55d09e59c83',1,'jsocketpp::SocketException']]],

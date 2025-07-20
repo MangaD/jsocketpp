@@ -1,10 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"group__tcp.html#ga05b1ae2ec76833370c809c53fe550a95":[3,1,2,42],
-"group__tcp.html#ga06c2651d2b46a22ca1a80dde4a74016e":[3,1,2,72],
-"group__tcp.html#ga0b3a5cb732c669b678e03549e5af2427":[3,1,2,33],
-"group__tcp.html#ga1308a8d172508999834853ccb35607e8":[3,1,2,17],
-"group__tcp.html#ga16bb8c36a3fd9a3a97a0d4f5d5036550":[3,1,2,90],
 "group__tcp.html#ga1717f9859e5aeeba77c3d463ec53e735":[3,1,2,35],
 "group__tcp.html#ga1957722b31677f0ab5efb17398e95156":[3,1,2,85],
 "group__tcp.html#ga1ca989ba16d32862dd4fa9bbb2b165b5":[3,1,2,8],
@@ -158,7 +153,7 @@ var NAVTREEINDEX1 =
 "namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda":[4,0,0,14],
 "namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2":[4,0,0,31],
 "namespacejsocketpp.html#aef7428a3f4d80452442ecf3edfdbc89a":[4,0,0,24],
-"namespacejsocketpp_1_1internal.html":[4,0,0,0],
+"namespacejsocketpp_1_1internal.html":[3,1,1,0],
 "namespacejsocketpp_1_1net.html":[3,1,0,0],
 "namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5":[4,0,0,1,2],
 "namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a":[4,0,0,1,3],

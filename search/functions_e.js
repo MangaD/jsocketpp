@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['scopedblockingmode_0',['ScopedBlockingMode',['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#a606aec57de9374b5b0fc69f37504fedd',1,'jsocketpp::internal::ScopedBlockingMode']]],
+  ['scopedblockingmode_0',['ScopedBlockingMode',['../group__internal.html#ga606aec57de9374b5b0fc69f37504fedd',1,'jsocketpp::internal::ScopedBlockingMode']]],
   ['serversocket_1',['ServerSocket',['../group__tcp.html#gad389848c3e0fcadcfe5f581ab8c8fbb8',1,'jsocketpp::ServerSocket::ServerSocket(Port port, std::string_view localAddress={}, bool autoBindListen=true, bool reuseAddress=true, int soTimeoutMillis=-1, bool dualStack=true)'],['../group__tcp.html#gac6eeb69e3b15334e7c224edf30248fe3',1,'jsocketpp::ServerSocket::ServerSocket(const ServerSocket &amp;rhs)=delete'],['../group__tcp.html#gace3560ea1b99e15c1564e430e8848500',1,'jsocketpp::ServerSocket::ServerSocket(ServerSocket &amp;&amp;rhs) noexcept']]],
   ['setdefaultreceivebuffersize_2',['setDefaultReceiveBufferSize',['../group__tcp.html#gaf644d3fccaebced95dd6bc2055bbed3e',1,'jsocketpp::ServerSocket']]],
   ['setdefaultsendbuffersize_3',['setDefaultSendBufferSize',['../group__tcp.html#gadbeecdd1d47fb8244dab210fa297fcf9',1,'jsocketpp::ServerSocket']]],

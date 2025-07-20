@@ -7,7 +7,7 @@ var searchData=
   ['library_20for_20vcpkg_4',['2. Prepare Your Library for vcpkg',['../group__vcpkg__publish__guide.html#autotoc_md349',1,'']]],
   ['license_5',['License',['../group__BUILD__AND__USAGE.html#autotoc_md24',1,'License'],['../index.html#autotoc_md386',1,'License']]],
   ['lifecycle_6',['Lifecycle',['../group__sockets__theory.html#autotoc_md282',1,'4. How Sockets Work: The Lifecycle'],['../group__socket__states.html#autotoc_md246',1,'TCP Socket Lifecycle']]],
-  ['limitations_7',['Limitations',['../group__address__reuse.html#autotoc_md86',1,'⚠️ Java’s Approach and Its Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md557',1,'Limitations']]],
+  ['limitations_7',['Limitations',['../group__address__reuse.html#autotoc_md86',1,'⚠️ Java’s Approach and Its Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md563',1,'Limitations']]],
   ['limitations_3a_8',['Limitations:',['../group__async__io.html#autotoc_md144',1,'']]],
   ['linking_20the_20library_9',['Linking the Library',['../group__BUILD__AND__USAGE.html#autotoc_md14',1,'']]],
   ['linux_10',['Unix/Linux',['../group__address__reuse.html#autotoc_md76',1,'']]],

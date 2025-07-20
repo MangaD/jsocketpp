@@ -108,6 +108,16 @@ Collaboration diagram for Internal Helpers:</div>
 </map>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:jsocketpp_3A_3Ainternal" id="r_jsocketpp_3A_3Ainternal"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejsocketpp_1_1internal.html">jsocketpp::internal</a></td></tr>
+<tr class="memdesc:namespacejsocketpp_1_1internal"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation-only utilities and platform abstractions for jsocketpp. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:jsocketpp_3A_3Ainternal_3A_3AScopedBlockingMode" id="r_jsocketpp_3A_3Ainternal_3A_3AScopedBlockingMode"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html">jsocketpp::internal::ScopedBlockingMode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">RAII helper for temporarily overriding a socket's blocking mode.  <a href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:gae140ce724d1cfc733f3c2dbccf0cf60b" id="r_gae140ce724d1cfc733f3c2dbccf0cf60b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; WSABUF &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae140ce724d1cfc733f3c2dbccf0cf60b">jsocketpp::internal::toWSABUF</a> (const <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> *buffers, const std::size_t count)</td></tr>
@@ -118,12 +128,68 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga7701a273337a71485ba1583df464b178"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a raw array of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> elements into an iovec array for POSIX <span class="tt">readv</span>/<span class="tt">writev</span>.  <br /></td></tr>
 <tr class="memitem:gacdd48d04c87ec69aff97c5d29dbfe1a1" id="r_gacdd48d04c87ec69aff97c5d29dbfe1a1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; iovec &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacdd48d04c87ec69aff97c5d29dbfe1a1">jsocketpp::internal::toIOVec</a> (const std::span&lt; const <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers)</td></tr>
 <tr class="memdesc:gacdd48d04c87ec69aff97c5d29dbfe1a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> elements into an iovec array for POSIX vectorized I/O.  <br /></td></tr>
+<tr class="memitem:ga606aec57de9374b5b0fc69f37504fedd" id="r_ga606aec57de9374b5b0fc69f37504fedd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga606aec57de9374b5b0fc69f37504fedd">jsocketpp::internal::ScopedBlockingMode::ScopedBlockingMode</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock, bool temporaryNonBlocking)</td></tr>
+<tr class="memdesc:ga606aec57de9374b5b0fc69f37504fedd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <span class="tt"><a class="el" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html" title="RAII helper for temporarily overriding a socket&#39;s blocking mode.">ScopedBlockingMode</a></span> that temporarily overrides the socket's blocking mode.  <br /></td></tr>
+<tr class="memitem:ga413d5e88aaee47a98645a9760884bec0" id="r_ga413d5e88aaee47a98645a9760884bec0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga413d5e88aaee47a98645a9760884bec0">jsocketpp::internal::ScopedBlockingMode::~ScopedBlockingMode</a> ()</td></tr>
+<tr class="memdesc:ga413d5e88aaee47a98645a9760884bec0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore the socket's original blocking mode on destruction.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Implementation-only utilities for internal use. </p>
 <p>These functions and types are not part of the public API. They are intended for internal glue code, platform compatibility, and cross-cutting concerns.</p>
 <dl class="section warning"><dt>Warning</dt><dd>Do not rely on this module from user code. It is subject to change without notice. </dd></dl>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="ga606aec57de9374b5b0fc69f37504fedd" name="ga606aec57de9374b5b0fc69f37504fedd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga606aec57de9374b5b0fc69f37504fedd">&#9670;&#160;</a></span>ScopedBlockingMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">jsocketpp::internal::ScopedBlockingMode::ScopedBlockingMode </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a></td>          <td class="paramname"><span class="paramname"><em>sock</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>temporaryNonBlocking</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a <span class="tt"><a class="el" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html" title="RAII helper for temporarily overriding a socket&#39;s blocking mode.">ScopedBlockingMode</a></span> that temporarily overrides the socket's blocking mode. </p>
+<p>This constructor queries the current blocking state of the specified socket and sets it to the desired temporary mode (<span class="tt">blocking</span> or <span class="tt">non-blocking</span>). Upon destruction, the original mode is restored.</p>
+<p>This is typically used to safely override a socket's mode during a scoped operation (e.g. non-blocking <span class="tt">connect()</span>), without permanently modifying the socket's configuration.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sock</td><td>The native socket descriptor (platform-specific type: <span class="tt"><a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a></span> on Windows, <span class="tt">int</span> on POSIX). </td></tr>
+    <tr><td class="paramname">temporaryNonBlocking</td><td>If <span class="tt">true</span>, the socket will be set to non-blocking mode during the scope. If <span class="tt">false</span>, it will be temporarily set to blocking mode.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>if querying or setting the socket mode fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>The constructor reads the current mode and only applies a change if necessary. </dd>
+<dd>
+If <span class="tt">setNonBlocking()</span> is called on the same socket while the object is alive, the final restored state may be incorrect.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga413d5e88aaee47a98645a9760884bec0" title="Restore the socket&#39;s original blocking mode on destruction.">~ScopedBlockingMode()</a> </dd>
+<dd>
+setNonBlocking() </dd></dl>
+
+</div>
+</div>
 <a id="ga7701a273337a71485ba1583df464b178" name="ga7701a273337a71485ba1583df464b178"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga7701a273337a71485ba1583df464b178">&#9670;&#160;</a></span>toIOVec() <span class="overload">[1/2]</span></h2>
 
@@ -311,6 +377,38 @@ This function is only available on Windows (<span class="tt">_WIN32</span> defin
 WSABUF </dd>
 <dd>
 <a class="el" href="#gae140ce724d1cfc733f3c2dbccf0cf60b" title="Convert a raw array of BufferView elements into a WSABUF array for use with Windows socket APIs.">toWSABUF(const BufferView*, std::size_t)</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga413d5e88aaee47a98645a9760884bec0" name="ga413d5e88aaee47a98645a9760884bec0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga413d5e88aaee47a98645a9760884bec0">&#9670;&#160;</a></span>~ScopedBlockingMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">jsocketpp::internal::ScopedBlockingMode::~ScopedBlockingMode </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Restore the socket's original blocking mode on destruction. </p>
+<p>This destructor attempts to revert the socket descriptor to the blocking mode it had at the time of this object's construction. This ensures that any temporary change to the blocking state (via the constructor) is automatically undone, preserving consistent socket behavior after the scope ends.</p>
+<p>This restoration is performed even if an exception was thrown inside the guarded scope, making this class suitable for safe use in exception-prone paths such as <span class="tt">connect()</span> with timeout logic.</p>
+<dl class="section note"><dt>Note</dt><dd>Errors during restoration are silently ignored. This is intentional to maintain noexcept destructor semantics and prevent exceptions from escaping destructors.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Do not call <span class="tt">setNonBlocking()</span> on the same socket while a <span class="tt"><a class="el" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html" title="RAII helper for temporarily overriding a socket&#39;s blocking mode.">ScopedBlockingMode</a></span> is active, as this will interfere with the mode restoration logic.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga606aec57de9374b5b0fc69f37504fedd" title="Construct a ScopedBlockingMode that temporarily overrides the socket&#39;s blocking mode.">ScopedBlockingMode()</a> </dd></dl>
 
 </div>
 </div>

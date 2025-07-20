@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['rationale_0',['Rationale',['../group__ServerSocket__Lifecycle.html#autotoc_md34',1,'4. Advantages and Rationale'],['../group__async__io.html#autotoc_md123',1,'Design Rationale'],['../group__core.html#autotoc_md421',1,'Rationale'],['../group__tcp.html#autotoc_md454',1,'Rationale']]],
+  ['rationale_0',['Rationale',['../group__ServerSocket__Lifecycle.html#autotoc_md34',1,'4. Advantages and Rationale'],['../group__async__io.html#autotoc_md123',1,'Design Rationale'],['../group__core.html#autotoc_md421',1,'Rationale'],['../group__tcp.html#autotoc_md460',1,'Rationale']]],
   ['raw_20socket_20communication_1',['3.3 Raw Socket Communication',['../group__underlying__socket__api.html#autotoc_md307',1,'']]],
   ['raw_20sockets_2',['Raw Sockets',['../group__sockets__theory.html#autotoc_md267',1,'2.3. Raw Sockets'],['../group__sockets__theory.html#autotoc_md275',1,'Raw Sockets']]],
   ['read_3',['Read',['../namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a7a1a5f3e79fdc91edf2f5ead9d66abb4',1,'jsocketpp']]],
@@ -25,7 +25,7 @@ var searchData=
   ['readvatmostwithtimeout_22',['readvAtMostWithTimeout',['../group__tcp.html#ga6a8b2fada7df0ddec9b6f2c491f4f92b',1,'jsocketpp::Socket']]],
   ['real_20server_20and_20client_3a_23',['2.1 &lt;b&gt;Setting Up Real Server and Client&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md336',1,'']]],
   ['recap_24',['✅ Best Practices Recap',['../group__address__reuse.html#autotoc_md110',1,'']]],
-  ['receiving_25',['Usage Example (Receiving)',['../classjsocketpp_1_1MulticastSocket.html#autotoc_md430',1,'']]],
+  ['receiving_25',['Usage Example (Receiving)',['../classjsocketpp_1_1MulticastSocket.html#autotoc_md436',1,'']]],
   ['recipe_20conanfile_20py_26',['2. Conan Recipe (&lt;span class=&quot;tt&quot;&gt;conanfile.py&lt;/span&gt;)',['../group__conan__publish__guide.html#autotoc_md164',1,'']]],
   ['recipe_20locally_27',['4. Test the Recipe Locally',['../group__conan__publish__guide.html#autotoc_md168',1,'']]],
   ['recommendations_28',['Recommendations',['../group__select__poll__epoll__iocp.html#autotoc_md195',1,'7. <b>Practical Recommendations</b>'],['../group__ServerSocket__Lifecycle.html#autotoc_md48',1,'8. Recommendations'],['../group__socket-options.html#autotoc_md223',1,'Design Recommendations']]],
@@ -45,8 +45,8 @@ var searchData=
   ['require_20the_20port_20in_20the_20constructor_42',['Why require the port in the constructor?',['../group__ServerSocket__Lifecycle.html#autotoc_md32',1,'']]],
   ['resize_43',['resize',['../classjsocketpp_1_1DatagramPacket.html#a2c99540d2136dae10a56f781c1b20c5f',1,'jsocketpp::DatagramPacket']]],
   ['resolvebuffers_44',['resolveBuffers',['../group__tcp.html#ga2becb95c348e07a111c3254d9ddb72ee',1,'jsocketpp::ServerSocket']]],
-  ['resource_20cleanup_45',['Resource Cleanup',['../group__tcp.html#autotoc_md438',1,'']]],
-  ['resource_20management_46',['Resource Management',['../group__tcp.html#autotoc_md494',1,'']]],
+  ['resource_20cleanup_45',['Resource Cleanup',['../group__tcp.html#autotoc_md444',1,'']]],
+  ['resource_20management_46',['Resource Management',['../group__tcp.html#autotoc_md500',1,'']]],
   ['resources_47',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
   ['responsibilities_48',['Our Responsibilities',['../md_CODE__OF__CONDUCT.html#autotoc_md411',1,'']]],
   ['reuse_20in_20sockets_3a_20so_5freuseaddr_20vs_20so_5fexclusiveaddruse_49',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],
