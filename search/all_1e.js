@@ -51,9 +51,9 @@ var searchData=
   ['this_20library_48',['1. jsocketpp (this library)',['../group__socket__library__comparison.html#autotoc_md229',1,'']]],
   ['this_20relates_20to_20jsocketpp_49',['How This Relates to &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt;',['../group__socket__states.html#autotoc_md255',1,'']]],
   ['thoughts_20and_20best_20practices_50',['🧠 Final Thoughts and Best Practices',['../group__async__io.html#autotoc_md146',1,'']]],
-  ['thread_20safety_51',['Thread Safety',['../group__tcp.html#autotoc_md439',1,'Thread Safety'],['../group__tcp.html#autotoc_md442',1,'Thread Safety'],['../group__tcp.html#autotoc_md447',1,'Thread Safety'],['../group__tcp.html#autotoc_md452',1,'Thread Safety'],['../classjsocketpp_1_1Socket.html#autotoc_md457',1,'Thread Safety'],['../group__tcp.html#autotoc_md471',1,'Thread Safety']]],
-  ['timeout_20behavior_52',['Timeout Behavior',['../group__tcp.html#autotoc_md551',1,'']]],
-  ['timeout_20semantics_53',['Timeout Semantics',['../group__tcp.html#autotoc_md451',1,'']]],
+  ['thread_20safety_51',['Thread Safety',['../group__tcp.html#autotoc_md439',1,'Thread Safety'],['../group__tcp.html#autotoc_md442',1,'Thread Safety'],['../classjsocketpp_1_1Socket.html#autotoc_md447',1,'Thread Safety'],['../group__tcp.html#autotoc_md461',1,'Thread Safety']]],
+  ['timeout_20behavior_52',['Timeout Behavior',['../group__tcp.html#autotoc_md541',1,'']]],
+  ['timeout_20semantics_53',['Timeout Semantics',['../group__tcp.html#autotoc_md441',1,'']]],
   ['timeouts_54',['Timeouts',['../group__async__io.html#autotoc_md122',1,'⏱ How jsocketpp Handles Blocking and Timeouts'],['../group__async__io.html#autotoc_md118',1,'🕐 Socket Timeouts'],['../group__async__io.html#autotoc_md119',1,'OS-Level Timeouts']]],
   ['timeouts_20via_20select_55',['Custom Timeouts via &lt;span class=&quot;tt&quot;&gt;select()&lt;/span&gt;',['../group__async__io.html#autotoc_md120',1,'']]],
   ['tips_20and_20best_20practices_56',['Tips and Best Practices',['../group__vcpkg__publish__guide.html#autotoc_md361',1,'7. Tips and Best Practices'],['../group__conan__publish__guide.html#autotoc_md177',1,'8. Tips and Best Practices']]],
@@ -78,12 +78,12 @@ var searchData=
   ['traditional_20socket_20initialization_3a_20posix_20approach_75',['1. Traditional Socket Initialization: POSIX Approach',['../group__ServerSocket__Lifecycle.html#autotoc_md27',1,'']]],
   ['transitions_76',['TCP State Transitions',['../group__socket__states.html#autotoc_md249',1,'']]],
   ['troubleshooting_77',['Troubleshooting',['../group__BUILD__AND__USAGE.html#autotoc_md20',1,'']]],
-  ['tryaccept_78',['tryAccept',['../group__tcp.html#ga39c2929caa5fc35e079157974a52bddd',1,'jsocketpp::ServerSocket::tryAccept(std::size_t recvBufferSize=0, std::size_t sendBufferSize=0) const'],['../group__tcp.html#gafcb23ec016d8c8ff4313b43b40f53b42',1,'jsocketpp::ServerSocket::tryAccept(int timeoutMillis, std::size_t recvBufferSize=0, std::size_t sendBufferSize=0) const']]],
+  ['tryaccept_78',['tryAccept',['../group__tcp.html#ga05869effa85fd68fc91686a56a665ab0',1,'jsocketpp::ServerSocket::tryAccept(std::optional&lt; std::size_t &gt; recvBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; sendBufferSize=std::nullopt) const'],['../group__tcp.html#ga1957722b31677f0ab5efb17398e95156',1,'jsocketpp::ServerSocket::tryAccept(int timeoutMillis, std::optional&lt; std::size_t &gt; recvBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; sendBufferSize=std::nullopt) const']]],
   ['type_79',['Common Options by Socket Type',['../group__socket-options.html#autotoc_md207',1,'']]],
-  ['types_80',['Types',['../group__underlying__socket__api.html#autotoc_md303',1,'2.3 Socket Types'],['../group__sockets__theory.html#autotoc_md270',1,'2.5. Comparison Table: Socket Types'],['../group__core.html',1,'Core Utilities and Types'],['../group__tcp.html#autotoc_md470',1,'Supported Types']]],
+  ['types_80',['Types',['../group__underlying__socket__api.html#autotoc_md303',1,'2.3 Socket Types'],['../group__sockets__theory.html#autotoc_md270',1,'2.5. Comparison Table: Socket Types'],['../group__core.html',1,'Core Utilities and Types'],['../group__tcp.html#autotoc_md460',1,'Supported Types']]],
   ['types_20and_20platform_20apis_81',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
   ['types_20of_20sockets_20in_20depth_82',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md264',1,'']]],
   ['types_20work_83',['2.6. Under the Hood: How Socket Types Work',['../group__sockets__theory.html#autotoc_md272',1,'']]],
   ['typical_20usage_84',['Typical Usage',['../classjsocketpp_1_1ServerSocket.html#autotoc_md434',1,'']]],
-  ['typical_20usage_20example_85',['Typical Usage Example',['../classjsocketpp_1_1Socket.html#autotoc_md454',1,'']]]
+  ['typical_20usage_20example_85',['Typical Usage Example',['../classjsocketpp_1_1Socket.html#autotoc_md444',1,'']]]
 ];

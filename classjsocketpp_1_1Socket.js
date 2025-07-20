@@ -54,7 +54,7 @@ var classjsocketpp_1_1Socket =
     [ "writeAtMostWithTimeout", "group__tcp.html#ga16bb8c36a3fd9a3a97a0d4f5d5036550", null ],
     [ "writeFrom", "group__tcp.html#gab4484254fc3c113a373718198c382dd9", null ],
     [ "writeFromAll", "group__tcp.html#ga686c95af72f4193d1a7c6dd6e658e4ba", null ],
-    [ "writePrefixed", "group__tcp.html#ga983f06841d1af489990b78f9fd4f91a3", null ],
+    [ "writePrefixed", "group__tcp.html#ga2ef82d6b1b3e6f6870aba48ebeac3b3b", null ],
     [ "writePrefixed", "group__tcp.html#gab0b48a69153c1ed31dd158ec7afb901c", null ],
     [ "writev", "group__tcp.html#gadf5094228dfdef090b0d49a3a9e9e78d", null ],
     [ "writevAll", "group__tcp.html#ga804a69fa791fc8adb91f32ab37244a0a", null ],

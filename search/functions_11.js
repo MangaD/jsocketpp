@@ -6,7 +6,7 @@ var searchData=
   ['writeatmostwithtimeout_3',['writeAtMostWithTimeout',['../group__tcp.html#ga16bb8c36a3fd9a3a97a0d4f5d5036550',1,'jsocketpp::Socket']]],
   ['writefrom_4',['writeFrom',['../group__tcp.html#gab4484254fc3c113a373718198c382dd9',1,'jsocketpp::Socket']]],
   ['writefromall_5',['writeFromAll',['../group__tcp.html#ga686c95af72f4193d1a7c6dd6e658e4ba',1,'jsocketpp::Socket']]],
-  ['writeprefixed_6',['writePrefixed',['../group__tcp.html#ga983f06841d1af489990b78f9fd4f91a3',1,'jsocketpp::Socket::writePrefixed(const std::string &amp;payload) const'],['../group__tcp.html#gab0b48a69153c1ed31dd158ec7afb901c',1,'jsocketpp::Socket::writePrefixed(const void *data, std::size_t len) const']]],
+  ['writeprefixed_6',['writePrefixed',['../group__tcp.html#ga2ef82d6b1b3e6f6870aba48ebeac3b3b',1,'jsocketpp::Socket::writePrefixed(const std::string &amp;payload)'],['../group__tcp.html#gab0b48a69153c1ed31dd158ec7afb901c',1,'jsocketpp::Socket::writePrefixed(const void *data, std::size_t len) const']]],
   ['writev_7',['writev',['../group__tcp.html#gadf5094228dfdef090b0d49a3a9e9e78d',1,'jsocketpp::Socket']]],
   ['writevall_8',['writevAll',['../group__tcp.html#ga804a69fa791fc8adb91f32ab37244a0a',1,'jsocketpp::Socket']]],
   ['writevfrom_9',['writevFrom',['../group__tcp.html#ga650e041e62870ef5710b0e45401e679d',1,'jsocketpp::Socket']]],
