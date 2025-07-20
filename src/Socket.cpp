@@ -231,16 +231,11 @@ std::string Socket::getRemoteSocketAddress() const
     // Normalize IPv4-mapped IPv6 to IPv4 (make a local copy)
     if (tempAddr.ss_family == AF_INET6)
     {
-        const auto* addr6 = reinterpret_cast<const sockaddr_in6*>(&tempAddr);
-        if (IN6_IS_ADDR_V4MAPPED(&addr6->sin6_addr))
+        if (const auto* addr6 = reinterpret_cast<const sockaddr_in6*>(&tempAddr); isIPv4MappedIPv6(addr6))
         {
-            sockaddr_in addr4{};
-            addr4.sin_family = AF_INET;
-            addr4.sin_port = addr6->sin6_port;
-            memcpy(&addr4.sin_addr.s_addr, addr6->sin6_addr.s6_addr + 12, sizeof(addr4.sin_addr.s_addr));
-            // Overwrite tempAddr with IPv4
-            memset(&tempAddr, 0, sizeof(tempAddr));
-            memcpy(&tempAddr, &addr4, sizeof(addr4));
+            const sockaddr_in addr4 = convertIPv4MappedIPv6ToIPv4(*addr6);
+            std::memset(&tempAddr, 0, sizeof(tempAddr));
+            std::memcpy(&tempAddr, &addr4, sizeof(addr4));
             tempLen = sizeof(addr4);
         }
     }
@@ -288,8 +283,8 @@ size_t Socket::writeAll(const std::string_view message) const
     while (totalSent < message.size())
     {
         const auto sent = write(message.substr(totalSent));
-        if (sent <= 0)
-            break; // Error or connection closed
+        if (sent == 0)
+            throw SocketException(0, "Connection closed during writeAll()");
         totalSent += static_cast<std::size_t>(sent);
     }
     return totalSent;
@@ -628,22 +623,18 @@ std::string Socket::readExact(const std::size_t n) const
 std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, const bool includeDelimiter) const
 {
     std::string result;
-    result.reserve(128); // optimistic allocation
+    result.reserve(128); // Optimistic allocation for small lines
 
     char ch = 0;
     std::size_t totalRead = 0;
 
     while (totalRead < maxLen)
     {
-        const auto len = recv(_sockFd, &ch,
-#ifdef _WIN32
-                              1,
-#else
-                              1,
-#endif
-                              0);
+        const auto len = recv(_sockFd, &ch, 1, 0);
+
         if (len == SOCKET_ERROR)
             throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
         if (len == 0)
             throw SocketException(0, "Connection closed before delimiter was found.");
 
@@ -653,12 +644,12 @@ std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, co
         if (ch == delimiter)
         {
             if (!includeDelimiter)
-                result.pop_back(); // Remove delimiter before returning
+                result.pop_back();
             break;
         }
     }
 
-    if (totalRead >= maxLen && (includeDelimiter || (!includeDelimiter && result.size() == maxLen)))
+    if (totalRead >= maxLen)
     {
         throw SocketException(0, "Maximum line length exceeded before delimiter was found.");
     }

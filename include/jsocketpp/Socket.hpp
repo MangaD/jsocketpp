@@ -466,12 +466,18 @@ class Socket
     void connect(int timeoutMillis = -1) const;
 
     /**
-     * @brief Read a trivially copyable type from the socket.
+     * @brief Reads a fixed-size trivially copyable value of type `T` from the socket.
      * @ingroup tcp
      *
-     * Reads exactly sizeof(T) bytes from the socket and interprets them as type T.
-     * This method is designed for reading binary data structures or primitive types
-     * that can be safely copied byte-by-byte (trivially copyable types).
+     * Reads exactly `sizeof(T)` bytes from the socket and interprets them as a complete,
+     * binary-safe object of type `T`. This is useful for reading primitive values and POD
+     * (Plain Old Data) structs directly from the stream without any parsing logic.
+     *
+     * ### Implementation Details
+     * - Allocates a temporary buffer of `sizeof(T)` bytes
+     * - Uses `recv()` in a loop to ensure all bytes are read (handles partial reads)
+     * - Uses `std::memcpy` to safely transfer data from buffer to object
+     * - Performs **no** endianness conversion or padding adjustment
      *
      * ### Usage Example
      * @code{.cpp}
@@ -479,79 +485,58 @@ class Socket
      * sock.connect();
      *
      * try {
-     *     // Read primitive types
      *     int number = sock.read<int>();
      *     double value = sock.read<double>();
      *
-     *     // Read a custom struct
-     *     struct Message {
+     *     struct Header {
      *         uint32_t id;
-     *         char data[64];
+     *         uint16_t flags;
+     *         char tag[16];
      *     };
-     *     Message msg = sock.read<Message>();
+     *     Header h = sock.read<Header>();
      * } catch (const SocketException& ex) {
      *     std::cerr << "Read failed: " << ex.what() << std::endl;
      * }
      * @endcode
      *
-     * ### Implementation Details
-     * - Uses recv() to read exactly sizeof(T) bytes
-     * - Performs no endianness conversion
-     * - Handles partial reads internally by continuing until all data is received
-     * - Uses temporary buffer to ensure memory safety
-     *
      * ### Supported Types
-     * - Built-in types (int, float, double, etc.)
-     * - POD structures and classes
-     * - Arrays of trivially copyable types
-     * - Custom types that satisfy std::is_trivially_copyable
-     * - Fixed-size containers of trivially copyable types
+     * - Built-in types (`int`, `float`, `double`, etc.)
+     * - C-style structs and PODs
+     * - Arrays or fixed-size containers (e.g., `std::array<T, N>`)
+     * - Any type satisfying `std::is_trivially_copyable`
      *
      * ### Thread Safety
-     * - Not thread-safe: concurrent calls on the same Socket object will cause undefined behavior
-     * - Multiple threads should use separate Socket instances
-     * - Internal buffer access is not synchronized
+     * - Not thread-safe: concurrent calls on the same `Socket` object are unsafe
+     * - Use one `Socket` instance per thread or provide external synchronization
      *
-     * @tparam T Type to read. Must satisfy std::is_trivially_copyable
-     *           to ensure safe binary copying.
+     * @tparam T The type to read from the socket.
+     *           Must satisfy `std::is_trivially_copyable`.
      *
-     * @returns A value of type T containing the read data. The returned value
-     *          is a complete, properly constructed object of type T containing
-     *          all bytes read from the socket.
+     * @return A fully constructed object of type `T` populated with bytes read from the stream.
      *
      * @throws SocketException If:
-     *         - Connection is closed by peer (errno = ECONNRESET)
-     *         - Network error occurs (various platform-specific errno values)
-     *         - Read operation fails (errno = EWOULDBLOCK, EAGAIN)
-     *         - Memory allocation for internal buffer fails (std::bad_alloc)
-     *         - Socket is invalid or not connected (errno = EBADF)
-     *         - Timeout occurs during read (errno = ETIMEDOUT)
+     *         - Connection is closed before read completes
+     *         - Network error occurs (e.g., `ECONNRESET`, `EWOULDBLOCK`, `ETIMEDOUT`)
+     *         - Socket is invalid or not connected (`EBADF`)
+     *         - Memory allocation fails (e.g., `std::bad_alloc`)
+     *
+     * @warning Byte Order:
+     *          - No endianness conversion is performed
+     *          - Caller must explicitly decode fields (e.g., using `net::fromNetwork()`)
+     *          - Do not assume identical layout across different platforms
      *
      * @warning Memory Safety:
-     *         - Ensure T's size matches the expected network message size
-     *         - Buffer overflows can occur if sender transmits more data than sizeof(T)
-     *         - Virtual functions and pointers in T will be meaningless after deserialization
-     *         - Avoid types with custom allocators or complex memory management
+     *          - Avoid types with pointers, virtual functions, custom allocators, or dynamic memory
+     *          - Misuse may result in undefined behavior or security issues
+     *          - Structure padding and alignment may differ between architectures
      *
-     * @warning Platform Considerations:
-     *         - Byte ordering differences between platforms must be handled by caller
-     *         - Structure padding may differ between platforms
-     *         - Windows systems may handle partial reads differently
-     *         - Alignment requirements may vary across architectures
+     * @note A temporary buffer is allocated and freed per read; no internal persistent buffer is used.
      *
-     * @note The caller must ensure proper byte ordering (endianness) when reading
-     *       numeric types across different architectures.
-     *
-     * @note Internal buffer management:
-     *       - A temporary buffer of sizeof(T) bytes is allocated for each read
-     *       - Buffer is automatically freed when read completes
-     *       - No persistent memory is allocated
-     *
-     * @see write() For writing data to the socket
-     * @see setInternalBufferSize() To modify internal buffer size for string reads
-     * @see read<std::string>() For reading string data
-     * @see isConnected() To check connection status before reading
-     * @see setSoTimeout() To set read timeout
+     * @see write()             For writing fixed-size types to the socket
+     * @see readPrefixed()      For reading size-prefixed dynamic data
+     * @see setInternalBufferSize() To adjust internal string buffer size
+     * @see setSoTimeout()      To set socket read timeout
+     * @see isConnected()       To check connection status
      */
     template <typename T> T read()
     {
@@ -940,15 +925,15 @@ class Socket
      * @ingroup tcp
      *
      * Reads a message that consists of a length prefix followed by a variable-length payload.
-     * The prefix type T determines the format and size of the length field. This method is
+     * The prefix type `T` determines the format and size of the length field. This method is
      * useful for protocols that encode message length as a fixed-size integer header.
      *
      * ### Implementation Details
-     * - First reads sizeof(T) bytes as the length prefix
+     * - First reads `sizeof(T)` bytes as the length prefix
+     * - Converts the prefix from **network byte order** to **host byte order** using `net::fromNetwork()`
      * - Then reads exactly that many bytes as the payload
-     * - Length prefix must be an integral type (uint8_t, uint32_t, etc.)
-     * - No endianness conversion is performed
-     * - Handles message sizes up to size_t capacity
+     * - Length prefix must be a trivially copyable unsigned integral type (e.g., `uint16_t`, `uint32_t`)
+     * - Payload is returned as a `std::string` (binary-safe)
      *
      * ### Example Usage
      * @code{.cpp}
@@ -980,25 +965,26 @@ class Socket
      * |<- sizeof(T) ->|<---- length ------->|
      * </pre>
      *
-     * @tparam T The integral type used for the length prefix (e.g., uint32_t).
-     *           Must be a trivially copyable integral type.
+     * @tparam T The unsigned integral type used for the length prefix (e.g., `uint32_t`).
+     *           Must be a trivially copyable type.
      *
-     * @return The payload as a string, excluding the length prefix.
+     * @return The payload as a `std::string`, excluding the length prefix.
      *
      * @throws SocketException If:
      *         - Connection is closed while reading
      *         - Length prefix is invalid/corrupt
-     *         - Not enough data available
+     *         - Not enough data is available to complete the read
      *         - Memory allocation fails
-     *         - Other network errors occur
+     *         - Any network error occurs
      *
-     * @note The caller must ensure that the prefix type T matches the protocol's
-     *       length field size and format. No validation of the length value is
-     *       performed beyond available memory constraints.
+     * @note The prefix is assumed to be encoded in **network byte order** and is converted
+     *       automatically to host byte order using `jsocketpp::net::fromNetwork()`. You must
+     *       ensure that the sender uses the same byte ordering.
      *
-     * @see read() For reading fixed-size types
-     * @see readExact() For reading exact number of bytes
-     * @see write() For writing data to socket
+     * @see read()          For reading raw fixed-size values
+     * @see readExact()     For reading an exact number of bytes
+     * @see writePrefixed() To send matching length-prefixed data
+     * @see net::fromNetwork() For details on byte order conversion
      */
     template <typename T> std::string readPrefixed()
     {
@@ -1014,17 +1000,19 @@ class Socket
      * @brief Reads a length-prefixed message with an upper bound check.
      * @ingroup tcp
      *
-     * This method reads a message consisting of a length prefix followed by a payload, ensuring the payload
-     * length does not exceed a specified maximum. The prefix type T determines the format and size of the length field.
-     * This is useful for protocols that encode message length as a fixed-size integer header and require validation
-     * against corrupted length values.
+     * Reads a message that consists of a length prefix followed by a variable-length payload.
+     * This overload adds protection by validating that the decoded length does not exceed a
+     * specified maximum (`maxPayloadLen`), helping prevent corrupted or maliciously large payloads.
+     *
+     * The prefix type `T` determines the format and size of the length field and is decoded
+     * in **network byte order** using `net::fromNetwork()`.
      *
      * ### Implementation Details
-     * - Reads sizeof(T) bytes as the length prefix
-     * - Throws exception if length exceeds maxPayloadLen
-     * - Reads exactly the specified number of bytes as the payload
-     * - Length prefix must be an integral type (e.g., uint8_t, uint32_t)
-     * - No endianness conversion is performed
+     * - Reads `sizeof(T)` bytes as the length prefix
+     * - Converts the prefix from **network byte order** to host byte order
+     * - Throws an exception if the length exceeds `maxPayloadLen`
+     * - Reads exactly `length` bytes as the payload
+     * - Returns the payload as a binary-safe `std::string`
      *
      * ### Example Usage
      * @code{.cpp}
@@ -1032,7 +1020,7 @@ class Socket
      * sock.connect();
      *
      * try {
-     *     std::string msg = sock.readPrefixed<uint32_t>(1024); // Max length 1024
+     *     std::string msg = sock.readPrefixed<uint32_t>(1024); // Rejects messages > 1024 bytes
      *     process(msg);
      * } catch (const SocketException& ex) {
      *     // Handle read errors
@@ -1047,25 +1035,29 @@ class Socket
      * |<- sizeof(T) ->|<---- length ------->|
      * </pre>
      *
-     * @tparam T The integral type used for the length prefix (e.g., uint32_t).
-     *           Must be a trivially copyable integral type.
-     * @param [in] maxPayloadLen Maximum allowed payload length for validation
-     * @return The payload as a string, excluding the length prefix.
+     * @tparam T The unsigned integral type used for the length prefix (e.g., `uint32_t`).
+     *           Must be a trivially copyable type.
+     *
+     * @param maxPayloadLen Maximum allowed length of the decoded payload in bytes.
+     *                      If the decoded prefix exceeds this, an exception is thrown.
+     *
+     * @return The payload as a `std::string`, excluding the length prefix.
      *
      * @throws SocketException If:
-     *         - Connection is closed while reading
-     *         - Length prefix is invalid/corrupt
-     *         - Length exceeds maxPayloadLen
-     *         - Not enough data available
+     *         - The connection is closed while reading
+     *         - The length prefix is corrupt or invalid
+     *         - The decoded length exceeds `maxPayloadLen`
+     *         - Not enough data is available to fulfill the read
      *         - Memory allocation fails
-     *         - Other network errors occur
+     *         - Any network error occurs
      *
-     * @note Ensure the prefix type T matches the protocol's length field size and format.
-     *       No validation of the length value is performed beyond available memory constraints.
+     * @note The prefix is automatically converted from **network byte order** to host byte order
+     *       using `jsocketpp::net::fromNetwork()`. The sender must use the corresponding network encoding.
      *
-     * @see read() For reading fixed-size types
-     * @see readExact() For reading exact number of bytes
-     * @see write() For writing data to socket
+     * @see read()            For reading fixed-size types
+     * @see readExact()       For reading a known number of bytes
+     * @see writePrefixed()   For sending length-prefixed messages
+     * @see net::fromNetwork() For byte order decoding
      */
     template <typename T> std::string readPrefixed(const std::size_t maxPayloadLen)
     {
@@ -1609,29 +1601,29 @@ class Socket
     size_t writeAll(std::string_view message) const;
 
     /**
-     * @brief Writes a payload prefixed with its length using a fixed-size integer type.
+     * @brief Writes a length-prefixed payload using a fixed-size prefix type.
      * @ingroup tcp
      *
-     * Sends a length-prefixed message where the prefix is a fixed-size integral type `T`,
-     * followed by the raw payload data. This is useful for protocols that encode the message
-     * size before transmitting variable-length payloads, allowing the receiver to determine
-     * message boundaries.
+     * Sends a message that consists of a length prefix followed by the actual payload.
+     * The prefix type `T` determines the format and size of the length field and is
+     * written in **network byte order** for cross-platform interoperability.
      *
      * ### Implementation Details
-     * - First converts `payload.size()` into a fixed-size integer of type `T`
-     * - Then sends the binary-encoded prefix using `writeAll()`
-     * - Finally writes the raw contents of the `payload` string
-     * - Validates that the payload fits within the range of type `T`
-     * - Uses `writeAll()` to ensure both prefix and payload are fully transmitted
-     * - No endianness conversion is applied (caller must convert if needed)
+     * - The payload length is first cast to `T` (must not exceed max representable value)
+     * - The prefix is converted to **network byte order** using `net::toNetwork()`
+     * - The prefix is written first, followed immediately by the raw payload
+     * - Accepts either `std::string` or raw `(void*, size)` overloads
      *
      * ### Example Usage
      * @code{.cpp}
      * Socket sock("example.com", 8080);
      * sock.connect();
      *
-     * std::string msg = "Hello from client!";
-     * sock.writePrefixed<uint32_t>(msg); // Sends [4-byte length][data]
+     * std::string msg = "Hello, world!";
+     *
+     * // Send message with 32-bit length prefix
+     * std::size_t totalBytes = sock.writePrefixed<uint32_t>(msg);
+     * std::cout << "Sent " << totalBytes << " bytes\n";
      * @endcode
      *
      * ### Protocol Format
@@ -1642,26 +1634,28 @@ class Socket
      * |<- sizeof(T) ->|<---- length ------->|
      * </pre>
      *
-     * @tparam T The integral type used to represent the length prefix.
-     *           Must be trivially copyable (e.g., uint16_t, uint32_t).
+     * @tparam T The unsigned integral type used for the length prefix (e.g., `uint32_t`).
+     *           Must be a trivially copyable type.
      *
-     * @param payload The message content to send after the length prefix.
+     * @param payload The string data to send. The length of this string will be encoded
+     *        as the prefix and must not exceed the maximum value of type `T`.
      *
-     * @return Total number of bytes written to the socket: sizeof(T) + payload.size().
+     * @return The total number of bytes written (prefix + payload).
      *
      * @throws SocketException If:
-     *         - The payload size exceeds what can be encoded in T
-     *         - Any call to writeAll() fails
-     *         - Connection is lost or socket error occurs
+     *         - Writing the prefix or payload fails
+     *         - Payload length exceeds max value representable by `T`
+     *         - The connection is closed or interrupted
      *
-     * @note It is the caller’s responsibility to use the same type `T` on the receiving side.
-     *       Consider applying endianness conversion if cross-platform compatibility is required.
+     * @note The prefix is automatically converted to **network byte order**
+     *       using `jsocketpp::net::toNetwork()`. The receiver must decode the prefix
+     *       using `readPrefixed<T>()` or equivalent logic.
      *
-     * @see readPrefixed() To receive the corresponding length-prefixed message
-     * @see writeAll() For writing full data to the socket
-     * @see write() For partial/low-level sending
+     * @see readPrefixed()  To decode the corresponding message
+     * @see writeFromAll()  To write raw binary data without a prefix
+     * @see net::toNetwork() For details on byte order conversion
      */
-    template <typename T> std::size_t writePrefixed(const std::string& payload) const
+    template <typename T> std::size_t writePrefixed(const std::string& payload)
     {
         static_assert(std::is_integral_v<T> && std::is_trivially_copyable_v<T>,
                       "Prefix type must be a trivially copyable integral type");
@@ -1694,15 +1688,16 @@ class Socket
      * @brief Writes a binary payload prefixed with its length using a fixed-size integer type.
      * @ingroup tcp
      *
-     * Sends a length-prefixed binary message, where the prefix is a fixed-size integral type `T`,
-     * followed by a raw data buffer. This version avoids allocating a temporary `std::string`,
-     * making it suitable for binary protocols, zero-copy send paths, or memory-efficient I/O.
+     * Sends a length-prefixed binary message, where the prefix is a fixed-size integral type `T`
+     * followed by a raw binary buffer. This version avoids constructing a temporary `std::string`,
+     * making it efficient for zero-copy binary protocols and high-performance I/O paths.
      *
      * ### Implementation Details
-     * - Validates that `len` can be safely cast to `T`
-     * - Sends `sizeof(T)` bytes of the length prefix (no endianness conversion)
-     * - Sends `len` bytes of payload immediately afterward
-     * - Uses `writeAll()` to guarantee full delivery of both parts
+     * - Validates that `len` fits within the range of type `T`
+     * - Converts the prefix to **network byte order** using `net::toNetwork()`
+     * - Sends `sizeof(T)` bytes of the length prefix
+     * - Sends `len` bytes of raw payload data immediately afterward
+     * - Uses `writeAll()` to ensure full delivery of both parts
      *
      * ### Example Usage
      * @code{.cpp}
@@ -1718,25 +1713,27 @@ class Socket
      * |<- sizeof(T) ->|<---- len --------->|
      * </pre>
      *
-     * @tparam T The integral type used for the length prefix (e.g., uint16_t, uint32_t).
-     *           Must be trivially copyable.
+     * @tparam T The unsigned integral type used for the length prefix (e.g., `uint32_t`).
+     *           Must be a trivially copyable type.
      *
      * @param data Pointer to the binary payload data.
      * @param len Number of bytes to write from `data`.
      *
-     * @return Total number of bytes written (sizeof(T) + len).
+     * @return Total number of bytes written (`sizeof(T) + len`).
      *
      * @throws SocketException If:
-     *         - `len` exceeds what can be encoded in `T`
-     *         - Connection is closed before completion
-     *         - writeAll() fails for prefix or payload
+     *         - `len` exceeds the maximum value representable by `T`
+     *         - Writing the prefix or payload fails
+     *         - Connection is closed or interrupted
      *
-     * @note No endianness conversion is performed.
-     *       If network-order is required, the caller must handle it.
+     * @note The prefix is automatically converted to **network byte order**
+     *       using `jsocketpp::net::toNetwork()`. Receivers must decode it
+     *       accordingly using `readPrefixed<T>()` or equivalent.
      *
-     * @see readPrefixed() For corresponding read
-     * @see writeAll() For guaranteed single-buffer write
-     * @see writePrefixed(std::string) For string-based variant
+     * @see readPrefixed() For the corresponding deserialization method
+     * @see writeAll()     For guaranteed single-buffer transmission
+     * @see writePrefixed(std::string) For the string-based variant
+     * @see net::toNetwork() For details on byte order conversion
      */
     template <typename T> std::size_t writePrefixed(const void* data, std::size_t len) const
     {

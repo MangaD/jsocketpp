@@ -537,48 +537,21 @@ class ServerSocket
      * only then calls `accept()`. If the timeout expires with no client, a `SocketTimeoutException` is thrown.
      *
      * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking()`) does not affect the
-     * waiting behavior of this method, since `select()` is used for waiting:
-     * - If the socket is in **blocking mode**, after readiness, `accept()` is called; in a rare race condition,
-     *   if no connection is available, `accept()` will block again (possibly beyond the timeout) until a client
-     * connects.
-     * - If the socket is in **non-blocking mode**, in the same race, `accept()` may fail with `EWOULDBLOCK` or `EAGAIN`
-     *   and a `SocketException` is thrown.
-     *
-     * This race condition is inherent to all socket APIs and can only be avoided by synchronizing access
-     * to the server socket across threads or processes.
+     * waiting behavior of this method, since `select()` is used for waiting.
      *
      * @note - Use `setSoTimeout()` and `getSoTimeout()` to configure the timeout.
      *       For manual non-blocking accept in an event loop, see `acceptNonBlocking()` and `waitReady()`.
      *
      * @note - To safely use `accept()` in a multithreaded environment, protect access to the `ServerSocket`
-     *       with a mutex. Example:
-     *       @code
-     *       std::mutex acceptMutex;
-     *       jsocketpp::ServerSocket server(8080);
-     *       server.bind();
-     *       server.listen();
-     *       std::vector<std::thread> workers;
-     *       for (int i = 0; i < 4; ++i) {
-     *           workers.emplace_back([&server, &acceptMutex]() {
-     *               while (true) {
-     *                   std::unique_lock<std::mutex> lock(acceptMutex);
-     *                   auto client = server.accept();
-     *                   lock.unlock();
-     *                   // Handle client...
-     *               }
-     *           });
-     *       }
-     *       @endcode
+     *       with a mutex.
      *
      * @ingroup tcp
      *
-     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket. If set to `0`,
-     * the per-instance default buffer size is used (see `setReceiveBufferSize()` and `DefaultBufferSize`). If not
-     * specified, defaults to `DefaultBufferSize` (4096 bytes) unless changed via `setReceiveBufferSize()`.
-     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
-     *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
-     *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                       changed via `setSendBufferSize()`.
+     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
+     *
      * @return A `Socket` object representing the connected client.
      *
      * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
@@ -592,21 +565,9 @@ class ServerSocket
      * @see acceptBlocking()
      * @see acceptNonBlocking()
      * @see waitReady()
-     *
-     * @code
-     * jsocketpp::ServerSocket server(8080);
-     * server.bind();
-     * server.listen();
-     * server.setSoTimeout(5000); // Wait up to 5 seconds for clients
-     * try {
-     *     jsocketpp::Socket client = server.accept();
-     *     // Handle client...
-     * } catch (const jsocketpp::SocketTimeoutException&) {
-     *     std::cout << "No client connected within timeout." << std::endl;
-     * }
-     * @endcode
      */
-    [[nodiscard]] Socket accept(std::size_t recvBufferSize = 0, std::size_t sendBufferSize = 0) const;
+    [[nodiscard]] Socket accept(std::optional<std::size_t> recvBufferSize = std::nullopt,
+                                std::optional<std::size_t> sendBufferSize = std::nullopt) const;
 
     /**
      * @brief Accept an incoming client connection, waiting up to the specified timeout.
@@ -620,66 +581,55 @@ class ServerSocket
      * - If `timeoutMillis` is **positive**, the method waits up to that many milliseconds for a connection,
      *   then throws a `SocketTimeoutException` if none arrives.
      *
-     * Internally, this method uses `waitReady(timeoutMillis)` (which uses `select()`) to wait for readiness, then
-     * calls `accept()`. If the timeout expires with no client, a `SocketTimeoutException` is thrown.
+     * Internally, this method uses `waitReady(timeoutMillis)` (which uses `select()`) to wait for readiness,
+     * then calls `acceptBlocking()` with the resolved buffer sizes. If the timeout expires with no client,
+     * a `SocketTimeoutException` is thrown.
      *
      * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking()`) does not affect the
-     * waiting behavior of this method, since `select()` is used for waiting:
-     * - If the socket is in **blocking mode**, after readiness, `accept()` is called; in a rare race condition,
-     *   if no connection is available, `accept()` will block again (possibly beyond the timeout) until a client
-     * connects.
-     * - If the socket is in **non-blocking mode**, in the same race, `accept()` may fail with `EWOULDBLOCK` or `EAGAIN`
-     *   and a `SocketException` is thrown.
+     * waiting behavior of this method, since `select()` is used for readiness detection.
      *
-     * This race condition is inherent to all socket APIs and can only be avoided by synchronizing access
-     * to the server socket across threads or processes.
+     * @note Use this method to specify a timeout **per call**. To configure a default for all accepts,
+     *       use `setSoTimeout()`. For non-blocking polling, use `tryAccept()` or `acceptNonBlocking()`.
      *
-     * @note Use this method to specify a timeout **per call**; to set a default for all accepts, use `setSoTimeout()`.
-     *       For manual non-blocking accept in an event loop, see `acceptNonBlocking()` and `waitReady()`.
+     * @param[in] timeoutMillis Timeout in milliseconds to wait for a client connection:
+     *   - Negative: block indefinitely
+     *   - Zero: poll once
+     *   - Positive: wait up to this many milliseconds
+     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
      *
-     * @ingroup tcp
-     *
-     * @param[in] timeoutMillis The maximum number of milliseconds to wait for a client connection:
-     *   - Negative: wait indefinitely.
-     *   - Zero: poll (return immediately).
-     *   - Positive: wait up to this many milliseconds.
-     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket.
-     *                       If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()`
-     *                       and `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes)
-     *                       unless changed via `setReceiveBufferSize()`.
-     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
-     *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
-     *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                       changed via `setSendBufferSize()`.
      * @return A `Socket` object representing the connected client.
      *
-     * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
-     * @throws SocketTimeoutException if the timeout expires before a client connects.
+     * @throws SocketException if the server socket is invalid or closed, or if an internal error occurs.
+     * @throws SocketTimeoutException if no client connects before the timeout expires.
      *
      * @pre Server socket must be valid, bound, and listening.
      * @post A new connected `Socket` is returned on success.
      *
-     * @see setSoTimeout(int)
-     * @see getSoTimeout()
+     * @see accept()
+     * @see tryAccept()
      * @see acceptBlocking()
-     * @see acceptNonBlocking()
+     * @see setSoTimeout()
      * @see waitReady()
+     *
+     * @ingroup tcp
      *
      * @code
      * jsocketpp::ServerSocket server(8080);
      * server.bind();
      * server.listen();
      * try {
-     *     // Wait up to 2 seconds for a client connection, then timeout.
-     *     jsocketpp::Socket client = server.accept(2000);
+     *     jsocketpp::Socket client = server.accept(2000); // Wait up to 2 seconds
      *     // Handle client...
      * } catch (const jsocketpp::SocketTimeoutException&) {
      *     std::cout << "No client connected within timeout." << std::endl;
      * }
      * @endcode
      */
-    [[nodiscard]] Socket accept(int timeoutMillis, std::size_t recvBufferSize = 0,
-                                std::size_t sendBufferSize = 0) const;
+    [[nodiscard]] Socket accept(int timeoutMillis, std::optional<std::size_t> recvBufferSize = std::nullopt,
+                                std::optional<std::size_t> sendBufferSize = std::nullopt) const;
 
     /**
      * @brief Attempt to accept an incoming client connection, returning immediately or after the configured timeout.
@@ -695,28 +645,22 @@ class ServerSocket
      * is ready, `acceptBlocking()` is called to retrieve the connection. If not, `std::nullopt` is returned.
      *
      * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking()`) does not affect the waiting
-     * behavior of this method, since `select()` is used for waiting. In rare cases (see below), `accept()` may still
-     * fail with `EWOULDBLOCK` or `EAGAIN` if a connection is lost between the readiness check and the actual accept
-     * call, in which case a `SocketException` is thrown.
+     * behavior of this method, since `select()` is used for readiness. In rare cases, `accept()` may still fail with
+     * `EWOULDBLOCK` or `EAGAIN` if the connection is lost between readiness check and accept call, in which case a
+     * `SocketException` is thrown.
      *
      * @note This method is **not thread safe**. Simultaneous calls from multiple threads or processes may lead to race
-     * conditions. See `accept()` for further discussion of these edge cases.
+     * conditions. See `accept()` for a discussion of those edge cases.
      *
-     * @note To specify a timeout for a single call, use `tryAccept(int timeoutMillis, std::size_t bufferSize)`.
-     *       For manual non-blocking accept, see `acceptNonBlocking()`.
+     * @note To specify a timeout for a single call, use `tryAccept(int timeoutMillis, ...)`.
      *
-     * @ingroup tcp
+     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
      *
-     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket.
-     *                       If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()`
-     *                       and `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes)
-     *                       unless changed via `setReceiveBufferSize()`.
-     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
-     *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
-     *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                       changed via `setSendBufferSize()`.
      * @return An `std::optional<Socket>` containing the accepted client socket, or `std::nullopt` if no client was
-     * available before the timeout.
+     *         available before the timeout.
      *
      * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
      *
@@ -726,10 +670,11 @@ class ServerSocket
      * @see setSoTimeout(int)
      * @see getSoTimeout()
      * @see accept()
+     * @see tryAccept(int, std::optional<std::size_t>, std::optional<std::size_t>)
      * @see acceptBlocking()
-     * @see acceptNonBlocking()
-     * @see tryAccept(int, std::size_t, std::size_t)
      * @see waitReady()
+     *
+     * @ingroup tcp
      *
      * @code
      * jsocketpp::ServerSocket server(8080);
@@ -745,7 +690,8 @@ class ServerSocket
      * }
      * @endcode
      */
-    [[nodiscard]] std::optional<Socket> tryAccept(std::size_t recvBufferSize = 0, std::size_t sendBufferSize = 0) const;
+    [[nodiscard]] std::optional<Socket> tryAccept(std::optional<std::size_t> recvBufferSize = std::nullopt,
+                                                  std::optional<std::size_t> sendBufferSize = std::nullopt) const;
 
     /**
      * @brief Attempt to accept an incoming client connection, waiting up to a specified timeout.
@@ -755,50 +701,42 @@ class ServerSocket
      * client connects. If `timeoutMillis` is zero, the method polls and returns immediately if no client is waiting.
      *
      * Unlike `accept(int timeoutMillis, ...)`, which throws a `SocketTimeoutException` if the timeout expires,
-     * this method returns `std::nullopt` in that case. This is useful for polling loops or event-driven servers.
+     * this method returns `std::nullopt` in that case. This makes it ideal for polling loops or event-driven servers.
      *
-     * Internally, the method uses `waitReady(timeoutMillis)` (implemented with `select()`) to check for pending
-     * connections. If the socket is ready, `acceptBlocking(bufferSize)` is called; otherwise, `std::nullopt` is
+     * Internally, this method uses `waitReady(timeoutMillis)` (via `select()`) to check for connection readiness.
+     * If the socket is ready, `acceptBlocking(...)` is called to retrieve the connection. Otherwise, `std::nullopt` is
      * returned.
      *
-     * The blocking or non-blocking mode of the server socket (via `setNonBlocking(true)`) does **not** affect the
-     * waiting behavior of this method. Readiness is determined entirely by `select()`. In rare cases, due to race
-     * conditions (see `accept()` documentation), `accept()` may still fail with `EWOULDBLOCK` or `EAGAIN` even after
-     * readiness was indicated; in this case, a `SocketException` is thrown.
+     * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking(true)`) does **not** affect
+     * the behavior of this method. Readiness is determined exclusively via `select()`. However, due to inherent race
+     * conditions in all socket APIs, it’s still possible for `accept()` to fail with `EWOULDBLOCK` or `EAGAIN` after
+     * readiness has been reported. In such cases, a `SocketException` is thrown.
      *
-     * @note This method is **not thread safe**. Simultaneous calls from multiple threads or processes may lead to race
-     * conditions.
+     * @note This method is **not thread safe**. Protect server socket access externally if used from multiple threads.
      *
-     * @note To use the configured socket timeout instead, call `tryAccept(std::size_t bufferSize)`.
-     *       For manual non-blocking accept, see `acceptNonBlocking()`.
+     * @param[in] timeoutMillis Timeout in milliseconds to wait for a client connection:
+     *   - Negative: block indefinitely
+     *   - Zero: poll once
+     *   - Positive: wait up to this many milliseconds
+     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
      *
-     * @ingroup tcp
+     * @return `std::optional<Socket>` containing a client connection if accepted, or `std::nullopt` on timeout.
      *
-     * @param[in] timeoutMillis Timeout in milliseconds to wait for a client connection. Negative blocks indefinitely,
-     * zero polls.
-     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket.
-     *                       If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()`
-     *                       and `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes)
-     *                       unless changed via `setReceiveBufferSize()`.
-     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
-     *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
-     *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                       changed via `setSendBufferSize()`.
-     * @return An `std::optional<Socket>` containing the accepted client socket, or `std::nullopt` if no client
-     * connected before the timeout.
-     *
-     * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
+     * @throws SocketException if the server socket is invalid, closed, or an internal error occurs.
      *
      * @pre Server socket must be valid, bound, and listening.
-     * @post Returns `std::nullopt` if timeout expires, or a connected `Socket` on success.
+     * @post Returns `std::nullopt` if timeout expires; otherwise a connected `Socket`.
      *
-     * @see accept(int, std::size_t)
-     * @see tryAccept(std::size_t)
      * @see accept()
+     * @see tryAccept()
      * @see acceptBlocking()
      * @see acceptNonBlocking()
-     * @see tryAccept(std::size_t, std::size_t)
      * @see waitReady()
+     *
+     * @ingroup tcp
      *
      * @code
      * jsocketpp::ServerSocket server(8080);
@@ -808,245 +746,232 @@ class ServerSocket
      *     if (auto client = server.tryAccept(100)) {
      *         // Handle client connection
      *     } else {
-     *         // No client; perform other tasks
+     *         // No client yet; continue polling
      *     }
      * }
      * @endcode
      */
-    [[nodiscard]] std::optional<Socket> tryAccept(int timeoutMillis, std::size_t recvBufferSize = 0,
-                                                  std::size_t sendBufferSize = 0) const;
+    [[nodiscard]] std::optional<Socket> tryAccept(int timeoutMillis,
+                                                  std::optional<std::size_t> recvBufferSize = std::nullopt,
+                                                  std::optional<std::size_t> sendBufferSize = std::nullopt) const;
 
     /**
      * @brief Accept an incoming client connection, always blocking until a client connects (unless the socket is set to
      * non-blocking).
      *
-     * This method invokes the underlying system `accept()` on the listening server socket.
-     * - If the socket is in **blocking mode** (default), this method blocks until a client connects, regardless of any
-     * timeouts set by `setSoTimeout()`.
-     * - If the socket is in **non-blocking mode** (set via `setNonBlocking(true)`), the call returns immediately:
-     *   - If a client is ready, returns a connected `Socket`.
-     *   - If no client is pending, throws a `SocketException` with `EWOULDBLOCK`/`EAGAIN`.
+     * This method directly invokes the underlying system `accept()` on the listening socket.
+     * - If the socket is in **blocking mode** (default), this method blocks until a client connects. It ignores any
+     * timeout set by `setSoTimeout()`.
+     * - If the socket is in **non-blocking mode**, the call returns immediately:
+     *   - If a client is pending, returns a connected `Socket`.
+     *   - If no client is waiting, throws `SocketException` with `EWOULDBLOCK` or `EAGAIN`.
      *
      * @par Comparison with acceptNonBlocking()
-     * - Both methods behave the same: their behavior depends on the blocking mode of the socket.
-     * - However, `acceptNonBlocking()` is typically used in event loop code, where you expect the socket to be in
-     * non-blocking mode and wish to distinguish "no client yet" (returns `std::nullopt`) from actual errors (throws).
-     * - `acceptBlocking()` throws on *all* failures and is idiomatic for classic blocking server loops.
+     * - Both methods behave the same, based on the socket's blocking mode.
+     * - `acceptBlocking()` throws on *all* failures, and is idiomatic for classic server loops.
+     * - `acceptNonBlocking()` is used in polling/event-driven code where you want to return `std::nullopt` when no
+     * client is available.
      *
-     * @note Both methods require the socket's blocking mode to be managed by the user via `setNonBlocking()`.
-     *       There is **no polling or timeout logic** in this method; if you need timeouts, use `accept()` or
-     * `tryAccept()` instead.
+     * @note This method does not perform any timeout polling. Use `accept()` or `tryAccept()` if you need timeouts.
      *
-     * @note Not thread safe: simultaneous accept calls from different threads or processes may result in race
-     * conditions or failures.
+     * @note This method is **not thread safe**. Simultaneous `accept` calls on the same socket from multiple threads or
+     * processes may result in race conditions or failures.
      *
-     * @ingroup tcp
+     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
      *
-     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket.
-     *                       If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()`
-     *                       and `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes)
-     *                       unless changed via `setReceiveBufferSize()`.
-     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
-     *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
-     *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                       changed via `setSendBufferSize()`.
      * @return A `Socket` object representing the connected client.
      *
-     * @throws SocketException if the server socket is not initialized, closed, or if `accept()` fails (including with
-     * `EWOULDBLOCK`/`EAGAIN` in non-blocking mode).
+     * @throws SocketException if the server socket is invalid or `accept()` fails (including with `EWOULDBLOCK` or
+     *         `EAGAIN` in non-blocking mode).
      *
      * @pre Server socket must be valid, bound, and listening.
      * @post A new connected `Socket` is returned on success.
      *
      * @see accept()
-     * @see acceptNonBlocking()
      * @see tryAccept()
+     * @see acceptNonBlocking()
      * @see setNonBlocking()
      * @see waitReady()
+     *
+     * @ingroup tcp
      *
      * @code
      * jsocketpp::ServerSocket server(8080);
      * server.bind();
      * server.listen();
-     * // Classic blocking:
+     *
+     * // Blocking example
      * jsocketpp::Socket client = server.acceptBlocking();
      *
-     * // Non-blocking pattern:
+     * // Non-blocking pattern
      * server.setNonBlocking(true);
      * try {
      *     jsocketpp::Socket client = server.acceptBlocking();
      *     // Handle client
      * } catch (const jsocketpp::SocketException& e) {
-     *     if (e.code() == EWOULDBLOCK) { // or platform equivalent
-     *         // No client yet, try again later
+     *     if (e.code() == EWOULDBLOCK) {
+     *         // No client yet
      *     } else {
-     *         throw; // real error
+     *         throw;
      *     }
      * }
      * @endcode
      */
-    [[nodiscard]] Socket acceptBlocking(std::size_t recvBufferSize = 0, std::size_t sendBufferSize = 0) const;
+    [[nodiscard]] Socket acceptBlocking(std::optional<std::size_t> recvBufferSize = std::nullopt,
+                                        std::optional<std::size_t> sendBufferSize = std::nullopt) const;
 
     /**
      * @brief Attempt to accept a client connection in non-blocking fashion.
      *
-     * This method attempts to accept an incoming client connection using the underlying system `accept()`.
-     * - If the server socket is in **blocking mode** (the default), this method will block until a client is ready,
-     *   and will return a connected `Socket` object.
-     * - If the server socket is in **non-blocking mode** (set via `setNonBlocking(true)`), this method will
-     *   return immediately:
-     *     - If a client connection is pending, returns a `Socket` object representing the client.
-     *     - If no client is pending, returns `std::nullopt` (no exception is thrown).
+     * This method attempts to accept an incoming client connection using the system `accept()` call:
+     * - If the server socket is in **blocking mode** (default), the call will block until a client connects.
+     * - If the socket is in **non-blocking mode** (`setNonBlocking(true)`), the call will return immediately:
+     *   - If a client is ready, returns a `Socket` object.
+     *   - If no client is waiting, returns `std::nullopt`.
      *
-     * This method does **not** perform any polling, waiting, or timeout logic. It is designed for use in event loops or
-     * with polling mechanisms, where you expect the socket to be non-blocking and want to check for new connections
-     * without waiting.
+     * This method does **not** use `select()`, `poll()`, or any timeout logic. It is ideal for event loops and
+     * polling-based architectures where you explicitly check for readiness before accepting.
      *
-     * @note The blocking or non-blocking behavior of this method depends entirely on the socket's current mode,
-     *       which can be set via `setNonBlocking(bool)`.
-     * @note For waiting with a timeout or blocking-until-ready semantics, see `accept()`, `tryAccept()`, or
+     * @note The blocking behavior depends entirely on the socket mode, which is controlled by `setNonBlocking(bool)`.
+     * @note For timeout-aware or readiness-checked accept patterns, use `accept()`, `tryAccept()`, or
      * `acceptBlocking()`.
-     * @note Not thread safe: concurrent accept calls may result in race conditions.
      *
-     * @ingroup tcp
+     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
      *
-     * @param[in] recvBufferSize The internal receive buffer size for the newly accepted client socket.
-     *                       If set to `0`, the per-instance default buffer size is used (see `setReceiveBufferSize()`
-     *                       and `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes)
-     *                       unless changed via `setReceiveBufferSize()`.
-     * @param[in] sendBufferSize The internal send buffer size for the newly accepted client socket. If set to `0`, the
-     *                       per-instance default send buffer size is used (see `setSendBufferSize()` and
-     *                       `DefaultBufferSize`). If not specified, defaults to `DefaultBufferSize` (4096 bytes) unless
-     *                       changed via `setSendBufferSize()`.
+     * @return A `Socket` object if a client is connected, or `std::nullopt` if no connection was ready.
      *
-     * @return A `Socket` object if a client connection is ready; otherwise, `std::nullopt`.
-     *
-     * @throws SocketException if the server socket is not initialized, closed, or if an unrecoverable error occurs
-     *         during accept (other than EWOULDBLOCK/EAGAIN in non-blocking mode).
+     * @throws SocketException if the socket is invalid or `accept()` fails due to a system error
+     *         (excluding `EWOULDBLOCK` / `EAGAIN` on non-blocking sockets).
      *
      * @pre Server socket must be valid, bound, and listening.
-     * @post Returns `std::nullopt` if no client is pending, or a connected `Socket` on success.
+     * @post Returns a connected `Socket` or `std::nullopt` if no client is pending.
      *
-     * @see setNonBlocking(bool)
-     * @see acceptBlocking()
      * @see accept()
      * @see tryAccept()
+     * @see acceptBlocking()
+     * @see setNonBlocking()
      * @see waitReady()
+     *
+     * @ingroup tcp
      *
      * @code
      * jsocketpp::ServerSocket server(8080);
      * server.bind();
      * server.listen();
-     * server.setNonBlocking(true); // Must be in non-blocking mode for true non-blocking behavior
+     * server.setNonBlocking(true);
+     *
      * while (true) {
-     *     auto clientOpt = server.acceptNonBlocking();
-     *     if (clientOpt) {
-     *         // Handle client connection
+     *     auto client = server.acceptNonBlocking();
+     *     if (client) {
+     *         // Handle client...
      *     } else {
-     *         // No client yet, can do other work (e.g. event loop)
+     *         // No client yet; do other work
      *     }
      * }
      * @endcode
      */
-    [[nodiscard]] std::optional<Socket> acceptNonBlocking(std::size_t recvBufferSize = 0,
-                                                          std::size_t sendBufferSize = 0) const;
+    [[nodiscard]] std::optional<Socket>
+    acceptNonBlocking(std::optional<std::size_t> recvBufferSize = std::nullopt,
+                      std::optional<std::size_t> sendBufferSize = std::nullopt) const;
 
     /**
      * @brief Asynchronously accept an incoming client connection, returning a future.
      *
-     * This method initiates an asynchronous accept operation on the server socket,
-     * returning a `std::future<Socket>` that will become ready when a client connects or an error occurs.
-     * The returned future allows you to wait for incoming connections in a non-blocking, event-driven way,
-     * which is ideal for scalable, modern C++ server architectures.
+     * This method launches an asynchronous accept operation on the server socket,
+     * returning a `std::future<Socket>` that resolves once a client connects or an error occurs.
      *
-     * Internally, this implementation launches the accept operation in a background thread
-     * using `std::async(std::launch::async, ...)` to ensure that the calling thread is never blocked.
-     * When a new client connection is accepted, the returned future becomes ready and yields a fully constructed
-     * `jsocketpp::Socket` object for communication with the client. If an error occurs (including timeouts),
-     * the future will rethrow a `SocketException` or `SocketTimeoutException` when `.get()` is called.
+     * Internally, this uses `std::async(std::launch::async, ...)` to spawn a background thread
+     * that calls `accept(...)`. The calling thread is never blocked.
      *
-     * ### Usage Example
-     * @code
-     * jsocketpp::ServerSocket server(8080);
-     * // Start asynchronous accept operation
-     * std::future<jsocketpp::Socket> clientFuture = server.acceptAsync();
+     * When a client is accepted, the future becomes ready and yields a fully constructed `Socket` object.
+     * If an error or timeout occurs, the exception is rethrown when `.get()` is called on the future.
      *
-     * // Do other work while waiting for a client...
-     * while (clientFuture.wait_for(std::chrono::milliseconds(100)) != std::future_status::ready) {
-     *     // Perform background tasks, handle shutdown signals, or update application state
-     * }
+     * @note This is **not thread safe**: do not call `acceptAsync()`, `accept()`, or related methods
+     * concurrently on the same `ServerSocket` instance unless externally synchronized.
      *
-     * // When ready, obtain the accepted client socket (may throw)
-     * try {
-     *     jsocketpp::Socket client = clientFuture.get();
-     *     // Use client socket for I/O...
-     * } catch (const jsocketpp::SocketException& ex) {
-     *     std::cerr << "Accept failed: " << ex.what() << std::endl;
-     * }
-     * @endcode
+     * @note The `ServerSocket` object must outlive the returned future. Use caution when capturing `this`.
      *
-     * ### Key Features
-     * - Non-blocking: Does not block the calling thread while waiting for connections.
-     * - Integrates with modern C++ asynchronous workflows (`std::future`, `std::async`).
-     * - Preserves exception semantics: socket errors are rethrown when the future is resolved.
-     * - Buffer size for the accepted client socket can be specified (default matches ServerSocket default).
-     * - Clean API: future and accepted Socket are managed with RAII and strong exception safety.
+     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
+     *                           If `std::nullopt`, the default buffer size is used.
      *
-     * ### Thread Safety
-     * - Not thread-safe: Do not call `accept()`, `acceptAsync()`, or other accept methods concurrently on the same
-     * ServerSocket instance. If you need to accept multiple connections in parallel, use one ServerSocket per thread or
-     * synchronize calls externally.
+     * @return A `std::future<Socket>` that resolves to a connected client socket or throws on error.
      *
-     * ### Implementation Notes
-     * - This default implementation uses a separate thread for each asynchronous accept operation.
-     *   For most server workloads, this is sufficient. For ultra-high concurrency (thousands of clients),
-     *   consider integrating an event-driven backend (e.g., Boost.Asio, epoll, IOCP) in a future version.
-     *
-     * ### Platform Support
-     * - Works on all supported platforms (Windows, Linux, macOS). Uses portable C++20 primitives only.
-     *
-     * ### Error Handling
-     * - If an error occurs before or during accept, calling `.get()` on the returned future will rethrow the exception.
-     *   - Throws `jsocketpp::SocketException` on fatal socket errors.
-     *   - Throws `jsocketpp::SocketTimeoutException` if a timeout occurs (if configured).
+     * @throws SocketException if a fatal socket error occurs.
+     * @throws SocketTimeoutException if a timeout is configured and no client connects.
      *
      * @pre Server socket must be valid, bound, and listening.
-     * @post Returned future will yield a connected `Socket` or throw on error.
+     * @post Future resolves to a connected `Socket`, or throws from `.get()`.
      *
-     * @note The ServerSocket must outlive the future.
-     *
-     * @param[in] recvBufferSize The internal receive buffer size (in bytes) to use for the newly accepted client
-     * socket. If set to `0` (the default), the ServerSocket's default buffer size is used. Adjust this value if you
-     * expect larger or smaller messages.
-     * @param[in] sendBufferSize The internal send buffer size (in bytes) to use for the newly accepted client socket.
-     *                   If set to `0` (the default), the ServerSocket's default send buffer size is used.
-     *                   Adjust this value if you expect larger or smaller messages.
-     *
-     * @return std::future<Socket>
-     *   A future that resolves to the accepted client socket when a client connects.
-     *   If an error occurs, the exception will be rethrown from the future.
-     *
-     * @see accept(), tryAccept(), acceptBlocking()
+     * @see accept()
+     * @see tryAccept()
+     * @see acceptBlocking()
      * @see std::future, std::async
      *
      * @ingroup tcp
+     *
+     * @code
+     * jsocketpp::ServerSocket server(8080);
+     * auto future = server.acceptAsync();
+     *
+     * // Do other work while waiting...
+     * if (future.wait_for(std::chrono::seconds(5)) == std::future_status::ready) {
+     *     jsocketpp::Socket client = future.get();
+     *     // Handle client...
+     * } else {
+     *     // Timeout or still waiting
+     * }
+     * @endcode
      */
-    [[nodiscard]] std::future<Socket> acceptAsync(std::size_t recvBufferSize = 0, std::size_t sendBufferSize = 0) const;
+    [[nodiscard]] std::future<Socket> acceptAsync(std::optional<std::size_t> recvBufferSize = std::nullopt,
+                                                  std::optional<std::size_t> sendBufferSize = std::nullopt) const;
 
     /**
      * @brief Asynchronously accept a client connection and invoke a callback upon completion.
      *
-     * This method initiates a non-blocking accept operation on the server socket. When a client connects,
-     * or if an error occurs, the provided callback function is invoked. The callback receives either:
-     *   - a valid `std::optional<Socket>` containing the accepted client socket (on success), and a `nullptr` exception
-     * pointer,
-     *   - or an empty `std::optional<Socket>` (on error), and a non-null exception pointer describing the error.
+     * Launches a background thread to perform an `accept()` operation and calls the user-provided callback
+     * when a client connects or an error occurs. This is useful for event-driven servers that require
+     * non-blocking, callback-based acceptance of new clients.
      *
-     * The accept operation runs in a detached background thread, so the callback may be executed on a different thread
-     * from the caller. This pattern is ideal for event-driven or highly concurrent servers, enabling your application
-     * to perform other work while waiting for incoming connections and to react immediately when a client is accepted.
+     * The callback is invoked exactly once with:
+     * - a valid `Socket` and `nullptr` exception on success, or
+     * - an empty `std::optional<Socket>` and a non-null `std::exception_ptr` on error.
      *
-     * ### Usage Example
+     * Internally, this uses a detached `std::thread` that invokes `accept(...)`, wrapped in a try-catch block.
+     * If the server socket is not valid or an error occurs (including timeouts), the exception is captured
+     * and passed to the callback for inspection or rethrowing via `std::rethrow_exception()`.
+     *
+     * @note This method is **not thread safe**. Avoid concurrent calls to `accept`, `acceptAsync`, or related
+     * methods from multiple threads unless externally synchronized.
+     *
+     * @note The `ServerSocket` object must remain alive until the callback is invoked. Destroying the object
+     * before the background thread finishes is undefined behavior.
+     *
+     * @param[in] callback Completion handler with signature:
+     *   `void callback(std::optional<Socket>, std::exception_ptr)`
+     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
+     *                           If `std::nullopt`, the server's default is used.
+     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
+     *                           If `std::nullopt`, the server's default is used.
+     *
+     * @pre Server socket must be valid, bound, and listening.
+     * @post Callback is invoked exactly once with either a valid `Socket` or an exception.
+     *
+     * @see accept()
+     * @see tryAccept()
+     * @see acceptAsync(std::future)
+     * @see std::optional
+     * @see std::exception_ptr, std::rethrow_exception
+     *
+     * @ingroup tcp
+     *
      * @code
      * server.acceptAsync(
      *     [](std::optional<jsocketpp::Socket> clientOpt, std::exception_ptr eptr) {
@@ -1056,46 +981,19 @@ class ServerSocket
      *                 std::cerr << "Accept failed: " << ex.what() << std::endl;
      *             }
      *         } else if (clientOpt) {
-     *             std::cout << "Accepted client from: " << clientOpt->getRemoteSocketAddress() << std::endl;
-     *             // Handle the client socket (e.g., read/write)
+     *             std::cout << "Accepted client from: "
+     *                       << clientOpt->getRemoteSocketAddress() << std::endl;
+     *             // Handle client...
      *         }
      *     },
      *     8192, // receive buffer size
      *     4096  // send buffer size
      * );
      * @endcode
-     *
-     * ### Thread Safety
-     * - This method is **not thread-safe** for concurrent calls. Do not call `acceptAsync`, `accept`, or other accept
-     *   methods concurrently on the same `ServerSocket` instance without external synchronization.
-     *   Use separate `ServerSocket` instances or synchronize access if parallel accepts are needed.
-     *
-     * ### Callback Details
-     * - The callback is always invoked exactly once per call to `acceptAsync`:
-     *   - On success: `clientOpt` contains a valid `Socket`, `eptr` is `nullptr`.
-     *   - On error: `clientOpt` is empty, `eptr` holds the exception. Use `std::rethrow_exception(eptr)` to rethrow it.
-     *
-     * ### Implementation Notes
-     * - By default, this function launches a detached background thread for each asynchronous accept.
-     *   For ultra-high concurrency, consider event-driven or coroutine-based backends in the future.
-     *
-     * @pre Server socket must be valid, bound, and listening.
-     * @post Callback is invoked exactly once, either with a valid `Socket` or exception.
-     *
-     * @param[in] callback The function to invoke on completion. Signature:
-     *                 `void callback(std::optional<Socket>, std::exception_ptr)`.
-     * @param[in] recvBufferSize Internal receive buffer size (bytes) for the accepted client socket (default: server
-     * default).
-     * @param[in] sendBufferSize Internal send buffer size (bytes) for the accepted client socket (default: server
-     * default).
-     *
-     * @see acceptAsync(std::future), accept(), tryAccept()
-     * @see std::optional, std::exception_ptr, std::rethrow_exception
-     *
-     * @ingroup tcp
      */
     void acceptAsync(std::function<void(std::optional<Socket>, std::exception_ptr)> callback,
-                     std::size_t recvBufferSize = 0, std::size_t sendBufferSize = 0) const;
+                     std::optional<std::size_t> recvBufferSize = std::nullopt,
+                     std::optional<std::size_t> sendBufferSize = std::nullopt) const;
 
     /**
      * @brief Closes the server socket and releases its associated system resources.
@@ -1577,15 +1475,14 @@ class ServerSocket
 
   private:
     /**
-     * @brief Get the effective receive buffer size to use for read socket operations.
+     * @brief Get the effective receive buffer size to use for socket read operations.
      *
-     * This helper method determines the actual buffer size to use based on the provided receive
-     * buffer size parameter and the default receive buffer size configured for the server socket.
-     * If the provided size is 0, it returns the default receive buffer size; otherwise, it returns
-     * the provided size.
+     * This helper determines the actual buffer size based on an optional user-provided value.
+     * If the parameter is `std::nullopt`, it returns the per-instance default receive buffer size;
+     * otherwise, it returns the explicitly provided value (even if it's 0).
      *
-     * @param[in] recvBufferSize The requested receive buffer size (0 means use default)
-     * @return The effective receive buffer size to use
+     * @param[in] recvBufferSize Optional size. If unset, defaults to `_defaultReceiveBufferSize`.
+     * @return The effective buffer size to use.
      *
      * @see setReceiveBufferSize()
      * @see getReceiveBufferSize()
@@ -1593,21 +1490,20 @@ class ServerSocket
      *
      * @ingroup tcp
      */
-    [[nodiscard]] std::size_t getEffectiveReceiveBufferSize(const std::size_t recvBufferSize) const
+    [[nodiscard]] std::size_t getEffectiveReceiveBufferSize(const std::optional<std::size_t> recvBufferSize) const
     {
-        return recvBufferSize == 0 ? _defaultReceiveBufferSize : recvBufferSize;
+        return recvBufferSize.value_or(_defaultReceiveBufferSize);
     }
 
     /**
-     * @brief Get the effective send buffer size to use for write socket operations.
+     * @brief Get the effective send buffer size to use for socket write operations.
      *
-     * This helper method determines the actual buffer size to use based on the provided send
-     * buffer size parameter and the default send buffer size configured for the server socket.
-     * If the provided size is 0, it returns the default send buffer size; otherwise, it returns
-     * the provided size.
+     * This helper determines the actual send buffer size based on an optional user-specified value.
+     * If the parameter is `std::nullopt`, it returns the per-instance default send buffer size.
+     * Otherwise, it returns the explicitly specified size (including zero if the caller intends it).
      *
-     * @param[in] sendBufferSize The requested send buffer size (0 means use default)
-     * @return The effective send buffer size to use
+     * @param[in] sendBufferSize Optional size. If unset, defaults to `_defaultSendBufferSize`.
+     * @return The effective buffer size to use for send operations.
      *
      * @see setSendBufferSize()
      * @see getSendBufferSize()
@@ -1615,9 +1511,30 @@ class ServerSocket
      *
      * @ingroup tcp
      */
-    [[nodiscard]] std::size_t getEffectiveSendBufferSize(const std::size_t sendBufferSize) const
+    [[nodiscard]] std::size_t getEffectiveSendBufferSize(std::optional<std::size_t> sendBufferSize) const
     {
-        return sendBufferSize == 0 ? _defaultSendBufferSize : sendBufferSize;
+        return sendBufferSize.value_or(_defaultSendBufferSize);
+    }
+
+    /**
+     * @brief Resolves effective receive and send buffer sizes from optional user inputs.
+     *
+     * If either buffer size is not provided, this method falls back to the
+     * per-instance `_defaultReceiveBufferSize` or `_defaultSendBufferSize`.
+     *
+     * @param recv Optional receive buffer size.
+     * @param send Optional send buffer size.
+     * @return A pair: {resolvedRecvBufferSize, resolvedSendBufferSize}
+     *
+     * @see getEffectiveReceiveBufferSize()
+     * @see getEffectiveSendBufferSize()
+     *
+     * @ingroup tcp
+     */
+    [[nodiscard]] std::pair<std::size_t, std::size_t> resolveBuffers(const std::optional<std::size_t> recv,
+                                                                     const std::optional<std::size_t> send) const
+    {
+        return {getEffectiveReceiveBufferSize(recv), getEffectiveSendBufferSize(send)};
     }
 
     SOCKET _serverSocket = INVALID_SOCKET; ///< Underlying socket file descriptor.
