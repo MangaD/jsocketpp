@@ -1,5 +1,8 @@
 #include "jsocketpp/Socket.hpp"
 
+#include "jsocketpp/SocketTimeoutException.hpp"
+#include "jsocketpp/internal/ScopedBlockingMode.hpp"
+
 #include <array>
 #include <chrono>
 
@@ -64,83 +67,76 @@ void Socket::connect(const int timeoutMillis) const
         throw SocketException(0, "connect() failed: no valid addrinfo found");
     }
 
-    // Flag to track whether we're in non-blocking mode
-    const bool isNonBlocking = (timeoutMillis >= 0);
+    // Determine if we should use non-blocking connect logic
+    const bool useNonBlocking = (timeoutMillis >= 0);
 
-    // Set the socket to non-blocking mode if a timeout is specified
-    if (isNonBlocking)
+    // Automatically switch to non-blocking if needed, and restore original mode later
+    // NOLINTNEXTLINE - Temporarily switch to non-blocking mode (RAII-reverted)
+    std::optional<internal::ScopedBlockingMode> blockingGuard;
+    if (useNonBlocking)
     {
-        setNonBlocking(true); // This sets the socket to non-blocking mode
+        blockingGuard.emplace(_sockFd, true); // Set non-blocking temporarily
     }
 
-    // Attempt to connect to the remote host
+    // Attempt to initiate the connection
     const auto res = ::connect(_sockFd, _selectedAddrInfo->ai_addr,
 #ifdef _WIN32
-                               static_cast<int>(_selectedAddrInfo->ai_addrlen) // Windows: cast to int
+                               static_cast<int>(_selectedAddrInfo->ai_addrlen)
 #else
-                               _selectedAddrInfo->ai_addrlen // Linux/Unix: use socklen_t directly
+                               _selectedAddrInfo->ai_addrlen
 #endif
     );
 
     if (res == SOCKET_ERROR)
     {
-        auto error = GetSocketError();
+        const int error = GetSocketError();
 
-        // If the error is EINPROGRESS or EWOULDBLOCK, it means the connection is in progress
-        // which is expected in non-blocking mode
 #ifdef _WIN32
-        // Windows: Check if WSAEINPROGRESS or WSAEWOULDBLOCK is returned
         if (error != WSAEINPROGRESS && error != WSAEWOULDBLOCK)
 #else
-        // Linux/Unix: Check if EINPROGRESS or EWOULDBLOCK is returned
         if (error != EINPROGRESS && error != EWOULDBLOCK)
 #endif
         {
-            // Reset the socket to blocking mode before throwing the exception
-            if (isNonBlocking)
-                setNonBlocking(false);
             throw SocketException(error, SocketErrorMessage(error));
         }
 
-        // If we're in non-blocking mode, use select to wait for the connection to complete
-        if (isNonBlocking)
+        // Wait for the connection to become writable (ready)
+        if (useNonBlocking)
         {
             timeval tv{};
             tv.tv_sec = timeoutMillis / 1000;
             tv.tv_usec = (timeoutMillis % 1000) * 1000;
 
-            fd_set fds;
-            FD_ZERO(&fds);
-            FD_SET(_sockFd, &fds);
+            fd_set writeFds;
+            FD_ZERO(&writeFds);
+            FD_SET(_sockFd, &writeFds);
 
 #ifdef _WIN32
-            // On Windows, the first parameter to select is ignored, but must be set to 0
-            auto result = select(0, nullptr, &fds, nullptr, &tv);
+            const int selectResult = ::select(0, nullptr, &writeFds, nullptr, &tv);
 #else
-            // On Linux/Unix, the first parameter to select should be the highest file descriptor + 1
-            auto result = select(_sockFd + 1, nullptr, &fds, nullptr, &tv);
+            const int selectResult = ::select(_sockFd + 1, nullptr, &writeFds, nullptr, &tv);
 #endif
 
-            // If select() timed out or failed, reset the socket to blocking mode
-            if (result <= 0)
+            if (selectResult == 0)
+                throw SocketTimeoutException();
+            if (selectResult < 0)
+                throw SocketException(GetSocketError(), "select() failed during connect()");
+
+            // On success, still need to check for actual socket error (getsockopt)
+            int so_error = 0;
+            socklen_t len = sizeof(so_error);
+            // SO_ERROR is always retrieved as int (POSIX & Windows agree on semantics)
+            if (::getsockopt(_sockFd, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&so_error), &len) < 0 ||
+                so_error != 0)
             {
-                // Reset the socket to blocking mode before throwing the timeout exception
-                setNonBlocking(false);
-                throw SocketException(0, "Connection timed out or failed.");
+                throw SocketException(so_error, SocketErrorMessage(so_error));
             }
         }
     }
 
-    // After the connection attempt, if we used non-blocking mode, reset to blocking mode
-    if (isNonBlocking)
-    {
-        setNonBlocking(false); // Reset the socket back to blocking mode
-    }
+    // Socket mode will be restored automatically via ScopedBlockingMode destructor
 }
 
-/**
- * @brief Destructor. Closes the socket and frees resources.
- */
 Socket::~Socket() noexcept
 {
     try
@@ -1178,16 +1174,7 @@ std::size_t Socket::readv(std::span<BufferView> buffers) const
         return 0;
 
 #ifdef _WIN32
-    std::vector<WSABUF> wsaBufs;
-    wsaBufs.reserve(buffers.size());
-
-    for (const auto& [data, size] : buffers)
-    {
-        WSABUF w;
-        w.buf = static_cast<char*>(data);
-        w.len = static_cast<ULONG>(size);
-        wsaBufs.push_back(w);
-    }
+    auto wsaBufs = internal::toWSABUF(buffers);
 
     DWORD bytesReceived = 0;
     DWORD flags = 0;
@@ -1202,17 +1189,7 @@ std::size_t Socket::readv(std::span<BufferView> buffers) const
     return static_cast<std::size_t>(bytesReceived);
 
 #else
-    std::vector<iovec> ioVecs;
-    ioVecs.reserve(buffers.size());
-
-    for (const auto& [data, size] : buffers)
-    {
-        iovec io{};
-        io.iov_base = data;
-        io.iov_len = size;
-        ioVecs.push_back(io);
-    }
-
+    const auto ioVecs = internal::toIOVec(buffers);
     const ssize_t bytes = ::readv(_sockFd, ioVecs.data(), static_cast<int>(ioVecs.size()));
     if (bytes < 0)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
@@ -1349,16 +1326,7 @@ std::size_t Socket::writevFrom(std::span<const BufferView> buffers) const
         return 0;
 
 #ifdef _WIN32
-    std::vector<WSABUF> wsaBufs;
-    wsaBufs.reserve(buffers.size());
-
-    for (const auto& [data, size] : buffers)
-    {
-        WSABUF w;
-        w.buf = static_cast<char*>(const_cast<void*>(data));
-        w.len = static_cast<ULONG>(size);
-        wsaBufs.push_back(w);
-    }
+    auto wsaBufs = internal::toWSABUF(buffers);
 
     DWORD bytesSent = 0;
     if (const int result =
@@ -1369,18 +1337,9 @@ std::size_t Socket::writevFrom(std::span<const BufferView> buffers) const
     return static_cast<std::size_t>(bytesSent);
 
 #else
-    std::vector<iovec> ioVecs;
-    ioVecs.reserve(buffers.size());
+    const auto ioVecs = internal::toIOVec(buffers);
 
-    for (const auto& [data, size] : buffers)
-    {
-        iovec io{};
-        io.iov_base = const_cast<void*>(data);
-        io.iov_len = size;
-        ioVecs.push_back(io);
-    }
-
-    ssize_t written = ::writev(_sockFd, ioVecs.data(), static_cast<int>(ioVecs.size()));
+    const ssize_t written = ::writev(_sockFd, ioVecs.data(), static_cast<int>(ioVecs.size()));
     if (written < 0)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 

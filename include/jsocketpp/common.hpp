@@ -73,7 +73,7 @@
 #include <sys/socket.h>  //socket
 #include <sys/time.h>    //timeval
 #include <sys/types.h>   //socket
-#include <sys/uio.h>     //writev
+#include <sys/uio.h>     //writev,readv,iovec
 #include <sys/un.h>      //for Unix domain sockets
 #include <unistd.h>      //close
 
@@ -116,6 +116,17 @@
  *
  * @see jsocketpp::net
  * @see Port
+ */
+
+/**
+ * @defgroup internal Internal Helpers
+ * @ingroup jsocketpp
+ * @brief Implementation-only utilities for internal use.
+ *
+ * These functions and types are not part of the public API.
+ * They are intended for internal glue code, platform compatibility, and cross-cutting concerns.
+ *
+ * @warning Do not rely on this module from user code. It is subject to change without notice.
  */
 
 /**
