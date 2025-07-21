@@ -117,8 +117,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga05b1ae2ec76833370c809c53fe550a95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator that transfers socket ownership safely.  <br /></td></tr>
 <tr class="memitem:ga2d1b014c3f33bb2b0400baf08681f973" id="r_ga2d1b014c3f33bb2b0400baf08681f973"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga2d1b014c3f33bb2b0400baf08681f973">~Socket</a> () noexcept</td></tr>
 <tr class="memdesc:ga2d1b014c3f33bb2b0400baf08681f973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructs the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object, closing connections and freeing resources.  <br /></td></tr>
-<tr class="memitem:gab0b1c45f93960266950d72fed70f56a5" id="r_gab0b1c45f93960266950d72fed70f56a5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab0b1c45f93960266950d72fed70f56a5">Socket::getRemoteSocketAddress</a> (bool convertIPv4Mapped=true) const</td></tr>
-<tr class="memdesc:gab0b1c45f93960266950d72fed70f56a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remote peer's address and port as a formatted string.  <br /></td></tr>
+<tr class="memitem:ga92c62bf727779c6d7395809084f9e4dc" id="r_ga92c62bf727779c6d7395809084f9e4dc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc">getRemoteSocketAddress</a> (bool convertIPv4Mapped=true) const</td></tr>
+<tr class="memdesc:ga92c62bf727779c6d7395809084f9e4dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remote peer's address and port as a formatted string.  <br /></td></tr>
 <tr class="memitem:ga647272fa39f462dd40aa4a87e335352c" id="r_ga647272fa39f462dd40aa4a87e335352c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga647272fa39f462dd40aa4a87e335352c">connect</a> (int timeoutMillis=-1) const</td></tr>
 <tr class="memdesc:ga647272fa39f462dd40aa4a87e335352c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Establishes a TCP connection to the remote host with optional timeout control.  <br /></td></tr>
 <tr class="memitem:gaa7498d51b547b52699055bdb16b9d68b" id="r_gaa7498d51b547b52699055bdb16b9d68b"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
@@ -159,8 +159,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga6a8b2fada7df0ddec9b6f2c491f4f92b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts a single vectorized read into multiple buffers with a timeout.  <br /></td></tr>
 <tr class="memitem:ga5c413ef976df1e89528d9b3df6484c89" id="r_ga5c413ef976df1e89528d9b3df6484c89"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga5c413ef976df1e89528d9b3df6484c89">peek</a> (std::size_t n) const</td></tr>
 <tr class="memdesc:ga5c413ef976df1e89528d9b3df6484c89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peeks at incoming data without consuming it.  <br /></td></tr>
-<tr class="memitem:ga9188bb8da388b31e50493a09749bf06d" id="r_ga9188bb8da388b31e50493a09749bf06d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga9188bb8da388b31e50493a09749bf06d">discard</a> (std::size_t n) const</td></tr>
-<tr class="memdesc:ga9188bb8da388b31e50493a09749bf06d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discards <span class="tt">n</span> bytes of data from the socket's input stream.  <br /></td></tr>
+<tr class="memitem:ga7492730c56e0bf5a4c67227df7bc4033" id="r_ga7492730c56e0bf5a4c67227df7bc4033"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga7492730c56e0bf5a4c67227df7bc4033">discard</a> (std::size_t n, std::size_t chunkSize=1024) const</td></tr>
+<tr class="memdesc:ga7492730c56e0bf5a4c67227df7bc4033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discards exactly <span class="tt">n</span> bytes from the socket by reading and discarding them.  <br /></td></tr>
 <tr class="memitem:ga75ee749264ccbcfc4dfbf5442e55dcb8" id="r_ga75ee749264ccbcfc4dfbf5442e55dcb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8">close</a> ()</td></tr>
 <tr class="memdesc:ga75ee749264ccbcfc4dfbf5442e55dcb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the socket connection and releases associated resources.  <br /></td></tr>
 <tr class="memitem:gaacbacf59cf8239e66c80c66a09243ec3" id="r_gaacbacf59cf8239e66c80c66a09243ec3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3">shutdown</a> (<a class="el" href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174">ShutdownMode</a> how) const</td></tr>
@@ -327,7 +327,7 @@ Advanced Usage</h3>
 <ul>
 <li>Set non-blocking mode with <span class="tt"><a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5" title="Set the socket to non-blocking or blocking mode.">setNonBlocking()</a></span>.</li>
 <li>Tune socket options with <span class="tt"><a class="el" href="#a4be91b4d9fd6da1ce2b36de1158e707c" title="Enable or disable TCP_NODELAY (Nagle&#39;s algorithm) on the socket.">enableNoDelay()</a></span>, <span class="tt"><a class="el" href="#aaceee2a0a6204cbc3e1481303891fcab" title="Enable or disable SO_KEEPALIVE on the socket.">enableKeepAlive()</a></span>, or <span class="tt">setTimeout()</span>.</li>
-<li>Check remote address with <span class="tt"><a class="el" href="group__tcp.html#gab0b1c45f93960266950d72fed70f56a5" title="Get the remote peer&#39;s address and port as a formatted string.">getRemoteSocketAddress()</a></span>.</li>
+<li>Check remote address with <span class="tt"><a class="el" href="group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc" title="Get the remote peer&#39;s address and port as a formatted string.">getRemoteSocketAddress()</a></span>.</li>
 </ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md456"></a>
 See Also</h3>
@@ -396,14 +396,14 @@ See Also</h3>
 <p>SO_KEEPALIVE is a socket option that enables periodic transmission of keepalive probes on an otherwise idle TCP connection. When enabled (set to true), the operating system will periodically send keepalive messages to the remote peer if no data has been exchanged for a certain period. If the peer does not respond, the connection is considered broken and will be closed.</p>
 <p>This feature is useful for detecting dead peers or broken network links, especially for long-lived connections where silent disconnects would otherwise go unnoticed. It is commonly used in server applications, remote control systems, and protocols that require reliable detection of dropped connections.</p>
 <p>By default, SO_KEEPALIVE is disabled (i.e., keepalive probes are not sent) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md555"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md553"></a>
 Platform-Specific Details</h3>
 <ul>
 <li>Linux: Configure via /proc/sys/net/ipv4/tcp_keepalive_*</li>
 <li>Windows: Default 2-hour idle time before first probe</li>
 <li>macOS: System-wide keepalive settings apply</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md556"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md554"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -450,7 +450,7 @@ Example Usage</h3>
 <p>When TCP_NODELAY is enabled (set to true), Nagle's algorithm is disabled. This means that small packets of data are sent immediately over the network, without waiting to accumulate more data. This can reduce latency for applications that require fast, interactive communication (such as games, real-time systems, or protocols where low latency is more important than bandwidth efficiency).</p>
 <p>When TCP_NODELAY is disabled (set to false), Nagle's algorithm is enabled. This causes the socket to buffer small outgoing packets and send them together, which can reduce network congestion and improve throughput for bulk data transfers, but may introduce slight delays for small messages.</p>
 <p>By default, TCP_NODELAY is disabled (i.e., Nagle's algorithm is enabled) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md554"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md552"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -544,7 +544,7 @@ Example Usage</h3>
 
 <p>Check if the socket is still connected (TCP only). </p>
 <p>This method performs a non-destructive check of the socket's connection status by attempting a zero-byte send (on Windows) or checking socket errors (on POSIX). While not 100% reliable due to the nature of TCP/IP, it provides a best-effort indication of connection status.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md552"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md550"></a>
 Implementation Details</h3>
 <ul>
 <li>Windows: Uses send() with zero bytes</li>
@@ -552,7 +552,7 @@ Implementation Details</h3>
 <li>Does not generate network traffic</li>
 <li>Non-blocking operation</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md553"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md551"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>

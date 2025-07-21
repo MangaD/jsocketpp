@@ -4,5 +4,5 @@ var searchData=
   ['datagramsocket_1',['DatagramSocket',['../classjsocketpp_1_1DatagramSocket.html#a9c44b1cef3fe97aeab9052fd81798ff9',1,'jsocketpp::DatagramSocket::DatagramSocket(Port port, std::size_t bufferSize=2048)'],['../classjsocketpp_1_1DatagramSocket.html#af6d82bc3786b10031c711cd796b5eabc',1,'jsocketpp::DatagramSocket::DatagramSocket(std::string_view host, Port port, std::size_t bufferSize=2048)'],['../classjsocketpp_1_1DatagramSocket.html#a3d08597b24d9c7a3fe43dd291ee85148',1,'jsocketpp::DatagramSocket::DatagramSocket(const DatagramSocket &amp;)=delete'],['../classjsocketpp_1_1DatagramSocket.html#a9dc7555c20b961c642309a618379e254',1,'jsocketpp::DatagramSocket::DatagramSocket(DatagramSocket &amp;&amp;other) noexcept']]],
   ['datagramsocket_3a_3aread_3c_20std_3a_3astring_20_3e_2',['read&lt; std::string &gt;',['../namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f',1,'jsocketpp']]],
   ['datagramsocket_3a_3arecvfrom_3c_20std_3a_3astring_20_3e_3',['recvFrom&lt; std::string &gt;',['../namespacejsocketpp.html#aa5ff7535f7cd1c89724bcfd6715e55ba',1,'jsocketpp']]],
-  ['discard_4',['discard',['../group__tcp.html#ga9188bb8da388b31e50493a09749bf06d',1,'jsocketpp::Socket']]]
+  ['discard_4',['discard',['../group__tcp.html#ga7492730c56e0bf5a4c67227df7bc4033',1,'jsocketpp::Socket']]]
 ];

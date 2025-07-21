@@ -21,11 +21,10 @@ var searchData=
   ['shutdown_18',['shutdown',['../group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3',1,'jsocketpp::Socket']]],
   ['size_19',['size',['../classjsocketpp_1_1DatagramPacket.html#a56c2fe4797d236c1453be540e1fa5c6c',1,'jsocketpp::DatagramPacket']]],
   ['socket_20',['Socket',['../group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587',1,'jsocketpp::Socket::Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)'],['../group__tcp.html#gabc4e14475484e596ac62509e627a9baf',1,'jsocketpp::Socket::Socket()=delete'],['../group__tcp.html#ga339f6a8d4a101e496e668416eebd2769',1,'jsocketpp::Socket::Socket(std::string_view host, Port port, std::optional&lt; std::size_t &gt; recvBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; sendBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; internalBufferSize=std::nullopt)'],['../group__tcp.html#gaf5a4ddebfbca7bfe6c9a88462cc9ada8',1,'jsocketpp::Socket::Socket(const Socket &amp;rhs)=delete'],['../group__tcp.html#gad0612bda82c378dbaf99e0839f5aa815',1,'jsocketpp::Socket::Socket(Socket &amp;&amp;rhs) noexcept']]],
-  ['socket_3a_3agetremotesocketaddress_21',['getRemoteSocketAddress',['../group__tcp.html#gab0b1c45f93960266950d72fed70f56a5',1,'jsocketpp::Socket']]],
-  ['socketerrormessage_22',['SocketErrorMessage',['../namespacejsocketpp.html#a1d0357025eb782be52907801696556ca',1,'jsocketpp']]],
-  ['socketerrormessagewrap_23',['SocketErrorMessageWrap',['../namespacejsocketpp.html#a2eae999aa2ba7973dc6c3acc40e51e5a',1,'jsocketpp']]],
-  ['socketexception_24',['SocketException',['../classjsocketpp_1_1SocketException.html#a60e8542fe737e4ab26f9f6bb99bd848e',1,'jsocketpp::SocketException']]],
-  ['socketinitializer_25',['SocketInitializer',['../classjsocketpp_1_1SocketInitializer.html#a4ff790d2289ffdbef65a5cce8c06a112',1,'jsocketpp::SocketInitializer::SocketInitializer()'],['../classjsocketpp_1_1SocketInitializer.html#a6bc3398c7814e3a54c2032a021ee20eb',1,'jsocketpp::SocketInitializer::SocketInitializer(const SocketInitializer &amp;rhs)=delete']]],
-  ['sockettimeoutexception_26',['SocketTimeoutException',['../classjsocketpp_1_1SocketTimeoutException.html#a83c08928ca631472282ca3b0ce3c952a',1,'jsocketpp::SocketTimeoutException']]],
-  ['stringtoaddress_27',['stringToAddress',['../classjsocketpp_1_1Socket.html#a68f996973d1497cb476c44025aac401b',1,'jsocketpp::Socket']]]
+  ['socketerrormessage_21',['SocketErrorMessage',['../namespacejsocketpp.html#a1d0357025eb782be52907801696556ca',1,'jsocketpp']]],
+  ['socketerrormessagewrap_22',['SocketErrorMessageWrap',['../namespacejsocketpp.html#a2eae999aa2ba7973dc6c3acc40e51e5a',1,'jsocketpp']]],
+  ['socketexception_23',['SocketException',['../classjsocketpp_1_1SocketException.html#a60e8542fe737e4ab26f9f6bb99bd848e',1,'jsocketpp::SocketException']]],
+  ['socketinitializer_24',['SocketInitializer',['../classjsocketpp_1_1SocketInitializer.html#a4ff790d2289ffdbef65a5cce8c06a112',1,'jsocketpp::SocketInitializer::SocketInitializer()'],['../classjsocketpp_1_1SocketInitializer.html#a6bc3398c7814e3a54c2032a021ee20eb',1,'jsocketpp::SocketInitializer::SocketInitializer(const SocketInitializer &amp;rhs)=delete']]],
+  ['sockettimeoutexception_25',['SocketTimeoutException',['../classjsocketpp_1_1SocketTimeoutException.html#a83c08928ca631472282ca3b0ce3c952a',1,'jsocketpp::SocketTimeoutException']]],
+  ['stringtoaddress_26',['stringToAddress',['../classjsocketpp_1_1Socket.html#a68f996973d1497cb476c44025aac401b',1,'jsocketpp::Socket']]]
 ];
