@@ -277,7 +277,7 @@ Preconditions</h3>
 <p>This constant defines the default size (4096 bytes / 4 KB) of the internal read buffer used by both <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> and <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> instances unless explicitly overridden.</p>
 <p>It applies to:</p><ul>
 <li>Client-side <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> instances constructed without a custom buffer size</li>
-<li>Server-accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> instances created via <span class="tt"><a class="el" href="group__tcp.html#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">ServerSocket::accept()</a></span></li>
+<li>Server-accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> instances created via <span class="tt"><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">ServerSocket::accept()</a></span></li>
 </ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md421"></a>
 Rationale</h3>
@@ -290,7 +290,7 @@ Rationale</h3>
 Customization</h3>
 <ul>
 <li>You may override this value by:<ul>
-<li>Passing a custom <span class="tt">bufferSize</span> to <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> or <span class="tt"><a class="el" href="group__tcp.html#ga7899e94b311b0b6ee9992909860d2bf1" title="Accept an incoming client connection, respecting the configured socket timeout.">ServerSocket::accept()</a></span></li>
+<li>Passing a custom <span class="tt">bufferSize</span> to <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> or <span class="tt"><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">ServerSocket::accept()</a></span></li>
 <li>Calling <span class="tt">setInternalBufferSize()</span> after construction</li>
 <li>Setting <span class="tt">SO_RCVBUF</span> via <span class="tt">setReceiveBufferSize()</span> for kernel buffer tuning</li>
 </ul>
@@ -312,7 +312,9 @@ When to Adjust</h3>
 <dd>
 <a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">Socket::setInternalBufferSize()</a> </dd>
 <dd>
-<a class="el" href="group__tcp.html#ga67700f13f17036f13ce5a30898a315dc" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">Socket::setReceiveBufferSize()</a> </dd></dl>
+<a class="el" href="group__tcp.html#ga67700f13f17036f13ce5a30898a315dc" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">Socket::setReceiveBufferSize()</a> </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">Socket::setSendBufferSize()</a> </dd></dl>
 
 </div>
 </div>

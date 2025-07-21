@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['rationale_0',['Rationale',['../group__ServerSocket__Lifecycle.html#autotoc_md34',1,'4. Advantages and Rationale'],['../group__async__io.html#autotoc_md123',1,'Design Rationale'],['../group__core.html#autotoc_md421',1,'Rationale'],['../group__tcp.html#autotoc_md460',1,'Rationale']]],
+  ['rationale_0',['Rationale',['../group__ServerSocket__Lifecycle.html#autotoc_md34',1,'4. Advantages and Rationale'],['../group__async__io.html#autotoc_md123',1,'Design Rationale'],['../group__core.html#autotoc_md421',1,'Rationale'],['../group__tcp.html#autotoc_md461',1,'Rationale']]],
   ['raw_20socket_20communication_1',['3.3 Raw Socket Communication',['../group__underlying__socket__api.html#autotoc_md307',1,'']]],
   ['raw_20sockets_2',['Raw Sockets',['../group__sockets__theory.html#autotoc_md267',1,'2.3. Raw Sockets'],['../group__sockets__theory.html#autotoc_md275',1,'Raw Sockets']]],
   ['read_3',['Read',['../namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a7a1a5f3e79fdc91edf2f5ead9d66abb4',1,'jsocketpp']]],
@@ -44,9 +44,9 @@ var searchData=
   ['requests_41',['2. Submitting Pull Requests',['../md_CONTRIBUTING.html#autotoc_md395',1,'']]],
   ['require_20the_20port_20in_20the_20constructor_42',['Why require the port in the constructor?',['../group__ServerSocket__Lifecycle.html#autotoc_md32',1,'']]],
   ['resize_43',['resize',['../classjsocketpp_1_1DatagramPacket.html#a2c99540d2136dae10a56f781c1b20c5f',1,'jsocketpp::DatagramPacket']]],
-  ['resolvebuffers_44',['resolveBuffers',['../group__tcp.html#ga2becb95c348e07a111c3254d9ddb72ee',1,'jsocketpp::ServerSocket']]],
+  ['resolvebuffers_44',['resolveBuffers',['../group__tcp.html#ga069d29c3ff8b80ee9a7cb9e1e39f930a',1,'jsocketpp::ServerSocket']]],
   ['resource_20cleanup_45',['Resource Cleanup',['../group__tcp.html#autotoc_md444',1,'']]],
-  ['resource_20management_46',['Resource Management',['../group__tcp.html#autotoc_md500',1,'']]],
+  ['resource_20management_46',['Resource Management',['../group__tcp.html#autotoc_md502',1,'']]],
   ['resources_47',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
   ['responsibilities_48',['Our Responsibilities',['../md_CODE__OF__CONDUCT.html#autotoc_md411',1,'']]],
   ['reuse_20in_20sockets_3a_20so_5freuseaddr_20vs_20so_5fexclusiveaddruse_49',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],

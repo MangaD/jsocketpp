@@ -18,5 +18,5 @@ var searchData=
   ['readvatmostwithtimeout_15',['readvAtMostWithTimeout',['../group__tcp.html#ga6a8b2fada7df0ddec9b6f2c491f4f92b',1,'jsocketpp::Socket']]],
   ['recvfrom_16',['recvFrom',['../classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06',1,'jsocketpp::DatagramSocket']]],
   ['resize_17',['resize',['../classjsocketpp_1_1DatagramPacket.html#a2c99540d2136dae10a56f781c1b20c5f',1,'jsocketpp::DatagramPacket']]],
-  ['resolvebuffers_18',['resolveBuffers',['../group__tcp.html#ga2becb95c348e07a111c3254d9ddb72ee',1,'jsocketpp::ServerSocket']]]
+  ['resolvebuffers_18',['resolveBuffers',['../group__tcp.html#ga069d29c3ff8b80ee9a7cb9e1e39f930a',1,'jsocketpp::ServerSocket']]]
 ];
