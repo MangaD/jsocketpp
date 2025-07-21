@@ -21,7 +21,7 @@ var searchData=
   ['classes_18',['Exception Classes',['../group__exceptions.html',1,'']]],
   ['cleanup_19',['Resource Cleanup',['../group__tcp.html#autotoc_md444',1,'']]],
   ['cleanup_3a_20',['1.2 &lt;b&gt;Testing Socket Initialization and Cleanup&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md334',1,'']]],
-  ['cleanupandthrow_21',['cleanupAndThrow',['../classjsocketpp_1_1DatagramSocket.html#a1973415ece2f77f191b250b9e9690733',1,'jsocketpp::DatagramSocket::cleanupAndThrow()'],['../group__tcp.html#gab5572cb795d9b45ee50a0ddf9cb9c075',1,'jsocketpp::ServerSocket::cleanupAndThrow()']]],
+  ['cleanupandthrow_21',['cleanupAndThrow',['../classjsocketpp_1_1DatagramSocket.html#a1973415ece2f77f191b250b9e9690733',1,'jsocketpp::DatagramSocket::cleanupAndThrow()'],['../group__tcp.html#gab5572cb795d9b45ee50a0ddf9cb9c075',1,'jsocketpp::ServerSocket::cleanupAndThrow()'],['../group__tcp.html#gaf80aa30f2806a17b930878841dfab7ad',1,'jsocketpp::Socket::cleanupAndThrow()']]],
   ['cleanupsockets_22',['CleanupSockets',['../namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c',1,'jsocketpp']]],
   ['clear_23',['clear',['../classjsocketpp_1_1DatagramPacket.html#a7853459de9f4e83363ed341bb465930a',1,'jsocketpp::DatagramPacket']]],
   ['clear_20api_24',['c) Clear API',['../group__ServerSocket__Lifecycle.html#autotoc_md37',1,'']]],

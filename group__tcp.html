@@ -331,6 +331,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga3369e71b7e6f2c8aaf8c090379f8f843"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set timeout for socket send and/or receive operations.  <br /></td></tr>
 <tr class="memitem:ga756c4e2148cfe7974fe191099341fccf" id="r_ga756c4e2148cfe7974fe191099341fccf"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga756c4e2148cfe7974fe191099341fccf">jsocketpp::Socket::readIntoInternal</a> (void *buffer, std::size_t len, bool exact=false) const</td></tr>
 <tr class="memdesc:ga756c4e2148cfe7974fe191099341fccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket into a user-supplied buffer.  <br /></td></tr>
+<tr class="memitem:gaf80aa30f2806a17b930878841dfab7ad" id="r_gaf80aa30f2806a17b930878841dfab7ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf80aa30f2806a17b930878841dfab7ad">jsocketpp::Socket::cleanupAndThrow</a> (int errorCode)</td></tr>
+<tr class="memdesc:gaf80aa30f2806a17b930878841dfab7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up client socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.  <br /></td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9" id="r_ga634bfa30476b72bfa4cca63a93c558a9"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga634bfa30476b72bfa4cca63a93c558a9">jsocketpp::Socket::read</a> ()</td></tr>
 <tr class="memdesc:ga634bfa30476b72bfa4cca63a93c558a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template specialization to read a string from the socket.  <br /></td></tr>
@@ -758,7 +760,7 @@ This method is <b>not thread safe</b>. Simultaneous <span class="tt">accept</spa
 <div class="line">        <span class="keywordflow">throw</span>;</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Set the socket to non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:322</div></div>
+<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Set the socket to non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:336</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -896,7 +898,7 @@ The socket must not be already bound. </dd></dl>
 </div>
 </div>
 <a id="gab5572cb795d9b45ee50a0ddf9cb9c075" name="gab5572cb795d9b45ee50a0ddf9cb9c075"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab5572cb795d9b45ee50a0ddf9cb9c075">&#9670;&#160;</a></span>cleanupAndThrow()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#gab5572cb795d9b45ee50a0ddf9cb9c075">&#9670;&#160;</a></span>cleanupAndThrow() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -933,6 +935,52 @@ The socket must not be already bound. </dd></dl>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="gaf80aa30f2806a17b930878841dfab7ad" name="gaf80aa30f2806a17b930878841dfab7ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf80aa30f2806a17b930878841dfab7ad">&#9670;&#160;</a></span>cleanupAndThrow() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::cleanupAndThrow </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>errorCode</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Cleans up client socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>. </p>
+<p>This method performs internal cleanup of the client socket's resources, including:</p><ul>
+<li>Closing the socket if it is open (<span class="tt">_sockFd</span>)</li>
+<li>Releasing any allocated address resolution data (<span class="tt">_cliAddrInfo</span>)</li>
+<li>Resetting <span class="tt">_selectedAddrInfo</span> to null</li>
+</ul>
+<p>It is used to centralize error recovery during construction or connection setup, ensuring that all partially initialized resources are properly released before rethrowing an exception.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">errorCode</td><td>The error code to report in the thrown exception.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>Always throws, containing the error code and the corresponding human-readable error message obtained via <span class="tt">SocketErrorMessage(errorCode)</span>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This function is typically called when socket creation, address resolution, or connection setup fails during client socket initialization. </dd></dl>
 
 </div>
 </div>
@@ -1006,7 +1054,7 @@ Example Usage</h3>
 <div class="line">sock.connect();</div>
 <div class="line"><span class="comment">// ... use socket ...</span></div>
 <div class="line">sock.close();  <span class="comment">// Explicitly close when done</span></div>
-<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:11</div></div>
+<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:12</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md502"></a>
 Resource Management</h3>
 <ul>

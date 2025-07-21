@@ -242,6 +242,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:ga94a43fdd77f92eb63104dfd4168ba587"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected constructor used internally to create <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> objects for accepted client connections.  <br /></td></tr>
 <tr class="memitem:ga756c4e2148cfe7974fe191099341fccf" id="r_ga756c4e2148cfe7974fe191099341fccf"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga756c4e2148cfe7974fe191099341fccf">readIntoInternal</a> (void *buffer, std::size_t len, bool exact=false) const</td></tr>
 <tr class="memdesc:ga756c4e2148cfe7974fe191099341fccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket into a user-supplied buffer.  <br /></td></tr>
+<tr class="memitem:gaf80aa30f2806a17b930878841dfab7ad" id="r_gaf80aa30f2806a17b930878841dfab7ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaf80aa30f2806a17b930878841dfab7ad">cleanupAndThrow</a> (int errorCode)</td></tr>
+<tr class="memdesc:gaf80aa30f2806a17b930878841dfab7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up client socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -408,7 +410,7 @@ Example Usage</h3>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Enable keepalive for long-lived connection</span></div>
 <div class="line">sock.enableKeepAlive(<span class="keyword">true</span>);</div>
-<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:11</div></div>
+<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:12</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">enable</td><td>true to enable keepalive probes (SO_KEEPALIVE), false to disable (default). </td></tr>

@@ -7,6 +7,7 @@ var classjsocketpp_1_1Socket =
     [ "Socket", "group__tcp.html#gad0612bda82c378dbaf99e0839f5aa815", null ],
     [ "~Socket", "group__tcp.html#ga2d1b014c3f33bb2b0400baf08681f973", null ],
     [ "addressToString", "classjsocketpp_1_1Socket.html#af3b50f84b3c8e869b9f8ff64da0bd315", null ],
+    [ "cleanupAndThrow", "group__tcp.html#gaf80aa30f2806a17b930878841dfab7ad", null ],
     [ "close", "group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8", null ],
     [ "connect", "group__tcp.html#ga647272fa39f462dd40aa4a87e335352c", null ],
     [ "discard", "group__tcp.html#ga9188bb8da388b31e50493a09749bf06d", null ],
