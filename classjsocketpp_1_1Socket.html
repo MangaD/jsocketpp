@@ -117,8 +117,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga05b1ae2ec76833370c809c53fe550a95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator that transfers socket ownership safely.  <br /></td></tr>
 <tr class="memitem:ga2d1b014c3f33bb2b0400baf08681f973" id="r_ga2d1b014c3f33bb2b0400baf08681f973"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga2d1b014c3f33bb2b0400baf08681f973">~Socket</a> () noexcept</td></tr>
 <tr class="memdesc:ga2d1b014c3f33bb2b0400baf08681f973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructs the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object, closing connections and freeing resources.  <br /></td></tr>
-<tr class="memitem:ga47460d7512cb20e061a98f66fdcf90c1" id="r_ga47460d7512cb20e061a98f66fdcf90c1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga47460d7512cb20e061a98f66fdcf90c1">getRemoteSocketAddress</a> () const</td></tr>
-<tr class="memdesc:ga47460d7512cb20e061a98f66fdcf90c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remote peer's address and port as a formatted string.  <br /></td></tr>
+<tr class="memitem:gab0b1c45f93960266950d72fed70f56a5" id="r_gab0b1c45f93960266950d72fed70f56a5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab0b1c45f93960266950d72fed70f56a5">Socket::getRemoteSocketAddress</a> (bool convertIPv4Mapped=true) const</td></tr>
+<tr class="memdesc:gab0b1c45f93960266950d72fed70f56a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remote peer's address and port as a formatted string.  <br /></td></tr>
 <tr class="memitem:ga647272fa39f462dd40aa4a87e335352c" id="r_ga647272fa39f462dd40aa4a87e335352c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga647272fa39f462dd40aa4a87e335352c">connect</a> (int timeoutMillis=-1) const</td></tr>
 <tr class="memdesc:ga647272fa39f462dd40aa4a87e335352c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Establishes a TCP connection to the remote host with optional timeout control.  <br /></td></tr>
 <tr class="memitem:gaa7498d51b547b52699055bdb16b9d68b" id="r_gaa7498d51b547b52699055bdb16b9d68b"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
@@ -327,7 +327,7 @@ Advanced Usage</h3>
 <ul>
 <li>Set non-blocking mode with <span class="tt"><a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5" title="Set the socket to non-blocking or blocking mode.">setNonBlocking()</a></span>.</li>
 <li>Tune socket options with <span class="tt"><a class="el" href="#a4be91b4d9fd6da1ce2b36de1158e707c" title="Enable or disable TCP_NODELAY (Nagle&#39;s algorithm) on the socket.">enableNoDelay()</a></span>, <span class="tt"><a class="el" href="#aaceee2a0a6204cbc3e1481303891fcab" title="Enable or disable SO_KEEPALIVE on the socket.">enableKeepAlive()</a></span>, or <span class="tt">setTimeout()</span>.</li>
-<li>Check remote address with <span class="tt"><a class="el" href="group__tcp.html#ga47460d7512cb20e061a98f66fdcf90c1" title="Get the remote peer&#39;s address and port as a formatted string.">getRemoteSocketAddress()</a></span>.</li>
+<li>Check remote address with <span class="tt"><a class="el" href="group__tcp.html#gab0b1c45f93960266950d72fed70f56a5" title="Get the remote peer&#39;s address and port as a formatted string.">getRemoteSocketAddress()</a></span>.</li>
 </ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md456"></a>
 See Also</h3>

@@ -233,8 +233,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga05b1ae2ec76833370c809c53fe550a95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator that transfers socket ownership safely.  <br /></td></tr>
 <tr class="memitem:ga2d1b014c3f33bb2b0400baf08681f973" id="r_ga2d1b014c3f33bb2b0400baf08681f973"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2d1b014c3f33bb2b0400baf08681f973">jsocketpp::Socket::~Socket</a> () noexcept</td></tr>
 <tr class="memdesc:ga2d1b014c3f33bb2b0400baf08681f973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructs the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object, closing connections and freeing resources.  <br /></td></tr>
-<tr class="memitem:ga47460d7512cb20e061a98f66fdcf90c1" id="r_ga47460d7512cb20e061a98f66fdcf90c1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga47460d7512cb20e061a98f66fdcf90c1">jsocketpp::Socket::getRemoteSocketAddress</a> () const</td></tr>
-<tr class="memdesc:ga47460d7512cb20e061a98f66fdcf90c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remote peer's address and port as a formatted string.  <br /></td></tr>
+<tr class="memitem:gab0b1c45f93960266950d72fed70f56a5" id="r_gab0b1c45f93960266950d72fed70f56a5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab0b1c45f93960266950d72fed70f56a5">jsocketpp::Socket::Socket::getRemoteSocketAddress</a> (bool convertIPv4Mapped=true) const</td></tr>
+<tr class="memdesc:gab0b1c45f93960266950d72fed70f56a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remote peer's address and port as a formatted string.  <br /></td></tr>
 <tr class="memitem:ga647272fa39f462dd40aa4a87e335352c" id="r_ga647272fa39f462dd40aa4a87e335352c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga647272fa39f462dd40aa4a87e335352c">jsocketpp::Socket::connect</a> (int timeoutMillis=-1) const</td></tr>
 <tr class="memdesc:ga647272fa39f462dd40aa4a87e335352c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Establishes a TCP connection to the remote host with optional timeout control.  <br /></td></tr>
 <tr class="memitem:gaa7498d51b547b52699055bdb16b9d68b" id="r_gaa7498d51b547b52699055bdb16b9d68b"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
@@ -760,7 +760,7 @@ This method is <b>not thread safe</b>. Simultaneous <span class="tt">accept</spa
 <div class="line">        <span class="keywordflow">throw</span>;</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Set the socket to non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:341</div></div>
+<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Set the socket to non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:342</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1909,46 +1909,6 @@ Example Usage</h3>
 <a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get send buffer size </dd>
 <dd>
 <a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html" title="Implementation-only utilities and platform abstractions for jsocketpp.">internal</a> string buffer size </dd></dl>
-
-</div>
-</div>
-<a id="ga47460d7512cb20e061a98f66fdcf90c1" name="ga47460d7512cb20e061a98f66fdcf90c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga47460d7512cb20e061a98f66fdcf90c1">&#9670;&#160;</a></span>getRemoteSocketAddress()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string Socket::getRemoteSocketAddress </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the remote peer's address and port as a formatted string. </p>
-<p>Converts the remote peer's address information (stored in sockaddr_storage) to a human-readable string in the format "address:port". This method supports both IPv4 and IPv6 addresses and handles special cases like IPv4-mapped IPv6 addresses.</p>
-<p>The conversion process:</p><ol type="1">
-<li>Uses getnameinfo() to convert the binary address to text</li>
-<li>Formats IPv4 addresses as "x.x.x.x:port"</li>
-<li>Formats IPv6 addresses as "[xxxx:xxxx::xxxx]:port"</li>
-</ol>
-<p>Example outputs:</p><ul>
-<li>IPv4: "192.168.1.1:80"</li>
-<li>IPv6: "[2001:db8::1]:80"</li>
-<li>IPv4-mapped IPv6: "192.168.1.1:80"</li>
-</ul>
-<dl class="section return"><dt>Returns</dt><dd>A string containing the formatted address and port </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If address conversion fails or the socket is invalid</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classjsocketpp_1_1Socket.html#af3b50f84b3c8e869b9f8ff64da0bd315" title="Convert an address and port to a string using getnameinfo.">addressToString()</a> Static utility method for general address conversion </dd>
-<dd>
-<a class="el" href="classjsocketpp_1_1Socket.html#a68f996973d1497cb476c44025aac401b" title="Convert a string (ip:port) to sockaddr_storage.">stringToAddress()</a> Convert string address back to binary form </dd></dl>
 
 </div>
 </div>
@@ -5354,6 +5314,57 @@ Initialization Flow</h3>
 <a class="el" href="#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> </dd>
 <dd>
 <a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> </dd></dl>
+
+</div>
+</div>
+<a id="gab0b1c45f93960266950d72fed70f56a5" name="gab0b1c45f93960266950d72fed70f56a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab0b1c45f93960266950d72fed70f56a5">&#9670;&#160;</a></span>Socket::getRemoteSocketAddress()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string jsocketpp::Socket::Socket::getRemoteSocketAddress </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>convertIPv4Mapped</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the remote peer's address and port as a formatted string. </p>
+<p>Converts the remote peer's address information (stored in sockaddr_storage) to a human-readable string in the format "address:port". This method supports both IPv4 and IPv6 addresses and optionally handles IPv4-mapped IPv6 addresses.</p>
+<p>The conversion process:</p><ol type="1">
+<li>Optionally detects and converts IPv4-mapped IPv6 addresses (e.g., "::ffff:192.168.0.1") to plain IPv4 ("192.168.0.1") if <span class="tt">convertIPv4Mapped</span> is true.</li>
+<li>Uses getnameinfo() to convert the binary address to text.</li>
+<li>Formats IPv4 addresses as "x.x.x.x:port".</li>
+<li>Formats IPv6 addresses as "[xxxx:xxxx::xxxx]:port".</li>
+</ol>
+<p>Example outputs:</p><ul>
+<li>IPv4: "192.168.1.1:80"</li>
+<li>IPv6: "[2001:db8::1]:80"</li>
+<li>IPv4-mapped IPv6:<ul>
+<li>With <span class="tt">convertIPv4Mapped = true</span> (default): "192.168.1.1:80"</li>
+<li>With <span class="tt">convertIPv4Mapped = false</span>: "[::ffff:192.168.1.1]:80"</li>
+</ul>
+</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to pure IPv4 form. Default is true. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string containing the formatted address and port.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If address conversion fails or the socket is invalid.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classjsocketpp_1_1Socket.html#af3b50f84b3c8e869b9f8ff64da0bd315" title="Convert an address and port to a string using getnameinfo.">addressToString()</a> Static utility method for general address conversion. </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1Socket.html#a68f996973d1497cb476c44025aac401b" title="Convert a string (ip:port) to sockaddr_storage.">stringToAddress()</a> Convert string address back to binary form. </dd></dl>
 
 </div>
 </div>

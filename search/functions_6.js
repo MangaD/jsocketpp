@@ -19,13 +19,12 @@ var searchData=
   ['getnonblocking_16',['getNonBlocking',['../group__tcp.html#ga36a682afc71359dc6889357bf7394b70',1,'jsocketpp::ServerSocket::getNonBlocking()'],['../group__tcp.html#ga70c008492e223265394080a88b3c0b5a',1,'jsocketpp::Socket::getNonBlocking()']]],
   ['getoption_17',['getOption',['../classjsocketpp_1_1DatagramSocket.html#a68e13894683afb701659da778a826b5e',1,'jsocketpp::DatagramSocket::getOption()'],['../group__tcp.html#gaed297b8a5f1097ca9d78b5c8faf38af4',1,'jsocketpp::ServerSocket::getOption()'],['../classjsocketpp_1_1Socket.html#ab1c36ab56a2ef4409629f2bd722d6f52',1,'jsocketpp::Socket::getOption()'],['../classjsocketpp_1_1UnixSocket.html#a133a2371a13446219dbf7728b5cba7bd',1,'jsocketpp::UnixSocket::getOption()']]],
   ['getreceivebuffersize_18',['getReceiveBufferSize',['../group__tcp.html#ga53a0a6980058ce02034033b05f6ca389',1,'jsocketpp::Socket']]],
-  ['getremotesocketaddress_19',['getRemoteSocketAddress',['../group__tcp.html#ga47460d7512cb20e061a98f66fdcf90c1',1,'jsocketpp::Socket']]],
-  ['getreuseaddress_20',['getReuseAddress',['../group__tcp.html#ga663e3d90aa82f14c2db9a16e3e5b3525',1,'jsocketpp::ServerSocket']]],
-  ['getreuseport_21',['getReusePort',['../group__tcp.html#ga7c00ace5b0756299ea0cbd77074e856d',1,'jsocketpp::ServerSocket']]],
-  ['getsendbuffersize_22',['getSendBufferSize',['../group__tcp.html#gacb2d3979ff562c2ffd60b12a1b4c9897',1,'jsocketpp::Socket']]],
-  ['getsocketerror_23',['GetSocketError',['../namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad',1,'jsocketpp']]],
-  ['getsocketpath_24',['getSocketPath',['../classjsocketpp_1_1UnixSocket.html#a7595a11516389b7690e3f387d999b01c',1,'jsocketpp::UnixSocket']]],
-  ['getsocketreuseoption_25',['getSocketReuseOption',['../group__tcp.html#gaf54c5a60a2d403df50674c261e86fbd5',1,'jsocketpp::ServerSocket']]],
-  ['getsotimeout_26',['getSoTimeout',['../group__tcp.html#ga7829c558cb7bf5e0a46d882df82acc19',1,'jsocketpp::ServerSocket']]],
-  ['gettimetolive_27',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]]
+  ['getreuseaddress_19',['getReuseAddress',['../group__tcp.html#ga663e3d90aa82f14c2db9a16e3e5b3525',1,'jsocketpp::ServerSocket']]],
+  ['getreuseport_20',['getReusePort',['../group__tcp.html#ga7c00ace5b0756299ea0cbd77074e856d',1,'jsocketpp::ServerSocket']]],
+  ['getsendbuffersize_21',['getSendBufferSize',['../group__tcp.html#gacb2d3979ff562c2ffd60b12a1b4c9897',1,'jsocketpp::Socket']]],
+  ['getsocketerror_22',['GetSocketError',['../namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad',1,'jsocketpp']]],
+  ['getsocketpath_23',['getSocketPath',['../classjsocketpp_1_1UnixSocket.html#a7595a11516389b7690e3f387d999b01c',1,'jsocketpp::UnixSocket']]],
+  ['getsocketreuseoption_24',['getSocketReuseOption',['../group__tcp.html#gaf54c5a60a2d403df50674c261e86fbd5',1,'jsocketpp::ServerSocket']]],
+  ['getsotimeout_25',['getSoTimeout',['../group__tcp.html#ga7829c558cb7bf5e0a46d882df82acc19',1,'jsocketpp::ServerSocket']]],
+  ['gettimetolive_26',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]]
 ];
