@@ -380,26 +380,31 @@ class Socket
      *
      * Converts the remote peer's address information (stored in sockaddr_storage)
      * to a human-readable string in the format "address:port". This method supports
-     * both IPv4 and IPv6 addresses and handles special cases like IPv4-mapped IPv6
-     * addresses.
+     * both IPv4 and IPv6 addresses and optionally handles IPv4-mapped IPv6 addresses.
      *
      * The conversion process:
-     * 1. Uses getnameinfo() to convert the binary address to text
-     * 2. Formats IPv4 addresses as "x.x.x.x:port"
-     * 3. Formats IPv6 addresses as "[xxxx:xxxx::xxxx]:port"
+     * 1. Optionally detects and converts IPv4-mapped IPv6 addresses (e.g., "::ffff:192.168.0.1")
+     *    to plain IPv4 ("192.168.0.1") if `convertIPv4Mapped` is true.
+     * 2. Uses getnameinfo() to convert the binary address to text.
+     * 3. Formats IPv4 addresses as "x.x.x.x:port".
+     * 4. Formats IPv6 addresses as "[xxxx:xxxx::xxxx]:port".
      *
      * Example outputs:
      * - IPv4: "192.168.1.1:80"
      * - IPv6: "[2001:db8::1]:80"
-     * - IPv4-mapped IPv6: "192.168.1.1:80"
+     * - IPv4-mapped IPv6:
+     *   - With `convertIPv4Mapped = true` (default): "192.168.1.1:80"
+     *   - With `convertIPv4Mapped = false`: "[::ffff:192.168.1.1]:80"
      *
-     * @return A string containing the formatted address and port
-     * @throws SocketException If address conversion fails or the socket is invalid
+     * @param[in] convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to pure IPv4 form. Default is true.
+     * @return A string containing the formatted address and port.
      *
-     * @see addressToString() Static utility method for general address conversion
-     * @see stringToAddress() Convert string address back to binary form
+     * @throws SocketException If address conversion fails or the socket is invalid.
+     *
+     * @see addressToString() Static utility method for general address conversion.
+     * @see stringToAddress() Convert string address back to binary form.
      */
-    std::string getRemoteSocketAddress() const;
+    std::string getRemoteSocketAddress(bool convertIPv4Mapped = true) const;
 
     /**
      * @brief Establishes a TCP connection to the remote host with optional timeout control.

@@ -240,7 +240,7 @@ void Socket::shutdown(ShutdownMode how) const
 }
 
 // http://www.microhowto.info/howto/convert_an_ip_address_to_a_human_readable_string_in_c.html
-std::string Socket::getRemoteSocketAddress() const
+std::string Socket::getRemoteSocketAddress(bool convertIPv4Mapped /* = true */) const
 {
     if (_remoteAddrLen == 0)
         return ""; // Or throw, depending on API contract
@@ -248,8 +248,7 @@ std::string Socket::getRemoteSocketAddress() const
     sockaddr_storage tempAddr = _remoteAddr;
     socklen_t tempLen = _remoteAddrLen;
 
-    // Normalize IPv4-mapped IPv6 to IPv4 (make a local copy)
-    if (tempAddr.ss_family == AF_INET6)
+    if (convertIPv4Mapped && tempAddr.ss_family == AF_INET6)
     {
         if (const auto* addr6 = reinterpret_cast<const sockaddr_in6*>(&tempAddr); isIPv4MappedIPv6(addr6))
         {
@@ -262,8 +261,9 @@ std::string Socket::getRemoteSocketAddress() const
 
     char host[NI_MAXHOST] = {};
     char serv[NI_MAXSERV] = {};
-    int ret = getnameinfo(reinterpret_cast<const sockaddr*>(&tempAddr), tempLen, host, sizeof(host), serv, sizeof(serv),
-                          NI_NUMERICHOST | NI_NUMERICSERV);
+    const int ret = getnameinfo(reinterpret_cast<const sockaddr*>(&tempAddr), tempLen, host, sizeof(host), serv,
+                                sizeof(serv), NI_NUMERICHOST | NI_NUMERICSERV);
+
     if (ret != 0)
     {
 #ifdef _WIN32
@@ -272,6 +272,7 @@ std::string Socket::getRemoteSocketAddress() const
         throw SocketException(ret, SocketErrorMessageWrap(ret, true));
 #endif
     }
+
     return std::string(host) + ":" + serv;
 }
 
