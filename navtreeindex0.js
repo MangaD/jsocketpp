@@ -245,9 +245,9 @@ var NAVTREEINDEX0 =
 "group__sockets__theory.html":[3,0,10],
 "group__tcp.html":[3,1,2],
 "group__tcp.html#ga0245d40096ca089255c67303eebf17e6":[3,1,2,11],
+"group__tcp.html#ga0539576a97fe792c9cb67b8aee26477b":[3,1,2,77],
 "group__tcp.html#ga05b1ae2ec76833370c809c53fe550a95":[3,1,2,45],
 "group__tcp.html#ga069d29c3ff8b80ee9a7cb9e1e39f930a":[3,1,2,65],
 "group__tcp.html#ga06c2651d2b46a22ca1a80dde4a74016e":[3,1,2,76],
-"group__tcp.html#ga0b3a5cb732c669b678e03549e5af2427":[3,1,2,36],
-"group__tcp.html#ga1308a8d172508999834853ccb35607e8":[3,1,2,20]
+"group__tcp.html#ga0b3a5cb732c669b678e03549e5af2427":[3,1,2,36]
 };

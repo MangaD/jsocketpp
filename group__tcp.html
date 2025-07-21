@@ -311,8 +311,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga7b3ab7a896b7fbfeba9b80672c41b236"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all raw memory regions fully using scatter/gather I/O.  <br /></td></tr>
 <tr class="memitem:ga3e2b5bd60122d459134cd5b0a3a27077" id="r_ga3e2b5bd60122d459134cd5b0a3a27077"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3e2b5bd60122d459134cd5b0a3a27077">jsocketpp::Socket::writevFromWithTotalTimeout</a> (std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers, int timeoutMillis) const</td></tr>
 <tr class="memdesc:ga3e2b5bd60122d459134cd5b0a3a27077"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all raw memory buffers fully within a timeout using scatter I/O.  <br /></td></tr>
-<tr class="memitem:ga67700f13f17036f13ce5a30898a315dc" id="r_ga67700f13f17036f13ce5a30898a315dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga67700f13f17036f13ce5a30898a315dc">jsocketpp::Socket::setReceiveBufferSize</a> (std::size_t size) const</td></tr>
-<tr class="memdesc:ga67700f13f17036f13ce5a30898a315dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
+<tr class="memitem:ga0539576a97fe792c9cb67b8aee26477b" id="r_ga0539576a97fe792c9cb67b8aee26477b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b">jsocketpp::Socket::setReceiveBufferSize</a> (std::size_t size)</td></tr>
+<tr class="memdesc:ga0539576a97fe792c9cb67b8aee26477b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
 <tr class="memitem:ga243562caf78f87e481f657e26c59e1f0" id="r_ga243562caf78f87e481f657e26c59e1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga243562caf78f87e481f657e26c59e1f0">jsocketpp::Socket::setSendBufferSize</a> (std::size_t size)</td></tr>
 <tr class="memdesc:ga243562caf78f87e481f657e26c59e1f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's send buffer size (SO_SNDBUF).  <br /></td></tr>
 <tr class="memitem:ga53a0a6980058ce02034033b05f6ca389" id="r_ga53a0a6980058ce02034033b05f6ca389"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga53a0a6980058ce02034033b05f6ca389">jsocketpp::Socket::getReceiveBufferSize</a> () const</td></tr>
@@ -760,7 +760,7 @@ This method is <b>not thread safe</b>. Simultaneous <span class="tt">accept</spa
 <div class="line">        <span class="keywordflow">throw</span>;</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Set the socket to non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:336</div></div>
+<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Set the socket to non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:341</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1892,7 +1892,7 @@ Example Usage</h3>
 <div class="line">    size = sock.getReceiveBufferSize();</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;New receive buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
 <div class="line">}</div>
-</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>Current receive buffer size in bytes. Note that this may differ from the size requested via <a class="el" href="#ga67700f13f17036f13ce5a30898a315dc" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> due to OS adjustments and overhead.</dd></dl>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>Current receive buffer size in bytes. Note that this may differ from the size requested via <a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> due to OS adjustments and overhead.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
@@ -1904,7 +1904,7 @@ Example Usage</h3>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga67700f13f17036f13ce5a30898a315dc" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> For setting the receive buffer size </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> For setting the receive buffer size </dd>
 <dd>
 <a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get send buffer size </dd>
 <dd>
@@ -4380,7 +4380,7 @@ This constructor is not thread safe. Do not share a <a class="el" href="classjso
 </div><div class="memdoc">
 
 <p>Sets the size of the internal read buffer used for string operations. </p>
-<p>This method controls the size of the internal buffer used by <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> operations. This is distinct from <a class="el" href="#ga67700f13f17036f13ce5a30898a315dc" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a>, which controls the operating system's socket buffer (SO_RCVBUF).</p>
+<p>This method controls the size of the internal buffer used by <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> operations. This is distinct from <a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a>, which controls the operating system's socket buffer (SO_RCVBUF).</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md539"></a>
 Purpose</h3>
 <ul>
@@ -4418,7 +4418,7 @@ Example Usage</h3>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga67700f13f17036f13ce5a30898a315dc" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> For setting the OS socket receive buffer </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> For setting the OS socket receive buffer </dd>
 <dd>
 <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> Uses this buffer for string operations </dd>
 <dd>
@@ -4625,8 +4625,8 @@ Common Use Cases</h3>
 
 </div>
 </div>
-<a id="ga67700f13f17036f13ce5a30898a315dc" name="ga67700f13f17036f13ce5a30898a315dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga67700f13f17036f13ce5a30898a315dc">&#9670;&#160;</a></span>setReceiveBufferSize()</h2>
+<a id="ga0539576a97fe792c9cb67b8aee26477b" name="ga0539576a97fe792c9cb67b8aee26477b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0539576a97fe792c9cb67b8aee26477b">&#9670;&#160;</a></span>setReceiveBufferSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4635,7 +4635,7 @@ Common Use Cases</h3>
           <td class="memname">void Socket::setReceiveBufferSize </td>
           <td>(</td>
           <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4830,7 +4830,7 @@ Example Usage</h3>
 <dl class="section note"><dt>Note</dt><dd>Some systems may double the specified size internally. Use <a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> to verify the actual size.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga53a0a6980058ce02034033b05f6ca389" title="Get the socket&#39;s receive buffer size (SO_RCVBUF).">getReceiveBufferSize()</a> Get current receive buffer size </dd>
 <dd>
-<a class="el" href="#ga67700f13f17036f13ce5a30898a315dc" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> Set receive buffer size </dd>
+<a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> Set receive buffer size </dd>
 <dd>
 <a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get current send buffer size </dd></dl>
 
@@ -5349,7 +5349,7 @@ Initialization Flow</h3>
 <dd>
 <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for TCP socket read operations.">DefaultBufferSize</a> </dd>
 <dd>
-<a class="el" href="#ga67700f13f17036f13ce5a30898a315dc" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> </dd>
+<a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> </dd>
 <dd>
 <a class="el" href="#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> </dd>
 <dd>

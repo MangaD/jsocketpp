@@ -44,7 +44,7 @@ var classjsocketpp_1_1Socket =
     [ "setInternalBufferSize", "group__tcp.html#ga3fb196157a1cde167c47a596c9235c91", null ],
     [ "setNonBlocking", "group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5", null ],
     [ "setOption", "classjsocketpp_1_1Socket.html#aff36b21f845d62d612d608027559c0b1", null ],
-    [ "setReceiveBufferSize", "group__tcp.html#ga67700f13f17036f13ce5a30898a315dc", null ],
+    [ "setReceiveBufferSize", "group__tcp.html#ga0539576a97fe792c9cb67b8aee26477b", null ],
     [ "setSendBufferSize", "group__tcp.html#ga243562caf78f87e481f657e26c59e1f0", null ],
     [ "setSoTimeout", "group__tcp.html#gab13446104e1e7ae372554f7e30582791", null ],
     [ "shutdown", "group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3", null ],
