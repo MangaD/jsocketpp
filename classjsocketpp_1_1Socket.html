@@ -211,18 +211,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga6cc57c26e230cb7ed7fa0174028811d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the socket to non-blocking or blocking mode.  <br /></td></tr>
 <tr class="memitem:ga70c008492e223265394080a88b3c0b5a" id="r_ga70c008492e223265394080a88b3c0b5a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga70c008492e223265394080a88b3c0b5a">getNonBlocking</a> () const</td></tr>
 <tr class="memdesc:ga70c008492e223265394080a88b3c0b5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the socket is currently in non-blocking mode.  <br /></td></tr>
-<tr class="memitem:ga3369e71b7e6f2c8aaf8c090379f8f843" id="r_ga3369e71b7e6f2c8aaf8c090379f8f843"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga3369e71b7e6f2c8aaf8c090379f8f843">setSoTimeout</a> (int millis, bool forRead=true, bool forWrite=true) const</td></tr>
-<tr class="memdesc:ga3369e71b7e6f2c8aaf8c090379f8f843"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set timeout for socket send and/or receive operations.  <br /></td></tr>
+<tr class="memitem:gab13446104e1e7ae372554f7e30582791" id="r_gab13446104e1e7ae372554f7e30582791"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab13446104e1e7ae372554f7e30582791">setSoTimeout</a> (int millis, bool forRead=true, bool forWrite=true)</td></tr>
+<tr class="memdesc:gab13446104e1e7ae372554f7e30582791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set timeout for socket send and/or receive operations.  <br /></td></tr>
 <tr class="memitem:a6b39b1375048cc167409b5b513c3ad8c" id="r_a6b39b1375048cc167409b5b513c3ad8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b39b1375048cc167409b5b513c3ad8c">waitReady</a> (bool forWrite, int timeoutMillis) const</td></tr>
 <tr class="memdesc:a6b39b1375048cc167409b5b513c3ad8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for the socket to be ready for reading or writing.  <br /></td></tr>
 <tr class="memitem:a969dad8dab10b5862aea7200af238d82" id="r_a969dad8dab10b5862aea7200af238d82"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a969dad8dab10b5862aea7200af238d82">isConnected</a> () const</td></tr>
 <tr class="memdesc:a969dad8dab10b5862aea7200af238d82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the socket is still connected (TCP only).  <br /></td></tr>
-<tr class="memitem:ac2975ed8e1d02b5f823bc0af50c034c7" id="r_ac2975ed8e1d02b5f823bc0af50c034c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac2975ed8e1d02b5f823bc0af50c034c7">enableNoDelay</a> (bool enable) const</td></tr>
-<tr class="memdesc:ac2975ed8e1d02b5f823bc0af50c034c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable TCP_NODELAY (Nagle's algorithm) on the socket.  <br /></td></tr>
-<tr class="memitem:a4c37f604fb8534760e00e077f5c4c5cf" id="r_a4c37f604fb8534760e00e077f5c4c5cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c37f604fb8534760e00e077f5c4c5cf">enableKeepAlive</a> (bool enable) const</td></tr>
-<tr class="memdesc:a4c37f604fb8534760e00e077f5c4c5cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable SO_KEEPALIVE on the socket.  <br /></td></tr>
-<tr class="memitem:aeb2c85baf767c3e362b1a9de64bada3c" id="r_aeb2c85baf767c3e362b1a9de64bada3c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb2c85baf767c3e362b1a9de64bada3c">setOption</a> (int level, int optName, int value) const</td></tr>
-<tr class="memdesc:aeb2c85baf767c3e362b1a9de64bada3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a socket option at the specified level.  <br /></td></tr>
+<tr class="memitem:a4be91b4d9fd6da1ce2b36de1158e707c" id="r_a4be91b4d9fd6da1ce2b36de1158e707c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4be91b4d9fd6da1ce2b36de1158e707c">enableNoDelay</a> (bool enable)</td></tr>
+<tr class="memdesc:a4be91b4d9fd6da1ce2b36de1158e707c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable TCP_NODELAY (Nagle's algorithm) on the socket.  <br /></td></tr>
+<tr class="memitem:aaceee2a0a6204cbc3e1481303891fcab" id="r_aaceee2a0a6204cbc3e1481303891fcab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaceee2a0a6204cbc3e1481303891fcab">enableKeepAlive</a> (bool enable)</td></tr>
+<tr class="memdesc:aaceee2a0a6204cbc3e1481303891fcab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable SO_KEEPALIVE on the socket.  <br /></td></tr>
+<tr class="memitem:aff36b21f845d62d612d608027559c0b1" id="r_aff36b21f845d62d612d608027559c0b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff36b21f845d62d612d608027559c0b1">setOption</a> (int level, int optName, int value)</td></tr>
+<tr class="memdesc:aff36b21f845d62d612d608027559c0b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a socket option at the specified level.  <br /></td></tr>
 <tr class="memitem:ab1c36ab56a2ef4409629f2bd722d6f52" id="r_ab1c36ab56a2ef4409629f2bd722d6f52"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1c36ab56a2ef4409629f2bd722d6f52">getOption</a> (int level, int optName) const</td></tr>
 <tr class="memdesc:ab1c36ab56a2ef4409629f2bd722d6f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current value of a socket option at the specified level.  <br /></td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9" id="r_ga634bfa30476b72bfa4cca63a93c558a9"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
@@ -326,7 +326,7 @@ Platform Support</h3>
 Advanced Usage</h3>
 <ul>
 <li>Set non-blocking mode with <span class="tt"><a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5" title="Set the socket to non-blocking or blocking mode.">setNonBlocking()</a></span>.</li>
-<li>Tune socket options with <span class="tt"><a class="el" href="#ac2975ed8e1d02b5f823bc0af50c034c7" title="Enable or disable TCP_NODELAY (Nagle&#39;s algorithm) on the socket.">enableNoDelay()</a></span>, <span class="tt"><a class="el" href="#a4c37f604fb8534760e00e077f5c4c5cf" title="Enable or disable SO_KEEPALIVE on the socket.">enableKeepAlive()</a></span>, or <span class="tt">setTimeout()</span>.</li>
+<li>Tune socket options with <span class="tt"><a class="el" href="#a4be91b4d9fd6da1ce2b36de1158e707c" title="Enable or disable TCP_NODELAY (Nagle&#39;s algorithm) on the socket.">enableNoDelay()</a></span>, <span class="tt"><a class="el" href="#aaceee2a0a6204cbc3e1481303891fcab" title="Enable or disable SO_KEEPALIVE on the socket.">enableKeepAlive()</a></span>, or <span class="tt">setTimeout()</span>.</li>
 <li>Check remote address with <span class="tt"><a class="el" href="group__tcp.html#ga47460d7512cb20e061a98f66fdcf90c1" title="Get the remote peer&#39;s address and port as a formatted string.">getRemoteSocketAddress()</a></span>.</li>
 </ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md456"></a>
@@ -377,8 +377,8 @@ See Also</h3>
 
 </div>
 </div>
-<a id="a4c37f604fb8534760e00e077f5c4c5cf" name="a4c37f604fb8534760e00e077f5c4c5cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c37f604fb8534760e00e077f5c4c5cf">&#9670;&#160;</a></span>enableKeepAlive()</h2>
+<a id="aaceee2a0a6204cbc3e1481303891fcab" name="aaceee2a0a6204cbc3e1481303891fcab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaceee2a0a6204cbc3e1481303891fcab">&#9670;&#160;</a></span>enableKeepAlive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -387,7 +387,7 @@ See Also</h3>
           <td class="memname">void Socket::enableKeepAlive </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -431,8 +431,8 @@ Example Usage</h3>
 
 </div>
 </div>
-<a id="ac2975ed8e1d02b5f823bc0af50c034c7" name="ac2975ed8e1d02b5f823bc0af50c034c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2975ed8e1d02b5f823bc0af50c034c7">&#9670;&#160;</a></span>enableNoDelay()</h2>
+<a id="a4be91b4d9fd6da1ce2b36de1158e707c" name="a4be91b4d9fd6da1ce2b36de1158e707c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4be91b4d9fd6da1ce2b36de1158e707c">&#9670;&#160;</a></span>enableNoDelay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -441,7 +441,7 @@ Example Usage</h3>
           <td class="memname">void Socket::enableNoDelay </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -565,12 +565,12 @@ Example Usage</h3>
 <div class="line"><span class="comment">// Connection lost</span></div>
 </div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>true if the socket appears to be connected, false if disconnected or in an error state. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This check is not guaranteed to detect all network failures, especially temporary outages or routing problems. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a4c37f604fb8534760e00e077f5c4c5cf" title="Enable or disable SO_KEEPALIVE on the socket.">enableKeepAlive()</a> For reliable connection monitoring </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#aaceee2a0a6204cbc3e1481303891fcab" title="Enable or disable SO_KEEPALIVE on the socket.">enableKeepAlive()</a> For reliable connection monitoring </dd></dl>
 
 </div>
 </div>
-<a id="aeb2c85baf767c3e362b1a9de64bada3c" name="aeb2c85baf767c3e362b1a9de64bada3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb2c85baf767c3e362b1a9de64bada3c">&#9670;&#160;</a></span>setOption()</h2>
+<a id="aff36b21f845d62d612d608027559c0b1" name="aff36b21f845d62d612d608027559c0b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff36b21f845d62d612d608027559c0b1">&#9670;&#160;</a></span>setOption()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -588,7 +588,7 @@ Example Usage</h3>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;) const</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
