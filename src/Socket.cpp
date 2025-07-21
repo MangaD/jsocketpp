@@ -306,7 +306,8 @@ size_t Socket::writeAll(const std::string_view message) const
     return totalSent;
 }
 
-void Socket::setReceiveBufferSize(const std::size_t size) const
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void Socket::setReceiveBufferSize(const std::size_t size)
 {
     setOption(SOL_SOCKET, SO_RCVBUF, static_cast<int>(size));
 }
@@ -371,7 +372,8 @@ bool Socket::getNonBlocking() const
 #endif
 }
 
-void Socket::setSoTimeout(int millis, bool forRead, bool forWrite) const
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void Socket::setSoTimeout(int millis, bool forRead, bool forWrite)
 {
 #ifdef _WIN32
     const int timeout = millis;
@@ -483,7 +485,8 @@ bool Socket::isConnected() const
 #endif
 }
 
-void Socket::enableNoDelay(const bool enable) const
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void Socket::enableNoDelay(const bool enable)
 {
     const int flag = enable ? 1 : 0;
     if (setsockopt(_sockFd, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<const char*>(&flag), sizeof(flag)) ==
@@ -491,7 +494,8 @@ void Socket::enableNoDelay(const bool enable) const
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 }
 
-void Socket::enableKeepAlive(const bool enable) const
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void Socket::enableKeepAlive(const bool enable)
 {
     const int flag = enable ? 1 : 0;
     if (setsockopt(_sockFd, SOL_SOCKET, SO_KEEPALIVE, reinterpret_cast<const char*>(&flag), sizeof(flag)) ==
@@ -572,7 +576,8 @@ void Socket::stringToAddress(const std::string& str, sockaddr_storage& addr)
     freeaddrinfo(res); // ignore errors from freeaddrinfo
 }
 
-void Socket::setOption(const int level, const int optName, int value) const
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void Socket::setOption(const int level, const int optName, int value)
 {
     if (setsockopt(_sockFd, level, optName,
 #ifdef _WIN32

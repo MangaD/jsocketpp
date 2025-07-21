@@ -2176,7 +2176,7 @@ class Socket
      * @see setInternalBufferSize() Set internal buffer size
      * @see setSendBufferSize() Set send buffer size
      */
-    void setReceiveBufferSize(std::size_t size) const;
+    void setReceiveBufferSize(std::size_t size);
 
     /**
      * @brief Sets the socket's send buffer size (SO_SNDBUF).
@@ -2563,7 +2563,7 @@ class Socket
      * @see read() Affected by receive timeout
      * @see write() Affected by send timeout
      */
-    void setSoTimeout(int millis, bool forRead = true, bool forWrite = true) const;
+    void setSoTimeout(int millis, bool forRead = true, bool forWrite = true);
 
     /**
      * @brief Wait for the socket to be ready for reading or writing.
@@ -2643,7 +2643,7 @@ class Socket
      *         - Permission denied (EACCES)
      *         - Protocol not available (ENOPROTOOPT)
      */
-    void enableNoDelay(bool enable) const;
+    void enableNoDelay(bool enable);
 
     /**
      * @brief Enable or disable SO_KEEPALIVE on the socket.
@@ -2679,7 +2679,7 @@ class Socket
      *         - Permission denied (EACCES)
      *         - Memory allocation error (ENOMEM)
      */
-    void enableKeepAlive(bool enable) const;
+    void enableKeepAlive(bool enable);
 
     /**
      * @brief Convert an address and port to a string using getnameinfo.
@@ -2718,7 +2718,7 @@ class Socket
      * @param value    The integer value to set for the option.
      * @throws SocketException if the operation fails (see the error code/message for details).
      */
-    void setOption(int level, int optName, int value) const;
+    void setOption(int level, int optName, int value);
 
     /**
      * @brief Get the current value of a socket option at the specified level.
