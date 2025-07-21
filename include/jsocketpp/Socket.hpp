@@ -1365,44 +1365,28 @@ class Socket
     std::string peek(std::size_t n) const;
 
     /**
-     * @brief Discards `n` bytes of data from the socket's input stream.
+     * @brief Discards exactly `n` bytes from the socket by reading and discarding them.
+     *
+     * This method reads and discards `n` bytes from the socket without returning any data.
+     * It is useful in scenarios where part of the stream should be skipped (e.g., headers,
+     * fixed-length preambles, corrupted payloads).
+     *
+     * The discard operation is performed using a temporary buffer of configurable size,
+     * which defaults to 1024 bytes. This chunk size is chosen as a balance between memory
+     * usage and I/O efficiency, but can be tuned for performance.
+     *
+     * @param[in] n Number of bytes to discard. Must be greater than 0.
+     * @param[in] chunkSize Size (in bytes) of the temporary buffer used for reading/discarding. Default is 1024.
+     *
+     * @throws SocketException If the socket is invalid, an error occurs during `recv()`,
+     *                         or the connection is closed before all `n` bytes are discarded.
+     *
+     * @note For optimal performance on high-throughput streams or large discards,
+     * consider using a larger chunk size (e.g., 4096 or 8192).
+     *
      * @ingroup tcp
-     *
-     * This method reads and silently drops exactly `n` bytes from the socket's input buffer.
-     * It is useful when you need to skip over known headers, padding, or unwanted segments
-     * in a protocol without storing them.
-     *
-     * ### Implementation Details
-     * - Loops until `n` bytes are discarded
-     * - Uses a fixed-size internal buffer (e.g., 1024 bytes)
-     * - Performs one or more `recv()` calls to drain the data
-     * - Does not store or return any of the read bytes
-     *
-     * ### Example Usage
-     * @code{.cpp}
-     * // Discard a 16-byte padding block
-     * sock.discard(16);
-     *
-     * // Skip header and read payload
-     * sock.discard(12);
-     * std::string body = sock.readExact(64);
-     * @endcode
-     *
-     * @param n Number of bytes to discard.
-     *
-     * @throws SocketException If:
-     *         - Connection is closed before all bytes are discarded
-     *         - recv() fails
-     *         - Socket is invalid
-     *
-     * @note This method always reads and blocks until `n` bytes are discarded.
-     *       For non-blocking skip logic, use peek() and manual reads.
-     *
-     * @see peek() To inspect data before discarding
-     * @see readExact() If you want to retain skipped bytes
-     * @see readAvailable() For draining the socket
      */
-    void discard(std::size_t n) const;
+    void discard(std::size_t n, std::size_t chunkSize = 1024) const;
 
     /**
      * @brief Closes the socket connection and releases associated resources.

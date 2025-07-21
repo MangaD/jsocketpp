@@ -880,7 +880,7 @@ std::string Socket::peek(std::size_t n) const
     return result;
 }
 
-void Socket::discard(std::size_t n) const
+void Socket::discard(const std::size_t n, std::size_t chunkSize /* = 1024 */) const
 {
     if (_sockFd == INVALID_SOCKET)
         throw SocketException(0, "discard() called on invalid socket");
@@ -888,13 +888,13 @@ void Socket::discard(std::size_t n) const
     if (n == 0)
         return;
 
-    constexpr std::size_t chunkSize = 1024;
-    std::array<char, chunkSize> tempBuffer{};
-
+    std::vector<char> tempBuffer(chunkSize); // use heap to support user-defined size
     std::size_t totalDiscarded = 0;
+
     while (totalDiscarded < n)
     {
-        std::size_t toRead = (std::min)(chunkSize, n - totalDiscarded);
+        const std::size_t toRead = std::min(chunkSize, n - totalDiscarded);
+
         const auto len = recv(_sockFd, tempBuffer.data(),
 #ifdef _WIN32
                               static_cast<int>(toRead),
