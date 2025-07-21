@@ -134,7 +134,11 @@ void Socket::connect(const int timeoutMillis) const
 #ifdef _WIN32
             const int selectResult = ::select(0, nullptr, &writeFds, nullptr, &tv);
 #else
-            const int selectResult = ::select(_sockFd + 1, nullptr, &writeFds, nullptr, &tv);
+            int selectResult;
+            do
+            {
+                selectResult = ::select(_sockFd + 1, nullptr, &writeFds, nullptr, &tv);
+            } while (selectResult < 0 && errno == EINTR);
 #endif
 
             if (selectResult == 0)
