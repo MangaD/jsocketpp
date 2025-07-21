@@ -17,9 +17,9 @@ Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_
     setSendBufferSize(sendBufferSize);
 }
 
-Socket::Socket(const std::string_view host, const Port port, std::optional<std::size_t> recvBufferSize,
-               std::optional<std::size_t> sendBufferSize, std::optional<std::size_t> internalBufferSize)
-    : _remoteAddr{}
+Socket::Socket(const std::string_view host, const Port port, const std::optional<std::size_t> recvBufferSize,
+               const std::optional<std::size_t> sendBufferSize, const std::optional<std::size_t> internalBufferSize)
+    : _remoteAddr{}, _internalBuffer{}
 {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;

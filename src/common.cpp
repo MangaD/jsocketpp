@@ -122,11 +122,10 @@ std::vector<std::string> jsocketpp::getHostAddr()
     std::vector<std::string> ips;
 
 #ifdef _WIN32
-    /* Declare and initialize variables */
     constexpr int MAX_TRIES = 3;
     DWORD dwRetVal = 0;
     PIP_ADAPTER_ADDRESSES pAddresses = nullptr;
-    ULONG outBufLen = 15000; // Allocate a 15 KB buffer to start with.
+    ULONG outBufLen = 15000;
     ULONG Iterations = 0;
     char buff[100];
 
@@ -134,7 +133,7 @@ std::vector<std::string> jsocketpp::getHostAddr()
     {
         constexpr ULONG family = AF_UNSPEC;
         constexpr ULONG flags = GAA_FLAG_INCLUDE_PREFIX;
-        pAddresses = static_cast<IP_ADAPTER_ADDRESSES*>(HeapAlloc(GetProcessHeap(), 0, (outBufLen)));
+        pAddresses = static_cast<IP_ADAPTER_ADDRESSES*>(HeapAlloc(GetProcessHeap(), 0, outBufLen));
         if (pAddresses == nullptr)
         {
             std::cerr << "Memory allocation failed for IP_ADAPTER_ADDRESSES struct." << std::endl;
@@ -143,7 +142,7 @@ std::vector<std::string> jsocketpp::getHostAddr()
         dwRetVal = GetAdaptersAddresses(family, flags, nullptr, pAddresses, &outBufLen);
         if (dwRetVal == ERROR_BUFFER_OVERFLOW)
         {
-            HeapFree(GetProcessHeap(), 0, (pAddresses));
+            HeapFree(GetProcessHeap(), 0, pAddresses);
             pAddresses = nullptr;
         }
         else
@@ -155,97 +154,73 @@ std::vector<std::string> jsocketpp::getHostAddr()
 
     if (dwRetVal == NO_ERROR)
     {
-        unsigned int i = 0;
-        PIP_ADAPTER_MULTICAST_ADDRESS pMulticast = nullptr;
-        PIP_ADAPTER_ANYCAST_ADDRESS pAnycast = nullptr;
-        PIP_ADAPTER_UNICAST_ADDRESS pUnicast = nullptr;
-        PIP_ADAPTER_ADDRESSES pCurrAddresses = nullptr;
-        // If successful, output some information from the data we received
-        pCurrAddresses = pAddresses;
-        while (pCurrAddresses)
+        for (PIP_ADAPTER_ADDRESSES pCurr = pAddresses; pCurr; pCurr = pCurr->Next)
         {
-            constexpr socklen_t buffLen = 100; // DWORD
-            pUnicast = pCurrAddresses->FirstUnicastAddress;
-            if (pUnicast)
+            constexpr socklen_t buffLen = 100;
+            // Unicast
+            for (const auto* p = pCurr->FirstUnicastAddress; p; p = p->Next)
             {
-                for (i = 0; pUnicast != nullptr; i++)
+                if (p->Address.lpSockaddr->sa_family == AF_INET)
                 {
-                    if (pUnicast->Address.lpSockaddr->sa_family == AF_INET)
-                    {
-                        const auto* sa_in = reinterpret_cast<sockaddr_in*>(pUnicast->Address.lpSockaddr);
-                        ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv4 Address " +
-                                         inet_ntop_aux(AF_INET, &(sa_in->sin_addr), buff, buffLen));
-                    }
-                    else if (pUnicast->Address.lpSockaddr->sa_family == AF_INET6)
-                    {
-                        auto* sa_in6 = reinterpret_cast<sockaddr_in6*>(pUnicast->Address.lpSockaddr);
-                        ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv6 Address " +
-                                         inet_ntop_aux(AF_INET6, &(sa_in6->sin6_addr), buff, buffLen));
-                    }
-                    // else{printf("\tUNSPEC");}
-                    pUnicast = pUnicast->Next;
+                    const auto* sa = reinterpret_cast<sockaddr_in*>(p->Address.lpSockaddr);
+                    ips.emplace_back(std::string(pCurr->AdapterName) + " IPv4 Address " +
+                                     inet_ntop_aux(AF_INET, &sa->sin_addr, buff, buffLen));
+                }
+                else if (p->Address.lpSockaddr->sa_family == AF_INET6)
+                {
+                    const auto* sa = reinterpret_cast<sockaddr_in6*>(p->Address.lpSockaddr);
+                    ips.emplace_back(std::string(pCurr->AdapterName) + " IPv6 Address " +
+                                     inet_ntop_aux(AF_INET6, &sa->sin6_addr, buff, buffLen));
                 }
             }
 
-            pAnycast = pCurrAddresses->FirstAnycastAddress;
-            if (pAnycast)
+            // Anycast
+            for (const auto* p = pCurr->FirstAnycastAddress; p; p = p->Next)
             {
-                for (i = 0; pAnycast != nullptr; i++)
+                if (p->Address.lpSockaddr->sa_family == AF_INET)
                 {
-                    if (pAnycast->Address.lpSockaddr->sa_family == AF_INET)
-                    {
-                        const auto* sa_in = reinterpret_cast<sockaddr_in*>(pAnycast->Address.lpSockaddr);
-                        ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv4 Address " +
-                                         inet_ntop_aux(AF_INET, &(sa_in->sin_addr), buff, buffLen));
-                    }
-                    else if (pUnicast->Address.lpSockaddr->sa_family == AF_INET6)
-                    {
-                        const auto* sa_in6 = reinterpret_cast<sockaddr_in6*>(pAnycast->Address.lpSockaddr);
-                        ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv6 Address " +
-                                         inet_ntop_aux(AF_INET6, &(sa_in6->sin6_addr), buff, buffLen));
-                    }
-                    // else{printf("\tUNSPEC");}
-                    pAnycast = pAnycast->Next;
+                    const auto* sa = reinterpret_cast<sockaddr_in*>(p->Address.lpSockaddr);
+                    ips.emplace_back(std::string(pCurr->AdapterName) + " IPv4 Address " +
+                                     inet_ntop_aux(AF_INET, &sa->sin_addr, buff, buffLen));
+                }
+                else if (p->Address.lpSockaddr->sa_family == AF_INET6)
+                {
+                    const auto* sa = reinterpret_cast<sockaddr_in6*>(p->Address.lpSockaddr);
+                    ips.emplace_back(std::string(pCurr->AdapterName) + " IPv6 Address " +
+                                     inet_ntop_aux(AF_INET6, &sa->sin6_addr, buff, buffLen));
                 }
             }
 
-            pMulticast = pCurrAddresses->FirstMulticastAddress;
-            if (pMulticast)
+            // Multicast
+            for (const auto* p = pCurr->FirstMulticastAddress; p; p = p->Next)
             {
-                for (i = 0; pMulticast != nullptr; i++)
+                if (p->Address.lpSockaddr->sa_family == AF_INET)
                 {
-                    if (pMulticast->Address.lpSockaddr->sa_family == AF_INET)
-                    {
-                        const auto* sa_in = reinterpret_cast<sockaddr_in*>(pMulticast->Address.lpSockaddr);
-                        ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv4 Address " +
-                                         inet_ntop_aux(AF_INET, &(sa_in->sin_addr), buff, buffLen));
-                    }
-                    else if (pMulticast->Address.lpSockaddr->sa_family == AF_INET6)
-                    {
-                        const auto* sa_in6 = reinterpret_cast<sockaddr_in6*>(pMulticast->Address.lpSockaddr);
-                        ips.emplace_back(std::string(pCurrAddresses->AdapterName) + " IPv6 Address " +
-                                         inet_ntop_aux(AF_INET6, &(sa_in6->sin6_addr), buff, buffLen));
-                    }
-                    // else{printf("\tUNSPEC");}
-                    pMulticast = pMulticast->Next;
+                    const auto* sa = reinterpret_cast<sockaddr_in*>(p->Address.lpSockaddr);
+                    ips.emplace_back(std::string(pCurr->AdapterName) + " IPv4 Address " +
+                                     inet_ntop_aux(AF_INET, &sa->sin_addr, buff, buffLen));
+                }
+                else if (p->Address.lpSockaddr->sa_family == AF_INET6)
+                {
+                    const auto* sa = reinterpret_cast<sockaddr_in6*>(p->Address.lpSockaddr);
+                    ips.emplace_back(std::string(pCurr->AdapterName) + " IPv6 Address " +
+                                     inet_ntop_aux(AF_INET6, &sa->sin6_addr, buff, buffLen));
                 }
             }
-
-            pCurrAddresses = pCurrAddresses->Next;
         }
     }
     else
     {
         if (pAddresses)
         {
-            HeapFree(GetProcessHeap(), 0, (pAddresses));
+            HeapFree(GetProcessHeap(), 0, pAddresses);
         }
         throw SocketException(static_cast<int>(dwRetVal), SocketErrorMessage(static_cast<int>(dwRetVal)));
     }
 
     if (pAddresses)
     {
-        HeapFree(GetProcessHeap(), 0, (pAddresses));
+        HeapFree(GetProcessHeap(), 0, pAddresses);
     }
 #else
     ifaddrs* ifAddrStruct = nullptr;
@@ -260,30 +235,28 @@ std::vector<std::string> jsocketpp::getHostAddr()
     for (ifa = ifAddrStruct; ifa != nullptr; ifa = ifa->ifa_next)
     {
         if (!ifa->ifa_addr)
-        {
             continue;
-        }
+
         DIAGNOSTIC_PUSH()
         DIAGNOSTIC_IGNORE("-Wcast-align")
         if (ifa->ifa_addr->sa_family == AF_INET)
-        { // check it is IP4
-            // is a valid IP4 Address
-            tmpAddrPtr = &(reinterpret_cast<struct sockaddr_in*>(ifa->ifa_addr))->sin_addr;
+        {
+            tmpAddrPtr = &(reinterpret_cast<sockaddr_in*>(ifa->ifa_addr))->sin_addr;
             char addressBuffer[INET_ADDRSTRLEN];
             inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
             ips.emplace_back(std::string(ifa->ifa_name) + " IPv4 Address " + addressBuffer);
         }
         else if (ifa->ifa_addr->sa_family == AF_INET6)
-        { // check it is IP6
-            // is a valid IP6 Address
-            tmpAddrPtr = &(reinterpret_cast<struct sockaddr_in6*>(ifa->ifa_addr))->sin6_addr;
+        {
+            tmpAddrPtr = &(reinterpret_cast<sockaddr_in6*>(ifa->ifa_addr))->sin6_addr;
             char addressBuffer[INET6_ADDRSTRLEN];
             inet_ntop(AF_INET6, tmpAddrPtr, addressBuffer, INET6_ADDRSTRLEN);
             ips.emplace_back(std::string(ifa->ifa_name) + " IPv6 Address " + addressBuffer);
         }
         DIAGNOSTIC_POP()
     }
-    if (ifAddrStruct != nullptr)
+
+    if (ifAddrStruct)
         freeifaddrs(ifAddrStruct);
 #endif
 
