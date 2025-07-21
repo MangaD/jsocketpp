@@ -9,7 +9,6 @@
 #pragma once
 
 #include "Socket.hpp"
-#include "SocketException.hpp"
 #include "common.hpp"
 
 #include <exception>
@@ -547,10 +546,12 @@ class ServerSocket
      *
      * @ingroup tcp
      *
-     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
-     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
+     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
      * @return A `Socket` object representing the connected client.
      *
@@ -567,7 +568,8 @@ class ServerSocket
      * @see waitReady()
      */
     [[nodiscard]] Socket accept(std::optional<std::size_t> recvBufferSize = std::nullopt,
-                                std::optional<std::size_t> sendBufferSize = std::nullopt) const;
+                                std::optional<std::size_t> sendBufferSize = std::nullopt,
+                                std::optional<std::size_t> internalBufferSize = std::nullopt) const;
 
     /**
      * @brief Accept an incoming client connection, waiting up to the specified timeout.
@@ -595,10 +597,12 @@ class ServerSocket
      *   - Negative: block indefinitely
      *   - Zero: poll once
      *   - Positive: wait up to this many milliseconds
-     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
-     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
+     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
      * @return A `Socket` object representing the connected client.
      *
@@ -629,7 +633,8 @@ class ServerSocket
      * @endcode
      */
     [[nodiscard]] Socket accept(int timeoutMillis, std::optional<std::size_t> recvBufferSize = std::nullopt,
-                                std::optional<std::size_t> sendBufferSize = std::nullopt) const;
+                                std::optional<std::size_t> sendBufferSize = std::nullopt,
+                                std::optional<std::size_t> internalBufferSize = std::nullopt) const;
 
     /**
      * @brief Attempt to accept an incoming client connection, returning immediately or after the configured timeout.
@@ -658,10 +663,12 @@ class ServerSocket
      *       kernel-level socket timeouts. To control socket-level I/O timeout (for client sockets), see
      *       `Socket::setSoTimeout()`.
      *
-     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
-     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
+     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
      * @return An `std::optional<Socket>` containing the accepted client socket, or `std::nullopt` if no client was
      *         available before the timeout.
@@ -695,7 +702,8 @@ class ServerSocket
      * @endcode
      */
     [[nodiscard]] std::optional<Socket> tryAccept(std::optional<std::size_t> recvBufferSize = std::nullopt,
-                                                  std::optional<std::size_t> sendBufferSize = std::nullopt) const;
+                                                  std::optional<std::size_t> sendBufferSize = std::nullopt,
+                                                  std::optional<std::size_t> internalBufferSize = std::nullopt) const;
 
     /**
      * @brief Attempt to accept an incoming client connection, waiting up to a specified timeout.
@@ -722,10 +730,12 @@ class ServerSocket
      *   - Negative: block indefinitely
      *   - Zero: poll once
      *   - Positive: wait up to this many milliseconds
-     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
-     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
+     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
      * @return `std::optional<Socket>` containing a client connection if accepted, or `std::nullopt` on timeout.
      *
@@ -757,7 +767,8 @@ class ServerSocket
      */
     [[nodiscard]] std::optional<Socket> tryAccept(int timeoutMillis,
                                                   std::optional<std::size_t> recvBufferSize = std::nullopt,
-                                                  std::optional<std::size_t> sendBufferSize = std::nullopt) const;
+                                                  std::optional<std::size_t> sendBufferSize = std::nullopt,
+                                                  std::optional<std::size_t> internalBufferSize = std::nullopt) const;
 
     /**
      * @brief Accept an incoming client connection, always blocking until a client connects (unless the socket is set to
@@ -781,10 +792,12 @@ class ServerSocket
      * @note This method is **not thread safe**. Simultaneous `accept` calls on the same socket from multiple threads or
      * processes may result in race conditions or failures.
      *
-     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
-     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
+     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
      * @return A `Socket` object representing the connected client.
      *
@@ -825,7 +838,8 @@ class ServerSocket
      * @endcode
      */
     [[nodiscard]] Socket acceptBlocking(std::optional<std::size_t> recvBufferSize = std::nullopt,
-                                        std::optional<std::size_t> sendBufferSize = std::nullopt) const;
+                                        std::optional<std::size_t> sendBufferSize = std::nullopt,
+                                        std::optional<std::size_t> internalBufferSize = std::nullopt) const;
 
     /**
      * @brief Attempt to accept a client connection in non-blocking fashion.
@@ -843,10 +857,12 @@ class ServerSocket
      * @note For timeout-aware or readiness-checked accept patterns, use `accept()`, `tryAccept()`, or
      * `acceptBlocking()`.
      *
-     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
-     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
+     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
      * @return A `Socket` object if a client is connected, or `std::nullopt` if no connection was ready.
      *
@@ -882,7 +898,8 @@ class ServerSocket
      */
     [[nodiscard]] std::optional<Socket>
     acceptNonBlocking(std::optional<std::size_t> recvBufferSize = std::nullopt,
-                      std::optional<std::size_t> sendBufferSize = std::nullopt) const;
+                      std::optional<std::size_t> sendBufferSize = std::nullopt,
+                      std::optional<std::size_t> internalBufferSize = std::nullopt) const;
 
     /**
      * @brief Asynchronously accept an incoming client connection, returning a future.
@@ -901,10 +918,12 @@ class ServerSocket
      *
      * @note The `ServerSocket` object must outlive the returned future. Use caution when capturing `this`.
      *
-     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
-     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
-     *                           If `std::nullopt`, the default buffer size is used.
+     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
+     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
      * @return A `std::future<Socket>` that resolves to a connected client socket or throws on error.
      *
@@ -935,7 +954,8 @@ class ServerSocket
      * @endcode
      */
     [[nodiscard]] std::future<Socket> acceptAsync(std::optional<std::size_t> recvBufferSize = std::nullopt,
-                                                  std::optional<std::size_t> sendBufferSize = std::nullopt) const;
+                                                  std::optional<std::size_t> sendBufferSize = std::nullopt,
+                                                  std::optional<std::size_t> internalBufferSize = std::nullopt) const;
 
     /**
      * @brief Asynchronously accept a client connection and invoke a callback upon completion.
@@ -960,10 +980,12 @@ class ServerSocket
      *
      * @param[in] callback Completion handler with signature:
      *   `void callback(std::optional<Socket>, std::exception_ptr)`
-     * @param[in] recvBufferSize Optional internal receive buffer size for the accepted socket.
-     *                           If `std::nullopt`, the server's default is used.
-     * @param[in] sendBufferSize Optional internal send buffer size for the accepted socket.
-     *                           If `std::nullopt`, the server's default is used.
+     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
+     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
+     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
      * @pre Server socket must be valid, bound, and listening.
      * @post Callback is invoked exactly once with either a valid `Socket` or an exception.
@@ -997,7 +1019,8 @@ class ServerSocket
      */
     void acceptAsync(std::function<void(std::optional<Socket>, std::exception_ptr)> callback,
                      std::optional<std::size_t> recvBufferSize = std::nullopt,
-                     std::optional<std::size_t> sendBufferSize = std::nullopt) const;
+                     std::optional<std::size_t> sendBufferSize = std::nullopt,
+                     std::optional<std::size_t> internalBufferSize = std::nullopt) const;
 
     /**
      * @brief Closes the server socket and releases its associated system resources.
@@ -1402,6 +1425,44 @@ class ServerSocket
      */
     [[nodiscard]] std::size_t getDefaultSendBufferSize() const noexcept { return _defaultSendBufferSize; }
 
+    /**
+     * @brief Set the per-instance default internal buffer size used for buffered read operations.
+     *
+     * This method updates the `_defaultInternalBufferSize` value, which determines the fallback buffer size
+     * used by methods like `accept()` or `readLine()` when no explicit `internalBufferSize` is provided.
+     *
+     * This does **not** affect the kernel-level `SO_RCVBUF`. It applies only to the internal buffering layer
+     * used in higher-level stream-oriented reads (e.g., reading lines or strings).
+     *
+     * @param size New default buffer size in bytes for this socket/server instance.
+     *
+     * @see getDefaultInternalBufferSize()
+     * @see getEffectiveInternalBufferSize()
+     * @see DefaultBufferSize
+     *
+     * @ingroup tcp
+     */
+    void setDefaultInternalBufferSize(const std::size_t size) { _defaultInternalBufferSize = size; }
+
+    /**
+     * @brief Get the per-instance default internal buffer size used for buffered read operations.
+     *
+     * Returns the current value of `_defaultInternalBufferSize`, which is used as the fallback size
+     * for internal buffering in stream-oriented socket reads when no explicit buffer size is provided.
+     *
+     * This value is typically initialized to `DefaultBufferSize` (4096 bytes), but can be modified
+     * using `setDefaultInternalBufferSize()`.
+     *
+     * @return The current default internal buffer size in bytes.
+     *
+     * @see setDefaultInternalBufferSize()
+     * @see getEffectiveInternalBufferSize()
+     * @see DefaultBufferSize
+     *
+     * @ingroup tcp
+     */
+    [[nodiscard]] std::size_t getDefaultInternalBufferSize() const noexcept { return _defaultInternalBufferSize; }
+
 #if defined(SO_REUSEPORT)
     /**
      * @brief Enable or disable the SO_REUSEPORT socket option.
@@ -1540,6 +1601,32 @@ class ServerSocket
     }
 
     /**
+     * @brief Get the effective internal buffer size to use for buffered socket read operations.
+     *
+     * This helper determines the internal buffer size for read-related operations based on the provided
+     * optional value. If `internalBufferSize` is set, its value is returned directly. If not, the method
+     * returns the per-instance `_defaultInternalBufferSize`, which defaults to `DefaultBufferSize` (4096 bytes)
+     * unless explicitly overridden via `setInternalBufferSize()`.
+     *
+     * This internal buffer is used for stream-based operations (e.g. reading strings or protocol lines) and is
+     * distinct from the kernel-level socket buffers (`SO_RCVBUF`, `SO_SNDBUF`).
+     *
+     * @param[in] internalBufferSize Optional buffer size override for a single operation.
+     * @return The effective internal buffer size to use.
+     *
+     * @see DefaultBufferSize
+     * @see setInternalBufferSize()
+     * @see Socket::readLine()
+     * @see Socket::getInternalBufferSize()
+     *
+     * @ingroup tcp
+     */
+    [[nodiscard]] std::size_t getEffectiveInternalBufferSize(std::optional<std::size_t> internalBufferSize) const
+    {
+        return internalBufferSize.value_or(_defaultInternalBufferSize);
+    }
+
+    /**
      * @brief Resolves effective receive and send buffer sizes from optional user inputs.
      *
      * If either buffer size is not provided, this method falls back to the
@@ -1547,17 +1634,20 @@ class ServerSocket
      *
      * @param recv Optional receive buffer size.
      * @param send Optional send buffer size.
-     * @return A pair: {resolvedRecvBufferSize, resolvedSendBufferSize}
+     * @param internal Optional internal buffer size.
+     * @return A tuple: {resolvedRecvBufferSize, resolvedSendBufferSize, resolvedInternalBufferSize}
      *
      * @see getEffectiveReceiveBufferSize()
      * @see getEffectiveSendBufferSize()
      *
      * @ingroup tcp
      */
-    [[nodiscard]] std::pair<std::size_t, std::size_t> resolveBuffers(const std::optional<std::size_t> recv,
-                                                                     const std::optional<std::size_t> send) const
+    [[nodiscard]] std::tuple<std::size_t, std::size_t, std::size_t>
+    resolveBuffers(const std::optional<std::size_t> recv, const std::optional<std::size_t> send,
+                   const std::optional<std::size_t> internal) const
     {
-        return {getEffectiveReceiveBufferSize(recv), getEffectiveSendBufferSize(send)};
+        return {getEffectiveReceiveBufferSize(recv), getEffectiveSendBufferSize(send),
+                getEffectiveInternalBufferSize(internal)};
     }
 
     SOCKET _serverSocket = INVALID_SOCKET; ///< Underlying socket file descriptor.
@@ -1570,6 +1660,8 @@ class ServerSocket
     std::size_t _defaultReceiveBufferSize =
         DefaultBufferSize; ///< Default buffer size used for accepted client sockets when no specific size is provided
     std::size_t _defaultSendBufferSize = DefaultBufferSize; ///< Default send buffer size for accepted client sockets
+    std::size_t _defaultInternalBufferSize =
+        DefaultBufferSize; ///< Default internal buffer size for accepted client sockets, used by some read() methods
 };
 
 } // namespace jsocketpp

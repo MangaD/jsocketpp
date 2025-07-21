@@ -14,6 +14,7 @@
 
 #include <array>
 #include <limits>
+#include <optional>
 #include <span>
 #include <string_view>
 #include <type_traits>
@@ -107,32 +108,33 @@ class Socket
      * @brief Protected constructor used internally to create Socket objects for accepted client connections.
      * @ingroup tcp
      *
-     * This constructor is specifically designed to be called by ServerSocket::accept() to create Socket
-     * objects representing established client connections. It initializes a Socket with an already-connected
-     * socket descriptor and the client's address information obtained from a successful accept() call.
+     * This constructor is specifically designed to be called by `ServerSocket::accept()` and related methods
+     * to create `Socket` instances representing established client connections. It initializes a `Socket`
+     * using an already-connected socket descriptor and the peer's address, and configures internal buffers
+     * and socket options for subsequent I/O.
      *
-     * Usage flow:
-     * 1. ServerSocket::accept() receives a new client connection
-     * 2. This constructor creates a Socket object for that connection
-     * 3. The Socket object takes ownership of the socket descriptor
-     * 4. The new Socket is returned to the caller of accept()
+     * ### Usage Flow
+     * 1. `ServerSocket::accept()` receives a new client connection from the OS
+     * 2. This constructor is invoked to create a `Socket` representing that client
+     * 3. The `Socket` takes ownership of the connected socket descriptor and sets buffer sizes
+     * 4. The constructed `Socket` is returned to the caller of `accept()`
      *
-     * @param[in] client Socket descriptor obtained from a successful accept() call
-     * @param[in] addr Remote peer's address information (sockaddr_storage for IPv4/IPv6 compatibility)
-     * @param[in] len Size of the address structure (for sockaddr_in or sockaddr_in6)
-     * @param[in] recvBufferSize Used to set the size of the socket's receive buffer (SO_RCVBUF)
-     *                           and the internal buffer of this class used in read string operations
-     * @param[in] sendBufferSize Used to set the size of the socket's send buffer (SO_SNDBUF)
+     * @param[in] client Socket descriptor obtained from a successful `accept()` call.
+     * @param[in] addr Remote peer address (`sockaddr_storage` for IPv4/IPv6 compatibility).
+     * @param[in] len Size of the peer address structure (`sockaddr_in`, `sockaddr_in6`, etc.).
+     * @param[in] recvBufferSize Size in bytes for the internal receive buffer and the socket's `SO_RCVBUF`.
+     * @param[in] sendBufferSize Size in bytes for the socket's `SO_SNDBUF` buffer.
+     * @param[in] internalBufferSize Size of the internal buffering layer used for string-based and stream reads.
      *
-     * @throws SocketException If buffer allocation fails or socket options cannot be set
+     * @throws SocketException If the socket options cannot be set or internal buffer allocation fails.
      *
-     * @note This constructor is protected and only accessible to ServerSocket to ensure proper
-     *       initialization of accepted client connections.
+     * @note This constructor is `protected` and only accessible to `ServerSocket` to ensure encapsulated
+     *       and consistent initialization of accepted client connections.
      *
-     * @see ServerSocket::accept() Creates new Socket instances using this constructor
+     * @see ServerSocket::accept() Creates `Socket` instances using this constructor.
      */
     Socket(SOCKET client, const sockaddr_storage& addr, socklen_t len, std::size_t recvBufferSize,
-           std::size_t sendBufferSize);
+           std::size_t sendBufferSize, std::size_t internalBufferSize);
 
   public:
     /**
@@ -162,35 +164,40 @@ class Socket
      * @brief Creates a new Socket object configured to connect to the specified host and port.
      * @ingroup tcp
      *
-     * This constructor initializes a Socket object for a TCP connection to a remote host. It performs
-     * hostname resolution using getaddrinfo() to support both IPv4 and IPv6 addresses, but does not
-     * establish the connection. To establish the connection, call connect() after construction.
+     * This constructor initializes a `Socket` object for a TCP connection to a remote host. It performs
+     * hostname resolution using `getaddrinfo()` to support both IPv4 and IPv6 addresses, creates the socket,
+     * and configures internal and socket-level buffer sizes.
      *
-     * The constructor performs the following steps:
-     * 1. Resolves the hostname using getaddrinfo() (supports both DNS names and IP addresses)
-     * 2. Creates a socket with the appropriate address family (AF_INET/AF_INET6)
-     * 3. Initializes internal buffers and data structures
+     * **Note:** This constructor does **not** establish a network connection. You must explicitly call `connect()`
+     * after construction to initiate the TCP handshake.
      *
-     * @param[in] host The hostname or IP address (IPv4/IPv6) to connect to. Can be a DNS name
-     *                 (e.g., "example.com") or an IP address (e.g., "192.168.1.1" or "::1").
-     * @param[in] port The TCP port number to connect to (1-65535).
-     * @param[in] bufferSize Size of the internal read buffer in bytes (default: @ref DefaultBufferSize). This buffer
-     *                       is used for string-based read operations. Larger values may improve
-     *                       performance for applications that receive large messages.
+     * ### Initialization Flow
+     * 1. Resolves the target host using `getaddrinfo()` (DNS or IP)
+     * 2. Creates the socket using the appropriate address family and protocol
+     * 3. Applies the provided buffer sizes (or defaults if omitted)
      *
-     * @throws SocketException If initialization fails due to:
-     *         - Invalid hostname or address
-     *         - Memory allocation failure
-     *         - System resource limits
-     *         - Network subsystem errors
+     * @param[in] host The remote hostname or IP address (e.g., "example.com", "127.0.0.1", "::1").
+     * @param[in] port The TCP port number to connect to (range: 1–65535).
+     * @param[in] recvBufferSize Socket-level receive buffer size (`SO_RCVBUF`). Defaults to `DefaultBufferSize` (4096
+     * bytes).
+     * @param[in] sendBufferSize Socket-level send buffer size (`SO_SNDBUF`). Defaults to `DefaultBufferSize` (4096
+     * bytes).
+     * @param[in] internalBufferSize Size of the internal buffer used for high-level `read<T>()` operations. This is
+     * distinct from the kernel socket buffers. Defaults to `DefaultBufferSize (4096 bytes).
      *
-     * @note This constructor only prepares the socket for connection. You must call connect()
-     *       to establish the actual network connection.
+     * @throws SocketException If hostname resolution fails, socket creation fails, or buffer configuration fails.
      *
-     * @see connect() To establish the connection after construction
-     * @see setInternalBufferSize() To change the buffer size after construction
+     * @note This constructor only prepares the socket. Use `connect()` to establish the actual connection.
+     *
+     * @see connect()
+     * @see DefaultBufferSize
+     * @see setReceiveBufferSize()
+     * @see setSendBufferSize()
+     * @see setInternalBufferSize()
      */
-    explicit Socket(std::string_view host, Port port, std::size_t bufferSize = DefaultBufferSize);
+    Socket(std::string_view host, Port port, std::optional<std::size_t> recvBufferSize = std::nullopt,
+           std::optional<std::size_t> sendBufferSize = std::nullopt,
+           std::optional<std::size_t> internalBufferSize = std::nullopt);
 
     /**
      * @brief Copy constructor (deleted) for Socket class.
@@ -250,7 +257,7 @@ class Socket
     Socket(Socket&& rhs) noexcept
         : _sockFd(rhs._sockFd), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
           _cliAddrInfo(rhs._cliAddrInfo), _selectedAddrInfo(rhs._selectedAddrInfo),
-          _recvBuffer(std::move(rhs._recvBuffer))
+          _internalBuffer(std::move(rhs._internalBuffer))
     {
         rhs._sockFd = INVALID_SOCKET;
         rhs._cliAddrInfo = nullptr;
@@ -338,7 +345,7 @@ class Socket
             _remoteAddrLen = rhs._remoteAddrLen;
             _cliAddrInfo = rhs._cliAddrInfo;
             _selectedAddrInfo = rhs._selectedAddrInfo;
-            _recvBuffer = std::move(rhs._recvBuffer);
+            _internalBuffer = std::move(rhs._internalBuffer);
             rhs._sockFd = INVALID_SOCKET;
             rhs._cliAddrInfo = nullptr;
             rhs._selectedAddrInfo = nullptr;
@@ -2805,7 +2812,7 @@ class Socket
     mutable socklen_t _remoteAddrLen = 0;  ///< Length of remote address (for recvfrom/recvmsg)
     addrinfo* _cliAddrInfo = nullptr;      ///< Address info for connection (from getaddrinfo)
     addrinfo* _selectedAddrInfo = nullptr; ///< Selected address info for connection
-    std::vector<char> _recvBuffer;         ///< Internal buffer for read operations, not thread-safe
+    std::vector<char> _internalBuffer;     ///< Internal buffer for read operations, not thread-safe
 };
 
 /**
@@ -2858,18 +2865,18 @@ class Socket
  */
 template <> inline std::string Socket::read()
 {
-    const auto len = recv(_sockFd, _recvBuffer.data(),
+    const auto len = recv(_sockFd, _internalBuffer.data(),
 #ifdef _WIN32
-                          static_cast<int>(_recvBuffer.size()),
+                          static_cast<int>(_internalBuffer.size()),
 #else
-                          _recvBuffer.size(),
+                          _internalBuffer.size(),
 #endif
                           0);
     if (len == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (len == 0)
         throw SocketException(0, "Connection closed by remote host.");
-    return {_recvBuffer.data(), static_cast<size_t>(len)};
+    return {_internalBuffer.data(), static_cast<size_t>(len)};
 }
 
 } // namespace jsocketpp

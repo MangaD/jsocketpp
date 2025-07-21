@@ -9,16 +9,17 @@
 using namespace jsocketpp;
 
 Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_t len, const std::size_t recvBufferSize,
-               const std::size_t sendBufferSize)
-    : _sockFd(client), _remoteAddr(addr), _remoteAddrLen(len), _recvBuffer(recvBufferSize)
+               const std::size_t sendBufferSize, const std::size_t internalBufferSize)
+    : _sockFd(client), _remoteAddr(addr), _remoteAddrLen(len), _internalBuffer(internalBufferSize)
 {
-    setInternalBufferSize(recvBufferSize);
+    setInternalBufferSize(internalBufferSize);
     setReceiveBufferSize(recvBufferSize);
     setSendBufferSize(sendBufferSize);
 }
 
-Socket::Socket(const std::string_view host, const Port port, const std::size_t bufferSize)
-    : _remoteAddr{}, _recvBuffer(bufferSize)
+Socket::Socket(const std::string_view host, const Port port, std::optional<std::size_t> recvBufferSize,
+               std::optional<std::size_t> sendBufferSize, std::optional<std::size_t> internalBufferSize)
+    : _remoteAddr{}
 {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
@@ -57,6 +58,11 @@ Socket::Socket(const std::string_view host, const Port port, const std::size_t b
         _cliAddrInfo = nullptr;
         throw SocketException(error, SocketErrorMessage(error));
     }
+
+    // Apply all buffer size configurations
+    setInternalBufferSize(internalBufferSize.value_or(DefaultBufferSize));
+    setReceiveBufferSize(recvBufferSize.value_or(DefaultBufferSize));
+    setSendBufferSize(sendBufferSize.value_or(DefaultBufferSize));
 }
 
 void Socket::connect(const int timeoutMillis) const
@@ -309,8 +315,8 @@ int Socket::getSendBufferSize() const
 
 void Socket::setInternalBufferSize(const std::size_t newLen)
 {
-    _recvBuffer.resize(newLen);
-    _recvBuffer.shrink_to_fit();
+    _internalBuffer.resize(newLen);
+    _internalBuffer.shrink_to_fit();
 }
 
 void Socket::setNonBlocking(bool nonBlocking) const

@@ -347,6 +347,7 @@ using Port = std::uint16_t;
  * @see ServerSocket
  * @see Socket::setInternalBufferSize()
  * @see Socket::setReceiveBufferSize()
+ * @see Socket::setSendBufferSize()
  */
 inline constexpr std::size_t DefaultBufferSize = 4096;
 
