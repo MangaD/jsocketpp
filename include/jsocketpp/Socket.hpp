@@ -2805,6 +2805,30 @@ class Socket
      */
     std::size_t readIntoInternal(void* buffer, std::size_t len, bool exact = false) const;
 
+    /**
+     * @brief Cleans up client socket resources and throws a SocketException.
+     *
+     * This method performs internal cleanup of the client socket's resources, including:
+     * - Closing the socket if it is open (`_sockFd`)
+     * - Releasing any allocated address resolution data (`_cliAddrInfo`)
+     * - Resetting `_selectedAddrInfo` to null
+     *
+     * It is used to centralize error recovery during construction or connection setup,
+     * ensuring that all partially initialized resources are properly released before
+     * rethrowing an exception.
+     *
+     * @param[in] errorCode The error code to report in the thrown exception.
+     *
+     * @throws SocketException Always throws, containing the error code and the corresponding
+     * human-readable error message obtained via `SocketErrorMessage(errorCode)`.
+     *
+     * @note This function is typically called when socket creation, address resolution,
+     * or connection setup fails during client socket initialization.
+     *
+     * @ingroup tcp
+     */
+    void cleanupAndThrow(int errorCode);
+
   private:
     SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor.
     sockaddr_storage _remoteAddr;    ///< sockaddr_in for IPv4; sockaddr_in6 for IPv6; sockaddr_storage for both

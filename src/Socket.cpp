@@ -5,6 +5,7 @@
 
 #include <array>
 #include <chrono>
+#include <cstring>
 
 using namespace jsocketpp;
 
@@ -12,7 +13,7 @@ Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_
                const std::size_t sendBufferSize, const std::size_t internalBufferSize)
     : _sockFd(client), _remoteAddr(addr), _remoteAddrLen(len), _internalBuffer(internalBufferSize)
 {
-    setInternalBufferSize(internalBufferSize);
+    // setInternalBufferSize(internalBufferSize); // redundant, is in initializer list already
     setReceiveBufferSize(recvBufferSize);
     setSendBufferSize(sendBufferSize);
 }
@@ -53,16 +54,29 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
     }
     if (_sockFd == INVALID_SOCKET)
     {
-        const auto error = GetSocketError();
-        freeaddrinfo(_cliAddrInfo); // ignore errors from freeaddrinfo
-        _cliAddrInfo = nullptr;
-        throw SocketException(error, SocketErrorMessage(error));
+        cleanupAndThrow(GetSocketError());
     }
 
     // Apply all buffer size configurations
     setInternalBufferSize(internalBufferSize.value_or(DefaultBufferSize));
     setReceiveBufferSize(recvBufferSize.value_or(DefaultBufferSize));
     setSendBufferSize(sendBufferSize.value_or(DefaultBufferSize));
+}
+
+void Socket::cleanupAndThrow(const int errorCode)
+{
+    if (_sockFd != INVALID_SOCKET)
+    {
+        CloseSocket(_sockFd);
+        _sockFd = INVALID_SOCKET;
+    }
+    if (_cliAddrInfo != nullptr)
+    {
+        freeaddrinfo(_cliAddrInfo); // ignore errors from freeaddrinfo
+        _cliAddrInfo = nullptr;
+    }
+    _selectedAddrInfo = nullptr;
+    throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
 void Socket::connect(const int timeoutMillis) const
