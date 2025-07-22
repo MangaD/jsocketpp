@@ -77,7 +77,7 @@ var searchData=
   ['specific_20apis_74',['6. Platform-Specific APIs',['../group__sockets__theory.html#autotoc_md288',1,'']]],
   ['specific_20behavior_3a_20connect_20accept_20recv_20and_20send_75',['🔄 Operation-Specific Behavior: &lt;span class=&quot;tt&quot;&gt;connect&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;accept&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt;, and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;',['../group__async__io.html#autotoc_md125',1,'']]],
   ['specific_20considerations_76',['9. Platform-Specific Considerations',['../group__underlying__socket__api.html#autotoc_md319',1,'']]],
-  ['specific_20details_77',['Platform-Specific Details',['../classjsocketpp_1_1Socket.html#autotoc_md558',1,'']]],
+  ['specific_20details_77',['Platform-Specific Details',['../group__tcp.html#autotoc_md558',1,'']]],
   ['specific_20tests_3a_78',['3.1 &lt;b&gt;Using CMake for Platform-Specific Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md339',1,'']]],
   ['standards_79',['Our Standards',['../md_CODE__OF__CONDUCT.html#autotoc_md410',1,'']]],
   ['start_80',['Quick Start',['../index.html#autotoc_md376',1,'']]],

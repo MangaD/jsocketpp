@@ -9,7 +9,7 @@ var searchData=
   ['platform_20socket_20library_6',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
   ['platform_20specific_20apis_7',['6. Platform-Specific APIs',['../group__sockets__theory.html#autotoc_md288',1,'']]],
   ['platform_20specific_20considerations_8',['9. Platform-Specific Considerations',['../group__underlying__socket__api.html#autotoc_md319',1,'']]],
-  ['platform_20specific_20details_9',['Platform-Specific Details',['../classjsocketpp_1_1Socket.html#autotoc_md558',1,'']]],
+  ['platform_20specific_20details_9',['Platform-Specific Details',['../group__tcp.html#autotoc_md558',1,'']]],
   ['platform_20specific_20tests_3a_10',['3.1 &lt;b&gt;Using CMake for Platform-Specific Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md339',1,'']]],
   ['platform_20support_11',['Platform Support',['../group__socket-options.html#autotoc_md205',1,'Cross-Platform Support'],['../classjsocketpp_1_1Socket.html#autotoc_md456',1,'Platform Support']]],
   ['platform_3a_12',['3. &lt;b&gt;Test Coverage for Cross-Platform&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md338',1,'']]],

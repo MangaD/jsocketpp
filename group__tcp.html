@@ -329,6 +329,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga70c008492e223265394080a88b3c0b5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the socket is currently in non-blocking mode.  <br /></td></tr>
 <tr class="memitem:gab13446104e1e7ae372554f7e30582791" id="r_gab13446104e1e7ae372554f7e30582791"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab13446104e1e7ae372554f7e30582791">jsocketpp::Socket::setSoTimeout</a> (int millis, bool forRead=true, bool forWrite=true)</td></tr>
 <tr class="memdesc:gab13446104e1e7ae372554f7e30582791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set timeout for socket send and/or receive operations.  <br /></td></tr>
+<tr class="memitem:gac3c6f8848ff049eb3e31b4fe190dd624" id="r_gac3c6f8848ff049eb3e31b4fe190dd624"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac3c6f8848ff049eb3e31b4fe190dd624">jsocketpp::Socket::setTcpNoDelay</a> (bool on)</td></tr>
+<tr class="memdesc:gac3c6f8848ff049eb3e31b4fe190dd624"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket.  <br /></td></tr>
+<tr class="memitem:ga9aa580ef897d00e6e4200657076bb769" id="r_ga9aa580ef897d00e6e4200657076bb769"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9aa580ef897d00e6e4200657076bb769">jsocketpp::Socket::setKeepAlive</a> (bool on)</td></tr>
+<tr class="memdesc:ga9aa580ef897d00e6e4200657076bb769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables SO_KEEPALIVE on the socket.  <br /></td></tr>
 <tr class="memitem:ga756c4e2148cfe7974fe191099341fccf" id="r_ga756c4e2148cfe7974fe191099341fccf"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga756c4e2148cfe7974fe191099341fccf">jsocketpp::Socket::readIntoInternal</a> (void *buffer, std::size_t len, bool exact=false) const</td></tr>
 <tr class="memdesc:ga756c4e2148cfe7974fe191099341fccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket into a user-supplied buffer.  <br /></td></tr>
 <tr class="memitem:gaf80aa30f2806a17b930878841dfab7ad" id="r_gaf80aa30f2806a17b930878841dfab7ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf80aa30f2806a17b930878841dfab7ad">jsocketpp::Socket::cleanupAndThrow</a> (int errorCode)</td></tr>
@@ -4486,6 +4490,63 @@ Example Usage</h3>
 
 </div>
 </div>
+<a id="ga9aa580ef897d00e6e4200657076bb769" name="ga9aa580ef897d00e6e4200657076bb769"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9aa580ef897d00e6e4200657076bb769">&#9670;&#160;</a></span>setKeepAlive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::setKeepAlive </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>on</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enables or disables SO_KEEPALIVE on the socket. </p>
+<p>When <span class="tt">SO_KEEPALIVE</span> is enabled (<span class="tt">on == true</span>), the operating system will periodically transmit TCP keepalive probes on an otherwise idle connection. These probes help detect unreachable peers or broken network links by triggering a disconnect when no response is received.</p>
+<p>If disabled (<span class="tt">on == false</span>), the operating system will not monitor idle connections for liveness. This is the default behavior for most sockets.</p>
+<p>Keepalive is especially useful for long-lived TCP connections where silent disconnection (e.g. router drop, crash, or cable pull) would otherwise go unnoticed.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md558"></a>
+Platform-Specific Details</h3>
+<ul>
+<li><b>Linux</b>: Keepalive interval, idle time, and probe count can be configured via <span class="tt">/proc/sys/net/ipv4/tcp_keepalive_*</span> or socket-specific options.</li>
+<li><b>Windows</b>: Default idle time is 2 hours unless modified via <span class="tt">SIO_KEEPALIVE_VALS</span>.</li>
+<li><b>macOS</b>: Controlled via system-wide settings; application-specific tuning is limited.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md559"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
+<div class="line">sock.connect();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Enable keepalive to detect dropped connections</span></div>
+<div class="line">sock.setKeepAlive(<span class="keyword">true</span>);</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">on</td><td><span class="tt">true</span> to enable keepalive probes (<span class="tt">SO_KEEPALIVE</span>), <span class="tt">false</span> to disable them.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If setting the socket option fails:<ul>
+<li>Invalid socket descriptor (<span class="tt">EBADF</span>)</li>
+<li>Insufficient privileges (<span class="tt">EACCES</span>)</li>
+<li>Option not supported on this socket type (<span class="tt">ENOPROTOOPT</span>)</li>
+<li>System resource exhaustion (<span class="tt">ENOMEM</span>)</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gac3c6f8848ff049eb3e31b4fe190dd624" title="Enables or disables TCP_NODELAY (Nagle&#39;s algorithm) on the socket.">setTcpNoDelay()</a> To configure Nagle’s algorithm </dd>
+<dd>
+<a class="el" href="#ga647272fa39f462dd40aa4a87e335352c" title="Establishes a TCP connection to the remote host with optional timeout control.">connect()</a> To initiate the connection before applying socket options </dd></dl>
+
+</div>
+</div>
 <a id="ga6da405f0212b736e027c7d2e16222b44" name="ga6da405f0212b736e027c7d2e16222b44"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga6da405f0212b736e027c7d2e16222b44">&#9670;&#160;</a></span>setNonBlocking() <span class="overload">[1/2]</span></h2>
 
@@ -5000,6 +5061,58 @@ Example Usage</h3>
 <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size trivially copyable value of type T from the socket.">read()</a> Affected by receive timeout </dd>
 <dd>
 <a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Writes data to the socket, handling partial writes.">write()</a> Affected by send timeout </dd></dl>
+
+</div>
+</div>
+<a id="gac3c6f8848ff049eb3e31b4fe190dd624" name="gac3c6f8848ff049eb3e31b4fe190dd624"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac3c6f8848ff049eb3e31b4fe190dd624">&#9670;&#160;</a></span>setTcpNoDelay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::setTcpNoDelay </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>on</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket. </p>
+<p>When <span class="tt">TCP_NODELAY</span> is enabled (<span class="tt">on == true</span>), Nagle's algorithm is disabled. This causes small packets to be sent immediately, reducing latency for real-time or interactive applications (e.g., games, messaging, RPCs).</p>
+<p>When disabled (<span class="tt">on == false</span>), Nagle's algorithm is enabled. The socket coalesces small outgoing messages into larger packets to improve throughput and reduce congestion, but may introduce slight delays.</p>
+<p>By default, TCP_NODELAY is off (i.e., Nagle's algorithm is enabled).</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md557"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
+<div class="line">sock.connect();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Disable Nagle&#39;s algorithm to reduce latency</span></div>
+<div class="line">sock.setTcpNoDelay(<span class="keyword">true</span>);</div>
+<div class="line"> </div>
+<div class="line">sock.write(<span class="stringliteral">&quot;low-latency payload&quot;</span>);</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">on</td><td><span class="tt">true</span> to disable Nagle's algorithm (enable TCP_NODELAY), <span class="tt">false</span> to re-enable Nagle's algorithm.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If setting the option fails due to:<ul>
+<li>Invalid socket descriptor (<span class="tt">EBADF</span>)</li>
+<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> already closed or invalid state</li>
+<li>Lack of permission (<span class="tt">EACCES</span>)</li>
+<li>Option not supported on this socket (<span class="tt">ENOPROTOOPT</span>)</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga9aa580ef897d00e6e4200657076bb769" title="Enables or disables SO_KEEPALIVE on the socket.">setKeepAlive()</a> For controlling connection keep-alive probes </dd>
+<dd>
+<a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Writes data to the socket, handling partial writes.">write()</a> To send data through the socket </dd></dl>
 
 </div>
 </div>
