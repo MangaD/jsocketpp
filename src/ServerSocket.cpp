@@ -50,11 +50,12 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
 
     // Resolve the local address and port to be used by the server
     const std::string portStr = std::to_string(_port);
+    addrinfo* rawSrvAddrInfo = nullptr;
     const auto ret = getaddrinfo(
         localAddress.empty() ? nullptr : localAddress.data(), // Node (hostname or IP address); nullptr means local host
         portStr.c_str(),                                      // Service (port number or service name) as a C-string
-        &hints,       // Pointer to struct addrinfo with hints about the type of socket
-        &_srvAddrInfo // Output: pointer to a linked list of results (set by getaddrinfo)
+        &hints,         // Pointer to struct addrinfo with hints about the type of socket
+        &rawSrvAddrInfo // Output: pointer to a linked list of results (set by getaddrinfo)
     );
     if (ret != 0)
     {
@@ -64,9 +65,10 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
         cleanupAndThrow(ret);
 #endif
     }
+    _srvAddrInfo.reset(rawSrvAddrInfo); // transfer ownership
 
     // First, try to create a socket with IPv6 (prioritized)
-    for (addrinfo* p = _srvAddrInfo; p != nullptr; p = p->ai_next)
+    for (addrinfo* p = _srvAddrInfo.get(); p != nullptr; p = p->ai_next)
     {
         if (p->ai_family == AF_INET6)
         {
@@ -95,7 +97,7 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
     // If no IPv6 address worked, fallback to IPv4
     if (_serverSocket == INVALID_SOCKET)
     {
-        for (addrinfo* p = _srvAddrInfo; p != nullptr; p = p->ai_next)
+        for (addrinfo* p = _srvAddrInfo.get(); p != nullptr; p = p->ai_next)
         {
             // Only attempt IPv4 if no valid IPv6 address has been used
             if (p->ai_family == AF_INET)
@@ -144,11 +146,7 @@ void ServerSocket::cleanupAndThrow(const int errorCode)
         CloseSocket(_serverSocket);
         _serverSocket = INVALID_SOCKET;
     }
-    if (_srvAddrInfo != nullptr)
-    {
-        freeaddrinfo(_srvAddrInfo); // ignore errors from freeaddrinfo
-        _srvAddrInfo = nullptr;
-    }
+    _srvAddrInfo.reset();
     _selectedAddrInfo = nullptr;
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
@@ -250,11 +248,6 @@ ServerSocket::~ServerSocket() noexcept
     catch (...)
     {
     }
-    if (_srvAddrInfo)
-    {
-        freeaddrinfo(_srvAddrInfo); // ignore errors from freeaddrinfo
-        _srvAddrInfo = nullptr;
-    }
 }
 
 void ServerSocket::close()
@@ -265,9 +258,11 @@ void ServerSocket::close()
             throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
 
         this->_serverSocket = INVALID_SOCKET;
-        _isBound = false;
-        _isListening = false;
     }
+    _srvAddrInfo.reset();
+    _selectedAddrInfo = nullptr;
+    _isBound = false;
+    _isListening = false;
 }
 
 void ServerSocket::bind()

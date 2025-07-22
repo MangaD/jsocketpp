@@ -256,11 +256,10 @@ class Socket
      */
     Socket(Socket&& rhs) noexcept
         : _sockFd(rhs._sockFd), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
-          _cliAddrInfo(rhs._cliAddrInfo), _selectedAddrInfo(rhs._selectedAddrInfo),
+          _cliAddrInfo(std::move(rhs._cliAddrInfo)), _selectedAddrInfo(rhs._selectedAddrInfo),
           _internalBuffer(std::move(rhs._internalBuffer))
     {
         rhs._sockFd = INVALID_SOCKET;
-        rhs._cliAddrInfo = nullptr;
         rhs._selectedAddrInfo = nullptr;
     }
 
@@ -329,25 +328,25 @@ class Socket
     {
         if (this != &rhs)
         {
-            if (this->_sockFd != INVALID_SOCKET)
+            // Clean up current socket
+            try
             {
-                if (CloseSocket(this->_sockFd))
-                    std::cerr << "closesocket() failed: " << SocketErrorMessage(GetSocketError()) << ": "
-                              << GetSocketError() << std::endl;
+                close(); // Clean up existing resources
             }
-            if (_cliAddrInfo)
+            catch (...)
             {
-                freeaddrinfo(_cliAddrInfo);
-                _cliAddrInfo = nullptr;
             }
+
+            // Transfer ownership
             _sockFd = rhs._sockFd;
             _remoteAddr = rhs._remoteAddr;
             _remoteAddrLen = rhs._remoteAddrLen;
-            _cliAddrInfo = rhs._cliAddrInfo;
+            _cliAddrInfo = std::move(rhs._cliAddrInfo);
             _selectedAddrInfo = rhs._selectedAddrInfo;
             _internalBuffer = std::move(rhs._internalBuffer);
+
+            // Reset source
             rhs._sockFd = INVALID_SOCKET;
-            rhs._cliAddrInfo = nullptr;
             rhs._selectedAddrInfo = nullptr;
         }
         return *this;
@@ -2822,10 +2821,10 @@ class Socket
     SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor.
     sockaddr_storage _remoteAddr;    ///< sockaddr_in for IPv4; sockaddr_in6 for IPv6; sockaddr_storage for both
     ///< (portability)
-    mutable socklen_t _remoteAddrLen = 0;  ///< Length of remote address (for recvfrom/recvmsg)
-    addrinfo* _cliAddrInfo = nullptr;      ///< Address info for connection (from getaddrinfo)
-    addrinfo* _selectedAddrInfo = nullptr; ///< Selected address info for connection
-    std::vector<char> _internalBuffer;     ///< Internal buffer for read operations, not thread-safe
+    mutable socklen_t _remoteAddrLen = 0;         ///< Length of remote address (for recvfrom/recvmsg)
+    internal::AddrinfoPtr _cliAddrInfo = nullptr; ///< Address info for connection (from getaddrinfo)
+    addrinfo* _selectedAddrInfo = nullptr;        ///< Selected address info for connection
+    std::vector<char> _internalBuffer;            ///< Internal buffer for read operations, not thread-safe
 };
 
 /**

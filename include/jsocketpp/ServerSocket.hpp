@@ -308,12 +308,12 @@ class ServerSocket
      * @ingroup tcp
      */
     ServerSocket(ServerSocket&& rhs) noexcept
-        : _serverSocket(rhs._serverSocket), _srvAddrInfo(rhs._srvAddrInfo), _selectedAddrInfo(rhs._selectedAddrInfo),
-          _port(rhs._port), _isBound(rhs._isBound), _isListening(rhs._isListening),
-          _soTimeoutMillis(rhs._soTimeoutMillis), _defaultReceiveBufferSize(rhs._defaultReceiveBufferSize)
+        : _serverSocket(rhs._serverSocket), _srvAddrInfo(std::move(rhs._srvAddrInfo)),
+          _selectedAddrInfo(rhs._selectedAddrInfo), _port(rhs._port), _isBound(rhs._isBound),
+          _isListening(rhs._isListening), _soTimeoutMillis(rhs._soTimeoutMillis),
+          _defaultReceiveBufferSize(rhs._defaultReceiveBufferSize)
     {
         rhs._serverSocket = INVALID_SOCKET;
-        rhs._srvAddrInfo = nullptr;
         rhs._selectedAddrInfo = nullptr;
         rhs._isBound = false;
         rhs._isListening = false;
@@ -350,6 +350,7 @@ class ServerSocket
     {
         if (this != &rhs)
         {
+            // Clean up current socket
             try
             {
                 close(); // Clean up existing resources
@@ -357,8 +358,10 @@ class ServerSocket
             catch (...)
             {
             }
+
+            // Transfer ownership
             _serverSocket = rhs._serverSocket;
-            _srvAddrInfo = rhs._srvAddrInfo;
+            _srvAddrInfo = std::move(rhs._srvAddrInfo);
             _selectedAddrInfo = rhs._selectedAddrInfo;
             _port = rhs._port;
             _isBound = rhs._isBound;
@@ -366,8 +369,8 @@ class ServerSocket
             _soTimeoutMillis = rhs._soTimeoutMillis;
             _defaultReceiveBufferSize = rhs._defaultReceiveBufferSize;
 
+            // Reset source
             rhs._serverSocket = INVALID_SOCKET;
-            rhs._srvAddrInfo = nullptr;
             rhs._selectedAddrInfo = nullptr;
             rhs._isBound = false;
             rhs._isListening = false;
@@ -1650,12 +1653,12 @@ class ServerSocket
                 getEffectiveInternalBufferSize(internal)};
     }
 
-    SOCKET _serverSocket = INVALID_SOCKET; ///< Underlying socket file descriptor.
-    addrinfo* _srvAddrInfo = nullptr;      ///< Address info for binding (from getaddrinfo)
-    addrinfo* _selectedAddrInfo = nullptr; ///< Selected address info for binding
-    Port _port;                            ///< Port number the server will listen on
-    bool _isBound = false;                 ///< True if the server socket is bound
-    bool _isListening = false;             ///< True if the server socket is listening
+    SOCKET _serverSocket = INVALID_SOCKET;        ///< Underlying socket file descriptor.
+    internal::AddrinfoPtr _srvAddrInfo = nullptr; ///< Address info for binding (from getaddrinfo)
+    addrinfo* _selectedAddrInfo = nullptr;        ///< Selected address info for binding
+    Port _port;                                   ///< Port number the server will listen on
+    bool _isBound = false;                        ///< True if the server socket is bound
+    bool _isListening = false;                    ///< True if the server socket is listening
     int _soTimeoutMillis = -1; ///< Timeout for accept(); -1 = no timeout, 0 = poll, >0 = timeout in milliseconds
     std::size_t _defaultReceiveBufferSize =
         DefaultBufferSize; ///< Default buffer size used for accepted client sockets when no specific size is provided

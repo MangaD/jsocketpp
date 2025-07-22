@@ -30,7 +30,8 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
     // Resolve the local address and port to be used by the server
     const std::string portStr = std::to_string(port);
 
-    if (auto ret = getaddrinfo(host.data(), portStr.c_str(), &hints, &_cliAddrInfo); ret != 0)
+    addrinfo* rawCliAddrInfo = nullptr;
+    if (const auto ret = getaddrinfo(host.data(), portStr.c_str(), &hints, &rawCliAddrInfo); ret != 0)
     {
         throw SocketException(
 #ifdef _WIN32
@@ -39,10 +40,11 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
             ret, SocketErrorMessageWrap(ret, true));
 #endif
     }
+    _cliAddrInfo.reset(rawCliAddrInfo); // transfer ownership
 
     // Try all available addresses (IPv6/IPv4) to create a SOCKET for
     _sockFd = INVALID_SOCKET;
-    for (addrinfo* p = _cliAddrInfo; p != nullptr; p = p->ai_next)
+    for (addrinfo* p = _cliAddrInfo.get(); p != nullptr; p = p->ai_next)
     {
         _sockFd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
         if (_sockFd != INVALID_SOCKET)
@@ -70,11 +72,7 @@ void Socket::cleanupAndThrow(const int errorCode)
         CloseSocket(_sockFd);
         _sockFd = INVALID_SOCKET;
     }
-    if (_cliAddrInfo != nullptr)
-    {
-        freeaddrinfo(_cliAddrInfo); // ignore errors from freeaddrinfo
-        _cliAddrInfo = nullptr;
-    }
+    _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
@@ -185,11 +183,7 @@ void Socket::close()
 
         this->_sockFd = INVALID_SOCKET;
     }
-    if (_cliAddrInfo)
-    {
-        freeaddrinfo(_cliAddrInfo); // ignore errors from freeaddrinfo
-        _cliAddrInfo = nullptr;
-    }
+    _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
 }
 

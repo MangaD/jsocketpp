@@ -58,14 +58,14 @@
 #else
 
 // Assuming Linux
-#include <arpa/inet.h>   //for inet_ntoa
+#include <arpa/inet.h>   //inet_ntoa
 #include <cerrno>        //errno
 #include <cstring>       //strerror
 #include <fcntl.h>       //fcntl
 #include <ifaddrs.h>     //getifaddrs
 #include <net/if.h>      //if_nametoindex
-#include <netdb.h>       //for struct addrinfo
-#include <netinet/in.h>  //for sockaddr_in and sockaddr_in6
+#include <netdb.h>       //addrinfo
+#include <netinet/in.h>  //sockaddr_in, sockaddr_in6
 #include <netinet/tcp.h> //TCP_NODELAY, TCP_MAXSEG
 #include <poll.h>        //poll
 #include <sys/ioctl.h>   //ioctl
@@ -471,3 +471,66 @@ inline uint32_t fromNetwork(const uint32_t val)
 }
 
 } // namespace jsocketpp::net
+
+namespace jsocketpp::internal
+{
+
+/**
+ * @struct AddrinfoDeleter
+ * @brief Custom deleter for `addrinfo*` pointers to support RAII-style cleanup.
+ * @ingroup internal
+ *
+ * This deleter is intended for use with `std::unique_ptr<addrinfo, AddrinfoDeleter>`,
+ * enabling automatic cleanup of dynamically allocated `addrinfo` structures returned
+ * by `getaddrinfo()`. When the smart pointer goes out of scope, `freeaddrinfo()` will
+ * be called automatically to release associated memory.
+ *
+ * ### Example
+ * @code
+ * addrinfo* raw = nullptr;
+ * getaddrinfo("example.com", "80", &hints, &raw);
+ * AddrinfoPtr info(raw); // Automatically cleaned up
+ * @endcode
+ *
+ * @see AddrinfoPtr
+ * @see getaddrinfo()
+ * @see freeaddrinfo()
+ */
+struct AddrinfoDeleter
+{
+    /**
+     * @brief Deletes an `addrinfo*` by calling `freeaddrinfo()`.
+     * @param[in] p Pointer to an `addrinfo` structure to be deallocated.
+     */
+    void operator()(addrinfo* p) const noexcept
+    {
+        if (p)
+            freeaddrinfo(p);
+    }
+};
+
+/**
+ * @typedef AddrinfoPtr
+ * @brief Smart pointer that manages `addrinfo*` resources using `AddrinfoDeleter`.
+ * @ingroup internal
+ *
+ * `AddrinfoPtr` wraps a raw `addrinfo*` (typically from `getaddrinfo()`) in a
+ * `std::unique_ptr` with a custom deleter to ensure safe, automatic cleanup
+ * using `freeaddrinfo()`. This eliminates manual memory management and guards
+ * against memory leaks in error-prone network code.
+ *
+ * ### Example Usage
+ * @code
+ * addrinfo* raw = nullptr;
+ * if (getaddrinfo("example.com", "80", &hints, &raw) == 0) {
+ *     AddrinfoPtr info(raw); // Automatically cleaned up on scope exit
+ *     // Use info.get() safely here
+ * }
+ * @endcode
+ *
+ * @see AddrinfoDeleter
+ * @see getaddrinfo()
+ * @see freeaddrinfo()
+ */
+using AddrinfoPtr = std::unique_ptr<addrinfo, AddrinfoDeleter>;
+} // namespace jsocketpp::internal
