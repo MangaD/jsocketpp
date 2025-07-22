@@ -3,7 +3,7 @@ var searchData=
   ['handles_20blocking_20and_20timeouts_0',['⏱ How jsocketpp Handles Blocking and Timeouts',['../group__async__io.html#autotoc_md122',1,'']]],
   ['handling_1',['Error Handling',['../classjsocketpp_1_1Socket.html#autotoc_md454',1,'']]],
   ['handling_2',['🧪 Socket state handling',['../group__address__reuse.html#autotoc_md60',1,'']]],
-  ['handling_20socket_20exceptions_3',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md560',1,'']]],
+  ['handling_20socket_20exceptions_3',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md563',1,'']]],
   ['happens_20when_20multiple_20sockets_20bind_20to_20the_20same_20port_4',['🧪 What Happens When Multiple Sockets Bind to the Same Port?',['../group__address__reuse.html#autotoc_md74',1,'']]],
   ['hood_3a_20how_20socket_20types_20work_5',['2.6. Under the Hood: How Socket Types Work',['../group__sockets__theory.html#autotoc_md272',1,'']]],
   ['hood_3a_20how_20sockets_20operate_6',['5. Under the Hood: How Sockets Operate',['../group__sockets__theory.html#autotoc_md286',1,'']]],

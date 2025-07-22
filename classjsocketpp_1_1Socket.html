@@ -126,10 +126,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:gaa7498d51b547b52699055bdb16b9d68b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a fixed-size trivially copyable value of type <span class="tt">T</span> from the socket.  <br /></td></tr>
 <tr class="memitem:ga3d194596258a3b1117b3437d969019b6" id="r_ga3d194596258a3b1117b3437d969019b6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga3d194596258a3b1117b3437d969019b6">readExact</a> (std::size_t n) const</td></tr>
 <tr class="memdesc:ga3d194596258a3b1117b3437d969019b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read exactly <span class="tt">n</span> bytes from the socket into a string.  <br /></td></tr>
-<tr class="memitem:ga3c694c2f5c8debc3b26af1971f1cdfc1" id="r_ga3c694c2f5c8debc3b26af1971f1cdfc1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga3c694c2f5c8debc3b26af1971f1cdfc1">readUntil</a> (char delimiter, std::size_t maxLen=8192, bool includeDelimiter=true) const</td></tr>
-<tr class="memdesc:ga3c694c2f5c8debc3b26af1971f1cdfc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket until a specified delimiter character.  <br /></td></tr>
-<tr class="memitem:ga3123fc6000e0fe76a5909795e85d39a4" id="r_ga3123fc6000e0fe76a5909795e85d39a4"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga3123fc6000e0fe76a5909795e85d39a4">readLine</a> (const std::size_t maxLen=8192, const bool includeDelimiter=true) const</td></tr>
-<tr class="memdesc:ga3123fc6000e0fe76a5909795e85d39a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a line terminated by '<br  />
+<tr class="memitem:ga46777f128a2a23cba8972aefd4b86828" id="r_ga46777f128a2a23cba8972aefd4b86828"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga46777f128a2a23cba8972aefd4b86828">readUntil</a> (char delimiter, std::size_t maxLen=8192, bool includeDelimiter=true)</td></tr>
+<tr class="memdesc:ga46777f128a2a23cba8972aefd4b86828"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket until a specified delimiter character.  <br /></td></tr>
+<tr class="memitem:ga21767c46469a8cee88a87f45405d36fd" id="r_ga21767c46469a8cee88a87f45405d36fd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga21767c46469a8cee88a87f45405d36fd">readLine</a> (const std::size_t maxLen=8192, const bool includeDelimiter=true)</td></tr>
+<tr class="memdesc:ga21767c46469a8cee88a87f45405d36fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a line terminated by '<br  />
 ' from the socket.  <br /></td></tr>
 <tr class="memitem:ga7c3a39505b6c65a9c4db03c081cd4de7" id="r_ga7c3a39505b6c65a9c4db03c081cd4de7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga7c3a39505b6c65a9c4db03c081cd4de7">readAtMost</a> (std::size_t n) const</td></tr>
 <tr class="memdesc:ga7c3a39505b6c65a9c4db03c081cd4de7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads up to <span class="tt">n</span> bytes from the socket into a string.  <br /></td></tr>
@@ -396,14 +396,14 @@ See Also</h3>
 <p>SO_KEEPALIVE is a socket option that enables periodic transmission of keepalive probes on an otherwise idle TCP connection. When enabled (set to true), the operating system will periodically send keepalive messages to the remote peer if no data has been exchanged for a certain period. If the peer does not respond, the connection is considered broken and will be closed.</p>
 <p>This feature is useful for detecting dead peers or broken network links, especially for long-lived connections where silent disconnects would otherwise go unnoticed. It is commonly used in server applications, remote control systems, and protocols that require reliable detection of dropped connections.</p>
 <p>By default, SO_KEEPALIVE is disabled (i.e., keepalive probes are not sent) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md555"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md558"></a>
 Platform-Specific Details</h3>
 <ul>
 <li>Linux: Configure via /proc/sys/net/ipv4/tcp_keepalive_*</li>
 <li>Windows: Default 2-hour idle time before first probe</li>
 <li>macOS: System-wide keepalive settings apply</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md556"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md559"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -450,7 +450,7 @@ Example Usage</h3>
 <p>When TCP_NODELAY is enabled (set to true), Nagle's algorithm is disabled. This means that small packets of data are sent immediately over the network, without waiting to accumulate more data. This can reduce latency for applications that require fast, interactive communication (such as games, real-time systems, or protocols where low latency is more important than bandwidth efficiency).</p>
 <p>When TCP_NODELAY is disabled (set to false), Nagle's algorithm is enabled. This causes the socket to buffer small outgoing packets and send them together, which can reduce network congestion and improve throughput for bulk data transfers, but may introduce slight delays for small messages.</p>
 <p>By default, TCP_NODELAY is disabled (i.e., Nagle's algorithm is enabled) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md554"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md557"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -544,7 +544,7 @@ Example Usage</h3>
 
 <p>Check if the socket is still connected (TCP only). </p>
 <p>This method performs a non-destructive check of the socket's connection status by attempting a zero-byte send (on Windows) or checking socket errors (on POSIX). While not 100% reliable due to the nature of TCP/IP, it provides a best-effort indication of connection status.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md552"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md555"></a>
 Implementation Details</h3>
 <ul>
 <li>Windows: Uses send() with zero bytes</li>
@@ -552,7 +552,7 @@ Implementation Details</h3>
 <li>Does not generate network traffic</li>
 <li>Non-blocking operation</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md553"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md556"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
