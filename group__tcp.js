@@ -60,7 +60,7 @@ var group__tcp =
       [ "_selectedAddrInfo", "classjsocketpp_1_1ServerSocket.html#a3d85400180a3ee56838c165e7b459e80", null ],
       [ "_serverSocket", "classjsocketpp_1_1ServerSocket.html#a7286800af0502d88ff1460f875cd178d", null ],
       [ "_soTimeoutMillis", "classjsocketpp_1_1ServerSocket.html#a21ecaaf4b757a2dd9cee37231381706f", null ],
-      [ "_srvAddrInfo", "classjsocketpp_1_1ServerSocket.html#aa27d2f032363fb8faa4b09eb81cdff31", null ]
+      [ "_srvAddrInfo", "classjsocketpp_1_1ServerSocket.html#a98d2690356bf0f8a20d0f4251d7f4b3b", null ]
     ] ],
     [ "jsocketpp::Socket", "classjsocketpp_1_1Socket.html", [
       [ "Socket", "group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587", null ],
@@ -128,7 +128,7 @@ var group__tcp =
       [ "writevWithTotalTimeout", "group__tcp.html#ga8e539c866c9fcad3578f9be78cbfdaf4", null ],
       [ "writeWithTotalTimeout", "group__tcp.html#ga964bb0e901179bc5eac126d77b0590eb", null ],
       [ "ServerSocket", "classjsocketpp_1_1Socket.html#a11a8bb11feaafab939278a8285afa567", null ],
-      [ "_cliAddrInfo", "classjsocketpp_1_1Socket.html#ad6d927dae83f28de5c08610a3d1bf527", null ],
+      [ "_cliAddrInfo", "classjsocketpp_1_1Socket.html#a50a79dbf8d56379ae0bfbfa2a186a9f1", null ],
       [ "_internalBuffer", "classjsocketpp_1_1Socket.html#a05964f49b3ce4b2d9f2413fd40d4d174", null ],
       [ "_remoteAddr", "classjsocketpp_1_1Socket.html#afde2fd1d94981d579025ffee115c877c", null ],
       [ "_remoteAddrLen", "classjsocketpp_1_1Socket.html#a9b495d6a442ffc2ead89a1e3d3232970", null ],

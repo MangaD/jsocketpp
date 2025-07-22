@@ -1,5 +1,6 @@
 var common_8hpp =
 [
+    [ "jsocketpp::internal::AddrinfoPtr", "group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646", null ],
     [ "jsocketpp::Port", "group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7", null ],
     [ "jsocketpp::SOCKADDR_UN", "namespacejsocketpp.html#a981f7d65e550398e8ab29db83092f119", null ],
     [ "jsocketpp::SOCKET", "namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda", null ],

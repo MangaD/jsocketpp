@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"group__tcp.html#ga0b3a5cb732c669b678e03549e5af2427":[3,1,2,36],
 "group__tcp.html#ga1308a8d172508999834853ccb35607e8":[3,1,2,20],
 "group__tcp.html#ga16bb8c36a3fd9a3a97a0d4f5d5036550":[3,1,2,94],
 "group__tcp.html#ga1717f9859e5aeeba77c3d463ec53e735":[3,1,2,38],
@@ -192,5 +193,7 @@ var NAVTREEINDEX1 =
 "structjsocketpp_1_1BufferView.html":[3,1,0,1],
 "structjsocketpp_1_1BufferView.html#a70b3f827c5fe2653a564d70c3c487f0e":[3,1,0,1,0],
 "structjsocketpp_1_1BufferView.html#ab394f54c74a9af0ca509add49c6aa229":[3,1,0,1,1],
+"structjsocketpp_1_1internal_1_1AddrinfoDeleter.html":[3,1,1,1],
+"structjsocketpp_1_1internal_1_1AddrinfoDeleter.html#a9717c2230739ecb2817a2837b4896e60":[3,1,1,1,0],
 "topics.html":[3]
 };

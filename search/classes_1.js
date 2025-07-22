@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['datagrampacket_0',['DatagramPacket',['../classjsocketpp_1_1DatagramPacket.html',1,'jsocketpp']]],
-  ['datagramsocket_1',['DatagramSocket',['../classjsocketpp_1_1DatagramSocket.html',1,'jsocketpp']]]
+  ['bufferview_0',['BufferView',['../structjsocketpp_1_1BufferView.html',1,'jsocketpp']]]
 ];

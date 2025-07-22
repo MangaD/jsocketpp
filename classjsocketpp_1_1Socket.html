@@ -253,8 +253,8 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:afde2fd1d94981d579025ffee115c877c"><td class="mdescLeft">&#160;</td><td class="mdescRight">(portability)  <br /></td></tr>
 <tr class="memitem:a9b495d6a442ffc2ead89a1e3d3232970" id="r_a9b495d6a442ffc2ead89a1e3d3232970"><td class="memItemLeft" align="right" valign="top">socklen_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b495d6a442ffc2ead89a1e3d3232970">_remoteAddrLen</a> = 0</td></tr>
 <tr class="memdesc:a9b495d6a442ffc2ead89a1e3d3232970"><td class="mdescLeft">&#160;</td><td class="mdescRight">Length of remote address (for recvfrom/recvmsg)  <br /></td></tr>
-<tr class="memitem:ad6d927dae83f28de5c08610a3d1bf527" id="r_ad6d927dae83f28de5c08610a3d1bf527"><td class="memItemLeft" align="right" valign="top">addrinfo *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6d927dae83f28de5c08610a3d1bf527">_cliAddrInfo</a> = nullptr</td></tr>
-<tr class="memdesc:ad6d927dae83f28de5c08610a3d1bf527"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address info for connection (from getaddrinfo)  <br /></td></tr>
+<tr class="memitem:a50a79dbf8d56379ae0bfbfa2a186a9f1" id="r_a50a79dbf8d56379ae0bfbfa2a186a9f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646">internal::AddrinfoPtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50a79dbf8d56379ae0bfbfa2a186a9f1">_cliAddrInfo</a> = nullptr</td></tr>
+<tr class="memdesc:a50a79dbf8d56379ae0bfbfa2a186a9f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address info for connection (from getaddrinfo)  <br /></td></tr>
 <tr class="memitem:ac4ae016cffe61f7c8ba9572ed98922aa" id="r_ac4ae016cffe61f7c8ba9572ed98922aa"><td class="memItemLeft" align="right" valign="top">addrinfo *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4ae016cffe61f7c8ba9572ed98922aa">_selectedAddrInfo</a> = nullptr</td></tr>
 <tr class="memdesc:ac4ae016cffe61f7c8ba9572ed98922aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selected address info for connection.  <br /></td></tr>
 <tr class="memitem:a05964f49b3ce4b2d9f2413fd40d4d174" id="r_a05964f49b3ce4b2d9f2413fd40d4d174"><td class="memItemLeft" align="right" valign="top">std::vector&lt; char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a05964f49b3ce4b2d9f2413fd40d4d174">_internalBuffer</a></td></tr>
@@ -268,7 +268,7 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TCP client connection abstraction (Java-like interface). </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> class represents a TCP connection between your application and a remote host. It provides a high-level, easy-to-use, and cross-platform API for creating, connecting, sending, and receiving data over TCP sockets. Its interface is inspired by Java's <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> class, but uses modern C++20 features.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md449"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md451"></a>
 Key Features</h3>
 <ul>
 <li><b>Connect to remote hosts</b> using hostnames or IP addresses (IPv4/IPv6).</li>
@@ -279,7 +279,7 @@ Key Features</h3>
 <li><b>Exception-based error handling</b> via <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
 <li><b>Fine-grained control</b>: configure timeouts, non-blocking mode, TCP_NODELAY, SO_KEEPALIVE, etc.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md450"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md452"></a>
 Typical Usage Example</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="Socket_8hpp.html">jsocketpp/Socket.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -300,36 +300,36 @@ Typical Usage Example</h3>
 <div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:58</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:91</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md451"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md453"></a>
 Internal Buffer</h3>
 <ul>
 <li>The socket maintains an internal read buffer (default: <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a>).</li>
 <li>You can resize it with <span class="tt"><a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a></span> if you expect to receive larger or smaller messages.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md452"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md454"></a>
 Error Handling</h3>
 <ul>
 <li>Almost all methods throw <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">jsocketpp::SocketException</a></span> on error (e.g., connect failure, write error, etc).</li>
 <li>You should catch exceptions to handle network errors gracefully.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md453"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md455"></a>
 Thread Safety</h3>
 <ul>
 <li>Not thread-safe. Use a separate <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> object per thread if needed.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md454"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md456"></a>
 Platform Support</h3>
 <ul>
 <li>Windows, Linux, macOS. Handles all necessary platform differences internally.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md455"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md457"></a>
 Advanced Usage</h3>
 <ul>
 <li>Set non-blocking mode with <span class="tt"><a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5" title="Set the socket to non-blocking or blocking mode.">setNonBlocking()</a></span>.</li>
 <li>Tune socket options with <span class="tt"><a class="el" href="#a4be91b4d9fd6da1ce2b36de1158e707c" title="Enable or disable TCP_NODELAY (Nagle&#39;s algorithm) on the socket.">enableNoDelay()</a></span>, <span class="tt"><a class="el" href="#aaceee2a0a6204cbc3e1481303891fcab" title="Enable or disable SO_KEEPALIVE on the socket.">enableKeepAlive()</a></span>, or <span class="tt">setTimeout()</span>.</li>
 <li>Check remote address with <span class="tt"><a class="el" href="group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc" title="Get the remote peer&#39;s address and port as a formatted string.">getRemoteSocketAddress()</a></span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md456"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md458"></a>
 See Also</h3>
 <ul>
 <li><a class="el" href="classjsocketpp_1_1ServerSocket.html">ServerSocket</a> - for listening to incoming connections</li>
@@ -396,14 +396,14 @@ See Also</h3>
 <p>SO_KEEPALIVE is a socket option that enables periodic transmission of keepalive probes on an otherwise idle TCP connection. When enabled (set to true), the operating system will periodically send keepalive messages to the remote peer if no data has been exchanged for a certain period. If the peer does not respond, the connection is considered broken and will be closed.</p>
 <p>This feature is useful for detecting dead peers or broken network links, especially for long-lived connections where silent disconnects would otherwise go unnoticed. It is commonly used in server applications, remote control systems, and protocols that require reliable detection of dropped connections.</p>
 <p>By default, SO_KEEPALIVE is disabled (i.e., keepalive probes are not sent) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md553"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md555"></a>
 Platform-Specific Details</h3>
 <ul>
 <li>Linux: Configure via /proc/sys/net/ipv4/tcp_keepalive_*</li>
 <li>Windows: Default 2-hour idle time before first probe</li>
 <li>macOS: System-wide keepalive settings apply</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md554"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md556"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -450,7 +450,7 @@ Example Usage</h3>
 <p>When TCP_NODELAY is enabled (set to true), Nagle's algorithm is disabled. This means that small packets of data are sent immediately over the network, without waiting to accumulate more data. This can reduce latency for applications that require fast, interactive communication (such as games, real-time systems, or protocols where low latency is more important than bandwidth efficiency).</p>
 <p>When TCP_NODELAY is disabled (set to false), Nagle's algorithm is enabled. This causes the socket to buffer small outgoing packets and send them together, which can reduce network congestion and improve throughput for bulk data transfers, but may introduce slight delays for small messages.</p>
 <p>By default, TCP_NODELAY is disabled (i.e., Nagle's algorithm is enabled) on new sockets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md552"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md554"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -544,7 +544,7 @@ Example Usage</h3>
 
 <p>Check if the socket is still connected (TCP only). </p>
 <p>This method performs a non-destructive check of the socket's connection status by attempting a zero-byte send (on Windows) or checking socket errors (on POSIX). While not 100% reliable due to the nature of TCP/IP, it provides a best-effort indication of connection status.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md550"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md552"></a>
 Implementation Details</h3>
 <ul>
 <li>Windows: Uses send() with zero bytes</li>
@@ -552,7 +552,7 @@ Implementation Details</h3>
 <li>Does not generate network traffic</li>
 <li>Non-blocking operation</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md551"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md553"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -722,8 +722,8 @@ Example Usage</h3>
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="ad6d927dae83f28de5c08610a3d1bf527" name="ad6d927dae83f28de5c08610a3d1bf527"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6d927dae83f28de5c08610a3d1bf527">&#9670;&#160;</a></span>_cliAddrInfo</h2>
+<a id="a50a79dbf8d56379ae0bfbfa2a186a9f1" name="a50a79dbf8d56379ae0bfbfa2a186a9f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50a79dbf8d56379ae0bfbfa2a186a9f1">&#9670;&#160;</a></span>_cliAddrInfo</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -732,7 +732,7 @@ Example Usage</h3>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">addrinfo* jsocketpp::Socket::_cliAddrInfo = nullptr</td>
+          <td class="memname"><a class="el" href="group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646">internal::AddrinfoPtr</a> jsocketpp::Socket::_cliAddrInfo = nullptr</td>
         </tr>
       </table>
   </td>

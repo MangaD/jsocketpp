@@ -65,7 +65,7 @@ var classjsocketpp_1_1Socket =
     [ "writevWithTotalTimeout", "group__tcp.html#ga8e539c866c9fcad3578f9be78cbfdaf4", null ],
     [ "writeWithTotalTimeout", "group__tcp.html#ga964bb0e901179bc5eac126d77b0590eb", null ],
     [ "ServerSocket", "classjsocketpp_1_1Socket.html#a11a8bb11feaafab939278a8285afa567", null ],
-    [ "_cliAddrInfo", "classjsocketpp_1_1Socket.html#ad6d927dae83f28de5c08610a3d1bf527", null ],
+    [ "_cliAddrInfo", "classjsocketpp_1_1Socket.html#a50a79dbf8d56379ae0bfbfa2a186a9f1", null ],
     [ "_internalBuffer", "classjsocketpp_1_1Socket.html#a05964f49b3ce4b2d9f2413fd40d4d174", null ],
     [ "_remoteAddr", "classjsocketpp_1_1Socket.html#afde2fd1d94981d579025ffee115c877c", null ],
     [ "_remoteAddrLen", "classjsocketpp_1_1Socket.html#a9b495d6a442ffc2ead89a1e3d3232970", null ],

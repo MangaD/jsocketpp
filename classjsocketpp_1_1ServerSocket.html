@@ -217,8 +217,8 @@ Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a7286800af0502d88ff1460f875cd178d" id="r_a7286800af0502d88ff1460f875cd178d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7286800af0502d88ff1460f875cd178d">_serverSocket</a> = <a class="el" href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">INVALID_SOCKET</a></td></tr>
 <tr class="memdesc:a7286800af0502d88ff1460f875cd178d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Underlying socket file descriptor.  <br /></td></tr>
-<tr class="memitem:aa27d2f032363fb8faa4b09eb81cdff31" id="r_aa27d2f032363fb8faa4b09eb81cdff31"><td class="memItemLeft" align="right" valign="top">addrinfo *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa27d2f032363fb8faa4b09eb81cdff31">_srvAddrInfo</a> = nullptr</td></tr>
-<tr class="memdesc:aa27d2f032363fb8faa4b09eb81cdff31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address info for binding (from getaddrinfo)  <br /></td></tr>
+<tr class="memitem:a98d2690356bf0f8a20d0f4251d7f4b3b" id="r_a98d2690356bf0f8a20d0f4251d7f4b3b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646">internal::AddrinfoPtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98d2690356bf0f8a20d0f4251d7f4b3b">_srvAddrInfo</a> = nullptr</td></tr>
+<tr class="memdesc:a98d2690356bf0f8a20d0f4251d7f4b3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address info for binding (from getaddrinfo)  <br /></td></tr>
 <tr class="memitem:a3d85400180a3ee56838c165e7b459e80" id="r_a3d85400180a3ee56838c165e7b459e80"><td class="memItemLeft" align="right" valign="top">addrinfo *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d85400180a3ee56838c165e7b459e80">_selectedAddrInfo</a> = nullptr</td></tr>
 <tr class="memdesc:a3d85400180a3ee56838c165e7b459e80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selected address info for binding.  <br /></td></tr>
 <tr class="memitem:a1f46490b73ad2133a735c221fe481f4e" id="r_a1f46490b73ad2133a735c221fe481f4e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f46490b73ad2133a735c221fe481f4e">_port</a></td></tr>
@@ -239,7 +239,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TCP server socket abstraction for cross-platform C++ networking. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> class provides a high-level, Java-like interface to create TCP server sockets in C++20, supporting both IPv4 and IPv6, and working on both Windows and Unix-like systems.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md439"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md441"></a>
 Overview</h2>
 <p><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> is designed to simplify the creation of network server applications. It allows you to:</p><ul>
 <li>Bind to a specified port (optionally on a specific address/interface)</li>
@@ -248,7 +248,7 @@ Overview</h2>
 <li>Clean up resources automatically (RAII)</li>
 </ul>
 <p>This class handles platform differences (such as Winsock vs BSD Sockets) internally, so you can write portable code.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md440"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md442"></a>
 Typical Usage</h2>
 <p>Here’s how you can use <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> to create a simple TCP echo server:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="ServerSocket_8hpp.html">jsocketpp/ServerSocket.hpp</a>&gt;</span></div>
@@ -281,11 +281,11 @@ Typical Usage</h2>
 <div class="ttc" id="aSocket_8hpp_html"><div class="ttname"><a href="Socket_8hpp.html">Socket.hpp</a></div><div class="ttdoc">TCP client socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:91</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
-<div class="ttc" id="agroup__tcp_html_ga8b952bd8912694754bb34ab763aa8daa"><div class="ttname"><a href="group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa">jsocketpp::Socket::write</a></div><div class="ttdeci">size_t write(std::string_view message) const</div><div class="ttdoc">Writes data to the socket, handling partial writes.</div><div class="ttdef"><b>Definition</b> Socket.cpp:280</div></div>
-<div class="ttc" id="agroup__tcp_html_ga92c62bf727779c6d7395809084f9e4dc"><div class="ttname"><a href="group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc">jsocketpp::Socket::getRemoteSocketAddress</a></div><div class="ttdeci">std::string getRemoteSocketAddress(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Get the remote peer&#39;s address and port as a formatted string.</div><div class="ttdef"><b>Definition</b> Socket.cpp:243</div></div>
-<div class="ttc" id="agroup__tcp_html_gaa7498d51b547b52699055bdb16b9d68b"><div class="ttname"><a href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b">jsocketpp::Socket::read</a></div><div class="ttdeci">T read()</div><div class="ttdoc">Reads a fixed-size trivially copyable value of type T from the socket.</div><div class="ttdef"><b>Definition</b> Socket.hpp:553</div></div>
+<div class="ttc" id="agroup__tcp_html_ga8b952bd8912694754bb34ab763aa8daa"><div class="ttname"><a href="group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa">jsocketpp::Socket::write</a></div><div class="ttdeci">size_t write(std::string_view message) const</div><div class="ttdoc">Writes data to the socket, handling partial writes.</div><div class="ttdef"><b>Definition</b> Socket.cpp:274</div></div>
+<div class="ttc" id="agroup__tcp_html_ga92c62bf727779c6d7395809084f9e4dc"><div class="ttname"><a href="group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc">jsocketpp::Socket::getRemoteSocketAddress</a></div><div class="ttdeci">std::string getRemoteSocketAddress(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Get the remote peer&#39;s address and port as a formatted string.</div><div class="ttdef"><b>Definition</b> Socket.cpp:237</div></div>
+<div class="ttc" id="agroup__tcp_html_gaa7498d51b547b52699055bdb16b9d68b"><div class="ttname"><a href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b">jsocketpp::Socket::read</a></div><div class="ttdeci">T read()</div><div class="ttdoc">Reads a fixed-size trivially copyable value of type T from the socket.</div><div class="ttdef"><b>Definition</b> Socket.hpp:552</div></div>
 <div class="ttc" id="agroup__tcp_html_gad389848c3e0fcadcfe5f581ab8c8fbb8"><div class="ttname"><a href="group__tcp.html#gad389848c3e0fcadcfe5f581ab8c8fbb8">jsocketpp::ServerSocket::ServerSocket</a></div><div class="ttdeci">ServerSocket(Port port, std::string_view localAddress={}, bool autoBindListen=true, bool reuseAddress=true, int soTimeoutMillis=-1, bool dualStack=true)</div><div class="ttdoc">Constructs a ServerSocket for listening to incoming TCP connections with full configuration control.</div><div class="ttdef"><b>Definition</b> ServerSocket.cpp:8</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md441"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md443"></a>
 Key Features</h2>
 <ul>
 <li><b>Cross-platform</b>: Windows and Linux/Unix support</li>
@@ -294,7 +294,7 @@ Key Features</h2>
 <li><b>Error handling</b>: Throws exceptions on error for robust applications</li>
 <li><b>Customizable</b>: Control backlog, address reuse, blocking/non-blocking modes, etc.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md442"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md444"></a>
 Basic API</h2>
 <ul>
 <li><span class="tt">ServerSocket(port)</span>: Construct with a port to listen on.</li>
@@ -310,7 +310,7 @@ Basic API</h2>
 <li>Exceptions are thrown as <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> for error conditions.</li>
 </ul>
 </dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md443"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md445"></a>
 See Also</h3>
 <ul>
 <li><a class="el" href="classjsocketpp_1_1Socket.html">Socket</a> - for connecting to a remote host</li>
@@ -538,8 +538,8 @@ See Also</h3>
 
 </div>
 </div>
-<a id="aa27d2f032363fb8faa4b09eb81cdff31" name="aa27d2f032363fb8faa4b09eb81cdff31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa27d2f032363fb8faa4b09eb81cdff31">&#9670;&#160;</a></span>_srvAddrInfo</h2>
+<a id="a98d2690356bf0f8a20d0f4251d7f4b3b" name="a98d2690356bf0f8a20d0f4251d7f4b3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98d2690356bf0f8a20d0f4251d7f4b3b">&#9670;&#160;</a></span>_srvAddrInfo</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -548,7 +548,7 @@ See Also</h3>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">addrinfo* jsocketpp::ServerSocket::_srvAddrInfo = nullptr</td>
+          <td class="memname"><a class="el" href="group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646">internal::AddrinfoPtr</a> jsocketpp::ServerSocket::_srvAddrInfo = nullptr</td>
         </tr>
       </table>
   </td>

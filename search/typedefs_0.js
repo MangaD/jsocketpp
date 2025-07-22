@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['port_0',['Port',['../group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7',1,'jsocketpp']]]
+  ['addrinfoptr_0',['AddrinfoPtr',['../group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646',1,'jsocketpp::internal']]]
 ];

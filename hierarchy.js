@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "jsocketpp::internal::AddrinfoDeleter", "structjsocketpp_1_1internal_1_1AddrinfoDeleter.html", null ],
     [ "jsocketpp::BufferView", "structjsocketpp_1_1BufferView.html", null ],
     [ "jsocketpp::DatagramPacket", "classjsocketpp_1_1DatagramPacket.html", null ],
     [ "jsocketpp::DatagramSocket", "classjsocketpp_1_1DatagramSocket.html", [

@@ -2,6 +2,7 @@ var annotated_dup =
 [
     [ "jsocketpp", "namespacejsocketpp.html", [
       [ "internal", "namespacejsocketpp_1_1internal.html", [
+        [ "AddrinfoDeleter", "structjsocketpp_1_1internal_1_1AddrinfoDeleter.html", "structjsocketpp_1_1internal_1_1AddrinfoDeleter" ],
         [ "ScopedBlockingMode", "classjsocketpp_1_1internal_1_1ScopedBlockingMode.html", "classjsocketpp_1_1internal_1_1ScopedBlockingMode" ]
       ] ],
       [ "BufferView", "structjsocketpp_1_1BufferView.html", "structjsocketpp_1_1BufferView" ],

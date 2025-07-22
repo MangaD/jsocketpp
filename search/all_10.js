@@ -1,11 +1,11 @@
 var searchData=
 [
   ['families_0',['Families',['../group__underlying__socket__api.html#autotoc_md302',1,'2.2 Address Families'],['../group__sockets__theory.html#autotoc_md280',1,'3. Socket Address Families']]],
-  ['features_1',['Features',['../group__underlying__socket__api.html#autotoc_md312',1,'6. Advanced Socket API Features'],['../group__underlying__socket__api.html#autotoc_md322',1,'Advanced Socket API Features'],['../index.html#autotoc_md369',1,'Features'],['../classjsocketpp_1_1MulticastSocket.html#autotoc_md438',1,'Features'],['../classjsocketpp_1_1DatagramSocket.html#autotoc_md426',1,'Key Features'],['../classjsocketpp_1_1ServerSocket.html#autotoc_md441',1,'Key Features'],['../classjsocketpp_1_1Socket.html#autotoc_md449',1,'Key Features'],['../group__tcp.html#autotoc_md457',1,'Key Features'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md560',1,'Main Features']]],
+  ['features_1',['Features',['../group__underlying__socket__api.html#autotoc_md312',1,'6. Advanced Socket API Features'],['../group__underlying__socket__api.html#autotoc_md322',1,'Advanced Socket API Features'],['../index.html#autotoc_md369',1,'Features'],['../classjsocketpp_1_1MulticastSocket.html#autotoc_md440',1,'Features'],['../classjsocketpp_1_1DatagramSocket.html#autotoc_md428',1,'Key Features'],['../classjsocketpp_1_1ServerSocket.html#autotoc_md443',1,'Key Features'],['../classjsocketpp_1_1Socket.html#autotoc_md451',1,'Key Features'],['../group__tcp.html#autotoc_md459',1,'Key Features'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md562',1,'Main Features']]],
   ['fields_2',['Fields',['../structjsocketpp_1_1BufferView.html#autotoc_md415',1,'']]],
   ['final_20thoughts_20and_20best_20practices_3',['🧠 Final Thoughts and Best Practices',['../group__async__io.html#autotoc_md146',1,'']]],
   ['flexibility_20and_20safety_4',['a) Flexibility and Safety',['../group__ServerSocket__Lifecycle.html#autotoc_md35',1,'']]],
-  ['flow_5',['Flow',['../group__tcp.html#autotoc_md462',1,'Initialization Flow'],['../group__tcp.html#autotoc_md460',1,'Usage Flow']]],
+  ['flow_5',['Flow',['../group__tcp.html#autotoc_md464',1,'Initialization Flow'],['../group__tcp.html#autotoc_md462',1,'Usage Flow']]],
   ['for_20all_20sockets_6',['1. Options for All Sockets',['../group__socket-options.html#autotoc_md208',1,'']]],
   ['for_20asynchronous_20i_20o_20operations_20does_20it_20make_20sense_20to_20provide_20poll_20and_20epoll_20as_20alternatives_7',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
   ['for_20conan_20center_20index_20cci_20submission_8',['5. Prepare for Conan Center Index (CCI) Submission',['../group__conan__publish__guide.html#autotoc_md170',1,'']]],
@@ -18,7 +18,7 @@ var searchData=
   ['for_20unit_20testing_20in_20c_2020_3a_15',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md331',1,'']]],
   ['for_20unit_20tests_3a_16',['4. &lt;b&gt;Mocking or Stubbing Socket API for Unit Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md340',1,'']]],
   ['for_20vcpkg_17',['2. Prepare Your Library for vcpkg',['../group__vcpkg__publish__guide.html#autotoc_md349',1,'']]],
-  ['format_18',['Format',['../group__tcp.html#autotoc_md485',1,'Protocol Format'],['../group__tcp.html#autotoc_md488',1,'Protocol Format'],['../group__tcp.html#autotoc_md510',1,'Protocol Format'],['../group__tcp.html#autotoc_md513',1,'Protocol Format']]],
+  ['format_18',['Format',['../group__tcp.html#autotoc_md487',1,'Protocol Format'],['../group__tcp.html#autotoc_md490',1,'Protocol Format'],['../group__tcp.html#autotoc_md512',1,'Protocol Format'],['../group__tcp.html#autotoc_md515',1,'Protocol Format']]],
   ['friendly_19',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md166',1,'']]],
   ['fromnetwork_20',['fromNetwork',['../namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37',1,'jsocketpp::net::fromNetwork(const uint16_t val)'],['../namespacejsocketpp_1_1net.html#acca9e860a0a33d2508bfa9986049db8c',1,'jsocketpp::net::fromNetwork(const uint32_t val)']]],
   ['fully_20step_20by_20step_20posix_20style_21',['&lt;b&gt;b) Fully Step-by-Step (POSIX Style)&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md41',1,'']]],

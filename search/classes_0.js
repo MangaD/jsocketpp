@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bufferview_0',['BufferView',['../structjsocketpp_1_1BufferView.html',1,'jsocketpp']]]
+  ['addrinfodeleter_0',['AddrinfoDeleter',['../structjsocketpp_1_1internal_1_1AddrinfoDeleter.html',1,'jsocketpp::internal']]]
 ];

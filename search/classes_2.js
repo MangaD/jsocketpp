@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['multicastsocket_0',['MulticastSocket',['../classjsocketpp_1_1MulticastSocket.html',1,'jsocketpp']]]
+  ['datagrampacket_0',['DatagramPacket',['../classjsocketpp_1_1DatagramPacket.html',1,'jsocketpp']]],
+  ['datagramsocket_1',['DatagramSocket',['../classjsocketpp_1_1DatagramSocket.html',1,'jsocketpp']]]
 ];
