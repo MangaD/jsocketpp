@@ -1,3 +1,11 @@
+/**
+ * @file ScopedBlockingMode.hpp
+ * @brief RAII helper for temporarily overriding a socket's blocking mode.
+ * @author MangaD
+ * @date 2025
+ * @version 1.0
+ */
+
 #pragma once
 
 #ifdef _WIN32

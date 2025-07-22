@@ -1,6 +1,9 @@
 /**
  * @file BufferView.hpp
  * @brief Represents a raw writable memory region for scatter/gather I/O.
+ * @author MangaD
+ * @date 2025
+ * @version 1.0
  */
 
 #pragma once
