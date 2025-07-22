@@ -140,7 +140,8 @@ void Socket::connect(const int timeoutMillis) const
 #endif
 
             if (selectResult == 0)
-                throw SocketTimeoutException();
+                throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
+                                             "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
             if (selectResult < 0)
                 throw SocketException(GetSocketError(), "select() failed during connect()");
 
@@ -641,17 +642,23 @@ std::string Socket::readExact(const std::size_t n) const
     return result;
 }
 
-std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, const bool includeDelimiter) const
+std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, const bool includeDelimiter)
 {
     std::string result;
     result.reserve(128); // Optimistic allocation for small lines
 
-    char ch = 0;
     std::size_t totalRead = 0;
 
     while (totalRead < maxLen)
     {
-        const auto len = recv(_sockFd, &ch, 1, 0);
+        const std::size_t toRead = std::min(_internalBuffer.size(), maxLen - totalRead);
+        const auto len = recv(_sockFd, _internalBuffer.data(),
+#ifdef _WIN32
+                              static_cast<int>(toRead),
+#else
+                              toRead,
+#endif
+                              0);
 
         if (len == SOCKET_ERROR)
             throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
@@ -659,23 +666,27 @@ std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, co
         if (len == 0)
             throw SocketException(0, "Connection closed before delimiter was found.");
 
-        result.push_back(ch);
-        ++totalRead;
-
-        if (ch == delimiter)
+        for (std::size_t i = 0; i < static_cast<std::size_t>(len); ++i)
         {
-            if (!includeDelimiter)
-                result.pop_back();
-            break;
+            const char ch = _internalBuffer[i];
+            if (totalRead == maxLen)
+            {
+                throw SocketException(0, "Maximum line length exceeded before delimiter was found.");
+            }
+
+            result.push_back(ch);
+            ++totalRead;
+
+            if (ch == delimiter)
+            {
+                if (!includeDelimiter)
+                    result.pop_back();
+                return result;
+            }
         }
     }
 
-    if (totalRead >= maxLen)
-    {
-        throw SocketException(0, "Maximum line length exceeded before delimiter was found.");
-    }
-
-    return result;
+    throw SocketException(0, "Maximum line length exceeded before delimiter was found.");
 }
 
 std::string Socket::readAtMost(std::size_t n) const
@@ -744,7 +755,8 @@ std::string Socket::readAtMostWithTimeout(std::size_t n, const int timeoutMillis
         return {};
 
     if (!waitReady(false /* forRead */, timeoutMillis))
-        throw SocketException(0, "Read timed out after waiting " + std::to_string(timeoutMillis) + " ms");
+        throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
+                                     "Read timed out after waiting " + std::to_string(timeoutMillis) + " ms");
 
     std::string result;
     result.resize(n); // max allocation
@@ -1006,7 +1018,8 @@ std::size_t Socket::writeAtMostWithTimeout(std::string_view data, const int time
         return 0;
 
     if (!waitReady(true /* forWrite */, timeoutMillis))
-        throw SocketException(0, "Write timed out after " + std::to_string(timeoutMillis) + " ms");
+        throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
+                                     "Write timed out after " + std::to_string(timeoutMillis) + " ms");
 
     const auto len = send(_sockFd,
 #ifdef _WIN32
@@ -1105,12 +1118,12 @@ std::size_t Socket::writeWithTotalTimeout(const std::string_view data, const int
     {
         auto now = std::chrono::steady_clock::now();
         if (now >= deadline)
-            throw SocketException(0, "Write operation timed out before completing");
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "Write operation timed out before completing");
 
         if (const auto remainingTime = std::chrono::duration_cast<std::chrono::milliseconds>(deadline - now).count();
             !waitReady(true /* forWrite */, static_cast<int>(remainingTime)))
         {
-            throw SocketException(0, "Socket not writable within remaining timeout window");
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "Socket not writable within remaining timeout window");
         }
 
         const auto sent = send(_sockFd,
@@ -1151,11 +1164,11 @@ std::size_t Socket::writevWithTotalTimeout(std::span<const std::string_view> buf
     {
         auto now = std::chrono::steady_clock::now();
         if (now >= deadline)
-            throw SocketException(0, "Timeout while writing vectorized buffers");
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "Timeout while writing vectorized buffers");
 
         if (const auto remainingTime = std::chrono::duration_cast<std::chrono::milliseconds>(deadline - now).count();
             !waitReady(true /* forWrite */, static_cast<int>(remainingTime)))
-            throw SocketException(0, "Socket not writable within remaining timeout");
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "Socket not writable within remaining timeout");
 
         const std::size_t bytesSent = writev(pending);
         totalSent += bytesSent;
@@ -1288,11 +1301,11 @@ std::size_t Socket::readvAllWithTotalTimeout(std::span<BufferView> buffers, cons
     {
         auto now = std::chrono::steady_clock::now();
         if (now >= deadline)
-            throw SocketException(0, "Timeout while reading into vector buffers");
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "Timeout while reading into vector buffers");
 
         if (const auto timeLeft = std::chrono::duration_cast<std::chrono::milliseconds>(deadline - now).count();
             !waitReady(false /* forRead */, static_cast<int>(timeLeft)))
-            throw SocketException(0, "Socket not readable within timeout");
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "Socket not readable within timeout");
 
         const std::size_t bytesRead = readv(pending);
         totalRead += bytesRead;
@@ -1337,7 +1350,7 @@ std::size_t Socket::readvAtMostWithTimeout(const std::span<BufferView> buffers, 
         return 0;
 
     if (!waitReady(false /* forRead */, timeoutMillis))
-        throw SocketException(0, "Socket not readable within timeout");
+        throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "Socket not readable within timeout");
 
     return readv(buffers);
 }
@@ -1432,11 +1445,11 @@ std::size_t Socket::writevFromWithTotalTimeout(std::span<BufferView> buffers, co
     {
         auto now = std::chrono::steady_clock::now();
         if (now >= deadline)
-            throw SocketException(0, "Timeout while writing binary buffers");
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "Timeout while writing binary buffers");
 
         if (const auto remainingTime = std::chrono::duration_cast<std::chrono::milliseconds>(deadline - now).count();
             !waitReady(true /* forWrite */, static_cast<int>(remainingTime)))
-            throw SocketException(0, "Socket not writable within remaining timeout");
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "Socket not writable within remaining timeout");
 
         const std::size_t bytesSent = writevFrom(pending);
         totalSent += bytesSent;

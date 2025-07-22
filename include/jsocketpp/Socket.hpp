@@ -633,17 +633,17 @@ class Socket
      * @brief Reads data from the socket until a specified delimiter character.
      * @ingroup tcp
      *
-     * Reads data from the socket until the specified delimiter character is encountered.
-     * The method accumulates data efficiently, handling partial reads and buffer resizing
-     * as needed. The returned string optionally includes the delimiter character based on
-     * the includeDelimiter parameter.
+     * Efficiently reads data from the socket until the specified delimiter character is encountered,
+     * using an internal buffer to minimize system calls. This method is optimized for performance
+     * by reading data in larger chunks rather than byte-by-byte. The returned string optionally includes
+     * the delimiter character, depending on the `includeDelimiter` parameter.
      *
      * ### Implementation Details
-     * - Uses internal buffer for efficient reading
-     * - Handles partial reads and buffer resizing
-     * - Supports arbitrary delimiter characters
-     * - Enforces maximum length limit
-     * - Optionally includes delimiter in return value
+     * - Uses the internal buffer (`_internalBuffer`) for chunked socket reads.
+     * - Reduces syscall overhead by performing `recv()` in bulk.
+     * - Scans each received chunk in-place for the delimiter.
+     * - Continues reading and appending until the delimiter is found or `maxLen` is exceeded.
+     * - Terminates with or without the delimiter depending on `includeDelimiter`.
      *
      * ### Example Usage
      * @code{.cpp}
@@ -660,25 +660,27 @@ class Socket
      * std::string data = sock.readUntil('\n', 8192, false);
      * @endcode
      *
-     * @param[in] delimiter Character that marks the end of data
-     * @param[in] maxLen Maximum allowed data length in bytes (default: 8192)
-     * @param[in] includeDelimiter Whether to include delimiter in returned string (default: true)
+     * @param[in] delimiter Character that marks the end of the read segment.
+     * @param[in] maxLen Maximum number of bytes to read (default: 8192).
+     * @param[in] includeDelimiter Whether to include the delimiter in the returned result (default: true).
      *
-     * @return std::string containing the data up to the delimiter, optionally including the delimiter
+     * @return A `std::string` containing the data read up to the delimiter. The delimiter
+     *         is included if `includeDelimiter == true`.
      *
      * @throws SocketException If:
-     *         - Maximum length is exceeded
-     *         - Connection is closed
-     *         - Read timeout occurs
-     *         - Socket error occurs
-     *         - Memory allocation fails
+     *         - The connection is closed before the delimiter is received
+     *         - The total bytes read exceeds `maxLen` without encountering the delimiter
+     *         - A network error occurs during `recv()`
+     *         - The socket is invalid
+     *         - A timeout is reached (if configured)
      *
-     * @see readLine() For reading newline-terminated data
+     * @see readLine() For reading newline-terminated strings
+     * @see readExact() For fixed-length reading
      * @see read() For general-purpose reading
-     * @see readExact() For fixed-length reads
-     * @see setSoTimeout() To control read timeout
+     * @see setInternalBufferSize() To control buffer chunk size
+     * @see setSoTimeout() To set socket timeout
      */
-    std::string readUntil(char delimiter, std::size_t maxLen = 8192, bool includeDelimiter = true) const;
+    std::string readUntil(char delimiter, std::size_t maxLen = 8192, bool includeDelimiter = true);
 
     /**
      * @brief Reads a line terminated by '\n' from the socket.
@@ -709,7 +711,7 @@ class Socket
      * @see read() For general-purpose reading
      * @see readExact() For fixed-length reads
      */
-    std::string readLine(const std::size_t maxLen = 8192, const bool includeDelimiter = true) const
+    std::string readLine(const std::size_t maxLen = 8192, const bool includeDelimiter = true)
     {
         return readUntil('\n', maxLen, includeDelimiter);
     }
@@ -878,20 +880,19 @@ class Socket
      * then performs a single `recv()` call for at most `n` bytes.
      *
      * Attempts to read up to `n` bytes from the socket, returning early if:
-     * - The requested number of bytes are received
-     * - The timeout period expires
+     * - Data becomes available before the timeout
      * - The connection is closed by the peer
      * - An error occurs
      *
-     * Unlike readExact(), this method returns as soon as any data is available,
-     * without waiting for the full requested length. The timeout applies to the
-     * initial wait for data availability.
+     * Unlike `readExact()`, this method returns as soon as any data is available,
+     * without retrying or waiting for the full requested length. The timeout only
+     * applies to the wait before initiating the read.
      *
      * ### Implementation Details
-     * - Uses waitReady() to implement timeout
-     * - Performs single recv() call when data available
-     * - Returns immediately with available data
-     * - Does not retry or accumulate partial reads
+     * - Uses `waitReady()` to implement timeout behavior
+     * - Performs a single `recv()` call when data is available
+     * - Does not accumulate partial reads across multiple calls
+     * - Resizes the returned buffer to match the actual number of bytes read
      *
      * ### Example Usage
      * @code{.cpp}
@@ -902,32 +903,32 @@ class Socket
      *     // Try to read up to 1024 bytes, waiting max 5 seconds
      *     std::string data = sock.readAtMostWithTimeout(1024, 5000);
      *     std::cout << "Read " << data.length() << " bytes\n";
+     * } catch (const SocketTimeoutException& timeoutEx) {
+     *     std::cerr << "Read timed out: " << timeoutEx.what() << std::endl;
      * } catch (const SocketException& ex) {
-     *     if (ex.getErrorCode() == ETIMEDOUT) {
-     *         // No data available within timeout
-     *     }
+     *     std::cerr << "Read failed: " << ex.what() << std::endl;
      * }
      * @endcode
      *
-     * @param[in] n Maximum number of bytes to read
+     * @param[in] n Maximum number of bytes to read.
      * @param[in] timeoutMillis Maximum time to wait for data, in milliseconds:
-     *                         - > 0: Maximum wait time
-     *                         - 0: Non-blocking check
-     *                         - < 0: Invalid (throws exception)
+     *                          - > 0: Wait up to this duration
+     *                          - 0: Poll (non-blocking)
+     *                          - < 0: Invalid; throws exception
      *
-     * @return String containing between 0 and n bytes of received data
+     * @return A `std::string` containing between 1 and `n` bytes of received data.
      *
+     * @throws SocketTimeoutException If no data arrives within the timeout period.
      * @throws SocketException If:
-     *         - Socket is invalid
-     *         - Timeout period expires before any data arrives
-     *         - Connection is closed by peer
+     *         - The socket is invalid
+     *         - The connection is closed by the peer
+     *         - `recv()` fails with a network error
      *         - Memory allocation fails
-     *         - Other network errors occur
      *
-     * @see readExact() For reading exact number of bytes
-     * @see readAtMost() For immediate best-effort read
-     * @see waitReady() For lower-level timeout control
-     * @see setSoTimeout() For setting default timeouts
+     * @see readExact() For reading exactly `n` bytes or failing
+     * @see readAtMost() For best-effort read without timeout
+     * @see waitReady() To wait for readiness before manual read
+     * @see setSoTimeout() To configure socket-level timeout defaults
      */
     std::string readAtMostWithTimeout(std::size_t n, int timeoutMillis) const;
 
@@ -1254,9 +1255,18 @@ class Socket
      * @brief Reads exactly the full contents of all buffers within a timeout.
      * @ingroup tcp
      *
-     * This method repeatedly performs vectorized reads into the given sequence
-     * of buffers until all bytes are read or the timeout expires. It uses a
-     * steady clock to track the total time spent across all retries.
+     * This method performs a series of vectorized `readv()` calls to fill the provided
+     * `BufferView` span until all bytes are read or the total timeout expires. A steady
+     * clock is used to measure elapsed time across multiple system calls, ensuring the
+     * full operation adheres to the timeout limit.
+     *
+     * If not all data is read before the timeout elapses, a `SocketTimeoutException` is thrown.
+     *
+     * ### Implementation Details
+     * - Performs repeated `readv()` calls into pending buffers.
+     * - Tracks time remaining using `std::chrono::steady_clock`.
+     * - Waits for readability before each attempt using `waitReady()`.
+     * - Automatically handles partially filled buffers.
      *
      * ### Example Usage
      * @code{.cpp}
@@ -1269,20 +1279,26 @@ class Socket
      * sock.readvAllWithTotalTimeout(views, 2000); // Must finish in 2 seconds
      * @endcode
      *
-     * @param buffers Span of BufferView objects describing writable regions.
-     * @param timeoutMillis Maximum allowed time to read all bytes (in milliseconds).
-     * @return Total number of bytes read (equal to sum of buffer sizes on success).
+     * @param buffers Span of BufferView objects describing writable memory regions.
+     * @param timeoutMillis Maximum allowed duration for the entire read operation, in milliseconds.
+     *
+     * @return The total number of bytes read (must equal the sum of all buffer sizes on success).
+     *
+     * @throws SocketTimeoutException If:
+     *         - Not all data is read before the timeout expires.
+     *         - The socket does not become readable in time.
      *
      * @throws SocketException If:
-     *         - The timeout expires before all data is read
-     *         - recv() or readv() fails
-     *         - Connection is closed prematurely
+     *         - `readv()` or `recv()` fails due to network error.
+     *         - The socket is invalid or disconnected.
+     *         - The connection is closed before all bytes are received.
      *
-     * @note This method is fully blocking but timeout-bounded.
-     *       Use `readv()` or `readvAll()` for simpler variants.
+     * @note This method is fully blocking (until timeout or completion).
+     *       Use `readv()` for a single read attempt, or `readvAll()` for a non-timed retry loop.
      *
-     * @see readvAll() For unbounded retry version
-     * @see readv() For best-effort single-attempt vectorized read
+     * @see readvAll() For retrying without a timeout
+     * @see readv() For single-attempt best-effort vectorized reads
+     * @see SocketTimeoutException For timeout-specific error handling
      */
     std::size_t readvAllWithTotalTimeout(std::span<BufferView> buffers, int timeoutMillis) const;
 
@@ -1290,9 +1306,20 @@ class Socket
      * @brief Attempts a single vectorized read into multiple buffers with a timeout.
      * @ingroup tcp
      *
-     * Waits up to `timeoutMillis` for the socket to become readable, then performs
-     * a single `readv()` operation. May read less than the total buffer size.
-     * This is the timeout-aware version of `readv()`, useful for polling or best-effort I/O.
+     * Waits up to `timeoutMillis` milliseconds for the socket to become readable,
+     * then performs a single `readv()` operation into the provided buffer views.
+     * This method does not retry on partial reads and is suitable for polling-style
+     * I/O where responsiveness is more important than completeness.
+     *
+     * May read fewer bytes than the total available buffer capacity, depending on
+     * what the socket delivers in a single system call. This is a timeout-aware variant
+     * of `readv()` and should be used when non-blocking responsiveness is desired.
+     *
+     * ### Implementation Details
+     * - Calls `waitReady()` to wait for the socket to become readable.
+     * - Performs one `readv()` attempt only.
+     * - Reads whatever data is immediately available.
+     * - Returns early on connection closure or any received data.
      *
      * ### Example Usage
      * @code{.cpp}
@@ -1304,22 +1331,29 @@ class Socket
      *     BufferView{body.data(), body.size()}
      * };
      *
-     * std::size_t n = sock.readvAtMostWithTimeout(bufs, 300); // wait up to 300 ms
+     * std::size_t n = sock.readvAtMostWithTimeout(bufs, 300); // Wait up to 300 ms
+     * std::cout << "Received " << n << " bytes.\n";
      * @endcode
      *
-     * @param buffers Writable buffer views to receive incoming data.
-     * @param timeoutMillis Time to wait for readability before giving up.
-     * @return Number of bytes read (can be 0).
+     * @param buffers Span of writable `BufferView`s to receive incoming data.
+     * @param timeoutMillis Time in milliseconds to wait for readability:
+     *                      - > 0: Wait up to this duration
+     *                      - 0: Non-blocking (poll)
+     *                      - < 0: Invalid; throws exception
      *
+     * @return Number of bytes read (may be 0 if timeout is 0 or nothing available).
+     *
+     * @throws SocketTimeoutException If the socket does not become readable before timeout.
      * @throws SocketException If:
-     *         - The socket is not readable within timeout
-     *         - recv() or readv() fails
-     *         - Connection is closed
+     *         - `readv()` fails with a system/network error
+     *         - The socket is invalid
+     *         - The connection is closed
      *
-     * @note This performs exactly one system read. It does not retry.
+     * @note This method performs a single system call. It does not retry or block for more data.
      *
      * @see readv() For non-timed scatter read
-     * @see readvAllWithTotalTimeout() For full delivery
+     * @see readvAllWithTotalTimeout() For complete delivery within a time budget
+     * @see SocketTimeoutException For timeout-related error details
      */
     std::size_t readvAtMostWithTimeout(std::span<BufferView> buffers, int timeoutMillis) const;
 
@@ -1838,36 +1872,54 @@ class Socket
      * @brief Performs a best-effort write with a total timeout.
      * @ingroup tcp
      *
-     * Waits up to `timeoutMillis` for the socket to become writable, then attempts
-     * a single `send()` of up to `data.size()` bytes. This method does not retry.
-     * It is suitable for time-sensitive or polling-based write loops.
+     * Waits up to `timeoutMillis` milliseconds for the socket to become writable,
+     * then attempts a single `send()` operation to write up to `data.size()` bytes.
+     * This method does not retry on partial writes and is designed for time-sensitive,
+     * latency-focused applications.
+     *
+     * This is a timeout-aware counterpart to `write()` that returns early in the
+     * event of timeout or connection closure. Use this when you need responsiveness
+     * rather than guaranteed delivery.
      *
      * ### Implementation Details
-     * - Uses `waitReady(true, timeoutMillis)` once
-     * - Calls `send()` once to write as much as possible
-     * - Returns the number of bytes actually written
+     * - Calls `waitReady(true, timeoutMillis)` to wait for socket writability.
+     * - If writable, performs one `send()` call.
+     * - Returns the number of bytes successfully written (which may be less than `data.size()`).
+     * - Returns 0 if the connection is closed before any data is written.
      *
      * ### Example Usage
      * @code{.cpp}
      * std::string payload = "POST /data";
-     * std::size_t sent = sock.writeAtMostWithTimeout(payload, 500);
+     *
+     * try {
+     *     std::size_t sent = sock.writeAtMostWithTimeout(payload, 500); // wait up to 500 ms
+     *     std::cout << "Sent " << sent << " bytes.\n";
+     * } catch (const SocketTimeoutException& e) {
+     *     std::cerr << "Write timed out: " << e.what() << std::endl;
+     * } catch (const SocketException& e) {
+     *     std::cerr << "Write error: " << e.what() << std::endl;
+     * }
      * @endcode
      *
      * @param data The data to send.
-     * @param timeoutMillis The maximum time to wait before sending.
+     * @param timeoutMillis Maximum time to wait for writability, in milliseconds:
+     *                      - > 0: Wait up to the given duration
+     *                      - 0: Poll immediately (non-blocking)
+     *                      - < 0: Invalid; throws exception
      *
-     * @return The number of bytes written (can be 0).
+     * @return Number of bytes written (may be 0 if the socket was closed or data not sent).
      *
+     * @throws SocketTimeoutException If the socket does not become writable within `timeoutMillis`.
      * @throws SocketException If:
-     *         - Timeout occurs before socket becomes writable
-     *         - send() fails
-     *         - Connection is closed
+     *         - `send()` fails with a network or system error
+     *         - The socket is closed or invalid
      *
-     * @note This is a best-effort, low-latency write. Use `writeAll()` or
-     *       `writeWithTimeoutRetry()` for full delivery.
+     * @note This is a single-attempt, low-latency write. Use `writeAll()` or
+     *       `writeWithTotalTimeout()` for guaranteed delivery with retries.
      *
-     * @see readAtMostWithTimeout()
-     * @see writeAll()
+     * @see writeAll() To send full content regardless of time
+     * @see writeWithTotalTimeout() To retry until timeout expires
+     * @see SocketTimeoutException For timeout-specific error classification
      */
     std::size_t writeAtMostWithTimeout(std::string_view data, int timeoutMillis) const;
 
@@ -1939,35 +1991,53 @@ class Socket
      * @brief Writes the full payload with a total timeout across all retries.
      * @ingroup tcp
      *
-     * Repeatedly attempts to write all bytes from `data`, retrying partial writes as needed.
-     * The entire operation must complete within `timeoutMillis` milliseconds. If the timeout
-     * expires before all data is sent, the method throws a SocketException.
+     * Repeatedly attempts to send the entire contents of `data`, retrying partial
+     * writes as needed. The complete operation must finish within `timeoutMillis`
+     * milliseconds or it will throw a `SocketTimeoutException`.
+     *
+     * This method ensures full delivery like `writeAll()`, but it is time-bounded
+     * by wall-clock time. It is suitable for real-time or responsiveness-sensitive
+     * applications where you must send everything or fail within a deadline.
      *
      * ### Implementation Details
-     * - Uses a `std::chrono::steady_clock` deadline internally
-     * - Each iteration waits for socket writability using remaining time
-     * - Behaves like `writeAll()` but bounded by a total wall-clock timeout
+     * - Uses `std::chrono::steady_clock` to enforce a wall-clock deadline.
+     * - Calls `waitReady(true, remainingTime)` before each `send()` attempt.
+     * - Retries partial writes until complete or until timeout is reached.
+     * - Returns the total number of bytes sent (equal to `data.size()` on success).
      *
      * ### Example Usage
      * @code{.cpp}
      * std::string json = buildPayload();
-     * sock.writeWithTotalTimeout(json, 1000); // Must finish in 1 second
+     *
+     * try {
+     *     sock.writeWithTotalTimeout(json, 1000); // Must finish in 1 second
+     *     std::cout << "Payload sent.\n";
+     * } catch (const SocketTimeoutException& e) {
+     *     std::cerr << "Timed out: " << e.what() << std::endl;
+     * } catch (const SocketException& e) {
+     *     std::cerr << "Write error: " << e.what() << std::endl;
+     * }
      * @endcode
      *
      * @param data The data to send.
-     * @param timeoutMillis Maximum total duration (in milliseconds) to complete the operation.
-     * @return Total number of bytes written (equals data.size() on success).
+     * @param timeoutMillis Maximum time in milliseconds to send the full payload.
+     *
+     * @return Total number of bytes written (equals `data.size()` on success).
+     *
+     * @throws SocketTimeoutException If:
+     *         - The socket does not become writable in time
+     *         - The full payload could not be sent before the deadline
      *
      * @throws SocketException If:
-     *         - The timeout expires before full delivery
-     *         - A network or socket error occurs
-     *         - Connection is closed during send
+     *         - `send()` fails due to a network or system error
+     *         - The socket is closed or invalid
+     *         - The connection is closed during the operation
      *
-     * @note This is the timeout-aware counterpart to `writeAll()`.
-     *       Prefer this when responsiveness or time-bound delivery is required.
+     * @note This method guarantees full delivery or throws. Use `writeAll()` for unbounded retries.
      *
-     * @see writeAll() For unbounded full delivery
-     * @see writeAtMostWithTimeout() For best-effort single attempt
+     * @see writeAll() For guaranteed delivery without time constraint
+     * @see writeAtMostWithTimeout() For single-shot, best-effort delivery
+     * @see SocketTimeoutException To catch time-limit-specific failures
      */
     std::size_t writeWithTotalTimeout(std::string_view data, int timeoutMillis) const;
 
@@ -1975,15 +2045,20 @@ class Socket
      * @brief Writes all buffers fully within a total timeout using vectorized I/O.
      * @ingroup tcp
      *
-     * Sends the contents of all buffers in the given span using scatter/gather I/O.
-     * Retries on partial sends until either all buffers are sent or the timeout expires.
-     * This is the timeout-aware counterpart to `writevAll()`.
+     * Sends the contents of all buffers in the provided span using scatter/gather I/O.
+     * Retries partial sends as needed, resuming from where the last send left off. The entire
+     * operation must complete within `timeoutMillis` milliseconds or a `SocketTimeoutException`
+     * will be thrown.
+     *
+     * This method guarantees that all data across all buffers will be sent in order—or none at all.
+     * It is the timeout-aware variant of `writevAll()` and suitable for time-bounded, multi-buffer
+     * transmission (e.g., structured headers + body).
      *
      * ### Implementation Details
-     * - Uses a `std::chrono::steady_clock` deadline internally
-     * - Each iteration waits for socket writability using remaining time
-     * - Uses `writev()` to transmit multiple buffers at once
-     * - Rebuilds the span as needed to resume after partial sends
+     * - Uses `std::chrono::steady_clock` to enforce a total wall-clock timeout.
+     * - Waits for writability using `waitReady(true, remainingTime)` between sends.
+     * - Uses `writev()` to send multiple buffers in one system call.
+     * - After partial sends, dynamically rebuilds the buffer span to reflect unsent data.
      *
      * ### Example Usage
      * @code{.cpp}
@@ -1992,23 +2067,37 @@ class Socket
      *     "value\r\n\r\n",
      *     "Body content"
      * };
-     * sock.writevWithTotalTimeout(parts, 1500);
+     *
+     * try {
+     *     sock.writevWithTotalTimeout(parts, 1500); // Must finish in 1.5 seconds
+     *     std::cout << "Message sent.\n";
+     * } catch (const SocketTimeoutException& e) {
+     *     std::cerr << "Write timeout: " << e.what() << std::endl;
+     * } catch (const SocketException& e) {
+     *     std::cerr << "Write failure: " << e.what() << std::endl;
+     * }
      * @endcode
      *
-     * @param buffers A span of buffers to send in order.
-     * @param timeoutMillis Maximum total time allowed for the operation, in milliseconds.
-     * @return Total number of bytes sent (equal to the sum of buffer sizes on success).
+     * @param buffers Span of string views representing logically distinct memory segments to send in order.
+     * @param timeoutMillis Total allowed duration in milliseconds to complete the operation.
+     *
+     * @return Total number of bytes sent (must equal the sum of all buffer sizes on success).
+     *
+     * @throws SocketTimeoutException If:
+     *         - The socket does not become writable in time
+     *         - The full payload is not sent before the timeout expires
      *
      * @throws SocketException If:
-     *         - The timeout expires before full delivery
-     *         - A network or socket error occurs
-     *         - The connection is closed prematurely
+     *         - `writev()` fails due to a system or network error
+     *         - The socket is closed or invalid
+     *         - The connection is interrupted during transmission
      *
-     * @note This method guarantees atomic full delivery within a strict time budget.
-     *       Use `writevAll()` if timeout control is not needed.
+     * @note This method guarantees complete delivery of all buffers, bounded by time.
+     *       Use `writevAll()` for unbounded retries or `writev()` for a single attempt.
      *
-     * @see writevAll() For unbounded full delivery
-     * @see writeWithTotalTimeout() For single-buffer variant
+     * @see writevAll() For unlimited retries and guaranteed delivery
+     * @see writeWithTotalTimeout() For single-buffer full delivery under timeout
+     * @see SocketTimeoutException To differentiate timeout from generic network errors
      */
     std::size_t writevWithTotalTimeout(std::span<const std::string_view> buffers, int timeoutMillis) const;
 
@@ -2085,9 +2174,19 @@ class Socket
      * @brief Writes all raw memory buffers fully within a timeout using scatter I/O.
      * @ingroup tcp
      *
-     * Sends multiple binary buffers using scatter/gather I/O, retrying as needed to
-     * ensure that all bytes are delivered within the specified timeout window.
-     * Fails if not all buffers can be sent before the timeout expires.
+     * Sends multiple binary buffers using scatter/gather I/O, retrying partial writes
+     * as needed until all data is delivered or the specified timeout period elapses.
+     * If the timeout expires before completing the transmission, a `SocketTimeoutException`
+     * is thrown.
+     *
+     * This is the binary-buffer equivalent of `writevWithTotalTimeout()`, intended for
+     * use with low-level, structured protocols or custom serialization layers.
+     *
+     * ### Implementation Details
+     * - Enforces a wall-clock timeout using `std::chrono::steady_clock`.
+     * - Waits for writability using `waitReady()` before each write attempt.
+     * - Uses `writevFrom()` to send multiple non-contiguous memory blocks efficiently.
+     * - After partial writes, dynamically adjusts buffer offsets to resume transmission.
      *
      * ### Example Usage
      * @code{.cpp}
@@ -2098,23 +2197,37 @@ class Socket
      *     BufferView{hdr.data(), hdr.size()},
      *     BufferView{body.data(), body.size()}
      * };
-     * sock.writevFromWithTotalTimeout(bufs, 2000); // must finish in 2s
+     *
+     * try {
+     *     sock.writevFromWithTotalTimeout(bufs, 2000); // must finish in 2s
+     *     std::cout << "Transmission complete.\n";
+     * } catch (const SocketTimeoutException& e) {
+     *     std::cerr << "Write timed out: " << e.what() << std::endl;
+     * } catch (const SocketException& e) {
+     *     std::cerr << "Write error: " << e.what() << std::endl;
+     * }
      * @endcode
      *
-     * @param buffers A span of raw memory buffers to fully write.
-     * @param timeoutMillis Total timeout in milliseconds across all retries.
+     * @param buffers A span of `BufferView` objects representing raw memory regions to send.
+     * @param timeoutMillis Total timeout duration in milliseconds across all write attempts.
      *
-     * @return Total bytes written (equal to sum of buffer sizes on success).
+     * @return Total number of bytes written (equal to the sum of all buffer sizes on success).
+     *
+     * @throws SocketTimeoutException If:
+     *         - The socket does not become writable within the remaining timeout
+     *         - The full payload is not sent before the deadline expires
      *
      * @throws SocketException If:
-     *         - The timeout expires before all data is written
-     *         - The socket becomes unwritable
-     *         - Connection is closed prematurely
+     *         - `writevFrom()` fails due to a system or network error
+     *         - The socket is invalid or disconnected
+     *         - The connection is closed during transmission
      *
-     * @note This is the binary-buffer equivalent of `writevWithTotalTimeout()`.
+     * @note This is the low-level, binary-buffer counterpart to `writevWithTotalTimeout()`.
+     *       Use `writevFromAll()` for unbounded full delivery.
      *
-     * @see writevFromAll() For blocking, unbounded version
-     * @see writevWithTotalTimeout() For `string_view` variant
+     * @see writevFromAll() For retrying without a timeout
+     * @see writevWithTotalTimeout() For `std::string_view`-based variant
+     * @see SocketTimeoutException For timeout-specific error handling
      */
     std::size_t writevFromWithTotalTimeout(std::span<BufferView> buffers, int timeoutMillis) const;
 
