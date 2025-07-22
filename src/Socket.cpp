@@ -240,7 +240,7 @@ void Socket::shutdown(ShutdownMode how) const
 }
 
 // http://www.microhowto.info/howto/convert_an_ip_address_to_a_human_readable_string_in_c.html
-std::string Socket::getRemoteSocketAddress(bool convertIPv4Mapped /* = true */) const
+std::string Socket::getRemoteSocketAddress(const bool convertIPv4Mapped /* = true */) const
 {
     if (_remoteAddrLen == 0)
         return ""; // Or throw, depending on API contract
@@ -273,7 +273,8 @@ std::string Socket::getRemoteSocketAddress(bool convertIPv4Mapped /* = true */) 
 #endif
     }
 
-    return std::string(host) + ":" + serv;
+    const bool isIPv6 = tempAddr.ss_family == AF_INET6;
+    return isIPv6 ? "[" + std::string(host) + "]:" + serv : std::string(host) + ":" + serv;
 }
 
 size_t Socket::write(std::string_view message) const
@@ -880,7 +881,7 @@ std::string Socket::peek(std::size_t n) const
     return result;
 }
 
-void Socket::discard(const std::size_t n, std::size_t chunkSize /* = 1024 */) const
+void Socket::discard(const std::size_t n, const std::size_t chunkSize /* = 1024 */) const
 {
     if (_sockFd == INVALID_SOCKET)
         throw SocketException(0, "discard() called on invalid socket");
@@ -1236,7 +1237,7 @@ std::size_t Socket::readvAll(std::span<BufferView> buffers) const
     if (_sockFd == INVALID_SOCKET)
         throw SocketException(0, "readvAll() called on invalid socket");
 
-    std::vector<BufferView> pending(buffers.begin(), buffers.end());
+    std::vector pending(buffers.begin(), buffers.end());
     std::size_t totalRead = 0;
 
     while (!pending.empty())
@@ -1295,7 +1296,7 @@ std::size_t Socket::readvAllWithTotalTimeout(std::span<BufferView> buffers, cons
         if (now >= deadline)
             throw SocketException(0, "Timeout while reading into vector buffers");
 
-        if (auto timeLeft = std::chrono::duration_cast<std::chrono::milliseconds>(deadline - now).count();
+        if (const auto timeLeft = std::chrono::duration_cast<std::chrono::milliseconds>(deadline - now).count();
             !waitReady(false /* forRead */, static_cast<int>(timeLeft)))
             throw SocketException(0, "Socket not readable within timeout");
 

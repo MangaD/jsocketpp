@@ -98,8 +98,8 @@ class Socket
      * - Configure internal buffers
      *
      * @see ServerSocket::accept() Creates new Socket instances from accepted connections
-     * @see Socket(SOCKET,const sockaddr_storage&,socklen_t,std::size_t,std::size_t) Protected constructor used by
-     * accept()
+     * @see Socket(SOCKET,const sockaddr_storage&,socklen_t,std::size_t,std::size_t,std::size_t) Protected constructor
+     * used by accept()
      */
     friend class ServerSocket;
 
