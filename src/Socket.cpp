@@ -374,16 +374,10 @@ bool Socket::getNonBlocking() const
 }
 
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
-void Socket::setSoTimeout(int millis, bool forRead, bool forWrite)
+void Socket::setSoRecvTimeout(int millis)
 {
 #ifdef _WIN32
-    const int timeout = millis;
-
-    if (forRead)
-        setOption(SOL_SOCKET, SO_RCVTIMEO, timeout);
-
-    if (forWrite)
-        setOption(SOL_SOCKET, SO_SNDTIMEO, timeout);
+    setOption(SOL_SOCKET, SO_RCVTIMEO, millis);
 #else
     timeval tv{0, 0};
     if (millis >= 0)
@@ -392,17 +386,56 @@ void Socket::setSoTimeout(int millis, bool forRead, bool forWrite)
         tv.tv_usec = (millis % 1000) * 1000;
     }
 
-    if (forRead && setsockopt(_sockFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
-    {
+    if (setsockopt(_sockFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
         throw SocketException(GetSocketError(),
                               "setsockopt(SO_RCVTIMEO) failed: " + SocketErrorMessage(GetSocketError()));
+#endif
+}
+
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void Socket::setSoSendTimeout(int millis)
+{
+#ifdef _WIN32
+    setOption(SOL_SOCKET, SO_SNDTIMEO, millis);
+#else
+    timeval tv{0, 0};
+    if (millis >= 0)
+    {
+        tv.tv_sec = millis / 1000;
+        tv.tv_usec = (millis % 1000) * 1000;
     }
 
-    if (forWrite && setsockopt(_sockFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
-    {
+    if (setsockopt(_sockFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
         throw SocketException(GetSocketError(),
                               "setsockopt(SO_SNDTIMEO) failed: " + SocketErrorMessage(GetSocketError()));
-    }
+#endif
+}
+
+int Socket::getSoRecvTimeout() const
+{
+#ifdef _WIN32
+    return getOption(SOL_SOCKET, SO_RCVTIMEO);
+#else
+    timeval tv{};
+    socklen_t len = sizeof(tv);
+    if (getsockopt(_sockFd, SOL_SOCKET, SO_RCVTIMEO, &tv, &len) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(),
+                              "getsockopt(SO_RCVTIMEO) failed: " + SocketErrorMessage(GetSocketError()));
+    return static_cast<int>(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+#endif
+}
+
+int Socket::getSoSendTimeout() const
+{
+#ifdef _WIN32
+    return getOption(SOL_SOCKET, SO_SNDTIMEO);
+#else
+    timeval tv{};
+    socklen_t len = sizeof(tv);
+    if (getsockopt(_sockFd, SOL_SOCKET, SO_SNDTIMEO, &tv, &len) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(),
+                              "getsockopt(SO_SNDTIMEO) failed: " + SocketErrorMessage(GetSocketError()));
+    return static_cast<int>(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 #endif
 }
 
