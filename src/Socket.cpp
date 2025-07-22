@@ -645,7 +645,7 @@ std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, co
 
     while (totalRead < maxLen)
     {
-        const std::size_t toRead = std::min(_internalBuffer.size(), maxLen - totalRead);
+        const std::size_t toRead = (std::min)(_internalBuffer.size(), maxLen - totalRead);
         const auto len = recv(_sockFd, _internalBuffer.data(),
 #ifdef _WIN32
                               static_cast<int>(toRead),
@@ -894,7 +894,7 @@ void Socket::discard(const std::size_t n, const std::size_t chunkSize /* = 1024 
 
     while (totalDiscarded < n)
     {
-        const std::size_t toRead = std::min(chunkSize, n - totalDiscarded);
+        const std::size_t toRead = (std::min)(chunkSize, n - totalDiscarded);
 
         const auto len = recv(_sockFd, tempBuffer.data(),
 #ifdef _WIN32
