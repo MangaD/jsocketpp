@@ -2712,75 +2712,87 @@ class Socket
     bool isConnected() const;
 
     /**
-     * @brief Enable or disable TCP_NODELAY (Nagle's algorithm) on the socket.
+     * @brief Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket.
+     * @ingroup tcp
      *
-     * When TCP_NODELAY is enabled (set to true), Nagle's algorithm is disabled. This means that small packets
-     * of data are sent immediately over the network, without waiting to accumulate more data. This can reduce
-     * latency for applications that require fast, interactive communication (such as games, real-time systems,
-     * or protocols where low latency is more important than bandwidth efficiency).
+     * When `TCP_NODELAY` is enabled (`on == true`), Nagle's algorithm is disabled.
+     * This causes small packets to be sent immediately, reducing latency for
+     * real-time or interactive applications (e.g., games, messaging, RPCs).
      *
-     * When TCP_NODELAY is disabled (set to false), Nagle's algorithm is enabled. This causes the socket to
-     * buffer small outgoing packets and send them together, which can reduce network congestion and improve
-     * throughput for bulk data transfers, but may introduce slight delays for small messages.
+     * When disabled (`on == false`), Nagle's algorithm is enabled. The socket
+     * coalesces small outgoing messages into larger packets to improve throughput
+     * and reduce congestion, but may introduce slight delays.
      *
-     * By default, TCP_NODELAY is disabled (i.e., Nagle's algorithm is enabled) on new sockets.
+     * By default, TCP_NODELAY is off (i.e., Nagle's algorithm is enabled).
      *
      * ### Example Usage
      * @code{.cpp}
      * Socket sock("example.com", 8080);
      * sock.connect();
      *
-     * // Enable TCP_NODELAY for low-latency communication
-     * sock.enableNoDelay(true);
+     * // Disable Nagle's algorithm to reduce latency
+     * sock.setTcpNoDelay(true);
      *
-     * // Send data immediately without buffering
-     * sock.write("time-sensitive-data");
+     * sock.write("low-latency payload");
      * @endcode
      *
-     * @param enable true to disable Nagle's algorithm (enable TCP_NODELAY, lower latency),
-     *               false to enable Nagle's algorithm (disable TCP_NODELAY, higher throughput).
-     * @throws SocketException If setting the TCP_NODELAY option fails:
-     *         - Invalid socket state (EBADF)
-     *         - Permission denied (EACCES)
-     *         - Protocol not available (ENOPROTOOPT)
+     * @param on `true` to disable Nagle's algorithm (enable TCP_NODELAY),
+     *           `false` to re-enable Nagle's algorithm.
+     *
+     * @throws SocketException If setting the option fails due to:
+     *         - Invalid socket descriptor (`EBADF`)
+     *         - Socket already closed or invalid state
+     *         - Lack of permission (`EACCES`)
+     *         - Option not supported on this socket (`ENOPROTOOPT`)
+     *
+     * @see setKeepAlive() For controlling connection keep-alive probes
+     * @see write() To send data through the socket
      */
-    void enableNoDelay(bool enable);
+    void setTcpNoDelay(bool on);
 
     /**
-     * @brief Enable or disable SO_KEEPALIVE on the socket.
+     * @brief Enables or disables SO_KEEPALIVE on the socket.
+     * @ingroup tcp
      *
-     * SO_KEEPALIVE is a socket option that enables periodic transmission of keepalive probes on an otherwise idle TCP
-     * connection. When enabled (set to true), the operating system will periodically send keepalive messages to the
-     * remote peer if no data has been exchanged for a certain period. If the peer does not respond, the connection is
-     * considered broken and will be closed.
+     * When `SO_KEEPALIVE` is enabled (`on == true`), the operating system will
+     * periodically transmit TCP keepalive probes on an otherwise idle connection.
+     * These probes help detect unreachable peers or broken network links by triggering
+     * a disconnect when no response is received.
      *
-     * This feature is useful for detecting dead peers or broken network links, especially for long-lived connections
-     * where silent disconnects would otherwise go unnoticed. It is commonly used in server applications, remote control
-     * systems, and protocols that require reliable detection of dropped connections.
+     * If disabled (`on == false`), the operating system will not monitor idle connections
+     * for liveness. This is the default behavior for most sockets.
      *
-     * By default, SO_KEEPALIVE is disabled (i.e., keepalive probes are not sent) on new sockets.
+     * Keepalive is especially useful for long-lived TCP connections where silent
+     * disconnection (e.g. router drop, crash, or cable pull) would otherwise go unnoticed.
      *
      * ### Platform-Specific Details
-     * - Linux: Configure via /proc/sys/net/ipv4/tcp_keepalive_*
-     * - Windows: Default 2-hour idle time before first probe
-     * - macOS: System-wide keepalive settings apply
+     * - **Linux**: Keepalive interval, idle time, and probe count can be configured via
+     *   `/proc/sys/net/ipv4/tcp_keepalive_*` or socket-specific options.
+     * - **Windows**: Default idle time is 2 hours unless modified via `SIO_KEEPALIVE_VALS`.
+     * - **macOS**: Controlled via system-wide settings; application-specific tuning is limited.
      *
      * ### Example Usage
      * @code{.cpp}
      * Socket sock("example.com", 8080);
      * sock.connect();
      *
-     * // Enable keepalive for long-lived connection
-     * sock.enableKeepAlive(true);
+     * // Enable keepalive to detect dropped connections
+     * sock.setKeepAlive(true);
      * @endcode
      *
-     * @param enable true to enable keepalive probes (SO_KEEPALIVE), false to disable (default).
-     * @throws SocketException If setting the SO_KEEPALIVE option fails:
-     *         - Invalid socket state (EBADF)
-     *         - Permission denied (EACCES)
-     *         - Memory allocation error (ENOMEM)
+     * @param on `true` to enable keepalive probes (`SO_KEEPALIVE`),
+     *           `false` to disable them.
+     *
+     * @throws SocketException If setting the socket option fails:
+     *         - Invalid socket descriptor (`EBADF`)
+     *         - Insufficient privileges (`EACCES`)
+     *         - Option not supported on this socket type (`ENOPROTOOPT`)
+     *         - System resource exhaustion (`ENOMEM`)
+     *
+     * @see setTcpNoDelay() To configure Nagle’s algorithm
+     * @see connect() To initiate the connection before applying socket options
      */
-    void enableKeepAlive(bool enable);
+    void setKeepAlive(bool on);
 
     /**
      * @brief Convert an address and port to a string using getnameinfo.

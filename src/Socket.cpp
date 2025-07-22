@@ -379,15 +379,11 @@ void Socket::setSoTimeout(int millis, bool forRead, bool forWrite)
 #ifdef _WIN32
     const int timeout = millis;
 
-    // Set the timeout for receiving if specified
-    if (forRead && setsockopt(_sockFd, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeout),
-                              sizeof(timeout)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    if (forRead)
+        setOption(SOL_SOCKET, SO_RCVTIMEO, timeout);
 
-    // Set the timeout for sending if specified
-    if (forWrite && setsockopt(_sockFd, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&timeout),
-                               sizeof(timeout)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    if (forWrite)
+        setOption(SOL_SOCKET, SO_SNDTIMEO, timeout);
 #else
     timeval tv{0, 0};
     if (millis >= 0)
@@ -396,13 +392,17 @@ void Socket::setSoTimeout(int millis, bool forRead, bool forWrite)
         tv.tv_usec = (millis % 1000) * 1000;
     }
 
-    // Set the timeout for receiving if specified
     if (forRead && setsockopt(_sockFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        throw SocketException(GetSocketError(),
+                              "setsockopt(SO_RCVTIMEO) failed: " + SocketErrorMessage(GetSocketError()));
+    }
 
-    // Set the timeout for sending if specified
     if (forWrite && setsockopt(_sockFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        throw SocketException(GetSocketError(),
+                              "setsockopt(SO_SNDTIMEO) failed: " + SocketErrorMessage(GetSocketError()));
+    }
 #endif
 }
 
@@ -487,21 +487,15 @@ bool Socket::isConnected() const
 }
 
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
-void Socket::enableNoDelay(const bool enable)
+void Socket::setTcpNoDelay(const bool on)
 {
-    const int flag = enable ? 1 : 0;
-    if (setsockopt(_sockFd, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<const char*>(&flag), sizeof(flag)) ==
-        SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    setOption(IPPROTO_TCP, TCP_NODELAY, on ? 1 : 0);
 }
 
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
-void Socket::enableKeepAlive(const bool enable)
+void Socket::setKeepAlive(const bool on)
 {
-    const int flag = enable ? 1 : 0;
-    if (setsockopt(_sockFd, SOL_SOCKET, SO_KEEPALIVE, reinterpret_cast<const char*>(&flag), sizeof(flag)) ==
-        SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    setOption(SOL_SOCKET, SO_KEEPALIVE, on ? 1 : 0);
 }
 
 std::string Socket::addressToString(const sockaddr_storage& addr)

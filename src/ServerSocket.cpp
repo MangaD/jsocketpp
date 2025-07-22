@@ -220,8 +220,7 @@ int ServerSocket::getSocketReuseOption()
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
 void ServerSocket::setReuseAddress(const bool enable)
 {
-    const int opt = enable ? 1 : 0;
-    setOption(SOL_SOCKET, getSocketReuseOption(), opt);
+    setOption(SOL_SOCKET, getSocketReuseOption(), enable ? 1 : 0);
 }
 
 bool ServerSocket::getReuseAddress() const
@@ -587,8 +586,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
 #if defined(SO_REUSEPORT)
 void ServerSocket::setReusePort(const bool enable)
 {
-    const int opt = enable ? 1 : 0;
-    setOption(SOL_SOCKET, SO_REUSEPORT, opt);
+    setOption(SOL_SOCKET, SO_REUSEPORT, enable ? 1 : 0);
 }
 
 bool ServerSocket::getReusePort() const
@@ -614,8 +612,7 @@ void ServerSocket::setIPv6Only(const bool enable)
     if (ss.ss_family != AF_INET6)
         throw SocketException(0, "setIPv6Only: Socket is not IPv6.");
 
-    const int opt = enable ? 1 : 0;
-    setOption(IPPROTO_IPV6, IPV6_V6ONLY, opt);
+    setOption(IPPROTO_IPV6, IPV6_V6ONLY, enable ? 1 : 0);
 }
 
 bool ServerSocket::getIPv6Only() const
