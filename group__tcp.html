@@ -6031,6 +6031,10 @@ Example Usage</h3>
 <dd>
 <a class="el" href="#ga964bb0e901179bc5eac126d77b0590eb" title="Writes the full payload with a total timeout across all retries.">writeWithTotalTimeout()</a> For deadline-bounded full writes </dd>
 <dd>
+<a class="el" href="#gab4484254fc3c113a373718198c382dd9" title="Writes up to len bytes from a raw memory buffer in a single send call.">writeFrom()</a> For zero-copy buffer-based sending </dd>
+<dd>
+<a class="el" href="#gadf5094228dfdef090b0d49a3a9e9e78d" title="Writes multiple buffers in a single system call using scatter/gather I/O.">writev()</a> For vectorized scatter/gather writes </dd>
+<dd>
 <a class="el" href="#ga6cc57c26e230cb7ed7fa0174028811d5" title="Sets the socket to either non-blocking or blocking mode.">setNonBlocking()</a> To configure non-blocking socket behavior </dd>
 <dd>
 <a class="el" href="#ga5182b15a2d0c4eb70eeeaa5f7c62aeed" title="Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.">setSoSendTimeout()</a> To configure <a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write</a> timeouts </dd></dl>
@@ -6445,6 +6449,7 @@ Protocol Format</h3>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
 <li><span class="tt">len</span> exceeds the maximum value representable by <span class="tt">T</span></li>
+<li>If data is null and len &gt; 0</li>
 <li>Writing the prefix or payload fails</li>
 <li>Connection is closed or interrupted</li>
 </ul>
