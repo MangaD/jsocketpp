@@ -175,25 +175,21 @@ class ServerSocket
                           bool reuseAddress = true, int soTimeoutMillis = -1, bool dualStack = true);
 
     /**
-     * @brief Get the local IP address to which the server socket is bound.
+     * @brief Returns the local IP address this server socket is bound to.
      *
-     * Returns the string representation of the IP address (IPv4 or IPv6) the socket is bound to.
-     * Useful for debugging, especially when binding to specific interfaces or when binding to
-     * "0.0.0.0" or "::" (any address).
+     * Retrieves the numeric IP address (IPv4 or IPv6) that the server socket is bound to.
+     * If the socket is bound to a wildcard interface (e.g., "0.0.0.0" or "::"), the wildcard address
+     * is returned as-is.
      *
-     * @note This method is thread safe.
-     * @ingroup tcp
+     * If the address is an IPv4-mapped IPv6 (::ffff:a.b.c.d) and @p convertIPv4Mapped is true,
+     * it is converted to its original IPv4 representation (e.g., "192.168.0.10").
      *
-     * @return The local IP address as a string, or an empty string if the socket is not bound.
-     * @throws SocketException if there is an error retrieving the address.
+     * @param convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to plain IPv4. Default is true.
+     * @return Local IP address as a string (e.g., "127.0.0.1", "::1", "0.0.0.0").
      *
-     * @code
-     * ServerSocket server("127.0.0.1", 8080);
-     * server.bind();
-     * std::cout << "Server bound to address: " << server.getInetAddress() << std::endl;
-     * @endcode
+     * @throws SocketException if the socket is invalid or the address cannot be retrieved.
      */
-    [[nodiscard]] std::string getInetAddress() const;
+    [[nodiscard]] std::string getLocalIp(bool convertIPv4Mapped = true) const;
 
     /**
      * @brief Retrieve the local port number to which the server socket is bound.

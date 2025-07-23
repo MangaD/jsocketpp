@@ -375,6 +375,73 @@ class Socket
     ~Socket() noexcept;
 
     /**
+     * @brief Retrieves the IP address of the connected remote peer.
+     *
+     * This method returns the remote peer's IP address in numeric form (IPv4 or IPv6).
+     * If the socket is using an IPv4-mapped IPv6 address (e.g., ::ffff:192.168.1.10) and
+     * @p convertIPv4Mapped is true, the result is converted to the original IPv4 form.
+     *
+     * @param convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to pure IPv4.
+     * @return Remote IP address as a string (e.g., "203.0.113.42" or "2001:db8::1").
+     *
+     * @throws SocketException if the socket is not connected or the address cannot be resolved.
+     */
+    [[nodiscard]] std::string getRemoteIp(bool convertIPv4Mapped = true) const;
+
+    /**
+     * @brief Retrieves the port number of the connected remote peer.
+     *
+     * This method returns the port number of the remote endpoint that this socket is connected to.
+     * The result is always returned in host byte order (e.g., 443, 8080).
+     *
+     * @return Remote port number as a 16-bit unsigned integer.
+     *
+     * @throws SocketException if the socket is not connected or the port cannot be determined.
+     */
+    [[nodiscard]] Port getRemotePort() const;
+
+    /**
+     * @brief Retrieves the local IP address this socket is bound to.
+     *
+     * This method returns the local interface IP address assigned to the socket,
+     * in numeric string format (e.g., "127.0.0.1", "192.168.1.5", or "fe80::1").
+     * If the address is an IPv4-mapped IPv6 address (::ffff:a.b.c.d) and
+     * @p convertIPv4Mapped is true, it is converted to the original IPv4 form.
+     *
+     * @param convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to plain IPv4.
+     * @return Local IP address as a string.
+     *
+     * @throws SocketException if the socket is not bound or the address cannot be retrieved.
+     */
+    [[nodiscard]] std::string getLocalIp(bool convertIPv4Mapped = true) const;
+
+    /**
+     * @brief Retrieves the local port number this socket is bound to.
+     *
+     * This method returns the local port assigned to the socket during binding or connection.
+     * The result is in host byte order and suitable for logging, diagnostics, or introspection.
+     *
+     * @return Local port number as a 16-bit unsigned integer.
+     *
+     * @throws SocketException if the socket is not bound or the port cannot be determined.
+     */
+    [[nodiscard]] Port getLocalPort() const;
+
+    /**
+     * @brief Retrieves the full local socket address in the form "IP:port".
+     *
+     * This method combines the local IP address and port into a single human-readable string.
+     * If the IP address is an IPv4-mapped IPv6 (e.g., ::ffff:192.0.2.1) and @p convertIPv4Mapped is true,
+     * the IPv6 form is simplified to plain IPv4.
+     *
+     * @param convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to pure IPv4.
+     * @return A string representing the local socket address (e.g., "127.0.0.1:8080").
+     *
+     * @throws SocketException if the local address or port cannot be retrieved.
+     */
+    [[nodiscard]] std::string getLocalSocketAddress(bool convertIPv4Mapped = true) const;
+
+    /**
      * @brief Get the remote peer's address and port as a formatted string.
      * @ingroup tcp
      *

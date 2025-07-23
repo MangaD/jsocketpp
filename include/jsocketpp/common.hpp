@@ -395,6 +395,34 @@ inline sockaddr_in convertIPv4MappedIPv6ToIPv4(const sockaddr_in6& addr6)
     return addr4;
 }
 
+/**
+ * @brief Extracts a human-readable IP address from a socket address structure.
+ *
+ * This function returns the numeric IP address (IPv4 or IPv6) contained in the given sockaddr.
+ * If the address is an IPv4-mapped IPv6 (::ffff:a.b.c.d) and @p convertIPv4Mapped is true,
+ * the result is converted to the original IPv4 form (e.g., "192.168.1.10").
+ *
+ * @param addr Pointer to a sockaddr structure (must be AF_INET or AF_INET6).
+ * @param convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to plain IPv4.
+ * @return IP address as a string (e.g., "127.0.0.1" or "fe80::1").
+ *
+ * @throws SocketException if the address family is unsupported or conversion fails.
+ */
+std::string ipFromSockaddr(const sockaddr* addr, bool convertIPv4Mapped = true);
+
+/**
+ * @brief Extracts the port number from a socket address structure.
+ *
+ * Retrieves the port from a sockaddr containing either an IPv4 or IPv6 address,
+ * converting it from network byte order to host byte order.
+ *
+ * @param addr Pointer to a sockaddr structure (must be AF_INET or AF_INET6).
+ * @return Port number in host byte order (e.g., 8080).
+ *
+ * @throws SocketException if the address family is unsupported.
+ */
+Port portFromSockaddr(const sockaddr* addr);
+
 } // namespace jsocketpp
 
 /**

@@ -262,3 +262,50 @@ std::vector<std::string> jsocketpp::getHostAddr()
 
     return ips;
 }
+
+std::string ipFromSockaddr(const sockaddr* addr, const bool convertIPv4Mapped)
+{
+    char buf[INET6_ADDRSTRLEN] = {};
+
+    if (addr->sa_family == AF_INET)
+    {
+        const auto* sa = reinterpret_cast<const sockaddr_in*>(addr);
+        if (!inet_ntop(AF_INET, &sa->sin_addr, buf, sizeof(buf)))
+            throw SocketException(GetSocketError(), "inet_ntop(AF_INET) failed");
+    }
+    else if (addr->sa_family == AF_INET6)
+    {
+        const auto* sa6 = reinterpret_cast<const sockaddr_in6*>(addr);
+
+        if (convertIPv4Mapped && IN6_IS_ADDR_V4MAPPED(&sa6->sin6_addr))
+        {
+            const uint8_t* b = &sa6->sin6_addr.s6_addr[12];
+            return std::to_string(b[0]) + '.' + std::to_string(b[1]) + '.' + std::to_string(b[2]) + '.' +
+                   std::to_string(b[3]);
+        }
+
+        if (!inet_ntop(AF_INET6, &sa6->sin6_addr, buf, sizeof(buf)))
+            throw SocketException(GetSocketError(), "inet_ntop(AF_INET6) failed");
+    }
+    else
+    {
+        throw SocketException(0, "Unsupported address family in ipFromSockaddr");
+    }
+
+    return {buf};
+}
+
+Port portFromSockaddr(const sockaddr* addr)
+{
+    switch (addr->sa_family)
+    {
+    case AF_INET:
+        return ntohs(reinterpret_cast<const sockaddr_in*>(addr)->sin_port);
+
+    case AF_INET6:
+        return ntohs(reinterpret_cast<const sockaddr_in6*>(addr)->sin6_port);
+
+    default:
+        throw SocketException(0, "Unsupported address family in portFromSockaddr");
+    }
+}

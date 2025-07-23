@@ -155,21 +155,21 @@ void ServerSocket::cleanupAndThrow(const int errorCode)
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
-std::string ServerSocket::getInetAddress() const
+std::string ServerSocket::getLocalIp(const bool convertIPv4Mapped) const
 {
     if (_serverSocket == INVALID_SOCKET)
-        return "";
+        return {};
 
     sockaddr_storage addr{};
-    socklen_t len = sizeof(addr);
-    if (getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    socklen_t addrLen = sizeof(addr);
 
-    char host[INET6_ADDRSTRLEN] = {0};
-    if (getnameinfo(reinterpret_cast<sockaddr*>(&addr), len, host, sizeof(host), nullptr, 0, NI_NUMERICHOST) != 0)
-        return "";
+    if (::getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, "getsockname() failed: " + SocketErrorMessage(err));
+    }
 
-    return {host};
+    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
 }
 
 Port ServerSocket::getLocalPort() const
@@ -178,19 +178,15 @@ Port ServerSocket::getLocalPort() const
         return 0;
 
     sockaddr_storage addr{};
-    socklen_t len = sizeof(addr);
-    if (getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    socklen_t addrLen = sizeof(addr);
 
-    if (addr.ss_family == AF_INET)
+    if (::getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
-        return ntohs(reinterpret_cast<sockaddr_in*>(&addr)->sin_port);
+        const int err = GetSocketError();
+        throw SocketException(err, "getsockname() failed: " + SocketErrorMessage(err));
     }
-    if (addr.ss_family == AF_INET6)
-    {
-        return ntohs(reinterpret_cast<sockaddr_in6*>(&addr)->sin6_port);
-    }
-    return 0;
+
+    return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
 }
 
 std::string ServerSocket::getLocalSocketAddress() const

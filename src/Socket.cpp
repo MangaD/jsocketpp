@@ -249,6 +249,67 @@ void Socket::shutdown(ShutdownMode how) const
     }
 }
 
+std::string Socket::getRemoteIp(const bool convertIPv4Mapped) const
+{
+    sockaddr_storage addr{};
+    socklen_t addrLen = sizeof(addr);
+
+    if (::getpeername(_sockFd, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, "getpeername() failed: " + SocketErrorMessage(err));
+    }
+
+    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
+}
+
+Port Socket::getRemotePort() const
+{
+    sockaddr_storage addr{};
+    socklen_t addrLen = sizeof(addr);
+
+    if (::getpeername(_sockFd, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, "getpeername() failed: " + SocketErrorMessage(err));
+    }
+
+    return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
+}
+
+std::string Socket::getLocalIp(const bool convertIPv4Mapped) const
+{
+    sockaddr_storage addr{};
+    socklen_t addrLen = sizeof(addr);
+
+    if (::getsockname(_sockFd, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, "getsockname() failed: " + SocketErrorMessage(err));
+    }
+
+    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
+}
+
+Port Socket::getLocalPort() const
+{
+    sockaddr_storage addr{};
+    socklen_t addrLen = sizeof(addr);
+
+    if (::getsockname(_sockFd, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, "getsockname() failed: " + SocketErrorMessage(err));
+    }
+
+    return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
+}
+
+std::string Socket::getLocalSocketAddress(bool convertIPv4Mapped) const
+{
+    return getLocalIp(convertIPv4Mapped) + ":" + std::to_string(getLocalPort());
+}
+
 // http://www.microhowto.info/howto/convert_an_ip_address_to_a_human_readable_string_in_c.html
 std::string Socket::getRemoteSocketAddress(const bool convertIPv4Mapped /* = true */) const
 {
