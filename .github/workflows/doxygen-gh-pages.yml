@@ -7,7 +7,9 @@ on:
   workflow_dispatch:
 
 env:
-  DOXYGEN_VERSION: 1.14.0
+  DOXYGEN_VERSION: "1.14.0"
+  CMAKE_VERSION: "4.0.3"
+  GRAPHVIZ_VERSION: "13.1.1"
 
 jobs:
   generate-docs:
@@ -23,35 +25,63 @@ jobs:
         with:
           submodules: "true"
 
-      - name: Update Ubuntu package list
-        run: sudo apt-get update
+
+      ##################################
+      # 📦 Cache and Install CMake
+      ##################################
+      - name: Cache CMake
+        id: cache-cmake
+        uses: actions/cache@v4
+        with:
+          path: cmake-install
+          key: cmake-cache-${{ env.CMAKE_VERSION }}
 
       - name: Install CMake
-        run: sudo apt-get install -y cmake
-
-      - name: Install Graphviz (for doxygen 'dot' component)
-        run: sudo apt-get install -y graphviz
-
-      - name: Prepare cache timestamp
-        id: cache_timestamp
-        shell: cmake -P {0}
+        if: steps.cache-cmake.outputs.cache-hit != 'true'
         run: |
-          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
-          file(APPEND "$ENV{GITHUB_OUTPUT}" "timestamp=${current_date}")
+          mkdir -p cmake-install
+          curl -LO https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz
+          tar -xf cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz --strip-components=1 -C cmake-install
+        shell: bash
 
+      - name: Add CMake to PATH
+        run: echo "${GITHUB_WORKSPACE}/cmake-install/bin" >> $GITHUB_PATH
+
+      ##################################
+      # 📦 Cache and Install Graphviz
+      ##################################
+      - name: Cache Graphviz
+        id: cache-graphviz
+        uses: actions/cache@v4
+        with:
+          path: graphviz-install
+          key: graphviz-cache-${{ env.GRAPHVIZ_VERSION }}
+
+      - name: Install Graphviz
+        if: steps.cache-graphviz.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p graphviz-install
+          curl -LO https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${GRAPHVIZ_VERSION}/graphviz-${GRAPHVIZ_VERSION}.tar.gz
+          tar -xf graphviz-${GRAPHVIZ_VERSION}.tar.gz -C graphviz-install --strip-components=1
+        shell: bash
+
+      - name: Add Graphviz to PATH
+        run: echo "${GITHUB_WORKSPACE}/graphviz-install/bin" >> $GITHUB_PATH
+
+      ##################################
+      # 📦 Cache and Install Doxygen
+      ##################################
       - name: Cache Doxygen
         id: cache-doxygen
         uses: actions/cache@v4
         with:
           path: doxygen-${{ env.DOXYGEN_VERSION }}
-          key: doxygen-cache-${{ steps.cache_timestamp.outputs.timestamp }}
-          restore-keys: |
-            doxygen-cache-
+          key: doxygen-cache-${{ env.DOXYGEN_VERSION }}
 
       - name: Install Doxygen from GitHub
         if: steps.cache-doxygen.outputs.cache-hit != 'true'
         run: |
-          version_underscore=$(echo "$DOXYGEN_VERSION" | sed -r 's/\./_/g')
+          version_underscore=$(echo "$DOXYGEN_VERSION" | sed 's/\./_/g')
           dirname=doxygen-$DOXYGEN_VERSION
           filename_tar=$dirname.linux.bin.tar
           filename_gz=$filename_tar.gz
@@ -59,20 +89,29 @@ jobs:
           wget $url
           gunzip $filename_gz
           tar xf $filename_tar
-          echo "${GITHUB_WORKSPACE}/$dirname/bin" >> $GITHUB_PATH
+        shell: bash
 
+      - name: Add Doxygen to PATH
+        run: echo "${GITHUB_WORKSPACE}/doxygen-${{ env.DOXYGEN_VERSION }}/bin" >> $GITHUB_PATH
+
+      ##################################
+      # 📚 Generate Doxygen Documentation
+      ##################################
       - name: Generate Doxygen Documentation
         run: |
           mkdir build && cd build
           cmake .. -DBUILD_SOURCE=OFF
           cmake --build . --target doxygen
 
-      # In the repository settings, go to Actions -> General -> Workflow permissions
-      # and enable Read and write permissions.
-      # After the workflow runs successfully, go to Settings -> Pages -> Branch
-      # select `gh-pages` and click "Save".
+      ##################################
+      # 🚀 Deploy to GitHub Pages
+      ##################################
       - name: Upload documentation to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/doxygen/html
+      # In the repository settings, go to Actions -> General -> Workflow permissions
+      # and enable Read and write permissions.
+      # After the workflow runs successfully, go to Settings -> Pages -> Branch
+      # select `gh-pages` and click "Save".
