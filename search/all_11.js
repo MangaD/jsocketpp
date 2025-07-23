@@ -32,10 +32,11 @@ var searchData=
   ['getsosendtimeout_29',['getSoSendTimeout',['../group__tcp.html#gab372986b4384867b48e82922aa2e1cbd',1,'jsocketpp::Socket']]],
   ['getsotimeout_30',['getSoTimeout',['../group__tcp.html#ga7829c558cb7bf5e0a46d882df82acc19',1,'jsocketpp::ServerSocket']]],
   ['gettimetolive_31',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]],
-  ['google_20mock_20to_20mock_20recv_20and_20send_3a_32',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md333',1,'']]],
-  ['google_20mock_3a_33',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md341',1,'']]],
-  ['guide_34',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
-  ['guide_20to_20the_20socket_20api_35',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['guidelines_36',['3. Code Style Guidelines',['../md_CONTRIBUTING.html#autotoc_md397',1,'']]],
-  ['guides_37',['User Guides',['../group__docs.html',1,'']]]
+  ['glance_32',['✨ Features at a Glance',['../index.html#autotoc_md372',1,'']]],
+  ['google_20mock_20to_20mock_20recv_20and_20send_3a_33',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md333',1,'']]],
+  ['google_20mock_3a_34',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md341',1,'']]],
+  ['guide_35',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
+  ['guide_20to_20the_20socket_20api_36',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
+  ['guidelines_37',['3. Code Style Guidelines',['../md_CONTRIBUTING.html#autotoc_md426',1,'']]],
+  ['guides_38',['User Guides',['../group__docs.html',1,'']]]
 ];

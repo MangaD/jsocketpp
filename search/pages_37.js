@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🚦_20blocking_20vs_20non_20blocking_20sockets_0',['🚦 Blocking vs Non-Blocking Sockets',['../group__async__io.html#autotoc_md114',1,'']]]
+  ['🔁_20jsocketpp_20vs_20boost_20asio_0',['🔁 jsocketpp vs Boost.Asio',['../index.html#autotoc_md376',1,'']]]
 ];

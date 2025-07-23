@@ -112,13 +112,13 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Represents a raw writable memory region for scatter/gather I/O. </p>
 <p><span class="tt"><a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a></span> is used to describe non-contiguous writable memory ranges for use with vectorized socket operations (e.g., <span class="tt">readv</span>, <span class="tt">writev</span>, <span class="tt">readvAll</span>).</p>
 <p>It allows efficient I/O without copying or concatenating buffers, enabling zero-copy messaging and protocol framing.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md415"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md444"></a>
 Fields</h3>
 <ul>
 <li><span class="tt">data</span>: Pointer to writable memory</li>
 <li><span class="tt">size</span>: Size in bytes of the memory region</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md416"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md445"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line">std::array&lt;std::byte, 4&gt; header;</div>
 <div class="line">std::array&lt;std::byte, 128&gt; payload;</div>

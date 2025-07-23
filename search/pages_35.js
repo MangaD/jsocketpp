@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🕐_20socket_20timeouts_0',['🕐 Socket Timeouts',['../group__async__io.html#autotoc_md118',1,'']]]
+  ['📥_20recv_20read_0',['📥 &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; / &lt;span class=&quot;tt&quot;&gt;read&lt;/span&gt;',['../group__async__io.html#autotoc_md134',1,'']]]
 ];

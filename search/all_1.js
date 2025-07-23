@@ -23,13 +23,13 @@ var searchData=
   ['2_20peer_20to_20peer_20model_20',['3.2 Peer-to-Peer Model',['../group__underlying__socket__api.html#autotoc_md306',1,'']]],
   ['2_20prepare_20your_20library_20for_20vcpkg_21',['2. Prepare Your Library for vcpkg',['../group__vcpkg__publish__guide.html#autotoc_md349',1,'']]],
   ['2_20socket_20options_22',['2 Socket Options',['../group__underlying__socket__api.html#autotoc_md314',1,'6.2 Socket Options'],['../group__underlying__socket__api.html#autotoc_md324',1,'6.2 Socket Options']]],
-  ['2_20submitting_20pull_20requests_23',['2. Submitting Pull Requests',['../md_CONTRIBUTING.html#autotoc_md395',1,'']]],
+  ['2_20submitting_20pull_20requests_23',['2. Submitting Pull Requests',['../md_CONTRIBUTING.html#autotoc_md424',1,'']]],
   ['2_20tcp_20sockets_20socket_20serversocket_24',['2. TCP Sockets (&lt;span class=&quot;tt&quot;&gt;Socket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ServerSocket&lt;/span&gt;)',['../group__socket-options.html#autotoc_md210',1,'']]],
   ['2_20testing_20socket_20initialization_20and_20cleanup_3a_25',['1.2 &lt;b&gt;Testing Socket Initialization and Cleanup&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md334',1,'']]],
   ['2_20types_20of_20sockets_20in_20depth_26',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md264',1,'']]],
   ['2_20udp_20server_20and_20client_20c_20af_5finet_27',['5.2 UDP Server and Client (C, AF_INET)',['../group__underlying__socket__api.html#autotoc_md311',1,'']]],
   ['2_20windows_20winsock_28',['6.2. Windows (Winsock)',['../group__sockets__theory.html#autotoc_md290',1,'']]],
-  ['20_20cross_20platform_20socket_20library_29',['jsocketpp: Modern C++20 Cross-Platform Socket Library',['../index.html',1,'']]],
+  ['20_29',['jsocketpp: Java-Style Cross-Platform Socket Library for Modern C++20',['../index.html',1,'']]],
   ['20_20cross_20platform_20socket_20library_30',['jsocketpp: C++20 cross-platform socket library',['../group__jsocketpp.html',1,'']]],
   ['20_3a_31',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md331',1,'']]]
 ];

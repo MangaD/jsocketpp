@@ -148,14 +148,14 @@ Variables</h2></td></tr>
 <li>Client-side <span class="tt">Socket</span> instances constructed without a custom buffer size</li>
 <li>Server-accepted <span class="tt">Socket</span> instances created via <span class="tt">ServerSocket::accept()</span></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md421"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md450"></a>
 Rationale</h3>
 <ul>
 <li><b>Memory-efficient:</b> 4096 bytes matches the typical memory page size on most operating systems.</li>
 <li><b>Performance-optimized:</b> Large enough to hold common protocol messages (e.g., HTTP headers, WebSocket frames) without reallocation or multiple reads.</li>
 <li><b>Concurrency-friendly:</b> Balances throughput and memory footprint across thousands of concurrent connections.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md422"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md451"></a>
 Customization</h3>
 <ul>
 <li>You may override this value by:<ul>
@@ -165,7 +165,7 @@ Customization</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md423"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md452"></a>
 When to Adjust</h3>
 <ul>
 <li>Increase if your application routinely expects:<ul>

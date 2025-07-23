@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['💡_20summary_20table_0',['💡 Summary Table',['../group__address__reuse.html#autotoc_md100',1,'']]]
+  ['✔_20what_20jsocketpp_20gets_20right_0',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md107',1,'']]]
 ];

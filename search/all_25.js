@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['⏱_20how_20jsocketpp_20handles_20blocking_20and_20timeouts_0',['⏱ How jsocketpp Handles Blocking and Timeouts',['../group__async__io.html#autotoc_md122',1,'']]]
+  ['↔_20jsocketpp_20class_20mapping_0',['🔄 Java ↔ jsocketpp Class Mapping',['../index.html#autotoc_md398',1,'']]]
 ];

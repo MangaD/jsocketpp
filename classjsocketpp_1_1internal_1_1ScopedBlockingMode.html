@@ -118,22 +118,22 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>RAII helper for temporarily overriding a socket's blocking mode. </p>
 <p>This class manages a temporary change to a socket's blocking/non-blocking state. On construction, it queries the socket's current mode and applies the requested override. When the object is destroyed (typically at the end of a scope), the original blocking mode is restored automatically, ensuring consistent socket state even in the presence of exceptions.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md433"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md462"></a>
 Use Case</h3>
 <p>Primarily used in socket operations like <span class="tt">connect()</span> that require temporarily switching to non-blocking mode to perform <span class="tt">select()</span>-based timeout handling without permanently altering the socket's mode.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md434"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md463"></a>
 Platform Behavior</h3>
 <ul>
 <li><b>POSIX:</b> Uses <span class="tt">fcntl()</span> with <span class="tt">O_NONBLOCK</span></li>
 <li><b>Windows:</b> Uses <span class="tt"><a class="el" href="namespacejsocketpp.html#a771a44f3967222b2e3221ed3120220af">ioctlsocket()</a></span> with <span class="tt">FIONBIO</span></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md435"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md464"></a>
 Safety</h3>
 <ul>
 <li>This class is exception-safe: if an error occurs during the override, the constructor throws.</li>
 <li>If the socket is externally modified via <span class="tt">setNonBlocking()</span> during the lifetime of a <span class="tt"><a class="el" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html" title="RAII helper for temporarily overriding a socket&#39;s blocking mode.">ScopedBlockingMode</a></span>, the restored state may be incorrect. <b>Do not call <span class="tt">setNonBlocking()</span></b> on the same socket while a <span class="tt"><a class="el" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html" title="RAII helper for temporarily overriding a socket&#39;s blocking mode.">ScopedBlockingMode</a></span> is active.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md436"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md465"></a>
 Example</h3>
 <div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_class" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html">jsocketpp::internal::ScopedBlockingMode</a> guard(sockFd, <span class="keyword">true</span>); <span class="comment">// temporarily non-blocking</span></div>

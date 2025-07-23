@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📌_20notes_20for_20library_20authors_0',['📌 Notes for Library Authors',['../group__address__reuse.html#autotoc_md102',1,'']]]
+  ['✨_20features_20at_20a_20glance_0',['✨ Features at a Glance',['../index.html#autotoc_md372',1,'']]]
 ];

@@ -5,7 +5,7 @@ var searchData=
   ['3_202_20peer_20to_20peer_20model_2',['3.2 Peer-to-Peer Model',['../group__underlying__socket__api.html#autotoc_md306',1,'']]],
   ['3_203_20raw_20socket_20communication_3',['3.3 Raw Socket Communication',['../group__underlying__socket__api.html#autotoc_md307',1,'']]],
   ['3_20advantages_20of_20poll_4',['3. &lt;b&gt;Advantages of &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt;&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md187',1,'']]],
-  ['3_20code_20style_20guidelines_5',['3. Code Style Guidelines',['../md_CONTRIBUTING.html#autotoc_md397',1,'']]],
+  ['3_20code_20style_20guidelines_5',['3. Code Style Guidelines',['../md_CONTRIBUTING.html#autotoc_md426',1,'']]],
   ['3_20communication_20models_6',['3. Communication Models',['../group__underlying__socket__api.html#autotoc_md304',1,'']]],
   ['3_20create_20a_20vcpkg_20portfile_7',['3. Create a vcpkg Portfile',['../group__vcpkg__publish__guide.html#autotoc_md351',1,'']]],
   ['3_20make_20your_20cmake_20project_20conan_20friendly_8',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md166',1,'']]],
