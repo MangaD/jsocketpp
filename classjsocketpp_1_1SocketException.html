@@ -141,15 +141,12 @@ Example: Catching and Handling Socket Exceptions</h3>
 <div class="line">}</div>
 <div class="ttc" id="aSocketException_8hpp_html"><div class="ttname"><a href="SocketException_8hpp.html">SocketException.hpp</a></div><div class="ttdoc">Exception class for socket-related errors in jsocketpp.</div></div>
 <div class="ttc" id="aSocket_8hpp_html"><div class="ttname"><a href="Socket_8hpp.html">Socket.hpp</a></div><div class="ttdoc">TCP client socket abstraction for jsocketpp.</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:58</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:57</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:92</div></div>
 <div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>This exception stores a copy of the error message and error code. It is not tied to any particular platform error format—use the code/message for display or logging. </dd>
 <dd>
-jsocketpp itself does not throw nested exceptions, but this class enables developers using the library to opt into exception chaining if desired. This class is safe to use without exception chaining. If you don't need nested exceptions, simply construct and throw it normally.</dd></dl>
-<dl class="section author"><dt>Author</dt><dd>MangaD </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2025 </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
+jsocketpp itself does not throw nested exceptions, but this class enables developers using the library to opt into exception chaining if desired. This class is safe to use without exception chaining. If you don't need nested exceptions, simply construct and throw it normally. </dd></dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a05d0ab6631b95d88ca1c2c6f920c190e" name="a05d0ab6631b95d88ca1c2c6f920c190e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a05d0ab6631b95d88ca1c2c6f920c190e">&#9670;&#160;</a></span>SocketException() <span class="overload">[1/2]</span></h2>
