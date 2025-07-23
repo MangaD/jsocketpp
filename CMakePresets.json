@@ -13,7 +13,25 @@
       "binaryDir": "${sourceDir}/build/${presetName}",
       "installDir": "${sourceDir}/install/${presetName}",
       "cacheVariables": {
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}"
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
+        "ENABLE_TESTS": "ON",
+        "CLANG_TIDY_ENABLE": "OFF"
+      }
+    },
+    {
+      "name": "base-disable-tests",
+      "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "ENABLE_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "base-enable-clang-tidy",
+      "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "CLANG_TIDY_ENABLE": "ON"
       }
     },
     {
@@ -275,6 +293,30 @@
       "displayName": "GCC Debug x64 (Static)"
     },
     {
+      "name": "gcc-debug-x64-disable-tests",
+      "inherits": [
+        "base-gcc",
+        "base-linux",
+        "base-debug",
+        "base-static",
+        "base-disable-tests"
+      ],
+      "displayName": "Disable Tests (GCC Debug x64 Static)",
+      "description": "Configure with tests disabled (GCC, Debug, x64, Static)"
+    },
+    {
+      "name": "gcc-debug-x64-enable-clang-tidy",
+      "inherits": [
+        "base-gcc",
+        "base-linux",
+        "base-debug",
+        "base-static",
+        "base-enable-clang-tidy"
+      ],
+      "displayName": "Enable Clang-Tidy (GCC Debug x64 Static)",
+      "description": "Configure with clang-tidy enabled (GCC, Debug, x64, Static)"
+    },
+    {
       "name": "gcc-release-x64-shared",
       "inherits": [
         "base-gcc",
@@ -495,100 +537,72 @@
     {
       "name": "gcc-debug-x64",
       "configurePreset": "gcc-debug-x64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "gcc-release-x64",
       "configurePreset": "gcc-release-x64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "clang-debug-x64",
       "configurePreset": "clang-debug-x64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "clang-release-x64",
       "configurePreset": "clang-release-x64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "msvc-x64-static",
       "configurePreset": "msvc-x64-static",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "msvc-x64-shared",
       "configurePreset": "msvc-x64-shared",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "mingw-gcc-debug-x64",
       "configurePreset": "mingw-gcc-debug-x64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "mingw-gcc-release-x64",
       "configurePreset": "mingw-gcc-release-x64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "gcc-debug-arm64",
       "configurePreset": "gcc-debug-arm64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "gcc-release-arm64",
       "configurePreset": "gcc-release-arm64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "clang-debug-arm64",
       "configurePreset": "clang-debug-arm64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "clang-release-arm64",
       "configurePreset": "clang-release-arm64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "clang-debug-apple-arm64",
       "configurePreset": "clang-debug-apple-arm64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     },
     {
       "name": "clang-release-apple-arm64",
       "configurePreset": "clang-release-apple-arm64",
-      "execution": {
-        "parallel": true
-      }
+      "execution": {}
     }
   ],
   "packagePresets": [
