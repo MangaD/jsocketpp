@@ -1259,34 +1259,43 @@ class ServerSocket
     [[nodiscard]] bool getNonBlocking() const;
 
     /**
-     * @brief Wait for the server socket to become ready to accept an incoming connection.
+     * @brief Waits for the server socket to become ready to accept an incoming connection.
+     * @ingroup tcp
      *
-     * This method blocks until the server socket is ready to accept a new client connection, using an optional timeout.
-     * It is used internally by `accept()` and `tryAccept()`, and can also be used directly in custom wait loops.
+     * This method blocks or polls until the server socket becomes readable, indicating that a
+     * new client is attempting to connect. It is used internally by `accept()` and `tryAccept()`,
+     * but can also be used directly in custom event loops or multiplexed servers.
      *
      * ### Platform Behavior
-     * - **POSIX:** Uses `poll()` for readiness notification, avoiding `select()` limitations (like FD_SETSIZE).
-     * - **Windows:** Uses `select()` for compatibility and reliability across all socket types.
+     * - **POSIX:** Uses `poll()` to monitor readiness, avoiding the `FD_SETSIZE` constraint imposed by `select()`.
+     * - **Windows:** Uses `select()` to ensure compatibility with all socket types.
+     *   - The socket descriptor must be less than `FD_SETSIZE` (typically 64 on Windows).
+     *   - If the descriptor exceeds `FD_SETSIZE`, a `SocketException` is thrown to prevent undefined behavior.
      *
      * ### Timeout Semantics
-     * - If `timeoutMillis < 0`, the call blocks indefinitely.
-     * - If `timeoutMillis == 0`, the call polls and returns immediately.
-     * - If `timeoutMillis > 0`, it waits up to the specified time in milliseconds.
-     * - If no value is provided, the method uses the **server socket's logical timeout** as configured by
-     * `setSoTimeout()`.
+     * - `timeoutMillis < 0`: Blocks indefinitely until a connection attempt is ready.
+     * - `timeoutMillis == 0`: Performs a non-blocking poll and returns immediately.
+     * - `timeoutMillis > 0`: Waits up to the specified number of milliseconds.
+     * - If `timeoutMillis` is not provided, the socket's logical timeout (`_soTimeoutMillis`) is used.
      *
-     * @note This method does **not** use or affect kernel-level socket timeouts (`SO_RCVTIMEO`). It relies purely on
-     *       event polling with `poll()` or `select()` and your configured logical timeout.
+     * @note This method does **not** rely on or modify kernel-level timeouts (e.g., `SO_RCVTIMEO`).
+     *       It uses event polling (`poll()` or `select()`) for logical timeout behavior.
      *
      * ### Thread Safety
-     * This method is thread-safe **as long as the server socket is not concurrently closed or modified.**
+     * This method is thread-safe **as long as the server socket is not concurrently closed or reconfigured.**
      *
-     * @param[in] timeoutMillis Optional timeout in milliseconds. Defaults to the value set by `setSoTimeout()`.
+     * @param[in] timeoutMillis Optional timeout in milliseconds. If omitted, the socket's `SO_TIMEOUT` is used.
      * @return `true` if the socket is ready to accept a connection, `false` if the timeout expired.
-     * @throws SocketException if the socket is uninitialized or if a system error occurs during readiness check.
      *
-     * @see accept(), tryAccept(), setSoTimeout(), getSoTimeout()
-     * @ingroup tcp
+     * @throws SocketException if:
+     *         - The server socket is not initialized (`INVALID_SOCKET`)
+     *         - A system-level polling error occurs
+     *         - The socket descriptor exceeds platform limits (`FD_SETSIZE`) on Windows
+     *
+     * @see accept()      Accepts a new incoming connection
+     * @see tryAccept()   Non-blocking variant of `accept()`
+     * @see setSoTimeout() Sets the default timeout used by this method
+     * @see getSoTimeout() Retrieves the current logical timeout value
      */
     [[nodiscard]] bool waitReady(std::optional<int> timeoutMillis = std::nullopt) const;
 

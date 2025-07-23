@@ -3,9 +3,8 @@
 #include "jsocketpp/SocketTimeoutException.hpp"
 #include "jsocketpp/internal/ScopedBlockingMode.hpp"
 
-#include <array>
 #include <chrono>
-#include <cstring>
+#include <cstring> // std::memcpy
 
 using namespace jsocketpp;
 
@@ -25,6 +24,9 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
+
+    // Explicitly specify TCP to avoid ambiguity on platforms where SOCK_STREAM alone may resolve to multiple protocols.
+    // This ensures only TCP (IPPROTO_TCP) is selected, especially useful on dual-stack or non-standard systems.
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the local address and port to be used by the server
@@ -71,6 +73,10 @@ void Socket::cleanupAndThrow(const int errorCode)
     {
         CloseSocket(_sockFd);
         _sockFd = INVALID_SOCKET;
+
+        // CloseSocket error is ignored.
+        // TODO: Consider adding an internal flag, nested exception, or user-configurable error handler
+        //       to report errors in future versions.
     }
     _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
@@ -109,51 +115,57 @@ void Socket::connect(const int timeoutMillis) const
     {
         const int error = GetSocketError();
 
+        // On most platforms, these errors indicate a non-blocking connection in progress
 #ifdef _WIN32
-        if (error != WSAEINPROGRESS && error != WSAEWOULDBLOCK)
+        const bool wouldBlock = (error == WSAEINPROGRESS || error == WSAEWOULDBLOCK);
 #else
-        if (error != EINPROGRESS && error != EWOULDBLOCK)
+        const bool wouldBlock = (error == EINPROGRESS || error == EWOULDBLOCK);
 #endif
+
+        if (!useNonBlocking || !wouldBlock)
         {
             throw SocketException(error, SocketErrorMessage(error));
         }
 
-        // Wait for the connection to become writable (ready)
-        if (useNonBlocking)
+        // Check FD_SETSIZE limit before using select()
+        if (_sockFd >= FD_SETSIZE)
         {
-            timeval tv{};
-            tv.tv_sec = timeoutMillis / 1000;
-            tv.tv_usec = (timeoutMillis % 1000) * 1000;
+            throw SocketException(0, "connect(): socket descriptor exceeds FD_SETSIZE (" + std::to_string(FD_SETSIZE) +
+                                         "), select() cannot be used");
+        }
 
-            fd_set writeFds;
-            FD_ZERO(&writeFds);
-            FD_SET(_sockFd, &writeFds);
+        // Wait until socket becomes writable (connection ready or failed)
+        timeval tv{};
+        tv.tv_sec = timeoutMillis / 1000;
+        tv.tv_usec = (timeoutMillis % 1000) * 1000;
+
+        fd_set writeFds;
+        FD_ZERO(&writeFds);
+        FD_SET(_sockFd, &writeFds);
 
 #ifdef _WIN32
-            const int selectResult = ::select(0, nullptr, &writeFds, nullptr, &tv);
+        const int selectResult = ::select(0, nullptr, &writeFds, nullptr, &tv);
 #else
-            int selectResult;
-            do
-            {
-                selectResult = ::select(_sockFd + 1, nullptr, &writeFds, nullptr, &tv);
-            } while (selectResult < 0 && errno == EINTR);
+        int selectResult;
+        do
+        {
+            selectResult = ::select(_sockFd + 1, nullptr, &writeFds, nullptr, &tv);
+        } while (selectResult < 0 && errno == EINTR);
 #endif
 
-            if (selectResult == 0)
-                throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
-                                             "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
-            if (selectResult < 0)
-                throw SocketException(GetSocketError(), "select() failed during connect()");
+        if (selectResult == 0)
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
+                                         "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
+        if (selectResult < 0)
+            throw SocketException(GetSocketError(), "select() failed during connect()");
 
-            // On success, still need to check for actual socket error (getsockopt)
-            int so_error = 0;
-            socklen_t len = sizeof(so_error);
-            // SO_ERROR is always retrieved as int (POSIX & Windows agree on semantics)
-            if (::getsockopt(_sockFd, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&so_error), &len) < 0 ||
-                so_error != 0)
-            {
-                throw SocketException(so_error, SocketErrorMessage(so_error));
-            }
+        // Even if select() reports writable, we must check if the connection actually succeeded
+        int so_error = 0;
+        socklen_t len = sizeof(so_error);
+        // SO_ERROR is always retrieved as int (POSIX & Windows agree on semantics)
+        if (::getsockopt(_sockFd, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&so_error), &len) < 0 || so_error != 0)
+        {
+            throw SocketException(so_error, SocketErrorMessage(so_error));
         }
     }
 
@@ -168,6 +180,9 @@ Socket::~Socket() noexcept
     }
     catch (std::exception&)
     {
+        // Suppress all exceptions to maintain noexcept guarantee.
+        // TODO: Consider adding an internal flag or user-configurable error handler
+        //       to report destructor-time errors in future versions.
     }
 }
 
@@ -177,12 +192,12 @@ Socket::~Socket() noexcept
  */
 void Socket::close()
 {
-    if (this->_sockFd != INVALID_SOCKET)
+    if (_sockFd != INVALID_SOCKET)
     {
-        if (CloseSocket(this->_sockFd))
+        if (CloseSocket(_sockFd))
             throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
 
-        this->_sockFd = INVALID_SOCKET;
+        _sockFd = INVALID_SOCKET;
     }
     _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
@@ -225,9 +240,9 @@ void Socket::shutdown(ShutdownMode how) const
 #endif
 
     // Ensure the socket is valid before attempting to shutdown
-    if (this->_sockFd != INVALID_SOCKET)
+    if (_sockFd != INVALID_SOCKET)
     {
-        if (::shutdown(this->_sockFd, shutdownType))
+        if (::shutdown(_sockFd, shutdownType))
         {
             throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
         }
@@ -337,37 +352,55 @@ void Socket::setInternalBufferSize(const std::size_t newLen)
 
 void Socket::setNonBlocking(bool nonBlocking) const
 {
+    if (_sockFd == INVALID_SOCKET)
+    {
+        throw SocketException(0, "setNonBlocking() called on invalid socket.");
+    }
+
 #ifdef _WIN32
     u_long mode = nonBlocking ? 1 : 0;
     if (ioctlsocket(_sockFd, FIONBIO, &mode) != 0)
+    {
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    }
 #else
     int flags = fcntl(_sockFd, F_GETFL, 0);
     if (flags == -1)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        throw SocketException(GetSocketError(), "setNonBlocking(): failed to get file descriptor flags.");
+    }
+
     if (nonBlocking)
         flags |= O_NONBLOCK;
     else
         flags &= ~O_NONBLOCK;
+
     if (fcntl(_sockFd, F_SETFL, flags) == -1)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        throw SocketException(GetSocketError(), "setNonBlocking(): failed to set file descriptor flags.");
+    }
 #endif
 }
 
 bool Socket::getNonBlocking() const
 {
+    if (_sockFd == INVALID_SOCKET)
+    {
+        throw SocketException(0, "getNonBlocking() called on invalid socket.");
+    }
+
 #ifdef _WIN32
     u_long mode = 0;
     if (ioctlsocket(_sockFd, FIONBIO, &mode) != 0)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        throw SocketException(GetSocketError(), "getNonBlocking(): ioctlsocket() failed.");
     }
     return mode != 0;
 #else
     int flags = fcntl(_sockFd, F_GETFL, 0);
     if (flags == -1)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        throw SocketException(GetSocketError(), "getNonBlocking(): fcntl(F_GETFL) failed.");
     }
     return (flags & O_NONBLOCK) != 0;
 #endif
@@ -376,38 +409,58 @@ bool Socket::getNonBlocking() const
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
 void Socket::setSoRecvTimeout(int millis)
 {
+    if (_sockFd == INVALID_SOCKET)
+    {
+        throw SocketException(0, "setSoRecvTimeout() called on invalid socket.");
+    }
+
+    if (millis < 0)
+    {
+        throw SocketException(0, "setSoRecvTimeout() requires a non-negative timeout in milliseconds.");
+    }
+
 #ifdef _WIN32
     setOption(SOL_SOCKET, SO_RCVTIMEO, millis);
 #else
     timeval tv{0, 0};
-    if (millis >= 0)
-    {
-        tv.tv_sec = millis / 1000;
-        tv.tv_usec = (millis % 1000) * 1000;
-    }
+    tv.tv_sec = millis / 1000;
+    tv.tv_usec = (millis % 1000) * 1000;
 
     if (setsockopt(_sockFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(),
-                              "setsockopt(SO_RCVTIMEO) failed: " + SocketErrorMessage(GetSocketError()));
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, "setSoRecvTimeout(): setsockopt(SO_RCVTIMEO) failed — " + SocketErrorMessage(err));
+    }
 #endif
 }
 
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
 void Socket::setSoSendTimeout(int millis)
 {
-#ifdef _WIN32
-    setOption(SOL_SOCKET, SO_SNDTIMEO, millis);
-#else
-    timeval tv{0, 0};
-    if (millis >= 0)
+    if (_sockFd == INVALID_SOCKET)
     {
-        tv.tv_sec = millis / 1000;
-        tv.tv_usec = (millis % 1000) * 1000;
+        throw SocketException(0, "setSoSendTimeout() called on invalid socket.");
     }
 
+    if (millis < 0)
+    {
+        throw SocketException(0, "setSoSendTimeout() requires a non-negative timeout in milliseconds.");
+    }
+
+#ifdef _WIN32
+    // Windows expects timeout as integer milliseconds
+    setOption(SOL_SOCKET, SO_SNDTIMEO, millis);
+#else
+    // POSIX requires timeval (seconds + microseconds)
+    timeval tv{0, 0};
+    tv.tv_sec = millis / 1000;
+    tv.tv_usec = (millis % 1000) * 1000;
+
     if (setsockopt(_sockFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(),
-                              "setsockopt(SO_SNDTIMEO) failed: " + SocketErrorMessage(GetSocketError()));
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, "setSoSendTimeout(): setsockopt(SO_SNDTIMEO) failed — " + SocketErrorMessage(err));
+    }
 #endif
 }
 
@@ -444,10 +497,18 @@ bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
     if (_sockFd == INVALID_SOCKET)
         throw SocketException(0, "Invalid socket");
 
+    // Guard against file descriptors exceeding FD_SETSIZE, which causes UB in FD_SET()
+    if (_sockFd >= FD_SETSIZE)
+    {
+        throw SocketException(0, "Socket descriptor exceeds FD_SETSIZE (" + std::to_string(FD_SETSIZE) +
+                                     "), cannot use select()");
+    }
+
     fd_set fds;
     FD_ZERO(&fds);
     FD_SET(_sockFd, &fds);
 
+    // Default to zero-timeout for non-blocking poll
     timeval tv{0, 0};
     if (timeoutMillis >= 0)
     {
@@ -456,21 +517,18 @@ bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
     }
 
     int result;
+
 #ifdef _WIN32
-    // On Windows, the first parameter to select is ignored, but must be set to 0.
-    if (forWrite)
-        result = select(0, nullptr, &fds, nullptr, &tv);
-    else
-        result = select(0, &fds, nullptr, nullptr, &tv);
+    // On Windows, the first argument to select() is ignored but must be >= 0.
+    result = select(0, forWrite ? nullptr : &fds, forWrite ? &fds : nullptr, nullptr, &tv);
 #else
-    if (forWrite)
-        result = select(static_cast<int>(_sockFd) + 1, nullptr, &fds, nullptr, &tv);
-    else
-        result = select(static_cast<int>(_sockFd) + 1, &fds, nullptr, nullptr, &tv);
+    // On POSIX, first argument must be the highest fd + 1
+    result = select(static_cast<int>(_sockFd) + 1, forWrite ? nullptr : &fds, forWrite ? &fds : nullptr, nullptr, &tv);
 #endif
 
     if (result < 0)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
     return result > 0;
 }
 
@@ -671,8 +729,13 @@ std::string Socket::readExact(const std::size_t n) const
 
 std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, const bool includeDelimiter)
 {
+    if (maxLen == 0)
+    {
+        throw SocketException(0, "readUntil: maxLen must be greater than 0.");
+    }
+
     std::string result;
-    result.reserve(128); // Optimistic allocation for small lines
+    result.reserve(std::min<std::size_t>(128, maxLen)); // Preallocate small buffer
 
     std::size_t totalRead = 0;
 
@@ -691,14 +754,14 @@ std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, co
             throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
         if (len == 0)
-            throw SocketException(0, "Connection closed before delimiter was found.");
+            throw SocketException(0, "readUntil: connection closed before delimiter was found.");
 
         for (std::size_t i = 0; i < static_cast<std::size_t>(len); ++i)
         {
             const char ch = _internalBuffer[i];
-            if (totalRead == maxLen)
+            if (totalRead >= maxLen)
             {
-                throw SocketException(0, "Maximum line length exceeded before delimiter was found.");
+                throw SocketException(0, "readUntil: exceeded maximum read limit without finding delimiter.");
             }
 
             result.push_back(ch);
@@ -707,22 +770,26 @@ std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, co
             if (ch == delimiter)
             {
                 if (!includeDelimiter)
+                {
                     result.pop_back();
+                }
                 return result;
             }
         }
     }
 
-    throw SocketException(0, "Maximum line length exceeded before delimiter was found.");
+    throw SocketException(0, "readUntil: maximum length reached without finding delimiter.");
 }
 
 std::string Socket::readAtMost(std::size_t n) const
 {
     if (n == 0)
+    {
+        // Nothing to read, return empty string immediately
         return {};
+    }
 
-    std::string result;
-    result.resize(n); // preallocate n bytes
+    std::string result(n, '\0'); // Preallocate n bytes initialized to null
 
     const auto len = recv(_sockFd, result.data(),
 #ifdef _WIN32
@@ -733,12 +800,16 @@ std::string Socket::readAtMost(std::size_t n) const
                           0);
 
     if (len == SOCKET_ERROR)
+    {
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    }
 
     if (len == 0)
-        throw SocketException(0, "Connection closed by remote host.");
+    {
+        throw SocketException(0, "readAtMost: connection closed by remote host.");
+    }
 
-    result.resize(static_cast<std::size_t>(len)); // trim to actual length
+    result.resize(static_cast<std::size_t>(len)); // Trim to actual number of bytes read
     return result;
 }
 
@@ -917,12 +988,15 @@ std::string Socket::peek(std::size_t n) const
 void Socket::discard(const std::size_t n, const std::size_t chunkSize /* = 1024 */) const
 {
     if (_sockFd == INVALID_SOCKET)
-        throw SocketException(0, "discard() called on invalid socket");
+        throw SocketException(0, "discard(): attempted on invalid socket.");
 
     if (n == 0)
         return;
 
-    std::vector<char> tempBuffer(chunkSize); // use heap to support user-defined size
+    if (chunkSize == 0)
+        throw SocketException(0, "discard(): chunkSize must be greater than zero.");
+
+    std::vector<char> tempBuffer(chunkSize); // Heap-allocated scratch buffer
     std::size_t totalDiscarded = 0;
 
     while (totalDiscarded < n)
@@ -938,10 +1012,14 @@ void Socket::discard(const std::size_t n, const std::size_t chunkSize /* = 1024 
                               0);
 
         if (len == SOCKET_ERROR)
+        {
             throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        }
 
         if (len == 0)
-            throw SocketException(0, "Connection closed before all bytes were discarded.");
+        {
+            throw SocketException(0, "discard(): connection closed before all bytes were discarded.");
+        }
 
         totalDiscarded += static_cast<std::size_t>(len);
     }

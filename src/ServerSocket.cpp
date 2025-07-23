@@ -145,6 +145,10 @@ void ServerSocket::cleanupAndThrow(const int errorCode)
     {
         CloseSocket(_serverSocket);
         _serverSocket = INVALID_SOCKET;
+
+        // CloseSocket error is ignored.
+        // TODO: Consider adding an internal flag, nested exception, or user-configurable error handler
+        //       to report errors in future versions.
     }
     _srvAddrInfo.reset();
     _selectedAddrInfo = nullptr;
@@ -246,6 +250,9 @@ ServerSocket::~ServerSocket() noexcept
     }
     catch (...)
     {
+        // Suppress all exceptions to maintain noexcept guarantee.
+        // TODO: Consider adding an internal flag or user-configurable error handler
+        //       to report destructor-time errors in future versions.
     }
 }
 
@@ -518,11 +525,10 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
 {
     if (_serverSocket == INVALID_SOCKET)
     {
-        throw SocketException(EINVAL, "Socket is not initialized.");
+        throw SocketException(EINVAL, "waitReady() failed: server socket is not initialized");
     }
 
-    // Determine the effective timeout to use.
-    // If a specific timeout was passed, use it; otherwise, use the socket's configured SO_TIMEOUT value.
+    // Determine the effective timeout to use: user-provided or socket's configured default
     const int millis = timeoutMillis.value_or(_soTimeoutMillis);
 
 #ifndef _WIN32
@@ -537,13 +543,17 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     int result = poll(&pfd, 1, timeout);
     if (result < 0)
     {
-        // poll() failed — throw an exception with the error code and message.
-        throw SocketException(GetSocketError(), "Failed to wait for incoming connection.");
+        throw SocketException(GetSocketError(), "poll() failed while waiting for incoming connection");
     }
     // poll() returns the number of fds with events. Check for POLLIN.
     return result > 0 && (pfd.revents & POLLIN);
 #else
     // --- Windows: Use select() for readiness notification ---
+    if (_serverSocket >= FD_SETSIZE)
+    {
+        throw SocketException(0, "waitReady() failed: socket descriptor exceeds FD_SETSIZE (" +
+                                     std::to_string(FD_SETSIZE) + "), select() cannot be used");
+    }
     // Prepare the file descriptor set for select().
     // We want to monitor this server socket for readability (i.e., incoming connection).
     fd_set readFds;
@@ -574,8 +584,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     int result = select(static_cast<int>(_serverSocket) + 1, &readFds, nullptr, nullptr, tvPtr);
     if (result < 0)
     {
-        // select() failed — throw an exception with the error code and message.
-        throw SocketException(GetSocketError(), "Failed to wait for incoming connection.");
+        throw SocketException(GetSocketError(), "select() failed while waiting for incoming connection");
     }
     // select() returns the number of sockets that are ready.
     // If it's greater than 0, our server socket is ready to accept a connection.

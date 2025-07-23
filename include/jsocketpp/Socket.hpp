@@ -13,6 +13,7 @@
 #include "common.hpp"
 
 #include <array>
+#include <bit>
 #include <limits>
 #include <optional>
 #include <span>
@@ -178,12 +179,12 @@ class Socket
      *
      * @param[in] host The remote hostname or IP address (e.g., "example.com", "127.0.0.1", "::1").
      * @param[in] port The TCP port number to connect to (range: 1–65535).
-     * @param[in] recvBufferSize Socket-level receive buffer size (`SO_RCVBUF`). Defaults to `DefaultBufferSize` (4096
-     * bytes).
-     * @param[in] sendBufferSize Socket-level send buffer size (`SO_SNDBUF`). Defaults to `DefaultBufferSize` (4096
+     * @param[in] recvBufferSize Socket-level receive buffer size (`SO_RCVBUF`). Defaults to @ref DefaultBufferSize
+     * (4096 bytes).
+     * @param[in] sendBufferSize Socket-level send buffer size (`SO_SNDBUF`). Defaults to @ref DefaultBufferSize (4096
      * bytes).
      * @param[in] internalBufferSize Size of the internal buffer used for high-level `read<T>()` operations. This is
-     * distinct from the kernel socket buffers. Defaults to `DefaultBufferSize (4096 bytes).
+     * distinct from the kernel socket buffers. Defaults to @ref DefaultBufferSize (4096 bytes).
      *
      * @throws SocketException If hostname resolution fails, socket creation fails, or buffer configuration fails.
      *
@@ -409,70 +410,71 @@ class Socket
      * @brief Establishes a TCP connection to the remote host with optional timeout control.
      * @ingroup tcp
      *
-     * Attempts to establish a TCP connection to the remote host specified during Socket construction.
-     * The connection can be attempted in either blocking or non-blocking mode, depending on the
-     * timeout parameter.
+     * Attempts to connect to the remote host and port specified during `Socket` construction.
+     * This method supports both blocking and non-blocking connection attempts, depending on
+     * the `timeoutMillis` parameter.
      *
      * ### Connection Modes
-     * - **Blocking Mode** (timeoutMillis < 0):
-     *   - Blocks until connection is established or fails
-     *   - Traditional synchronous behavior
-     *   - Suitable for simple clients
+     * - **Blocking Mode** (`timeoutMillis < 0`):
+     *   - Performs a traditional blocking connect().
+     *   - The call blocks until the connection succeeds or fails.
+     *   - Best suited for synchronous applications.
      *
-     * - **Non-blocking Mode with Timeout** (timeoutMillis >= 0):
-     *   - Uses select() to monitor connection progress
-     *   - Returns or throws exception after timeout
-     *   - Prevents indefinite blocking
-     *   - Ideal for responsive applications
+     * - **Non-blocking Mode with Timeout** (`timeoutMillis >= 0`):
+     *   - Temporarily switches the socket to non-blocking mode.
+     *   - Initiates a connection and waits for readiness using `select()`.
+     *   - Throws an exception if the connection does not complete within the timeout period.
+     *   - Restores original blocking mode automatically (RAII).
+     *   - Recommended for GUI, async, or responsive applications.
+     *
+     * ### Implementation Details
+     * - Uses `::connect()` followed by `::select()` to monitor write readiness.
+     * - Once writable, uses `getsockopt(SO_ERROR)` to determine if the connection succeeded.
+     * - On POSIX systems, if the socket descriptor exceeds `FD_SETSIZE`, a `SocketException` is thrown.
+     * - The socket's original blocking mode is automatically restored using `ScopedBlockingMode`.
+     *
+     * ### Platform Notes
+     * - On **POSIX**, `select()` monitors the socket using `fd_set`; the file descriptor must be `< FD_SETSIZE`
+     * (typically 1024).
+     * - On **Windows**, `select()` ignores its first parameter and allows descriptors up to `~2030`, but limits still
+     * apply.
      *
      * ### Example Usage
      * @code{.cpp}
      * Socket sock("example.com", 80);
      *
-     * // Blocking connect (will wait indefinitely)
+     * // Blocking connect (waits indefinitely)
      * sock.connect();
      *
-     * // Connect with 5-second timeout
+     * // Connect with a 5-second timeout (non-blocking)
      * try {
      *     sock.connect(5000);
+     * } catch (const SocketTimeoutException& timeout) {
+     *     std::cerr << "Connection timed out\\n";
      * } catch (const SocketException& ex) {
-     *     if (ex.getErrorCode() == ETIMEDOUT) {
-     *         std::cerr << "Connection timed out\n";
-     *     }
+     *     std::cerr << "Connect failed: " << ex.what() << "\\n";
      * }
      * @endcode
      *
-     * ### Implementation Details
-     * 1. In non-blocking mode:
-     *    - Sets socket to non-blocking
-     *    - Initiates connection (returns EINPROGRESS/WSAEINPROGRESS)
-     *    - Uses select() to wait for completion
-     *    - Verifies connection success
-     *    - Restores blocking mode if needed
-     *
-     * 2. In blocking mode:
-     *    - Performs traditional blocking connect()
-     *    - Returns when connected or throws on error
-     *
      * @param[in] timeoutMillis Connection timeout in milliseconds:
-     *                          - Negative: blocking mode (no timeout)
-     *                          - Zero or positive: maximum wait time
+     *                          - Negative: use blocking mode (no timeout)
+     *                          - Zero or positive: maximum wait duration in milliseconds
      *
-     * @throws SocketException In cases of:
-     *         - Connection timeout
-     *         - Connection refused
-     *         - Network unreachable
-     *         - Invalid address
-     *         - Permission denied
-     *         - Other system-specific errors
+     * @throws SocketTimeoutException If the connection did not complete before the timeout.
+     * @throws SocketException If:
+     *         - No address information was resolved
+     *         - The socket is invalid or closed
+     *         - The connection fails (e.g., refused, unreachable, or timed out)
+     *         - The descriptor exceeds platform-specific `select()` limits
+     *         - `getsockopt()` reports an error after select returns success
      *
-     * @note This method is not thread-safe. Do not call connect() on the same Socket
-     *       instance from multiple threads simultaneously.
+     * @note This method is **not thread-safe**. Do not call `connect()` on the same `Socket`
+     *       instance concurrently from multiple threads.
      *
-     * @see isConnected() Check if connection is established
-     * @see close() Close the connection
-     * @see setNonBlocking() Change blocking mode
-     * @see waitReady() Low-level connection monitoring
+     * @see isConnected()  Check if the connection was established
+     * @see close()        Close the socket
+     * @see setNonBlocking() Permanently change blocking mode
+     * @see waitReady()    Low-level readiness polling with timeout
      */
     void connect(int timeoutMillis = -1) const;
 
@@ -488,8 +490,8 @@ class Socket
      * ### Implementation Details
      * - Allocates a temporary buffer of `sizeof(T)` bytes
      * - Loops on `recv()` until all bytes are received (handles partial reads)
-     * - Copies the buffer into a zero-initialized `T` using `std::memcpy`
-     * - Enforces type constraint: `std::is_trivially_copyable_v<T>`
+     * - Copies the buffer into a `std::array<std::byte, sizeof(T)>` and performs a `std::bit_cast`
+     * - Enforces type constraint: `std::is_trivially_copyable_v<T>` and `std::is_standard_layout_v<T>`
      * - Performs **no** byte order conversion, alignment, or field normalization
      *
      * ### Example Usage
@@ -550,33 +552,36 @@ class Socket
      * @see setSoRecvTimeout()   To configure read timeout behavior
      * @see isConnected()        To check whether the socket is currently usable
      */
-    template <typename T> T read()
+    template <typename T> [[nodiscard]] T read()
     {
-        static_assert(std::is_trivially_copyable_v<T>, "Socket::read<T>() only supports trivially copyable types");
-        T r;
-        std::array<char, sizeof(T)> buffer;
-        size_t totalRead = 0;
-        size_t remaining = sizeof(T);
+        static_assert(std::is_trivially_copyable_v<T>, "Socket::read<T>() requires a trivially copyable type");
+        static_assert(std::is_standard_layout_v<T>, "Socket::read<T>() requires a standard layout type");
+
+        std::array<std::byte, sizeof(T)> buffer{};
+        std::size_t totalRead = 0;
+        std::size_t remaining = sizeof(T);
 
         while (remaining > 0)
         {
-            const auto len = recv(this->_sockFd, buffer.data() + totalRead,
+            const auto len = recv(_sockFd, reinterpret_cast<char*>(buffer.data()) + totalRead,
 #ifdef _WIN32
                                   static_cast<int>(remaining),
 #else
                                   remaining,
 #endif
                                   0);
+
             if (len == SOCKET_ERROR)
                 throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-            if (len == 0)
-                throw SocketException(0, "Connection closed by remote host.");
 
-            totalRead += len;
-            remaining -= len;
+            if (len == 0)
+                throw SocketException(0, "Connection closed by remote host before full object was received.");
+
+            totalRead += static_cast<std::size_t>(len);
+            remaining -= static_cast<std::size_t>(len);
         }
-        std::memcpy(&r, buffer.data(), sizeof(T));
-        return r;
+
+        return std::bit_cast<T>(buffer);
     }
 
     /**
@@ -628,6 +633,7 @@ class Socket
      *
      * @note This method blocks until all `n` bytes are read or an error occurs.
      *       It is not suitable for variable-length or streaming reads.
+     * @note This method returns an empty string if n == 0.
      *
      * @see read<std::string>() For best-effort, buffered reads
      * @see read<T>() For fixed-size reads of trivially copyable types
@@ -731,67 +737,53 @@ class Socket
     }
 
     /**
-     * @brief Performs a best-effort read of up to `n` bytes from the socket.
+     * @brief Performs a single best-effort read of up to `n` bytes from the socket.
      * @ingroup tcp
      *
-     * Attempts to read up to `n` bytes from the socket in a single `recv()` call.
-     * This method is non-blocking in spirit—it will return as soon as any data
-     * is available, even if the full requested size is not received. It is ideal
-     * for use cases where responsiveness is more important than completeness,
-     * such as polling loops, real-time systems, or event-driven designs.
+     * This method attempts to read up to `n` bytes from the socket using a single `recv()` call.
+     * It is designed for responsiveness: it returns as soon as any data is available—whether
+     * that's the full `n` bytes, fewer bytes, or even zero if the connection was closed.
      *
-     * Unlike `readExact()`, this method makes no guarantee that `n` bytes will be
-     * returned. If the connection is closed or no data is available at the time
-     * of the call (especially with a non-blocking socket), it may return fewer
-     * bytes or an empty result.
+     * This is a low-overhead, non-looping read ideal for event-driven designs, polling, or
+     * non-blocking sockets. It differs from `readExact()` in that it does not retry or wait
+     * for the full amount of data.
      *
      * ### Implementation Details
-     * - Performs a single `recv()` system call
-     * - Returns immediately with available data (up to `n` bytes)
-     * - Does not loop or retry partial reads
-     * - Fully binary-safe and preserves byte ordering
+     * - Calls `recv()` exactly once with a preallocated buffer
+     * - Returns available data immediately (up to `n` bytes)
+     * - Resizes the result to the actual number of bytes read
+     * - Throws on socket errors or if the connection is closed
      *
      * ### Example Usage
      * @code{.cpp}
      * Socket sock("example.com", 8080);
      * sock.connect();
      *
-     * // Read up to 1024 bytes from the socket
-     * std::string chunk = sock.readAtMost(1024);
-     * std::cout << "Received " << chunk.size() << " bytes\n";
-     *
-     * // Use with non-blocking socket
-     * sock.setNonBlocking(true);
-     * try {
-     *     std::string packet = sock.readAtMost(512);
-     *     process(packet);
-     * } catch (const SocketException& ex) {
-     *     if (ex.getErrorCode() == EWOULDBLOCK || ex.getErrorCode() == EAGAIN) {
-     *         // No data available now, try again later
-     *     }
+     * // Try to read up to 512 bytes
+     * std::string chunk = sock.readAtMost(512);
+     * if (!chunk.empty()) {
+     *     process(chunk);
      * }
      * @endcode
      *
-     * @param[in] n The maximum number of bytes to read in a single call.
-     *              Must be greater than zero. Actual returned size may be less.
+     * @param[in] n Maximum number of bytes to read in one call. Must be greater than 0.
      *
-     * @return A `std::string` containing 0 to `n` bytes of data. An empty string
-     *         may indicate no data was available or the peer has closed the connection.
+     * @return A `std::string` containing 0 to `n` bytes of data. An empty string means
+     *         the connection was closed or nothing was available (e.g., non-blocking mode).
      *
      * @throws SocketException If:
-     *         - The socket is invalid or not connected (`EBADF`)
-     *         - A network error occurs (`ECONNRESET`, `ENETDOWN`, etc.)
-     *         - The connection is closed (`recv() == 0`)
-     *         - A memory allocation fails (`std::bad_alloc`)
+     *         - The socket is invalid, disconnected, or closed (`EBADF`, `ENOTCONN`, etc.)
+     *         - A network error occurs during the `recv()` operation
+     *         - The connection was closed by the peer (`recv()` returned 0)
+     *         - Memory allocation fails during buffer allocation
      *
-     * @note This method performs a single system call and does not retry.
-     *       Use `readExact()` to enforce exact-length reads, or `readUntil()`
-     *       for delimiter-based parsing.
+     * @note Unlike `readExact()`, this method does not retry or loop. Use with care in protocols
+     *       that depend on strict byte counts.
      *
-     * @see readExact() For reading a guaranteed number of bytes
-     * @see read<std::string>() For buffered one-shot reads using internal buffer
-     * @see setNonBlocking() To configure non-blocking mode
-     * @see setSoRecvTimeout() To configure blocking read timeouts
+     * @see readExact() For guaranteed-length blocking reads
+     * @see readUntil() For delimiter-based parsing
+     * @see setNonBlocking() To configure socket non-blocking behavior
+     * @see setSoRecvTimeout() To configure read timeout
      */
     std::string readAtMost(std::size_t n) const;
 
@@ -1023,8 +1015,8 @@ class Socket
      */
     template <typename T> std::string readPrefixed()
     {
-        static_assert(std::is_integral_v<T> && std::is_trivially_copyable_v<T>,
-                      "Prefix type must be a trivially copyable integral type");
+        static_assert(std::is_integral_v<T> && std::is_unsigned_v<T> && std::is_trivially_copyable_v<T>,
+                      "Prefix type must be a trivially copyable unsigned integral type");
 
         T netLen = read<T>();
         T length = net::fromNetwork(netLen);
@@ -1422,25 +1414,26 @@ class Socket
 
     /**
      * @brief Discards exactly `n` bytes from the socket by reading and discarding them.
+     * @ingroup tcp
      *
      * This method reads and discards `n` bytes from the socket without returning any data.
      * It is useful in scenarios where part of the stream should be skipped (e.g., headers,
      * fixed-length preambles, corrupted payloads).
      *
      * The discard operation is performed using a temporary buffer of configurable size,
-     * which defaults to 1024 bytes. This chunk size is chosen as a balance between memory
-     * usage and I/O efficiency, but can be tuned for performance.
+     * which defaults to 1024 bytes. If the chunk size is 0, the method throws an exception.
      *
      * @param[in] n Number of bytes to discard. Must be greater than 0.
      * @param[in] chunkSize Size (in bytes) of the temporary buffer used for reading/discarding. Default is 1024.
      *
-     * @throws SocketException If the socket is invalid, an error occurs during `recv()`,
-     *                         or the connection is closed before all `n` bytes are discarded.
+     * @throws SocketException If:
+     *         - The socket is invalid
+     *         - An error occurs during `recv()`
+     *         - The connection is closed before all `n` bytes are discarded
+     *         - `chunkSize` is 0
      *
      * @note For optimal performance on high-throughput streams or large discards,
      * consider using a larger chunk size (e.g., 4096 or 8192).
-     *
-     * @ingroup tcp
      */
     void discard(std::size_t n, std::size_t chunkSize = 1024) const;
 
@@ -1504,9 +1497,10 @@ class Socket
      *   - Sends FIN packet to peer
      *   - Receive operations remain unaffected
      *
-     * - **ShutdownMode::Both**: Disables both send and receive operations
+     * - **ShutdownMode::Both**: Disables both send and receive operations (full-duplex shutdown)
      *   - Equivalent to calling shutdown() with Read and Write modes
-     *   - Most similar to close() but keeps socket descriptor valid
+     *   - Unlike `close()`, this does **not** release the socket descriptor or system resources.
+     *   - The socket remains open and can still be queried, reused, or closed later.
      *
      * ### Example Usage
      * @code{.cpp}
@@ -1569,7 +1563,7 @@ class Socket
      * - Performs a single call to `send()` (platform-specific: `send()` or `send_s()` on Windows)
      * - Supports binary data, including embedded null bytes (`\0`)
      * - Returns the number of bytes actually written (may be less than `message.size()`)
-     * - Caller is responsible for retrying if needed
+     * - This method does not retry; for guaranteed delivery use writeAll().
      *
      * ### Example Usage
      * @code{.cpp}
@@ -1602,6 +1596,8 @@ class Socket
      *
      * @see writeAll() For guaranteed delivery via retries
      * @see writeWithTotalTimeout() For deadline-bounded full writes
+     * @see writeFrom() For zero-copy buffer-based sending
+     * @see writev() For vectorized scatter/gather writes
      * @see setNonBlocking() To configure non-blocking socket behavior
      * @see setSoSendTimeout() To configure write timeouts
      */
@@ -1664,68 +1660,70 @@ class Socket
     std::size_t writeAll(std::string_view message) const;
 
     /**
-     * @brief Writes a length-prefixed payload using a fixed-size prefix type.
+     * @brief Writes a length-prefixed payload using a fixed-size integral prefix.
      * @ingroup tcp
      *
      * Sends a message that consists of a length prefix followed by the actual payload.
-     * The prefix type `T` determines the format and size of the length field and is
-     * written in **network byte order** for cross-platform interoperability.
+     * The prefix is encoded in **network byte order** to ensure cross-platform compatibility.
      *
      * ### Implementation Details
-     * - The payload length is first cast to `T` (must not exceed max representable value)
+     * - The length of the payload is cast to type `T` (must not exceed its maximum value)
      * - The prefix is converted to **network byte order** using `net::toNetwork()`
-     * - The prefix is written first, followed immediately by the raw payload
-     * - Accepts either `std::string` or raw `(void*, size)` overloads
+     * - The prefix is copied into a properly aligned buffer to avoid undefined behavior
+     * - The prefix is written first, followed immediately by the payload
+     * - This overload accepts any `std::string_view`, allowing use with string literals,
+     *   slices, or raw binary buffers
      *
      * ### Example Usage
      * @code{.cpp}
      * Socket sock("example.com", 8080);
      * sock.connect();
      *
-     * std::string msg = "Hello, world!";
+     * std::string_view msg = "Hello, world!";
      *
      * // Send message with 32-bit length prefix
      * std::size_t totalBytes = sock.writePrefixed<uint32_t>(msg);
-     * std::cout << "Sent " << totalBytes << " bytes\n";
+     * std::cout << "Sent " << totalBytes << " bytes\\n";
      * @endcode
      *
      * ### Protocol Format
      * <pre>
      * +----------------+----------------------+
-     * | Length (T)     | Payload (n bytes)   |
+     * | Length (T)     | Payload (n bytes)    |
      * +----------------+----------------------+
      * |<- sizeof(T) ->|<---- length ------->|
      * </pre>
      *
      * @tparam T The unsigned integral type used for the length prefix (e.g., `uint32_t`).
-     *           Must be a trivially copyable type.
+     *           Must be trivially copyable.
      *
-     * @param payload The string data to send. The length of this string will be encoded
-     *        as the prefix and must not exceed the maximum value of type `T`.
+     * @param payload The payload data to send. The length of this view will be encoded
+     *        as the prefix and must not exceed the maximum representable value of type `T`.
      *
      * @return The total number of bytes written (prefix + payload).
      *
      * @throws SocketException If:
      *         - Writing the prefix or payload fails
-     *         - Payload length exceeds max value representable by `T`
+     *         - Payload size exceeds the maximum encodable value for type `T`
      *         - The connection is closed or interrupted
      *
      * @note The prefix is automatically converted to **network byte order**
-     *       using `jsocketpp::net::toNetwork()`. The receiver must decode the prefix
+     *       using `jsocketpp::net::toNetwork()`. The receiving side must decode it
      *       using `readPrefixed<T>()` or equivalent logic.
      *
-     * @see readPrefixed()  To decode the corresponding message
-     * @see writeFromAll()  To write raw binary data without a prefix
-     * @see net::toNetwork() For details on byte order conversion
+     * @see readPrefixed()    To decode the corresponding message
+     * @see writeAll()        To write data without a length prefix
+     * @see net::toNetwork()  For details on byte order conversion
      */
-    template <typename T> std::size_t writePrefixed(const std::string& payload)
+    template <typename T> std::size_t writePrefixed(const std::string_view payload)
     {
         static_assert(std::is_integral_v<T> && std::is_trivially_copyable_v<T>,
                       "Prefix type must be a trivially copyable integral type");
 
         const std::size_t payloadSize = payload.size();
 
-        // Put parentheses around the `max` function name due to a collision with
+        // Guard against overflows: ensure payload fits in the prefix type
+        // Note: Put parentheses around the `max` function name due to a collision with
         // a macro defined in windows.h. See:
         // https://stackoverflow.com/a/13420838/3049315
         // Another alternative would be to define `NOMINMAX` before including windows.h
@@ -1736,10 +1734,16 @@ class Socket
                                          " exceeds maximum encodable size for prefix type");
         }
 
+        // Convert the length to network byte order
         T len = net::toNetwork(static_cast<T>(payloadSize));
 
+        // Copy the prefix value into a properly aligned buffer to avoid UB
+        std::array<char, sizeof(T)> prefixBuffer{};
+        std::memcpy(prefixBuffer.data(), &len, sizeof(T));
+        const std::string_view prefixView(prefixBuffer.data(), sizeof(T));
+
         // Write the length prefix
-        const std::size_t prefixSent = writeAll(std::string_view(reinterpret_cast<const char*>(&len), sizeof(T)));
+        const std::size_t prefixSent = writeAll(prefixView);
 
         // Then write the payload
         const std::size_t dataSent = writeAll(payload);
@@ -1786,6 +1790,7 @@ class Socket
      *
      * @throws SocketException If:
      *         - `len` exceeds the maximum value representable by `T`
+     *         - If data is null and len > 0
      *         - Writing the prefix or payload fails
      *         - Connection is closed or interrupted
      *
@@ -1803,26 +1808,39 @@ class Socket
         static_assert(std::is_integral_v<T> && std::is_trivially_copyable_v<T>,
                       "Prefix type must be a trivially copyable integral type");
 
+        // Check for null pointer with non-zero length
         if (!data && len > 0)
+        {
             throw SocketException(0, "writePrefixed: Null data pointer with non-zero length");
+        }
 
+        // Ensure the payload length fits in the prefix type
         if (len > static_cast<std::size_t>((std::numeric_limits<T>::max)()))
         {
-            throw SocketException(0, "writePrefixed: Payload length exceeds capacity of prefix type");
+            throw SocketException(0, "writePrefixed: Payload length " + std::to_string(len) +
+                                         " exceeds capacity of prefix type (" +
+                                         std::to_string((std::numeric_limits<T>::max)()) + ")");
         }
 
+        // Encode prefix in network byte order
         T prefix = net::toNetwork(static_cast<T>(len));
 
-        // Send prefix
-        writeAll(std::string_view(reinterpret_cast<const char*>(&prefix), sizeof(T)));
+        // Use aligned buffer to avoid undefined behavior when casting to char*
+        std::array<char, sizeof(T)> prefixBuffer{};
+        std::memcpy(prefixBuffer.data(), &prefix, sizeof(T));
+        const std::string_view prefixView(prefixBuffer.data(), sizeof(T));
 
-        // Send payload
+        // Send prefix
+        const std::size_t prefixSent = writeAll(prefixView);
+
+        // Send payload if any
+        std::size_t payloadSent = 0;
         if (len > 0)
         {
-            writeAll(std::string_view(static_cast<const char*>(data), len));
+            payloadSent = writeAll(std::string_view(static_cast<const char*>(data), len));
         }
 
-        return sizeof(T) + len;
+        return prefixSent + payloadSent;
     }
 
     /**
@@ -2530,7 +2548,7 @@ class Socket
      * @see isConnected() Check if socket is actually connected
      * @see close() Invalidates the socket
      */
-    [[nodiscard]] bool isValid() const noexcept { return this->_sockFd != INVALID_SOCKET; }
+    [[nodiscard]] bool isValid() const noexcept { return _sockFd != INVALID_SOCKET; }
 
     /**
      * @brief Sets the socket to either non-blocking or blocking mode.
@@ -2659,6 +2677,7 @@ class Socket
      * Internally, this sets the `SO_RCVTIMEO` socket option via `setsockopt()`:
      * - On **Windows**, the value is interpreted directly as an integer in milliseconds.
      * - On **POSIX** systems, the value is converted into a `timeval` structure.
+     * - A negative value is invalid and will throw a `SocketException`.
      *
      * ### Example Usage
      * @code{.cpp}
@@ -2671,9 +2690,10 @@ class Socket
      * std::string response = sock.readUntil('\n'); // Will throw if no data in 3s
      * @endcode
      *
-     * @param millis Receive timeout in milliseconds. Use 0 to disable the timeout.
+     * @param millis Receive timeout in milliseconds. Use 0 to disable the timeout. Must be non-negative.
      *
-     * @throws SocketException If the socket is invalid, closed, or if `setsockopt()` fails due to:
+     * @throws SocketException If the socket is invalid, closed, the timeout is negative,
+     *         or if `setsockopt()` fails due to:
      *         - `EBADF` (bad file descriptor)
      *         - `ENOPROTOOPT` (option not available)
      *         - `ENOMEM` or `EFAULT` (invalid pointer or memory error)
@@ -2699,6 +2719,7 @@ class Socket
      * Internally, this sets the `SO_SNDTIMEO` socket option using `setsockopt()`:
      * - On **Windows**, the timeout is set directly as an integer (milliseconds).
      * - On **POSIX**, it is converted into a `timeval` structure.
+     * - A negative value is considered invalid and will result in a `SocketException`.
      *
      * ### Example Usage
      * @code{.cpp}
@@ -2711,9 +2732,10 @@ class Socket
      * sock.writeAll(request); // Will fail if peer is unresponsive for 5s
      * @endcode
      *
-     * @param millis Send timeout in milliseconds. Use 0 to disable the timeout.
+     * @param millis Send timeout in milliseconds. Use 0 to disable the timeout. Must be non-negative.
      *
      * @throws SocketException If the socket is invalid or if `setsockopt()` fails due to:
+     *         - A negative timeout value
      *         - `EBADF` (bad file descriptor)
      *         - `ENOPROTOOPT` (option not available)
      *         - `ENOMEM` or `EFAULT` (invalid pointer or memory error)
@@ -2801,12 +2823,66 @@ class Socket
     int getSoSendTimeout() const;
 
     /**
-     * @brief Wait for the socket to be ready for reading or writing.
+     * @brief Waits for the socket to become ready for reading or writing.
+     * @ingroup tcp
      *
-     * @param forWrite true to wait for write, false for read.
-     * @param timeoutMillis Timeout in milliseconds.
-     * @return true if ready, false if timeout.
-     * @throws SocketException on error.
+     * This method performs a blocking or timed wait until the socket is ready for either
+     * reading or writing, depending on the `forWrite` parameter. Internally, it uses the
+     * `select()` system call to monitor readiness.
+     *
+     * The timeout is specified in milliseconds. A negative timeout value (e.g., `-1`)
+     * causes the method to wait indefinitely until the socket becomes ready.
+     * A timeout of `0` performs a non-blocking poll.
+     *
+     * ### Implementation Notes
+     * - Internally uses `select()` on both POSIX and Windows platforms.
+     * - On POSIX, the socket descriptor must be **less than `FD_SETSIZE`** (typically 1024).
+     *   If the descriptor exceeds this limit, a `SocketException` is thrown.
+     * - On Windows, the first parameter to `select()` is ignored and always set to 0.
+     * - This method works for both blocking and non-blocking sockets.
+     *
+     * ### Example
+     * @code{.cpp}
+     * Socket sock("example.com", 8080);
+     * sock.connect();
+     * if (sock.waitReady(false, 5000)) {
+     *     std::string msg = sock.read<std::string>();
+     *     std::cout << "Received: " << msg << "\\n";
+     * }
+     * @endcode
+     *
+     * ### Protocol Behavior
+     * - `forWrite == false`: Waits for the socket to be readable (e.g., data available).
+     * - `forWrite == true`:  Waits for the socket to be writable (e.g., buffer space available).
+     *
+     * @param forWrite If true, waits for the socket to become writable; if false, waits for it to be readable.
+     * @param timeoutMillis Timeout in milliseconds. Use `-1` for infinite wait, or `0` for non-blocking polling.
+     *
+     * @retval true  The socket is ready for I/O.
+     * @retval false The timeout expired before the socket became ready.
+     *
+     * @throws SocketException If:
+     *         - The socket is invalid (`INVALID_SOCKET`)
+     *         - The socket descriptor exceeds `FD_SETSIZE` (POSIX only)
+     *         - A system error occurs during polling
+     *
+     * @note
+     * This method uses the legacy `select()` system call, which is portable but has limitations:\n
+     * - On POSIX systems, it cannot monitor descriptors ≥ `FD_SETSIZE` (usually 1024)\n
+     * - `fd_set` is a static bitset, and overflow causes undefined behavior\n
+     * - `select()` scales poorly with large socket sets\n\n
+     * **Alternatives:**\n
+     * - On POSIX: `poll()` (removes FD_SETSIZE limit, cleaner API)\n
+     * - On Linux: `epoll` (scales to thousands of fds)\n
+     * - On BSD/macOS: `kqueue` (efficient and feature-rich)\n
+     * - On Windows: `WSAPoll()` (requires Windows Vista+), or I/O Completion Ports for async\n\n
+     * These alternatives are better suited for server-side multiplexing and event-driven designs.
+     * For single-socket or per-connection waiting, `select()` remains simple and widely compatible.
+     *
+     * @see setBlocking() To configure blocking/non-blocking mode
+     * @see read()        For reading data once the socket is ready
+     * @see write()       For writing data once the socket is ready
+     * @see FD_SETSIZE    System-defined maximum descriptor index for `select()`
      */
     bool waitReady(bool forWrite, int timeoutMillis) const;
 
