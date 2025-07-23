@@ -57,6 +57,11 @@ namespace jsocketpp
 class SocketException : public std::runtime_error, public std::nested_exception
 {
   public:
+    explicit SocketException(const std::string& message = "SocketException")
+        : std::runtime_error(message), _errorCode(0)
+    {
+    }
+
     explicit SocketException(const int code, const std::string& message = "SocketException")
         : std::runtime_error(message + " (" + std::to_string(code) + ")"), _errorCode(code)
     {

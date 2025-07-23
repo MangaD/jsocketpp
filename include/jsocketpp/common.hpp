@@ -154,6 +154,25 @@
  */
 
 /**
+ * @defgroup socketopts Socket Options
+ * @ingroup jsocketpp
+ * @brief Low-level socket configuration options exposed via the `Socket` and related classes.
+ *
+ * This module contains functions and accessors for configuring standard socket options
+ * such as SO_LINGER, SO_RCVTIMEO, TCP_NODELAY, SO_REUSEADDR, and SO_KEEPALIVE.
+ *
+ * These options provide fine-grained control over low-level socket behavior such as
+ * timeout behavior, connection shutdown semantics, buffering, and performance tuning.
+ *
+ * All functions in this group are cross-platform abstractions over `setsockopt()` and `getsockopt()`.
+ *
+ * @note Some options may not be available or meaningful on all platforms. Platform-specific
+ * behavior is documented per function.
+ *
+ * @see Socket::setSoLinger(), Socket::getSoLinger(), Socket::setTcpNoDelay(), etc.
+ */
+
+/**
  * @namespace jsocketpp
  * @brief A C++ socket library providing Java-style networking interfaces
  *

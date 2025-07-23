@@ -82,17 +82,17 @@ const char* jsocketpp::inet_ntop_aux(const int af, const void* src, char* dst, s
 
     switch (af)
     {
-    case AF_INET:
-        reinterpret_cast<sockaddr_in*>(&ss)->sin_addr = *(static_cast<const in_addr*>(src));
-        break;
-    case AF_INET6:
-        reinterpret_cast<sockaddr_in6*>(&ss)->sin6_addr = *(static_cast<const in6_addr*>(src));
-        break;
-    default:
-        return nullptr;
+        case AF_INET:
+            reinterpret_cast<sockaddr_in*>(&ss)->sin_addr = *(static_cast<const in_addr*>(src));
+            break;
+        case AF_INET6:
+            reinterpret_cast<sockaddr_in6*>(&ss)->sin6_addr = *(static_cast<const in6_addr*>(src));
+            break;
+        default:
+            return nullptr;
     }
 
-    // Handle the case where we need wide characters on 64-bit Windows
+        // Handle the case where we need wide characters on 64-bit Windows
 #ifdef _WIN64
     wchar_t w_dst[INET6_ADDRSTRLEN]; // Wide character buffer for 64-bit Windows
     unsigned long w_s = sizeof(w_dst) / sizeof(wchar_t);
@@ -263,7 +263,7 @@ std::vector<std::string> jsocketpp::getHostAddr()
     return ips;
 }
 
-std::string ipFromSockaddr(const sockaddr* addr, const bool convertIPv4Mapped)
+std::string jsocketpp::ipFromSockaddr(const sockaddr* addr, const bool convertIPv4Mapped)
 {
     char buf[INET6_ADDRSTRLEN] = {};
 
@@ -295,17 +295,17 @@ std::string ipFromSockaddr(const sockaddr* addr, const bool convertIPv4Mapped)
     return {buf};
 }
 
-Port portFromSockaddr(const sockaddr* addr)
+Port jsocketpp::portFromSockaddr(const sockaddr* addr)
 {
     switch (addr->sa_family)
     {
-    case AF_INET:
-        return ntohs(reinterpret_cast<const sockaddr_in*>(addr)->sin_port);
+        case AF_INET:
+            return ntohs(reinterpret_cast<const sockaddr_in*>(addr)->sin_port);
 
-    case AF_INET6:
-        return ntohs(reinterpret_cast<const sockaddr_in6*>(addr)->sin6_port);
+        case AF_INET6:
+            return ntohs(reinterpret_cast<const sockaddr_in6*>(addr)->sin6_port);
 
-    default:
-        throw SocketException(0, "Unsupported address family in portFromSockaddr");
+        default:
+            throw SocketException(0, "Unsupported address family in portFromSockaddr");
     }
 }

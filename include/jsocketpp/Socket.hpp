@@ -9,8 +9,8 @@
 #pragma once
 
 #include "BufferView.hpp"
-#include "SocketException.hpp"
 #include "common.hpp"
+#include "SocketException.hpp"
 
 #include <array>
 #include <bit>
@@ -376,6 +376,7 @@ class Socket
 
     /**
      * @brief Retrieves the IP address of the connected remote peer.
+     * @ingroup tcp
      *
      * This method returns the remote peer's IP address in numeric form (IPv4 or IPv6).
      * If the socket is using an IPv4-mapped IPv6 address (e.g., ::ffff:192.168.1.10) and
@@ -390,6 +391,7 @@ class Socket
 
     /**
      * @brief Retrieves the port number of the connected remote peer.
+     * @ingroup tcp
      *
      * This method returns the port number of the remote endpoint that this socket is connected to.
      * The result is always returned in host byte order (e.g., 443, 8080).
@@ -402,6 +404,7 @@ class Socket
 
     /**
      * @brief Retrieves the local IP address this socket is bound to.
+     * @ingroup tcp
      *
      * This method returns the local interface IP address assigned to the socket,
      * in numeric string format (e.g., "127.0.0.1", "192.168.1.5", or "fe80::1").
@@ -417,6 +420,7 @@ class Socket
 
     /**
      * @brief Retrieves the local port number this socket is bound to.
+     * @ingroup tcp
      *
      * This method returns the local port assigned to the socket during binding or connection.
      * The result is in host byte order and suitable for logging, diagnostics, or introspection.
@@ -429,6 +433,7 @@ class Socket
 
     /**
      * @brief Retrieves the full local socket address in the form "IP:port".
+     * @ingroup tcp
      *
      * This method combines the local IP address and port into a single human-readable string.
      * If the IP address is an IPv4-mapped IPv6 (e.g., ::ffff:192.0.2.1) and @p convertIPv4Mapped is true,
@@ -2888,6 +2893,87 @@ class Socket
      * @see write() For operations that may block based on this timeout
      */
     int getSoSendTimeout() const;
+
+    /**
+     * @brief Configures the socket's linger behavior (SO_LINGER) on close.
+     * @ingroup socketopts
+     *
+     * The SO_LINGER option controls how the socket behaves when it is closed and unsent data remains.
+     * It determines whether `close()` (or `shutdown()` followed by `close()`) blocks while the kernel
+     * attempts to flush unsent data, or whether it returns immediately and discards it.
+     *
+     * #### When enabled (`enable == true`):
+     * The socket enters a "lingering" state on close. The OS will attempt to transmit any unsent data,
+     * blocking the `close()` call for up to `seconds`. If the data is fully sent before the timeout,
+     * the socket closes cleanly. Otherwise, it is forcefully closed after the timeout.
+     *
+     * #### When disabled (`enable == false`):
+     * The socket closes immediately, even if unsent data remains. This can cause truncation or reset
+     * at the receiving end (e.g., the receiver may see a TCP RST instead of a graceful FIN).
+     *
+     * @param enable Whether to enable linger mode.
+     * @param seconds Timeout duration in seconds. Only used when \p enable is true.
+     *                Must be non-negative. A value of 0 causes an abortive close (RST).
+     *
+     * @throws SocketException If the SO_LINGER option could not be applied.
+     *
+     * @see getSoLinger()
+     *
+     * ### 📌 Use Cases
+     * - **Graceful TCP Shutdown**: When sending critical data (e.g., file footers, checksums),
+     *   linger ensures the data is actually transmitted before closing.
+     * - **Fast Connection Teardown**: Disabling linger (or enabling with 0 seconds) is useful in
+     *   high-load servers or testing tools where you need to immediately free resources.
+     * - **Avoiding TIME_WAIT Accumulation**: With linger disabled, the socket doesn't wait, which
+     *   reduces kernel resource usage but can cause abrupt termination.
+     *
+     * @code
+     *   // Wait up to 5 seconds for pending data to be sent on close()
+     *   socket.setSoLinger(true, 5);
+     *
+     *   // Immediately abort on close, discard unsent data, and send TCP RST
+     *   socket.setSoLinger(true, 0);
+     *
+     *   // Disable lingering entirely (standard close behavior)
+     *   socket.setSoLinger(false, 0);
+     * @endcode
+     */
+    void setSoLinger(bool enable, int seconds);
+
+    /**
+     * @brief Retrieves the socket's current SO_LINGER configuration.
+     * @ingroup socketopts
+     *
+     * This method returns whether SO_LINGER is enabled, and if so, the number of seconds
+     * the socket will linger (i.e., block) on close() to allow unsent data to be transmitted.
+     *
+     * If SO_LINGER is disabled, the socket closes immediately without attempting to flush
+     * unsent data. If enabled, close() will block for up to the specified timeout before
+     * forcefully terminating the connection.
+     *
+     * @return A pair `{enabled, timeout}`:
+     * - `first` (bool): true if SO_LINGER is enabled, false otherwise
+     * - `second` (int): linger timeout in seconds (0 if disabled)
+     *
+     * @throws SocketException If the SO_LINGER option could not be retrieved.
+     *
+     * @see setSoLinger()
+     *
+     * ### 📌 Use Cases
+     * - **Inspecting socket shutdown behavior**: Knowing whether the socket is in blocking close mode is helpful for
+     * debugging or optimizing teardown.
+     * - **Server socket diagnostics**: Some applications may dynamically adjust linger settings and wish to log or
+     * verify current values.
+     *
+     * @code
+     *   auto [enabled, timeout] = socket.getSoLinger();
+     *   if (enabled)
+     *       std::cout << "Linger is enabled for " << timeout << " seconds.\n";
+     *   else
+     *       std::cout << "Linger is disabled.\n";
+     * @endcode
+     */
+    std::pair<bool, int> getSoLinger() const;
 
     /**
      * @brief Waits for the socket to become ready for reading or writing.

@@ -1,0 +1,65 @@
+# Enable core checks grouped by category
+Checks: >
+  clang-analyzer-*,
+  bugprone-*,
+  cppcoreguidelines-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  misc-*,
+  -cppcoreguidelines-owning-memory,                # You use RAII and STL, not manual memory
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,# Too noisy for safe socket code
+  -cppcoreguidelines-pro-type-vararg,              # OK to use variadic functions in logs/syscalls
+  -modernize-use-trailing-return-type,             # Not preferred style in jsocketpp
+  -readability-identifier-naming,                  # Naming is handled via clang-format or manually
+
+# Enforce warnings only (don't fail on notes or minor issues)
+WarningsAsErrors: ''
+
+# Apply only to files in your repo (optional)
+HeaderFilterRegex: '.*'
+
+# Inherit formatting from .clang-format
+FormatStyle: file
+
+# Enable color in diagnostics
+UseColor: true
+
+CheckOptions:
+
+  ### 🧼 Readability: Clean declarations
+  - key: readability-avoid-const-params-in-decls
+    value: true   # Avoid clutter like `const int` or `const std::string` passed by value
+
+  - key: readability-magic-numbers.IgnoreEnums
+    value: true   # Allow constants in enums
+
+  ### 🚀 Performance: Eliminate unnecessary copies
+  - key: performance-unnecessary-value-param.AllowedTypes
+    value: 'std::string;std::vector;std::shared_ptr'
+
+  ### 🧠 Modernize: Encourage modern idioms
+  - key: modernize-loop-convert.MaxCopySize
+    value: '16'   # Allow value capture for small types
+
+  - key: modernize-use-using.CheckAliasTemplates
+    value: true
+
+  - key: modernize-pass-by-value.IncludeStyle
+    value: llvm
+
+  ### 🧱 C++ Core Guidelines: Enforce safety without overreach
+  - key: cppcoreguidelines-special-member-functions.CheckMissingMoveFunctions
+    value: true
+
+  - key: cppcoreguidelines-special-member-functions.WarnIfNotDefinedInline
+    value: false  # You separate headers/impls
+
+  ### ⚠️ Misc: Useful small checks
+  - key: misc-unused-parameters.IgnoreUnusedParamsWithName
+    value: true   # Allow _-prefixed dummy params (e.g., `int /*unused*/`, `int _`)
+
+  ### 🧭 Portability
+  - key: portability-simd-intrinsics.WarnOnUnsupported
+    value: false

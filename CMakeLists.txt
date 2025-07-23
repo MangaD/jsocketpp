@@ -67,18 +67,53 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/jsocketppConfigVersion.cmake" DESTINATION lib/cmake/jsocketpp)
 
-# clang-format integration (if found)
-if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-    find_program(CLANG_FORMAT_EXE NAMES clang-format)
-    if(CLANG_FORMAT_EXE)
-        file(GLOB_RECURSE ALL_SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/src/*.hpp"
-             "${CMAKE_SOURCE_DIR}/tests/*.cpp" "${CMAKE_SOURCE_DIR}/tests/*.hpp")
-        add_custom_target(
-            clang-format
-            COMMAND ${CLANG_FORMAT_EXE} -i --style=file ${ALL_SOURCE_FILES}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            COMMENT "Running clang-format on all source files")
-    endif()
+# ───────────────────────────────────────────────
+# Clang-Tidy & Clang-Format Integration
+# ───────────────────────────────────────────────
+
+# Find clang-tidy if available and enable it conditionally
+find_program(CLANG_TIDY_EXE NAMES clang-tidy)
+
+# Enable clang-tidy only if the environment or cmake variable CLANG_TIDY_ENABLE is set This avoids forcing it on all builds and
+# makes it opt-in for developers or CI.
+if(CLANG_TIDY_EXE AND (DEFINED CLANG_TIDY_ENABLE OR DEFINED ENV{CLANG_TIDY_ENABLE}))
+    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}" "--warnings-as-errors=*")
+    message(STATUS "Clang-Tidy enabled: ${CLANG_TIDY_EXE}")
+else()
+    message(STATUS "Clang-Tidy not enabled (pass -DCLANG_TIDY_ENABLE=ON to enable it)")
+endif()
+
+# Find clang-format and register format-related targets
+find_program(CLANG_FORMAT_EXE NAMES clang-format)
+
+if(CLANG_FORMAT_EXE)
+    # Collect all formatable source files
+    file(
+        GLOB_RECURSE
+        JSOCKETPP_FORMAT_FILES
+        "${CMAKE_SOURCE_DIR}/src/*.cpp"
+        "${CMAKE_SOURCE_DIR}/src/*.hpp"
+        "${CMAKE_SOURCE_DIR}/tests/*.cpp"
+        "${CMAKE_SOURCE_DIR}/tests/*.hpp"
+        "${CMAKE_SOURCE_DIR}/examples/*.cpp")
+
+    # Format files in-place
+    add_custom_target(
+        clang-format
+        COMMAND ${CLANG_FORMAT_EXE} -i --style=file ${JSOCKETPP_FORMAT_FILES}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Formatting source code with clang-format"
+        VERBATIM)
+
+    # Check-only (dry-run) format target — ideal for CI enforcement
+    add_custom_target(
+        clang-format-check
+        COMMAND ${CLANG_FORMAT_EXE} --dry-run --Werror --style=file ${JSOCKETPP_FORMAT_FILES}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Checking clang-format compliance"
+        VERBATIM)
+else()
+    message(STATUS "Clang-Format not found — clang-format targets will not be available")
 endif()
 
 # Export targets for use with find_package()

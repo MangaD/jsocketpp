@@ -1,7 +1,7 @@
 #include "jsocketpp/Socket.hpp"
 
-#include "jsocketpp/SocketTimeoutException.hpp"
 #include "jsocketpp/internal/ScopedBlockingMode.hpp"
+#include "jsocketpp/SocketTimeoutException.hpp"
 
 #include <chrono>
 #include <cstring> // std::memcpy
@@ -210,32 +210,32 @@ void Socket::shutdown(ShutdownMode how) const
 #ifdef _WIN32
     switch (how)
     {
-    case ShutdownMode::Read:
-        shutdownType = SD_RECEIVE;
-        break;
-    case ShutdownMode::Write:
-        shutdownType = SD_SEND;
-        break;
-    case ShutdownMode::Both:
-        [[fallthrough]]; // SD_BOTH is equivalent to SD_SEND | SD_RECEIVE
-    default:
-        shutdownType = SD_BOTH;
-        break;
+        case ShutdownMode::Read:
+            shutdownType = SD_RECEIVE;
+            break;
+        case ShutdownMode::Write:
+            shutdownType = SD_SEND;
+            break;
+        case ShutdownMode::Both:
+            [[fallthrough]]; // SD_BOTH is equivalent to SD_SEND | SD_RECEIVE
+        default:
+            shutdownType = SD_BOTH;
+            break;
     }
 #else
     switch (how)
     {
-    case ShutdownMode::Read:
-        shutdownType = SHUT_RD;
-        break;
-    case ShutdownMode::Write:
-        shutdownType = SHUT_WR;
-        break;
-    case ShutdownMode::Both:
-        [[fallthrough]]; // SHUT_RDWR is equivalent to SHUT_WR | SHUT_RD
-    default:
-        shutdownType = SHUT_RDWR;
-        break;
+        case ShutdownMode::Read:
+            shutdownType = SHUT_RD;
+            break;
+        case ShutdownMode::Write:
+            shutdownType = SHUT_WR;
+            break;
+        case ShutdownMode::Both:
+            [[fallthrough]]; // SHUT_RDWR is equivalent to SHUT_WR | SHUT_RD
+        default:
+            shutdownType = SHUT_RDWR;
+            break;
     }
 #endif
 
@@ -553,6 +553,40 @@ int Socket::getSoSendTimeout() const
 #endif
 }
 
+// NOLINTNEXTLINE(readability-make-member-function-const) - modifies socket state
+void Socket::setSoLinger(const bool enable, const int seconds)
+{
+    if (enable && seconds < 0)
+    {
+        throw SocketException(0, "Socket::setSoLinger(): Linger timeout must be non-negative");
+    }
+
+    ::linger lingerOpt{};
+    lingerOpt.l_onoff = enable ? 1 : 0;
+    lingerOpt.l_linger = static_cast<decltype(lingerOpt.l_linger)>(enable ? seconds : 0);
+
+    const int result = ::setsockopt(_sockFd, SOL_SOCKET, SO_LINGER, reinterpret_cast<const char*>(&lingerOpt),
+                                    static_cast<socklen_t>(sizeof(lingerOpt)));
+
+    if (result < 0)
+    {
+        throw SocketException(GetSocketError(), "Socket::setSoLinger(): setsockopt(SO_LINGER) failed");
+    }
+}
+
+std::pair<bool, int> Socket::getSoLinger() const
+{
+    ::linger lingerOpt{};
+    auto optLen = static_cast<socklen_t>(sizeof(lingerOpt));
+
+    if (::getsockopt(_sockFd, SOL_SOCKET, SO_LINGER, reinterpret_cast<char*>(&lingerOpt), &optLen) < 0)
+    {
+        throw SocketException(GetSocketError(), "Socket::getSoLinger(): getsockopt(SO_LINGER) failed");
+    }
+
+    return {lingerOpt.l_onoff != 0, lingerOpt.l_onoff ? lingerOpt.l_linger : 0};
+}
+
 bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
 {
     if (_sockFd == INVALID_SOCKET)
@@ -802,7 +836,7 @@ std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, co
 
     while (totalRead < maxLen)
     {
-        const std::size_t toRead = (std::min)(_internalBuffer.size(), maxLen - totalRead);
+        const std::size_t toRead = (std::min) (_internalBuffer.size(), maxLen - totalRead);
         const auto len = recv(_sockFd, _internalBuffer.data(),
 #ifdef _WIN32
                               static_cast<int>(toRead),
@@ -1062,7 +1096,7 @@ void Socket::discard(const std::size_t n, const std::size_t chunkSize /* = 1024 
 
     while (totalDiscarded < n)
     {
-        const std::size_t toRead = (std::min)(chunkSize, n - totalDiscarded);
+        const std::size_t toRead = (std::min) (chunkSize, n - totalDiscarded);
 
         const auto len = recv(_sockFd, tempBuffer.data(),
 #ifdef _WIN32

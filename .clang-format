@@ -1,10 +1,135 @@
-BasedOnStyle: LLVM
-IndentWidth: 4
-ColumnLimit: 120
+# ───────────────────────────────────────────────
+# 🧱 BASE STYLE & LANGUAGE
+# ───────────────────────────────────────────────
+
+BasedOnStyle: LLVM           # Clean, modern C++ base style — used by LLVM/Clang, Qt, Chromium
+Language: Cpp
+Standard: c++20              # Enables formatting for modern language features: ranges, lambdas, concepts, etc.
+
+
+# ───────────────────────────────────────────────
+# 🧱 INDENTATION & TABS
+# ───────────────────────────────────────────────
+
+IndentWidth: 4               # Widely adopted for clarity and consistency in C++; used by Mozilla, LLVM, Qt
+UseTab: Never                # Prevents inconsistent rendering across editors and platforms
+
+
+# ───────────────────────────────────────────────
+# 📏 LINE WRAPPING
+# ───────────────────────────────────────────────
+
+ColumnLimit: 120             # Wider than default to reduce line noise for complex C++ types — used by Facebook/Folly, Chromium
+
 AllowShortFunctionsOnASingleLine: Inline
-SortIncludes: true
+# Allow short functions like `int id() const { return _id; }` — keeps accessors and trivial logic compact
+
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+# Avoid visual ambiguity and hidden control flow bugs — recommended by Google and C++ Core Guidelines
+
+AllowShortBlocksOnASingleLine: Empty
+# Allow `{}` for empty blocks only (e.g. while loops) — avoids compressing real logic into one-liners
+
+
+# ───────────────────────────────────────────────
+# 🔗 BRACES AND BLOCKS
+# ───────────────────────────────────────────────
+
+BreakBeforeBraces: Allman    # Each brace on its own line — improves block scannability and visually separates scopes (like Java)
+# Used in Unreal Engine, and by developers favoring clarity over compactness
+
+BraceWrapping:
+  AfterFunction: true
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterStruct: true
+  BeforeCatch: true
+  BeforeElse: true
+  IndentBraces: false        # Keeps braces aligned with scope, not indented (standard in Allman style)
+
+
+# ───────────────────────────────────────────────
+# 🎯 POINTERS & REFERENCES
+# ───────────────────────────────────────────────
+
 DerivePointerAlignment: false
-PointerAlignment: Left
+PointerAlignment: Left       # Style: `int* ptr;` (not `int *ptr;`) — reduces ambiguity when declaring multiple pointers
+# Recommended by Qt, CLion, and the C++ Core Guidelines (P.5)
+
+
+# ───────────────────────────────────────────────
+# 🎛️ SPACING RULES
+# ───────────────────────────────────────────────
+
 SpaceBeforeParens: ControlStatements
-BreakBeforeBraces: Allman
-UseTab: Never
+# Space only before control flow (`if (...)`) but NOT function calls (`foo()`)
+# Recommended by: LLVM, Google, Mozilla
+
+SpaceAfterCStyleCast: true
+# Improves readability of C-style casts: `(int) x` not `(int)x`
+
+SpaceInEmptyBlock: false
+SpacesInAngles: false
+SpacesInContainerLiterals: false
+SpacesInCStyleCastParentheses: false
+SpaceBeforeAssignmentOperators: true
+
+
+# ───────────────────────────────────────────────
+# 🧩 INCLUDE ORDER & SORTING
+# ───────────────────────────────────────────────
+
+SortIncludes: CaseInsensitive
+# Includes are sorted alphabetically without case distinction — improves consistency
+# Used by: LLVM, Google, Mozilla
+
+IncludeBlocks: Preserve      # Prevent collapsing separate include blocks (e.g. separating forward decls vs. includes)
+
+# Custom include order to enforce header hygiene:
+# Ensures headers don't rely on system headers hiding missing includes
+IncludeCategories:
+  - Regex: '^"jsocketpp/.*"'  # Project public headers first
+    Priority: 1
+    SortPriority: 0
+    CaseSensitive: false
+
+  - Regex: '^".*"'            # Local/private headers second
+    Priority: 2
+    SortPriority: 1
+    CaseSensitive: false
+
+  - Regex: '^<.*>'            # System headers last
+    Priority: 3
+    SortPriority: 2
+    CaseSensitive: false
+
+  - Regex: '.*'               # Catch-all fallback
+    Priority: 4
+    SortPriority: 3
+
+
+# ───────────────────────────────────────────────
+# 🧠 TEMPLATES, ALIGNMENT, COMMENTS
+# ───────────────────────────────────────────────
+
+AlwaysBreakTemplateDeclarations: MultiLine
+# One template param per line for readability — especially in metaprogramming-heavy code
+
+AlignAfterOpenBracket: Align
+# Align parameters/elements inside brackets across newlines for visual clarity
+
+AlignOperands: true
+# Align binary operators in multiline expressions — improves vertical readability
+
+ReflowComments: Always
+# Reformat comments to obey ColumnLimit — ensures consistency and avoids unwrapped overflow
+# Used by: LLVM, Mozilla, and many IDEs that support ClangFormat
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+# Avoid extraneous vertical whitespace immediately after `{`
+
+IndentCaseLabels: true
+# Indent `case:` and `default:` inside `switch` — improves scope visibility
+# Recommended by Google and LLVM
