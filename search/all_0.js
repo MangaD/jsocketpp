@@ -12,7 +12,7 @@ var searchData=
   ['1_20options_20for_20all_20sockets_9',['1. Options for All Sockets',['../group__socket-options.html#autotoc_md208',1,'']]],
   ['1_20posix_20linux_20macos_20unix_10',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md289',1,'']]],
   ['1_20prerequisites_11',['1 Prerequisites',['../group__conan__publish__guide.html#autotoc_md162',1,'1. Prerequisites'],['../group__vcpkg__publish__guide.html#autotoc_md347',1,'1. Prerequisites']]],
-  ['1_20reporting_20issues_12',['1. Reporting Issues',['../md_CONTRIBUTING.html#autotoc_md429',1,'']]],
+  ['1_20reporting_20issues_12',['1. Reporting Issues',['../md_CONTRIBUTING.html#autotoc_md422',1,'']]],
   ['1_20server_20side_13',['4.1. Server Side',['../group__sockets__theory.html#autotoc_md283',1,'']]],
   ['1_20setting_20up_20real_20server_20and_20client_3a_14',['2.1 &lt;b&gt;Setting Up Real Server and Client&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md336',1,'']]],
   ['1_20stream_20sockets_20tcp_15',['2.1. Stream Sockets (TCP)',['../group__sockets__theory.html#autotoc_md265',1,'']]],

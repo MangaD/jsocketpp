@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🧵_20tcp_20echo_20server_0',['🧵 TCP Echo Server',['../index.html#autotoc_md390',1,'']]]
+  ['🧷_20unix_20domain_20socket_20ipc_0',['🧷 UNIX Domain Socket (IPC)',['../index.html#autotoc_md396',1,'']]]
 ];

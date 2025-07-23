@@ -348,61 +348,57 @@ $(function(){initNavTree('index.html','',''); });
 <p>You can also generate it locally:</p>
 <div class="fragment"><div class="line">cmake -S . -B build -DBUILD_DOCS=ON</div>
 <div class="line">cmake --build build --target docs</div>
-</div><!-- fragment --><p>The generated HTML will appear in <span class="tt">docs/doxygen/html/index.html</span>.</p>
+<div class="line">````</div>
+<div class="line"> </div>
+<div class="line">The generated HTML will appear in `docs/doxygen/html/index.html`.</div>
+<div class="line"> </div>
+<div class="line">---</div>
+<div class="line"> </div>
+<div class="line">## 🧪 Building and Testing</div>
+<div class="line"> </div>
+<div class="line">The project uses **CMake presets** for consistent and cross-platform builds:</div>
+</div><!-- fragment --><p> sh cmake &ndash;preset=gcc-debug-x64 # or clang-debug-x64 / msvc-x64-static cmake &ndash;build &ndash;preset=gcc-debug-x64 ctest &ndash;preset=gcc-debug-x64 </p><div class="fragment"><div class="line">Presets are defined in [CMakePresets.json](./CMakePresets.json) and include configurations for:</div>
+<div class="line"> </div>
+<div class="line">* GCC, Clang, MSVC, MinGW</div>
+<div class="line">* x64 and ARM64</div>
+<div class="line">* Debug/Release/RelWithDebInfo</div>
+<div class="line">* Shared and static builds</div>
+<div class="line">* CI workflows for GitHub Actions</div>
+<div class="line"> </div>
+<div class="line">Tests are written with **GoogleTest**. To run them:</div>
+</div><!-- fragment --><p> sh ctest &ndash;preset=gcc-debug-x64 </p><div class="fragment"><div class="line">---</div>
+<div class="line"> </div>
+<div class="line">## 🛠 Developer Tooling</div>
+<div class="line"> </div>
+<div class="line">### Pre-commit hooks</div>
+<div class="line"> </div>
+<div class="line">The repository supports pre-commit checks:</div>
+<div class="line"> </div>
+<div class="line">* `clang-format` (via `.clang-format`)</div>
+<div class="line">* `cmake-format` (via `.cmake-format.yaml`)</div>
+<div class="line">* Header guards, whitespace, and YAML checks</div>
+<div class="line"> </div>
+<div class="line">Set up with:</div>
+</div><!-- fragment --><p> sh pip install -r requirements.txt pre-commit install </p><div class="fragment"><div class="line">---</div>
+<div class="line"> </div>
+<div class="line">## 🤝 Contributing</div>
+<div class="line"> </div>
+<div class="line">We welcome PRs, issues, and ideas! Please read the following before contributing:</div>
+<div class="line"> </div>
+<div class="line">* 📋 [CONTRIBUTING.md](./CONTRIBUTING.md)</div>
+<div class="line">* 📜 [CODE\_OF\_CONDUCT.md](./CODE_OF_CONDUCT.md)</div>
+<div class="line">* 🛡️ [SECURITY.md](./SECURITY.md)</div>
+<div class="line"> </div>
+<div class="line">To work on the library:</div>
+</div><!-- fragment --><p> sh git clone <a href="https://github.com/MangaD/jsocketpp.git">https://github.com/MangaD/jsocketpp.git</a> cd jsocketpp cmake &ndash;preset=clang-debug-x64 cmake &ndash;build &ndash;preset=clang-debug-x64 </p><div class="fragment"><div class="line">Remember to format your code with:</div>
+</div><!-- fragment --><p> sh cmake &ndash;build . &ndash;target clang-format ```</p>
+<p>And write tests in <span class="tt">tests/</span>!</p>
 <hr  />
 <h1 class="doxsection"><a class="anchor" id="autotoc_md402"></a>
-🧪 Building and Testing</h1>
-<p>The project uses <b>CMake presets</b> for consistent and cross-platform builds:</p>
-<div class="fragment"><div class="line">cmake --preset=gcc-debug-x64     # or clang-debug-x64 / msvc-x64-static</div>
-<div class="line">cmake --build --preset=gcc-debug-x64</div>
-<div class="line">ctest --preset=gcc-debug-x64</div>
-</div><!-- fragment --><p>Presets are defined in <a href="./CMakePresets.json">CMakePresets.json</a> and include configurations for:</p>
-<ul>
-<li>GCC, Clang, MSVC, MinGW</li>
-<li>x64 and ARM64</li>
-<li>Debug/Release/RelWithDebInfo</li>
-<li>Shared and static builds</li>
-<li>CI workflows for GitHub Actions</li>
-</ul>
-<p>Tests are written with <b>GoogleTest</b>. To run them:</p>
-<div class="fragment"><div class="line">ctest --preset=gcc-debug-x64</div>
-</div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md404"></a>
-🛠 Developer Tooling</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md405"></a>
-Pre-commit hooks</h2>
-<p>The repository supports pre-commit checks:</p>
-<ul>
-<li><span class="tt">clang-format</span> (via <span class="tt">.clang-format</span>)</li>
-<li><span class="tt">cmake-format</span> (via <span class="tt">.cmake-format.yaml</span>)</li>
-<li>Header guards, whitespace, and YAML checks</li>
-</ul>
-<p>Set up with:</p>
-<div class="fragment"><div class="line">pip install -r requirements.txt</div>
-<div class="line">pre-commit install</div>
-</div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md407"></a>
-🤝 Contributing</h1>
-<p>We welcome PRs, issues, and ideas! Please read the following before contributing:</p>
-<ul>
-<li>📋 <a class="el" href="md_CONTRIBUTING.html">CONTRIBUTING.md</a></li>
-<li>📜 <a class="el" href="md_CODE__OF__CONDUCT.html">CODE_OF_CONDUCT.md</a></li>
-<li>🛡️ SECURITY.md</li>
-</ul>
-<p>To work on the library:</p>
-<div class="fragment"><div class="line">git clone https://github.com/MangaD/jsocketpp.git</div>
-<div class="line">cd jsocketpp</div>
-<div class="line">cmake --preset=clang-debug-x64</div>
-<div class="line">cmake --build --preset=clang-debug-x64</div>
-</div><!-- fragment --><p>Remember to format your code with:</p>
-<div class="fragment"><div class="line">cmake --build . --target clang-format</div>
-</div><!-- fragment --><p>And write tests in <span class="tt">tests/</span>!</p>
-<hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md409"></a>
 ⚖️ License</h1>
 <p>This project is licensed under the MIT License. See <a href="./LICENSE">LICENSE</a> for details.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md411"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md404"></a>
 🙏 Acknowledgements</h1>
 <ul>
 <li>The Java Networking API — for its excellent abstractions</li>
@@ -411,9 +407,9 @@ Pre-commit hooks</h2>
 <li>Everyone who contributes, uses, or discusses jsocketpp ❤️</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md413"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md406"></a>
 ❓ FAQ</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md414"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md407"></a>
 Is jsocketpp async?</h2>
 <p>Yes — jsocketpp provides non-blocking and timeout-based I/O, including:</p>
 <ul>
@@ -425,7 +421,7 @@ Is jsocketpp async?</h2>
 <p>These are based on <span class="tt">select()</span> internally and return in bounded time.</p>
 <p><b>Coroutine support</b> is a potential future feature via <span class="tt">co_await</span> + platform-specific polling (e.g., <span class="tt">epoll</span>, <span class="tt">kqueue</span>, <span class="tt">IOCP</span>).</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md416"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md409"></a>
 How does error handling work?</h2>
 <p>All functions throw either:</p>
 <ul>
@@ -434,7 +430,7 @@ How does error handling work?</h2>
 </ul>
 <p>All errors include the native error code and message.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md418"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md411"></a>
 Can I use jsocketpp in production?</h2>
 <p>Yes — <span class="tt">jsocketpp</span> is robust, portable, and suitable for production use in many real-world scenarios:</p>
 <ul>
@@ -452,7 +448,7 @@ Can I use jsocketpp in production?</h2>
 <li>No high-performance event loop (e.g., epoll/io_uring)</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md420"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md413"></a>
 Does it work on Windows?</h2>
 <p>Yes. It fully supports Winsock, and even supports AF_UNIX on Windows 10+ (1803 or later).</p>
 <p>On Windows:</p>
@@ -461,11 +457,11 @@ Does it work on Windows?</h2>
 <li>Platform-specific errors are translated to readable messages</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md422"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md415"></a>
 What is the default buffer size?</h2>
 <p>Most read/write operations use a default internal buffer size of <b>4096 bytes</b>. You can override this in constructors for <span class="tt">Socket</span>, <span class="tt">DatagramSocket</span>, etc.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md424"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md417"></a>
 🛣️ Roadmap</h1>
 <ul class="check">
 <li class="checked">TCP (client + server)</li>
@@ -511,7 +507,7 @@ What is the default buffer size?</h2>
 <li class="unchecked">Proxy socket types (SOCKS5, HTTP CONNECT)</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md426"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md419"></a>
 🧭 See Also</h1>
 <ul>
 <li><a href="https://think-async.com/">Boost.Asio</a> — heavyweight async networking</li>

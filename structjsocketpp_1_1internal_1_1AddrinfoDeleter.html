@@ -109,7 +109,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Custom deleter for <span class="tt">addrinfo*</span> pointers to support RAII-style cleanup. </p>
 <p>This deleter is intended for use with <span class="tt">std::unique_ptr&lt;addrinfo, <a class="el" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html" title="Custom deleter for addrinfo* pointers to support RAII-style cleanup.">AddrinfoDeleter</a>&gt;</span>, enabling automatic cleanup of dynamically allocated <span class="tt">addrinfo</span> structures returned by <span class="tt">getaddrinfo()</span>. When the smart pointer goes out of scope, <span class="tt">freeaddrinfo()</span> will be called automatically to release associated memory.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md461"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md454"></a>
 Example</h3>
 <div class="fragment"><div class="line">addrinfo* raw = <span class="keyword">nullptr</span>;</div>
 <div class="line">getaddrinfo(<span class="stringliteral">&quot;example.com&quot;</span>, <span class="stringliteral">&quot;80&quot;</span>, &amp;hints, &amp;raw);</div>
