@@ -162,6 +162,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:gab0ac1b9850480abafeb047a4f96792a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a given sockaddr_in6 represents an IPv4-mapped IPv6 address.  <br /></td></tr>
 <tr class="memitem:ga4da3763b1f8385b27ebbe44cdcfdfc8d" id="r_ga4da3763b1f8385b27ebbe44cdcfdfc8d"><td class="memItemLeft" align="right" valign="top">sockaddr_in&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d">convertIPv4MappedIPv6ToIPv4</a> (const sockaddr_in6 &amp;addr6)</td></tr>
 <tr class="memdesc:ga4da3763b1f8385b27ebbe44cdcfdfc8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an IPv4-mapped IPv6 address to a pure IPv4 sockaddr_in.  <br /></td></tr>
+<tr class="memitem:a18428d088b7f3b2e55efe9adc49e10a9" id="r_a18428d088b7f3b2e55efe9adc49e10a9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a18428d088b7f3b2e55efe9adc49e10a9">ipFromSockaddr</a> (const sockaddr *addr, bool convertIPv4Mapped=true)</td></tr>
+<tr class="memdesc:a18428d088b7f3b2e55efe9adc49e10a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts a human-readable IP address from a socket address structure.  <br /></td></tr>
+<tr class="memitem:a71637861db9b297572bc1de3df56a59a" id="r_a71637861db9b297572bc1de3df56a59a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71637861db9b297572bc1de3df56a59a">portFromSockaddr</a> (const sockaddr *addr)</td></tr>
+<tr class="memdesc:a71637861db9b297572bc1de3df56a59a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the port number from a socket address structure.  <br /></td></tr>
 <tr class="memitem:a30deb297e9c8fae8da50947d4a29c95f" id="r_a30deb297e9c8fae8da50947d4a29c95f"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:a30deb297e9c8fae8da50947d4a29c95f template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30deb297e9c8fae8da50947d4a29c95f">DatagramSocket::read&lt; std::string &gt;</a> ()</td></tr>
 <tr class="memdesc:a30deb297e9c8fae8da50947d4a29c95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a string from the socket (connected UDP).  <br /></td></tr>
@@ -531,6 +535,77 @@ template&lt;&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a18428d088b7f3b2e55efe9adc49e10a9" name="a18428d088b7f3b2e55efe9adc49e10a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18428d088b7f3b2e55efe9adc49e10a9">&#9670;&#160;</a></span>ipFromSockaddr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string jsocketpp::ipFromSockaddr </td>
+          <td>(</td>
+          <td class="paramtype">const sockaddr *</td>          <td class="paramname"><span class="paramname"><em>addr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>convertIPv4Mapped</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Extracts a human-readable IP address from a socket address structure. </p>
+<p>This function returns the numeric IP address (IPv4 or IPv6) contained in the given sockaddr. If the address is an IPv4-mapped IPv6 (::ffff:a.b.c.d) and <code class="param">convertIPv4Mapped</code> is true, the result is converted to the original IPv4 form (e.g., "192.168.1.10").</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">addr</td><td>Pointer to a sockaddr structure (must be AF_INET or AF_INET6). </td></tr>
+    <tr><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to plain IPv4. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>IP address as a string (e.g., "127.0.0.1" or "fe80::1").</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the address family is unsupported or conversion fails. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a71637861db9b297572bc1de3df56a59a" name="a71637861db9b297572bc1de3df56a59a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71637861db9b297572bc1de3df56a59a">&#9670;&#160;</a></span>portFromSockaddr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> jsocketpp::portFromSockaddr </td>
+          <td>(</td>
+          <td class="paramtype">const sockaddr *</td>          <td class="paramname"><span class="paramname"><em>addr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Extracts the port number from a socket address structure. </p>
+<p>Retrieves the port from a sockaddr containing either an IPv4 or IPv6 address, converting it from network byte order to host byte order.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">addr</td><td>Pointer to a sockaddr structure (must be AF_INET or AF_INET6). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number in host byte order (e.g., 8080).</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the address family is unsupported. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

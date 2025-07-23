@@ -139,7 +139,7 @@ Variables</h2></td></tr>
 <p>Internal types, platform abstractions, and utility functions used across the jsocketpp library. </p>
 <p>This group contains foundational components of the jsocketpp socket library, including common type aliases, byte-order conversion utilities, and cross-platform compatibility helpers.</p>
 <p>Components in this group are typically not used directly by application-level code, but are essential for internal implementation and protocol correctness.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md446"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md453"></a>
 Includes:</h3>
 <ul>
 <li><span class="tt"><a class="el" href="#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">jsocketpp::Port</a></span> – type alias for network ports</li>
@@ -199,7 +199,7 @@ Port </dd></dl>
 
 <p>Converts an IPv4-mapped IPv6 address to a pure IPv4 sockaddr_in. </p>
 <p>This function extracts the embedded IPv4 address from an IPv4-mapped IPv6 address. It preserves the port number and fills a fully valid <span class="tt">sockaddr_in</span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md453"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md460"></a>
 Preconditions</h3>
 <ul>
 <li>The input must be an IPv4-mapped IPv6 address.</li>
@@ -279,14 +279,14 @@ Preconditions</h3>
 <li>Client-side <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> instances constructed without a custom buffer size</li>
 <li>Server-accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> instances created via <span class="tt"><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">ServerSocket::accept()</a></span></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md450"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md457"></a>
 Rationale</h3>
 <ul>
 <li><b>Memory-efficient:</b> 4096 bytes matches the typical memory page size on most operating systems.</li>
 <li><b>Performance-optimized:</b> Large enough to hold common protocol messages (e.g., HTTP headers, WebSocket frames) without reallocation or multiple reads.</li>
 <li><b>Concurrency-friendly:</b> Balances throughput and memory footprint across thousands of concurrent connections.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md451"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md458"></a>
 Customization</h3>
 <ul>
 <li>You may override this value by:<ul>
@@ -296,7 +296,7 @@ Customization</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md452"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md459"></a>
 When to Adjust</h3>
 <ul>
 <li>Increase if your application routinely expects:<ul>

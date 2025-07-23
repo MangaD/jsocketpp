@@ -113,14 +113,14 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Endianness utilities for network byte order conversion. </p>
 <p>The <span class="tt"><a class="el" href="namespacejsocketpp_1_1net.html" title="Endianness utilities for network byte order conversion.">jsocketpp::net</a></span> namespace provides a collection of lightweight, header-only functions for safely converting between host and network byte order for integral types.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md447"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md454"></a>
 Purpose</h3>
 <ul>
 <li>Ensures portable binary encoding across different CPU architectures</li>
 <li>Enables interoperability with other systems that use big-endian formats</li>
 <li>Matches standard socket API behavior (e.g., htons/ntohl)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md448"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md455"></a>
 Usage Example</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp_1_1net.html">jsocketpp::net</a>;</div>
 <div class="line"> </div>
@@ -128,13 +128,13 @@ Usage Example</h3>
 <div class="line">uint32_t networkValue = <a class="code hl_function" href="#a30e0ea56a20c62070f079482d8cabfa5">toNetwork</a>(value);     <span class="comment">// Host → network (big-endian)</span></div>
 <div class="line">uint32_t restored = <a class="code hl_function" href="#adbc3d8ebcf4347173f61e55e236c8b37">fromNetwork</a>(networkValue); <span class="comment">// Network → host</span></div>
 <div class="ttc" id="anamespacejsocketpp_1_1net_html"><div class="ttname"><a href="namespacejsocketpp_1_1net.html">jsocketpp::net</a></div><div class="ttdoc">Endianness utilities for network byte order conversion.</div></div>
-<div class="ttc" id="anamespacejsocketpp_1_1net_html_a30e0ea56a20c62070f079482d8cabfa5"><div class="ttname"><a href="#a30e0ea56a20c62070f079482d8cabfa5">jsocketpp::net::toNetwork</a></div><div class="ttdeci">uint16_t toNetwork(const uint16_t val)</div><div class="ttdoc">Converts a 16-bit unsigned integer from host to network byte order.</div><div class="ttdef"><b>Definition</b> common.hpp:444</div></div>
-<div class="ttc" id="anamespacejsocketpp_1_1net_html_adbc3d8ebcf4347173f61e55e236c8b37"><div class="ttname"><a href="#adbc3d8ebcf4347173f61e55e236c8b37">jsocketpp::net::fromNetwork</a></div><div class="ttdeci">uint16_t fromNetwork(const uint16_t val)</div><div class="ttdoc">Converts a 16-bit unsigned integer from network to host byte order.</div><div class="ttdef"><b>Definition</b> common.hpp:460</div></div>
+<div class="ttc" id="anamespacejsocketpp_1_1net_html_a30e0ea56a20c62070f079482d8cabfa5"><div class="ttname"><a href="#a30e0ea56a20c62070f079482d8cabfa5">jsocketpp::net::toNetwork</a></div><div class="ttdeci">uint16_t toNetwork(const uint16_t val)</div><div class="ttdoc">Converts a 16-bit unsigned integer from host to network byte order.</div><div class="ttdef"><b>Definition</b> common.hpp:472</div></div>
+<div class="ttc" id="anamespacejsocketpp_1_1net_html_adbc3d8ebcf4347173f61e55e236c8b37"><div class="ttname"><a href="#adbc3d8ebcf4347173f61e55e236c8b37">jsocketpp::net::fromNetwork</a></div><div class="ttdeci">uint16_t fromNetwork(const uint16_t val)</div><div class="ttdoc">Converts a 16-bit unsigned integer from network to host byte order.</div><div class="ttdef"><b>Definition</b> common.hpp:488</div></div>
 </div><!-- fragment --><p>These functions are wrappers over platform-native byte order macros:</p><ul>
 <li>Windows: <span class="tt">htons</span>, <span class="tt">ntohl</span>, etc. (from winsock2.h)</li>
 <li>POSIX: <span class="tt">htons</span>, <span class="tt">ntohl</span>, etc. (from arpa/inet.h)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md449"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md456"></a>
 Recommended Use</h3>
 <ul>
 <li>Apply to any integral header field before transmission over the wire</li>
