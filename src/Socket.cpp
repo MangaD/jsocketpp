@@ -19,7 +19,7 @@ Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_
 
 Socket::Socket(const std::string_view host, const Port port, const std::optional<std::size_t> recvBufferSize,
                const std::optional<std::size_t> sendBufferSize, const std::optional<std::size_t> internalBufferSize)
-    : _remoteAddr{}, _internalBuffer{}
+    : _remoteAddr{}
 {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;

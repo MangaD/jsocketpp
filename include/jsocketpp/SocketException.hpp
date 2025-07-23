@@ -1,6 +1,9 @@
 /**
  * @file SocketException.hpp
  * @brief Exception class for socket-related errors in jsocketpp.
+ * @author MangaD
+ * @date 2025
+ * @version 1.0
  */
 
 #pragma once
@@ -49,10 +52,6 @@ namespace jsocketpp
  * @note jsocketpp itself does not throw nested exceptions, but this class enables developers using the library to opt
  * into exception chaining if desired. This class is safe to use without exception chaining. If you don't need nested
  * exceptions, simply construct and throw it normally.
- *
- * @author MangaD
- * @date 2025
- * @version 1.0
  */
 class SocketException : public std::runtime_error, public std::nested_exception
 {

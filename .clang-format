@@ -123,7 +123,7 @@ AlignAfterOpenBracket: Align
 AlignOperands: true
 # Align binary operators in multiline expressions — improves vertical readability
 
-ReflowComments: Always
+ReflowComments: true
 # Reformat comments to obey ColumnLimit — ensures consistency and avoids unwrapped overflow
 # Used by: LLVM, Mozilla, and many IDEs that support ClangFormat
 
