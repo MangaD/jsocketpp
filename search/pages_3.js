@@ -8,7 +8,7 @@ var searchData=
   ['4_20asynchronous_20i_20o_5',['4 Asynchronous I O',['../group__underlying__socket__api.html#autotoc_md316',1,'6.4 Asynchronous I/O'],['../group__underlying__socket__api.html#autotoc_md326',1,'6.4 Asynchronous I/O']]],
   ['4_20how_20sockets_20work_3a_20the_20lifecycle_6',['4. How Sockets Work: The Lifecycle',['../group__sockets__theory.html#autotoc_md282',1,'']]],
   ['4_20mocking_20or_20stubbing_20socket_20api_20for_20unit_20tests_3a_7',['4. &lt;b&gt;Mocking or Stubbing Socket API for Unit Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md340',1,'']]],
-  ['4_20pre_20commit_20hooks_8',['4. Pre-commit Hooks',['../md_CONTRIBUTING.html#autotoc_md428',1,'']]],
+  ['4_20pre_20commit_20hooks_8',['4. Pre-commit Hooks',['../md_CONTRIBUTING.html#autotoc_md435',1,'']]],
   ['4_20protocols_20and_20the_20socket_20api_9',['4. Protocols and the Socket API',['../group__underlying__socket__api.html#autotoc_md308',1,'']]],
   ['4_20qt_20network_20module_10',['4. Qt Network Module',['../group__socket__library__comparison.html#autotoc_md235',1,'']]],
   ['4_20test_20the_20port_20locally_11',['4. Test the Port Locally',['../group__vcpkg__publish__guide.html#autotoc_md355',1,'']]],

@@ -2,9 +2,9 @@ var searchData=
 [
   ['b_20fully_20step_20by_20step_20posix_20style_0',['&lt;b&gt;b) Fully Step-by-Step (POSIX Style)&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md41',1,'']]],
   ['b_20portability_1',['b) Portability',['../group__ServerSocket__Lifecycle.html#autotoc_md36',1,'']]],
-  ['basic_20api_2',['Basic API',['../classjsocketpp_1_1ServerSocket.html#autotoc_md473',1,'']]],
+  ['basic_20api_2',['Basic API',['../classjsocketpp_1_1ServerSocket.html#autotoc_md480',1,'']]],
   ['basics_3',['🧠 Beyond the Basics',['../group__address__reuse.html#autotoc_md108',1,'']]],
-  ['behavior_4',['Behavior',['../group__address__reuse.html#autotoc_md67',1,'⚙️ Behavior'],['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#autotoc_md463',1,'Platform Behavior'],['../group__tcp.html#autotoc_md477',1,'Platform Behavior'],['../group__tcp.html#autotoc_md589',1,'Protocol Behavior'],['../group__address__reuse.html#autotoc_md95',1,'Recommended Behavior']]],
+  ['behavior_4',['Behavior',['../group__address__reuse.html#autotoc_md67',1,'⚙️ Behavior'],['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#autotoc_md470',1,'Platform Behavior'],['../group__tcp.html#autotoc_md484',1,'Platform Behavior'],['../group__tcp.html#autotoc_md596',1,'Protocol Behavior'],['../group__address__reuse.html#autotoc_md95',1,'Recommended Behavior']]],
   ['behavior_3a_5',['1.1 &lt;b&gt;Mocking Socket Behavior&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md332',1,'']]],
   ['behavior_3a_20connect_20accept_20recv_20and_20send_6',['🔄 Operation-Specific Behavior: &lt;span class=&quot;tt&quot;&gt;connect&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;accept&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt;, and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;',['../group__async__io.html#autotoc_md125',1,'']]],
   ['best_20practices_7',['Best Practices',['../group__async__io.html#autotoc_md146',1,'🧠 Final Thoughts and Best Practices'],['../group__vcpkg__publish__guide.html#autotoc_md361',1,'7. Tips and Best Practices'],['../group__conan__publish__guide.html#autotoc_md177',1,'8. Tips and Best Practices'],['../group__bind__interfaces.html#autotoc_md155',1,'Best Practices']]],
@@ -21,14 +21,15 @@ var searchData=
   ['blocking_20sockets_18',['Blocking Sockets',['../group__async__io.html#autotoc_md114',1,'🚦 Blocking vs Non-Blocking Sockets'],['../group__underlying__socket__api.html#autotoc_md313',1,'6.1 Non-Blocking Sockets'],['../group__underlying__socket__api.html#autotoc_md323',1,'6.1 Non-Blocking Sockets']]],
   ['blocking_20vs_20non_20blocking_20sockets_19',['🚦 Blocking vs Non-Blocking Sockets',['../group__async__io.html#autotoc_md114',1,'']]],
   ['boost_20asio_20',['Boost Asio',['../index.html#autotoc_md376',1,'🔁 jsocketpp vs Boost.Asio'],['../group__socket__library__comparison.html#autotoc_md231',1,'2. Boost.Asio']]],
-  ['branching_20code_20of_20conduct_21',['7. Branching &amp;amp; Code of Conduct',['../md_CONTRIBUTING.html#autotoc_md434',1,'']]],
+  ['branching_20code_20of_20conduct_21',['7. Branching &amp;amp; Code of Conduct',['../md_CONTRIBUTING.html#autotoc_md441',1,'']]],
   ['broadcast_22',['Broadcast',['../group__underlying__socket__api.html#autotoc_md315',1,'6.3 Multicast and Broadcast'],['../group__underlying__socket__api.html#autotoc_md325',1,'6.3 Multicast and Broadcast']]],
   ['bsd_20posix_20winsock_20apis_23',['5. Native BSD/POSIX/WinSock APIs',['../group__socket__library__comparison.html#autotoc_md237',1,'']]],
-  ['buffer_24',['Internal Buffer',['../classjsocketpp_1_1Socket.html#autotoc_md482',1,'']]],
-  ['buffer_20size_25',['What is the default buffer size?',['../index.html#autotoc_md415',1,'']]],
+  ['buffer_24',['Internal Buffer',['../classjsocketpp_1_1Socket.html#autotoc_md489',1,'']]],
+  ['buffer_20size_25',['What is the default buffer size?',['../index.html#autotoc_md422',1,'']]],
   ['build_26',['Manual CMake Build',['../group__BUILD__AND__USAGE.html#autotoc_md8',1,'']]],
   ['building_20and_20running_20tests_27',['Building and Running Tests',['../group__BUILD__AND__USAGE.html#autotoc_md12',1,'']]],
-  ['building_20the_20library_28',['Building the Library',['../group__BUILD__AND__USAGE.html#autotoc_md6',1,'']]],
-  ['by_20socket_20type_29',['Common Options by Socket Type',['../group__socket-options.html#autotoc_md207',1,'']]],
-  ['by_20step_20posix_20style_30',['&lt;b&gt;b) Fully Step-by-Step (POSIX Style)&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md41',1,'']]]
+  ['building_20and_20testing_28',['🧪 Building and Testing',['../index.html#autotoc_md402',1,'']]],
+  ['building_20the_20library_29',['Building the Library',['../group__BUILD__AND__USAGE.html#autotoc_md6',1,'']]],
+  ['by_20socket_20type_30',['Common Options by Socket Type',['../group__socket-options.html#autotoc_md207',1,'']]],
+  ['by_20step_20posix_20style_31',['&lt;b&gt;b) Fully Step-by-Step (POSIX Style)&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md41',1,'']]]
 ];

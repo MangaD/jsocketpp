@@ -103,23 +103,12 @@ $(function(){initNavTree('classjsocketpp_1_1MulticastSocket.html','','classjsock
 <div class="dynheader">
 Inheritance diagram for jsocketpp::MulticastSocket:</div>
 <div class="dyncontent">
-<div class="center"><img src="classjsocketpp_1_1MulticastSocket__inherit__graph.png" border="0" usemap="#ajsocketpp_1_1MulticastSocket_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
-<map name="ajsocketpp_1_1MulticastSocket_inherit__map" id="ajsocketpp_1_1MulticastSocket_inherit__map">
-<area shape="rect" title="Cross&#45;platform multicast UDP socket class (IPv4/IPv6)." alt="" coords="8,79,203,104"/>
-<area shape="rect" href="classjsocketpp_1_1DatagramSocket.html" title="Cross&#45;platform UDP socket class with Java&#45;style interface." alt="" coords="5,5,205,31"/>
-<area shape="poly" title=" " alt="" coords="108,44,108,79,103,79,103,44"/>
-</map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for jsocketpp::MulticastSocket:</div>
-<div class="dyncontent">
-<div class="center"><img src="classjsocketpp_1_1MulticastSocket__coll__graph.png" border="0" usemap="#ajsocketpp_1_1MulticastSocket_coll__map" loading="lazy" alt="Collaboration graph"/></div>
-<map name="ajsocketpp_1_1MulticastSocket_coll__map" id="ajsocketpp_1_1MulticastSocket_coll__map">
-<area shape="rect" title="Cross&#45;platform multicast UDP socket class (IPv4/IPv6)." alt="" coords="8,79,203,104"/>
-<area shape="rect" href="classjsocketpp_1_1DatagramSocket.html" title="Cross&#45;platform UDP socket class with Java&#45;style interface." alt="" coords="5,5,205,31"/>
-<area shape="poly" title=" " alt="" coords="108,44,108,79,103,79,103,44"/>
-</map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+ <div class="center">
+  <img src="classjsocketpp_1_1MulticastSocket.png" usemap="#jsocketpp_3A_3AMulticastSocket_map" alt=""/>
+  <map id="jsocketpp_3A_3AMulticastSocket_map" name="jsocketpp_3A_3AMulticastSocket_map">
+<area href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface." alt="jsocketpp::DatagramSocket" shape="rect" coords="0,0,163,24"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -222,14 +211,14 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Cross-platform multicast UDP socket class (IPv4/IPv6). </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a></span> class extends <a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> to provide high-level, Java-inspired support for multicast networking. It works on both Windows and Linux, and supports both IPv4 and IPv6 multicast groups.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md466"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md473"></a>
 What is Multicast?</h3>
 <ul>
 <li><b>Multicast</b> allows you to send a single UDP packet to multiple hosts subscribed to a multicast group address.</li>
 <li>It is useful for applications such as real-time data feeds, streaming media, and network discovery protocols.</li>
 <li>Each group is identified by a special IP address (224.0.0.0–239.255.255.255 for IPv4, <span class="tt">ff00::/8</span> for IPv6).</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md467"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md474"></a>
 Usage Example (Receiving)</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
 <div class="line">* <span class="comment">// Create a multicast socket bound to port 5000</span></div>
@@ -247,7 +236,7 @@ Usage Example (Receiving)</h3>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramPacket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramPacket.html">jsocketpp::DatagramPacket</a></div><div class="ttdoc">Represents a UDP datagram packet, encapsulating both payload and addressing information.</div><div class="ttdef"><b>Definition</b> DatagramPacket.hpp:48</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1MulticastSocket_html_a4671cefd5b0b7f7e936b0d436c6fd308"><div class="ttname"><a href="#a4671cefd5b0b7f7e936b0d436c6fd308">jsocketpp::MulticastSocket::MulticastSocket</a></div><div class="ttdeci">MulticastSocket(Port port=0, std::size_t bufferSize=2048)</div><div class="ttdoc">Constructs a multicast socket optionally bound to a local port and buffer size.</div><div class="ttdef"><b>Definition</b> MulticastSocket.cpp:5</div></div>
 <div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md468"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md475"></a>
 Usage Example (Sending)</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
 <div class="line"> </div>
@@ -257,7 +246,7 @@ Usage Example (Sending)</h3>
 <div class="line">socket.<a class="code hl_function" href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0">write</a>(packet);</div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_af34dc33d47f23ca13e9a63d4b1fcdee0"><div class="ttname"><a href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">size_t write(const DatagramPacket &amp;packet) const</div><div class="ttdoc">Write data to a remote host using a DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:232</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1MulticastSocket_html_a72172a10bc5ba13a908f31c791c90ec5"><div class="ttname"><a href="#a72172a10bc5ba13a908f31c791c90ec5">jsocketpp::MulticastSocket::setTimeToLive</a></div><div class="ttdeci">void setTimeToLive(int ttl)</div><div class="ttdoc">Set the time-to-live (TTL) for outgoing multicast packets.</div><div class="ttdef"><b>Definition</b> MulticastSocket.cpp:393</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md469"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md476"></a>
 Features</h3>
 <ul>
 <li>Join/leave multicast groups on a specific interface or all interfaces.</li>

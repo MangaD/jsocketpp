@@ -98,15 +98,6 @@ $(function(){initNavTree('group__internal.html','',''); });
 
 <p>Implementation-only utilities for internal use.  
 <a href="#details">More...</a></p>
-<div class="dynheader">
-Collaboration diagram for Internal Helpers:</div>
-<div class="dyncontent">
-<div class="center"><img src="group__internal.png" border="0" usemap="#agroup____internal" loading="lazy" alt=""/></div>
-<map name="agroup____internal" id="agroup____internal">
-<area shape="rect" title="Implementation&#45;only utilities for internal use." alt="" coords="231,13,357,38"/>
-<area shape="rect" href="group__jsocketpp.html" title="All core classes and functions of the jsocketpp networking library." alt="" coords="5,5,183,45"/>
-</map>
-</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -159,7 +150,7 @@ Functions</h2></td></tr>
 
 <p>Smart pointer that manages <span class="tt">addrinfo*</span> resources using <span class="tt"><a class="el" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html" title="Custom deleter for addrinfo* pointers to support RAII-style cleanup.">AddrinfoDeleter</a></span>. </p>
 <p><span class="tt"><a class="el" href="#ga62d9b0682386f85cca0aadbdfbb76646" title="Smart pointer that manages addrinfo* resources using AddrinfoDeleter.">AddrinfoPtr</a></span> wraps a raw <span class="tt">addrinfo*</span> (typically from <span class="tt">getaddrinfo()</span>) in a <span class="tt">std::unique_ptr</span> with a custom deleter to ensure safe, automatic cleanup using <span class="tt">freeaddrinfo()</span>. This eliminates manual memory management and guards against memory leaks in error-prone network code.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md455"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md462"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line">addrinfo* raw = <span class="keyword">nullptr</span>;</div>
 <div class="line"><span class="keywordflow">if</span> (getaddrinfo(<span class="stringliteral">&quot;example.com&quot;</span>, <span class="stringliteral">&quot;80&quot;</span>, &amp;hints, &amp;raw) == 0) {</div>

@@ -10,7 +10,7 @@ var searchData=
   ['6_20advanced_20socket_20api_20features_7',['6. Advanced Socket API Features',['../group__underlying__socket__api.html#autotoc_md312',1,'']]],
   ['6_20after_20acceptance_8',['6. After Acceptance',['../group__vcpkg__publish__guide.html#autotoc_md359',1,'']]],
   ['6_20cross_20platform_20api_20considerations_9',['6. &lt;b&gt;Cross-Platform API Considerations&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md193',1,'']]],
-  ['6_20documentation_10',['6. Documentation',['../md_CONTRIBUTING.html#autotoc_md432',1,'']]],
+  ['6_20documentation_10',['6. Documentation',['../md_CONTRIBUTING.html#autotoc_md439',1,'']]],
   ['6_20platform_20specific_20apis_11',['6. Platform-Specific APIs',['../group__sockets__theory.html#autotoc_md288',1,'']]],
   ['6_20submit_20a_20pull_20request_20to_20cci_12',['6. Submit a Pull Request to CCI',['../group__conan__publish__guide.html#autotoc_md173',1,'']]],
   ['6_20under_20the_20hood_3a_20how_20socket_20types_20work_13',['2.6. Under the Hood: How Socket Types Work',['../group__sockets__theory.html#autotoc_md272',1,'']]]

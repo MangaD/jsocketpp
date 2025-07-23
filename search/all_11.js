@@ -39,6 +39,6 @@ var searchData=
   ['google_20mock_3a_36',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md341',1,'']]],
   ['guide_37',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
   ['guide_20to_20the_20socket_20api_38',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['guidelines_39',['3. Code Style Guidelines',['../md_CONTRIBUTING.html#autotoc_md426',1,'']]],
+  ['guidelines_39',['3. Code Style Guidelines',['../md_CONTRIBUTING.html#autotoc_md433',1,'']]],
   ['guides_40',['User Guides',['../group__docs.html',1,'']]]
 ];
