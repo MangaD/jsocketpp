@@ -432,12 +432,20 @@ How does error handling work?</h2>
 <hr  />
 <h2 class="doxsection"><a class="anchor" id="autotoc_md411"></a>
 Can I use jsocketpp in production?</h2>
-<p>Yes — it’s designed to be robust and portable. Just be aware of its limitations:</p>
+<p>Yes — <span class="tt">jsocketpp</span> is robust, portable, and suitable for production use in many real-world scenarios:</p>
 <ul>
-<li>No TLS (use OpenSSL/wrappers if needed)</li>
-<li>No async event loop (yet)</li>
-<li>Not thread-safe by default</li>
-<li>Best for apps that can tolerate blocking or select-based I/O</li>
+<li>Lightweight HTTP and WebSocket servers</li>
+<li>Game servers using TCP/UDP/multicast</li>
+<li>Local IPC using UNIX domain sockets</li>
+<li>Network tools, daemons, test harnesses</li>
+</ul>
+<p>It supports non-blocking and timeout-driven I/O, including async <span class="tt">accept()</span> and <span class="tt">connect()</span> via <span class="tt">select()</span> and futures.</p>
+<p>However, keep in mind:</p>
+<ul>
+<li>No TLS yet (use OpenSSL or mbedTLS externally)</li>
+<li>No coroutine (<span class="tt">co_await</span>) support yet</li>
+<li>Not thread-safe by default — use one socket per thread</li>
+<li>No high-performance event loop (e.g., epoll/io_uring)</li>
 </ul>
 <hr  />
 <h2 class="doxsection"><a class="anchor" id="autotoc_md413"></a>
