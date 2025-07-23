@@ -281,7 +281,7 @@ You can also generate it locally:
 ```sh
 cmake -S . -B build -DBUILD_DOCS=ON
 cmake --build build --target docs
-````
+```
 
 The generated HTML will appear in `docs/doxygen/html/index.html`.
 
