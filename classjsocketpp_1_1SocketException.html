@@ -142,7 +142,7 @@ Private Attributes</h2></td></tr>
 <p><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a> is the standard exception type thrown by the jsocketpp socket library whenever a socket-related operation fails (such as connect, bind, send, or receive). It stores both an error code and a human-readable message describing the error.</p>
 <p>The exception can be caught using a standard C++ try-catch block, making error handling robust and portable.</p>
 <p>This exception inherits from <span class="tt">std::runtime_error</span> for compatibility with standard exception handling patterns and tools, and also from <span class="tt">std::nested_exception</span> to allow users to use <span class="tt">std::throw_with_nested()</span> for advanced error chaining.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md563"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md569"></a>
 Example: Catching and Handling Socket Exceptions</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="SocketException_8hpp.html">jsocketpp/SocketException.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="Socket_8hpp.html">jsocketpp/Socket.hpp</a>&gt;</span></div>
@@ -158,7 +158,7 @@ Example: Catching and Handling Socket Exceptions</h3>
 <div class="ttc" id="aSocketException_8hpp_html"><div class="ttname"><a href="SocketException_8hpp.html">SocketException.hpp</a></div><div class="ttdoc">Exception class for socket-related errors in jsocketpp.</div></div>
 <div class="ttc" id="aSocket_8hpp_html"><div class="ttname"><a href="Socket_8hpp.html">Socket.hpp</a></div><div class="ttdoc">TCP client socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:58</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:91</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:92</div></div>
 <div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>This exception stores a copy of the error message and error code. It is not tied to any particular platform error format—use the code/message for display or logging. </dd>
 <dd>

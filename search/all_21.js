@@ -1,7 +1,7 @@
 var searchData=
 [
   ['waiting_20for_20readiness_0',['✅ Summary Table: Waiting for Readiness',['../group__async__io.html#autotoc_md141',1,'']]],
-  ['waitready_1',['waitReady',['../group__tcp.html#ga61c1904213b0971817ec917fd2a01ccf',1,'jsocketpp::ServerSocket::waitReady()'],['../classjsocketpp_1_1Socket.html#a6b39b1375048cc167409b5b513c3ad8c',1,'jsocketpp::Socket::waitReady()']]],
+  ['waitready_1',['waitReady',['../group__tcp.html#ga61c1904213b0971817ec917fd2a01ccf',1,'jsocketpp::ServerSocket::waitReady()'],['../group__tcp.html#ga6b39b1375048cc167409b5b513c3ad8c',1,'jsocketpp::Socket::waitReady()']]],
   ['we_20use_20select_20for_20asynchronous_20i_20o_20operations_20does_20it_20make_20sense_20to_20provide_20poll_20and_20epoll_20as_20alternatives_2',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
   ['what_20about_20udp_20and_20unix_20sockets_3',['What About UDP and UNIX Sockets?',['../group__socket__states.html#autotoc_md251',1,'']]],
   ['what_20are_20socket_20options_4',['What Are Socket Options?',['../group__socket-options.html#autotoc_md203',1,'']]],
@@ -48,7 +48,7 @@ var searchData=
   ['writeatmostwithtimeout_45',['writeAtMostWithTimeout',['../group__tcp.html#ga16bb8c36a3fd9a3a97a0d4f5d5036550',1,'jsocketpp::Socket']]],
   ['writefrom_46',['writeFrom',['../group__tcp.html#gab4484254fc3c113a373718198c382dd9',1,'jsocketpp::Socket']]],
   ['writefromall_47',['writeFromAll',['../group__tcp.html#ga686c95af72f4193d1a7c6dd6e658e4ba',1,'jsocketpp::Socket']]],
-  ['writeprefixed_48',['writePrefixed',['../group__tcp.html#ga2ef82d6b1b3e6f6870aba48ebeac3b3b',1,'jsocketpp::Socket::writePrefixed(const std::string &amp;payload)'],['../group__tcp.html#gab0b48a69153c1ed31dd158ec7afb901c',1,'jsocketpp::Socket::writePrefixed(const void *data, std::size_t len) const']]],
+  ['writeprefixed_48',['writePrefixed',['../group__tcp.html#ga81f896d90e08fbfb1d63f1aabb21c970',1,'jsocketpp::Socket::writePrefixed(const std::string_view payload)'],['../group__tcp.html#gab0b48a69153c1ed31dd158ec7afb901c',1,'jsocketpp::Socket::writePrefixed(const void *data, std::size_t len) const']]],
   ['writev_49',['writev',['../group__tcp.html#gadf5094228dfdef090b0d49a3a9e9e78d',1,'jsocketpp::Socket']]],
   ['writevall_50',['writevAll',['../group__tcp.html#ga804a69fa791fc8adb91f32ab37244a0a',1,'jsocketpp::Socket']]],
   ['writevfrom_51',['writevFrom',['../group__tcp.html#ga650e041e62870ef5710b0e45401e679d',1,'jsocketpp::Socket']]],

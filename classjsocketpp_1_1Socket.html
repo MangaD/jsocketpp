@@ -123,22 +123,22 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga647272fa39f462dd40aa4a87e335352c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Establishes a TCP connection to the remote host with optional timeout control.  <br /></td></tr>
 <tr class="memitem:gaa7498d51b547b52699055bdb16b9d68b" id="r_gaa7498d51b547b52699055bdb16b9d68b"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:gaa7498d51b547b52699055bdb16b9d68b template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b">read</a> ()</td></tr>
-<tr class="memdesc:gaa7498d51b547b52699055bdb16b9d68b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a fixed-size trivially copyable value of type <span class="tt">T</span> from the socket.  <br /></td></tr>
+<tr class="memdesc:gaa7498d51b547b52699055bdb16b9d68b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a fixed-size, trivially copyable object of type <span class="tt">T</span> from the socket.  <br /></td></tr>
 <tr class="memitem:ga3d194596258a3b1117b3437d969019b6" id="r_ga3d194596258a3b1117b3437d969019b6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga3d194596258a3b1117b3437d969019b6">readExact</a> (std::size_t n) const</td></tr>
-<tr class="memdesc:ga3d194596258a3b1117b3437d969019b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read exactly <span class="tt">n</span> bytes from the socket into a string.  <br /></td></tr>
+<tr class="memdesc:ga3d194596258a3b1117b3437d969019b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads exactly <span class="tt">n</span> bytes from the socket into a <span class="tt">std::string</span>.  <br /></td></tr>
 <tr class="memitem:ga46777f128a2a23cba8972aefd4b86828" id="r_ga46777f128a2a23cba8972aefd4b86828"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga46777f128a2a23cba8972aefd4b86828">readUntil</a> (char delimiter, std::size_t maxLen=8192, bool includeDelimiter=true)</td></tr>
-<tr class="memdesc:ga46777f128a2a23cba8972aefd4b86828"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket until a specified delimiter character.  <br /></td></tr>
+<tr class="memdesc:ga46777f128a2a23cba8972aefd4b86828"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket until a specified delimiter character is encountered.  <br /></td></tr>
 <tr class="memitem:ga21767c46469a8cee88a87f45405d36fd" id="r_ga21767c46469a8cee88a87f45405d36fd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga21767c46469a8cee88a87f45405d36fd">readLine</a> (const std::size_t maxLen=8192, const bool includeDelimiter=true)</td></tr>
 <tr class="memdesc:ga21767c46469a8cee88a87f45405d36fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a line terminated by '<br  />
 ' from the socket.  <br /></td></tr>
 <tr class="memitem:ga7c3a39505b6c65a9c4db03c081cd4de7" id="r_ga7c3a39505b6c65a9c4db03c081cd4de7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga7c3a39505b6c65a9c4db03c081cd4de7">readAtMost</a> (std::size_t n) const</td></tr>
-<tr class="memdesc:ga7c3a39505b6c65a9c4db03c081cd4de7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads up to <span class="tt">n</span> bytes from the socket into a string.  <br /></td></tr>
+<tr class="memdesc:ga7c3a39505b6c65a9c4db03c081cd4de7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a single best-effort read of up to <span class="tt">n</span> bytes from the socket.  <br /></td></tr>
 <tr class="memitem:gac2bfca99305ede78697fc0b39fbbeed8" id="r_gac2bfca99305ede78697fc0b39fbbeed8"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gac2bfca99305ede78697fc0b39fbbeed8">readInto</a> (void *buffer, const std::size_t len) const</td></tr>
 <tr class="memdesc:gac2bfca99305ede78697fc0b39fbbeed8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads available data from the socket into the provided buffer.  <br /></td></tr>
 <tr class="memitem:gabb8631cb8242b3573a2679da0b6a4f4d" id="r_gabb8631cb8242b3573a2679da0b6a4f4d"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gabb8631cb8242b3573a2679da0b6a4f4d">readIntoExact</a> (void *buffer, const std::size_t len) const</td></tr>
 <tr class="memdesc:gabb8631cb8242b3573a2679da0b6a4f4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads exactly <span class="tt">len</span> bytes into the given buffer (looped recv).  <br /></td></tr>
 <tr class="memitem:ga3b61b5861d62f4e85be4a52aa9e0bcc9" id="r_ga3b61b5861d62f4e85be4a52aa9e0bcc9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga3b61b5861d62f4e85be4a52aa9e0bcc9">readAtMostWithTimeout</a> (std::size_t n, int timeoutMillis) const</td></tr>
-<tr class="memdesc:ga3b61b5861d62f4e85be4a52aa9e0bcc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a best-effort read up to <span class="tt">n</span> bytes, with a maximum timeout.  <br /></td></tr>
+<tr class="memdesc:ga3b61b5861d62f4e85be4a52aa9e0bcc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts a best-effort read of up to <span class="tt">n</span> bytes with a timeout constraint.  <br /></td></tr>
 <tr class="memitem:gab1aaaa6572bcf756be7bcdb801e35812" id="r_gab1aaaa6572bcf756be7bcdb801e35812"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:gab1aaaa6572bcf756be7bcdb801e35812 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab1aaaa6572bcf756be7bcdb801e35812">readPrefixed</a> ()</td></tr>
 <tr class="memdesc:gab1aaaa6572bcf756be7bcdb801e35812"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a length-prefixed payload using a fixed-size prefix type.  <br /></td></tr>
@@ -165,13 +165,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga75ee749264ccbcfc4dfbf5442e55dcb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the socket connection and releases associated resources.  <br /></td></tr>
 <tr class="memitem:gaacbacf59cf8239e66c80c66a09243ec3" id="r_gaacbacf59cf8239e66c80c66a09243ec3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3">shutdown</a> (<a class="el" href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174">ShutdownMode</a> how) const</td></tr>
 <tr class="memdesc:gaacbacf59cf8239e66c80c66a09243ec3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shutdown specific communication aspects of the socket.  <br /></td></tr>
-<tr class="memitem:ga8b952bd8912694754bb34ab763aa8daa" id="r_ga8b952bd8912694754bb34ab763aa8daa"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa">write</a> (std::string_view message) const</td></tr>
-<tr class="memdesc:ga8b952bd8912694754bb34ab763aa8daa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes data to the socket, handling partial writes.  <br /></td></tr>
-<tr class="memitem:gad1803ae12c1562ec09c28d19c1067914" id="r_gad1803ae12c1562ec09c28d19c1067914"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gad1803ae12c1562ec09c28d19c1067914">writeAll</a> (std::string_view message) const</td></tr>
-<tr class="memdesc:gad1803ae12c1562ec09c28d19c1067914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the entire contents of a message to the socket, handling partial writes.  <br /></td></tr>
-<tr class="memitem:ga2ef82d6b1b3e6f6870aba48ebeac3b3b" id="r_ga2ef82d6b1b3e6f6870aba48ebeac3b3b"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:ga2ef82d6b1b3e6f6870aba48ebeac3b3b template"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga2ef82d6b1b3e6f6870aba48ebeac3b3b">writePrefixed</a> (const std::string &amp;payload)</td></tr>
-<tr class="memdesc:ga2ef82d6b1b3e6f6870aba48ebeac3b3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a length-prefixed payload using a fixed-size prefix type.  <br /></td></tr>
+<tr class="memitem:ga8b952bd8912694754bb34ab763aa8daa" id="r_ga8b952bd8912694754bb34ab763aa8daa"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa">write</a> (std::string_view message) const</td></tr>
+<tr class="memdesc:ga8b952bd8912694754bb34ab763aa8daa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends data to the socket using a single, best-effort write operation.  <br /></td></tr>
+<tr class="memitem:gad1803ae12c1562ec09c28d19c1067914" id="r_gad1803ae12c1562ec09c28d19c1067914"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gad1803ae12c1562ec09c28d19c1067914">writeAll</a> (std::string_view message) const</td></tr>
+<tr class="memdesc:gad1803ae12c1562ec09c28d19c1067914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the entire contents of a message to the socket, retrying as needed.  <br /></td></tr>
+<tr class="memitem:ga81f896d90e08fbfb1d63f1aabb21c970" id="r_ga81f896d90e08fbfb1d63f1aabb21c970"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ga81f896d90e08fbfb1d63f1aabb21c970 template"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga81f896d90e08fbfb1d63f1aabb21c970">writePrefixed</a> (const std::string_view payload)</td></tr>
+<tr class="memdesc:ga81f896d90e08fbfb1d63f1aabb21c970"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a length-prefixed payload using a fixed-size integral prefix.  <br /></td></tr>
 <tr class="memitem:gab0b48a69153c1ed31dd158ec7afb901c" id="r_gab0b48a69153c1ed31dd158ec7afb901c"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:gab0b48a69153c1ed31dd158ec7afb901c template"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab0b48a69153c1ed31dd158ec7afb901c">writePrefixed</a> (const void *data, std::size_t len) const</td></tr>
 <tr class="memdesc:gab0b48a69153c1ed31dd158ec7afb901c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a binary payload prefixed with its length using a fixed-size integer type.  <br /></td></tr>
@@ -208,13 +208,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:gae2b10ef466023b380a34b062359c0f65" id="r_gae2b10ef466023b380a34b062359c0f65"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gae2b10ef466023b380a34b062359c0f65">isValid</a> () const noexcept</td></tr>
 <tr class="memdesc:gae2b10ef466023b380a34b062359c0f65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the socket is valid and open for communication.  <br /></td></tr>
 <tr class="memitem:ga6cc57c26e230cb7ed7fa0174028811d5" id="r_ga6cc57c26e230cb7ed7fa0174028811d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5">setNonBlocking</a> (bool nonBlocking) const</td></tr>
-<tr class="memdesc:ga6cc57c26e230cb7ed7fa0174028811d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the socket to non-blocking or blocking mode.  <br /></td></tr>
+<tr class="memdesc:ga6cc57c26e230cb7ed7fa0174028811d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket to either non-blocking or blocking mode.  <br /></td></tr>
 <tr class="memitem:ga70c008492e223265394080a88b3c0b5a" id="r_ga70c008492e223265394080a88b3c0b5a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga70c008492e223265394080a88b3c0b5a">getNonBlocking</a> () const</td></tr>
-<tr class="memdesc:ga70c008492e223265394080a88b3c0b5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the socket is currently in non-blocking mode.  <br /></td></tr>
-<tr class="memitem:gab13446104e1e7ae372554f7e30582791" id="r_gab13446104e1e7ae372554f7e30582791"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab13446104e1e7ae372554f7e30582791">setSoTimeout</a> (int millis, bool forRead=true, bool forWrite=true)</td></tr>
-<tr class="memdesc:gab13446104e1e7ae372554f7e30582791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set timeout for socket send and/or receive operations.  <br /></td></tr>
-<tr class="memitem:a6b39b1375048cc167409b5b513c3ad8c" id="r_a6b39b1375048cc167409b5b513c3ad8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b39b1375048cc167409b5b513c3ad8c">waitReady</a> (bool forWrite, int timeoutMillis) const</td></tr>
-<tr class="memdesc:a6b39b1375048cc167409b5b513c3ad8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for the socket to be ready for reading or writing.  <br /></td></tr>
+<tr class="memdesc:ga70c008492e223265394080a88b3c0b5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the socket is currently in non-blocking mode.  <br /></td></tr>
+<tr class="memitem:gaeabff1b6131c1570fe485304faa47491" id="r_gaeabff1b6131c1570fe485304faa47491"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaeabff1b6131c1570fe485304faa47491">setSoRecvTimeout</a> (int millis)</td></tr>
+<tr class="memdesc:gaeabff1b6131c1570fe485304faa47491"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.  <br /></td></tr>
+<tr class="memitem:ga5182b15a2d0c4eb70eeeaa5f7c62aeed" id="r_ga5182b15a2d0c4eb70eeeaa5f7c62aeed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga5182b15a2d0c4eb70eeeaa5f7c62aeed">setSoSendTimeout</a> (int millis)</td></tr>
+<tr class="memdesc:ga5182b15a2d0c4eb70eeeaa5f7c62aeed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.  <br /></td></tr>
+<tr class="memitem:gaaf45a79f9c216e52bd1593e4bdf8a334" id="r_gaaf45a79f9c216e52bd1593e4bdf8a334"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaaf45a79f9c216e52bd1593e4bdf8a334">getSoRecvTimeout</a> () const</td></tr>
+<tr class="memdesc:gaaf45a79f9c216e52bd1593e4bdf8a334"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current socket read timeout (SO_RCVTIMEO) in milliseconds.  <br /></td></tr>
+<tr class="memitem:gab372986b4384867b48e82922aa2e1cbd" id="r_gab372986b4384867b48e82922aa2e1cbd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab372986b4384867b48e82922aa2e1cbd">getSoSendTimeout</a> () const</td></tr>
+<tr class="memdesc:gab372986b4384867b48e82922aa2e1cbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current socket send timeout (SO_SNDTIMEO) in milliseconds.  <br /></td></tr>
+<tr class="memitem:ga6b39b1375048cc167409b5b513c3ad8c" id="r_ga6b39b1375048cc167409b5b513c3ad8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga6b39b1375048cc167409b5b513c3ad8c">waitReady</a> (bool forWrite, int timeoutMillis) const</td></tr>
+<tr class="memdesc:ga6b39b1375048cc167409b5b513c3ad8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for the socket to become ready for reading or writing.  <br /></td></tr>
 <tr class="memitem:a969dad8dab10b5862aea7200af238d82" id="r_a969dad8dab10b5862aea7200af238d82"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a969dad8dab10b5862aea7200af238d82">isConnected</a> () const</td></tr>
 <tr class="memdesc:a969dad8dab10b5862aea7200af238d82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the socket is still connected (TCP only).  <br /></td></tr>
 <tr class="memitem:gac3c6f8848ff049eb3e31b4fe190dd624" id="r_gac3c6f8848ff049eb3e31b4fe190dd624"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gac3c6f8848ff049eb3e31b4fe190dd624">setTcpNoDelay</a> (bool on)</td></tr>
@@ -227,7 +233,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab1c36ab56a2ef4409629f2bd722d6f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current value of a socket option at the specified level.  <br /></td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9" id="r_ga634bfa30476b72bfa4cca63a93c558a9"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga634bfa30476b72bfa4cca63a93c558a9">read</a> ()</td></tr>
-<tr class="memdesc:ga634bfa30476b72bfa4cca63a93c558a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template specialization to read a string from the socket.  <br /></td></tr>
+<tr class="memdesc:ga634bfa30476b72bfa4cca63a93c558a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">read&lt;T&gt;()</span> for reading a single buffer of string data.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -298,7 +304,7 @@ Typical Usage Example</h3>
 <div class="line">}</div>
 <div class="ttc" id="aSocket_8hpp_html"><div class="ttname"><a href="Socket_8hpp.html">Socket.hpp</a></div><div class="ttdoc">TCP client socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:58</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:91</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:92</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md453"></a>
 Internal Buffer</h3>
@@ -325,7 +331,7 @@ Platform Support</h3>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md457"></a>
 Advanced Usage</h3>
 <ul>
-<li>Set non-blocking mode with <span class="tt"><a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5" title="Set the socket to non-blocking or blocking mode.">setNonBlocking()</a></span>.</li>
+<li>Set non-blocking mode with <span class="tt"><a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5" title="Sets the socket to either non-blocking or blocking mode.">setNonBlocking()</a></span>.</li>
 <li>Tune socket options with <span class="tt">enableNoDelay()</span>, <span class="tt">enableKeepAlive()</span>, or <span class="tt">setTimeout()</span>.</li>
 <li>Check remote address with <span class="tt"><a class="el" href="group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc" title="Get the remote peer&#39;s address and port as a formatted string.">getRemoteSocketAddress()</a></span>.</li>
 </ul>
@@ -441,7 +447,7 @@ See Also</h3>
 
 <p>Check if the socket is still connected (TCP only). </p>
 <p>This method performs a non-destructive check of the socket's connection status by attempting a zero-byte send (on Windows) or checking socket errors (on POSIX). While not 100% reliable due to the nature of TCP/IP, it provides a best-effort indication of connection status.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md555"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md561"></a>
 Implementation Details</h3>
 <ul>
 <li>Windows: Uses send() with zero bytes</li>
@@ -449,7 +455,7 @@ Implementation Details</h3>
 <li>Does not generate network traffic</li>
 <li>Non-blocking operation</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md556"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md562"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -460,7 +466,7 @@ Example Usage</h3>
 <div class="line">    std::this_thread::sleep_for(std::chrono::seconds(1));</div>
 <div class="line">}</div>
 <div class="line"><span class="comment">// Connection lost</span></div>
-<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:12</div></div>
+<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:11</div></div>
 </div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>true if the socket appears to be connected, false if disconnected or in an error state. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This check is not guaranteed to detect all network failures, especially temporary outages or routing problems. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd>enableKeepAlive() For reliable connection monitoring </dd></dl>
@@ -543,43 +549,6 @@ Example Usage</h3>
   <table class="params">
     <tr><td class="paramname">str</td><td>Address string. </td></tr>
     <tr><td class="paramname">addr</td><td>Output sockaddr_storage. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a6b39b1375048cc167409b5b513c3ad8c" name="a6b39b1375048cc167409b5b513c3ad8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b39b1375048cc167409b5b513c3ad8c">&#9670;&#160;</a></span>waitReady()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Socket::waitReady </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>forWrite</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>timeoutMillis</em></span>&#160;) const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Wait for the socket to be ready for reading or writing. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">forWrite</td><td>true to wait for write, false for read. </td></tr>
-    <tr><td class="paramname">timeoutMillis</td><td>Timeout in milliseconds. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if ready, false if timeout. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>on error. </td></tr>
   </table>
   </dd>
 </dl>

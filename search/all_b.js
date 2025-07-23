@@ -59,7 +59,7 @@ var searchData=
   ['and_20client_3a_56',['2.1 &lt;b&gt;Setting Up Real Server and Client&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md336',1,'']]],
   ['and_20cons_57',['5. Alternative Designs: Pros and Cons',['../group__ServerSocket__Lifecycle.html#autotoc_md39',1,'']]],
   ['and_20epoll_20as_20alternatives_58',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
-  ['and_20handling_20socket_20exceptions_59',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md563',1,'']]],
+  ['and_20handling_20socket_20exceptions_59',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md569',1,'']]],
   ['and_20integration_20guide_60',['Unit Testing and Integration Guide',['../group__unit__tests.html',1,'']]],
   ['and_20its_20limitations_61',['⚠️ Java’s Approach and Its Limitations',['../group__address__reuse.html#autotoc_md86',1,'']]],
   ['and_20listening_3a_20design_20patterns_20and_20best_20practices_62',['ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices',['../group__ServerSocket__Lifecycle.html',1,'']]],
