@@ -66,11 +66,12 @@ var searchData=
   ['traditional_20socket_20initialization_3a_20posix_20approach_63',['1. Traditional Socket Initialization: POSIX Approach',['../group__ServerSocket__Lifecycle.html#autotoc_md27',1,'']]],
   ['transitions_64',['TCP State Transitions',['../group__socket__states.html#autotoc_md249',1,'']]],
   ['troubleshooting_65',['Troubleshooting',['../group__BUILD__AND__USAGE.html#autotoc_md20',1,'']]],
-  ['type_66',['Common Options by Socket Type',['../group__socket-options.html#autotoc_md207',1,'']]],
-  ['types_67',['Types',['../group__underlying__socket__api.html#autotoc_md303',1,'2.3 Socket Types'],['../group__sockets__theory.html#autotoc_md270',1,'2.5. Comparison Table: Socket Types'],['../group__tcp.html#autotoc_md507',1,'Supported Types']]],
-  ['types_20of_20sockets_20in_20depth_68',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md264',1,'']]],
-  ['types_20work_69',['2.6. Under the Hood: How Socket Types Work',['../group__sockets__theory.html#autotoc_md272',1,'']]],
-  ['typical_20usage_70',['Typical Usage',['../classjsocketpp_1_1ServerSocket.html#autotoc_md478',1,'']]],
-  ['typical_20usage_20example_71',['Typical Usage Example',['../classjsocketpp_1_1Socket.html#autotoc_md488',1,'']]],
-  ['typical_20use_20cases_72',['🧰 Typical Use Cases',['../index.html#autotoc_md368',1,'']]]
+  ['true_20_3a_66',['When enabled (&lt;span class=&quot;tt&quot;&gt;enable == true&lt;/span&gt;):',['../group__socketopts.html#autotoc_md594',1,'']]],
+  ['type_67',['Common Options by Socket Type',['../group__socket-options.html#autotoc_md207',1,'']]],
+  ['types_68',['Types',['../group__underlying__socket__api.html#autotoc_md303',1,'2.3 Socket Types'],['../group__sockets__theory.html#autotoc_md270',1,'2.5. Comparison Table: Socket Types'],['../group__tcp.html#autotoc_md507',1,'Supported Types']]],
+  ['types_20of_20sockets_20in_20depth_69',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md264',1,'']]],
+  ['types_20work_70',['2.6. Under the Hood: How Socket Types Work',['../group__sockets__theory.html#autotoc_md272',1,'']]],
+  ['typical_20usage_71',['Typical Usage',['../classjsocketpp_1_1ServerSocket.html#autotoc_md478',1,'']]],
+  ['typical_20usage_20example_72',['Typical Usage Example',['../classjsocketpp_1_1Socket.html#autotoc_md488',1,'']]],
+  ['typical_20use_20cases_73',['🧰 Typical Use Cases',['../index.html#autotoc_md368',1,'']]]
 ];

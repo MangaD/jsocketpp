@@ -3,7 +3,7 @@ var searchData=
   ['inet_5fntop_5faux_0',['inet_ntop_aux',['../namespacejsocketpp.html#a403588c277f89591897408faed72a910',1,'jsocketpp']]],
   ['initsockets_1',['InitSockets',['../namespacejsocketpp.html#aef7428a3f4d80452442ecf3edfdbc89a',1,'jsocketpp']]],
   ['ioctlsocket_2',['ioctlsocket',['../namespacejsocketpp.html#a771a44f3967222b2e3221ed3120220af',1,'jsocketpp']]],
-  ['ipfromsockaddr_3',['ipFromSockaddr',['../namespacejsocketpp.html#a18428d088b7f3b2e55efe9adc49e10a9',1,'jsocketpp::ipFromSockaddr()'],['../common_8cpp.html#a74e8298b76afad1dd09d854f436ddd20',1,'ipFromSockaddr():&#160;common.cpp']]],
+  ['ipfromsockaddr_3',['ipFromSockaddr',['../namespacejsocketpp.html#a18428d088b7f3b2e55efe9adc49e10a9',1,'jsocketpp']]],
   ['isbound_4',['isBound',['../group__tcp.html#ga0b3a5cb732c669b678e03549e5af2427',1,'jsocketpp::ServerSocket']]],
   ['isclosed_5',['isClosed',['../group__tcp.html#gaeb5adb24bd7f50eaf8b52aa4441ffe71',1,'jsocketpp::ServerSocket']]],
   ['isconnected_6',['isConnected',['../classjsocketpp_1_1DatagramSocket.html#a9962c2782fe6549bf5781f0301f70906',1,'jsocketpp::DatagramSocket::isConnected()'],['../classjsocketpp_1_1Socket.html#a969dad8dab10b5862aea7200af238d82',1,'jsocketpp::Socket::isConnected()']]],

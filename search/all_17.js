@@ -2,7 +2,7 @@ var searchData=
 [
   ['macos_20unix_0',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md289',1,'']]],
   ['main_1',['main',['../client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;client.cpp'],['../server_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;server.cpp']]],
-  ['main_20features_2',['Main Features',['../classjsocketpp_1_1UnixSocket.html#autotoc_md607',1,'']]],
+  ['main_20features_2',['Main Features',['../classjsocketpp_1_1UnixSocket.html#autotoc_md611',1,'']]],
   ['main_20tcp_20socket_20states_3',['Main TCP Socket States',['../group__socket__states.html#autotoc_md247',1,'']]],
   ['make_20sense_20to_20provide_20poll_20and_20epoll_20as_20alternatives_4',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
   ['make_20your_20cmake_20project_20conan_20friendly_5',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md166',1,'']]],
@@ -28,7 +28,7 @@ var searchData=
   ['models_25',['3. Communication Models',['../group__underlying__socket__api.html#autotoc_md304',1,'']]],
   ['modern_20c_2020_26',['jsocketpp: Java-Style Cross-Platform Socket Library for Modern C++20',['../index.html',1,'']]],
   ['modes_27',['Modes',['../group__tcp.html#autotoc_md501',1,'Connection Modes'],['../group__tcp.html#autotoc_md543',1,'Shutdown Modes']]],
-  ['modes_20of_20operation_28',['Modes of Operation',['../group__tcp.html#autotoc_md602',1,'']]],
+  ['modes_20of_20operation_28',['Modes of Operation',['../group__tcp.html#autotoc_md606',1,'']]],
   ['module_29',['4. Qt Network Module',['../group__socket__library__comparison.html#autotoc_md235',1,'']]],
   ['more_20resources_30',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
   ['multicast_31',['What is Multicast?',['../classjsocketpp_1_1MulticastSocket.html#autotoc_md473',1,'']]],

@@ -222,6 +222,16 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga05b1ae2ec76833370c809c53fe550a95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator that transfers socket ownership safely.  <br /></td></tr>
 <tr class="memitem:ga2d1b014c3f33bb2b0400baf08681f973" id="r_ga2d1b014c3f33bb2b0400baf08681f973"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2d1b014c3f33bb2b0400baf08681f973">jsocketpp::Socket::~Socket</a> () noexcept</td></tr>
 <tr class="memdesc:ga2d1b014c3f33bb2b0400baf08681f973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructs the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object, closing connections and freeing resources.  <br /></td></tr>
+<tr class="memitem:ga273e2d4847b5407bb8eef56d9e88996e" id="r_ga273e2d4847b5407bb8eef56d9e88996e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga273e2d4847b5407bb8eef56d9e88996e">jsocketpp::Socket::getRemoteIp</a> (bool convertIPv4Mapped=true) const</td></tr>
+<tr class="memdesc:ga273e2d4847b5407bb8eef56d9e88996e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the IP address of the connected remote peer.  <br /></td></tr>
+<tr class="memitem:ga2840142258bae9535c6421d6cd3dce1c" id="r_ga2840142258bae9535c6421d6cd3dce1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2840142258bae9535c6421d6cd3dce1c">jsocketpp::Socket::getRemotePort</a> () const</td></tr>
+<tr class="memdesc:ga2840142258bae9535c6421d6cd3dce1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the port number of the connected remote peer.  <br /></td></tr>
+<tr class="memitem:ga6cd36845f959c2bf075c475e5fdc7620" id="r_ga6cd36845f959c2bf075c475e5fdc7620"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6cd36845f959c2bf075c475e5fdc7620">jsocketpp::Socket::getLocalIp</a> (bool convertIPv4Mapped=true) const</td></tr>
+<tr class="memdesc:ga6cd36845f959c2bf075c475e5fdc7620"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the local IP address this socket is bound to.  <br /></td></tr>
+<tr class="memitem:gac10f731a7d1e90c18688266fe5db969e" id="r_gac10f731a7d1e90c18688266fe5db969e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac10f731a7d1e90c18688266fe5db969e">jsocketpp::Socket::getLocalPort</a> () const</td></tr>
+<tr class="memdesc:gac10f731a7d1e90c18688266fe5db969e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the local port number this socket is bound to.  <br /></td></tr>
+<tr class="memitem:gab716648ffb451640b18f4f4363a22eb3" id="r_gab716648ffb451640b18f4f4363a22eb3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab716648ffb451640b18f4f4363a22eb3">jsocketpp::Socket::getLocalSocketAddress</a> (bool convertIPv4Mapped=true) const</td></tr>
+<tr class="memdesc:gab716648ffb451640b18f4f4363a22eb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the full local socket address in the form "IP:port".  <br /></td></tr>
 <tr class="memitem:ga92c62bf727779c6d7395809084f9e4dc" id="r_ga92c62bf727779c6d7395809084f9e4dc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga92c62bf727779c6d7395809084f9e4dc">jsocketpp::Socket::getRemoteSocketAddress</a> (bool convertIPv4Mapped=true) const</td></tr>
 <tr class="memdesc:ga92c62bf727779c6d7395809084f9e4dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remote peer's address and port as a formatted string.  <br /></td></tr>
 <tr class="memitem:ga647272fa39f462dd40aa4a87e335352c" id="r_ga647272fa39f462dd40aa4a87e335352c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga647272fa39f462dd40aa4a87e335352c">jsocketpp::Socket::connect</a> (int timeoutMillis=-1) const</td></tr>
@@ -1543,8 +1553,49 @@ getSendBufferSize() </dd>
 
 </div>
 </div>
+<a id="ga6cd36845f959c2bf075c475e5fdc7620" name="ga6cd36845f959c2bf075c475e5fdc7620"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6cd36845f959c2bf075c475e5fdc7620">&#9670;&#160;</a></span>getLocalIp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Socket::getLocalIp </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>convertIPv4Mapped</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves the local IP address this socket is bound to. </p>
+<p>This method returns the local interface IP address assigned to the socket, in numeric string format (e.g., "127.0.0.1", "192.168.1.5", or "fe80::1"). If the address is an IPv4-mapped IPv6 address (::ffff:a.b.c.d) and <code class="param">convertIPv4Mapped</code> is true, it is converted to the original IPv4 form.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to plain IPv4. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Local IP address as a string.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is not bound or the address cannot be retrieved. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="gad3b2807577129c652044f17626c6e01a" name="gad3b2807577129c652044f17626c6e01a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad3b2807577129c652044f17626c6e01a">&#9670;&#160;</a></span>getLocalPort()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#gad3b2807577129c652044f17626c6e01a">&#9670;&#160;</a></span>getLocalPort() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1580,13 +1631,48 @@ getSendBufferSize() </dd>
 <div class="line">server.bind();</div>
 <div class="line"><a class="code hl_typedef" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port = server.getLocalPort();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Server bound to port: &quot;</span> &lt;&lt; port &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__core_html_ga1a7be273748ae3d91bc5ebe6499788a7"><div class="ttname"><a href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">jsocketpp::Port</a></div><div class="ttdeci">std::uint16_t Port</div><div class="ttdoc">Type alias representing a TCP or UDP port number (1–65535).</div><div class="ttdef"><b>Definition</b> common.hpp:315</div></div>
+<div class="ttc" id="agroup__core_html_ga1a7be273748ae3d91bc5ebe6499788a7"><div class="ttname"><a href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">jsocketpp::Port</a></div><div class="ttdeci">std::uint16_t Port</div><div class="ttdoc">Type alias representing a TCP or UDP port number (1–65535).</div><div class="ttdef"><b>Definition</b> common.hpp:334</div></div>
 <div class="ttc" id="agroup__tcp_html_gad389848c3e0fcadcfe5f581ab8c8fbb8"><div class="ttname"><a href="#gad389848c3e0fcadcfe5f581ab8c8fbb8">jsocketpp::ServerSocket::ServerSocket</a></div><div class="ttdeci">ServerSocket(Port port, std::string_view localAddress={}, bool autoBindListen=true, bool reuseAddress=true, int soTimeoutMillis=-1, bool dualStack=true)</div><div class="ttdoc">Constructs a ServerSocket for listening to incoming TCP connections with full configuration control.</div><div class="ttdef"><b>Definition</b> ServerSocket.cpp:8</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
+<a id="gac10f731a7d1e90c18688266fe5db969e" name="gac10f731a7d1e90c18688266fe5db969e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac10f731a7d1e90c18688266fe5db969e">&#9670;&#160;</a></span>getLocalPort() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> Socket::getLocalPort </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves the local port number this socket is bound to. </p>
+<p>This method returns the local port assigned to the socket during binding or connection. The result is in host byte order and suitable for logging, diagnostics, or introspection.</p>
+<dl class="section return"><dt>Returns</dt><dd>Local port number as a 16-bit unsigned integer.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is not bound or the port cannot be determined. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ga5e035235b554db37df4492b5725e78cc" name="ga5e035235b554db37df4492b5725e78cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5e035235b554db37df4492b5725e78cc">&#9670;&#160;</a></span>getLocalSocketAddress()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5e035235b554db37df4492b5725e78cc">&#9670;&#160;</a></span>getLocalSocketAddress() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1622,6 +1708,47 @@ getSendBufferSize() </dd>
 <div class="line">server.bind();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Server bound to: &quot;</span> &lt;&lt; server.getLocalSocketAddress() &lt;&lt; std::endl;</div>
 </div><!-- fragment --> 
+</div>
+</div>
+<a id="gab716648ffb451640b18f4f4363a22eb3" name="gab716648ffb451640b18f4f4363a22eb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab716648ffb451640b18f4f4363a22eb3">&#9670;&#160;</a></span>getLocalSocketAddress() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Socket::getLocalSocketAddress </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>convertIPv4Mapped</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves the full local socket address in the form "IP:port". </p>
+<p>This method combines the local IP address and port into a single human-readable string. If the IP address is an IPv4-mapped IPv6 (e.g., ::ffff:192.0.2.1) and <code class="param">convertIPv4Mapped</code> is true, the IPv6 form is simplified to plain IPv4.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to pure IPv4. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string representing the local socket address (e.g., "127.0.0.1:8080").</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the local address or port cannot be retrieved. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="ga36a682afc71359dc6889357bf7394b70" name="ga36a682afc71359dc6889357bf7394b70"></a>
@@ -1848,6 +1975,82 @@ Example Usage</h3>
 <a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get send buffer size </dd>
 <dd>
 <a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html" title="Implementation-only utilities and platform abstractions for jsocketpp.">internal</a> string buffer size </dd></dl>
+
+</div>
+</div>
+<a id="ga273e2d4847b5407bb8eef56d9e88996e" name="ga273e2d4847b5407bb8eef56d9e88996e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga273e2d4847b5407bb8eef56d9e88996e">&#9670;&#160;</a></span>getRemoteIp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Socket::getRemoteIp </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>convertIPv4Mapped</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves the IP address of the connected remote peer. </p>
+<p>This method returns the remote peer's IP address in numeric form (IPv4 or IPv6). If the socket is using an IPv4-mapped IPv6 address (e.g., ::ffff:192.168.1.10) and <code class="param">convertIPv4Mapped</code> is true, the result is converted to the original IPv4 form.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to pure IPv4. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Remote IP address as a string (e.g., "203.0.113.42" or "2001:db8::1").</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is not connected or the address cannot be resolved. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga2840142258bae9535c6421d6cd3dce1c" name="ga2840142258bae9535c6421d6cd3dce1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2840142258bae9535c6421d6cd3dce1c">&#9670;&#160;</a></span>getRemotePort()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> Socket::getRemotePort </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves the port number of the connected remote peer. </p>
+<p>This method returns the port number of the remote endpoint that this socket is connected to. The result is always returned in host byte order (e.g., 443, 8080).</p>
+<dl class="section return"><dt>Returns</dt><dd>Remote port number as a 16-bit unsigned integer.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is not connected or the port cannot be determined. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -3406,7 +3609,7 @@ Example Usage</h3>
 
 <p>Reads data from the socket into a user-supplied buffer. </p>
 <p>This method provides direct access to the socket's receive functionality by reading data into a caller-provided buffer. It supports both "best-effort" single reads and exact-length reads that ensure all requested bytes are received.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md602"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md606"></a>
 Modes of Operation</h3>
 <ul>
 <li><b>Best-effort mode</b> (exact=false):<ul>
@@ -3424,7 +3627,7 @@ Modes of Operation</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md603"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md607"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -3438,7 +3641,7 @@ Example Usage</h3>
 <div class="line">uint32_t length;</div>
 <div class="line">sock.readInto(&amp;length, <span class="keyword">sizeof</span>(length), <span class="keyword">true</span>);</div>
 <div class="line"><span class="comment">// Always reads exactly 4 bytes or throws</span></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md604"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md608"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses recv() internally for actual reads</li>
@@ -4552,14 +4755,14 @@ Example Usage</h3>
 <p>When <span class="tt">SO_KEEPALIVE</span> is enabled (<span class="tt">on == true</span>), the operating system will periodically transmit TCP keepalive probes on an otherwise idle connection. These probes help detect unreachable peers or broken network links by triggering a disconnect when no response is received.</p>
 <p>If disabled (<span class="tt">on == false</span>), the operating system will not monitor idle connections for liveness. This is the default behavior for most sockets.</p>
 <p>Keepalive is especially useful for long-lived TCP connections where silent disconnection (e.g. router drop, crash, or cable pull) would otherwise go unnoticed.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md600"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md604"></a>
 Platform-Specific Details</h3>
 <ul>
 <li><b>Linux</b>: Keepalive interval, idle time, and probe count can be configured via <span class="tt">/proc/sys/net/ipv4/tcp_keepalive_*</span> or socket-specific options.</li>
 <li><b>Windows</b>: Default idle time is 2 hours unless modified via <span class="tt">SIO_KEEPALIVE_VALS</span>.</li>
 <li><b>macOS</b>: Controlled via system-wide settings; application-specific tuning is limited.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md601"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md605"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -4669,7 +4872,7 @@ Example Usage</h3>
 <div class="line">        }</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassjsocketpp_1_1SocketException_html_a05b11ce845a5ea121e331dda3039993d"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html#a05b11ce845a5ea121e331dda3039993d">jsocketpp::SocketException::getErrorCode</a></div><div class="ttdeci">int getErrorCode() const noexcept</div><div class="ttdef"><b>Definition</b> SocketException.hpp:65</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1SocketException_html_a05b11ce845a5ea121e331dda3039993d"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html#a05b11ce845a5ea121e331dda3039993d">jsocketpp::SocketException::getErrorCode</a></div><div class="ttdeci">int getErrorCode() const noexcept</div><div class="ttdef"><b>Definition</b> SocketException.hpp:70</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md587"></a>
 Use Cases</h3>
 <ul>
@@ -5150,7 +5353,7 @@ Example Usage</h3>
 <p>When <span class="tt">TCP_NODELAY</span> is enabled (<span class="tt">on == true</span>), Nagle's algorithm is disabled. This causes small packets to be sent immediately, reducing latency for real-time or interactive applications (e.g., games, messaging, RPCs).</p>
 <p>When disabled (<span class="tt">on == false</span>), Nagle's algorithm is enabled. The socket coalesces small outgoing messages into larger packets to improve throughput and reduce congestion, but may introduce slight delays.</p>
 <p>By default, TCP_NODELAY is off (i.e., Nagle's algorithm is enabled).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md599"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md603"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -5238,8 +5441,8 @@ Example Usage</h3>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Complete shutdown</span></div>
 <div class="line">sock.shutdown(<a class="code hl_enumvalue" href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e">ShutdownMode::Both</a>);</div>
-<div class="ttc" id="anamespacejsocketpp_html_a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6"><div class="ttname"><a href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6">jsocketpp::ShutdownMode::Write</a></div><div class="ttdeci">@ Write</div><div class="ttdoc">Shutdown write operations (SHUT_WR or SD_SEND)</div><div class="ttdef"><b>Definition</b> common.hpp:294</div></div>
-<div class="ttc" id="anamespacejsocketpp_html_a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e"><div class="ttname"><a href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e">jsocketpp::ShutdownMode::Both</a></div><div class="ttdeci">@ Both</div><div class="ttdoc">Shutdown both read and write operations (SHUT_RDWR or SD_BOTH)</div><div class="ttdef"><b>Definition</b> common.hpp:295</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6"><div class="ttname"><a href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6">jsocketpp::ShutdownMode::Write</a></div><div class="ttdeci">@ Write</div><div class="ttdoc">Shutdown write operations (SHUT_WR or SD_SEND)</div><div class="ttdef"><b>Definition</b> common.hpp:313</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e"><div class="ttname"><a href="namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e">jsocketpp::ShutdownMode::Both</a></div><div class="ttdeci">@ Both</div><div class="ttdoc">Shutdown both read and write operations (SHUT_RDWR or SD_BOTH)</div><div class="ttdef"><b>Definition</b> common.hpp:314</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md545"></a>
 Implementation Details</h3>
 <ul>
@@ -5833,7 +6036,7 @@ Thread Safety</h3>
 <p>Waits for the socket to become ready for reading or writing. </p>
 <p>This method performs a blocking or timed wait until the socket is ready for either reading or writing, depending on the <span class="tt">forWrite</span> parameter. Internally, it uses the <span class="tt">select()</span> system call to monitor readiness.</p>
 <p>The timeout is specified in milliseconds. A negative timeout value (e.g., <span class="tt">-1</span>) causes the method to wait indefinitely until the socket becomes ready. A timeout of <span class="tt">0</span> performs a non-blocking poll.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md594"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md598"></a>
 Implementation Notes</h3>
 <ul>
 <li>Internally uses <span class="tt">select()</span> on both POSIX and Windows platforms.</li>
@@ -5841,7 +6044,7 @@ Implementation Notes</h3>
 <li>On Windows, the first parameter to <span class="tt">select()</span> is ignored and always set to 0.</li>
 <li>This method works for both blocking and non-blocking sockets.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md595"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md599"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -5849,7 +6052,7 @@ Example</h3>
 <div class="line">    std::string msg = sock.read&lt;std::string&gt;();</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Received: &quot;</span> &lt;&lt; msg &lt;&lt; <span class="stringliteral">&quot;\\n&quot;</span>;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md596"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md600"></a>
 Protocol Behavior</h3>
 <ul>
 <li><span class="tt">forWrite == false</span>: Waits for the socket to be readable (e.g., data available).</li>

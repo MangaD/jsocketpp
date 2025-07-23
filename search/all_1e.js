@@ -82,13 +82,14 @@ var searchData=
   ['traditional_20socket_20initialization_3a_20posix_20approach_79',['1. Traditional Socket Initialization: POSIX Approach',['../group__ServerSocket__Lifecycle.html#autotoc_md27',1,'']]],
   ['transitions_80',['TCP State Transitions',['../group__socket__states.html#autotoc_md249',1,'']]],
   ['troubleshooting_81',['Troubleshooting',['../group__BUILD__AND__USAGE.html#autotoc_md20',1,'']]],
-  ['tryaccept_82',['tryAccept',['../group__tcp.html#ga91177064cad7d0c7f1fc63c4e1f34187',1,'jsocketpp::ServerSocket::tryAccept(std::optional&lt; std::size_t &gt; recvBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; sendBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; internalBufferSize=std::nullopt) const'],['../group__tcp.html#gaf6adb31c07e64787f2fcf17602619868',1,'jsocketpp::ServerSocket::tryAccept(int timeoutMillis, std::optional&lt; std::size_t &gt; recvBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; sendBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; internalBufferSize=std::nullopt) const']]],
-  ['type_83',['Common Options by Socket Type',['../group__socket-options.html#autotoc_md207',1,'']]],
-  ['types_84',['Types',['../group__underlying__socket__api.html#autotoc_md303',1,'2.3 Socket Types'],['../group__sockets__theory.html#autotoc_md270',1,'2.5. Comparison Table: Socket Types'],['../group__core.html',1,'Core Utilities and Types'],['../group__tcp.html#autotoc_md507',1,'Supported Types']]],
-  ['types_20and_20platform_20apis_85',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
-  ['types_20of_20sockets_20in_20depth_86',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md264',1,'']]],
-  ['types_20work_87',['2.6. Under the Hood: How Socket Types Work',['../group__sockets__theory.html#autotoc_md272',1,'']]],
-  ['typical_20usage_88',['Typical Usage',['../classjsocketpp_1_1ServerSocket.html#autotoc_md478',1,'']]],
-  ['typical_20usage_20example_89',['Typical Usage Example',['../classjsocketpp_1_1Socket.html#autotoc_md488',1,'']]],
-  ['typical_20use_20cases_90',['🧰 Typical Use Cases',['../index.html#autotoc_md368',1,'']]]
+  ['true_20_3a_82',['When enabled (&lt;span class=&quot;tt&quot;&gt;enable == true&lt;/span&gt;):',['../group__socketopts.html#autotoc_md594',1,'']]],
+  ['tryaccept_83',['tryAccept',['../group__tcp.html#ga91177064cad7d0c7f1fc63c4e1f34187',1,'jsocketpp::ServerSocket::tryAccept(std::optional&lt; std::size_t &gt; recvBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; sendBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; internalBufferSize=std::nullopt) const'],['../group__tcp.html#gaf6adb31c07e64787f2fcf17602619868',1,'jsocketpp::ServerSocket::tryAccept(int timeoutMillis, std::optional&lt; std::size_t &gt; recvBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; sendBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; internalBufferSize=std::nullopt) const']]],
+  ['type_84',['Common Options by Socket Type',['../group__socket-options.html#autotoc_md207',1,'']]],
+  ['types_85',['Types',['../group__underlying__socket__api.html#autotoc_md303',1,'2.3 Socket Types'],['../group__sockets__theory.html#autotoc_md270',1,'2.5. Comparison Table: Socket Types'],['../group__core.html',1,'Core Utilities and Types'],['../group__tcp.html#autotoc_md507',1,'Supported Types']]],
+  ['types_20and_20platform_20apis_86',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
+  ['types_20of_20sockets_20in_20depth_87',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md264',1,'']]],
+  ['types_20work_88',['2.6. Under the Hood: How Socket Types Work',['../group__sockets__theory.html#autotoc_md272',1,'']]],
+  ['typical_20usage_89',['Typical Usage',['../classjsocketpp_1_1ServerSocket.html#autotoc_md478',1,'']]],
+  ['typical_20usage_20example_90',['Typical Usage Example',['../classjsocketpp_1_1Socket.html#autotoc_md488',1,'']]],
+  ['typical_20use_20cases_91',['🧰 Typical Use Cases',['../index.html#autotoc_md368',1,'']]]
 ];
