@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "SocketException.h"
 #include "common.hpp"
+#include "SocketException.hpp"
 
 namespace jsocketpp
 {

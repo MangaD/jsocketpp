@@ -1,3 +1,7 @@
+# ───────────────────────────────────────────────
+# 📚 Doxygen Documentation Generation
+# ───────────────────────────────────────────────
+
 # cmake/doxygen.cmake
 #
 # This script configures and generates Doxygen documentation for the project. It sets various Doxygen configuration variables

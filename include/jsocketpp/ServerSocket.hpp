@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Socket.hpp"
 #include "common.hpp"
+#include "Socket.hpp"
 
 #include <exception>
 #include <functional>
@@ -98,7 +98,6 @@ namespace jsocketpp
  */
 class ServerSocket
 {
-
   public:
     /**
      * @brief Constructs a ServerSocket for listening to incoming TCP connections with full configuration control.

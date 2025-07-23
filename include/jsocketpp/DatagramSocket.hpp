@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "DatagramPacket.hpp"
 #include "common.hpp"
+#include "DatagramPacket.hpp"
 
 #include <string>
 

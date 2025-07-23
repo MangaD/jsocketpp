@@ -16,8 +16,8 @@
 #define AF_UNIX 1
 #endif
 
-#include "SocketException.hpp"
 #include "common.hpp"
+#include "SocketException.hpp"
 
 namespace jsocketpp
 {

@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "DatagramSocket.hpp"
 #include "common.hpp"
+#include "DatagramSocket.hpp"
 
 #include <string>
 
