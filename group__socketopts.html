@@ -105,6 +105,14 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga895f76bf9c4745fc20074ef2491b02be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the socket's linger behavior (SO_LINGER) on close.  <br /></td></tr>
 <tr class="memitem:ga1734c9ec9ae9c7dacf616fadc3b5f1cb" id="r_ga1734c9ec9ae9c7dacf616fadc3b5f1cb"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1734c9ec9ae9c7dacf616fadc3b5f1cb">jsocketpp::Socket::getSoLinger</a> () const</td></tr>
 <tr class="memdesc:ga1734c9ec9ae9c7dacf616fadc3b5f1cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the socket's current SO_LINGER configuration.  <br /></td></tr>
+<tr class="memitem:gac3c6f8848ff049eb3e31b4fe190dd624" id="r_gac3c6f8848ff049eb3e31b4fe190dd624"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac3c6f8848ff049eb3e31b4fe190dd624">jsocketpp::Socket::setTcpNoDelay</a> (bool on)</td></tr>
+<tr class="memdesc:gac3c6f8848ff049eb3e31b4fe190dd624"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket.  <br /></td></tr>
+<tr class="memitem:ga2539928ed0829df5070384f907ea48f7" id="r_ga2539928ed0829df5070384f907ea48f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2539928ed0829df5070384f907ea48f7">jsocketpp::Socket::getTcpNoDelay</a> () const</td></tr>
+<tr class="memdesc:ga2539928ed0829df5070384f907ea48f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether TCP_NODELAY (Nagle's algorithm) is currently disabled.  <br /></td></tr>
+<tr class="memitem:ga5a0b2e189e91b53d7e5223d47eadffe3" id="r_ga5a0b2e189e91b53d7e5223d47eadffe3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5a0b2e189e91b53d7e5223d47eadffe3">jsocketpp::Socket::setReuseAddress</a> (bool on)</td></tr>
+<tr class="memdesc:ga5a0b2e189e91b53d7e5223d47eadffe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the SO_REUSEADDR socket option.  <br /></td></tr>
+<tr class="memitem:ga440e7ee9303d454df0c51fe6125cd2af" id="r_ga440e7ee9303d454df0c51fe6125cd2af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga440e7ee9303d454df0c51fe6125cd2af">jsocketpp::Socket::getReuseAddress</a> () const</td></tr>
+<tr class="memdesc:ga440e7ee9303d454df0c51fe6125cd2af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether SO_REUSEADDR is currently enabled on the socket.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Low-level socket configuration options exposed via the <span class="tt">Socket</span> and related classes. </p>
@@ -114,6 +122,49 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Some options may not be available or meaningful on all platforms. Platform-specific behavior is documented per function.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd>Socket::setSoLinger(), Socket::getSoLinger(), Socket::setTcpNoDelay(), etc. </dd></dl>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="ga440e7ee9303d454df0c51fe6125cd2af" name="ga440e7ee9303d454df0c51fe6125cd2af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga440e7ee9303d454df0c51fe6125cd2af">&#9670;&#160;</a></span>getReuseAddress()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Socket::getReuseAddress </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Queries whether SO_REUSEADDR is currently enabled on the socket. </p>
+<p>This method retrieves the current state of the address reuse flag. When enabled, it relaxes restrictions on re-binding to local ports that are already in use or still in <span class="tt">TIME_WAIT</span>.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md606"></a>
+Platform behavior:</h3>
+<ul>
+<li><b>POSIX:</b> Multiple sockets can bind the same address/port if all use SO_REUSEADDR.</li>
+<li><b>Windows:</b> Only allows reuse if the previous socket is closed and in <span class="tt">TIME_WAIT</span>.</li>
+</ul>
+<p>This option is relevant for both client and server sockets in low-level networking scenarios such as multicast, reconnectable clients, or custom source-port binding.</p>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if address reuse is enabled; <span class="tt">false</span> otherwise.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket option cannot be retrieved.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga5a0b2e189e91b53d7e5223d47eadffe3" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress(bool)</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga1734c9ec9ae9c7dacf616fadc3b5f1cb" name="ga1734c9ec9ae9c7dacf616fadc3b5f1cb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga1734c9ec9ae9c7dacf616fadc3b5f1cb">&#9670;&#160;</a></span>getSoLinger()</h2>
 
@@ -156,6 +207,94 @@ Functions</h2></td></tr>
 <div class="line"><span class="keywordflow">else</span></div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Linger is disabled.\n&quot;</span>;</div>
 </div><!-- fragment --> 
+</div>
+</div>
+<a id="ga2539928ed0829df5070384f907ea48f7" name="ga2539928ed0829df5070384f907ea48f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2539928ed0829df5070384f907ea48f7">&#9670;&#160;</a></span>getTcpNoDelay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Socket::getTcpNoDelay </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks whether TCP_NODELAY (Nagle's algorithm) is currently disabled. </p>
+<p>This method queries the current state of the TCP_NODELAY option on the socket. If enabled, small packets are sent immediately without delay (i.e., Nagle's algorithm is disabled), reducing latency for interactive applications. If disabled, the system may batch small packets to improve throughput.</p>
+<p>Internally, this reads the value of the TCP_NODELAY option using: </p><div class="fragment"><div class="line">getsockopt(fd, IPPROTO_TCP, TCP_NODELAY, ...)</div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if TCP_NODELAY is enabled (Nagle's algorithm is off), <span class="tt">false</span> if Nagle's algorithm is active.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the option cannot be retrieved.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gac3c6f8848ff049eb3e31b4fe190dd624" title="Enables or disables TCP_NODELAY (Nagle&#39;s algorithm) on the socket.">setTcpNoDelay(bool on)</a> </dd>
+<dd>
+<a href="https://en.wikipedia.org/wiki/Nagle's_algorithm">https://en.wikipedia.org/wiki/Nagle's_algorithm</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga5a0b2e189e91b53d7e5223d47eadffe3" name="ga5a0b2e189e91b53d7e5223d47eadffe3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5a0b2e189e91b53d7e5223d47eadffe3">&#9670;&#160;</a></span>setReuseAddress()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::setReuseAddress </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>on</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enables or disables the SO_REUSEADDR socket option. </p>
+<p>This option controls whether the socket is allowed to bind to a local address that is either already in use or in the <span class="tt">TIME_WAIT</span> state. Although most commonly used in server sockets, client sockets may also benefit in certain scenarios.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md604"></a>
+Platform behavior:</h3>
+<ul>
+<li><b>POSIX:</b> Allows multiple sockets to bind the same address and port, as long as all use <span class="tt">SO_REUSEADDR</span>. This is especially useful for multicast or for clients that bind to a fixed local port and reconnect frequently.</li>
+<li><b>Windows:</b> Allows rebinding to a port in <span class="tt">TIME_WAIT</span>, but <b>does not</b> allow multiple concurrent binds to the same port.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md605"></a>
+Use cases in client sockets:</h3>
+<ul>
+<li>Reconnecting P2P or UDP clients that bind to the same port repeatedly</li>
+<li>Multicast receivers</li>
+<li>High-performance test environments with rapid reconnect loops</li>
+</ul>
+<p>Internally, this calls: </p><div class="fragment"><div class="line">setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, ...)</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">on</td><td>If <span class="tt">true</span>, enables address reuse; if <span class="tt">false</span>, disables it.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket option cannot be applied.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga440e7ee9303d454df0c51fe6125cd2af" title="Queries whether SO_REUSEADDR is currently enabled on the socket.">getReuseAddress()</a> </dd>
+<dd>
+bind() </dd></dl>
+
 </div>
 </div>
 <a id="ga895f76bf9c4745fc20074ef2491b02be" name="ga895f76bf9c4745fc20074ef2491b02be"></a>
@@ -215,6 +354,59 @@ When disabled (<span class="tt">enable == false</span>):</h4>
 <div class="line"><span class="comment">// Disable lingering entirely (standard close behavior)</span></div>
 <div class="line">socket.setSoLinger(<span class="keyword">false</span>, 0);</div>
 </div><!-- fragment --> 
+</div>
+</div>
+<a id="gac3c6f8848ff049eb3e31b4fe190dd624" name="gac3c6f8848ff049eb3e31b4fe190dd624"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac3c6f8848ff049eb3e31b4fe190dd624">&#9670;&#160;</a></span>setTcpNoDelay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::setTcpNoDelay </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>on</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket. </p>
+<p>When <span class="tt">TCP_NODELAY</span> is enabled (<span class="tt">on == true</span>), Nagle's algorithm is disabled. This causes small packets to be sent immediately, reducing latency for real-time or interactive applications (e.g., games, messaging, RPCs).</p>
+<p>When disabled (<span class="tt">on == false</span>), Nagle's algorithm is enabled. The socket coalesces small outgoing messages into larger packets to improve throughput and reduce congestion, but may introduce slight delays.</p>
+<p>By default, TCP_NODELAY is off (i.e., Nagle's algorithm is enabled).</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md603"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
+<div class="line">sock.connect();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Disable Nagle&#39;s algorithm to reduce latency</span></div>
+<div class="line">sock.setTcpNoDelay(<span class="keyword">true</span>);</div>
+<div class="line"> </div>
+<div class="line">sock.write(<span class="stringliteral">&quot;low-latency payload&quot;</span>);</div>
+<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:11</div></div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">on</td><td>If <span class="tt">true</span>, disables Nagle's algorithm to reduce latency. If <span class="tt">false</span>, enables Nagle's algorithm to improve throughput.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If setting the option fails due to:<ul>
+<li>Invalid socket descriptor (<span class="tt">EBADF</span>)</li>
+<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> already closed or invalid state</li>
+<li>Lack of permission (<span class="tt">EACCES</span>)</li>
+<li>Option not supported on this socket (<span class="tt">ENOPROTOOPT</span>)</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga2539928ed0829df5070384f907ea48f7" title="Checks whether TCP_NODELAY (Nagle&#39;s algorithm) is currently disabled.">getTcpNoDelay()</a> </dd>
+<dd>
+<a href="https://en.wikipedia.org/wiki/Nagle's_algorithm">https://en.wikipedia.org/wiki/Nagle's_algorithm</a> </dd></dl>
+
 </div>
 </div>
 </div><!-- contents -->

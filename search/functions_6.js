@@ -23,7 +23,7 @@ var searchData=
   ['getremoteip_20',['getRemoteIp',['../group__tcp.html#ga273e2d4847b5407bb8eef56d9e88996e',1,'jsocketpp::Socket']]],
   ['getremoteport_21',['getRemotePort',['../group__tcp.html#ga2840142258bae9535c6421d6cd3dce1c',1,'jsocketpp::Socket']]],
   ['getremotesocketaddress_22',['getRemoteSocketAddress',['../group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc',1,'jsocketpp::Socket']]],
-  ['getreuseaddress_23',['getReuseAddress',['../group__tcp.html#ga663e3d90aa82f14c2db9a16e3e5b3525',1,'jsocketpp::ServerSocket']]],
+  ['getreuseaddress_23',['getReuseAddress',['../group__tcp.html#ga663e3d90aa82f14c2db9a16e3e5b3525',1,'jsocketpp::ServerSocket::getReuseAddress()'],['../group__socketopts.html#ga440e7ee9303d454df0c51fe6125cd2af',1,'jsocketpp::Socket::getReuseAddress()']]],
   ['getreuseport_24',['getReusePort',['../group__tcp.html#ga7c00ace5b0756299ea0cbd77074e856d',1,'jsocketpp::ServerSocket']]],
   ['getsendbuffersize_25',['getSendBufferSize',['../group__tcp.html#gacb2d3979ff562c2ffd60b12a1b4c9897',1,'jsocketpp::Socket']]],
   ['getsocketerror_26',['GetSocketError',['../namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad',1,'jsocketpp']]],
@@ -33,5 +33,6 @@ var searchData=
   ['getsorecvtimeout_30',['getSoRecvTimeout',['../group__tcp.html#gaaf45a79f9c216e52bd1593e4bdf8a334',1,'jsocketpp::Socket']]],
   ['getsosendtimeout_31',['getSoSendTimeout',['../group__tcp.html#gab372986b4384867b48e82922aa2e1cbd',1,'jsocketpp::Socket']]],
   ['getsotimeout_32',['getSoTimeout',['../group__tcp.html#ga7829c558cb7bf5e0a46d882df82acc19',1,'jsocketpp::ServerSocket']]],
-  ['gettimetolive_33',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]]
+  ['gettcpnodelay_33',['getTcpNoDelay',['../group__socketopts.html#ga2539928ed0829df5070384f907ea48f7',1,'jsocketpp::Socket']]],
+  ['gettimetolive_34',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]]
 ];
