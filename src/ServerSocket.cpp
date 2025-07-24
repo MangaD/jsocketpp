@@ -596,7 +596,7 @@ void ServerSocket::setReusePort(const bool enable)
 
 bool ServerSocket::getReusePort() const
 {
-    return getOption(SOL_SOCKET, SO_REUSEPORT);
+    return getOption(SOL_SOCKET, SO_REUSEPORT) != 0;
 }
 #endif
 
@@ -633,7 +633,7 @@ bool ServerSocket::getIPv6Only() const
     if (ss.ss_family != AF_INET6)
         throw SocketException("getIPv6Only: Socket is not IPv6.");
 
-    return getOption(IPPROTO_IPV6, IPV6_V6ONLY);
+    return getOption(IPPROTO_IPV6, IPV6_V6ONLY) != 0;
 }
 
 #endif // IPV6_V6ONLY
