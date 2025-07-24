@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['echo_20server_0',['Echo Server',['../index.html#autotoc_md392',1,'📡 UDP Echo Server'],['../index.html#autotoc_md390',1,'🧵 TCP Echo Server'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md612',1,'Example: Simple Echo Server']]],
+  ['echo_20server_0',['Echo Server',['../index.html#autotoc_md392',1,'📡 UDP Echo Server'],['../index.html#autotoc_md390',1,'🧵 TCP Echo Server'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md614',1,'Example: Simple Echo Server']]],
   ['echo_20server_20and_20client_1',['Example: Simple UDP Echo Server and Client',['../classjsocketpp_1_1DatagramSocket.html#autotoc_md465',1,'']]],
   ['enable_20false_20_3a_2',['When disabled (&lt;span class=&quot;tt&quot;&gt;enable == false&lt;/span&gt;):',['../group__socketopts.html#autotoc_md595',1,'']]],
   ['enable_20true_20_3a_3',['When enabled (&lt;span class=&quot;tt&quot;&gt;enable == true&lt;/span&gt;):',['../group__socketopts.html#autotoc_md594',1,'']]],
@@ -11,7 +11,7 @@ var searchData=
   ['epoll_20as_20alternatives_8',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
   ['error_20handling_9',['Error Handling',['../classjsocketpp_1_1Socket.html#autotoc_md490',1,'']]],
   ['error_20handling_20work_10',['How does error handling work?',['../index.html#autotoc_md416',1,'']]],
-  ['example_11',['Example',['../structjsocketpp_1_1internal_1_1AddrinfoDeleter.html#autotoc_md461',1,'Example'],['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#autotoc_md472',1,'Example'],['../group__tcp.html#autotoc_md599',1,'Example'],['../classjsocketpp_1_1SocketTimeoutException.html#autotoc_md610',1,'Example'],['../classjsocketpp_1_1Socket.html#autotoc_md488',1,'Typical Usage Example'],['../group__BUILD__AND__USAGE.html#autotoc_md16',1,'Usage Example'],['../namespacejsocketpp_1_1net.html#autotoc_md455',1,'Usage Example']]],
+  ['example_11',['Example',['../structjsocketpp_1_1internal_1_1AddrinfoDeleter.html#autotoc_md461',1,'Example'],['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#autotoc_md472',1,'Example'],['../group__tcp.html#autotoc_md599',1,'Example'],['../classjsocketpp_1_1SocketTimeoutException.html#autotoc_md612',1,'Example'],['../classjsocketpp_1_1Socket.html#autotoc_md488',1,'Typical Usage Example'],['../group__BUILD__AND__USAGE.html#autotoc_md16',1,'Usage Example'],['../namespacejsocketpp_1_1net.html#autotoc_md455',1,'Usage Example']]],
   ['example_20of_20a_20simple_20server_20client_20integration_20test_3a_12',['Example of a Simple Server-Client Integration Test:',['../group__unit__tests.html#autotoc_md337',1,'']]],
   ['example_20portfile_20cmake_13',['Example &lt;span class=&quot;tt&quot;&gt;portfile.cmake&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md353',1,'']]],
   ['example_20receiving_14',['Usage Example (Receiving)',['../classjsocketpp_1_1MulticastSocket.html#autotoc_md474',1,'']]],
@@ -21,14 +21,16 @@ var searchData=
   ['example_20vcpkg_20json_18',['Example &lt;span class=&quot;tt&quot;&gt;vcpkg.json&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md352',1,'']]],
   ['example_20with_20google_20mock_3a_19',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md341',1,'']]],
   ['example_3a_20binding_20to_20all_20interfaces_20',['Example: Binding to All Interfaces',['../group__bind__interfaces.html#autotoc_md153',1,'']]],
-  ['example_3a_20catching_20and_20handling_20socket_20exceptions_21',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md609',1,'']]],
-  ['example_3a_20simple_20client_22',['Example: Simple Client',['../classjsocketpp_1_1UnixSocket.html#autotoc_md613',1,'']]],
-  ['example_3a_20simple_20echo_20server_23',['Example: Simple Echo Server',['../classjsocketpp_1_1UnixSocket.html#autotoc_md612',1,'']]],
-  ['example_3a_20simple_20udp_20echo_20server_20and_20client_24',['Example: Simple UDP Echo Server and Client',['../classjsocketpp_1_1DatagramSocket.html#autotoc_md465',1,'']]],
-  ['example_3a_20using_20google_20mock_20to_20mock_20recv_20and_20send_3a_25',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md333',1,'']]],
-  ['examples_26',['Examples',['../index.html#autotoc_md389',1,'🚀 Quick Start Examples'],['../group__underlying__socket__api.html#autotoc_md309',1,'5. Socket API in Action: Practical Examples'],['../group__socket-options.html#autotoc_md221',1,'Examples']]],
-  ['exception_20classes_27',['Exception Classes',['../group__exceptions.html',1,'']]],
-  ['exceptions_28',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md609',1,'']]],
-  ['explicit_29',['3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit',['../group__ServerSocket__Lifecycle.html#autotoc_md31',1,'']]],
-  ['expose_20windows_20so_5freuseaddr_30',['Why Not Expose Windows &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt;?',['../group__address__reuse.html#autotoc_md98',1,'']]]
+  ['example_3a_20catching_20and_20handling_20socket_20exceptions_21',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md610',1,'']]],
+  ['example_3a_20manual_20nesting_22',['Example: Manual nesting',['../classjsocketpp_1_1SocketException.html#autotoc_md611',1,'']]],
+  ['example_3a_20simple_20client_23',['Example: Simple Client',['../classjsocketpp_1_1UnixSocket.html#autotoc_md615',1,'']]],
+  ['example_3a_20simple_20echo_20server_24',['Example: Simple Echo Server',['../classjsocketpp_1_1UnixSocket.html#autotoc_md614',1,'']]],
+  ['example_3a_20simple_20udp_20echo_20server_20and_20client_25',['Example: Simple UDP Echo Server and Client',['../classjsocketpp_1_1DatagramSocket.html#autotoc_md465',1,'']]],
+  ['example_3a_20using_20google_20mock_20to_20mock_20recv_20and_20send_3a_26',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md333',1,'']]],
+  ['examples_27',['Examples',['../index.html#autotoc_md389',1,'🚀 Quick Start Examples'],['../group__underlying__socket__api.html#autotoc_md309',1,'5. Socket API in Action: Practical Examples'],['../group__socket-options.html#autotoc_md221',1,'Examples']]],
+  ['exception_20chaining_28',['Exception Chaining',['../classjsocketpp_1_1SocketException.html#autotoc_md609',1,'']]],
+  ['exception_20classes_29',['Exception Classes',['../group__exceptions.html',1,'']]],
+  ['exceptions_30',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md610',1,'']]],
+  ['explicit_31',['3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit',['../group__ServerSocket__Lifecycle.html#autotoc_md31',1,'']]],
+  ['expose_20windows_20so_5freuseaddr_32',['Why Not Expose Windows &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt;?',['../group__address__reuse.html#autotoc_md98',1,'']]]
 ];

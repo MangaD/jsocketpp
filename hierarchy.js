@@ -6,13 +6,10 @@ var hierarchy =
     [ "jsocketpp::DatagramSocket", "classjsocketpp_1_1DatagramSocket.html", [
       [ "jsocketpp::MulticastSocket", "classjsocketpp_1_1MulticastSocket.html", null ]
     ] ],
-    [ "std::nested_exception", null, [
+    [ "std::runtime_error", null, [
       [ "jsocketpp::SocketException", "classjsocketpp_1_1SocketException.html", [
         [ "jsocketpp::SocketTimeoutException", "classjsocketpp_1_1SocketTimeoutException.html", null ]
       ] ]
-    ] ],
-    [ "std::runtime_error", null, [
-      [ "jsocketpp::SocketException", "classjsocketpp_1_1SocketException.html", null ]
     ] ],
     [ "jsocketpp::internal::ScopedBlockingMode", "classjsocketpp_1_1internal_1_1ScopedBlockingMode.html", null ],
     [ "jsocketpp::ServerSocket", "classjsocketpp_1_1ServerSocket.html", null ],

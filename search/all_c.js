@@ -40,9 +40,10 @@ var searchData=
   ['build_37',['Manual CMake Build',['../group__BUILD__AND__USAGE.html#autotoc_md8',1,'']]],
   ['build_20test_20and_20usage_20guide_38',['jsocketpp: Build, Test, and Usage Guide',['../group__BUILD__AND__USAGE.html',1,'']]],
   ['build_5fand_5fusage_2emd_39',['BUILD_AND_USAGE.md',['../BUILD__AND__USAGE_8md.html',1,'']]],
-  ['building_20and_20running_20tests_40',['Building and Running Tests',['../group__BUILD__AND__USAGE.html#autotoc_md12',1,'']]],
-  ['building_20and_20testing_41',['🧪 Building and Testing',['../index.html#autotoc_md402',1,'']]],
-  ['building_20the_20library_42',['Building the Library',['../group__BUILD__AND__USAGE.html#autotoc_md6',1,'']]],
-  ['by_20socket_20type_43',['Common Options by Socket Type',['../group__socket-options.html#autotoc_md207',1,'']]],
-  ['by_20step_20posix_20style_44',['&lt;b&gt;b) Fully Step-by-Step (POSIX Style)&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md41',1,'']]]
+  ['builderrormessage_40',['buildErrorMessage',['../classjsocketpp_1_1SocketException.html#aad86355058becd22b3f405ba72ca6444',1,'jsocketpp::SocketException']]],
+  ['building_20and_20running_20tests_41',['Building and Running Tests',['../group__BUILD__AND__USAGE.html#autotoc_md12',1,'']]],
+  ['building_20and_20testing_42',['🧪 Building and Testing',['../index.html#autotoc_md402',1,'']]],
+  ['building_20the_20library_43',['Building the Library',['../group__BUILD__AND__USAGE.html#autotoc_md6',1,'']]],
+  ['by_20socket_20type_44',['Common Options by Socket Type',['../group__socket-options.html#autotoc_md207',1,'']]],
+  ['by_20step_20posix_20style_45',['&lt;b&gt;b) Fully Step-by-Step (POSIX Style)&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md41',1,'']]]
 ];
