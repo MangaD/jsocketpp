@@ -3076,7 +3076,7 @@ class Socket
 
     /**
      * @brief Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket.
-     * @ingroup tcp
+     * @ingroup socketopts
      *
      * When `TCP_NODELAY` is enabled (`on == true`), Nagle's algorithm is disabled.
      * This causes small packets to be sent immediately, reducing latency for
@@ -3099,8 +3099,8 @@ class Socket
      * sock.write("low-latency payload");
      * @endcode
      *
-     * @param on `true` to disable Nagle's algorithm (enable TCP_NODELAY),
-     *           `false` to re-enable Nagle's algorithm.
+     * @param on If `true`, disables Nagle's algorithm to reduce latency.
+     *           If `false`, enables Nagle's algorithm to improve throughput.
      *
      * @throws SocketException If setting the option fails due to:
      *         - Invalid socket descriptor (`EBADF`)
@@ -3108,10 +3108,91 @@ class Socket
      *         - Lack of permission (`EACCES`)
      *         - Option not supported on this socket (`ENOPROTOOPT`)
      *
-     * @see setKeepAlive() For controlling connection keep-alive probes
-     * @see write() To send data through the socket
+     * @see getTcpNoDelay()
+     * @see https://en.wikipedia.org/wiki/Nagle's_algorithm
      */
     void setTcpNoDelay(bool on);
+
+    /**
+     * @brief Checks whether TCP_NODELAY (Nagle's algorithm) is currently disabled.
+     * @ingroup socketopts
+     *
+     * This method queries the current state of the TCP_NODELAY option on the socket.
+     * If enabled, small packets are sent immediately without delay (i.e., Nagle's algorithm is disabled),
+     * reducing latency for interactive applications. If disabled, the system may batch small packets
+     * to improve throughput.
+     *
+     * Internally, this reads the value of the TCP_NODELAY option using:
+     * @code
+     * getsockopt(fd, IPPROTO_TCP, TCP_NODELAY, ...)
+     * @endcode
+     *
+     * @return `true` if TCP_NODELAY is enabled (Nagle's algorithm is off),
+     *         `false` if Nagle's algorithm is active.
+     *
+     * @throws SocketException if the option cannot be retrieved.
+     *
+     * @see setTcpNoDelay(bool on)
+     * @see https://en.wikipedia.org/wiki/Nagle's_algorithm
+     */
+    [[nodiscard]] bool getTcpNoDelay() const;
+
+    /**
+     * @brief Enables or disables the SO_REUSEADDR socket option.
+     * @ingroup socketopts
+     *
+     * This option controls whether the socket is allowed to bind to a local address
+     * that is either already in use or in the `TIME_WAIT` state. Although most commonly
+     * used in server sockets, client sockets may also benefit in certain scenarios.
+     *
+     * ### Platform behavior:
+     * - **POSIX:** Allows multiple sockets to bind the same address and port, as long as
+     *   all use `SO_REUSEADDR`. This is especially useful for multicast or for clients that
+     *   bind to a fixed local port and reconnect frequently.
+     * - **Windows:** Allows rebinding to a port in `TIME_WAIT`, but **does not** allow multiple
+     *   concurrent binds to the same port.
+     *
+     * ### Use cases in client sockets:
+     * - Reconnecting P2P or UDP clients that bind to the same port repeatedly
+     * - Multicast receivers
+     * - High-performance test environments with rapid reconnect loops
+     *
+     * Internally, this calls:
+     * @code
+     * setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, ...)
+     * @endcode
+     *
+     * @param on If `true`, enables address reuse; if `false`, disables it.
+     *
+     * @throws SocketException if the socket option cannot be applied.
+     *
+     * @see getReuseAddress()
+     * @see bind()
+     */
+    void setReuseAddress(bool on);
+
+    /**
+     * @brief Queries whether SO_REUSEADDR is currently enabled on the socket.
+     * @ingroup socketopts
+     *
+     * This method retrieves the current state of the address reuse flag. When enabled,
+     * it relaxes restrictions on re-binding to local ports that are already in use
+     * or still in `TIME_WAIT`.
+     *
+     * ### Platform behavior:
+     * - **POSIX:** Multiple sockets can bind the same address/port if all use SO_REUSEADDR.
+     * - **Windows:** Only allows reuse if the previous socket is closed and in `TIME_WAIT`.
+     *
+     * This option is relevant for both client and server sockets in low-level networking
+     * scenarios such as multicast, reconnectable clients, or custom source-port binding.
+     *
+     * @return `true` if address reuse is enabled; `false` otherwise.
+     *
+     * @throws SocketException if the socket option cannot be retrieved.
+     *
+     * @see setReuseAddress(bool)
+     */
+    [[nodiscard]] bool getReuseAddress() const;
 
     /**
      * @brief Enables or disables SO_KEEPALIVE on the socket.

@@ -678,6 +678,22 @@ void Socket::setTcpNoDelay(const bool on)
     setOption(IPPROTO_TCP, TCP_NODELAY, on ? 1 : 0);
 }
 
+[[nodiscard]] bool Socket::getTcpNoDelay() const
+{
+    return getOption(IPPROTO_TCP, TCP_NODELAY) != 0;
+}
+
+// NOLINTNEXTLINE(readability-make-member-function-const) – modifies socket state
+void Socket::setReuseAddress(const bool on)
+{
+    setOption(SOL_SOCKET, SO_REUSEADDR, on ? 1 : 0);
+}
+
+[[nodiscard]] bool Socket::getReuseAddress() const
+{
+    return getOption(SOL_SOCKET, SO_REUSEADDR) != 0;
+}
+
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
 void Socket::setKeepAlive(const bool on)
 {
