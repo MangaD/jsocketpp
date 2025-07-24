@@ -647,7 +647,7 @@ class Socket
                 throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
             if (len == 0)
-                throw SocketException(0, "Connection closed by remote host before full object was received.");
+                throw SocketException("Connection closed by remote host before full object was received.");
 
             totalRead += static_cast<std::size_t>(len);
             remaining -= static_cast<std::size_t>(len);
@@ -1169,8 +1169,8 @@ class Socket
         const auto payloadLen = static_cast<std::size_t>(length);
         if (payloadLen > maxPayloadLen)
         {
-            throw SocketException(0, "readPrefixed: Prefix length " + std::to_string(payloadLen) +
-                                         " exceeds maximum allowed payload length of " + std::to_string(maxPayloadLen));
+            throw SocketException("readPrefixed: Prefix length " + std::to_string(payloadLen) +
+                                  " exceeds maximum allowed payload length of " + std::to_string(maxPayloadLen));
         }
 
         return readExact(payloadLen);
@@ -1802,8 +1802,8 @@ class Socket
         // such as in CMake when compiling the target library
         if (payloadSize > static_cast<std::size_t>((std::numeric_limits<T>::max)()))
         {
-            throw SocketException(0, "writePrefixed: Payload size " + std::to_string(payloadSize) +
-                                         " exceeds maximum encodable size for prefix type");
+            throw SocketException("writePrefixed: Payload size " + std::to_string(payloadSize) +
+                                  " exceeds maximum encodable size for prefix type");
         }
 
         // Convert the length to network byte order
@@ -1883,15 +1883,15 @@ class Socket
         // Check for null pointer with non-zero length
         if (!data && len > 0)
         {
-            throw SocketException(0, "writePrefixed: Null data pointer with non-zero length");
+            throw SocketException("writePrefixed: Null data pointer with non-zero length");
         }
 
         // Ensure the payload length fits in the prefix type
         if (len > static_cast<std::size_t>((std::numeric_limits<T>::max)()))
         {
-            throw SocketException(0, "writePrefixed: Payload length " + std::to_string(len) +
-                                         " exceeds capacity of prefix type (" +
-                                         std::to_string((std::numeric_limits<T>::max)()) + ")");
+            throw SocketException("writePrefixed: Payload length " + std::to_string(len) +
+                                  " exceeds capacity of prefix type (" +
+                                  std::to_string((std::numeric_limits<T>::max)()) + ")");
         }
 
         // Encode prefix in network byte order
@@ -3383,7 +3383,7 @@ template <> inline std::string Socket::read()
     if (len == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (len == 0)
-        throw SocketException(0, "Connection closed by remote host.");
+        throw SocketException("Connection closed by remote host.");
     return {_internalBuffer.data(), static_cast<size_t>(len)};
 }
 

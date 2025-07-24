@@ -256,7 +256,7 @@ class DatagramSocket
                       "DatagramSocket::read<T>() only supports trivially copyable types");
 
         if (!_isConnected)
-            throw SocketException(0, "DatagramSocket is not connected.");
+            throw SocketException("DatagramSocket is not connected.");
 
         T value;
         const int n = ::recv(_sockFd, reinterpret_cast<char*>(&value), sizeof(T), 0);
@@ -264,9 +264,9 @@ class DatagramSocket
         if (n == SOCKET_ERROR)
             throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
         if (n == 0)
-            throw SocketException(0, "Connection closed by remote host.");
+            throw SocketException("Connection closed by remote host.");
         if (n != sizeof(T))
-            throw SocketException(0, "Partial read: did not receive a complete T object.");
+            throw SocketException("Partial read: did not receive a complete T object.");
         return value;
     }
 
@@ -290,7 +290,7 @@ class DatagramSocket
         if (n == SOCKET_ERROR)
             throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
         if (n == 0)
-            throw SocketException(0, "Connection closed by remote host.");
+            throw SocketException("Connection closed by remote host.");
 
         // Get sender's IP:port
         char hostBuf[NI_MAXHOST], portBuf[NI_MAXSERV];
@@ -421,7 +421,7 @@ class DatagramSocket
 template <> inline std::string DatagramSocket::read<std::string>()
 {
     if (!_isConnected)
-        throw SocketException(0, "DatagramSocket is not connected.");
+        throw SocketException("DatagramSocket is not connected.");
 
     _buffer.resize(_buffer.size()); // Ensure buffer is sized
     const auto n = ::recv(_sockFd, _buffer.data(),
@@ -434,7 +434,7 @@ template <> inline std::string DatagramSocket::read<std::string>()
     if (n == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (n == 0)
-        throw SocketException(0, "Connection closed by remote host.");
+        throw SocketException("Connection closed by remote host.");
     return {_buffer.data(), static_cast<size_t>(n)};
 }
 
@@ -459,7 +459,7 @@ template <> inline std::string DatagramSocket::recvFrom<std::string>(std::string
     if (n == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (n == 0)
-        throw SocketException(0, "Connection closed by remote host.");
+        throw SocketException("Connection closed by remote host.");
 
     // Get sender's IP:port
     char hostBuf[NI_MAXHOST], portBuf[NI_MAXSERV];

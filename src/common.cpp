@@ -289,7 +289,7 @@ std::string jsocketpp::ipFromSockaddr(const sockaddr* addr, const bool convertIP
     }
     else
     {
-        throw SocketException(0, "Unsupported address family in ipFromSockaddr");
+        throw SocketException("Unsupported address family in ipFromSockaddr");
     }
 
     return {buf};
@@ -306,6 +306,6 @@ Port jsocketpp::portFromSockaddr(const sockaddr* addr)
             return ntohs(reinterpret_cast<const sockaddr_in6*>(addr)->sin6_port);
 
         default:
-            throw SocketException(0, "Unsupported address family in portFromSockaddr");
+            throw SocketException("Unsupported address family in portFromSockaddr");
     }
 }

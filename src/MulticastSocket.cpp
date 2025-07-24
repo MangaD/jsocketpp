@@ -11,7 +11,7 @@ MulticastSocket::MulticastSocket(const Port port, const std::size_t bufferSize) 
 void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string& iface)
 {
     if (groupAddr.empty())
-        throw SocketException(0, "Multicast group address cannot be empty.");
+        throw SocketException("Multicast group address cannot be empty.");
 
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC; // Support both IPv4 and IPv6 groups
@@ -67,7 +67,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
                 else
                 {
                     freeaddrinfo(res);
-                    throw SocketException(0, "Failed to resolve IPv4 interface address: " + iface);
+                    throw SocketException("Failed to resolve IPv4 interface address: " + iface);
                 }
             }
         }
@@ -111,7 +111,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
             else
             {
                 freeaddrinfo(res);
-                throw SocketException(0, "On Windows, the IPv6 interface must be a numeric index.");
+                throw SocketException("On Windows, the IPv6 interface must be a numeric index.");
             }
 #else
             // POSIX: allow interface name or index
@@ -124,7 +124,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
                 if (end && *end != '\0')
                 {
                     freeaddrinfo(res);
-                    throw SocketException(0, "Invalid IPv6 interface: " + iface);
+                    throw SocketException("Invalid IPv6 interface: " + iface);
                 }
             }
             mReq6.ipv6mr_interface = idx;
@@ -154,7 +154,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
     else
     {
         freeaddrinfo(res);
-        throw SocketException(0, "Unsupported address family for multicast: " + std::to_string(res->ai_family));
+        throw SocketException("Unsupported address family for multicast: " + std::to_string(res->ai_family));
     }
 
     // Store group/interface
@@ -166,7 +166,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
 void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string& iface)
 {
     if (groupAddr.empty())
-        throw SocketException(0, "Multicast group address cannot be empty.");
+        throw SocketException("Multicast group address cannot be empty.");
 
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC; // Support both IPv4 and IPv6 groups
@@ -219,7 +219,7 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
                 else
                 {
                     freeaddrinfo(res);
-                    throw SocketException(0, "Failed to resolve IPv4 interface address: " + iface);
+                    throw SocketException("Failed to resolve IPv4 interface address: " + iface);
                 }
             }
         }
@@ -260,7 +260,7 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
             else
             {
                 freeaddrinfo(res);
-                throw SocketException(0, "On Windows, the IPv6 interface must be a numeric index.");
+                throw SocketException("On Windows, the IPv6 interface must be a numeric index.");
             }
 #else
             unsigned int idx = if_nametoindex(iface.c_str());
@@ -272,7 +272,7 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
                 if (end && *end != '\0')
                 {
                     freeaddrinfo(res);
-                    throw SocketException(0, "Invalid IPv6 interface: " + iface);
+                    throw SocketException("Invalid IPv6 interface: " + iface);
                 }
             }
             mReq6.ipv6mr_interface = idx;
@@ -302,7 +302,7 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
     else
     {
         freeaddrinfo(res);
-        throw SocketException(0, "Unsupported address family for multicast: " + std::to_string(res->ai_family));
+        throw SocketException("Unsupported address family for multicast: " + std::to_string(res->ai_family));
     }
 
     // Optionally clear state if this matches current group/interface
@@ -372,7 +372,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
         _currentInterface = iface;
         return;
     }
-    throw SocketException(0, "On Windows, IPv6 multicast interface must be a numeric index (e.g., \"2\").");
+    throw SocketException("On Windows, IPv6 multicast interface must be a numeric index (e.g., \"2\").");
 #else
     // Try as name, fallback to numeric index
     unsigned int idx = if_nametoindex(iface.c_str());
@@ -382,7 +382,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
         char* end = nullptr;
         idx = static_cast<unsigned int>(strtoul(iface.c_str(), &end, 10));
         if (!iface.empty() && (!end || *end != '\0' || idx == 0))
-            throw SocketException(0, "Invalid IPv6 interface: " + iface);
+            throw SocketException("Invalid IPv6 interface: " + iface);
     }
     if (setsockopt(_sockFd, IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
         throw SocketException(GetSocketError(), "Failed to set IPv6 multicast interface to " + iface);
@@ -393,7 +393,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
 void MulticastSocket::setTimeToLive(int ttl)
 {
     if (ttl < 0 || ttl > 255)
-        throw SocketException(0, "TTL value must be between 0 and 255");
+        throw SocketException("TTL value must be between 0 and 255");
 
     if (ttl == _ttl)
         return;

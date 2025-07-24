@@ -226,7 +226,7 @@ void ServerSocket::setReuseAddress(const bool enable)
 bool ServerSocket::getReuseAddress() const
 {
     if (_serverSocket == INVALID_SOCKET)
-        throw SocketException(0, "getReuseAddress() failed: socket not open.");
+        throw SocketException("getReuseAddress() failed: socket not open.");
 
     auto value = getOption(SOL_SOCKET, getSocketReuseOption());
 
@@ -271,7 +271,7 @@ void ServerSocket::bind()
 {
     // Ensure that we have already selected an address during construction
     if (_selectedAddrInfo == nullptr)
-        throw SocketException(0, "bind() failed: no valid addrinfo found");
+        throw SocketException("bind() failed: no valid addrinfo found");
 
     const auto res = ::bind(
         _serverSocket,              // The socket file descriptor to bind.
@@ -304,7 +304,7 @@ Socket ServerSocket::accept(const std::optional<std::size_t> recvBufferSize,
                             const std::optional<std::size_t> internalBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
-        throw SocketException(0, "Server socket is not initialized or already closed.");
+        throw SocketException("Server socket is not initialized or already closed.");
 
     const auto [resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf] =
         resolveBuffers(recvBufferSize, sendBufferSize, internalBufferSize);
@@ -320,7 +320,7 @@ Socket ServerSocket::accept(int timeoutMillis, const std::optional<std::size_t> 
                             const std::optional<std::size_t> internalBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
-        throw SocketException(0, "Server socket is not initialized or already closed.");
+        throw SocketException("Server socket is not initialized or already closed.");
 
     const auto [resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf] =
         resolveBuffers(recvBufferSize, sendBufferSize, internalBufferSize);
@@ -336,7 +336,7 @@ std::optional<Socket> ServerSocket::tryAccept(const std::optional<std::size_t> r
                                               const std::optional<std::size_t> internalBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
-        throw SocketException(0, "Server socket is not initialized or already closed.");
+        throw SocketException("Server socket is not initialized or already closed.");
 
     const auto [resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf] =
         resolveBuffers(recvBufferSize, sendBufferSize, internalBufferSize);
@@ -352,7 +352,7 @@ std::optional<Socket> ServerSocket::tryAccept(int timeoutMillis, const std::opti
                                               const std::optional<std::size_t> internalBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
-        throw SocketException(0, "Server socket is not initialized or already closed.");
+        throw SocketException("Server socket is not initialized or already closed.");
 
     const auto [resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf] =
         resolveBuffers(recvBufferSize, sendBufferSize, internalBufferSize);
@@ -368,7 +368,7 @@ Socket ServerSocket::acceptBlocking(const std::optional<std::size_t> recvBufferS
                                     const std::optional<std::size_t> internalBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
-        throw SocketException(0, "Server socket is not initialized or already closed.");
+        throw SocketException("Server socket is not initialized or already closed.");
 
     sockaddr_storage clientAddr{};
     socklen_t clientAddrLen = sizeof(clientAddr);
@@ -387,7 +387,7 @@ std::optional<Socket> ServerSocket::acceptNonBlocking(const std::optional<std::s
                                                       const std::optional<std::size_t> internalBufferSize) const
 {
     if (_serverSocket == INVALID_SOCKET)
-        throw SocketException(0, "Server socket is not initialized or already closed.");
+        throw SocketException("Server socket is not initialized or already closed.");
 
     sockaddr_storage clientAddr{};
     socklen_t addrLen = sizeof(clientAddr);
@@ -547,8 +547,8 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     // --- Windows: Use select() for readiness notification ---
     if (_serverSocket >= FD_SETSIZE)
     {
-        throw SocketException(0, "waitReady() failed: socket descriptor exceeds FD_SETSIZE (" +
-                                     std::to_string(FD_SETSIZE) + "), select() cannot be used");
+        throw SocketException("waitReady() failed: socket descriptor exceeds FD_SETSIZE (" +
+                              std::to_string(FD_SETSIZE) + "), select() cannot be used");
     }
     // Prepare the file descriptor set for select().
     // We want to monitor this server socket for readability (i.e., incoming connection).
@@ -607,7 +607,7 @@ void ServerSocket::setIPv6Only(const bool enable)
 {
     // Check if the socket is valid and AF_INET6
     if (_serverSocket == INVALID_SOCKET)
-        throw SocketException(0, "setIPv6Only: Socket is not open.");
+        throw SocketException("setIPv6Only: Socket is not open.");
 
     sockaddr_storage ss{};
     socklen_t len = sizeof(ss);
@@ -615,7 +615,7 @@ void ServerSocket::setIPv6Only(const bool enable)
         throw SocketException(GetSocketError(), "setIPv6Only: getsockname() failed.");
 
     if (ss.ss_family != AF_INET6)
-        throw SocketException(0, "setIPv6Only: Socket is not IPv6.");
+        throw SocketException("setIPv6Only: Socket is not IPv6.");
 
     setOption(IPPROTO_IPV6, IPV6_V6ONLY, enable ? 1 : 0);
 }
@@ -623,7 +623,7 @@ void ServerSocket::setIPv6Only(const bool enable)
 bool ServerSocket::getIPv6Only() const
 {
     if (_serverSocket == INVALID_SOCKET)
-        throw SocketException(0, "getIPv6Only: Socket is not open.");
+        throw SocketException("getIPv6Only: Socket is not open.");
 
     sockaddr_storage ss{};
     socklen_t len = sizeof(ss);
@@ -631,7 +631,7 @@ bool ServerSocket::getIPv6Only() const
         throw SocketException(GetSocketError(), "getIPv6Only: getsockname() failed.");
 
     if (ss.ss_family != AF_INET6)
-        throw SocketException(0, "getIPv6Only: Socket is not IPv6.");
+        throw SocketException("getIPv6Only: Socket is not IPv6.");
 
     return getOption(IPPROTO_IPV6, IPV6_V6ONLY);
 }

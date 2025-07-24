@@ -102,7 +102,7 @@ void DatagramSocket::bind() const
 {
     // Ensure that we have already selected an address during construction
     if (_selectedAddrInfo == nullptr)
-        throw SocketException(0, "bind() failed: no valid addrinfo found");
+        throw SocketException("bind() failed: no valid addrinfo found");
 
     const auto res = ::bind(
         _sockFd,                    // The socket file descriptor to bind.
@@ -125,7 +125,7 @@ void DatagramSocket::connect(const int timeoutMillis)
     // Ensure that we have already selected an address during construction
     if (_selectedAddrInfo == nullptr)
     {
-        throw SocketException(0, "connect() failed: no valid addrinfo found");
+        throw SocketException("connect() failed: no valid addrinfo found");
     }
 
     // Flag to track whether we're in non-blocking mode
@@ -190,7 +190,7 @@ void DatagramSocket::connect(const int timeoutMillis)
             {
                 // Reset the socket to blocking mode before throwing the timeout exception
                 setNonBlocking(false);
-                throw SocketException(0, "Connection timed out or failed.");
+                throw SocketException("Connection timed out or failed.");
             }
         }
     }
@@ -207,7 +207,7 @@ void DatagramSocket::connect(const int timeoutMillis)
 size_t DatagramSocket::write(std::string_view message) const
 {
     if (!_isConnected)
-        throw SocketException(0, "DatagramSocket is not connected.");
+        throw SocketException("DatagramSocket is not connected.");
 
     if (message.empty())
         return 0; // Nothing to send
@@ -343,7 +343,7 @@ size_t DatagramSocket::write(std::string_view message, const std::string_view ho
 size_t DatagramSocket::read(DatagramPacket& packet, const bool resizeBuffer) const
 {
     if (packet.buffer.empty())
-        throw SocketException(0, "DatagramPacket buffer is empty");
+        throw SocketException("DatagramPacket buffer is empty");
 
     sockaddr_storage srcAddr{};
     socklen_t addrLen = sizeof(srcAddr);
@@ -360,7 +360,7 @@ size_t DatagramSocket::read(DatagramPacket& packet, const bool resizeBuffer) con
     if (received == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (received == 0)
-        throw SocketException(0, "Connection closed by remote host.");
+        throw SocketException("Connection closed by remote host.");
 
     // Fill in address and port fields
     char hostBuf[NI_MAXHOST], portBuf[NI_MAXSERV];

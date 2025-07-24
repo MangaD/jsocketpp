@@ -189,7 +189,7 @@ class UnixSocket
         if (len == SOCKET_ERROR)
             throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
         if (len == 0)
-            throw SocketException(0, "Connection closed by remote socket.");
+            throw SocketException("Connection closed by remote socket.");
         return value;
     }
 
@@ -312,7 +312,7 @@ template <> inline std::string UnixSocket::read()
     if (len == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (len == 0)
-        throw SocketException(0, "Connection closed by remote socket.");
+        throw SocketException("Connection closed by remote socket.");
     return {_buffer.data(), static_cast<size_t>(len)};
 }
 

@@ -10,7 +10,7 @@ UnixSocket::UnixSocket(const std::string_view path, const std::size_t bufferSize
 {
     if (path.length() >= sizeof(_addr.sun_path))
     {
-        throw SocketException(0, "Unix domain socket path too long");
+        throw SocketException("Unix domain socket path too long");
     }
 
     std::memset(&_addr, 0, sizeof(_addr));
