@@ -47,7 +47,7 @@ var searchData=
   ['resize_44',['resize',['../classjsocketpp_1_1DatagramPacket.html#a2c99540d2136dae10a56f781c1b20c5f',1,'jsocketpp::DatagramPacket']]],
   ['resolvebuffers_45',['resolveBuffers',['../group__tcp.html#ga069d29c3ff8b80ee9a7cb9e1e39f930a',1,'jsocketpp::ServerSocket']]],
   ['resource_20cleanup_46',['Resource Cleanup',['../group__tcp.html#autotoc_md482',1,'']]],
-  ['resource_20management_47',['Resource Management',['../group__tcp.html#autotoc_md542',1,'']]],
+  ['resource_20management_47',['Resource Management',['../group__tcp.html#autotoc_md545',1,'']]],
   ['resources_48',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
   ['responsibilities_49',['Our Responsibilities',['../md_CODE__OF__CONDUCT.html#autotoc_md447',1,'']]],
   ['reuse_20in_20sockets_3a_20so_5freuseaddr_20vs_20so_5fexclusiveaddruse_50',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],

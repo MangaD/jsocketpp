@@ -101,6 +101,10 @@ $(function(){initNavTree('group__socketopts.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga477422f8e69c0114cc539926b7f6bc68" id="r_ga477422f8e69c0114cc539926b7f6bc68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga477422f8e69c0114cc539926b7f6bc68">jsocketpp::Socket::bind</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
+<tr class="memdesc:ga477422f8e69c0114cc539926b7f6bc68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the client socket to all interfaces (INADDR_ANY) using the specified port.  <br /></td></tr>
+<tr class="memitem:gace1da4f860ac0af46d702cb5fc875a51" id="r_gace1da4f860ac0af46d702cb5fc875a51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gace1da4f860ac0af46d702cb5fc875a51">jsocketpp::Socket::bind</a> ()</td></tr>
+<tr class="memdesc:gace1da4f860ac0af46d702cb5fc875a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the client socket to all interfaces using an ephemeral port.  <br /></td></tr>
 <tr class="memitem:ga895f76bf9c4745fc20074ef2491b02be" id="r_ga895f76bf9c4745fc20074ef2491b02be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga895f76bf9c4745fc20074ef2491b02be">jsocketpp::Socket::setSoLinger</a> (bool enable, int seconds)</td></tr>
 <tr class="memdesc:ga895f76bf9c4745fc20074ef2491b02be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the socket's linger behavior (SO_LINGER) on close.  <br /></td></tr>
 <tr class="memitem:ga1734c9ec9ae9c7dacf616fadc3b5f1cb" id="r_ga1734c9ec9ae9c7dacf616fadc3b5f1cb"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1734c9ec9ae9c7dacf616fadc3b5f1cb">jsocketpp::Socket::getSoLinger</a> () const</td></tr>
@@ -122,6 +126,64 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Some options may not be available or meaningful on all platforms. Platform-specific behavior is documented per function.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd>Socket::setSoLinger(), Socket::getSoLinger(), Socket::setTcpNoDelay(), etc. </dd></dl>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="gace1da4f860ac0af46d702cb5fc875a51" name="gace1da4f860ac0af46d702cb5fc875a51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gace1da4f860ac0af46d702cb5fc875a51">&#9670;&#160;</a></span>bind() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::bind </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Binds the client socket to all interfaces using an ephemeral port. </p>
+<p>This overload delegates to the default configuration — bind to any interface, with any available port. Equivalent to calling <span class="tt">bind("0.0.0.0", 0)</span>.</p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if binding fails or the socket is already bound. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga477422f8e69c0114cc539926b7f6bc68" name="ga477422f8e69c0114cc539926b7f6bc68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga477422f8e69c0114cc539926b7f6bc68">&#9670;&#160;</a></span>bind() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::bind </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Binds the client socket to all interfaces (INADDR_ANY) using the specified port. </p>
+<p>This overload binds to all available network interfaces using a specific local port. Equivalent to calling <span class="tt">bind("0.0.0.0", port)</span>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">port</td><td><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number to bind to.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if binding fails or the socket is already bound. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ga440e7ee9303d454df0c51fe6125cd2af" name="ga440e7ee9303d454df0c51fe6125cd2af"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga440e7ee9303d454df0c51fe6125cd2af">&#9670;&#160;</a></span>getReuseAddress()</h2>
 
@@ -147,7 +209,7 @@ Functions</h2></td></tr>
 
 <p>Queries whether SO_REUSEADDR is currently enabled on the socket. </p>
 <p>This method retrieves the current state of the address reuse flag. When enabled, it relaxes restrictions on re-binding to local ports that are already in use or still in <span class="tt">TIME_WAIT</span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md606"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md607"></a>
 Platform behavior:</h3>
 <ul>
 <li><b>POSIX:</b> Multiple sockets can bind the same address/port if all use SO_REUSEADDR.</li>
@@ -195,7 +257,7 @@ Platform behavior:</h3>
   </dd>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga895f76bf9c4745fc20074ef2491b02be" title="Configures the socket&#39;s linger behavior (SO_LINGER) on close.">setSoLinger()</a></dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md597"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md600"></a>
 📌 Use Cases</h3>
 <ul>
 <li><b>Inspecting socket shutdown behavior</b>: Knowing whether the socket is in blocking close mode is helpful for debugging or optimizing teardown.</li>
@@ -265,13 +327,13 @@ Platform behavior:</h3>
 
 <p>Enables or disables the SO_REUSEADDR socket option. </p>
 <p>This option controls whether the socket is allowed to bind to a local address that is either already in use or in the <span class="tt">TIME_WAIT</span> state. Although most commonly used in server sockets, client sockets may also benefit in certain scenarios.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md604"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md605"></a>
 Platform behavior:</h3>
 <ul>
 <li><b>POSIX:</b> Allows multiple sockets to bind the same address and port, as long as all use <span class="tt">SO_REUSEADDR</span>. This is especially useful for multicast or for clients that bind to a fixed local port and reconnect frequently.</li>
 <li><b>Windows:</b> Allows rebinding to a port in <span class="tt">TIME_WAIT</span>, but <b>does not</b> allow multiple concurrent binds to the same port.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md605"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md606"></a>
 Use cases in client sockets:</h3>
 <ul>
 <li>Reconnecting P2P or UDP clients that bind to the same port repeatedly</li>
@@ -293,7 +355,7 @@ Use cases in client sockets:</h3>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga440e7ee9303d454df0c51fe6125cd2af" title="Queries whether SO_REUSEADDR is currently enabled on the socket.">getReuseAddress()</a> </dd>
 <dd>
-bind() </dd></dl>
+<a class="el" href="#gace1da4f860ac0af46d702cb5fc875a51" title="Binds the client socket to all interfaces using an ephemeral port.">bind()</a> </dd></dl>
 
 </div>
 </div>
@@ -318,10 +380,10 @@ bind() </dd></dl>
 
 <p>Configures the socket's linger behavior (SO_LINGER) on close. </p>
 <p>The SO_LINGER option controls how the socket behaves when it is closed and unsent data remains. It determines whether <span class="tt"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a></span> (or <span class="tt"><a class="el" href="group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a></span> followed by <span class="tt"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a></span>) blocks while the kernel attempts to flush unsent data, or whether it returns immediately and discards it.</p>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md594"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md597"></a>
 When enabled (<span class="tt">enable == true</span>):</h4>
 <p>The socket enters a "lingering" state on close. The OS will attempt to transmit any unsent data, blocking the <span class="tt"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a></span> call for up to <span class="tt">seconds</span>. If the data is fully sent before the timeout, the socket closes cleanly. Otherwise, it is forcefully closed after the timeout.</p>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md595"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md598"></a>
 When disabled (<span class="tt">enable == false</span>):</h4>
 <p>The socket closes immediately, even if unsent data remains. This can cause truncation or reset at the receiving end (e.g., the receiver may see a TCP RST instead of a graceful FIN).</p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -338,7 +400,7 @@ When disabled (<span class="tt">enable == false</span>):</h4>
   </dd>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga1734c9ec9ae9c7dacf616fadc3b5f1cb" title="Retrieves the socket&#39;s current SO_LINGER configuration.">getSoLinger()</a></dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md596"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md599"></a>
 📌 Use Cases</h3>
 <ul>
 <li><b>Graceful TCP Shutdown</b>: When sending critical data (e.g., file footers, checksums), linger ensures the data is actually transmitted before closing.</li>
@@ -375,7 +437,7 @@ When disabled (<span class="tt">enable == false</span>):</h4>
 <p>When <span class="tt">TCP_NODELAY</span> is enabled (<span class="tt">on == true</span>), Nagle's algorithm is disabled. This causes small packets to be sent immediately, reducing latency for real-time or interactive applications (e.g., games, messaging, RPCs).</p>
 <p>When disabled (<span class="tt">on == false</span>), Nagle's algorithm is enabled. The socket coalesces small outgoing messages into larger packets to improve throughput and reduce congestion, but may introduce slight delays.</p>
 <p>By default, TCP_NODELAY is off (i.e., Nagle's algorithm is enabled).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md603"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md604"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>

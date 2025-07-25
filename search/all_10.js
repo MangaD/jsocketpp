@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['false_20_3a_0',['When disabled (&lt;span class=&quot;tt&quot;&gt;enable == false&lt;/span&gt;):',['../group__socketopts.html#autotoc_md595',1,'']]],
+  ['false_20_3a_0',['When disabled (&lt;span class=&quot;tt&quot;&gt;enable == false&lt;/span&gt;):',['../group__socketopts.html#autotoc_md598',1,'']]],
   ['families_1',['Families',['../group__underlying__socket__api.html#autotoc_md302',1,'2.2 Address Families'],['../group__sockets__theory.html#autotoc_md280',1,'3. Socket Address Families']]],
   ['faq_2',['❓ FAQ',['../index.html#autotoc_md413',1,'']]],
-  ['features_3',['Features',['../group__underlying__socket__api.html#autotoc_md312',1,'6. Advanced Socket API Features'],['../group__underlying__socket__api.html#autotoc_md322',1,'Advanced Socket API Features'],['../classjsocketpp_1_1MulticastSocket.html#autotoc_md476',1,'Features'],['../classjsocketpp_1_1DatagramSocket.html#autotoc_md464',1,'Key Features'],['../classjsocketpp_1_1ServerSocket.html#autotoc_md479',1,'Key Features'],['../classjsocketpp_1_1Socket.html#autotoc_md487',1,'Key Features'],['../group__tcp.html#autotoc_md495',1,'Key Features'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md616',1,'Main Features']]],
+  ['features_3',['Features',['../group__underlying__socket__api.html#autotoc_md312',1,'6. Advanced Socket API Features'],['../group__underlying__socket__api.html#autotoc_md322',1,'Advanced Socket API Features'],['../classjsocketpp_1_1MulticastSocket.html#autotoc_md476',1,'Features'],['../classjsocketpp_1_1DatagramSocket.html#autotoc_md464',1,'Key Features'],['../classjsocketpp_1_1ServerSocket.html#autotoc_md479',1,'Key Features'],['../classjsocketpp_1_1Socket.html#autotoc_md487',1,'Key Features'],['../group__tcp.html#autotoc_md495',1,'Key Features'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md617',1,'Main Features']]],
   ['features_20at_20a_20glance_4',['✨ Features at a Glance',['../index.html#autotoc_md372',1,'']]],
   ['fields_5',['Fields',['../structjsocketpp_1_1BufferView.html#autotoc_md451',1,'']]],
   ['final_20thoughts_20and_20best_20practices_6',['🧠 Final Thoughts and Best Practices',['../group__async__io.html#autotoc_md146',1,'']]],
@@ -23,7 +23,7 @@ var searchData=
   ['for_20unit_20testing_20in_20c_2020_3a_20',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md331',1,'']]],
   ['for_20unit_20tests_3a_21',['4. &lt;b&gt;Mocking or Stubbing Socket API for Unit Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md340',1,'']]],
   ['for_20vcpkg_22',['2. Prepare Your Library for vcpkg',['../group__vcpkg__publish__guide.html#autotoc_md349',1,'']]],
-  ['format_23',['Format',['../group__tcp.html#autotoc_md525',1,'Protocol Format'],['../group__tcp.html#autotoc_md528',1,'Protocol Format'],['../group__tcp.html#autotoc_md552',1,'Protocol Format'],['../group__tcp.html#autotoc_md555',1,'Protocol Format']]],
+  ['format_23',['Format',['../group__tcp.html#autotoc_md528',1,'Protocol Format'],['../group__tcp.html#autotoc_md531',1,'Protocol Format'],['../group__tcp.html#autotoc_md555',1,'Protocol Format'],['../group__tcp.html#autotoc_md558',1,'Protocol Format']]],
   ['friendly_24',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md166',1,'']]],
   ['fromnetwork_25',['fromNetwork',['../namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37',1,'jsocketpp::net::fromNetwork(const uint16_t val)'],['../namespacejsocketpp_1_1net.html#acca9e860a0a33d2508bfa9986049db8c',1,'jsocketpp::net::fromNetwork(const uint32_t val)']]],
   ['fully_20step_20by_20step_20posix_20style_26',['&lt;b&gt;b) Fully Step-by-Step (POSIX Style)&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md41',1,'']]],

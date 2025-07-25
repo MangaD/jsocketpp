@@ -27,7 +27,7 @@ var searchData=
   ['requests_24',['2. Submitting Pull Requests',['../md_CONTRIBUTING.html#autotoc_md431',1,'']]],
   ['require_20the_20port_20in_20the_20constructor_25',['Why require the port in the constructor?',['../group__ServerSocket__Lifecycle.html#autotoc_md32',1,'']]],
   ['resource_20cleanup_26',['Resource Cleanup',['../group__tcp.html#autotoc_md482',1,'']]],
-  ['resource_20management_27',['Resource Management',['../group__tcp.html#autotoc_md542',1,'']]],
+  ['resource_20management_27',['Resource Management',['../group__tcp.html#autotoc_md545',1,'']]],
   ['resources_28',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
   ['responsibilities_29',['Our Responsibilities',['../md_CODE__OF__CONDUCT.html#autotoc_md447',1,'']]],
   ['reuse_20options_30',['🔍 In-Depth Overview of Address Reuse Options',['../group__address__reuse.html#autotoc_md53',1,'']]],

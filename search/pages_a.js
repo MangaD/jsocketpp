@@ -48,7 +48,7 @@ var searchData=
   ['and_20client_20python_20af_5finet_45',['5.1 TCP Server and Client (Python, AF_INET)',['../group__underlying__socket__api.html#autotoc_md310',1,'']]],
   ['and_20client_3a_46',['2.1 &lt;b&gt;Setting Up Real Server and Client&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md336',1,'']]],
   ['and_20cons_47',['5. Alternative Designs: Pros and Cons',['../group__ServerSocket__Lifecycle.html#autotoc_md39',1,'']]],
-  ['and_20handling_20socket_20exceptions_48',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md613',1,'']]],
+  ['and_20handling_20socket_20exceptions_48',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md614',1,'']]],
   ['and_20its_20limitations_49',['⚠️ Java’s Approach and Its Limitations',['../group__address__reuse.html#autotoc_md86',1,'']]],
   ['and_20performance_20considerations_50',['2.7. Security and Performance Considerations',['../group__sockets__theory.html#autotoc_md278',1,'']]],
   ['and_20rationale_51',['4. Advantages and Rationale',['../group__ServerSocket__Lifecycle.html#autotoc_md34',1,'']]],
