@@ -83,8 +83,63 @@ void Socket::cleanupAndThrow(const int errorCode)
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
-void Socket::connect(const int timeoutMillis) const
+void Socket::bind(const std::string_view localHost, const Port port)
 {
+    if (_isBound)
+    {
+        throw SocketException("Socket::bind(): socket is already bound");
+    }
+
+    addrinfo hints{};
+    hints.ai_family = AF_UNSPEC;     // IPv4 or IPv6
+    hints.ai_socktype = SOCK_STREAM; // TCP socket
+    hints.ai_protocol = IPPROTO_TCP; // TCP protocol
+    hints.ai_flags = AI_PASSIVE;     // Accept wildcard address (e.g. "0.0.0.0")
+
+    const std::string portStr = std::to_string(port);
+    addrinfo* rawResult = nullptr;
+
+    if (::getaddrinfo(localHost.data(), portStr.c_str(), &hints, &rawResult) != 0)
+    {
+#ifdef _WIN32
+        throw SocketException(GetSocketError(), "Socket::bind(): getaddrinfo() failed");
+#else
+        throw SocketException(ret, "Socket::bind(): getaddrinfo() failed");
+#endif
+    }
+
+    const internal::AddrinfoPtr result{rawResult};
+
+    for (const addrinfo* p = result.get(); p != nullptr; p = p->ai_next)
+    {
+        if (::bind(_sockFd, p->ai_addr, static_cast<socklen_t>(p->ai_addrlen)) == 0)
+        {
+            _isBound = true;
+            return; // success
+        }
+    }
+
+    const int error = GetSocketError();
+    throw SocketException(error, "Socket::bind(): bind() failed");
+}
+
+void Socket::bind(const Port port)
+{
+    bind("0.0.0.0", port);
+}
+
+void Socket::bind()
+{
+    bind("0.0.0.0", 0);
+}
+
+void Socket::connect(const int timeoutMillis)
+{
+    if (_isConnected)
+    {
+        throw SocketException("connect() called on an already-connected socket");
+    }
+
     // Ensure that we have already selected an address during construction
     if (_selectedAddrInfo == nullptr)
     {
@@ -169,6 +224,7 @@ void Socket::connect(const int timeoutMillis) const
         }
     }
 
+    _isConnected = true;
     // Socket mode will be restored automatically via ScopedBlockingMode destructor
 }
 
@@ -625,51 +681,6 @@ bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
     return result > 0;
-}
-
-bool Socket::isConnected() const
-{
-    if (_sockFd == INVALID_SOCKET)
-        return false;
-
-    char buf;
-#ifdef _WIN32
-    u_long bytesAvailable = 0;
-    if (ioctlsocket(_sockFd, FIONREAD, &bytesAvailable) == SOCKET_ERROR)
-        return false; // Error, assume socket is closed.
-    if (bytesAvailable > 0)
-        return true; // Data available, socket is alive.
-
-    // Try non-blocking recv with MSG_PEEK
-    u_long mode = 1;
-    ioctlsocket(_sockFd, FIONBIO, &mode); // Set socket to non-blocking mode
-    auto ret = recv(_sockFd, &buf, 1, MSG_PEEK);
-    mode = 0;
-    ioctlsocket(_sockFd, FIONBIO, &mode); // Restore socket to blocking mode
-    if (ret == 0)
-        return false; // Connection closed
-    if (ret < 0)
-    {
-        const auto err = WSAGetLastError();
-        return (err == WSAEWOULDBLOCK || err == WSAEINPROGRESS); // Connection still in progress or non-blocking
-    }
-    return true;
-#else
-    const auto flags = fcntl(_sockFd, F_GETFL, 0);
-    const bool wasNonBlocking = flags & O_NONBLOCK;
-    if (!wasNonBlocking)
-        fcntl(_sockFd, F_SETFL, flags | O_NONBLOCK);
-
-    auto ret = recv(_sockFd, &buf, 1, MSG_PEEK);
-    if (!wasNonBlocking)
-        fcntl(_sockFd, F_SETFL, flags); // Restore socket to original mode
-
-    if (ret == 0)
-        return false; // Connection closed
-    if (ret < 0)
-        return (errno == EWOULDBLOCK || errno == EAGAIN); // Connection still in progress or non-blocking
-    return true;
-#endif
 }
 
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state

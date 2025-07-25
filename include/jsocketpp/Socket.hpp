@@ -258,10 +258,12 @@ class Socket
     Socket(Socket&& rhs) noexcept
         : _sockFd(rhs._sockFd), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
           _cliAddrInfo(std::move(rhs._cliAddrInfo)), _selectedAddrInfo(rhs._selectedAddrInfo),
-          _internalBuffer(std::move(rhs._internalBuffer))
+          _internalBuffer(std::move(rhs._internalBuffer)), _isBound(rhs._isBound), _isConnected(rhs._isConnected)
     {
         rhs._sockFd = INVALID_SOCKET;
         rhs._selectedAddrInfo = nullptr;
+        rhs._isBound = false;
+        rhs._isConnected = false;
     }
 
     /**
@@ -345,10 +347,14 @@ class Socket
             _cliAddrInfo = std::move(rhs._cliAddrInfo);
             _selectedAddrInfo = rhs._selectedAddrInfo;
             _internalBuffer = std::move(rhs._internalBuffer);
+            _isBound = rhs._isBound;
+            _isConnected = rhs._isConnected;
 
             // Reset source
             rhs._sockFd = INVALID_SOCKET;
             rhs._selectedAddrInfo = nullptr;
+            rhs._isBound = false;
+            rhs._isConnected = false;
         }
         return *this;
     }
@@ -373,6 +379,110 @@ class Socket
      * @see shutdown() For controlled shutdown of specific socket operations
      */
     ~Socket() noexcept;
+
+    /**
+     * @brief Binds the client socket to a specific local IP address and/or port.
+     * @ingroup tcp
+     *
+     * This method provides fine-grained control over the local endpoint from which a client socket originates.
+     * It supports both IPv4 and IPv6 resolution, dual-stack addressing, and wildcard or specific local interfaces.
+     *
+     * ### Common Use Cases:
+     * - P2P or NAT traversal clients requiring fixed source ports
+     * - Multihomed systems selecting a specific local interface
+     * - Unit testing with known local port bindings
+     * - UDP clients that do not connect but still need a listening endpoint
+     *
+     * This method must be called after the socket is constructed and before `connect()`.
+     * It can only be called once; repeated calls will throw.
+     * Internally uses `getaddrinfo()` for resolution and retries all returned addresses until binding succeeds.
+     *
+     * @param localHost A local IP address or hostname to bind to (e.g., "127.0.0.1" or "::1").
+     * @param port      Port number to bind to. Use `0` to allow the OS to auto-assign one.
+     *
+     * @throws SocketException if resolution or binding fails, or if the socket is already bound.
+     *
+     * @see connect()
+     * @see setReuseAddress()
+     * @see getReuseAddress()
+     */
+    void bind(std::string_view localHost, Port port);
+
+    /**
+     * @brief Binds the client socket to all interfaces (INADDR_ANY) using the specified port.
+     * @ingroup socketopts
+     *
+     * This overload binds to all available network interfaces using a specific local port.
+     * Equivalent to calling `bind("0.0.0.0", port)`.
+     *
+     * @param port Port number to bind to.
+     *
+     * @throws SocketException if binding fails or the socket is already bound.
+     */
+    void bind(Port port);
+
+    /**
+     * @brief Binds the client socket to all interfaces using an ephemeral port.
+     * @ingroup socketopts
+     *
+     * This overload delegates to the default configuration — bind to any interface, with any available port.
+     * Equivalent to calling `bind("0.0.0.0", 0)`.
+     *
+     * @throws SocketException if binding fails or the socket is already bound.
+     */
+    void bind();
+
+    /**
+     * @brief Indicates whether the socket has been explicitly bound to a local address and/or port.
+     * @ingroup tcp
+     *
+     * Returns `true` if the socket has successfully completed a call to one of the `bind()` overloads.
+     * Binding is optional for client sockets, but is often required in advanced scenarios such as:
+     * - Assigning a fixed local port for NAT traversal or predictable communication
+     * - Selecting a specific local interface in multihomed environments
+     * - Participating in multicast, broadcast, or P2P communication setups
+     *
+     * Binding must occur before the socket is connected. Attempting to bind after `connect()` will throw.
+     *
+     * ### Example
+     * @code
+     * Socket socket("example.com", 443);
+     * socket.bind("0.0.0.0", 12345); // Use fixed source port
+     * socket.connect();
+     * @endcode
+     *
+     * @return `true` if the socket has been bound to a local address/port, `false` otherwise.
+     *
+     * @see bind()
+     */
+    [[nodiscard]] bool isBound() const noexcept { return _isBound; }
+
+    /**
+     * @brief Indicates whether the socket has been successfully connected to a remote host.
+     * @ingroup tcp
+     *
+     * Returns `true` if the socket has completed a successful connection attempt using `connect()`.
+     * This reflects the internal connection state as tracked by the library—it does not actively
+     * probe the socket or verify that the connection is still alive at the network layer.
+     *
+     * Use this method to check whether it is valid to perform send/receive operations.
+     * A socket transitions to the "connected" state only after a successful call to `connect()`
+     * with no subsequent errors or closures.
+     *
+     * ### Example
+     * @code
+     * Socket socket("example.com", 443);
+     * socket.connect();
+     * if (socket.isConnected()) {
+     *     socket.send(...);
+     * }
+     * @endcode
+     *
+     * @return `true` if the socket is in the connected state, `false` otherwise.
+     *
+     * @see connect()
+     */
+    [[nodiscard]] bool isConnected() const noexcept { return _isConnected; }
 
     /**
      * @brief Retrieves the IP address of the connected remote peer.
@@ -479,6 +589,22 @@ class Socket
     std::string getRemoteSocketAddress(bool convertIPv4Mapped = true) const;
 
     /**
+     * @brief Binds the client socket to a specific local IP address and/or port.
+     * @ingroup tcp
+     *
+     * By default, client sockets are automatically bound to an ephemeral local port.
+     * This method allows explicit binding to a specific local interface or port before calling connect().
+     *
+     * @param localHost The local IP address to bind to (e.g., "0.0.0.0" or "192.168.1.10").
+     * @param port      Optional port number. Use 0 to let the OS assign one.
+     *
+     * @throws SocketException if the bind operation fails.
+     *
+     * @note This method must be called before connect(). Calling it after connect() has no effect or will fail.
+     */
+    void bind(std::string_view localHost, Port port = 0);
+
+    /**
      * @brief Establishes a TCP connection to the remote host with optional timeout control.
      * @ingroup tcp
      *
@@ -548,7 +674,7 @@ class Socket
      * @see setNonBlocking() Permanently change blocking mode
      * @see waitReady()    Low-level readiness polling with timeout
      */
-    void connect(int timeoutMillis = -1) const;
+    void connect(int timeoutMillis = -1);
 
     /**
      * @brief Reads a fixed-size, trivially copyable object of type `T` from the socket.
@@ -3040,41 +3166,6 @@ class Socket
     bool waitReady(bool forWrite, int timeoutMillis) const;
 
     /**
-     * @brief Check if the socket is still connected (TCP only).
-     *
-     * This method performs a non-destructive check of the socket's connection status
-     * by attempting a zero-byte send (on Windows) or checking socket errors (on POSIX).
-     * While not 100% reliable due to the nature of TCP/IP, it provides a best-effort
-     * indication of connection status.
-     *
-     * ### Implementation Details
-     * - Windows: Uses send() with zero bytes
-     * - POSIX: Checks SO_ERROR socket option
-     * - Does not generate network traffic
-     * - Non-blocking operation
-     *
-     * ### Example Usage
-     * @code{.cpp}
-     * Socket sock("example.com", 8080);
-     * sock.connect();
-     *
-     * // Periodically check connection
-     * while (sock.isConnected()) {
-     *     // Connection is still alive
-     *     std::this_thread::sleep_for(std::chrono::seconds(1));
-     * }
-     * // Connection lost
-     * @endcode
-     *
-     * @return true if the socket appears to be connected, false if disconnected
-     *         or in an error state.
-     * @note This check is not guaranteed to detect all network failures,
-     *       especially temporary outages or routing problems.
-     * @see enableKeepAlive() For reliable connection monitoring
-     */
-    bool isConnected() const;
-
-    /**
      * @brief Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket.
      * @ingroup socketopts
      *
@@ -3394,6 +3485,8 @@ class Socket
     internal::AddrinfoPtr _cliAddrInfo = nullptr; ///< Address info for connection (from getaddrinfo)
     addrinfo* _selectedAddrInfo = nullptr;        ///< Selected address info for connection
     std::vector<char> _internalBuffer;            ///< Internal buffer for read operations, not thread-safe
+    bool _isBound = false;                        ///< True if the socket is bound to an address
+    bool _isConnected = false;                    ///< True if the socket is connected to a remote peer
 };
 
 /**
