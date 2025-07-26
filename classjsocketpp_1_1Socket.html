@@ -100,6 +100,15 @@ $(function(){initNavTree('classjsocketpp_1_1Socket.html','','classjsocketpp_1_1S
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Socket_8hpp_source.html">Socket.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for jsocketpp::Socket:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classjsocketpp_1_1Socket.png" usemap="#jsocketpp_3A_3ASocket_map" alt=""/>
+  <map id="jsocketpp_3A_3ASocket_map" name="jsocketpp_3A_3ASocket_map">
+<area href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt()." alt="jsocketpp::SocketOptions" shape="rect" coords="0,0,152,24"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -115,13 +124,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga4d2721350ef6a3cad7edf7b778d436c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment operator (deleted) for <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> class.  <br /></td></tr>
 <tr class="memitem:ga05b1ae2ec76833370c809c53fe550a95" id="r_ga05b1ae2ec76833370c809c53fe550a95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classjsocketpp_1_1Socket.html">Socket</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga05b1ae2ec76833370c809c53fe550a95">operator=</a> (<a class="el" href="classjsocketpp_1_1Socket.html">Socket</a> &amp;&amp;rhs) noexcept</td></tr>
 <tr class="memdesc:ga05b1ae2ec76833370c809c53fe550a95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator that transfers socket ownership safely.  <br /></td></tr>
-<tr class="memitem:ga2d1b014c3f33bb2b0400baf08681f973" id="r_ga2d1b014c3f33bb2b0400baf08681f973"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga2d1b014c3f33bb2b0400baf08681f973">~Socket</a> () noexcept</td></tr>
-<tr class="memdesc:ga2d1b014c3f33bb2b0400baf08681f973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructs the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object, closing connections and freeing resources.  <br /></td></tr>
+<tr class="memitem:gafa933f0914d99522c857b30f64c9ce32" id="r_gafa933f0914d99522c857b30f64c9ce32"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gafa933f0914d99522c857b30f64c9ce32">~Socket</a> () noexcept override</td></tr>
+<tr class="memdesc:gafa933f0914d99522c857b30f64c9ce32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructs the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object, closing connections and freeing resources.  <br /></td></tr>
 <tr class="memitem:gae9a523509c0b63f91a801613dec85b39" id="r_gae9a523509c0b63f91a801613dec85b39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gae9a523509c0b63f91a801613dec85b39">bind</a> (std::string_view localHost, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
 <tr class="memdesc:gae9a523509c0b63f91a801613dec85b39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the client socket to a specific local IP address and/or port.  <br /></td></tr>
-<tr class="memitem:ga477422f8e69c0114cc539926b7f6bc68" id="r_ga477422f8e69c0114cc539926b7f6bc68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga477422f8e69c0114cc539926b7f6bc68">bind</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
+<tr class="memitem:ga477422f8e69c0114cc539926b7f6bc68" id="r_ga477422f8e69c0114cc539926b7f6bc68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga477422f8e69c0114cc539926b7f6bc68">bind</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
 <tr class="memdesc:ga477422f8e69c0114cc539926b7f6bc68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the client socket to all interfaces (INADDR_ANY) using the specified port.  <br /></td></tr>
-<tr class="memitem:gace1da4f860ac0af46d702cb5fc875a51" id="r_gace1da4f860ac0af46d702cb5fc875a51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gace1da4f860ac0af46d702cb5fc875a51">bind</a> ()</td></tr>
+<tr class="memitem:gace1da4f860ac0af46d702cb5fc875a51" id="r_gace1da4f860ac0af46d702cb5fc875a51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gace1da4f860ac0af46d702cb5fc875a51">bind</a> ()</td></tr>
 <tr class="memdesc:gace1da4f860ac0af46d702cb5fc875a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the client socket to all interfaces using an ephemeral port.  <br /></td></tr>
 <tr class="memitem:gac5d9708cad057d6d608fb732eb1bb117" id="r_gac5d9708cad057d6d608fb732eb1bb117"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gac5d9708cad057d6d608fb732eb1bb117">isBound</a> () const noexcept</td></tr>
 <tr class="memdesc:gac5d9708cad057d6d608fb732eb1bb117"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the socket has been explicitly bound to a local address and/or port.  <br /></td></tr>
@@ -215,13 +224,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga7b3ab7a896b7fbfeba9b80672c41b236"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all raw memory regions fully using scatter/gather I/O.  <br /></td></tr>
 <tr class="memitem:ga3e2b5bd60122d459134cd5b0a3a27077" id="r_ga3e2b5bd60122d459134cd5b0a3a27077"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga3e2b5bd60122d459134cd5b0a3a27077">writevFromWithTotalTimeout</a> (std::span&lt; <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers, int timeoutMillis) const</td></tr>
 <tr class="memdesc:ga3e2b5bd60122d459134cd5b0a3a27077"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes all raw memory buffers fully within a timeout using scatter I/O.  <br /></td></tr>
-<tr class="memitem:ga0539576a97fe792c9cb67b8aee26477b" id="r_ga0539576a97fe792c9cb67b8aee26477b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga0539576a97fe792c9cb67b8aee26477b">setReceiveBufferSize</a> (std::size_t size)</td></tr>
+<tr class="memitem:ga0539576a97fe792c9cb67b8aee26477b" id="r_ga0539576a97fe792c9cb67b8aee26477b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga0539576a97fe792c9cb67b8aee26477b">setReceiveBufferSize</a> (std::size_t size)</td></tr>
 <tr class="memdesc:ga0539576a97fe792c9cb67b8aee26477b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
-<tr class="memitem:ga243562caf78f87e481f657e26c59e1f0" id="r_ga243562caf78f87e481f657e26c59e1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga243562caf78f87e481f657e26c59e1f0">setSendBufferSize</a> (std::size_t size)</td></tr>
+<tr class="memitem:ga243562caf78f87e481f657e26c59e1f0" id="r_ga243562caf78f87e481f657e26c59e1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga243562caf78f87e481f657e26c59e1f0">setSendBufferSize</a> (std::size_t size)</td></tr>
 <tr class="memdesc:ga243562caf78f87e481f657e26c59e1f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's send buffer size (SO_SNDBUF).  <br /></td></tr>
-<tr class="memitem:ga53a0a6980058ce02034033b05f6ca389" id="r_ga53a0a6980058ce02034033b05f6ca389"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga53a0a6980058ce02034033b05f6ca389">getReceiveBufferSize</a> () const</td></tr>
+<tr class="memitem:ga53a0a6980058ce02034033b05f6ca389" id="r_ga53a0a6980058ce02034033b05f6ca389"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga53a0a6980058ce02034033b05f6ca389">getReceiveBufferSize</a> () const</td></tr>
 <tr class="memdesc:ga53a0a6980058ce02034033b05f6ca389"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
-<tr class="memitem:gacb2d3979ff562c2ffd60b12a1b4c9897" id="r_gacb2d3979ff562c2ffd60b12a1b4c9897"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gacb2d3979ff562c2ffd60b12a1b4c9897">getSendBufferSize</a> () const</td></tr>
+<tr class="memitem:gacb2d3979ff562c2ffd60b12a1b4c9897" id="r_gacb2d3979ff562c2ffd60b12a1b4c9897"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gacb2d3979ff562c2ffd60b12a1b4c9897">getSendBufferSize</a> () const</td></tr>
 <tr class="memdesc:gacb2d3979ff562c2ffd60b12a1b4c9897"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the socket's send buffer size (SO_SNDBUF).  <br /></td></tr>
 <tr class="memitem:ga3fb196157a1cde167c47a596c9235c91" id="r_ga3fb196157a1cde167c47a596c9235c91"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91">setInternalBufferSize</a> (std::size_t newLen)</td></tr>
 <tr class="memdesc:ga3fb196157a1cde167c47a596c9235c91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the size of the internal read buffer used for string operations.  <br /></td></tr>
@@ -231,13 +240,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga6cc57c26e230cb7ed7fa0174028811d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket to either non-blocking or blocking mode.  <br /></td></tr>
 <tr class="memitem:ga70c008492e223265394080a88b3c0b5a" id="r_ga70c008492e223265394080a88b3c0b5a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga70c008492e223265394080a88b3c0b5a">getNonBlocking</a> () const</td></tr>
 <tr class="memdesc:ga70c008492e223265394080a88b3c0b5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the socket is currently in non-blocking mode.  <br /></td></tr>
-<tr class="memitem:gaeabff1b6131c1570fe485304faa47491" id="r_gaeabff1b6131c1570fe485304faa47491"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaeabff1b6131c1570fe485304faa47491">setSoRecvTimeout</a> (int millis)</td></tr>
+<tr class="memitem:gaeabff1b6131c1570fe485304faa47491" id="r_gaeabff1b6131c1570fe485304faa47491"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gaeabff1b6131c1570fe485304faa47491">setSoRecvTimeout</a> (int millis)</td></tr>
 <tr class="memdesc:gaeabff1b6131c1570fe485304faa47491"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.  <br /></td></tr>
-<tr class="memitem:ga5182b15a2d0c4eb70eeeaa5f7c62aeed" id="r_ga5182b15a2d0c4eb70eeeaa5f7c62aeed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga5182b15a2d0c4eb70eeeaa5f7c62aeed">setSoSendTimeout</a> (int millis)</td></tr>
+<tr class="memitem:ga5182b15a2d0c4eb70eeeaa5f7c62aeed" id="r_ga5182b15a2d0c4eb70eeeaa5f7c62aeed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga5182b15a2d0c4eb70eeeaa5f7c62aeed">setSoSendTimeout</a> (int millis)</td></tr>
 <tr class="memdesc:ga5182b15a2d0c4eb70eeeaa5f7c62aeed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.  <br /></td></tr>
-<tr class="memitem:gaaf45a79f9c216e52bd1593e4bdf8a334" id="r_gaaf45a79f9c216e52bd1593e4bdf8a334"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaaf45a79f9c216e52bd1593e4bdf8a334">getSoRecvTimeout</a> () const</td></tr>
+<tr class="memitem:gaaf45a79f9c216e52bd1593e4bdf8a334" id="r_gaaf45a79f9c216e52bd1593e4bdf8a334"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gaaf45a79f9c216e52bd1593e4bdf8a334">getSoRecvTimeout</a> () const</td></tr>
 <tr class="memdesc:gaaf45a79f9c216e52bd1593e4bdf8a334"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current socket read timeout (SO_RCVTIMEO) in milliseconds.  <br /></td></tr>
-<tr class="memitem:gab372986b4384867b48e82922aa2e1cbd" id="r_gab372986b4384867b48e82922aa2e1cbd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gab372986b4384867b48e82922aa2e1cbd">getSoSendTimeout</a> () const</td></tr>
+<tr class="memitem:gab372986b4384867b48e82922aa2e1cbd" id="r_gab372986b4384867b48e82922aa2e1cbd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gab372986b4384867b48e82922aa2e1cbd">getSoSendTimeout</a> () const</td></tr>
 <tr class="memdesc:gab372986b4384867b48e82922aa2e1cbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current socket send timeout (SO_SNDTIMEO) in milliseconds.  <br /></td></tr>
 <tr class="memitem:ga895f76bf9c4745fc20074ef2491b02be" id="r_ga895f76bf9c4745fc20074ef2491b02be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga895f76bf9c4745fc20074ef2491b02be">setSoLinger</a> (bool enable, int seconds)</td></tr>
 <tr class="memdesc:ga895f76bf9c4745fc20074ef2491b02be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the socket's linger behavior (SO_LINGER) on close.  <br /></td></tr>
@@ -257,10 +266,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga9aa580ef897d00e6e4200657076bb769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP keepalive behavior for the socket.  <br /></td></tr>
 <tr class="memitem:gaefa84283aeb8880542d40bc7550b8d53" id="r_gaefa84283aeb8880542d40bc7550b8d53"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaefa84283aeb8880542d40bc7550b8d53">getKeepAlive</a> () const</td></tr>
 <tr class="memdesc:gaefa84283aeb8880542d40bc7550b8d53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether SO_KEEPALIVE is currently enabled on the socket.  <br /></td></tr>
-<tr class="memitem:aff36b21f845d62d612d608027559c0b1" id="r_aff36b21f845d62d612d608027559c0b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff36b21f845d62d612d608027559c0b1">setOption</a> (int level, int optName, int value)</td></tr>
-<tr class="memdesc:aff36b21f845d62d612d608027559c0b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a socket option at the specified level.  <br /></td></tr>
-<tr class="memitem:ab1c36ab56a2ef4409629f2bd722d6f52" id="r_ab1c36ab56a2ef4409629f2bd722d6f52"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1c36ab56a2ef4409629f2bd722d6f52">getOption</a> (int level, int optName) const</td></tr>
-<tr class="memdesc:ab1c36ab56a2ef4409629f2bd722d6f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current value of a socket option at the specified level.  <br /></td></tr>
 <tr class="memitem:ga368ea24012b68fcf6db4f9a75d6d1940" id="r_ga368ea24012b68fcf6db4f9a75d6d1940"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga368ea24012b68fcf6db4f9a75d6d1940">isClosed</a> () const noexcept</td></tr>
 <tr class="memdesc:ga368ea24012b68fcf6db4f9a75d6d1940"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports whether the socket has been closed or invalidated.  <br /></td></tr>
 <tr class="memitem:ga402fc4a398e670854cbb4edf791c1916" id="r_ga402fc4a398e670854cbb4edf791c1916"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga402fc4a398e670854cbb4edf791c1916">isInputShutdown</a> () const noexcept</td></tr>
@@ -270,6 +275,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9" id="r_ga634bfa30476b72bfa4cca63a93c558a9"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga634bfa30476b72bfa4cca63a93c558a9">read</a> ()</td></tr>
 <tr class="memdesc:ga634bfa30476b72bfa4cca63a93c558a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">read&lt;T&gt;()</span> for reading a single buffer of string data.  <br /></td></tr>
+<tr class="inherit_header pub_methods_classjsocketpp_1_1SocketOptions"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classjsocketpp_1_1SocketOptions')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classjsocketpp_1_1SocketOptions.html">jsocketpp::SocketOptions</a></td></tr>
+<tr class="memitem:gab6fea2ad1b8aac819f3726ab8846527b inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_gab6fea2ad1b8aac819f3726ab8846527b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gab6fea2ad1b8aac819f3726ab8846527b">SocketOptions</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
+<tr class="memdesc:gab6fea2ad1b8aac819f3726ab8846527b inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the socket option interface with a specific socket descriptor.  <br /></td></tr>
+<tr class="memitem:ga74663905817ec41a5b3a7f3d7a16550d inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga74663905817ec41a5b3a7f3d7a16550d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga74663905817ec41a5b3a7f3d7a16550d">~SocketOptions</a> ()=default</td></tr>
+<tr class="memdesc:ga74663905817ec41a5b3a7f3d7a16550d inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor for safe polymorphic destruction.  <br /></td></tr>
+<tr class="memitem:ga1b7061a0f4d13e8d33d3065b8ad4998b inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga1b7061a0f4d13e8d33d3065b8ad4998b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b">setOption</a> (int level, int optName, int value)</td></tr>
+<tr class="memdesc:ga1b7061a0f4d13e8d33d3065b8ad4998b inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a low-level socket option on the underlying socket.  <br /></td></tr>
+<tr class="memitem:ga6a5264b995eb2a1143f45c5de6ad92c3 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga6a5264b995eb2a1143f45c5de6ad92c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga6a5264b995eb2a1143f45c5de6ad92c3">getOption</a> (int level, int optName) const</td></tr>
+<tr class="memdesc:ga6a5264b995eb2a1143f45c5de6ad92c3 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current value of a low-level socket option.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -288,6 +302,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:gaf80aa30f2806a17b930878841dfab7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up client socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.  <br /></td></tr>
 <tr class="memitem:ga41e5ecdf97be51a3a354429be87b12d0" id="r_ga41e5ecdf97be51a3a354429be87b12d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga41e5ecdf97be51a3a354429be87b12d0">resetShutdownFlags</a> () noexcept</td></tr>
 <tr class="memdesc:ga41e5ecdf97be51a3a354429be87b12d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets internal shutdown state flags to <span class="tt">false</span>.  <br /></td></tr>
+<tr class="inherit_header pro_methods_classjsocketpp_1_1SocketOptions"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classjsocketpp_1_1SocketOptions')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classjsocketpp_1_1SocketOptions.html">jsocketpp::SocketOptions</a></td></tr>
+<tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d inherit pro_methods_classjsocketpp_1_1SocketOptions" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
+<tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d inherit pro_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the socket descriptor used by this object.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -314,8 +331,8 @@ Private Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a11a8bb11feaafab939278a8285afa567" id="r_a11a8bb11feaafab939278a8285afa567"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a11a8bb11feaafab939278a8285afa567">ServerSocket</a></td></tr>
-<tr class="memdesc:a11a8bb11feaafab939278a8285afa567"><td class="mdescLeft">&#160;</td><td class="mdescRight">Grants <a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> access to private members.  <br /></td></tr>
+<tr class="memitem:ga11a8bb11feaafab939278a8285afa567" id="r_ga11a8bb11feaafab939278a8285afa567"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga11a8bb11feaafab939278a8285afa567">ServerSocket</a></td></tr>
+<tr class="memdesc:ga11a8bb11feaafab939278a8285afa567"><td class="mdescLeft">&#160;</td><td class="mdescRight">Grants <a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> access to private members.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TCP client connection abstraction (Java-like interface). </p>
@@ -349,8 +366,8 @@ Typical Usage Example</h3>
 <div class="line">    }</div>
 <div class="line">}</div>
 <div class="ttc" id="aSocket_8hpp_html"><div class="ttname"><a href="Socket_8hpp.html">Socket.hpp</a></div><div class="ttdoc">TCP client socket abstraction for jsocketpp.</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:62</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:92</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:63</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:93</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md489"></a>
 Internal Buffer</h3>
@@ -429,97 +446,6 @@ See Also</h3>
 
 </div>
 </div>
-<a id="ab1c36ab56a2ef4409629f2bd722d6f52" name="ab1c36ab56a2ef4409629f2bd722d6f52"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab1c36ab56a2ef4409629f2bd722d6f52">&#9670;&#160;</a></span>getOption()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int Socket::getOption </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>optName</em></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get the current value of a socket option at the specified level. </p>
-<p>This method retrieves the value of a low-level socket option from the underlying socket. This can be useful to check the current settings for options like buffer sizes or timeouts.</p>
-<p>Example usage to read the receive buffer size: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> recvBuf = socket.getOption(SOL_SOCKET, SO_RCVBUF);</div>
-</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">level</td><td>The protocol level at which the option resides (e.g., SOL_SOCKET, IPPROTO_TCP). </td></tr>
-    <tr><td class="paramname">optName</td><td>The name of the option (e.g., SO_RCVBUF, SO_KEEPALIVE). </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The integer value currently set for the option. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the operation fails (see the error code/message for details). </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="aff36b21f845d62d612d608027559c0b1" name="aff36b21f845d62d612d608027559c0b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff36b21f845d62d612d608027559c0b1">&#9670;&#160;</a></span>setOption()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Socket::setOption </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>optName</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set a socket option at the specified level. </p>
-<p>This method sets a low-level socket option on the underlying socket. <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> options allow advanced users to customize various aspects of socket behavior, such as timeouts, buffer sizes, and address reuse policies.</p>
-<p>Example usage to enable address reuse (SO_REUSEADDR): </p><div class="fragment"><div class="line">socket.setOption(SOL_SOCKET, SO_REUSEADDR, 1);</div>
-</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">level</td><td>The protocol level at which the option resides (e.g., SOL_SOCKET, IPPROTO_TCP). </td></tr>
-    <tr><td class="paramname">optName</td><td>The name of the option (e.g., SO_REUSEADDR, SO_RCVBUF). </td></tr>
-    <tr><td class="paramname">value</td><td>The integer value to set for the option. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the operation fails (see the error code/message for details). </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a68f996973d1497cb476c44025aac401b" name="a68f996973d1497cb476c44025aac401b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a68f996973d1497cb476c44025aac401b">&#9670;&#160;</a></span>stringToAddress()</h2>
 
@@ -555,39 +481,6 @@ See Also</h3>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a name="doc-related-members" id="doc-related-members"></a><h2 id="header-doc-related-members" class="groupheader">Friends And Related Symbol Documentation</h2>
-<a id="a11a8bb11feaafab939278a8285afa567" name="a11a8bb11feaafab939278a8285afa567"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11a8bb11feaafab939278a8285afa567">&#9670;&#160;</a></span>ServerSocket</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">friend class <a class="el" href="classjsocketpp_1_1ServerSocket.html">ServerSocket</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel friend">friend</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Grants <a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> access to private members. </p>
-<p><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> needs access to <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a>'s private members during accept() operations to:</p><ul>
-<li>Initialize client <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> objects directly with the accepted socket descriptor</li>
-<li>Set address information for the connected client</li>
-<li>Configure internal buffers</li>
-</ul>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">ServerSocket::accept()</a> Creates new <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances from accepted connections </dd>
-<dd>
-<a class="el" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587" title="Protected constructor used internally to create Socket objects for accepted client connections.">Socket(SOCKET,const sockaddr_storage&amp;,socklen_t,std::size_t,std::size_t,std::size_t)</a> Protected constructor used by accept() </dd></dl>
 
 </div>
 </div>

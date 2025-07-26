@@ -1,7 +1,7 @@
 var classjsocketpp_1_1SocketException =
 [
     [ "SocketException", "group__exceptions.html#ga05d0ab6631b95d88ca1c2c6f920c190e", null ],
-    [ "SocketException", "classjsocketpp_1_1SocketException.html#a25c0eb3a8bc7fabe2784063bd0c37540", null ],
+    [ "SocketException", "classjsocketpp_1_1SocketException.html#a60e8542fe737e4ab26f9f6bb99bd848e", null ],
     [ "SocketException", "classjsocketpp_1_1SocketException.html#a04f64a2a2f336ac220c329b96d02e41a", null ],
     [ "~SocketException", "classjsocketpp_1_1SocketException.html#aaa33a3bf7a190d99131ec55d09e59c83", null ],
     [ "buildErrorMessage", "classjsocketpp_1_1SocketException.html#aad86355058becd22b3f405ba72ca6444", null ],

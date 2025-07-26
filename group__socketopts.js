@@ -1,11 +1,36 @@
 var group__socketopts =
 [
-    [ "jsocketpp::Socket::bind", "group__socketopts.html#gace1da4f860ac0af46d702cb5fc875a51", null ],
-    [ "jsocketpp::Socket::bind", "group__socketopts.html#ga477422f8e69c0114cc539926b7f6bc68", null ],
+    [ "jsocketpp::SocketOptions", "classjsocketpp_1_1SocketOptions.html", [
+      [ "SocketOptions", "group__socketopts.html#gab6fea2ad1b8aac819f3726ab8846527b", null ],
+      [ "~SocketOptions", "group__socketopts.html#ga74663905817ec41a5b3a7f3d7a16550d", null ],
+      [ "getOption", "group__socketopts.html#ga6a5264b995eb2a1143f45c5de6ad92c3", null ],
+      [ "setOption", "group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b", null ],
+      [ "setSocketFd", "group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d", null ],
+      [ "_sockFd", "classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131", null ]
+    ] ],
+    [ "jsocketpp::ServerSocket::getNonBlocking", "group__socketopts.html#ga36a682afc71359dc6889357bf7394b70", null ],
+    [ "jsocketpp::SocketOptions::getOption", "group__socketopts.html#ga6a5264b995eb2a1143f45c5de6ad92c3", null ],
+    [ "jsocketpp::Socket::getReceiveBufferSize", "group__socketopts.html#ga53a0a6980058ce02034033b05f6ca389", null ],
+    [ "jsocketpp::ServerSocket::getReuseAddress", "group__socketopts.html#ga663e3d90aa82f14c2db9a16e3e5b3525", null ],
     [ "jsocketpp::Socket::getReuseAddress", "group__socketopts.html#ga440e7ee9303d454df0c51fe6125cd2af", null ],
+    [ "jsocketpp::Socket::getSendBufferSize", "group__socketopts.html#gacb2d3979ff562c2ffd60b12a1b4c9897", null ],
     [ "jsocketpp::Socket::getSoLinger", "group__socketopts.html#ga1734c9ec9ae9c7dacf616fadc3b5f1cb", null ],
+    [ "jsocketpp::Socket::getSoRecvTimeout", "group__socketopts.html#gaaf45a79f9c216e52bd1593e4bdf8a334", null ],
+    [ "jsocketpp::Socket::getSoSendTimeout", "group__socketopts.html#gab372986b4384867b48e82922aa2e1cbd", null ],
+    [ "jsocketpp::ServerSocket::getSoTimeout", "group__socketopts.html#ga7829c558cb7bf5e0a46d882df82acc19", null ],
     [ "jsocketpp::Socket::getTcpNoDelay", "group__socketopts.html#ga2539928ed0829df5070384f907ea48f7", null ],
+    [ "jsocketpp::ServerSocket::setNonBlocking", "group__socketopts.html#ga6da405f0212b736e027c7d2e16222b44", null ],
+    [ "jsocketpp::SocketOptions::setOption", "group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b", null ],
+    [ "jsocketpp::Socket::setReceiveBufferSize", "group__socketopts.html#ga0539576a97fe792c9cb67b8aee26477b", null ],
+    [ "jsocketpp::ServerSocket::setReuseAddress", "group__socketopts.html#ga32d53c151cb8b7aecc8da81f9e9aa1b6", null ],
     [ "jsocketpp::Socket::setReuseAddress", "group__socketopts.html#ga5a0b2e189e91b53d7e5223d47eadffe3", null ],
+    [ "jsocketpp::Socket::setSendBufferSize", "group__socketopts.html#ga243562caf78f87e481f657e26c59e1f0", null ],
+    [ "jsocketpp::SocketOptions::setSocketFd", "group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d", null ],
     [ "jsocketpp::Socket::setSoLinger", "group__socketopts.html#ga895f76bf9c4745fc20074ef2491b02be", null ],
-    [ "jsocketpp::Socket::setTcpNoDelay", "group__socketopts.html#gac3c6f8848ff049eb3e31b4fe190dd624", null ]
+    [ "jsocketpp::Socket::setSoRecvTimeout", "group__socketopts.html#gaeabff1b6131c1570fe485304faa47491", null ],
+    [ "jsocketpp::Socket::setSoSendTimeout", "group__socketopts.html#ga5182b15a2d0c4eb70eeeaa5f7c62aeed", null ],
+    [ "jsocketpp::ServerSocket::setSoTimeout", "group__socketopts.html#ga2087f337f22de16821132208b94b1441", null ],
+    [ "jsocketpp::Socket::setTcpNoDelay", "group__socketopts.html#gac3c6f8848ff049eb3e31b4fe190dd624", null ],
+    [ "jsocketpp::SocketOptions::SocketOptions", "group__socketopts.html#gab6fea2ad1b8aac819f3726ab8846527b", null ],
+    [ "jsocketpp::SocketOptions::~SocketOptions", "group__socketopts.html#ga74663905817ec41a5b3a7f3d7a16550d", null ]
 ];

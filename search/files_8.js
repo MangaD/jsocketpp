@@ -14,6 +14,8 @@ var searchData=
   ['socket_5fstates_2emd_11',['socket_states.md',['../socket__states_8md.html',1,'']]],
   ['socketexception_2ehpp_12',['SocketException.hpp',['../SocketException_8hpp.html',1,'']]],
   ['socketinitializer_2ehpp_13',['SocketInitializer.hpp',['../SocketInitializer_8hpp.html',1,'']]],
-  ['sockets_5ftheory_2emd_14',['sockets_theory.md',['../sockets__theory_8md.html',1,'']]],
-  ['sockettimeoutexception_2ehpp_15',['SocketTimeoutException.hpp',['../SocketTimeoutException_8hpp.html',1,'']]]
+  ['socketoptions_2ecpp_14',['SocketOptions.cpp',['../SocketOptions_8cpp.html',1,'']]],
+  ['socketoptions_2ehpp_15',['SocketOptions.hpp',['../SocketOptions_8hpp.html',1,'']]],
+  ['sockets_5ftheory_2emd_16',['sockets_theory.md',['../sockets__theory_8md.html',1,'']]],
+  ['sockettimeoutexception_2ehpp_17',['SocketTimeoutException.hpp',['../SocketTimeoutException_8hpp.html',1,'']]]
 ];

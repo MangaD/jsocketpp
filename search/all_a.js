@@ -27,7 +27,7 @@ var searchData=
   ['_5fserversocket_24',['_serverSocket',['../classjsocketpp_1_1ServerSocket.html#a7286800af0502d88ff1460f875cd178d',1,'jsocketpp::ServerSocket']]],
   ['_5fsock_25',['_sock',['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#a1c11185c53ef3f7ce4d579d9604af40f',1,'jsocketpp::internal::ScopedBlockingMode']]],
   ['_5fsocketpath_26',['_socketPath',['../classjsocketpp_1_1UnixSocket.html#a324077c9d23ae6de38014520beca8c24',1,'jsocketpp::UnixSocket']]],
-  ['_5fsockfd_27',['_sockFd',['../classjsocketpp_1_1DatagramSocket.html#ad6f0154db35669c0aa1929d415e71048',1,'jsocketpp::DatagramSocket::_sockFd'],['../classjsocketpp_1_1Socket.html#a9a1c3578c781b51d5f59313c6c4aef6c',1,'jsocketpp::Socket::_sockFd'],['../classjsocketpp_1_1UnixSocket.html#a6acdbdcd8197d46742a65be96df0eaec',1,'jsocketpp::UnixSocket::_sockFd']]],
+  ['_5fsockfd_27',['_sockFd',['../classjsocketpp_1_1DatagramSocket.html#ad6f0154db35669c0aa1929d415e71048',1,'jsocketpp::DatagramSocket::_sockFd'],['../classjsocketpp_1_1Socket.html#a9a1c3578c781b51d5f59313c6c4aef6c',1,'jsocketpp::Socket::_sockFd'],['../classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131',1,'jsocketpp::SocketOptions::_sockFd'],['../classjsocketpp_1_1UnixSocket.html#a6acdbdcd8197d46742a65be96df0eaec',1,'jsocketpp::UnixSocket::_sockFd']]],
   ['_5fsotimeoutmillis_28',['_soTimeoutMillis',['../classjsocketpp_1_1ServerSocket.html#a21ecaaf4b757a2dd9cee37231381706f',1,'jsocketpp::ServerSocket']]],
   ['_5fsrvaddrinfo_29',['_srvAddrInfo',['../classjsocketpp_1_1ServerSocket.html#a98d2690356bf0f8a20d0f4251d7f4b3b',1,'jsocketpp::ServerSocket']]],
   ['_5fttl_30',['_ttl',['../classjsocketpp_1_1MulticastSocket.html#ac0001a7d48ce8157b9c487963599f2b5',1,'jsocketpp::MulticastSocket']]],

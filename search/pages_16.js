@@ -1,7 +1,7 @@
 var searchData=
 [
   ['macos_20unix_0',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md289',1,'']]],
-  ['main_20features_1',['Main Features',['../classjsocketpp_1_1UnixSocket.html#autotoc_md623',1,'']]],
+  ['main_20features_1',['Main Features',['../classjsocketpp_1_1UnixSocket.html#autotoc_md642',1,'']]],
   ['main_20tcp_20socket_20states_2',['Main TCP Socket States',['../group__socket__states.html#autotoc_md247',1,'']]],
   ['make_20your_20cmake_20project_20conan_20friendly_3',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md166',1,'']]],
   ['makefile_4',['Using the Makefile',['../group__BUILD__AND__USAGE.html#autotoc_md9',1,'']]],

@@ -15,6 +15,7 @@ var namespacejsocketpp =
     [ "Socket", "classjsocketpp_1_1Socket.html", "classjsocketpp_1_1Socket" ],
     [ "SocketException", "classjsocketpp_1_1SocketException.html", "classjsocketpp_1_1SocketException" ],
     [ "SocketInitializer", "classjsocketpp_1_1SocketInitializer.html", "classjsocketpp_1_1SocketInitializer" ],
+    [ "SocketOptions", "classjsocketpp_1_1SocketOptions.html", "classjsocketpp_1_1SocketOptions" ],
     [ "SocketTimeoutException", "classjsocketpp_1_1SocketTimeoutException.html", "classjsocketpp_1_1SocketTimeoutException" ],
     [ "UnixSocket", "classjsocketpp_1_1UnixSocket.html", "classjsocketpp_1_1UnixSocket" ],
     [ "Port", "group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7", null ],

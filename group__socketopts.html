@@ -99,12 +99,41 @@ $(function(){initNavTree('group__socketopts.html','',''); });
 <p>Low-level socket configuration options exposed via the <span class="tt">Socket</span> and related classes.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:jsocketpp_3A_3ASocketOptions" id="r_jsocketpp_3A_3ASocketOptions"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1SocketOptions.html">jsocketpp::SocketOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Public base class for raw socket option access via <span class="tt">setsockopt()</span> and <span class="tt">getsockopt()</span>.  <a href="classjsocketpp_1_1SocketOptions.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga477422f8e69c0114cc539926b7f6bc68" id="r_ga477422f8e69c0114cc539926b7f6bc68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga477422f8e69c0114cc539926b7f6bc68">jsocketpp::Socket::bind</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
-<tr class="memdesc:ga477422f8e69c0114cc539926b7f6bc68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the client socket to all interfaces (INADDR_ANY) using the specified port.  <br /></td></tr>
-<tr class="memitem:gace1da4f860ac0af46d702cb5fc875a51" id="r_gace1da4f860ac0af46d702cb5fc875a51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gace1da4f860ac0af46d702cb5fc875a51">jsocketpp::Socket::bind</a> ()</td></tr>
-<tr class="memdesc:gace1da4f860ac0af46d702cb5fc875a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the client socket to all interfaces using an ephemeral port.  <br /></td></tr>
+<tr class="memitem:ga32d53c151cb8b7aecc8da81f9e9aa1b6" id="r_ga32d53c151cb8b7aecc8da81f9e9aa1b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga32d53c151cb8b7aecc8da81f9e9aa1b6">jsocketpp::ServerSocket::setReuseAddress</a> (bool enable)</td></tr>
+<tr class="memdesc:ga32d53c151cb8b7aecc8da81f9e9aa1b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable address reuse for this server socket.  <br /></td></tr>
+<tr class="memitem:ga663e3d90aa82f14c2db9a16e3e5b3525" id="r_ga663e3d90aa82f14c2db9a16e3e5b3525"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga663e3d90aa82f14c2db9a16e3e5b3525">jsocketpp::ServerSocket::getReuseAddress</a> () const</td></tr>
+<tr class="memdesc:ga663e3d90aa82f14c2db9a16e3e5b3525"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether the address reuse option is enabled on this server socket.  <br /></td></tr>
+<tr class="memitem:ga6da405f0212b736e027c7d2e16222b44" id="r_ga6da405f0212b736e027c7d2e16222b44"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6da405f0212b736e027c7d2e16222b44">jsocketpp::ServerSocket::setNonBlocking</a> (bool nonBlocking)</td></tr>
+<tr class="memdesc:ga6da405f0212b736e027c7d2e16222b44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the server socket to non-blocking or blocking mode.  <br /></td></tr>
+<tr class="memitem:ga36a682afc71359dc6889357bf7394b70" id="r_ga36a682afc71359dc6889357bf7394b70"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga36a682afc71359dc6889357bf7394b70">jsocketpp::ServerSocket::getNonBlocking</a> () const</td></tr>
+<tr class="memdesc:ga36a682afc71359dc6889357bf7394b70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the server socket is in non-blocking mode.  <br /></td></tr>
+<tr class="memitem:ga2087f337f22de16821132208b94b1441" id="r_ga2087f337f22de16821132208b94b1441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2087f337f22de16821132208b94b1441">jsocketpp::ServerSocket::setSoTimeout</a> (const int timeoutMillis)</td></tr>
+<tr class="memdesc:ga2087f337f22de16821132208b94b1441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the logical timeout (in milliseconds) for accepting client connections.  <br /></td></tr>
+<tr class="memitem:ga7829c558cb7bf5e0a46d882df82acc19" id="r_ga7829c558cb7bf5e0a46d882df82acc19"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19">jsocketpp::ServerSocket::getSoTimeout</a> () const noexcept</td></tr>
+<tr class="memdesc:ga7829c558cb7bf5e0a46d882df82acc19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the logical timeout (in milliseconds) for accept operations.  <br /></td></tr>
+<tr class="memitem:ga0539576a97fe792c9cb67b8aee26477b" id="r_ga0539576a97fe792c9cb67b8aee26477b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b">jsocketpp::Socket::setReceiveBufferSize</a> (std::size_t size)</td></tr>
+<tr class="memdesc:ga0539576a97fe792c9cb67b8aee26477b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
+<tr class="memitem:ga243562caf78f87e481f657e26c59e1f0" id="r_ga243562caf78f87e481f657e26c59e1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga243562caf78f87e481f657e26c59e1f0">jsocketpp::Socket::setSendBufferSize</a> (std::size_t size)</td></tr>
+<tr class="memdesc:ga243562caf78f87e481f657e26c59e1f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's send buffer size (SO_SNDBUF).  <br /></td></tr>
+<tr class="memitem:ga53a0a6980058ce02034033b05f6ca389" id="r_ga53a0a6980058ce02034033b05f6ca389"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga53a0a6980058ce02034033b05f6ca389">jsocketpp::Socket::getReceiveBufferSize</a> () const</td></tr>
+<tr class="memdesc:ga53a0a6980058ce02034033b05f6ca389"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
+<tr class="memitem:gacb2d3979ff562c2ffd60b12a1b4c9897" id="r_gacb2d3979ff562c2ffd60b12a1b4c9897"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897">jsocketpp::Socket::getSendBufferSize</a> () const</td></tr>
+<tr class="memdesc:gacb2d3979ff562c2ffd60b12a1b4c9897"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the socket's send buffer size (SO_SNDBUF).  <br /></td></tr>
+<tr class="memitem:gaeabff1b6131c1570fe485304faa47491" id="r_gaeabff1b6131c1570fe485304faa47491"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaeabff1b6131c1570fe485304faa47491">jsocketpp::Socket::setSoRecvTimeout</a> (int millis)</td></tr>
+<tr class="memdesc:gaeabff1b6131c1570fe485304faa47491"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.  <br /></td></tr>
+<tr class="memitem:ga5182b15a2d0c4eb70eeeaa5f7c62aeed" id="r_ga5182b15a2d0c4eb70eeeaa5f7c62aeed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5182b15a2d0c4eb70eeeaa5f7c62aeed">jsocketpp::Socket::setSoSendTimeout</a> (int millis)</td></tr>
+<tr class="memdesc:ga5182b15a2d0c4eb70eeeaa5f7c62aeed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.  <br /></td></tr>
+<tr class="memitem:gaaf45a79f9c216e52bd1593e4bdf8a334" id="r_gaaf45a79f9c216e52bd1593e4bdf8a334"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaf45a79f9c216e52bd1593e4bdf8a334">jsocketpp::Socket::getSoRecvTimeout</a> () const</td></tr>
+<tr class="memdesc:gaaf45a79f9c216e52bd1593e4bdf8a334"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current socket read timeout (SO_RCVTIMEO) in milliseconds.  <br /></td></tr>
+<tr class="memitem:gab372986b4384867b48e82922aa2e1cbd" id="r_gab372986b4384867b48e82922aa2e1cbd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab372986b4384867b48e82922aa2e1cbd">jsocketpp::Socket::getSoSendTimeout</a> () const</td></tr>
+<tr class="memdesc:gab372986b4384867b48e82922aa2e1cbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current socket send timeout (SO_SNDTIMEO) in milliseconds.  <br /></td></tr>
 <tr class="memitem:ga895f76bf9c4745fc20074ef2491b02be" id="r_ga895f76bf9c4745fc20074ef2491b02be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga895f76bf9c4745fc20074ef2491b02be">jsocketpp::Socket::setSoLinger</a> (bool enable, int seconds)</td></tr>
 <tr class="memdesc:ga895f76bf9c4745fc20074ef2491b02be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the socket's linger behavior (SO_LINGER) on close.  <br /></td></tr>
 <tr class="memitem:ga1734c9ec9ae9c7dacf616fadc3b5f1cb" id="r_ga1734c9ec9ae9c7dacf616fadc3b5f1cb"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1734c9ec9ae9c7dacf616fadc3b5f1cb">jsocketpp::Socket::getSoLinger</a> () const</td></tr>
@@ -117,6 +146,16 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga5a0b2e189e91b53d7e5223d47eadffe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the SO_REUSEADDR socket option.  <br /></td></tr>
 <tr class="memitem:ga440e7ee9303d454df0c51fe6125cd2af" id="r_ga440e7ee9303d454df0c51fe6125cd2af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga440e7ee9303d454df0c51fe6125cd2af">jsocketpp::Socket::getReuseAddress</a> () const</td></tr>
 <tr class="memdesc:ga440e7ee9303d454df0c51fe6125cd2af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether SO_REUSEADDR is currently enabled on the socket.  <br /></td></tr>
+<tr class="memitem:gab6fea2ad1b8aac819f3726ab8846527b" id="r_gab6fea2ad1b8aac819f3726ab8846527b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab6fea2ad1b8aac819f3726ab8846527b">jsocketpp::SocketOptions::SocketOptions</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
+<tr class="memdesc:gab6fea2ad1b8aac819f3726ab8846527b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the socket option interface with a specific socket descriptor.  <br /></td></tr>
+<tr class="memitem:ga74663905817ec41a5b3a7f3d7a16550d" id="r_ga74663905817ec41a5b3a7f3d7a16550d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga74663905817ec41a5b3a7f3d7a16550d">jsocketpp::SocketOptions::~SocketOptions</a> ()=default</td></tr>
+<tr class="memdesc:ga74663905817ec41a5b3a7f3d7a16550d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor for safe polymorphic destruction.  <br /></td></tr>
+<tr class="memitem:ga1b7061a0f4d13e8d33d3065b8ad4998b" id="r_ga1b7061a0f4d13e8d33d3065b8ad4998b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b">jsocketpp::SocketOptions::setOption</a> (int level, int optName, int value)</td></tr>
+<tr class="memdesc:ga1b7061a0f4d13e8d33d3065b8ad4998b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a low-level socket option on the underlying socket.  <br /></td></tr>
+<tr class="memitem:ga6a5264b995eb2a1143f45c5de6ad92c3" id="r_ga6a5264b995eb2a1143f45c5de6ad92c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3">jsocketpp::SocketOptions::getOption</a> (int level, int optName) const</td></tr>
+<tr class="memdesc:ga6a5264b995eb2a1143f45c5de6ad92c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current value of a low-level socket option.  <br /></td></tr>
+<tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
+<tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the socket descriptor used by this object.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Low-level socket configuration options exposed via the <span class="tt">Socket</span> and related classes. </p>
@@ -126,66 +165,240 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Some options may not be available or meaningful on all platforms. Platform-specific behavior is documented per function.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd>Socket::setSoLinger(), Socket::getSoLinger(), Socket::setTcpNoDelay(), etc. </dd></dl>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="gace1da4f860ac0af46d702cb5fc875a51" name="gace1da4f860ac0af46d702cb5fc875a51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gace1da4f860ac0af46d702cb5fc875a51">&#9670;&#160;</a></span>bind() <span class="overload">[1/2]</span></h2>
+<a id="ga36a682afc71359dc6889357bf7394b70" name="ga36a682afc71359dc6889357bf7394b70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga36a682afc71359dc6889357bf7394b70">&#9670;&#160;</a></span>getNonBlocking()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Socket::bind </td>
+          <td class="memname">bool ServerSocket::getNonBlocking </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Binds the client socket to all interfaces using an ephemeral port. </p>
-<p>This overload delegates to the default configuration — bind to any interface, with any available port. Equivalent to calling <span class="tt">bind("0.0.0.0", 0)</span>.</p>
+<p>Check if the server socket is in non-blocking mode. </p>
+<p>This function queries the socket's current blocking mode. In non-blocking mode, operations like <a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> return immediately if no connection is available, instead of blocking.</p>
+<dl class="section return"><dt>Returns</dt><dd>true if the socket is non-blocking, false if it is blocking. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if binding fails or the socket is already bound. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket flags cannot be retrieved. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga477422f8e69c0114cc539926b7f6bc68" name="ga477422f8e69c0114cc539926b7f6bc68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga477422f8e69c0114cc539926b7f6bc68">&#9670;&#160;</a></span>bind() <span class="overload">[2/2]</span></h2>
+<a id="ga6a5264b995eb2a1143f45c5de6ad92c3" name="ga6a5264b995eb2a1143f45c5de6ad92c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6a5264b995eb2a1143f45c5de6ad92c3">&#9670;&#160;</a></span>getOption()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Socket::bind </td>
+          <td class="memname">int jsocketpp::SocketOptions::getOption </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>optName</em></span>&#160;) const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Binds the client socket to all interfaces (INADDR_ANY) using the specified port. </p>
-<p>This overload binds to all available network interfaces using a specific local port. Equivalent to calling <span class="tt">bind("0.0.0.0", port)</span>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Retrieves the current value of a low-level socket option. </p>
+<p>This method queries the current value of a socket option via <span class="tt">getsockopt()</span> on the underlying socket descriptor. It is useful for verifying runtime socket configuration, inspecting platform defaults, and performing conditional logic based on system-level state.</p>
+<p>This interface applies uniformly across all socket types (e.g., <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>) and supports standard protocol levels and option names.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md632"></a>
+Example: Read the configured receive buffer size</h3>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> rcvBuf = socket.getOption(SOL_SOCKET, SO_RCVBUF);</div>
+</div><!-- fragment --><hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md634"></a>
+⚠️ ServerSocket-specific Notes</h3>
+<ul>
+<li><span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> returns the value of the option as applied to the <b>listening socket only</b>.</li>
+<li>Options like <span class="tt">SO_RCVBUF</span>, <span class="tt">SO_REUSEADDR</span>, and <span class="tt">SO_LINGER</span> are meaningful before or during <span class="tt">listen()</span>.</li>
+<li>To inspect options for a client connection, call <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> on the accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> returned by <span class="tt">accept()</span>.</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md636"></a>
+📡 DatagramSocket-specific Notes</h3>
+<ul>
+<li>Use <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> to inspect options like buffer sizes (<span class="tt">SO_RCVBUF</span>, <span class="tt">SO_SNDBUF</span>) and timeouts (<span class="tt">SO_RCVTIMEO</span>, <span class="tt">SO_SNDTIMEO</span>) for diagnostic or tuning purposes.</li>
+<li>On broadcast-enabled sockets (<span class="tt">SO_BROADCAST</span>), this method can verify that the option was set successfully.</li>
+<li>Behavior is the same whether the socket is connected or unconnected.</li>
+</ul>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md637"></a>
+Example: Get current timeout for receiving</h4>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> timeout = datagramSocket.getOption(SOL_SOCKET, SO_RCVTIMEO);</div>
+</div><!-- fragment --><hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md639"></a>
+🧿 UnixSocket-specific Notes</h3>
+<ul>
+<li>Although Unix domain sockets are local, many <span class="tt">SOL_SOCKET</span> options are still supported and report useful values:<ul>
+<li><span class="tt">SO_RCVBUF</span>, <span class="tt">SO_SNDBUF</span>: Report actual system-allocated buffer sizes</li>
+<li><span class="tt">SO_RCVTIMEO</span>, <span class="tt">SO_SNDTIMEO</span>: Inspect timeouts for IPC calls</li>
+<li><span class="tt">SO_PASSCRED</span>: Check whether credential passing is enabled</li>
+</ul>
+</li>
+<li>This method is particularly useful for debugging IPC performance characteristics.</li>
+</ul>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md640"></a>
+Example: Read the actual receive buffer size used for a Unix socket</h4>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> size = unixSocket.getOption(SOL_SOCKET, SO_RCVBUF);</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">port</td><td><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number to bind to.</td></tr>
+    <tr><td class="paramname">level</td><td>The protocol level (e.g., <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>). </td></tr>
+    <tr><td class="paramname">optName</td><td>The name of the socket option to retrieve (e.g., <span class="tt">SO_RCVBUF</span>, <span class="tt">SO_KEEPALIVE</span>). </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The integer value of the specified socket option.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if binding fails or the socket is already bound. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the operation fails, the socket is invalid, or the option is not supported.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a> </dd>
+<dd>
+<a href="https://man7.org/linux/man-pages/man2/getsockopt.2.html">https://man7.org/linux/man-pages/man2/getsockopt.2.html</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga53a0a6980058ce02034033b05f6ca389" name="ga53a0a6980058ce02034033b05f6ca389"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga53a0a6980058ce02034033b05f6ca389">&#9670;&#160;</a></span>getReceiveBufferSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Socket::getReceiveBufferSize </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the socket's receive buffer size (SO_RCVBUF). </p>
+<p>Retrieves the current size of the operating system's receive buffer for this socket. The receive buffer is used by the OS to store incoming data before it is read by the application. A larger buffer can help prevent data loss during high-bandwidth transfers or when the application cannot read data quickly enough.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md579"></a>
+Implementation Details</h3>
+<ul>
+<li>Uses getsockopt() with SO_RCVBUF option</li>
+<li>Returns actual buffer size allocated by OS</li>
+<li>On Linux, returned value may be twice the requested size due to kernel overhead</li>
+<li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md580"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
+<div class="line">sock.connect();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Check current receive buffer size</span></div>
+<div class="line"><span class="keywordtype">int</span> size = sock.getReceiveBufferSize();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current receive buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Increase if needed</span></div>
+<div class="line"><span class="keywordflow">if</span> (size &lt; 64 * 1024) {</div>
+<div class="line">    sock.setReceiveBufferSize(64 * 1024);</div>
+<div class="line">    size = sock.getReceiveBufferSize();</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;New receive buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+<div class="line">}</div>
+<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:11</div></div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>Current receive buffer size in bytes. Note that this may differ from the size requested via <a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> due to OS adjustments and overhead.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> is invalid (EBADF)</li>
+<li>System call fails (EFAULT)</li>
+<li>Insufficient permissions</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> For setting the receive buffer size </dd>
+<dd>
+<a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get send buffer size </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html" title="Implementation-only utilities and platform abstractions for jsocketpp.">internal</a> string buffer size </dd></dl>
+
+</div>
+</div>
+<a id="ga663e3d90aa82f14c2db9a16e3e5b3525" name="ga663e3d90aa82f14c2db9a16e3e5b3525"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga663e3d90aa82f14c2db9a16e3e5b3525">&#9670;&#160;</a></span>getReuseAddress() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ServerSocket::getReuseAddress </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Query whether the address reuse option is enabled on this server socket. </p>
+<p>This function checks whether the socket is currently configured to allow reuse of local addresses.</p>
+<ul>
+<li>On UNIX-like systems, this checks the <span class="tt">SO_REUSEADDR</span> socket option.</li>
+<li>On Windows, this checks <span class="tt">SO_EXCLUSIVEADDRUSE</span>, but note that this is semantically <b>opposite</b>: enabling <span class="tt">SO_EXCLUSIVEADDRUSE</span> <b>disables</b> address reuse.</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if address reuse is enabled (i.e., <span class="tt">SO_REUSEADDR</span> is set on UNIX-like systems or <span class="tt">SO_EXCLUSIVEADDRUSE</span> is unset on Windows); <span class="tt">false</span> otherwise.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is not valid or the option cannot be retrieved.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This reflects the current state of the reuse flag, which may have been set manually or inherited from system defaults. Always call this <em>after</em> socket creation, and <em>before</em> <span class="tt"><a class="el" href="group__tcp.html#ga1ca989ba16d32862dd4fa9bbb2b165b5" title="Binds the server socket to the configured port and network interface.">bind()</a></span> for accurate results.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga32d53c151cb8b7aecc8da81f9e9aa1b6" title="Enable or disable address reuse for this server socket.">setReuseAddress()</a> </dd></dl>
 
 </div>
 </div>
 <a id="ga440e7ee9303d454df0c51fe6125cd2af" name="ga440e7ee9303d454df0c51fe6125cd2af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga440e7ee9303d454df0c51fe6125cd2af">&#9670;&#160;</a></span>getReuseAddress()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga440e7ee9303d454df0c51fe6125cd2af">&#9670;&#160;</a></span>getReuseAddress() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -224,6 +437,74 @@ Platform behavior:</h3>
   </dd>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga5a0b2e189e91b53d7e5223d47eadffe3" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress(bool)</a> </dd></dl>
+
+</div>
+</div>
+<a id="gacb2d3979ff562c2ffd60b12a1b4c9897" name="gacb2d3979ff562c2ffd60b12a1b4c9897"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacb2d3979ff562c2ffd60b12a1b4c9897">&#9670;&#160;</a></span>getSendBufferSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Socket::getSendBufferSize </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the socket's send buffer size (SO_SNDBUF). </p>
+<p>Retrieves the current size of the operating system's send buffer for this socket. The send buffer is used by the OS to store outgoing data before it is transmitted over the network. A larger buffer can help improve performance during high-bandwidth transfers or when the network is temporarily congested.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md581"></a>
+Implementation Details</h3>
+<ul>
+<li>Uses getsockopt() with SO_SNDBUF option</li>
+<li>Returns actual buffer size allocated by OS</li>
+<li>On Linux, returned value may be twice the requested size due to kernel overhead</li>
+<li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md582"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
+<div class="line">sock.connect();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Check current send buffer size</span></div>
+<div class="line"><span class="keywordtype">int</span> size = sock.getSendBufferSize();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current send buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Increase if needed</span></div>
+<div class="line"><span class="keywordflow">if</span> (size &lt; 64 * 1024) {</div>
+<div class="line">    sock.setSendBufferSize(64 * 1024);</div>
+<div class="line">    size = sock.getSendBufferSize();</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;New send buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+<div class="line">}</div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>Current send buffer size in bytes. Note that this may differ from the size requested via <a class="el" href="#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> due to OS adjustments and overhead.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> is invalid (EBADF)</li>
+<li>System call fails (EFAULT)</li>
+<li>Insufficient permissions</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> For setting the send buffer size </dd>
+<dd>
+<a class="el" href="#ga53a0a6980058ce02034033b05f6ca389" title="Get the socket&#39;s receive buffer size (SO_RCVBUF).">getReceiveBufferSize()</a> Get receive buffer size </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html" title="Implementation-only utilities and platform abstractions for jsocketpp.">internal</a> string buffer size </dd></dl>
 
 </div>
 </div>
@@ -271,6 +552,133 @@ Platform behavior:</h3>
 </div><!-- fragment --> 
 </div>
 </div>
+<a id="gaaf45a79f9c216e52bd1593e4bdf8a334" name="gaaf45a79f9c216e52bd1593e4bdf8a334"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaaf45a79f9c216e52bd1593e4bdf8a334">&#9670;&#160;</a></span>getSoRecvTimeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Socket::getSoRecvTimeout </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the current socket read timeout (SO_RCVTIMEO) in milliseconds. </p>
+<p>Returns the duration, in milliseconds, that the socket will block while waiting to receive data before timing out. This corresponds to the <span class="tt">SO_RCVTIMEO</span> socket option. A return value of <span class="tt">0</span> indicates that no timeout is set, and the socket may block indefinitely during read operations.</p>
+<p>This timeout applies to all blocking read methods, including <span class="tt"><a class="el" href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read()</a></span>, <span class="tt"><a class="el" href="group__tcp.html#ga46777f128a2a23cba8972aefd4b86828" title="Reads data from the socket until a specified delimiter character is encountered.">readUntil()</a></span>, <span class="tt"><a class="el" href="group__tcp.html#ga3d194596258a3b1117b3437d969019b6" title="Reads exactly n bytes from the socket into a std::string.">readExact()</a></span>, and <span class="tt"><a class="el" href="group__tcp.html#ga3b61b5861d62f4e85be4a52aa9e0bcc9" title="Attempts a best-effort read of up to n bytes with a timeout constraint.">readAtMostWithTimeout()</a></span>. It is critical for avoiding indefinite hangs in network applications that require responsiveness or failover behavior.</p>
+<p>The method transparently handles platform-specific representations:</p><ul>
+<li>On <b>Windows</b>, the timeout is stored as an <span class="tt">int</span> (milliseconds).</li>
+<li>On <b>POSIX</b>, the timeout is stored as a <span class="tt">timeval</span> and converted into milliseconds.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md595"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 9000);</div>
+<div class="line">sock.connect();</div>
+<div class="line"> </div>
+<div class="line">sock.setSoRecvTimeout(3000); <span class="comment">// Set 3-second receive timeout</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> timeout = sock.getSoRecvTimeout(); <span class="comment">// Returns 3000</span></div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current read timeout: &quot;</span> &lt;&lt; timeout &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>The current receive timeout in milliseconds. Returns 0 if disabled.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the socket is invalid or if <span class="tt">getsockopt()</span> fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaeabff1b6131c1570fe485304faa47491" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To configure this timeout </dd>
+<dd>
+<a class="el" href="#gab372986b4384867b48e82922aa2e1cbd" title="Retrieves the current socket send timeout (SO_SNDTIMEO) in milliseconds.">getSoSendTimeout()</a> To query the send-side timeout </dd>
+<dd>
+<a class="el" href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read()</a> For blocking operations impacted by this timeout </dd></dl>
+
+</div>
+</div>
+<a id="gab372986b4384867b48e82922aa2e1cbd" name="gab372986b4384867b48e82922aa2e1cbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab372986b4384867b48e82922aa2e1cbd">&#9670;&#160;</a></span>getSoSendTimeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Socket::getSoSendTimeout </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the current socket send timeout (SO_SNDTIMEO) in milliseconds. </p>
+<p>Returns the duration, in milliseconds, that the socket will block when attempting to send data before timing out. This reflects the value of the <span class="tt">SO_SNDTIMEO</span> socket option. A return value of <span class="tt">0</span> means no timeout is set, and the socket may block indefinitely until the peer is ready to receive data or the system buffer becomes available.</p>
+<p>This timeout affects all blocking send operations, including <span class="tt"><a class="el" href="group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write()</a></span>, <span class="tt"><a class="el" href="group__tcp.html#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, retrying as needed.">writeAll()</a></span>, <span class="tt"><a class="el" href="group__tcp.html#ga964bb0e901179bc5eac126d77b0590eb" title="Writes the full payload with a total timeout across all retries.">writeWithTotalTimeout()</a></span>, and their vectorized counterparts. It is critical for ensuring responsiveness in network scenarios where a peer may stop reading or the connection stalls.</p>
+<p>The method is cross-platform:</p><ul>
+<li>On <b>Windows</b>, the timeout is returned directly as an integer (milliseconds).</li>
+<li>On <b>POSIX</b>, it reads a <span class="tt">timeval</span> structure and converts the result to milliseconds.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md596"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
+<div class="line">sock.connect();</div>
+<div class="line"> </div>
+<div class="line">sock.setSoSendTimeout(5000); <span class="comment">// Set a 5-second write timeout</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> timeout = sock.getSoSendTimeout(); <span class="comment">// Should return 5000</span></div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current write timeout: &quot;</span> &lt;&lt; timeout &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>The current socket send timeout in milliseconds. Returns 0 if the timeout is disabled.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the socket is invalid or if <span class="tt">getsockopt()</span> fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga5182b15a2d0c4eb70eeeaa5f7c62aeed" title="Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.">setSoSendTimeout()</a> To configure this timeout </dd>
+<dd>
+<a class="el" href="#gaaf45a79f9c216e52bd1593e4bdf8a334" title="Retrieves the current socket read timeout (SO_RCVTIMEO) in milliseconds.">getSoRecvTimeout()</a> To check the receive timeout </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write()</a> For operations that may block based on this timeout </dd></dl>
+
+</div>
+</div>
+<a id="ga7829c558cb7bf5e0a46d882df82acc19" name="ga7829c558cb7bf5e0a46d882df82acc19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7829c558cb7bf5e0a46d882df82acc19">&#9670;&#160;</a></span>getSoTimeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int jsocketpp::ServerSocket::getSoTimeout </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the logical timeout (in milliseconds) for accept operations. </p>
+<p>This value determines how long methods like <span class="tt"><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> and <span class="tt"><a class="el" href="group__tcp.html#ga91177064cad7d0c7f1fc63c4e1f34187" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a></span> will wait for an incoming client connection before timing out. It is used internally by <span class="tt">select()</span> or similar readiness mechanisms.</p>
+<dl class="section note"><dt>Note</dt><dd>This timeout is a logical userland timeout and does <b>not</b> affect the socket descriptor via <span class="tt">setsockopt()</span> (unlike <span class="tt">Socket::getSoTimeout()</span>).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The configured accept timeout in milliseconds.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a> </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga91177064cad7d0c7f1fc63c4e1f34187" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga2539928ed0829df5070384f907ea48f7" name="ga2539928ed0829df5070384f907ea48f7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga2539928ed0829df5070384f907ea48f7">&#9670;&#160;</a></span>getTcpNoDelay()</h2>
 
@@ -310,8 +718,237 @@ Platform behavior:</h3>
 
 </div>
 </div>
+<a id="ga6da405f0212b736e027c7d2e16222b44" name="ga6da405f0212b736e027c7d2e16222b44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6da405f0212b736e027c7d2e16222b44">&#9670;&#160;</a></span>setNonBlocking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ServerSocket::setNonBlocking </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>nonBlocking</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the server socket to non-blocking or blocking mode. </p>
+<p>When in non-blocking mode, the <span class="tt"><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> call will return immediately if no connections are pending, instead of blocking until a client connects.</p>
+<p>This is useful for integrating the server socket into event loops or custom I/O polling systems.</p>
+<dl class="section note"><dt>Note</dt><dd>This only affects the listening server socket. The accepted sockets returned by <span class="tt"><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> remain in blocking mode by default and must be configured separately.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">nonBlocking</td><td>true to enable non-blocking mode, false for blocking (default). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>on error.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__tcp.html#ga69c4a45146fc3d3854f2e5684bf65c55" title="Accept an incoming client connection, always blocking until a client connects (unless the socket is s...">acceptBlocking()</a>, <a class="el" href="group__tcp.html#gadd605b49147b688c630d6d1b0aa5a6c0" title="Attempt to accept a client connection in non-blocking fashion.">acceptNonBlocking()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga1b7061a0f4d13e8d33d3065b8ad4998b" name="ga1b7061a0f4d13e8d33d3065b8ad4998b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1b7061a0f4d13e8d33d3065b8ad4998b">&#9670;&#160;</a></span>setOption()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jsocketpp::SocketOptions::setOption </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>optName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets a low-level socket option on the underlying socket. </p>
+<p>This method configures a socket option using the system-level <span class="tt">setsockopt()</span> interface. <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> options allow advanced users to fine-tune behavior related to performance, protocol semantics, and resource usage.</p>
+<p>This API is common to all socket types (e.g., <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>) and supports options at multiple protocol levels, such as <span class="tt">SOL_SOCKET</span> and <span class="tt">IPPROTO_TCP</span>.</p>
+<p>Typical use cases include:</p><ul>
+<li>Enabling address reuse (<span class="tt">SO_REUSEADDR</span>)</li>
+<li>Adjusting receive/send buffer sizes (<span class="tt">SO_RCVBUF</span>, <span class="tt">SO_SNDBUF</span>)</li>
+<li>Enabling/disabling keepalive (<span class="tt">SO_KEEPALIVE</span>)</li>
+<li>Disabling Nagle’s algorithm for latency-sensitive TCP (<span class="tt">TCP_NODELAY</span>)</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md624"></a>
+⚠️ ServerSocket-specific Notes</h3>
+<ul>
+<li>Setting options on a <b>listening socket</b> (e.g., <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>) only affects that socket, not the client sockets returned by <span class="tt">accept()</span>. Per-connection tuning must be applied to each accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>.</li>
+<li>Not all options are meaningful on passive (listening) sockets. Invalid combinations may result in <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> or system errors.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md625"></a>
+Example: Enable port reuse (recommended for servers)</h3>
+<div class="fragment"><div class="line">serverSocket.setOption(SOL_SOCKET, SO_REUSEADDR, 1);</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md626"></a>
+Example: Disable Nagle’s algorithm (for latency-sensitive clients)</h3>
+<div class="fragment"><div class="line">socket.setOption(IPPROTO_TCP, TCP_NODELAY, 1);</div>
+</div><!-- fragment --><hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md628"></a>
+📡 DatagramSocket-specific Notes</h3>
+<ul>
+<li>You can use this method to enable <b>broadcast mode</b> (<span class="tt">SO_BROADCAST</span>) or adjust buffer sizes for high-throughput UDP workloads.</li>
+<li>It also supports setting timeouts via <span class="tt">SO_RCVTIMEO</span> and <span class="tt">SO_SNDTIMEO</span>.</li>
+<li>For unconnected UDP sockets, option changes affect all outgoing/incoming packets.</li>
+<li>For connected UDP sockets, the changes affect only the single destination connection.</li>
+</ul>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md629"></a>
+Example: Enable broadcast for a datagram socket</h4>
+<div class="fragment"><div class="line">datagramSocket.setOption(SOL_SOCKET, SO_BROADCAST, 1);</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md630"></a>
+🧿 UnixSocket-specific Notes</h3>
+<ul>
+<li>Although Unix domain sockets are local and do not use TCP/IP, many <span class="tt">SOL_SOCKET</span> options still apply:<ul>
+<li><span class="tt">SO_RCVBUF</span>, <span class="tt">SO_SNDBUF</span> for buffer control</li>
+<li><span class="tt">SO_RCVTIMEO</span>, <span class="tt">SO_SNDTIMEO</span> for timeouts</li>
+<li><span class="tt">SO_PASSCRED</span> to enable credential passing (on supported platforms)</li>
+</ul>
+</li>
+<li>Options like <span class="tt">TCP_NODELAY</span> and <span class="tt">SO_KEEPALIVE</span> do not apply to Unix sockets.</li>
+</ul>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md631"></a>
+Example: Set a larger send buffer for inter-process communication</h4>
+<div class="fragment"><div class="line">unixSocket.setOption(SOL_SOCKET, SO_SNDBUF, 65536);</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">level</td><td>The protocol level at which the option resides (e.g., <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>). </td></tr>
+    <tr><td class="paramname">optName</td><td>The name of the option to set (e.g., <span class="tt">SO_REUSEADDR</span>, <span class="tt">SO_RCVBUF</span>). </td></tr>
+    <tr><td class="paramname">value</td><td>Integer value to assign to the option.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the option is invalid, unsupported, or if <span class="tt">setsockopt()</span> fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a> </dd>
+<dd>
+<a href="https://man7.org/linux/man-pages/man2/setsockopt.2.html">https://man7.org/linux/man-pages/man2/setsockopt.2.html</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga0539576a97fe792c9cb67b8aee26477b" name="ga0539576a97fe792c9cb67b8aee26477b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0539576a97fe792c9cb67b8aee26477b">&#9670;&#160;</a></span>setReceiveBufferSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::setReceiveBufferSize </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the socket's receive buffer size (SO_RCVBUF). </p>
+<p>Configures the size of the operating system's receive buffer for this socket. A larger buffer can improve performance for high-bandwidth connections by allowing the system to buffer more incoming data, reducing the risk of packet loss during temporary processing delays.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md575"></a>
+Implementation Details</h3>
+<ul>
+<li>Uses setsockopt() with SO_RCVBUF option to set kernel socket buffer size</li>
+<li>The operating system may adjust the requested size:<ul>
+<li>Linux typically doubles the value to account for bookkeeping overhead</li>
+<li>Windows may round to system-specific boundaries</li>
+<li>Maximum size is limited by system settings (/proc/sys/net/core/rmem_max on Linux)</li>
+</ul>
+</li>
+<li>Changes affect subsequent receives only, not data already in the buffer</li>
+<li>System limits may constrain maximum size based on available memory and OS policy</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md576"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Set 64KB receive buffer</span></div>
+<div class="line">sock.setReceiveBufferSize(64 * 1024);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Verify actual size (may be different)</span></div>
+<div class="line"><span class="keywordtype">int</span> actualSize = sock.getReceiveBufferSize();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Actual receive buffer size: &quot;</span> &lt;&lt; actualSize &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>Desired receive buffer size in bytes. The actual size allocated may be adjusted by the operating system.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> is invalid</li>
+<li>System call fails</li>
+<li>Requested size exceeds system limits</li>
+<li>Insufficient permissions</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Some systems may double the specified size internally. Use <a class="el" href="#ga53a0a6980058ce02034033b05f6ca389" title="Get the socket&#39;s receive buffer size (SO_RCVBUF).">getReceiveBufferSize()</a> to verify the actual size.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get current send buffer size </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html" title="Implementation-only utilities and platform abstractions for jsocketpp.">internal</a> buffer size </dd>
+<dd>
+<a class="el" href="#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> Set send buffer size </dd></dl>
+
+</div>
+</div>
+<a id="ga32d53c151cb8b7aecc8da81f9e9aa1b6" name="ga32d53c151cb8b7aecc8da81f9e9aa1b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga32d53c151cb8b7aecc8da81f9e9aa1b6">&#9670;&#160;</a></span>setReuseAddress() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ServerSocket::setReuseAddress </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable or disable address reuse for this server socket. </p>
+<p>When address reuse is enabled (<span class="tt">enable = true</span>), the server socket can bind to a local address/port even if a previous socket on that port is still in the TIME_WAIT state. This is useful for restarting servers without waiting for old sockets to time out.</p>
+<p>On UNIX-like systems, this sets the <span class="tt">SO_REUSEADDR</span> socket option. On Windows, it sets the equivalent option, <span class="tt">SO_EXCLUSIVEADDRUSE</span>.</p>
+<dl class="section warning"><dt>Warning</dt><dd>This method must be called before calling <a class="el" href="group__tcp.html#ga1ca989ba16d32862dd4fa9bbb2b165b5" title="Binds the server socket to the configured port and network interface.">bind()</a>, and only once the socket has been created (i.e., after construction, before bind).</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td>True to enable address reuse, false to disable (default OS behavior).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if setting the option fails (e.g., socket not open or system error).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Improper use of address reuse can have security and protocol implications. For most server applications, enabling this is recommended. For advanced load-balancing, see also SO_REUSEPORT (not portable).</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a href="https://man7.org/linux/man-pages/man7/socket.7.html">https://man7.org/linux/man-pages/man7/socket.7.html</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga5a0b2e189e91b53d7e5223d47eadffe3" name="ga5a0b2e189e91b53d7e5223d47eadffe3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5a0b2e189e91b53d7e5223d47eadffe3">&#9670;&#160;</a></span>setReuseAddress()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5a0b2e189e91b53d7e5223d47eadffe3">&#9670;&#160;</a></span>setReuseAddress() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -355,7 +992,107 @@ Use cases in client sockets:</h3>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga440e7ee9303d454df0c51fe6125cd2af" title="Queries whether SO_REUSEADDR is currently enabled on the socket.">getReuseAddress()</a> </dd>
 <dd>
-<a class="el" href="#gace1da4f860ac0af46d702cb5fc875a51" title="Binds the client socket to all interfaces using an ephemeral port.">bind()</a> </dd></dl>
+<a class="el" href="group__tcp.html#gace1da4f860ac0af46d702cb5fc875a51" title="Binds the client socket to all interfaces using an ephemeral port.">bind()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga243562caf78f87e481f657e26c59e1f0" name="ga243562caf78f87e481f657e26c59e1f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga243562caf78f87e481f657e26c59e1f0">&#9670;&#160;</a></span>setSendBufferSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::setSendBufferSize </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the socket's send buffer size (SO_SNDBUF). </p>
+<p>Configures the size of the operating system's send buffer for this socket. A larger buffer can improve performance for high-bandwidth connections by allowing the system to buffer more outgoing data, reducing the risk of blocking during write operations when the network is temporarily congested.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md577"></a>
+Implementation Details</h3>
+<ul>
+<li>Uses setsockopt() with SO_SNDBUF option to set kernel socket buffer size</li>
+<li>The operating system may adjust the requested size:<ul>
+<li>Linux typically doubles the value to account for bookkeeping overhead</li>
+<li>Windows may round to system-specific boundaries</li>
+<li>Maximum size is limited by system settings (/proc/sys/net/core/wmem_max on Linux)</li>
+</ul>
+</li>
+<li>Changes affect subsequent sends only, not data already in the buffer</li>
+<li>System limits may constrain maximum size based on available memory and OS policy</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md578"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Set 64KB send buffer</span></div>
+<div class="line">sock.setSendBufferSize(64 * 1024);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Verify actual size (may be different)</span></div>
+<div class="line"><span class="keywordtype">int</span> actualSize = sock.getSendBufferSize();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Actual send buffer size: &quot;</span> &lt;&lt; actualSize &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>Desired send buffer size in bytes. The actual size allocated may be adjusted by the operating system.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> is invalid</li>
+<li>System call fails</li>
+<li>Requested size exceeds system limits</li>
+<li>Insufficient permissions</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Some systems may double the specified size internally. Use <a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> to verify the actual size.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga53a0a6980058ce02034033b05f6ca389" title="Get the socket&#39;s receive buffer size (SO_RCVBUF).">getReceiveBufferSize()</a> Get current receive buffer size </dd>
+<dd>
+<a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> Set receive buffer size </dd>
+<dd>
+<a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get current send buffer size </dd></dl>
+
+</div>
+</div>
+<a id="ga97706ddf21aab33a18db00bd0b8eb65d" name="ga97706ddf21aab33a18db00bd0b8eb65d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga97706ddf21aab33a18db00bd0b8eb65d">&#9670;&#160;</a></span>setSocketFd()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jsocketpp::SocketOptions::setSocketFd </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a></td>          <td class="paramname"><span class="paramname"><em>sock</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the socket descriptor used by this object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sock</td><td>New socket file descriptor. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -418,6 +1155,169 @@ When disabled (<span class="tt">enable == false</span>):</h4>
 </div><!-- fragment --> 
 </div>
 </div>
+<a id="gaeabff1b6131c1570fe485304faa47491" name="gaeabff1b6131c1570fe485304faa47491"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeabff1b6131c1570fe485304faa47491">&#9670;&#160;</a></span>setSoRecvTimeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::setSoRecvTimeout </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>millis</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds. </p>
+<p>Configures how long the socket will block while waiting for incoming data before a read operation times out. This affects all blocking read methods such as <span class="tt"><a class="el" href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read()</a></span>, <span class="tt"><a class="el" href="group__tcp.html#ga3d194596258a3b1117b3437d969019b6" title="Reads exactly n bytes from the socket into a std::string.">readExact()</a></span>, <span class="tt"><a class="el" href="group__tcp.html#ga46777f128a2a23cba8972aefd4b86828" title="Reads data from the socket until a specified delimiter character is encountered.">readUntil()</a></span>, and <span class="tt"><a class="el" href="group__tcp.html#ga3b61b5861d62f4e85be4a52aa9e0bcc9" title="Attempts a best-effort read of up to n bytes with a timeout constraint.">readAtMostWithTimeout()</a></span>.</p>
+<p>A value of <span class="tt">0</span> disables the timeout, meaning read operations may block indefinitely until data arrives, the peer closes the connection, or an error occurs. Use <span class="tt">0</span> with caution in interactive or responsiveness-sensitive applications.</p>
+<p>Internally, this sets the <span class="tt">SO_RCVTIMEO</span> socket option via <span class="tt">setsockopt()</span>:</p><ul>
+<li>On <b>Windows</b>, the value is interpreted directly as an integer in milliseconds.</li>
+<li>On <b>POSIX</b> systems, the value is converted into a <span class="tt">timeval</span> structure.</li>
+<li>A negative value is invalid and will throw a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md593"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 9000);</div>
+<div class="line">sock.connect();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Set a 3-second receive timeout</span></div>
+<div class="line">sock.setSoRecvTimeout(3000);</div>
+<div class="line"> </div>
+<div class="line">std::string response = sock.readUntil(<span class="charliteral">&#39;\n&#39;</span>); <span class="comment">// Will throw if no data in 3s</span></div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">millis</td><td>Receive timeout in milliseconds. Use 0 to disable the timeout. Must be non-negative.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the socket is invalid, closed, the timeout is negative, or if <span class="tt">setsockopt()</span> fails due to:<ul>
+<li><span class="tt">EBADF</span> (bad file descriptor)</li>
+<li><span class="tt">ENOPROTOOPT</span> (option not available)</li>
+<li><span class="tt">ENOMEM</span> or <span class="tt">EFAULT</span> (invalid pointer or memory error)</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaaf45a79f9c216e52bd1593e4bdf8a334" title="Retrieves the current socket read timeout (SO_RCVTIMEO) in milliseconds.">getSoRecvTimeout()</a> To query the currently configured <a class="el" href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read</a> timeout </dd>
+<dd>
+<a class="el" href="#ga5182b15a2d0c4eb70eeeaa5f7c62aeed" title="Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.">setSoSendTimeout()</a> To configure the send/write timeout separately </dd>
+<dd>
+<a class="el" href="group__tcp.html#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read()</a> For affected blocking operations </dd></dl>
+
+</div>
+</div>
+<a id="ga5182b15a2d0c4eb70eeeaa5f7c62aeed" name="ga5182b15a2d0c4eb70eeeaa5f7c62aeed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5182b15a2d0c4eb70eeeaa5f7c62aeed">&#9670;&#160;</a></span>setSoSendTimeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::setSoSendTimeout </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>millis</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the socket send timeout (SO_SNDTIMEO) in milliseconds. </p>
+<p>Configures how long the socket will block while attempting to send data before a write operation times out. This affects all blocking send methods such as <span class="tt"><a class="el" href="group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write()</a></span>, <span class="tt"><a class="el" href="group__tcp.html#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, retrying as needed.">writeAll()</a></span>, <span class="tt"><a class="el" href="group__tcp.html#ga964bb0e901179bc5eac126d77b0590eb" title="Writes the full payload with a total timeout across all retries.">writeWithTotalTimeout()</a></span>, and <span class="tt"><a class="el" href="group__tcp.html#ga16bb8c36a3fd9a3a97a0d4f5d5036550" title="Performs a best-effort write with a total timeout.">writeAtMostWithTimeout()</a></span>.</p>
+<p>A value of <span class="tt">0</span> disables the timeout entirely, allowing send operations to block indefinitely until buffer space becomes available or the peer consumes the data. Use with care in latency-sensitive or non-blocking applications.</p>
+<p>Internally, this sets the <span class="tt">SO_SNDTIMEO</span> socket option using <span class="tt">setsockopt()</span>:</p><ul>
+<li>On <b>Windows</b>, the timeout is set directly as an integer (milliseconds).</li>
+<li>On <b>POSIX</b>, it is converted into a <span class="tt">timeval</span> structure.</li>
+<li>A negative value is considered invalid and will result in a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md594"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
+<div class="line">sock.connect();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Set a 5-second send timeout</span></div>
+<div class="line">sock.setSoSendTimeout(5000);</div>
+<div class="line"> </div>
+<div class="line">sock.writeAll(request); <span class="comment">// Will fail if peer is unresponsive for 5s</span></div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">millis</td><td>Send timeout in milliseconds. Use 0 to disable the timeout. Must be non-negative.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the socket is invalid or if <span class="tt">setsockopt()</span> fails due to:<ul>
+<li>A negative timeout value</li>
+<li><span class="tt">EBADF</span> (bad file descriptor)</li>
+<li><span class="tt">ENOPROTOOPT</span> (option not available)</li>
+<li><span class="tt">ENOMEM</span> or <span class="tt">EFAULT</span> (invalid pointer or memory error)</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gab372986b4384867b48e82922aa2e1cbd" title="Retrieves the current socket send timeout (SO_SNDTIMEO) in milliseconds.">getSoSendTimeout()</a> To query the currently configured send timeout </dd>
+<dd>
+<a class="el" href="#gaeabff1b6131c1570fe485304faa47491" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To configure the receive-side timeout </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write()</a> For affected blocking send operations </dd></dl>
+
+</div>
+</div>
+<a id="ga2087f337f22de16821132208b94b1441" name="ga2087f337f22de16821132208b94b1441"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2087f337f22de16821132208b94b1441">&#9670;&#160;</a></span>setSoTimeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jsocketpp::ServerSocket::setSoTimeout </td>
+          <td>(</td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>timeoutMillis</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the logical timeout (in milliseconds) for accepting client connections. </p>
+<p>This timeout applies to methods like <span class="tt"><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> and <span class="tt"><a class="el" href="group__tcp.html#ga91177064cad7d0c7f1fc63c4e1f34187" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a></span>, and determines how long the server socket will wait for a client connection before timing out.</p>
+<p>Unlike <span class="tt">Socket::setSoTimeout()</span>, this method does <b>not</b> call <span class="tt">setsockopt()</span> and does <b>not</b> affect the underlying socket descriptor. Instead, it is used internally to control the behavior of <span class="tt">select()</span> during accept operations.</p>
+<dl class="section note"><dt>Note</dt><dd>Use:<ul>
+<li>Negative value: wait indefinitely (blocking behavior)</li>
+<li>Zero: poll mode (non-blocking)</li>
+<li>Positive value: wait up to the specified milliseconds</li>
+</ul>
+</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timeoutMillis</td><td>Timeout value in milliseconds</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19" title="Get the logical timeout (in milliseconds) for accept operations.">getSoTimeout()</a> </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a> </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga91177064cad7d0c7f1fc63c4e1f34187" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a> </dd>
+<dd>
+<a class="el" href="group__tcp.html#ga61c1904213b0971817ec917fd2a01ccf" title="Waits for the server socket to become ready to accept an incoming connection.">waitReady()</a> </dd></dl>
+
+</div>
+</div>
 <a id="gac3c6f8848ff049eb3e31b4fe190dd624" name="gac3c6f8848ff049eb3e31b4fe190dd624"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gac3c6f8848ff049eb3e31b4fe190dd624">&#9670;&#160;</a></span>setTcpNoDelay()</h2>
 
@@ -446,7 +1346,6 @@ Example Usage</h3>
 <div class="line">sock.setTcpNoDelay(<span class="keyword">true</span>);</div>
 <div class="line"> </div>
 <div class="line">sock.write(<span class="stringliteral">&quot;low-latency payload&quot;</span>);</div>
-<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:11</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">on</td><td>If <span class="tt">true</span>, disables Nagle's algorithm to reduce latency. If <span class="tt">false</span>, enables Nagle's algorithm to improve throughput.</td></tr>
@@ -468,6 +1367,77 @@ Example Usage</h3>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga2539928ed0829df5070384f907ea48f7" title="Checks whether TCP_NODELAY (Nagle&#39;s algorithm) is currently disabled.">getTcpNoDelay()</a> </dd>
 <dd>
 <a href="https://en.wikipedia.org/wiki/Nagle's_algorithm">https://en.wikipedia.org/wiki/Nagle's_algorithm</a> </dd></dl>
+
+</div>
+</div>
+<a id="gab6fea2ad1b8aac819f3726ab8846527b" name="gab6fea2ad1b8aac819f3726ab8846527b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab6fea2ad1b8aac819f3726ab8846527b">&#9670;&#160;</a></span>SocketOptions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">jsocketpp::SocketOptions::SocketOptions </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a></td>          <td class="paramname"><span class="paramname"><em>sock</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel explicit">explicit</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initializes the socket option interface with a specific socket descriptor. </p>
+<p>Constructs a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> object that uses the provided socket file descriptor for all subsequent <span class="tt"><a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a></span> and <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> calls. This constructor is intended to be used by derived socket classes (e.g., <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>) to delegate option-handling responsibilities without duplicating system-specific logic.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sock</td><td>A valid socket descriptor (e.g., from <span class="tt">socket()</span>, <span class="tt">accept()</span>, etc.), or <span class="tt">INVALID_SOCKET</span> if the object is not yet initialized.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>It is the responsibility of the derived class to ensure that the socket descriptor remains valid for the lifetime of the <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> object.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This class does not manage or close the socket descriptor. It assumes the derived class owns and controls the lifetime of the socket.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga97706ddf21aab33a18db00bd0b8eb65d" title="Update the socket descriptor used by this object.">setSocketFd()</a> </dd>
+<dd>
+<a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a> </dd>
+<dd>
+<a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga74663905817ec41a5b3a7f3d7a16550d" name="ga74663905817ec41a5b3a7f3d7a16550d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga74663905817ec41a5b3a7f3d7a16550d">&#9670;&#160;</a></span>~SocketOptions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual jsocketpp::SocketOptions::~SocketOptions </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Virtual destructor for safe polymorphic destruction. </p>
+<p>Ensures that derived classes can be safely destroyed through a pointer to <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span>. This is important for preventing resource leaks and undefined behavior when using socket option interfaces polymorphically (e.g., in unit tests or abstraction layers).</p>
+<p>This destructor does <b>not</b> perform any cleanup of the socket descriptor itself, as <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> does not own or manage the socket lifecycle. Derived classes are responsible for closing or releasing the socket if needed.</p>
+<dl class="section note"><dt>Note</dt><dd>Declared <span class="tt">virtual</span> to support inheritance and polymorphism. </dd></dl>
 
 </div>
 </div>

@@ -10,6 +10,7 @@ var dir_e94b15c7ff9417df3f606cd4c674cf2e =
     [ "Socket.hpp", "Socket_8hpp.html", "Socket_8hpp" ],
     [ "SocketException.hpp", "SocketException_8hpp.html", null ],
     [ "SocketInitializer.hpp", "SocketInitializer_8hpp.html", "SocketInitializer_8hpp" ],
+    [ "SocketOptions.hpp", "SocketOptions_8hpp.html", null ],
     [ "SocketTimeoutException.hpp", "SocketTimeoutException_8hpp.html", null ],
     [ "UnixSocket.hpp", "UnixSocket_8hpp.html", null ]
 ];
