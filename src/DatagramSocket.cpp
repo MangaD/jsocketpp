@@ -9,7 +9,7 @@ DatagramSocket::DatagramSocket(const Port port, const std::size_t bufferSize)
 }
 
 DatagramSocket::DatagramSocket(const std::string_view host, const Port port, const std::size_t bufferSize)
-    : _buffer(bufferSize), _port(port)
+    : SocketOptions(INVALID_SOCKET), _buffer(bufferSize), _port(port)
 {
     // Prepare the hints structure for getaddrinfo to specify the desired socket type and protocol.
     addrinfo hints{}; // Initialize the hints structure to zero
@@ -40,10 +40,10 @@ DatagramSocket::DatagramSocket(const std::string_view host, const Port port, con
     // Resolve the local address and port to be used by the server
     const std::string portStr = std::to_string(_port);
     const auto ret =
-        getaddrinfo((host.empty() ? nullptr : host.data()), // Node (hostname or IP address); nullptr means local host
-                    portStr.c_str(),                        // Service (port number or service name) as a C-string
-                    &hints,       // Pointer to struct addrinfo with hints about the type of socket
-                    &_addrInfoPtr // Output: pointer to a linked list of results (set by getaddrinfo)
+        ::getaddrinfo((host.empty() ? nullptr : host.data()), // Node (hostname or IP address); nullptr means local host
+                      portStr.c_str(),                        // Service (port number or service name) as a C-string
+                      &hints,       // Pointer to struct addrinfo with hints about the type of socket
+                      &_addrInfoPtr // Output: pointer to a linked list of results (set by getaddrinfo)
         );
 
     if (ret != 0)
@@ -75,6 +75,8 @@ DatagramSocket::DatagramSocket(const std::string_view host, const Port port, con
         _addrInfoPtr = nullptr;
         throw SocketException(error, SocketErrorMessage(error));
     }
+
+    setSocketFd(_sockFd);
 }
 
 void DatagramSocket::cleanupAndThrow(const int errorCode)
@@ -83,6 +85,7 @@ void DatagramSocket::cleanupAndThrow(const int errorCode)
     freeaddrinfo(_addrInfoPtr); // ignore errors from freeaddrinfo
     _addrInfoPtr = nullptr;
     _selectedAddrInfo = nullptr;
+    setSocketFd(INVALID_SOCKET);
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
@@ -394,6 +397,7 @@ void DatagramSocket::close()
         if (CloseSocket(this->_sockFd))
             throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
         _sockFd = INVALID_SOCKET;
+        setSocketFd(INVALID_SOCKET);
     }
     if (_addrInfoPtr)
     {
@@ -441,37 +445,6 @@ void DatagramSocket::setTimeout(int millis) const
         setsockopt(_sockFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #endif
-}
-
-void DatagramSocket::setOption(const int level, const int optName, const int value) const
-{
-    if (setsockopt(_sockFd, level, optName,
-#ifdef _WIN32
-                   reinterpret_cast<const char*>(&value),
-#else
-                   &value,
-#endif
-                   sizeof(value)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-}
-
-int DatagramSocket::getOption(const int level, const int optName) const
-{
-    int value = 0;
-#ifdef _WIN32
-    int len = sizeof(value);
-#else
-    socklen_t len = sizeof(value);
-#endif
-    if (getsockopt(_sockFd, level, optName,
-#ifdef _WIN32
-                   reinterpret_cast<char*>(&value),
-#else
-                   &value,
-#endif
-                   &len) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    return value;
 }
 
 std::string DatagramSocket::getLocalSocketAddress() const

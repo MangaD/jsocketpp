@@ -7,6 +7,7 @@
 
 #include "common.hpp"
 #include "DatagramPacket.hpp"
+#include "SocketOptions.hpp"
 
 #include <string>
 
@@ -77,7 +78,7 @@ namespace jsocketpp
  * @see jsocketpp::DatagramPacket
  * @see jsocketpp::SocketException
  */
-class DatagramSocket
+class DatagramSocket : public SocketOptions
 {
   public:
     /**
@@ -107,7 +108,7 @@ class DatagramSocket
     /**
      * @brief Destructor. Closes the socket and frees resources.
      */
-    ~DatagramSocket() noexcept;
+    ~DatagramSocket() noexcept override;
 
     /**
      * @brief Copy constructor (deleted).
@@ -125,16 +126,17 @@ class DatagramSocket
      * Transfers ownership of the socket and resources from another DatagramSocket.
      * The moved-from object is left in a valid but unspecified state.
      */
-    DatagramSocket(DatagramSocket&& other) noexcept
-        : _sockFd(other._sockFd), _addrInfoPtr(other._addrInfoPtr), _selectedAddrInfo(other._selectedAddrInfo),
-          _localAddr(other._localAddr), _localAddrLen(other._localAddrLen), _buffer(std::move(other._buffer)),
-          _port(other._port)
+    DatagramSocket(DatagramSocket&& rhs) noexcept
+        : SocketOptions(rhs._sockFd), _sockFd(rhs._sockFd), _addrInfoPtr(rhs._addrInfoPtr),
+          _selectedAddrInfo(rhs._selectedAddrInfo), _localAddr(rhs._localAddr), _localAddrLen(rhs._localAddrLen),
+          _buffer(std::move(rhs._buffer)), _port(rhs._port)
     {
-        other._sockFd = INVALID_SOCKET;
-        other._addrInfoPtr = nullptr;
-        other._selectedAddrInfo = nullptr;
-        other._localAddrLen = 0;
-        other._port = 0;
+        rhs._sockFd = INVALID_SOCKET;
+        rhs.setSocketFd(INVALID_SOCKET);
+        rhs._addrInfoPtr = nullptr;
+        rhs._selectedAddrInfo = nullptr;
+        rhs._localAddrLen = 0;
+        rhs._port = 0;
     }
 
     /**
@@ -142,24 +144,26 @@ class DatagramSocket
      *
      * Releases any owned resources and transfers ownership from another DatagramSocket.
      */
-    DatagramSocket& operator=(DatagramSocket&& other) noexcept
+    DatagramSocket& operator=(DatagramSocket&& rhs) noexcept
     {
-        if (this != &other)
+        if (this != &rhs)
         {
             close();
-            _sockFd = other._sockFd;
-            _localAddr = other._localAddr;
-            _localAddrLen = other._localAddrLen;
-            _addrInfoPtr = other._addrInfoPtr;
-            _selectedAddrInfo = other._selectedAddrInfo;
-            _buffer = std::move(other._buffer);
-            _port = other._port;
+            _sockFd = rhs._sockFd;
+            setSocketFd(_sockFd);
+            _localAddr = rhs._localAddr;
+            _localAddrLen = rhs._localAddrLen;
+            _addrInfoPtr = rhs._addrInfoPtr;
+            _selectedAddrInfo = rhs._selectedAddrInfo;
+            _buffer = std::move(rhs._buffer);
+            _port = rhs._port;
 
-            other._sockFd = INVALID_SOCKET;
-            other._addrInfoPtr = nullptr;
-            other._selectedAddrInfo = nullptr;
-            other._localAddrLen = 0;
-            other._port = 0;
+            rhs._sockFd = INVALID_SOCKET;
+            rhs.setSocketFd(INVALID_SOCKET);
+            rhs._addrInfoPtr = nullptr;
+            rhs._selectedAddrInfo = nullptr;
+            rhs._localAddrLen = 0;
+            rhs._port = 0;
         }
         return *this;
     }
@@ -338,24 +342,6 @@ class DatagramSocket
      * @throws SocketException if setting timeout fails
      */
     void setTimeout(int millis) const;
-
-    /**
-     * @brief Set a socket option (integer value).
-     * @param level Option level (e.g., SOL_SOCKET).
-     * @param optName Option name (e.g., SO_BROADCAST).
-     * @param value Integer value to set for the option.
-     * @throws SocketException on error.
-     */
-    void setOption(int level, int optName, int value) const;
-
-    /**
-     * @brief Get a socket option (integer value).
-     * @param level Option level (e.g., SOL_SOCKET).
-     * @param optName Option name (e.g., SO_BROADCAST).
-     * @return Integer value of the option.
-     * @throws SocketException on error.
-     */
-    [[nodiscard]] int getOption(int level, int optName) const;
 
     /**
      * @brief Get the local socket's address as a string (ip:port).

@@ -11,6 +11,7 @@
 #include "BufferView.hpp"
 #include "common.hpp"
 #include "SocketException.hpp"
+#include "SocketOptions.hpp"
 
 #include <array>
 #include <bit>
@@ -88,10 +89,11 @@ namespace jsocketpp
  * - @ref ServerSocket "ServerSocket" - for listening to incoming connections
  * - @ref tcp - TCP socket group
  */
-class Socket
+class Socket : public SocketOptions
 {
     /**
      * @brief Grants ServerSocket access to private members.
+     * @ingroup tcp
      *
      * ServerSocket needs access to Socket's private members during accept() operations to:
      * - Initialize client Socket objects directly with the accepted socket descriptor
@@ -256,12 +258,14 @@ class Socket
      * @see operator=(Socket&&) Move assignment operator
      */
     Socket(Socket&& rhs) noexcept
-        : _sockFd(rhs._sockFd), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
-          _cliAddrInfo(std::move(rhs._cliAddrInfo)), _selectedAddrInfo(rhs._selectedAddrInfo),
-          _internalBuffer(std::move(rhs._internalBuffer)), _isBound(rhs._isBound), _isConnected(rhs._isConnected),
-          _inputShutdown(rhs._inputShutdown), _outputShutdown(rhs._outputShutdown)
+        : SocketOptions(rhs._sockFd), _sockFd(rhs._sockFd), _remoteAddr(rhs._remoteAddr),
+          _remoteAddrLen(rhs._remoteAddrLen), _cliAddrInfo(std::move(rhs._cliAddrInfo)),
+          _selectedAddrInfo(rhs._selectedAddrInfo), _internalBuffer(std::move(rhs._internalBuffer)),
+          _isBound(rhs._isBound), _isConnected(rhs._isConnected), _inputShutdown(rhs._inputShutdown),
+          _outputShutdown(rhs._outputShutdown)
     {
         rhs._sockFd = INVALID_SOCKET;
+        rhs.setSocketFd(INVALID_SOCKET);
         rhs._selectedAddrInfo = nullptr;
         rhs._isBound = false;
         rhs._isConnected = false;
@@ -344,6 +348,7 @@ class Socket
 
             // Transfer ownership
             _sockFd = rhs._sockFd;
+            setSocketFd(_sockFd);
             _remoteAddr = rhs._remoteAddr;
             _remoteAddrLen = rhs._remoteAddrLen;
             _cliAddrInfo = std::move(rhs._cliAddrInfo);
@@ -356,6 +361,7 @@ class Socket
 
             // Reset source
             rhs._sockFd = INVALID_SOCKET;
+            rhs.setSocketFd(INVALID_SOCKET);
             rhs._selectedAddrInfo = nullptr;
             rhs._isBound = false;
             rhs._isConnected = false;
@@ -383,7 +389,7 @@ class Socket
      * @see close() For explicit connection closure before destruction
      * @see shutdown() For controlled shutdown of specific socket operations
      */
-    ~Socket() noexcept;
+    ~Socket() noexcept override;
 
     /**
      * @brief Binds the client socket to a specific local IP address and/or port.
@@ -3378,43 +3384,6 @@ class Socket
      * @param addr Output sockaddr_storage.
      */
     static void stringToAddress(const std::string& str, sockaddr_storage& addr);
-
-    /**
-     * @brief Set a socket option at the specified level.
-     *
-     * This method sets a low-level socket option on the underlying socket.
-     * Socket options allow advanced users to customize various aspects of socket behavior,
-     * such as timeouts, buffer sizes, and address reuse policies.
-     *
-     * Example usage to enable address reuse (SO_REUSEADDR):
-     * @code
-     * socket.setOption(SOL_SOCKET, SO_REUSEADDR, 1);
-     * @endcode
-     *
-     * @param level    The protocol level at which the option resides (e.g., SOL_SOCKET, IPPROTO_TCP).
-     * @param optName  The name of the option (e.g., SO_REUSEADDR, SO_RCVBUF).
-     * @param value    The integer value to set for the option.
-     * @throws SocketException if the operation fails (see the error code/message for details).
-     */
-    void setOption(int level, int optName, int value);
-
-    /**
-     * @brief Get the current value of a socket option at the specified level.
-     *
-     * This method retrieves the value of a low-level socket option from the underlying socket.
-     * This can be useful to check the current settings for options like buffer sizes or timeouts.
-     *
-     * Example usage to read the receive buffer size:
-     * @code
-     * int recvBuf = socket.getOption(SOL_SOCKET, SO_RCVBUF);
-     * @endcode
-     *
-     * @param level    The protocol level at which the option resides (e.g., SOL_SOCKET, IPPROTO_TCP).
-     * @param optName  The name of the option (e.g., SO_RCVBUF, SO_KEEPALIVE).
-     * @return         The integer value currently set for the option.
-     * @throws SocketException if the operation fails (see the error code/message for details).
-     */
-    [[nodiscard]] int getOption(int level, int optName) const;
 
     /**
      * @brief Reports whether the socket has been closed or invalidated.

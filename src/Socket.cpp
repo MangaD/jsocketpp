@@ -10,7 +10,8 @@ using namespace jsocketpp;
 
 Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_t len, const std::size_t recvBufferSize,
                const std::size_t sendBufferSize, const std::size_t internalBufferSize)
-    : _sockFd(client), _remoteAddr(addr), _remoteAddrLen(len), _internalBuffer(internalBufferSize)
+    : SocketOptions(client), _sockFd(client), _remoteAddr(addr), _remoteAddrLen(len),
+      _internalBuffer(internalBufferSize)
 {
     // setInternalBufferSize(internalBufferSize); // redundant, is in initializer list already
     setReceiveBufferSize(recvBufferSize);
@@ -19,7 +20,7 @@ Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_
 
 Socket::Socket(const std::string_view host, const Port port, const std::optional<std::size_t> recvBufferSize,
                const std::optional<std::size_t> sendBufferSize, const std::optional<std::size_t> internalBufferSize)
-    : _remoteAddr{}
+    : SocketOptions(INVALID_SOCKET), _remoteAddr{}, _internalBuffer(internalBufferSize.value_or(DefaultBufferSize))
 {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
@@ -45,7 +46,6 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
     _cliAddrInfo.reset(rawCliAddrInfo); // transfer ownership
 
     // Try all available addresses (IPv6/IPv4) to create a SOCKET for
-    _sockFd = INVALID_SOCKET;
     for (addrinfo* p = _cliAddrInfo.get(); p != nullptr; p = p->ai_next)
     {
         _sockFd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
@@ -60,6 +60,8 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
     {
         cleanupAndThrow(GetSocketError());
     }
+
+    setSocketFd(_sockFd);
 
     // Apply all buffer size configurations
     setInternalBufferSize(internalBufferSize.value_or(DefaultBufferSize));
@@ -80,6 +82,7 @@ void Socket::cleanupAndThrow(const int errorCode)
     }
     _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
+    setSocketFd(INVALID_SOCKET);
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
@@ -99,7 +102,7 @@ void Socket::bind(const std::string_view localHost, const Port port)
     const std::string portStr = std::to_string(port);
     addrinfo* rawResult = nullptr;
 
-    if (::getaddrinfo(localHost.data(), portStr.c_str(), &hints, &rawResult) != 0)
+    if (auto ret = ::getaddrinfo(localHost.data(), portStr.c_str(), &hints, &rawResult); ret != 0)
     {
 #ifdef _WIN32
         throw SocketException(GetSocketError(), "Socket::bind(): getaddrinfo() failed");
@@ -254,6 +257,7 @@ void Socket::close()
             throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
 
         _sockFd = INVALID_SOCKET;
+        setSocketFd(INVALID_SOCKET);
     }
     _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
@@ -788,38 +792,6 @@ void Socket::stringToAddress(const std::string& str, sockaddr_storage& addr)
 
     std::memcpy(&addr, res->ai_addr, res->ai_addrlen);
     freeaddrinfo(res); // ignore errors from freeaddrinfo
-}
-
-// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
-void Socket::setOption(const int level, const int optName, int value)
-{
-    if (setsockopt(_sockFd, level, optName,
-#ifdef _WIN32
-                   reinterpret_cast<const char*>(&value),
-#else
-                   &value,
-#endif
-                   sizeof(value)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-}
-
-int Socket::getOption(const int level, const int optName) const
-{
-    int value = 0;
-#ifdef _WIN32
-    int len = sizeof(value);
-#else
-    socklen_t len = sizeof(value);
-#endif
-    if (getsockopt(_sockFd, level, optName,
-#ifdef _WIN32
-                   reinterpret_cast<char*>(&value),
-#else
-                   &value,
-#endif
-                   &len) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    return value;
 }
 
 std::string Socket::readExact(const std::size_t n) const

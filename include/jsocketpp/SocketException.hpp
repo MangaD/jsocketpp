@@ -14,6 +14,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 namespace jsocketpp
 {
@@ -93,7 +94,7 @@ class SocketException : public std::runtime_error
      *
      * @see getErrorCode()
      */
-    explicit SocketException(int code, const std::string& message = "SocketException")
+    explicit SocketException(const int code, const std::string& message = "SocketException")
         : std::runtime_error(buildErrorMessage(message, code)), _errorCode(code)
     {
     }
@@ -124,7 +125,7 @@ class SocketException : public std::runtime_error
      * @see std::rethrow_if_nested
      */
     SocketException(const std::string& message, std::exception_ptr nested)
-        : std::runtime_error(message), _errorCode(0), _nested(nested)
+        : std::runtime_error(message), _errorCode(0), _nested(std::move(nested))
     {
     }
 
@@ -175,8 +176,8 @@ class SocketException : public std::runtime_error
     ~SocketException() override = default;
 
   private:
-    int _errorCode;             ///< Platform-specific error code (e.g., errno, WSA error).
-    std::exception_ptr _nested; ///< Captured nested exception for chaining, if any.
+    int _errorCode;               ///< Platform-specific error code (e.g., errno, WSA error).
+    std::exception_ptr _nested{}; ///< Captured nested exception for chaining, if any.
 
     /**
      * @brief Builds a formatted error message combining a textual description and an error code.

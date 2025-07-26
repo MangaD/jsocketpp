@@ -6,7 +6,7 @@ using namespace jsocketpp;
 #if defined(_WIN32) && defined(AF_UNIX) || defined(__unix__) || defined(__APPLE__)
 
 UnixSocket::UnixSocket(const std::string_view path, const std::size_t bufferSize)
-    : _socketPath(path), _buffer(bufferSize)
+    : SocketOptions(INVALID_SOCKET), _socketPath(path), _buffer(bufferSize)
 {
     if (path.length() >= sizeof(_addr.sun_path))
     {
@@ -20,6 +20,8 @@ UnixSocket::UnixSocket(const std::string_view path, const std::size_t bufferSize
     _sockFd = socket(AF_UNIX, SOCK_STREAM, 0);
     if (_sockFd == INVALID_SOCKET)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+
+    setSocketFd(_sockFd);
 }
 
 UnixSocket::~UnixSocket() noexcept
@@ -43,32 +45,34 @@ UnixSocket::~UnixSocket() noexcept
     }
 }
 
-UnixSocket::UnixSocket(UnixSocket&& other) noexcept
-    : _sockFd(other._sockFd), _isListening(other._isListening), _socketPath(std::move(other._socketPath)),
-      _addr(other._addr), _buffer(std::move(other._buffer))
+UnixSocket::UnixSocket(UnixSocket&& rhs) noexcept
+    : SocketOptions(rhs._sockFd), _sockFd(rhs._sockFd), _isListening(rhs._isListening),
+      _socketPath(std::move(rhs._socketPath)), _addr(rhs._addr), _buffer(std::move(rhs._buffer))
 {
-    other._sockFd = INVALID_SOCKET;
-    other._socketPath.clear();
-    other._isListening = false;
-    std::memset(&other._addr, 0, sizeof(other._addr));
+    rhs._sockFd = INVALID_SOCKET;
+    rhs._socketPath.clear();
+    rhs._isListening = false;
+    std::memset(&rhs._addr, 0, sizeof(rhs._addr));
 }
 
-UnixSocket& UnixSocket::operator=(UnixSocket&& other) noexcept
+UnixSocket& UnixSocket::operator=(UnixSocket&& rhs) noexcept
 {
-    if (this != &other)
+    if (this != &rhs)
     {
         close();
 
-        _sockFd = other._sockFd;
-        _socketPath = std::move(other._socketPath);
-        _buffer = std::move(other._buffer);
-        _addr = other._addr;
-        _isListening = other._isListening;
+        _sockFd = rhs._sockFd;
+        setSocketFd(_sockFd);
+        _socketPath = std::move(rhs._socketPath);
+        _buffer = std::move(rhs._buffer);
+        _addr = rhs._addr;
+        _isListening = rhs._isListening;
 
-        other._sockFd = INVALID_SOCKET;
-        other._socketPath.clear();
-        other._isListening = false;
-        std::memset(&other._addr, 0, sizeof(other._addr));
+        rhs._sockFd = INVALID_SOCKET;
+        rhs.setSocketFd(INVALID_SOCKET);
+        rhs._socketPath.clear();
+        rhs._isListening = false;
+        std::memset(&rhs._addr, 0, sizeof(rhs._addr));
     }
     return *this;
 }
@@ -128,6 +132,7 @@ UnixSocket UnixSocket::accept() const
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     UnixSocket client;
     client._sockFd = client_fd;
+    client.setSocketFd(_sockFd);
     client._addr = client_addr;
     client._socketPath = client_addr.sun_path;
     return client;
@@ -239,37 +244,6 @@ bool UnixSocket::isPathInUse(std::string_view path)
     }
     CloseSocket(fd);
     return inUse;
-}
-
-void UnixSocket::setOption(const int level, const int optName, int value) const
-{
-    if (setsockopt(_sockFd, level, optName,
-#ifdef _WIN32
-                   reinterpret_cast<const char*>(&value),
-#else
-                   &value,
-#endif
-                   sizeof(value)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-}
-
-int UnixSocket::getOption(const int level, const int optName) const
-{
-    int value = 0;
-#ifdef _WIN32
-    int len = sizeof(value);
-#else
-    socklen_t len = sizeof(value);
-#endif
-    if (getsockopt(_sockFd, level, optName,
-#ifdef _WIN32
-                   reinterpret_cast<char*>(&value),
-#else
-                   &value,
-#endif
-                   &len) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    return value;
 }
 
 #endif

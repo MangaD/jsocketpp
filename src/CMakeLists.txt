@@ -1,7 +1,15 @@
 # src/CMakeLists.txt - Build the jsocketpp library
 
 # Create the jsocketpp library (STATIC or SHARED depending on your needs)
-add_library(jsocketpp common.cpp DatagramSocket.cpp MulticastSocket.cpp ServerSocket.cpp Socket.cpp UnixSocket.cpp)
+add_library(
+    jsocketpp
+    common.cpp
+    DatagramSocket.cpp
+    MulticastSocket.cpp
+    ServerSocket.cpp
+    Socket.cpp
+    SocketOptions.cpp
+    UnixSocket.cpp)
 
 # Set C++ standard requirement for the library (C++20)
 target_compile_features(jsocketpp PUBLIC cxx_std_20)

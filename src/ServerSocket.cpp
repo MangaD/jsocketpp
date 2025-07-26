@@ -7,7 +7,7 @@ using namespace jsocketpp;
 
 ServerSocket::ServerSocket(const Port port, const std::string_view localAddress, const bool autoBindListen,
                            const bool reuseAddress, const int soTimeoutMillis, const bool dualStack)
-    : _port(port)
+    : SocketOptions(INVALID_SOCKET), _port(port)
 {
     // Prepare the hints structure for getaddrinfo to specify the desired socket type and protocol.
     addrinfo hints{}; // Initialize the hints structure to zero
@@ -119,6 +119,8 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
         cleanupAndThrow(GetSocketError());
     }
 
+    setSocketFd(_serverSocket);
+
     // Set socket options for address reuse
     try
     {
@@ -152,6 +154,7 @@ void ServerSocket::cleanupAndThrow(const int errorCode)
     }
     _srvAddrInfo.reset();
     _selectedAddrInfo = nullptr;
+    setSocketFd(_serverSocket);
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
@@ -260,6 +263,7 @@ void ServerSocket::close()
             throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
 
         this->_serverSocket = INVALID_SOCKET;
+        setSocketFd(INVALID_SOCKET);
     }
     _srvAddrInfo.reset();
     _selectedAddrInfo = nullptr;
@@ -444,38 +448,6 @@ void ServerSocket::acceptAsync(std::function<void(std::optional<Socket>, std::ex
             }
         })
         .detach(); // Detach so thread runs independently; lifetime is managed by the OS
-}
-
-// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
-void ServerSocket::setOption(const int level, const int optName, int value)
-{
-    if (setsockopt(_serverSocket, level, optName,
-#ifdef _WIN32
-                   reinterpret_cast<const char*>(&value),
-#else
-                   &value,
-#endif
-                   sizeof(value)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-}
-
-int ServerSocket::getOption(const int level, const int optName) const
-{
-    int value = 0;
-#ifdef _WIN32
-    int len = sizeof(value);
-#else
-    socklen_t len = sizeof(value);
-#endif
-    if (getsockopt(_serverSocket, level, optName,
-#ifdef _WIN32
-                   reinterpret_cast<char*>(&value),
-#else
-                   &value,
-#endif
-                   &len) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    return value;
 }
 
 // NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
