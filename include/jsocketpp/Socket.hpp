@@ -589,22 +589,6 @@ class Socket
     std::string getRemoteSocketAddress(bool convertIPv4Mapped = true) const;
 
     /**
-     * @brief Binds the client socket to a specific local IP address and/or port.
-     * @ingroup tcp
-     *
-     * By default, client sockets are automatically bound to an ephemeral local port.
-     * This method allows explicit binding to a specific local interface or port before calling connect().
-     *
-     * @param localHost The local IP address to bind to (e.g., "0.0.0.0" or "192.168.1.10").
-     * @param port      Optional port number. Use 0 to let the OS assign one.
-     *
-     * @throws SocketException if the bind operation fails.
-     *
-     * @note This method must be called before connect(). Calling it after connect() has no effect or will fail.
-     */
-    void bind(std::string_view localHost, Port port = 0);
-
-    /**
      * @brief Establishes a TCP connection to the remote host with optional timeout control.
      * @ingroup tcp
      *
@@ -3286,48 +3270,89 @@ class Socket
     [[nodiscard]] bool getReuseAddress() const;
 
     /**
-     * @brief Enables or disables SO_KEEPALIVE on the socket.
+     * @brief Enables or disables TCP keepalive behavior for the socket.
      * @ingroup tcp
      *
-     * When `SO_KEEPALIVE` is enabled (`on == true`), the operating system will
-     * periodically transmit TCP keepalive probes on an otherwise idle connection.
-     * These probes help detect unreachable peers or broken network links by triggering
-     * a disconnect when no response is received.
+     * Enabling `SO_KEEPALIVE` causes the operating system to periodically send keepalive probes
+     * on otherwise idle TCP connections. If the remote peer becomes unreachable or the connection
+     * silently fails (e.g., due to a crash or network issue), the system will detect this and close
+     * the socket with an error after several unacknowledged probes.
      *
-     * If disabled (`on == false`), the operating system will not monitor idle connections
-     * for liveness. This is the default behavior for most sockets.
+     * When disabled (the default for most platforms), the TCP connection may remain open indefinitely
+     * even if the remote peer is no longer reachable—no liveness checking is performed by the kernel.
      *
-     * Keepalive is especially useful for long-lived TCP connections where silent
-     * disconnection (e.g. router drop, crash, or cable pull) would otherwise go unnoticed.
+     * ### Use Cases
+     * - Long-lived client sessions (e.g., remote control, telemetry, streaming)
+     * - Detecting peer failure in headless or embedded environments
+     * - Avoiding resource leaks from zombie connections in servers
      *
-     * ### Platform-Specific Details
-     * - **Linux**: Keepalive interval, idle time, and probe count can be configured via
-     *   `/proc/sys/net/ipv4/tcp_keepalive_*` or socket-specific options.
-     * - **Windows**: Default idle time is 2 hours unless modified via `SIO_KEEPALIVE_VALS`.
-     * - **macOS**: Controlled via system-wide settings; application-specific tuning is limited.
+     * ### Platform Notes
+     * - **Linux**: Keepalive settings (idle time, probe count, interval) are configurable globally via:
+     *   `/proc/sys/net/ipv4/tcp_keepalive_time`, `tcp_keepalive_intvl`, and `tcp_keepalive_probes`.
+     *   Per-socket tuning requires additional socket options (not currently exposed here).
      *
-     * ### Example Usage
-     * @code{.cpp}
-     * Socket sock("example.com", 8080);
+     * - **Windows**: Default keepalive timeout is 2 hours. Per-socket tuning requires `WSAIoctl` with
+     *   `SIO_KEEPALIVE_VALS` (not exposed here). Keepalive is disabled by default.
+     *
+     * - **macOS**: Controlled by system-level TCP settings. Limited application-level configurability.
+     *
+     * ### Example
+     * @code
+     * Socket sock("example.com", 443);
      * sock.connect();
-     *
-     * // Enable keepalive to detect dropped connections
-     * sock.setKeepAlive(true);
+     * sock.setKeepAlive(true); // Enable detection of silent disconnects
      * @endcode
      *
-     * @param on `true` to enable keepalive probes (`SO_KEEPALIVE`),
-     *           `false` to disable them.
+     * @param on Set to `true` to enable TCP keepalive probes, or `false` to disable them.
      *
-     * @throws SocketException If setting the socket option fails:
+     * @throws SocketException if the socket option cannot be set. This may occur due to:
      *         - Invalid socket descriptor (`EBADF`)
-     *         - Insufficient privileges (`EACCES`)
-     *         - Option not supported on this socket type (`ENOPROTOOPT`)
-     *         - System resource exhaustion (`ENOMEM`)
+     *         - Socket type does not support keepalive (`ENOPROTOOPT`)
+     *         - Platform-level restrictions or resource exhaustion
      *
-     * @see setTcpNoDelay() To configure Nagle’s algorithm
-     * @see connect() To initiate the connection before applying socket options
+     * @see getKeepAlive() To query the current keepalive setting
+     * @see connect() To establish the connection before applying this option
      */
     void setKeepAlive(bool on);
+
+    /**
+     * @brief Queries whether SO_KEEPALIVE is currently enabled on the socket.
+     * @ingroup tcp
+     *
+     * This method retrieves the status of the `SO_KEEPALIVE` option, which controls
+     * whether the operating system sends periodic keepalive probes on idle TCP connections.
+     *
+     * Keepalive is typically used to detect silently dropped or unreachable peers
+     * (e.g. due to cable disconnects, router failures, or crash/hang scenarios),
+     * especially in long-lived client/server sessions.
+     *
+     * This method does not check system-level keepalive intervals or behavior—
+     * it only verifies whether keepalive probing is enabled at the socket level.
+     *
+     * ### Platform Behavior
+     * - **Linux/macOS**: Returns `true` if `SO_KEEPALIVE` is active. Probe behavior is system-configured.
+     * - **Windows**: Also returns `true` if enabled. Idle time and probe rate can be adjusted via `SIO_KEEPALIVE_VALS`.
+     *
+     * ### Example
+     * @code{.cpp}
+     * Socket sock("example.com", 443);
+     * sock.connect();
+     * if (!sock.getKeepAlive()) {
+     *     sock.setKeepAlive(true); // Enable it if not already active
+     * }
+     * @endcode
+     *
+     * @return `true` if keepalive is enabled on the socket, `false` otherwise.
+     *
+     * @throws SocketException if querying the option fails:
+     *         - Invalid descriptor (`EBADF`)
+     *         - Option not supported (`ENOPROTOOPT`)
+     *         - Other system-specific socket errors
+     *
+     * @see setKeepAlive(bool)
+     * @see getTcpNoDelay() for related low-level transport options
+     */
+    [[nodiscard]] bool getKeepAlive() const;
 
     /**
      * @brief Convert an address and port to a string using getnameinfo.
@@ -3385,6 +3410,36 @@ class Socket
      * @throws SocketException if the operation fails (see the error code/message for details).
      */
     [[nodiscard]] int getOption(int level, int optName) const;
+
+    /**
+     * @brief Reports whether the socket has been closed or invalidated.
+     * @ingroup tcp
+     *
+     * Returns `true` if the socket is no longer usable—either because it was explicitly
+     * closed, or because the underlying file descriptor has been released or never initialized.
+     *
+     * This method does not perform any system-level check or probing. It simply inspects
+     * the internal socket descriptor (`_sockFd`) and considers the socket closed if it is
+     * equal to `INVALID_SOCKET`. This reflects the same mechanism used internally for
+     * error detection and safety throughout the library.
+     *
+     * ### Example
+     * @code
+     * Socket sock("example.com", 443);
+     * assert(!sock.isClosed());
+     * sock.connect();
+     * sock.close(); // assume you define a close() method
+     * assert(sock.isClosed()); // true
+     * @endcode
+     *
+     * @return `true` if the socket is closed or uninitialized, `false` otherwise.
+     *
+     * @note Once closed, the socket cannot be reused or reopened. Create a new Socket instance instead.
+     *
+     * @see isConnected()
+     * @see isBound()
+     */
+    [[nodiscard]] bool isClosed() const noexcept { return _sockFd == INVALID_SOCKET; }
 
   protected:
     /**

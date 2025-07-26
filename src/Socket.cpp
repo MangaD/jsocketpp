@@ -711,6 +711,11 @@ void Socket::setKeepAlive(const bool on)
     setOption(SOL_SOCKET, SO_KEEPALIVE, on ? 1 : 0);
 }
 
+bool Socket::getKeepAlive() const
+{
+    return getOption(SOL_SOCKET, SO_KEEPALIVE) != 0;
+}
+
 std::string Socket::addressToString(const sockaddr_storage& addr)
 {
     char ip[INET6_ADDRSTRLEN] = {0};
