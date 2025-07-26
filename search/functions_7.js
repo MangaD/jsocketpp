@@ -5,7 +5,7 @@ var searchData=
   ['ioctlsocket_2',['ioctlsocket',['../namespacejsocketpp.html#a771a44f3967222b2e3221ed3120220af',1,'jsocketpp']]],
   ['ipfromsockaddr_3',['ipFromSockaddr',['../namespacejsocketpp.html#a18428d088b7f3b2e55efe9adc49e10a9',1,'jsocketpp']]],
   ['isbound_4',['isBound',['../group__tcp.html#ga0b3a5cb732c669b678e03549e5af2427',1,'jsocketpp::ServerSocket::isBound()'],['../group__tcp.html#gac5d9708cad057d6d608fb732eb1bb117',1,'jsocketpp::Socket::isBound()']]],
-  ['isclosed_5',['isClosed',['../group__tcp.html#gaeb5adb24bd7f50eaf8b52aa4441ffe71',1,'jsocketpp::ServerSocket']]],
+  ['isclosed_5',['isClosed',['../group__tcp.html#gaeb5adb24bd7f50eaf8b52aa4441ffe71',1,'jsocketpp::ServerSocket::isClosed()'],['../group__tcp.html#ga368ea24012b68fcf6db4f9a75d6d1940',1,'jsocketpp::Socket::isClosed()']]],
   ['isconnected_6',['isConnected',['../classjsocketpp_1_1DatagramSocket.html#a9962c2782fe6549bf5781f0301f70906',1,'jsocketpp::DatagramSocket::isConnected()'],['../group__tcp.html#gab1e4f32614be9a3609820f75dbcb4fc2',1,'jsocketpp::Socket::isConnected()']]],
   ['isipv4mappedipv6_7',['isIPv4MappedIPv6',['../group__core.html#gab0ac1b9850480abafeb047a4f96792a0',1,'jsocketpp']]],
   ['islistening_8',['isListening',['../group__tcp.html#ga1717f9859e5aeeba77c3d463ec53e735',1,'jsocketpp::ServerSocket']]],

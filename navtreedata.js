@@ -79,8 +79,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BufferView_8hpp.html",
-"group__docs.html",
-"socket__gtest_8cpp.html#aadbb6137575fbeb33208cb9f555b3a3d"
+"group__exceptions.html",
+"socket__gtest_8cpp.html#aac9350146074ace6dd63823149af8925"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

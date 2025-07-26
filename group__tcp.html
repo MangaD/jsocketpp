@@ -343,7 +343,11 @@ Functions</h2></td></tr>
 <tr class="memitem:ga6b39b1375048cc167409b5b513c3ad8c" id="r_ga6b39b1375048cc167409b5b513c3ad8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6b39b1375048cc167409b5b513c3ad8c">jsocketpp::Socket::waitReady</a> (bool forWrite, int timeoutMillis) const</td></tr>
 <tr class="memdesc:ga6b39b1375048cc167409b5b513c3ad8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for the socket to become ready for reading or writing.  <br /></td></tr>
 <tr class="memitem:ga9aa580ef897d00e6e4200657076bb769" id="r_ga9aa580ef897d00e6e4200657076bb769"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9aa580ef897d00e6e4200657076bb769">jsocketpp::Socket::setKeepAlive</a> (bool on)</td></tr>
-<tr class="memdesc:ga9aa580ef897d00e6e4200657076bb769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables SO_KEEPALIVE on the socket.  <br /></td></tr>
+<tr class="memdesc:ga9aa580ef897d00e6e4200657076bb769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP keepalive behavior for the socket.  <br /></td></tr>
+<tr class="memitem:gaefa84283aeb8880542d40bc7550b8d53" id="r_gaefa84283aeb8880542d40bc7550b8d53"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaefa84283aeb8880542d40bc7550b8d53">jsocketpp::Socket::getKeepAlive</a> () const</td></tr>
+<tr class="memdesc:gaefa84283aeb8880542d40bc7550b8d53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether SO_KEEPALIVE is currently enabled on the socket.  <br /></td></tr>
+<tr class="memitem:ga368ea24012b68fcf6db4f9a75d6d1940" id="r_ga368ea24012b68fcf6db4f9a75d6d1940"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga368ea24012b68fcf6db4f9a75d6d1940">jsocketpp::Socket::isClosed</a> () const noexcept</td></tr>
+<tr class="memdesc:ga368ea24012b68fcf6db4f9a75d6d1940"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports whether the socket has been closed or invalidated.  <br /></td></tr>
 <tr class="memitem:ga756c4e2148cfe7974fe191099341fccf" id="r_ga756c4e2148cfe7974fe191099341fccf"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga756c4e2148cfe7974fe191099341fccf">jsocketpp::Socket::readIntoInternal</a> (void *buffer, std::size_t len, bool exact=false) const</td></tr>
 <tr class="memdesc:ga756c4e2148cfe7974fe191099341fccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket into a user-supplied buffer.  <br /></td></tr>
 <tr class="memitem:gaf80aa30f2806a17b930878841dfab7ad" id="r_gaf80aa30f2806a17b930878841dfab7ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf80aa30f2806a17b930878841dfab7ad">jsocketpp::Socket::cleanupAndThrow</a> (int errorCode)</td></tr>
@@ -1608,6 +1612,64 @@ getSendBufferSize() </dd>
 
 </div>
 </div>
+<a id="gaefa84283aeb8880542d40bc7550b8d53" name="gaefa84283aeb8880542d40bc7550b8d53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaefa84283aeb8880542d40bc7550b8d53">&#9670;&#160;</a></span>getKeepAlive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Socket::getKeepAlive </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Queries whether SO_KEEPALIVE is currently enabled on the socket. </p>
+<p>This method retrieves the status of the <span class="tt">SO_KEEPALIVE</span> option, which controls whether the operating system sends periodic keepalive probes on idle TCP connections.</p>
+<p>Keepalive is typically used to detect silently dropped or unreachable peers (e.g. due to cable disconnects, router failures, or crash/hang scenarios), especially in long-lived client/server sessions.</p>
+<p>This method does not check system-level keepalive intervals or behavior— it only verifies whether keepalive probing is enabled at the socket level.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md611"></a>
+Platform Behavior</h3>
+<ul>
+<li><b>Linux/macOS</b>: Returns <span class="tt">true</span> if <span class="tt">SO_KEEPALIVE</span> is active. Probe behavior is system-configured.</li>
+<li><b>Windows</b>: Also returns <span class="tt">true</span> if enabled. Idle time and probe rate can be adjusted via <span class="tt">SIO_KEEPALIVE_VALS</span>.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md612"></a>
+Example</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
+<div class="line">sock.connect();</div>
+<div class="line"><span class="keywordflow">if</span> (!sock.getKeepAlive()) {</div>
+<div class="line">    sock.setKeepAlive(<span class="keyword">true</span>); <span class="comment">// Enable it if not already active</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if keepalive is enabled on the socket, <span class="tt">false</span> otherwise.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if querying the option fails:<ul>
+<li>Invalid descriptor (<span class="tt">EBADF</span>)</li>
+<li>Option not supported (<span class="tt">ENOPROTOOPT</span>)</li>
+<li>Other system-specific socket errors</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga9aa580ef897d00e6e4200657076bb769" title="Enables or disables TCP keepalive behavior for the socket.">setKeepAlive(bool)</a> </dd>
+<dd>
+<a class="el" href="group__socketopts.html#ga2539928ed0829df5070384f907ea48f7" title="Checks whether TCP_NODELAY (Nagle&#39;s algorithm) is currently disabled.">getTcpNoDelay()</a> for related low-level transport options </dd></dl>
+
+</div>
+</div>
 <a id="ga6cd36845f959c2bf075c475e5fdc7620" name="ga6cd36845f959c2bf075c475e5fdc7620"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga6cd36845f959c2bf075c475e5fdc7620">&#9670;&#160;</a></span>getLocalIp()</h2>
 
@@ -2538,7 +2600,7 @@ Example</h3>
 </div>
 </div>
 <a id="gaeb5adb24bd7f50eaf8b52aa4441ffe71" name="gaeb5adb24bd7f50eaf8b52aa4441ffe71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaeb5adb24bd7f50eaf8b52aa4441ffe71">&#9670;&#160;</a></span>isClosed()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeb5adb24bd7f50eaf8b52aa4441ffe71">&#9670;&#160;</a></span>isClosed() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2564,6 +2626,47 @@ Example</h3>
 <p>This method returns <span class="tt">true</span> if the socket has been closed (and is no longer usable), or <span class="tt">false</span> if it is still open. The logic and naming follow the Java networking API for familiarity.</p>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if the socket has been closed, <span class="tt">false</span> if it is still open.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga4e3ff54722a55e7500fdd76f26c53dac" title="Check whether the server socket is currently open and valid.">isValid()</a>, <a class="el" href="#ga0245d40096ca089255c67303eebf17e6" title="Closes the server socket and releases its associated system resources.">close()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga368ea24012b68fcf6db4f9a75d6d1940" name="ga368ea24012b68fcf6db4f9a75d6d1940"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga368ea24012b68fcf6db4f9a75d6d1940">&#9670;&#160;</a></span>isClosed() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::Socket::isClosed </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reports whether the socket has been closed or invalidated. </p>
+<p>Returns <span class="tt">true</span> if the socket is no longer usable—either because it was explicitly closed, or because the underlying file descriptor has been released or never initialized.</p>
+<p>This method does not perform any system-level check or probing. It simply inspects the internal socket descriptor (<span class="tt">_sockFd</span>) and considers the socket closed if it is equal to <span class="tt">INVALID_SOCKET</span>. This reflects the same mechanism used internally for error detection and safety throughout the library.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md613"></a>
+Example</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
+<div class="line">assert(!sock.isClosed());</div>
+<div class="line">sock.connect();</div>
+<div class="line">sock.close(); <span class="comment">// assume you define a close() method</span></div>
+<div class="line">assert(sock.isClosed()); <span class="comment">// true</span></div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if the socket is closed or uninitialized, <span class="tt">false</span> otherwise.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Once closed, the socket cannot be reused or reopened. Create a new <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instance instead.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gab1e4f32614be9a3609820f75dbcb4fc2" title="Indicates whether the socket has been successfully connected to a remote host.">isConnected()</a> </dd>
+<dd>
+<a class="el" href="#gac5d9708cad057d6d608fb732eb1bb117" title="Indicates whether the socket has been explicitly bound to a local address and/or port.">isBound()</a> </dd></dl>
 
 </div>
 </div>
@@ -3742,7 +3845,7 @@ Example Usage</h3>
 
 <p>Reads data from the socket into a user-supplied buffer. </p>
 <p>This method provides direct access to the socket's receive functionality by reading data into a caller-provided buffer. It supports both "best-effort" single reads and exact-length reads that ensure all requested bytes are received.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md610"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md614"></a>
 Modes of Operation</h3>
 <ul>
 <li><b>Best-effort mode</b> (exact=false):<ul>
@@ -3760,7 +3863,7 @@ Modes of Operation</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md611"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md615"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -3774,7 +3877,7 @@ Example Usage</h3>
 <div class="line">uint32_t length;</div>
 <div class="line">sock.readInto(&amp;length, <span class="keyword">sizeof</span>(length), <span class="keyword">true</span>);</div>
 <div class="line"><span class="comment">// Always reads exactly 4 bytes or throws</span></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md612"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md616"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses recv() internally for actual reads</li>
@@ -4884,45 +4987,48 @@ Example Usage</h3>
       </table>
 </div><div class="memdoc">
 
-<p>Enables or disables SO_KEEPALIVE on the socket. </p>
-<p>When <span class="tt">SO_KEEPALIVE</span> is enabled (<span class="tt">on == true</span>), the operating system will periodically transmit TCP keepalive probes on an otherwise idle connection. These probes help detect unreachable peers or broken network links by triggering a disconnect when no response is received.</p>
-<p>If disabled (<span class="tt">on == false</span>), the operating system will not monitor idle connections for liveness. This is the default behavior for most sockets.</p>
-<p>Keepalive is especially useful for long-lived TCP connections where silent disconnection (e.g. router drop, crash, or cable pull) would otherwise go unnoticed.</p>
+<p>Enables or disables TCP keepalive behavior for the socket. </p>
+<p>Enabling <span class="tt">SO_KEEPALIVE</span> causes the operating system to periodically send keepalive probes on otherwise idle TCP connections. If the remote peer becomes unreachable or the connection silently fails (e.g., due to a crash or network issue), the system will detect this and close the socket with an error after several unacknowledged probes.</p>
+<p>When disabled (the default for most platforms), the TCP connection may remain open indefinitely even if the remote peer is no longer reachable—no liveness checking is performed by the kernel.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md608"></a>
-Platform-Specific Details</h3>
+Use Cases</h3>
 <ul>
-<li><b>Linux</b>: Keepalive interval, idle time, and probe count can be configured via <span class="tt">/proc/sys/net/ipv4/tcp_keepalive_*</span> or socket-specific options.</li>
-<li><b>Windows</b>: Default idle time is 2 hours unless modified via <span class="tt">SIO_KEEPALIVE_VALS</span>.</li>
-<li><b>macOS</b>: Controlled via system-wide settings; application-specific tuning is limited.</li>
+<li>Long-lived client sessions (e.g., remote control, telemetry, streaming)</li>
+<li>Detecting peer failure in headless or embedded environments</li>
+<li>Avoiding resource leaks from zombie connections in servers</li>
 </ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md609"></a>
-Example Usage</h3>
-<div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
+Platform Notes</h3>
+<ul>
+<li><b>Linux</b>: Keepalive settings (idle time, probe count, interval) are configurable globally via: <span class="tt">/proc/sys/net/ipv4/tcp_keepalive_time</span>, <span class="tt">tcp_keepalive_intvl</span>, and <span class="tt">tcp_keepalive_probes</span>. Per-socket tuning requires additional socket options (not currently exposed here).</li>
+<li><b>Windows</b>: Default keepalive timeout is 2 hours. Per-socket tuning requires <span class="tt">WSAIoctl</span> with <span class="tt">SIO_KEEPALIVE_VALS</span> (not exposed here). Keepalive is disabled by default.</li>
+<li><b>macOS</b>: Controlled by system-level TCP settings. Limited application-level configurability.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md610"></a>
+Example</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
 <div class="line">sock.connect();</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Enable keepalive to detect dropped connections</span></div>
-<div class="line">sock.setKeepAlive(<span class="keyword">true</span>);</div>
+<div class="line">sock.setKeepAlive(<span class="keyword">true</span>); <span class="comment">// Enable detection of silent disconnects</span></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">on</td><td><span class="tt">true</span> to enable keepalive probes (<span class="tt">SO_KEEPALIVE</span>), <span class="tt">false</span> to disable them.</td></tr>
+    <tr><td class="paramname">on</td><td>Set to <span class="tt">true</span> to enable TCP keepalive probes, or <span class="tt">false</span> to disable them.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If setting the socket option fails:<ul>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket option cannot be set. This may occur due to:<ul>
 <li>Invalid socket descriptor (<span class="tt">EBADF</span>)</li>
-<li>Insufficient privileges (<span class="tt">EACCES</span>)</li>
-<li>Option not supported on this socket type (<span class="tt">ENOPROTOOPT</span>)</li>
-<li>System resource exhaustion (<span class="tt">ENOMEM</span>)</li>
+<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> type does not support keepalive (<span class="tt">ENOPROTOOPT</span>)</li>
+<li>Platform-level restrictions or resource exhaustion</li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__socketopts.html#gac3c6f8848ff049eb3e31b4fe190dd624" title="Enables or disables TCP_NODELAY (Nagle&#39;s algorithm) on the socket.">setTcpNoDelay()</a> To configure Nagle’s algorithm </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaefa84283aeb8880542d40bc7550b8d53" title="Queries whether SO_KEEPALIVE is currently enabled on the socket.">getKeepAlive()</a> To query the current keepalive setting </dd>
 <dd>
-<a class="el" href="#ga93cc325113abb7433288338ca3facde1" title="Establishes a TCP connection to the remote host with optional timeout control.">connect()</a> To initiate the connection before applying socket options </dd></dl>
+<a class="el" href="#ga93cc325113abb7433288338ca3facde1" title="Establishes a TCP connection to the remote host with optional timeout control.">connect()</a> To establish the connection before applying this option </dd></dl>
 
 </div>
 </div>

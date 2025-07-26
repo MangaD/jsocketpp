@@ -1,7 +1,7 @@
 var searchData=
 [
   ['macos_20unix_0',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md289',1,'']]],
-  ['main_20features_1',['Main Features',['../classjsocketpp_1_1UnixSocket.html#autotoc_md617',1,'']]],
+  ['main_20features_1',['Main Features',['../classjsocketpp_1_1UnixSocket.html#autotoc_md621',1,'']]],
   ['main_20tcp_20socket_20states_2',['Main TCP Socket States',['../group__socket__states.html#autotoc_md247',1,'']]],
   ['make_20your_20cmake_20project_20conan_20friendly_3',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md166',1,'']]],
   ['makefile_4',['Using the Makefile',['../group__BUILD__AND__USAGE.html#autotoc_md9',1,'']]],
@@ -9,7 +9,7 @@ var searchData=
   ['manual_20cmake_20build_6',['Manual CMake Build',['../group__BUILD__AND__USAGE.html#autotoc_md8',1,'']]],
   ['manual_20compilation_7',['Manual Compilation',['../group__BUILD__AND__USAGE.html#autotoc_md10',1,'']]],
   ['manual_20integration_8',['🔧 Manual Integration',['../index.html#autotoc_md387',1,'']]],
-  ['manual_20nesting_9',['Example: Manual nesting',['../classjsocketpp_1_1SocketException.html#autotoc_md615',1,'']]],
+  ['manual_20nesting_9',['Example: Manual nesting',['../classjsocketpp_1_1SocketException.html#autotoc_md619',1,'']]],
   ['mapping_10',['🔄 Java ↔ jsocketpp Class Mapping',['../index.html#autotoc_md398',1,'']]],
   ['mean_11',['What Does “Binding to All Interfaces” Mean?',['../group__bind__interfaces.html#autotoc_md151',1,'']]],
   ['methods_12',['Dedicated Methods vs. Generic Methods',['../group__socket-options.html#autotoc_md219',1,'']]],
@@ -27,7 +27,7 @@ var searchData=
   ['models_24',['3. Communication Models',['../group__underlying__socket__api.html#autotoc_md304',1,'']]],
   ['modern_20c_2020_25',['jsocketpp: Java-Style Cross-Platform Socket Library for Modern C++20',['../index.html',1,'']]],
   ['modes_26',['Modes',['../group__tcp.html#autotoc_md504',1,'Connection Modes'],['../group__tcp.html#autotoc_md546',1,'Shutdown Modes']]],
-  ['modes_20of_20operation_27',['Modes of Operation',['../group__tcp.html#autotoc_md610',1,'']]],
+  ['modes_20of_20operation_27',['Modes of Operation',['../group__tcp.html#autotoc_md614',1,'']]],
   ['module_28',['4. Qt Network Module',['../group__socket__library__comparison.html#autotoc_md235',1,'']]],
   ['more_20resources_29',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
   ['multicast_30',['What is Multicast?',['../classjsocketpp_1_1MulticastSocket.html#autotoc_md473',1,'']]],

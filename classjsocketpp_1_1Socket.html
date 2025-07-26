@@ -139,8 +139,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:gab716648ffb451640b18f4f4363a22eb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the full local socket address in the form "IP:port".  <br /></td></tr>
 <tr class="memitem:ga92c62bf727779c6d7395809084f9e4dc" id="r_ga92c62bf727779c6d7395809084f9e4dc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc">getRemoteSocketAddress</a> (bool convertIPv4Mapped=true) const</td></tr>
 <tr class="memdesc:ga92c62bf727779c6d7395809084f9e4dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remote peer's address and port as a formatted string.  <br /></td></tr>
-<tr class="memitem:gae9a523509c0b63f91a801613dec85b39" id="r_gae9a523509c0b63f91a801613dec85b39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae9a523509c0b63f91a801613dec85b39">bind</a> (std::string_view localHost, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port=0)</td></tr>
-<tr class="memdesc:gae9a523509c0b63f91a801613dec85b39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the client socket to a specific local IP address and/or port.  <br /></td></tr>
 <tr class="memitem:ga93cc325113abb7433288338ca3facde1" id="r_ga93cc325113abb7433288338ca3facde1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga93cc325113abb7433288338ca3facde1">connect</a> (int timeoutMillis=-1)</td></tr>
 <tr class="memdesc:ga93cc325113abb7433288338ca3facde1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Establishes a TCP connection to the remote host with optional timeout control.  <br /></td></tr>
 <tr class="memitem:gaa7498d51b547b52699055bdb16b9d68b" id="r_gaa7498d51b547b52699055bdb16b9d68b"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
@@ -256,11 +254,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ga440e7ee9303d454df0c51fe6125cd2af" id="r_ga440e7ee9303d454df0c51fe6125cd2af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga440e7ee9303d454df0c51fe6125cd2af">getReuseAddress</a> () const</td></tr>
 <tr class="memdesc:ga440e7ee9303d454df0c51fe6125cd2af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether SO_REUSEADDR is currently enabled on the socket.  <br /></td></tr>
 <tr class="memitem:ga9aa580ef897d00e6e4200657076bb769" id="r_ga9aa580ef897d00e6e4200657076bb769"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga9aa580ef897d00e6e4200657076bb769">setKeepAlive</a> (bool on)</td></tr>
-<tr class="memdesc:ga9aa580ef897d00e6e4200657076bb769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables SO_KEEPALIVE on the socket.  <br /></td></tr>
+<tr class="memdesc:ga9aa580ef897d00e6e4200657076bb769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP keepalive behavior for the socket.  <br /></td></tr>
+<tr class="memitem:gaefa84283aeb8880542d40bc7550b8d53" id="r_gaefa84283aeb8880542d40bc7550b8d53"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaefa84283aeb8880542d40bc7550b8d53">getKeepAlive</a> () const</td></tr>
+<tr class="memdesc:gaefa84283aeb8880542d40bc7550b8d53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether SO_KEEPALIVE is currently enabled on the socket.  <br /></td></tr>
 <tr class="memitem:aff36b21f845d62d612d608027559c0b1" id="r_aff36b21f845d62d612d608027559c0b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff36b21f845d62d612d608027559c0b1">setOption</a> (int level, int optName, int value)</td></tr>
 <tr class="memdesc:aff36b21f845d62d612d608027559c0b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a socket option at the specified level.  <br /></td></tr>
 <tr class="memitem:ab1c36ab56a2ef4409629f2bd722d6f52" id="r_ab1c36ab56a2ef4409629f2bd722d6f52"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1c36ab56a2ef4409629f2bd722d6f52">getOption</a> (int level, int optName) const</td></tr>
 <tr class="memdesc:ab1c36ab56a2ef4409629f2bd722d6f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current value of a socket option at the specified level.  <br /></td></tr>
+<tr class="memitem:ga368ea24012b68fcf6db4f9a75d6d1940" id="r_ga368ea24012b68fcf6db4f9a75d6d1940"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga368ea24012b68fcf6db4f9a75d6d1940">isClosed</a> () const noexcept</td></tr>
+<tr class="memdesc:ga368ea24012b68fcf6db4f9a75d6d1940"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports whether the socket has been closed or invalidated.  <br /></td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9" id="r_ga634bfa30476b72bfa4cca63a93c558a9"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga634bfa30476b72bfa4cca63a93c558a9">read</a> ()</td></tr>
 <tr class="memdesc:ga634bfa30476b72bfa4cca63a93c558a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">read&lt;T&gt;()</span> for reading a single buffer of string data.  <br /></td></tr>
@@ -414,44 +416,6 @@ See Also</h3>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="gae9a523509c0b63f91a801613dec85b39" name="gae9a523509c0b63f91a801613dec85b39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae9a523509c0b63f91a801613dec85b39">&#9670;&#160;</a></span>bind()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void jsocketpp::Socket::bind </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>localHost</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Binds the client socket to a specific local IP address and/or port. </p>
-<p>By default, client sockets are automatically bound to an ephemeral local port. This method allows explicit binding to a specific local interface or port before calling <a class="el" href="group__tcp.html#ga93cc325113abb7433288338ca3facde1" title="Establishes a TCP connection to the remote host with optional timeout control.">connect()</a>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">localHost</td><td>The local IP address to bind to (e.g., "0.0.0.0" or "192.168.1.10"). </td></tr>
-    <tr><td class="paramname">port</td><td>Optional port number. Use 0 to let the OS assign one.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the bind operation fails.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>This method must be called before <a class="el" href="group__tcp.html#ga93cc325113abb7433288338ca3facde1" title="Establishes a TCP connection to the remote host with optional timeout control.">connect()</a>. Calling it after <a class="el" href="group__tcp.html#ga93cc325113abb7433288338ca3facde1" title="Establishes a TCP connection to the remote host with optional timeout control.">connect()</a> has no effect or will fail. </dd></dl>
 
 </div>
 </div>
