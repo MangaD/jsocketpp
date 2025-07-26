@@ -144,7 +144,7 @@ class UnixSocket
      * @return A new UnixSocket representing the accepted connection.
      * @throws std::socket_exception if accept fails.
      */
-    UnixSocket accept() const;
+    [[nodiscard]] UnixSocket accept() const;
 
     /**
      * @brief Connects the socket.
@@ -158,7 +158,7 @@ class UnixSocket
      * @return The number of bytes written.
      * @throws std::socket_exception if writing fails.
      */
-    size_t write(std::string_view data) const;
+    [[nodiscard]] size_t write(std::string_view data) const;
 
     /**
      * @brief Reads data from the socket into a buffer.
@@ -279,7 +279,7 @@ class UnixSocket
     /**
      * @brief Default constructor for internal use (e.g., accept()).
      */
-    UnixSocket() : _sockFd(INVALID_SOCKET), _socketPath(), _addr(), _buffer(512) {}
+    UnixSocket() : _buffer(512) {}
 
   private:
     SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor.

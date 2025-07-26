@@ -1117,7 +1117,7 @@ class ServerSocket
      *
      * @see getOption()
      *
-     * @ingroup tcp
+     * @ingroup socketopts
      */
     void setOption(int level, int optName, int value);
 
@@ -1145,7 +1145,7 @@ class ServerSocket
      *
      * @see setOption()
      *
-     * @ingroup tcp
+     * @ingroup socketopts
      */
     [[nodiscard]] int getOption(int level, int optName) const;
 
@@ -1192,7 +1192,7 @@ class ServerSocket
      *
      * @see https://man7.org/linux/man-pages/man7/socket.7.html
      *
-     * @ingroup tcp
+     * @ingroup socketopts
      */
     void setReuseAddress(bool enable);
 
@@ -1215,7 +1215,7 @@ class ServerSocket
      *
      * @see setReuseAddress()
      *
-     * @ingroup tcp
+     * @ingroup socketopts
      */
     [[nodiscard]] bool getReuseAddress() const;
 
@@ -1235,7 +1235,7 @@ class ServerSocket
      *
      * @see acceptBlocking(), acceptNonBlocking()
      *
-     * @ingroup tcp
+     * @ingroup socketopts
      */
     void setNonBlocking(bool nonBlocking);
 
@@ -1249,7 +1249,7 @@ class ServerSocket
      * @return true if the socket is non-blocking, false if it is blocking.
      * @throws SocketException if the socket flags cannot be retrieved.
      *
-     * @ingroup tcp
+     * @ingroup socketopts
      */
     [[nodiscard]] bool getNonBlocking() const;
 
@@ -1316,7 +1316,7 @@ class ServerSocket
      * @see tryAccept()
      * @see waitReady()
      *
-     * @ingroup tcp
+     * @ingroup socketopts
      */
     void setSoTimeout(const int timeoutMillis) { _soTimeoutMillis = timeoutMillis; }
 
@@ -1334,7 +1334,7 @@ class ServerSocket
      * @see setSoTimeout()
      * @see accept()
      * @see tryAccept()
-     * @ingroup tcp
+     * @ingroup socketopts
      */
     [[nodiscard]] int getSoTimeout() const noexcept { return _soTimeoutMillis; }
 

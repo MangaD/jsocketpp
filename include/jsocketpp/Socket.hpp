@@ -415,7 +415,7 @@ class Socket
 
     /**
      * @brief Binds the client socket to all interfaces (INADDR_ANY) using the specified port.
-     * @ingroup socketopts
+     * @ingroup tcp
      *
      * This overload binds to all available network interfaces using a specific local port.
      * Equivalent to calling `bind("0.0.0.0", port)`.
@@ -428,7 +428,7 @@ class Socket
 
     /**
      * @brief Binds the client socket to all interfaces using an ephemeral port.
-     * @ingroup socketopts
+     * @ingroup tcp
      *
      * This overload delegates to the default configuration — bind to any interface, with any available port.
      * Equivalent to calling `bind("0.0.0.0", 0)`.
@@ -2472,7 +2472,7 @@ class Socket
 
     /**
      * @brief Sets the socket's receive buffer size (SO_RCVBUF).
-     * @ingroup tcp
+     * @ingroup socketopts
      *
      * Configures the size of the operating system's receive buffer for this socket.
      * A larger buffer can improve performance for high-bandwidth connections by allowing
@@ -2520,7 +2520,7 @@ class Socket
 
     /**
      * @brief Sets the socket's send buffer size (SO_SNDBUF).
-     * @ingroup tcp
+     * @ingroup socketopts
      *
      * Configures the size of the operating system's send buffer for this socket.
      * A larger buffer can improve performance for high-bandwidth connections by allowing
@@ -2568,7 +2568,7 @@ class Socket
 
     /**
      * @brief Get the socket's receive buffer size (SO_RCVBUF).
-     * @ingroup tcp
+     * @ingroup socketopts
      *
      * Retrieves the current size of the operating system's receive buffer for this socket.
      * The receive buffer is used by the OS to store incoming data before it is read by
@@ -2615,7 +2615,7 @@ class Socket
 
     /**
      * @brief Get the socket's send buffer size (SO_SNDBUF).
-     * @ingroup tcp
+     * @ingroup socketopts
      *
      * Retrieves the current size of the operating system's send buffer for this socket.
      * The send buffer is used by the OS to store outgoing data before it is transmitted
@@ -2851,7 +2851,7 @@ class Socket
 
     /**
      * @brief Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.
-     * @ingroup tcp
+     * @ingroup socketopts
      *
      * Configures how long the socket will block while waiting for incoming data before
      * a read operation times out. This affects all blocking read methods such as
@@ -2893,7 +2893,7 @@ class Socket
 
     /**
      * @brief Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.
-     * @ingroup tcp
+     * @ingroup socketopts
      *
      * Configures how long the socket will block while attempting to send data
      * before a write operation times out. This affects all blocking send methods such as
@@ -2935,7 +2935,7 @@ class Socket
 
     /**
      * @brief Retrieves the current socket read timeout (SO_RCVTIMEO) in milliseconds.
-     * @ingroup tcp
+     * @ingroup socketopts
      *
      * Returns the duration, in milliseconds, that the socket will block while waiting
      * to receive data before timing out. This corresponds to the `SO_RCVTIMEO` socket option.
@@ -2973,7 +2973,7 @@ class Socket
 
     /**
      * @brief Retrieves the current socket send timeout (SO_SNDTIMEO) in milliseconds.
-     * @ingroup tcp
+     * @ingroup socketopts
      *
      * Returns the duration, in milliseconds, that the socket will block when attempting
      * to send data before timing out. This reflects the value of the `SO_SNDTIMEO` socket option.
