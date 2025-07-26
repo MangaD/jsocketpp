@@ -258,12 +258,14 @@ class Socket
     Socket(Socket&& rhs) noexcept
         : _sockFd(rhs._sockFd), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
           _cliAddrInfo(std::move(rhs._cliAddrInfo)), _selectedAddrInfo(rhs._selectedAddrInfo),
-          _internalBuffer(std::move(rhs._internalBuffer)), _isBound(rhs._isBound), _isConnected(rhs._isConnected)
+          _internalBuffer(std::move(rhs._internalBuffer)), _isBound(rhs._isBound), _isConnected(rhs._isConnected),
+          _inputShutdown(rhs._inputShutdown), _outputShutdown(rhs._outputShutdown)
     {
         rhs._sockFd = INVALID_SOCKET;
         rhs._selectedAddrInfo = nullptr;
         rhs._isBound = false;
         rhs._isConnected = false;
+        rhs.resetShutdownFlags();
     }
 
     /**
@@ -349,12 +351,15 @@ class Socket
             _internalBuffer = std::move(rhs._internalBuffer);
             _isBound = rhs._isBound;
             _isConnected = rhs._isConnected;
+            _inputShutdown = rhs._inputShutdown;
+            _outputShutdown = rhs._outputShutdown;
 
             // Reset source
             rhs._sockFd = INVALID_SOCKET;
             rhs._selectedAddrInfo = nullptr;
             rhs._isBound = false;
             rhs._isConnected = false;
+            rhs.resetShutdownFlags();
         }
         return *this;
     }
@@ -3441,6 +3446,59 @@ class Socket
      */
     [[nodiscard]] bool isClosed() const noexcept { return _sockFd == INVALID_SOCKET; }
 
+    /**
+     * @brief Checks whether the socket's input stream has been shutdown.
+     * @ingroup tcp
+     *
+     * Returns `true` if the socket has been explicitly shutdown for reading via
+     * `shutdown(ShutdownMode::Read)` or `shutdown(ShutdownMode::Both)`. After input shutdown:
+     * - Any further read operations will return EOF or throw exceptions.
+     * - The socket cannot receive new data from the peer.
+     *
+     * This method tracks shutdown state internally—it does **not** query the operating system
+     * (as no portable API exists for that). It reflects the local state at the time of the last
+     * `shutdown()` call on this socket.
+     *
+     * ### Use Cases
+     * - Preventing redundant or invalid read calls after a graceful shutdown.
+     * - Verifying application-level protocol state transitions.
+     * - Detecting half-closed connections during teardown.
+     *
+     * @return `true` if the input (receive) side of the socket has been shutdown; `false` otherwise.
+     *
+     * @see shutdown()
+     * @see isOutputShutdown()
+     * @see isConnected()
+     * @see read(), readExact(), readUntil()
+     */
+    [[nodiscard]] bool isInputShutdown() const noexcept { return _inputShutdown; }
+
+    /**
+     * @brief Checks whether the socket's output stream has been shutdown.
+     * @ingroup tcp
+     *
+     * Returns `true` if the socket has been explicitly shutdown for writing via
+     * `shutdown(ShutdownMode::Write)` or `shutdown(ShutdownMode::Both)`. After output shutdown:
+     * - All subsequent write operations will fail with a `SocketException`.
+     * - The system sends a FIN packet to the peer, indicating no more data will be sent.
+     *
+     * This method tracks shutdown state internally—it does **not** query the operating system,
+     * as no portable `getsockopt()` mechanism exists to detect output shutdown externally.
+     *
+     * ### Use Cases
+     * - Enforcing proper protocol shutdown (e.g. sending EOF before receiving response).
+     * - Avoiding invalid writes after intentionally shutting down output.
+     * - Debugging and verifying application-level connection state.
+     *
+     * @return `true` if the output (send) side of the socket has been shutdown; `false` otherwise.
+     *
+     * @see shutdown()
+     * @see isInputShutdown()
+     * @see isConnected()
+     * @see write(), writeAll(), writePrefixed()
+     */
+    [[nodiscard]] bool isOutputShutdown() const noexcept { return _outputShutdown; }
+
   protected:
     /**
      * @brief Reads data from the socket into a user-supplied buffer.
@@ -3532,6 +3590,35 @@ class Socket
      */
     void cleanupAndThrow(int errorCode);
 
+    /**
+     * @brief Resets internal shutdown state flags to `false`.
+     * @ingroup tcp
+     *
+     * This method clears the internal flags that track whether the socket's input or output
+     * streams have been shutdown via `shutdown(ShutdownMode)`. It does **not** reopen or
+     * re-enable socket directions at the system level—it only resets the internal state used
+     * by `isInputShutdown()` and `isOutputShutdown()`.
+     *
+     * This method is useful when reinitializing or repurposing a `Socket` object after calling
+     * `close()`, or when transferring ownership during a move assignment where shutdown state
+     * is no longer valid.
+     *
+     * @warning This method does **not** call any OS-level functions like `shutdown()` or `setsockopt()`.
+     *          It only resets internal bookkeeping flags.
+     *
+     * @note This method is intended for internal use or advanced scenarios. Most users should
+     *       not need to call this directly.
+     *
+     * @see shutdown()
+     * @see isInputShutdown()
+     * @see isOutputShutdown()
+     */
+    void resetShutdownFlags() noexcept
+    {
+        _inputShutdown = false;
+        _outputShutdown = false;
+    }
+
   private:
     SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor.
     sockaddr_storage _remoteAddr;    ///< sockaddr_in for IPv4; sockaddr_in6 for IPv6; sockaddr_storage for both
@@ -3542,6 +3629,8 @@ class Socket
     std::vector<char> _internalBuffer;            ///< Internal buffer for read operations, not thread-safe
     bool _isBound = false;                        ///< True if the socket is bound to an address
     bool _isConnected = false;                    ///< True if the socket is connected to a remote peer
+    bool _inputShutdown = false;                  ///< True if input side is shutdown (recv disabled)
+    bool _outputShutdown = false;                 ///< True if output side is shutdown (send disabled)
 };
 
 /**

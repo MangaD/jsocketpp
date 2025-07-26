@@ -257,6 +257,7 @@ void Socket::close()
     }
     _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
+    resetShutdownFlags();
 }
 
 void Socket::shutdown(ShutdownMode how) const
