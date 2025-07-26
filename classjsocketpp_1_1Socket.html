@@ -263,6 +263,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab1c36ab56a2ef4409629f2bd722d6f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current value of a socket option at the specified level.  <br /></td></tr>
 <tr class="memitem:ga368ea24012b68fcf6db4f9a75d6d1940" id="r_ga368ea24012b68fcf6db4f9a75d6d1940"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga368ea24012b68fcf6db4f9a75d6d1940">isClosed</a> () const noexcept</td></tr>
 <tr class="memdesc:ga368ea24012b68fcf6db4f9a75d6d1940"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports whether the socket has been closed or invalidated.  <br /></td></tr>
+<tr class="memitem:ga402fc4a398e670854cbb4edf791c1916" id="r_ga402fc4a398e670854cbb4edf791c1916"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga402fc4a398e670854cbb4edf791c1916">isInputShutdown</a> () const noexcept</td></tr>
+<tr class="memdesc:ga402fc4a398e670854cbb4edf791c1916"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the socket's input stream has been shutdown.  <br /></td></tr>
+<tr class="memitem:gad2b2992b358d3656a2e0d3e854c897bc" id="r_gad2b2992b358d3656a2e0d3e854c897bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gad2b2992b358d3656a2e0d3e854c897bc">isOutputShutdown</a> () const noexcept</td></tr>
+<tr class="memdesc:gad2b2992b358d3656a2e0d3e854c897bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the socket's output stream has been shutdown.  <br /></td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9" id="r_ga634bfa30476b72bfa4cca63a93c558a9"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga634bfa30476b72bfa4cca63a93c558a9">read</a> ()</td></tr>
 <tr class="memdesc:ga634bfa30476b72bfa4cca63a93c558a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">read&lt;T&gt;()</span> for reading a single buffer of string data.  <br /></td></tr>
@@ -282,6 +286,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:ga756c4e2148cfe7974fe191099341fccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket into a user-supplied buffer.  <br /></td></tr>
 <tr class="memitem:gaf80aa30f2806a17b930878841dfab7ad" id="r_gaf80aa30f2806a17b930878841dfab7ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaf80aa30f2806a17b930878841dfab7ad">cleanupAndThrow</a> (int errorCode)</td></tr>
 <tr class="memdesc:gaf80aa30f2806a17b930878841dfab7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up client socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.  <br /></td></tr>
+<tr class="memitem:ga41e5ecdf97be51a3a354429be87b12d0" id="r_ga41e5ecdf97be51a3a354429be87b12d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga41e5ecdf97be51a3a354429be87b12d0">resetShutdownFlags</a> () noexcept</td></tr>
+<tr class="memdesc:ga41e5ecdf97be51a3a354429be87b12d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets internal shutdown state flags to <span class="tt">false</span>.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -301,6 +307,10 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:ae689d75e85e7d24f7dcca98704daf82d"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the socket is bound to an address.  <br /></td></tr>
 <tr class="memitem:aa36c3591cf5dd284183a7cdb3ba3fb39" id="r_aa36c3591cf5dd284183a7cdb3ba3fb39"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa36c3591cf5dd284183a7cdb3ba3fb39">_isConnected</a> = false</td></tr>
 <tr class="memdesc:aa36c3591cf5dd284183a7cdb3ba3fb39"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the socket is connected to a remote peer.  <br /></td></tr>
+<tr class="memitem:a57d7f824fde7a28a536ef6e63fb0c7bf" id="r_a57d7f824fde7a28a536ef6e63fb0c7bf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57d7f824fde7a28a536ef6e63fb0c7bf">_inputShutdown</a> = false</td></tr>
+<tr class="memdesc:a57d7f824fde7a28a536ef6e63fb0c7bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if input side is shutdown (recv disabled)  <br /></td></tr>
+<tr class="memitem:a6a1f26e61572ad71ac342559fe94ca47" id="r_a6a1f26e61572ad71ac342559fe94ca47"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a1f26e61572ad71ac342559fe94ca47">_outputShutdown</a> = false</td></tr>
+<tr class="memdesc:a6a1f26e61572ad71ac342559fe94ca47"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if output side is shutdown (send disabled)  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -606,6 +616,30 @@ See Also</h3>
 
 </div>
 </div>
+<a id="a57d7f824fde7a28a536ef6e63fb0c7bf" name="a57d7f824fde7a28a536ef6e63fb0c7bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57d7f824fde7a28a536ef6e63fb0c7bf">&#9670;&#160;</a></span>_inputShutdown</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::Socket::_inputShutdown = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True if input side is shutdown (recv disabled) </p>
+
+</div>
+</div>
 <a id="a05964f49b3ce4b2d9f2413fd40d4d174" name="a05964f49b3ce4b2d9f2413fd40d4d174"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a05964f49b3ce4b2d9f2413fd40d4d174">&#9670;&#160;</a></span>_internalBuffer</h2>
 
@@ -675,6 +709,30 @@ See Also</h3>
 </div><div class="memdoc">
 
 <p>True if the socket is connected to a remote peer. </p>
+
+</div>
+</div>
+<a id="a6a1f26e61572ad71ac342559fe94ca47" name="a6a1f26e61572ad71ac342559fe94ca47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a1f26e61572ad71ac342559fe94ca47">&#9670;&#160;</a></span>_outputShutdown</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::Socket::_outputShutdown = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True if output side is shutdown (send disabled) </p>
 
 </div>
 </div>

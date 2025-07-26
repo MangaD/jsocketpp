@@ -348,10 +348,16 @@ Functions</h2></td></tr>
 <tr class="memdesc:gaefa84283aeb8880542d40bc7550b8d53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether SO_KEEPALIVE is currently enabled on the socket.  <br /></td></tr>
 <tr class="memitem:ga368ea24012b68fcf6db4f9a75d6d1940" id="r_ga368ea24012b68fcf6db4f9a75d6d1940"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga368ea24012b68fcf6db4f9a75d6d1940">jsocketpp::Socket::isClosed</a> () const noexcept</td></tr>
 <tr class="memdesc:ga368ea24012b68fcf6db4f9a75d6d1940"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports whether the socket has been closed or invalidated.  <br /></td></tr>
+<tr class="memitem:ga402fc4a398e670854cbb4edf791c1916" id="r_ga402fc4a398e670854cbb4edf791c1916"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga402fc4a398e670854cbb4edf791c1916">jsocketpp::Socket::isInputShutdown</a> () const noexcept</td></tr>
+<tr class="memdesc:ga402fc4a398e670854cbb4edf791c1916"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the socket's input stream has been shutdown.  <br /></td></tr>
+<tr class="memitem:gad2b2992b358d3656a2e0d3e854c897bc" id="r_gad2b2992b358d3656a2e0d3e854c897bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad2b2992b358d3656a2e0d3e854c897bc">jsocketpp::Socket::isOutputShutdown</a> () const noexcept</td></tr>
+<tr class="memdesc:gad2b2992b358d3656a2e0d3e854c897bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the socket's output stream has been shutdown.  <br /></td></tr>
 <tr class="memitem:ga756c4e2148cfe7974fe191099341fccf" id="r_ga756c4e2148cfe7974fe191099341fccf"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga756c4e2148cfe7974fe191099341fccf">jsocketpp::Socket::readIntoInternal</a> (void *buffer, std::size_t len, bool exact=false) const</td></tr>
 <tr class="memdesc:ga756c4e2148cfe7974fe191099341fccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket into a user-supplied buffer.  <br /></td></tr>
 <tr class="memitem:gaf80aa30f2806a17b930878841dfab7ad" id="r_gaf80aa30f2806a17b930878841dfab7ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf80aa30f2806a17b930878841dfab7ad">jsocketpp::Socket::cleanupAndThrow</a> (int errorCode)</td></tr>
 <tr class="memdesc:gaf80aa30f2806a17b930878841dfab7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up client socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.  <br /></td></tr>
+<tr class="memitem:ga41e5ecdf97be51a3a354429be87b12d0" id="r_ga41e5ecdf97be51a3a354429be87b12d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga41e5ecdf97be51a3a354429be87b12d0">jsocketpp::Socket::resetShutdownFlags</a> () noexcept</td></tr>
+<tr class="memdesc:ga41e5ecdf97be51a3a354429be87b12d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets internal shutdown state flags to <span class="tt">false</span>.  <br /></td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9" id="r_ga634bfa30476b72bfa4cca63a93c558a9"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga634bfa30476b72bfa4cca63a93c558a9">jsocketpp::Socket::read</a> ()</td></tr>
 <tr class="memdesc:ga634bfa30476b72bfa4cca63a93c558a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">read&lt;T&gt;()</span> for reading a single buffer of string data.  <br /></td></tr>
@@ -779,7 +785,7 @@ This method is <b>not thread safe</b>. Simultaneous <span class="tt">accept</spa
 <div class="line">        <span class="keywordflow">throw</span>;</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Sets the socket to either non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:470</div></div>
+<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Sets the socket to either non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:471</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -2708,6 +2714,53 @@ Example</h3>
 
 </div>
 </div>
+<a id="ga402fc4a398e670854cbb4edf791c1916" name="ga402fc4a398e670854cbb4edf791c1916"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga402fc4a398e670854cbb4edf791c1916">&#9670;&#160;</a></span>isInputShutdown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::Socket::isInputShutdown </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks whether the socket's input stream has been shutdown. </p>
+<p>Returns <span class="tt">true</span> if the socket has been explicitly shutdown for reading via <span class="tt">shutdown(ShutdownMode::Read)</span> or <span class="tt">shutdown(ShutdownMode::Both)</span>. After input shutdown:</p><ul>
+<li>Any further read operations will return EOF or throw exceptions.</li>
+<li>The socket cannot receive new data from the peer.</li>
+</ul>
+<p>This method tracks shutdown state internally—it does <b>not</b> query the operating system (as no portable API exists for that). It reflects the local state at the time of the last <span class="tt"><a class="el" href="#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a></span> call on this socket.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md614"></a>
+Use Cases</h3>
+<ul>
+<li>Preventing redundant or invalid read calls after a graceful shutdown.</li>
+<li>Verifying application-level protocol state transitions.</li>
+<li>Detecting half-closed connections during teardown.</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if the input (receive) side of the socket has been shutdown; <span class="tt">false</span> otherwise.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a> </dd>
+<dd>
+<a class="el" href="#gad2b2992b358d3656a2e0d3e854c897bc" title="Checks whether the socket&#39;s output stream has been shutdown.">isOutputShutdown()</a> </dd>
+<dd>
+<a class="el" href="#gab1e4f32614be9a3609820f75dbcb4fc2" title="Indicates whether the socket has been successfully connected to a remote host.">isConnected()</a> </dd>
+<dd>
+<a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read()</a>, <a class="el" href="#ga3d194596258a3b1117b3437d969019b6" title="Reads exactly n bytes from the socket into a std::string.">readExact()</a>, <a class="el" href="#ga46777f128a2a23cba8972aefd4b86828" title="Reads data from the socket until a specified delimiter character is encountered.">readUntil()</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga1717f9859e5aeeba77c3d463ec53e735" name="ga1717f9859e5aeeba77c3d463ec53e735"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga1717f9859e5aeeba77c3d463ec53e735">&#9670;&#160;</a></span>isListening()</h2>
 
@@ -2735,6 +2788,53 @@ Example</h3>
 <p>Returns <span class="tt">true</span> if the socket has successfully entered the listening state by calling the <span class="tt"><a class="el" href="#ga4780ea0cf2fb98d0081ed91d8dbecfa3" title="Marks the socket as a passive (listening) socket, ready to accept incoming TCP connection requests.">listen()</a></span> method, and is ready to accept new client connections. Returns <span class="tt">false</span> otherwise.</p>
 <p>This complements <span class="tt"><a class="el" href="#ga0b3a5cb732c669b678e03549e5af2427" title="Check if the server socket is bound to a local address.">isBound()</a></span>, which only tells you if the socket has been bound to a local address.</p>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if the socket is listening for connections, <span class="tt">false</span> otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="gad2b2992b358d3656a2e0d3e854c897bc" name="gad2b2992b358d3656a2e0d3e854c897bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad2b2992b358d3656a2e0d3e854c897bc">&#9670;&#160;</a></span>isOutputShutdown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::Socket::isOutputShutdown </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks whether the socket's output stream has been shutdown. </p>
+<p>Returns <span class="tt">true</span> if the socket has been explicitly shutdown for writing via <span class="tt">shutdown(ShutdownMode::Write)</span> or <span class="tt">shutdown(ShutdownMode::Both)</span>. After output shutdown:</p><ul>
+<li>All subsequent write operations will fail with a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
+<li>The system sends a FIN packet to the peer, indicating no more data will be sent.</li>
+</ul>
+<p>This method tracks shutdown state internally—it does <b>not</b> query the operating system, as no portable <span class="tt">getsockopt()</span> mechanism exists to detect output shutdown externally.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md615"></a>
+Use Cases</h3>
+<ul>
+<li>Enforcing proper protocol shutdown (e.g. sending EOF before receiving response).</li>
+<li>Avoiding invalid writes after intentionally shutting down output.</li>
+<li>Debugging and verifying application-level connection state.</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if the output (send) side of the socket has been shutdown; <span class="tt">false</span> otherwise.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a> </dd>
+<dd>
+<a class="el" href="#ga402fc4a398e670854cbb4edf791c1916" title="Checks whether the socket&#39;s input stream has been shutdown.">isInputShutdown()</a> </dd>
+<dd>
+<a class="el" href="#gab1e4f32614be9a3609820f75dbcb4fc2" title="Indicates whether the socket has been successfully connected to a remote host.">isConnected()</a> </dd>
+<dd>
+<a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write()</a>, <a class="el" href="#gad1803ae12c1562ec09c28d19c1067914" title="Writes the entire contents of a message to the socket, retrying as needed.">writeAll()</a>, <a class="el" href="#ga81f896d90e08fbfb1d63f1aabb21c970" title="Writes a length-prefixed payload using a fixed-size integral prefix.">writePrefixed()</a> </dd></dl>
 
 </div>
 </div>
@@ -3845,7 +3945,7 @@ Example Usage</h3>
 
 <p>Reads data from the socket into a user-supplied buffer. </p>
 <p>This method provides direct access to the socket's receive functionality by reading data into a caller-provided buffer. It supports both "best-effort" single reads and exact-length reads that ensure all requested bytes are received.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md614"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md616"></a>
 Modes of Operation</h3>
 <ul>
 <li><b>Best-effort mode</b> (exact=false):<ul>
@@ -3863,7 +3963,7 @@ Modes of Operation</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md615"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md617"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -3877,7 +3977,7 @@ Example Usage</h3>
 <div class="line">uint32_t length;</div>
 <div class="line">sock.readInto(&amp;length, <span class="keyword">sizeof</span>(length), <span class="keyword">true</span>);</div>
 <div class="line"><span class="comment">// Always reads exactly 4 bytes or throws</span></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md616"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md618"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses recv() internally for actual reads</li>
@@ -4500,6 +4600,42 @@ Example Usage</h3>
 <a class="el" href="#gaf4b83c97cc8ca1fd97b0b9dfaac533b0" title="Reads exactly the full contents of all buffers within a timeout.">readvAllWithTotalTimeout()</a> For complete delivery within a time budget </dd>
 <dd>
 <a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a> For timeout-related error details </dd></dl>
+
+</div>
+</div>
+<a id="ga41e5ecdf97be51a3a354429be87b12d0" name="ga41e5ecdf97be51a3a354429be87b12d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga41e5ecdf97be51a3a354429be87b12d0">&#9670;&#160;</a></span>resetShutdownFlags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jsocketpp::Socket::resetShutdownFlags </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Resets internal shutdown state flags to <span class="tt">false</span>. </p>
+<p>This method clears the internal flags that track whether the socket's input or output streams have been shutdown via <span class="tt">shutdown(ShutdownMode)</span>. It does <b>not</b> reopen or re-enable socket directions at the system level—it only resets the internal state used by <span class="tt"><a class="el" href="#ga402fc4a398e670854cbb4edf791c1916" title="Checks whether the socket&#39;s input stream has been shutdown.">isInputShutdown()</a></span> and <span class="tt"><a class="el" href="#gad2b2992b358d3656a2e0d3e854c897bc" title="Checks whether the socket&#39;s output stream has been shutdown.">isOutputShutdown()</a></span>.</p>
+<p>This method is useful when reinitializing or repurposing a <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> object after calling <span class="tt"><a class="el" href="#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a></span>, or when transferring ownership during a move assignment where shutdown state is no longer valid.</p>
+<dl class="section warning"><dt>Warning</dt><dd>This method does <b>not</b> call any OS-level functions like <span class="tt"><a class="el" href="#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a></span> or <span class="tt">setsockopt()</span>. It only resets internal bookkeeping flags.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This method is intended for internal use or advanced scenarios. Most users should not need to call this directly.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a> </dd>
+<dd>
+<a class="el" href="#ga402fc4a398e670854cbb4edf791c1916" title="Checks whether the socket&#39;s input stream has been shutdown.">isInputShutdown()</a> </dd>
+<dd>
+<a class="el" href="#gad2b2992b358d3656a2e0d3e854c897bc" title="Checks whether the socket&#39;s output stream has been shutdown.">isOutputShutdown()</a> </dd></dl>
 
 </div>
 </div>
