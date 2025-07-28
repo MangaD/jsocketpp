@@ -3224,63 +3224,6 @@ class Socket : public SocketOptions
     [[nodiscard]] bool getTcpNoDelay() const;
 
     /**
-     * @brief Enables or disables the SO_REUSEADDR socket option.
-     * @ingroup socketopts
-     *
-     * This option controls whether the socket is allowed to bind to a local address
-     * that is either already in use or in the `TIME_WAIT` state. Although most commonly
-     * used in server sockets, client sockets may also benefit in certain scenarios.
-     *
-     * ### Platform behavior:
-     * - **POSIX:** Allows multiple sockets to bind the same address and port, as long as
-     *   all use `SO_REUSEADDR`. This is especially useful for multicast or for clients that
-     *   bind to a fixed local port and reconnect frequently.
-     * - **Windows:** Allows rebinding to a port in `TIME_WAIT`, but **does not** allow multiple
-     *   concurrent binds to the same port.
-     *
-     * ### Use cases in client sockets:
-     * - Reconnecting P2P or UDP clients that bind to the same port repeatedly
-     * - Multicast receivers
-     * - High-performance test environments with rapid reconnect loops
-     *
-     * Internally, this calls:
-     * @code
-     * setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, ...)
-     * @endcode
-     *
-     * @param on If `true`, enables address reuse; if `false`, disables it.
-     *
-     * @throws SocketException if the socket option cannot be applied.
-     *
-     * @see getReuseAddress()
-     * @see bind()
-     */
-    void setReuseAddress(bool on);
-
-    /**
-     * @brief Queries whether SO_REUSEADDR is currently enabled on the socket.
-     * @ingroup socketopts
-     *
-     * This method retrieves the current state of the address reuse flag. When enabled,
-     * it relaxes restrictions on re-binding to local ports that are already in use
-     * or still in `TIME_WAIT`.
-     *
-     * ### Platform behavior:
-     * - **POSIX:** Multiple sockets can bind the same address/port if all use SO_REUSEADDR.
-     * - **Windows:** Only allows reuse if the previous socket is closed and in `TIME_WAIT`.
-     *
-     * This option is relevant for both client and server sockets in low-level networking
-     * scenarios such as multicast, reconnectable clients, or custom source-port binding.
-     *
-     * @return `true` if address reuse is enabled; `false` otherwise.
-     *
-     * @throws SocketException if the socket option cannot be retrieved.
-     *
-     * @see setReuseAddress(bool)
-     */
-    [[nodiscard]] bool getReuseAddress() const;
-
-    /**
      * @brief Enables or disables TCP keepalive behavior for the socket.
      * @ingroup tcp
      *

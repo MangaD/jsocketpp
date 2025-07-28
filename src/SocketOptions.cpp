@@ -53,4 +53,47 @@ int SocketOptions::getOption(const int level, const int optName) const
     return value;
 }
 
+// NOLINTNEXTLINE(readability-make-member-function-const) – modifies socket state
+void SocketOptions::setReuseAddress(bool on)
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException("setReuseAddress() failed: socket not open.");
+
+#ifdef _WIN32
+    if (isPassiveSocket())
+    {
+        // For listening sockets: disable exclusive use to allow reuse
+        const int value = on ? 0 : 1;
+        setOption(SOL_SOCKET, SO_EXCLUSIVEADDRUSE, value);
+    }
+    else
+    {
+        // For clients, UDP, Unix — use SO_REUSEADDR
+        setOption(SOL_SOCKET, SO_REUSEADDR, on ? 1 : 0);
+    }
+#else
+    setOption(SOL_SOCKET, SO_REUSEADDR, on ? 1 : 0);
+#endif
+}
+
+bool SocketOptions::getReuseAddress() const
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException("getReuseAddress() failed: socket not open.");
+
+#ifdef _WIN32
+    if (isPassiveSocket())
+    {
+        // Reuse is allowed if exclusive use is disabled
+        return getOption(SOL_SOCKET, SO_EXCLUSIVEADDRUSE) == 0;
+    }
+    else
+    {
+        return getOption(SOL_SOCKET, SO_REUSEADDR) != 0;
+    }
+#else
+    return getOption(SOL_SOCKET, SO_REUSEADDR) != 0;
+#endif
+}
+
 } // namespace jsocketpp

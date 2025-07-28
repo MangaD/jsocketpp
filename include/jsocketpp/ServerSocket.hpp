@@ -1092,76 +1092,6 @@ class ServerSocket : public SocketOptions
     [[nodiscard]] bool isClosed() const noexcept { return this->_serverSocket == INVALID_SOCKET; }
 
     /**
-     * @brief Returns the correct socket option constant for address reuse, depending on the platform.
-     *
-     * - On **Unix/Linux** platforms, this returns @c SO_REUSEADDR, which allows a socket to bind to a local
-     * address/port that is in the TIME_WAIT state. This is commonly used for servers that need to restart without
-     * waiting for TCP connections to fully time out.
-     *
-     * - On **Windows**, this returns @c SO_EXCLUSIVEADDRUSE, which provides safer server semantics: only one socket can
-     *   bind to a given address/port at a time, but it allows quick server restarts. Using @c SO_REUSEADDR on Windows
-     * has different (and less safe) behavior, potentially allowing multiple sockets to bind to the same port
-     * simultaneously, which is almost never what you want for TCP servers.
-     *
-     * @return The socket option to use with setsockopt() for configuring address reuse in a cross-platform way.
-     *
-     * @note This function should be used to select the correct socket option when calling setsockopt() in your server
-     * code. Typically, this option must be set before calling bind().
-     *
-     * @ingroup tcp
-     */
-    [[nodiscard]] static int getSocketReuseOption();
-
-    /**
-     * @brief Enable or disable address reuse for this server socket.
-     *
-     * When address reuse is enabled (`enable = true`), the server socket can bind to a local address/port even if
-     * a previous socket on that port is still in the TIME_WAIT state. This is useful for restarting servers
-     * without waiting for old sockets to time out.
-     *
-     * On UNIX-like systems, this sets the `SO_REUSEADDR` socket option. On Windows, it sets the equivalent option,
-     * `SO_EXCLUSIVEADDRUSE`.
-     *
-     * @warning This method must be called before calling bind(), and only once the socket has been created
-     * (i.e., after construction, before bind).
-     *
-     * @param[in] enable True to enable address reuse, false to disable (default OS behavior).
-     *
-     * @throws SocketException if setting the option fails (e.g., socket not open or system error).
-     *
-     * @note Improper use of address reuse can have security and protocol implications. For most server applications,
-     * enabling this is recommended. For advanced load-balancing, see also SO_REUSEPORT (not portable).
-     *
-     * @see https://man7.org/linux/man-pages/man7/socket.7.html
-     *
-     * @ingroup socketopts
-     */
-    void setReuseAddress(bool enable);
-
-    /**
-     * @brief Query whether the address reuse option is enabled on this server socket.
-     *
-     * This function checks whether the socket is currently configured to allow reuse of local addresses.
-     *
-     * - On UNIX-like systems, this checks the `SO_REUSEADDR` socket option.
-     * - On Windows, this checks `SO_EXCLUSIVEADDRUSE`, but note that this is semantically **opposite**:
-     *   enabling `SO_EXCLUSIVEADDRUSE` **disables** address reuse.
-     *
-     * @return `true` if address reuse is enabled (i.e., `SO_REUSEADDR` is set on UNIX-like systems or
-     * `SO_EXCLUSIVEADDRUSE` is unset on Windows); `false` otherwise.
-     *
-     * @throws SocketException if the socket is not valid or the option cannot be retrieved.
-     *
-     * @note This reflects the current state of the reuse flag, which may have been set manually or inherited
-     * from system defaults. Always call this *after* socket creation, and *before* `bind()` for accurate results.
-     *
-     * @see setReuseAddress()
-     *
-     * @ingroup socketopts
-     */
-    [[nodiscard]] bool getReuseAddress() const;
-
-    /**
      * @brief Set the server socket to non-blocking or blocking mode.
      *
      * When in non-blocking mode, the `accept()` call will return immediately if no connections are pending,
@@ -1505,6 +1435,32 @@ class ServerSocket : public SocketOptions
      * @ingroup tcp
      */
     void cleanupAndThrow(int errorCode);
+
+    /**
+     * @brief Identifies this socket as a passive (listening) socket.
+     * @ingroup socketopts
+     *
+     * Overrides the base `SocketOptions::isPassiveSocket()` to return `true`, indicating that
+     * this `ServerSocket` instance is intended to accept incoming connections rather than
+     * initiate outbound ones.
+     *
+     * This designation is important for platform-specific behaviors — particularly on Windows,
+     * where passive sockets use `SO_EXCLUSIVEADDRUSE` instead of `SO_REUSEADDR` to control
+     * address reuse semantics. The `SocketOptions` interface uses this signal to select the
+     * correct option and logic in `setReuseAddress()` and `getReuseAddress()`.
+     *
+     * ### When `true` matters
+     * - Enables use of `SO_EXCLUSIVEADDRUSE` on Windows
+     * - Prevents unsafe or misleading reuse logic on listening sockets
+     * - Helps unify reuse handling logic across all socket types in a central place
+     *
+     * @return Always returns `true` for `ServerSocket` to indicate passive socket behavior.
+     *
+     * @see SocketOptions::isPassiveSocket()
+     * @see SocketOptions::setReuseAddress()
+     * @see SocketOptions::getReuseAddress()
+     */
+    [[nodiscard]] bool isPassiveSocket() const noexcept override { return true; }
 
   private:
     /**

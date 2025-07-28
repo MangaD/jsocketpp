@@ -211,36 +211,6 @@ std::string ServerSocket::getLocalSocketAddress() const
     return std::string(host) + ":" + serv;
 }
 
-int ServerSocket::getSocketReuseOption()
-{
-#ifdef _WIN32
-    return SO_EXCLUSIVEADDRUSE; // Windows-specific
-#else
-    return SO_REUSEADDR; // Unix/Linux-specific
-#endif
-}
-
-// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
-void ServerSocket::setReuseAddress(const bool enable)
-{
-    setOption(SOL_SOCKET, getSocketReuseOption(), enable ? 1 : 0);
-}
-
-bool ServerSocket::getReuseAddress() const
-{
-    if (_serverSocket == INVALID_SOCKET)
-        throw SocketException("getReuseAddress() failed: socket not open.");
-
-    auto value = getOption(SOL_SOCKET, getSocketReuseOption());
-
-#ifdef _WIN32
-    // On Windows, SO_EXCLUSIVEADDRUSE is the opposite of SO_REUSEADDR
-    return value == 0; // If exclusive use is *not* set, reuse is allowed
-#else
-    return value != 0;
-#endif
-}
-
 ServerSocket::~ServerSocket() noexcept
 {
     try

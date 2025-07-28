@@ -222,13 +222,161 @@ class SocketOptions
      */
     [[nodiscard]] int getOption(int level, int optName) const;
 
+    /**
+     * @brief Enables or disables the `SO_REUSEADDR` socket option.
+     * @ingroup socketopts
+     *
+     * This option controls whether the socket is permitted to bind to a local address and port
+     * that is already in use or in the `TIME_WAIT` state. It is commonly used in both server
+     * and client contexts, and is applicable to TCP, UDP, and Unix domain sockets.
+     *
+     * Internally, this method invokes:
+     * @code
+     * setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, ...)
+     * @endcode
+     *
+     * ### Platform Behavior
+     * - **POSIX (Linux, BSD, macOS):**
+     *   - Permits multiple sockets to bind the same address/port as long as all use `SO_REUSEADDR`.
+     *   - Commonly used with multicast UDP, and for servers that need to restart quickly.
+     * - **Windows:**
+     *   - Allows rebinding to a port in `TIME_WAIT`, but does **not** allow simultaneous binds.
+     *   - Microsoft recommends `SO_EXCLUSIVEADDRUSE` for exclusive ownership, but `SO_REUSEADDR` works for most cases.
+     *
+     * ### Protocol Use Cases
+     * - **TCP Server Sockets**: Enables re-binding to a port immediately after shutdown.
+     * - **TCP Client Sockets**: Useful when binding to a fixed local port to reconnect rapidly.
+     * - **UDP Sockets**:
+     *   - Allows multiple sockets to bind to the same port, often required for multicast listeners.
+     *   - Useful in P2P setups where port reuse is desired across short-lived sessions.
+     * - **Unix Domain Sockets**:
+     *   - On some platforms, `SO_REUSEADDR` may be ignored or unnecessary for `AF_UNIX`, since
+     *     file system semantics already handle path reusability. However, setting it is harmless and may
+     *     be supported by your platform for consistency.
+     *
+     * ### Example
+     * @code
+     * socket.setReuseAddress(true); // Enable port/path reuse before calling bind()
+     * @endcode
+     *
+     * @warning This method must be called **after socket creation** and **before bind()**.
+     *          Improper use can lead to security issues or interference between applications.
+     *
+     * @param on If `true`, enables address reuse; if `false`, disables it.
+     *
+     * @throws SocketException if the socket is invalid or the option cannot be set.
+     *
+     * @see getReuseAddress()
+     * @see bind()
+     * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     */
+    void setReuseAddress(bool on);
+
+    /**
+     * @brief Queries whether the socket is currently configured to allow address reuse.
+     * @ingroup socketopts
+     *
+     * This method retrieves the state of the `SO_REUSEADDR` socket option using `getsockopt()`.
+     * When enabled, it allows the socket to bind to a local address/port that is already in use
+     * or still in the `TIME_WAIT` state. This is particularly useful in scenarios such as:
+     *
+     * - Restartable TCP servers that must rebind quickly
+     * - UDP or multicast receivers sharing the same port
+     * - Clients using fixed local ports across reconnects
+     *
+     * ### Platform Behavior
+     * - **POSIX:** Multiple sockets can bind the same local address/port if all use `SO_REUSEADDR`.
+     * - **Windows:** `SO_REUSEADDR` allows rebinding to a port in `TIME_WAIT`, but does **not**
+     *   allow simultaneous binds. Additionally, `SO_EXCLUSIVEADDRUSE` is enabled by default
+     *   and disables reuse — this method reflects the effective state of `SO_REUSEADDR`, not
+     *   `SO_EXCLUSIVEADDRUSE`.
+     *
+     * ### Protocol Applicability
+     * - **TCP:** Useful for both client and server sockets.
+     * - **UDP:** Required for multicast and shared-port scenarios.
+     * - **Unix domain sockets:** `SO_REUSEADDR` may be supported but is typically a no-op;
+     *   Unix path conflicts are governed by the file system.
+     *
+     * ### Example
+     * @code
+     * if (!socket.getReuseAddress()) {
+     *     socket.setReuseAddress(true);
+     * }
+     * @endcode
+     *
+     * @return `true` if address reuse is currently enabled; `false` otherwise.
+     *
+     * @throws SocketException if the socket is invalid or the option cannot be retrieved.
+     *
+     * @note Always call this after socket creation and before `bind()` to ensure valid results.
+     *
+     * @see setReuseAddress()
+     * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     */
+    [[nodiscard]] bool getReuseAddress() const;
+
   protected:
     /**
-     * @brief Update the socket descriptor used by this object.
+     * @brief Updates the socket descriptor used by this object.
      * @ingroup socketopts
-     * @param sock New socket file descriptor.
+     *
+     * This method sets the internal socket file descriptor used by the `SocketOptions` interface.
+     * It is typically called by derived classes after the socket has been moved, reassigned, or
+     * otherwise changed during the object's lifetime.
+     *
+     * This does **not** open, close, or validate the socket descriptor. It simply updates the
+     * internal `_sockFd` used by methods such as `setOption()` and `getOption()`.
+     *
+     * ### When to Use
+     * - After a move constructor or move assignment updates the underlying socket
+     * - After explicitly re-binding or re-creating a socket file descriptor
+     * - When adapting an externally provided descriptor (e.g., from `accept()` or `socketpair()`)
+     *
+     * ### Example: Move assignment
+     * @code
+     * _sockFd = rhs._sockFd;
+     * setSocketFd(_sockFd); // keeps SocketOptions base class in sync
+     * @endcode
+     *
+     * @param sock The new socket file descriptor to associate with this object. May be `INVALID_SOCKET`
+     *             to mark the socket as uninitialized or closed.
+     *
+     * @note This method does not perform error checking. It is the caller's responsibility to ensure
+     *       the provided descriptor is valid and consistent with the derived class state.
+     *
+     * @see getOption()
+     * @see setOption()
+     * @see SocketOptions
      */
     void setSocketFd(const SOCKET sock) noexcept { _sockFd = sock; }
+
+    /**
+     * @brief Indicates whether the socket behaves as a passive (listening) socket.
+     * @ingroup socketopts
+     *
+     * This virtual method is used internally by the `SocketOptions` interface to determine whether
+     * the socket is operating in a *passive role* — that is, it is a listening socket typically created
+     * by a server to accept incoming connections. This distinction is particularly relevant on platforms
+     * like Windows, where different socket options apply to passive vs. active sockets.
+     *
+     * Specifically, this affects how address reuse logic is applied:
+     * - On Windows, `SO_EXCLUSIVEADDRUSE` is used for passive sockets to control port reuse semantics.
+     * - On POSIX systems, all sockets use `SO_REUSEADDR`, but server sockets may still follow different best practices.
+     *
+     * ### Usage
+     * - Override this method in subclasses like `ServerSocket` to return `true`.
+     * - Leave it as `false` (default) in client sockets, UDP sockets, or Unix domain sockets.
+     *
+     * @return `true` if the socket is used in a listening or acceptor role; `false` otherwise.
+     *
+     * @note This method has no direct side effects. It exists purely to guide conditional logic in reusable
+     *       base class operations such as `setReuseAddress()` and `getReuseAddress()`.
+     *
+     * @see setReuseAddress()
+     * @see getReuseAddress()
+     * @see ServerSocket
+     */
+    [[nodiscard]] virtual bool isPassiveSocket() const noexcept { return false; }
 
   private:
     SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor
