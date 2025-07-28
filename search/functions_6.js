@@ -24,16 +24,15 @@ var searchData=
   ['getremoteip_21',['getRemoteIp',['../group__tcp.html#ga273e2d4847b5407bb8eef56d9e88996e',1,'jsocketpp::Socket']]],
   ['getremoteport_22',['getRemotePort',['../group__tcp.html#ga2840142258bae9535c6421d6cd3dce1c',1,'jsocketpp::Socket']]],
   ['getremotesocketaddress_23',['getRemoteSocketAddress',['../group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc',1,'jsocketpp::Socket']]],
-  ['getreuseaddress_24',['getReuseAddress',['../group__socketopts.html#ga663e3d90aa82f14c2db9a16e3e5b3525',1,'jsocketpp::ServerSocket::getReuseAddress()'],['../group__socketopts.html#ga440e7ee9303d454df0c51fe6125cd2af',1,'jsocketpp::Socket::getReuseAddress()']]],
+  ['getreuseaddress_24',['getReuseAddress',['../group__socketopts.html#ga8e8783ada3142cd6c3b275e01b7b12f2',1,'jsocketpp::SocketOptions']]],
   ['getreuseport_25',['getReusePort',['../group__tcp.html#ga7c00ace5b0756299ea0cbd77074e856d',1,'jsocketpp::ServerSocket']]],
   ['getsendbuffersize_26',['getSendBufferSize',['../group__socketopts.html#gacb2d3979ff562c2ffd60b12a1b4c9897',1,'jsocketpp::Socket']]],
   ['getsocketerror_27',['GetSocketError',['../namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad',1,'jsocketpp']]],
   ['getsocketpath_28',['getSocketPath',['../classjsocketpp_1_1UnixSocket.html#a7595a11516389b7690e3f387d999b01c',1,'jsocketpp::UnixSocket']]],
-  ['getsocketreuseoption_29',['getSocketReuseOption',['../group__tcp.html#gaf54c5a60a2d403df50674c261e86fbd5',1,'jsocketpp::ServerSocket']]],
-  ['getsolinger_30',['getSoLinger',['../group__socketopts.html#ga1734c9ec9ae9c7dacf616fadc3b5f1cb',1,'jsocketpp::Socket']]],
-  ['getsorecvtimeout_31',['getSoRecvTimeout',['../group__socketopts.html#gaaf45a79f9c216e52bd1593e4bdf8a334',1,'jsocketpp::Socket']]],
-  ['getsosendtimeout_32',['getSoSendTimeout',['../group__socketopts.html#gab372986b4384867b48e82922aa2e1cbd',1,'jsocketpp::Socket']]],
-  ['getsotimeout_33',['getSoTimeout',['../group__socketopts.html#ga7829c558cb7bf5e0a46d882df82acc19',1,'jsocketpp::ServerSocket']]],
-  ['gettcpnodelay_34',['getTcpNoDelay',['../group__socketopts.html#ga2539928ed0829df5070384f907ea48f7',1,'jsocketpp::Socket']]],
-  ['gettimetolive_35',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]]
+  ['getsolinger_29',['getSoLinger',['../group__socketopts.html#ga1734c9ec9ae9c7dacf616fadc3b5f1cb',1,'jsocketpp::Socket']]],
+  ['getsorecvtimeout_30',['getSoRecvTimeout',['../group__socketopts.html#gaaf45a79f9c216e52bd1593e4bdf8a334',1,'jsocketpp::Socket']]],
+  ['getsosendtimeout_31',['getSoSendTimeout',['../group__socketopts.html#gab372986b4384867b48e82922aa2e1cbd',1,'jsocketpp::Socket']]],
+  ['getsotimeout_32',['getSoTimeout',['../group__socketopts.html#ga7829c558cb7bf5e0a46d882df82acc19',1,'jsocketpp::ServerSocket']]],
+  ['gettcpnodelay_33',['getTcpNoDelay',['../group__socketopts.html#ga2539928ed0829df5070384f907ea48f7',1,'jsocketpp::Socket']]],
+  ['gettimetolive_34',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]]
 ];

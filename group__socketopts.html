@@ -106,10 +106,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga32d53c151cb8b7aecc8da81f9e9aa1b6" id="r_ga32d53c151cb8b7aecc8da81f9e9aa1b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga32d53c151cb8b7aecc8da81f9e9aa1b6">jsocketpp::ServerSocket::setReuseAddress</a> (bool enable)</td></tr>
-<tr class="memdesc:ga32d53c151cb8b7aecc8da81f9e9aa1b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable address reuse for this server socket.  <br /></td></tr>
-<tr class="memitem:ga663e3d90aa82f14c2db9a16e3e5b3525" id="r_ga663e3d90aa82f14c2db9a16e3e5b3525"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga663e3d90aa82f14c2db9a16e3e5b3525">jsocketpp::ServerSocket::getReuseAddress</a> () const</td></tr>
-<tr class="memdesc:ga663e3d90aa82f14c2db9a16e3e5b3525"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether the address reuse option is enabled on this server socket.  <br /></td></tr>
 <tr class="memitem:ga6da405f0212b736e027c7d2e16222b44" id="r_ga6da405f0212b736e027c7d2e16222b44"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6da405f0212b736e027c7d2e16222b44">jsocketpp::ServerSocket::setNonBlocking</a> (bool nonBlocking)</td></tr>
 <tr class="memdesc:ga6da405f0212b736e027c7d2e16222b44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the server socket to non-blocking or blocking mode.  <br /></td></tr>
 <tr class="memitem:ga36a682afc71359dc6889357bf7394b70" id="r_ga36a682afc71359dc6889357bf7394b70"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga36a682afc71359dc6889357bf7394b70">jsocketpp::ServerSocket::getNonBlocking</a> () const</td></tr>
@@ -118,6 +114,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga2087f337f22de16821132208b94b1441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the logical timeout (in milliseconds) for accepting client connections.  <br /></td></tr>
 <tr class="memitem:ga7829c558cb7bf5e0a46d882df82acc19" id="r_ga7829c558cb7bf5e0a46d882df82acc19"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19">jsocketpp::ServerSocket::getSoTimeout</a> () const noexcept</td></tr>
 <tr class="memdesc:ga7829c558cb7bf5e0a46d882df82acc19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the logical timeout (in milliseconds) for accept operations.  <br /></td></tr>
+<tr class="memitem:gad113886a7cc6100e5ef2c25ea504696e" id="r_gad113886a7cc6100e5ef2c25ea504696e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad113886a7cc6100e5ef2c25ea504696e">jsocketpp::ServerSocket::isPassiveSocket</a> () const noexcept override</td></tr>
+<tr class="memdesc:gad113886a7cc6100e5ef2c25ea504696e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies this socket as a passive (listening) socket.  <br /></td></tr>
 <tr class="memitem:ga0539576a97fe792c9cb67b8aee26477b" id="r_ga0539576a97fe792c9cb67b8aee26477b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b">jsocketpp::Socket::setReceiveBufferSize</a> (std::size_t size)</td></tr>
 <tr class="memdesc:ga0539576a97fe792c9cb67b8aee26477b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
 <tr class="memitem:ga243562caf78f87e481f657e26c59e1f0" id="r_ga243562caf78f87e481f657e26c59e1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga243562caf78f87e481f657e26c59e1f0">jsocketpp::Socket::setSendBufferSize</a> (std::size_t size)</td></tr>
@@ -142,10 +140,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:gac3c6f8848ff049eb3e31b4fe190dd624"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket.  <br /></td></tr>
 <tr class="memitem:ga2539928ed0829df5070384f907ea48f7" id="r_ga2539928ed0829df5070384f907ea48f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2539928ed0829df5070384f907ea48f7">jsocketpp::Socket::getTcpNoDelay</a> () const</td></tr>
 <tr class="memdesc:ga2539928ed0829df5070384f907ea48f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether TCP_NODELAY (Nagle's algorithm) is currently disabled.  <br /></td></tr>
-<tr class="memitem:ga5a0b2e189e91b53d7e5223d47eadffe3" id="r_ga5a0b2e189e91b53d7e5223d47eadffe3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5a0b2e189e91b53d7e5223d47eadffe3">jsocketpp::Socket::setReuseAddress</a> (bool on)</td></tr>
-<tr class="memdesc:ga5a0b2e189e91b53d7e5223d47eadffe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the SO_REUSEADDR socket option.  <br /></td></tr>
-<tr class="memitem:ga440e7ee9303d454df0c51fe6125cd2af" id="r_ga440e7ee9303d454df0c51fe6125cd2af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga440e7ee9303d454df0c51fe6125cd2af">jsocketpp::Socket::getReuseAddress</a> () const</td></tr>
-<tr class="memdesc:ga440e7ee9303d454df0c51fe6125cd2af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether SO_REUSEADDR is currently enabled on the socket.  <br /></td></tr>
 <tr class="memitem:gab6fea2ad1b8aac819f3726ab8846527b" id="r_gab6fea2ad1b8aac819f3726ab8846527b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab6fea2ad1b8aac819f3726ab8846527b">jsocketpp::SocketOptions::SocketOptions</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
 <tr class="memdesc:gab6fea2ad1b8aac819f3726ab8846527b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the socket option interface with a specific socket descriptor.  <br /></td></tr>
 <tr class="memitem:ga74663905817ec41a5b3a7f3d7a16550d" id="r_ga74663905817ec41a5b3a7f3d7a16550d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga74663905817ec41a5b3a7f3d7a16550d">jsocketpp::SocketOptions::~SocketOptions</a> ()=default</td></tr>
@@ -154,8 +148,14 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga1b7061a0f4d13e8d33d3065b8ad4998b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a low-level socket option on the underlying socket.  <br /></td></tr>
 <tr class="memitem:ga6a5264b995eb2a1143f45c5de6ad92c3" id="r_ga6a5264b995eb2a1143f45c5de6ad92c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3">jsocketpp::SocketOptions::getOption</a> (int level, int optName) const</td></tr>
 <tr class="memdesc:ga6a5264b995eb2a1143f45c5de6ad92c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current value of a low-level socket option.  <br /></td></tr>
+<tr class="memitem:gab358ea7ed49e95717b1e9438251b3d9a" id="r_gab358ea7ed49e95717b1e9438251b3d9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab358ea7ed49e95717b1e9438251b3d9a">jsocketpp::SocketOptions::setReuseAddress</a> (bool on)</td></tr>
+<tr class="memdesc:gab358ea7ed49e95717b1e9438251b3d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the <span class="tt">SO_REUSEADDR</span> socket option.  <br /></td></tr>
+<tr class="memitem:ga8e8783ada3142cd6c3b275e01b7b12f2" id="r_ga8e8783ada3142cd6c3b275e01b7b12f2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8e8783ada3142cd6c3b275e01b7b12f2">jsocketpp::SocketOptions::getReuseAddress</a> () const</td></tr>
+<tr class="memdesc:ga8e8783ada3142cd6c3b275e01b7b12f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the socket is currently configured to allow address reuse.  <br /></td></tr>
 <tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
-<tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the socket descriptor used by this object.  <br /></td></tr>
+<tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the socket descriptor used by this object.  <br /></td></tr>
+<tr class="memitem:gaace6c3364b4016979537571b36c58727" id="r_gaace6c3364b4016979537571b36c58727"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaace6c3364b4016979537571b36c58727">jsocketpp::SocketOptions::isPassiveSocket</a> () const noexcept</td></tr>
+<tr class="memdesc:gaace6c3364b4016979537571b36c58727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the socket behaves as a passive (listening) socket.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Low-level socket configuration options exposed via the <span class="tt">Socket</span> and related classes. </p>
@@ -230,11 +230,11 @@ Functions</h2></td></tr>
 <p>Retrieves the current value of a low-level socket option. </p>
 <p>This method queries the current value of a socket option via <span class="tt">getsockopt()</span> on the underlying socket descriptor. It is useful for verifying runtime socket configuration, inspecting platform defaults, and performing conditional logic based on system-level state.</p>
 <p>This interface applies uniformly across all socket types (e.g., <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>) and supports standard protocol levels and option names.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md632"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md630"></a>
 Example: Read the configured receive buffer size</h3>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> rcvBuf = socket.getOption(SOL_SOCKET, SO_RCVBUF);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md634"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md632"></a>
 ⚠️ ServerSocket-specific Notes</h3>
 <ul>
 <li><span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> returns the value of the option as applied to the <b>listening socket only</b>.</li>
@@ -242,18 +242,18 @@ Example: Read the configured receive buffer size</h3>
 <li>To inspect options for a client connection, call <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> on the accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> returned by <span class="tt">accept()</span>.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md636"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md634"></a>
 📡 DatagramSocket-specific Notes</h3>
 <ul>
 <li>Use <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> to inspect options like buffer sizes (<span class="tt">SO_RCVBUF</span>, <span class="tt">SO_SNDBUF</span>) and timeouts (<span class="tt">SO_RCVTIMEO</span>, <span class="tt">SO_SNDTIMEO</span>) for diagnostic or tuning purposes.</li>
 <li>On broadcast-enabled sockets (<span class="tt">SO_BROADCAST</span>), this method can verify that the option was set successfully.</li>
 <li>Behavior is the same whether the socket is connected or unconnected.</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md637"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md635"></a>
 Example: Get current timeout for receiving</h4>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> timeout = datagramSocket.getOption(SOL_SOCKET, SO_RCVTIMEO);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md639"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md637"></a>
 🧿 UnixSocket-specific Notes</h3>
 <ul>
 <li>Although Unix domain sockets are local, many <span class="tt">SOL_SOCKET</span> options are still supported and report useful values:<ul>
@@ -264,7 +264,7 @@ Example: Get current timeout for receiving</h4>
 </li>
 <li>This method is particularly useful for debugging IPC performance characteristics.</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md640"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md638"></a>
 Example: Read the actual receive buffer size used for a Unix socket</h4>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> size = unixSocket.getOption(SOL_SOCKET, SO_RCVBUF);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
@@ -312,7 +312,7 @@ Example: Read the actual receive buffer size used for a Unix socket</h4>
 
 <p>Get the socket's receive buffer size (SO_RCVBUF). </p>
 <p>Retrieves the current size of the operating system's receive buffer for this socket. The receive buffer is used by the OS to store incoming data before it is read by the application. A larger buffer can help prevent data loss during high-bandwidth transfers or when the application cannot read data quickly enough.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md579"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md580"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses getsockopt() with SO_RCVBUF option</li>
@@ -320,7 +320,7 @@ Implementation Details</h3>
 <li>On Linux, returned value may be twice the requested size due to kernel overhead</li>
 <li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md580"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md581"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -356,8 +356,8 @@ Example Usage</h3>
 
 </div>
 </div>
-<a id="ga663e3d90aa82f14c2db9a16e3e5b3525" name="ga663e3d90aa82f14c2db9a16e3e5b3525"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga663e3d90aa82f14c2db9a16e3e5b3525">&#9670;&#160;</a></span>getReuseAddress() <span class="overload">[1/2]</span></h2>
+<a id="ga8e8783ada3142cd6c3b275e01b7b12f2" name="ga8e8783ada3142cd6c3b275e01b7b12f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8e8783ada3142cd6c3b275e01b7b12f2">&#9670;&#160;</a></span>getReuseAddress()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -366,7 +366,7 @@ Example Usage</h3>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool ServerSocket::getReuseAddress </td>
+          <td class="memname">bool jsocketpp::SocketOptions::getReuseAddress </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -379,64 +379,42 @@ Example Usage</h3>
 </table>
 </div><div class="memdoc">
 
-<p>Query whether the address reuse option is enabled on this server socket. </p>
-<p>This function checks whether the socket is currently configured to allow reuse of local addresses.</p>
+<p>Queries whether the socket is currently configured to allow address reuse. </p>
+<p>This method retrieves the state of the <span class="tt">SO_REUSEADDR</span> socket option using <span class="tt">getsockopt()</span>. When enabled, it allows the socket to bind to a local address/port that is already in use or still in the <span class="tt">TIME_WAIT</span> state. This is particularly useful in scenarios such as:</p>
 <ul>
-<li>On UNIX-like systems, this checks the <span class="tt">SO_REUSEADDR</span> socket option.</li>
-<li>On Windows, this checks <span class="tt">SO_EXCLUSIVEADDRUSE</span>, but note that this is semantically <b>opposite</b>: enabling <span class="tt">SO_EXCLUSIVEADDRUSE</span> <b>disables</b> address reuse.</li>
+<li>Restartable TCP servers that must rebind quickly</li>
+<li>UDP or multicast receivers sharing the same port</li>
+<li>Clients using fixed local ports across reconnects</li>
 </ul>
-<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if address reuse is enabled (i.e., <span class="tt">SO_REUSEADDR</span> is set on UNIX-like systems or <span class="tt">SO_EXCLUSIVEADDRUSE</span> is unset on Windows); <span class="tt">false</span> otherwise.</dd></dl>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md642"></a>
+Platform Behavior</h3>
+<ul>
+<li><b>POSIX:</b> Multiple sockets can bind the same local address/port if all use <span class="tt">SO_REUSEADDR</span>.</li>
+<li><b>Windows:</b> <span class="tt">SO_REUSEADDR</span> allows rebinding to a port in <span class="tt">TIME_WAIT</span>, but does <b>not</b> allow simultaneous binds. Additionally, <span class="tt">SO_EXCLUSIVEADDRUSE</span> is enabled by default and disables reuse — this method reflects the effective state of <span class="tt">SO_REUSEADDR</span>, not <span class="tt">SO_EXCLUSIVEADDRUSE</span>.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md643"></a>
+Protocol Applicability</h3>
+<ul>
+<li><b>TCP:</b> Useful for both client and server sockets.</li>
+<li><b>UDP:</b> Required for multicast and shared-port scenarios.</li>
+<li><b>Unix domain sockets:</b> <span class="tt">SO_REUSEADDR</span> may be supported but is typically a no-op; Unix path conflicts are governed by the file system.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md644"></a>
+Example</h3>
+<div class="fragment"><div class="line"><span class="keywordflow">if</span> (!socket.getReuseAddress()) {</div>
+<div class="line">    socket.setReuseAddress(<span class="keyword">true</span>);</div>
+<div class="line">}</div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if address reuse is currently enabled; <span class="tt">false</span> otherwise.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is not valid or the option cannot be retrieved.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is invalid or the option cannot be retrieved.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>This reflects the current state of the reuse flag, which may have been set manually or inherited from system defaults. Always call this <em>after</em> socket creation, and <em>before</em> <span class="tt"><a class="el" href="group__tcp.html#ga1ca989ba16d32862dd4fa9bbb2b165b5" title="Binds the server socket to the configured port and network interface.">bind()</a></span> for accurate results.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga32d53c151cb8b7aecc8da81f9e9aa1b6" title="Enable or disable address reuse for this server socket.">setReuseAddress()</a> </dd></dl>
-
-</div>
-</div>
-<a id="ga440e7ee9303d454df0c51fe6125cd2af" name="ga440e7ee9303d454df0c51fe6125cd2af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga440e7ee9303d454df0c51fe6125cd2af">&#9670;&#160;</a></span>getReuseAddress() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Socket::getReuseAddress </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Queries whether SO_REUSEADDR is currently enabled on the socket. </p>
-<p>This method retrieves the current state of the address reuse flag. When enabled, it relaxes restrictions on re-binding to local ports that are already in use or still in <span class="tt">TIME_WAIT</span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md607"></a>
-Platform behavior:</h3>
-<ul>
-<li><b>POSIX:</b> Multiple sockets can bind the same address/port if all use SO_REUSEADDR.</li>
-<li><b>Windows:</b> Only allows reuse if the previous socket is closed and in <span class="tt">TIME_WAIT</span>.</li>
-</ul>
-<p>This option is relevant for both client and server sockets in low-level networking scenarios such as multicast, reconnectable clients, or custom source-port binding.</p>
-<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if address reuse is enabled; <span class="tt">false</span> otherwise.</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket option cannot be retrieved.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga5a0b2e189e91b53d7e5223d47eadffe3" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress(bool)</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Always call this after socket creation and before <span class="tt">bind()</span> to ensure valid results.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gab358ea7ed49e95717b1e9438251b3d9a" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress()</a> </dd>
+<dd>
+<a href="https://man7.org/linux/man-pages/man7/socket.7.html">https://man7.org/linux/man-pages/man7/socket.7.html</a> </dd></dl>
 
 </div>
 </div>
@@ -465,7 +443,7 @@ Platform behavior:</h3>
 
 <p>Get the socket's send buffer size (SO_SNDBUF). </p>
 <p>Retrieves the current size of the operating system's send buffer for this socket. The send buffer is used by the OS to store outgoing data before it is transmitted over the network. A larger buffer can help improve performance during high-bandwidth transfers or when the network is temporarily congested.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md581"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md582"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses getsockopt() with SO_SNDBUF option</li>
@@ -473,7 +451,7 @@ Implementation Details</h3>
 <li>On Linux, returned value may be twice the requested size due to kernel overhead</li>
 <li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md582"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md583"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -538,7 +516,7 @@ Example Usage</h3>
   </dd>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga895f76bf9c4745fc20074ef2491b02be" title="Configures the socket&#39;s linger behavior (SO_LINGER) on close.">setSoLinger()</a></dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md600"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md601"></a>
 📌 Use Cases</h3>
 <ul>
 <li><b>Inspecting socket shutdown behavior</b>: Knowing whether the socket is in blocking close mode is helpful for debugging or optimizing teardown.</li>
@@ -574,7 +552,7 @@ Example Usage</h3>
 <li>On <b>Windows</b>, the timeout is stored as an <span class="tt">int</span> (milliseconds).</li>
 <li>On <b>POSIX</b>, the timeout is stored as a <span class="tt">timeval</span> and converted into milliseconds.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md595"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md596"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 9000);</div>
 <div class="line">sock.connect();</div>
@@ -620,7 +598,7 @@ Example Usage</h3>
 <li>On <b>Windows</b>, the timeout is returned directly as an integer (milliseconds).</li>
 <li>On <b>POSIX</b>, it reads a <span class="tt">timeval</span> structure and converts the result to milliseconds.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md596"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md597"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
 <div class="line">sock.connect();</div>
@@ -718,6 +696,97 @@ Example Usage</h3>
 
 </div>
 </div>
+<a id="gad113886a7cc6100e5ef2c25ea504696e" name="gad113886a7cc6100e5ef2c25ea504696e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad113886a7cc6100e5ef2c25ea504696e">&#9670;&#160;</a></span>isPassiveSocket() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::ServerSocket::isPassiveSocket </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Identifies this socket as a passive (listening) socket. </p>
+<p>Overrides the base <span class="tt"><a class="el" href="#gaace6c3364b4016979537571b36c58727" title="Indicates whether the socket behaves as a passive (listening) socket.">SocketOptions::isPassiveSocket()</a></span> to return <span class="tt">true</span>, indicating that this <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> instance is intended to accept incoming connections rather than initiate outbound ones.</p>
+<p>This designation is important for platform-specific behaviors — particularly on Windows, where passive sockets use <span class="tt">SO_EXCLUSIVEADDRUSE</span> instead of <span class="tt">SO_REUSEADDR</span> to control address reuse semantics. The <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> interface uses this signal to select the correct option and logic in <span class="tt"><a class="el" href="#gab358ea7ed49e95717b1e9438251b3d9a" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress()</a></span> and <span class="tt"><a class="el" href="#ga8e8783ada3142cd6c3b275e01b7b12f2" title="Queries whether the socket is currently configured to allow address reuse.">getReuseAddress()</a></span>.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md487"></a>
+When <span class="tt">true</span> matters</h3>
+<ul>
+<li>Enables use of <span class="tt">SO_EXCLUSIVEADDRUSE</span> on Windows</li>
+<li>Prevents unsafe or misleading reuse logic on listening sockets</li>
+<li>Helps unify reuse handling logic across all socket types in a central place</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd>Always returns <span class="tt">true</span> for <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> to indicate passive socket behavior.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaace6c3364b4016979537571b36c58727" title="Indicates whether the socket behaves as a passive (listening) socket.">SocketOptions::isPassiveSocket()</a> </dd>
+<dd>
+<a class="el" href="#gab358ea7ed49e95717b1e9438251b3d9a" title="Enables or disables the SO_REUSEADDR socket option.">SocketOptions::setReuseAddress()</a> </dd>
+<dd>
+<a class="el" href="#ga8e8783ada3142cd6c3b275e01b7b12f2" title="Queries whether the socket is currently configured to allow address reuse.">SocketOptions::getReuseAddress()</a> </dd></dl>
+
+<p>Reimplemented from <a class="el" href="#gaace6c3364b4016979537571b36c58727">jsocketpp::SocketOptions</a>.</p>
+
+</div>
+</div>
+<a id="gaace6c3364b4016979537571b36c58727" name="gaace6c3364b4016979537571b36c58727"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaace6c3364b4016979537571b36c58727">&#9670;&#160;</a></span>isPassiveSocket() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool jsocketpp::SocketOptions::isPassiveSocket </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Indicates whether the socket behaves as a passive (listening) socket. </p>
+<p>This virtual method is used internally by the <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> interface to determine whether the socket is operating in a <em>passive role</em> — that is, it is a listening socket typically created by a server to accept incoming connections. This distinction is particularly relevant on platforms like Windows, where different socket options apply to passive vs. active sockets.</p>
+<p>Specifically, this affects how address reuse logic is applied:</p><ul>
+<li>On Windows, <span class="tt">SO_EXCLUSIVEADDRUSE</span> is used for passive sockets to control port reuse semantics.</li>
+<li>On POSIX systems, all sockets use <span class="tt">SO_REUSEADDR</span>, but server sockets may still follow different best practices.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md647"></a>
+Usage</h3>
+<ul>
+<li>Override this method in subclasses like <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> to return <span class="tt">true</span>.</li>
+<li>Leave it as <span class="tt">false</span> (default) in client sockets, UDP sockets, or Unix domain sockets.</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if the socket is used in a listening or acceptor role; <span class="tt">false</span> otherwise.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This method has no direct side effects. It exists purely to guide conditional logic in reusable base class operations such as <span class="tt"><a class="el" href="#gab358ea7ed49e95717b1e9438251b3d9a" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress()</a></span> and <span class="tt"><a class="el" href="#ga8e8783ada3142cd6c3b275e01b7b12f2" title="Queries whether the socket is currently configured to allow address reuse.">getReuseAddress()</a></span>.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gab358ea7ed49e95717b1e9438251b3d9a" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress()</a> </dd>
+<dd>
+<a class="el" href="#ga8e8783ada3142cd6c3b275e01b7b12f2" title="Queries whether the socket is currently configured to allow address reuse.">getReuseAddress()</a> </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> </dd></dl>
+
+<p>Reimplemented in <a class="el" href="#gad113886a7cc6100e5ef2c25ea504696e">jsocketpp::ServerSocket</a>.</p>
+
+</div>
+</div>
 <a id="ga6da405f0212b736e027c7d2e16222b44" name="ga6da405f0212b736e027c7d2e16222b44"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga6da405f0212b736e027c7d2e16222b44">&#9670;&#160;</a></span>setNonBlocking()</h2>
 
@@ -786,20 +855,20 @@ Example Usage</h3>
 <li>Enabling/disabling keepalive (<span class="tt">SO_KEEPALIVE</span>)</li>
 <li>Disabling Nagle’s algorithm for latency-sensitive TCP (<span class="tt">TCP_NODELAY</span>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md624"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md622"></a>
 ⚠️ ServerSocket-specific Notes</h3>
 <ul>
 <li>Setting options on a <b>listening socket</b> (e.g., <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>) only affects that socket, not the client sockets returned by <span class="tt">accept()</span>. Per-connection tuning must be applied to each accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>.</li>
 <li>Not all options are meaningful on passive (listening) sockets. Invalid combinations may result in <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> or system errors.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md625"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md623"></a>
 Example: Enable port reuse (recommended for servers)</h3>
 <div class="fragment"><div class="line">serverSocket.setOption(SOL_SOCKET, SO_REUSEADDR, 1);</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md626"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md624"></a>
 Example: Disable Nagle’s algorithm (for latency-sensitive clients)</h3>
 <div class="fragment"><div class="line">socket.setOption(IPPROTO_TCP, TCP_NODELAY, 1);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md628"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md626"></a>
 📡 DatagramSocket-specific Notes</h3>
 <ul>
 <li>You can use this method to enable <b>broadcast mode</b> (<span class="tt">SO_BROADCAST</span>) or adjust buffer sizes for high-throughput UDP workloads.</li>
@@ -807,10 +876,10 @@ Example: Disable Nagle’s algorithm (for latency-sensitive clients)</h3>
 <li>For unconnected UDP sockets, option changes affect all outgoing/incoming packets.</li>
 <li>For connected UDP sockets, the changes affect only the single destination connection.</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md629"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md627"></a>
 Example: Enable broadcast for a datagram socket</h4>
 <div class="fragment"><div class="line">datagramSocket.setOption(SOL_SOCKET, SO_BROADCAST, 1);</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md630"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md628"></a>
 🧿 UnixSocket-specific Notes</h3>
 <ul>
 <li>Although Unix domain sockets are local and do not use TCP/IP, many <span class="tt">SOL_SOCKET</span> options still apply:<ul>
@@ -821,7 +890,7 @@ Example: Enable broadcast for a datagram socket</h4>
 </li>
 <li>Options like <span class="tt">TCP_NODELAY</span> and <span class="tt">SO_KEEPALIVE</span> do not apply to Unix sockets.</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md631"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md629"></a>
 Example: Set a larger send buffer for inter-process communication</h4>
 <div class="fragment"><div class="line">unixSocket.setOption(SOL_SOCKET, SO_SNDBUF, 65536);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
@@ -861,7 +930,7 @@ Example: Set a larger send buffer for inter-process communication</h4>
 
 <p>Sets the socket's receive buffer size (SO_RCVBUF). </p>
 <p>Configures the size of the operating system's receive buffer for this socket. A larger buffer can improve performance for high-bandwidth connections by allowing the system to buffer more incoming data, reducing the risk of packet loss during temporary processing delays.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md575"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md576"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses setsockopt() with SO_RCVBUF option to set kernel socket buffer size</li>
@@ -874,7 +943,7 @@ Implementation Details</h3>
 <li>Changes affect subsequent receives only, not data already in the buffer</li>
 <li>System limits may constrain maximum size based on available memory and OS policy</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md576"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md577"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
 <div class="line"> </div>
@@ -911,50 +980,14 @@ Example Usage</h3>
 
 </div>
 </div>
-<a id="ga32d53c151cb8b7aecc8da81f9e9aa1b6" name="ga32d53c151cb8b7aecc8da81f9e9aa1b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga32d53c151cb8b7aecc8da81f9e9aa1b6">&#9670;&#160;</a></span>setReuseAddress() <span class="overload">[1/2]</span></h2>
+<a id="gab358ea7ed49e95717b1e9438251b3d9a" name="gab358ea7ed49e95717b1e9438251b3d9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab358ea7ed49e95717b1e9438251b3d9a">&#9670;&#160;</a></span>setReuseAddress()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void ServerSocket::setReuseAddress </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable or disable address reuse for this server socket. </p>
-<p>When address reuse is enabled (<span class="tt">enable = true</span>), the server socket can bind to a local address/port even if a previous socket on that port is still in the TIME_WAIT state. This is useful for restarting servers without waiting for old sockets to time out.</p>
-<p>On UNIX-like systems, this sets the <span class="tt">SO_REUSEADDR</span> socket option. On Windows, it sets the equivalent option, <span class="tt">SO_EXCLUSIVEADDRUSE</span>.</p>
-<dl class="section warning"><dt>Warning</dt><dd>This method must be called before calling <a class="el" href="group__tcp.html#ga1ca989ba16d32862dd4fa9bbb2b165b5" title="Binds the server socket to the configured port and network interface.">bind()</a>, and only once the socket has been created (i.e., after construction, before bind).</dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td>True to enable address reuse, false to disable (default OS behavior).</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if setting the option fails (e.g., socket not open or system error).</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>Improper use of address reuse can have security and protocol implications. For most server applications, enabling this is recommended. For advanced load-balancing, see also SO_REUSEPORT (not portable).</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a href="https://man7.org/linux/man-pages/man7/socket.7.html">https://man7.org/linux/man-pages/man7/socket.7.html</a> </dd></dl>
-
-</div>
-</div>
-<a id="ga5a0b2e189e91b53d7e5223d47eadffe3" name="ga5a0b2e189e91b53d7e5223d47eadffe3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5a0b2e189e91b53d7e5223d47eadffe3">&#9670;&#160;</a></span>setReuseAddress() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Socket::setReuseAddress </td>
+          <td class="memname">void jsocketpp::SocketOptions::setReuseAddress </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>on</em></span></td><td>)</td>
           <td></td>
@@ -962,23 +995,43 @@ Example Usage</h3>
       </table>
 </div><div class="memdoc">
 
-<p>Enables or disables the SO_REUSEADDR socket option. </p>
-<p>This option controls whether the socket is allowed to bind to a local address that is either already in use or in the <span class="tt">TIME_WAIT</span> state. Although most commonly used in server sockets, client sockets may also benefit in certain scenarios.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md605"></a>
-Platform behavior:</h3>
+<p>Enables or disables the <span class="tt">SO_REUSEADDR</span> socket option. </p>
+<p>This option controls whether the socket is permitted to bind to a local address and port that is already in use or in the <span class="tt">TIME_WAIT</span> state. It is commonly used in both server and client contexts, and is applicable to TCP, UDP, and Unix domain sockets.</p>
+<p>Internally, this method invokes: </p><div class="fragment"><div class="line">setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, ...)</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md639"></a>
+Platform Behavior</h3>
 <ul>
-<li><b>POSIX:</b> Allows multiple sockets to bind the same address and port, as long as all use <span class="tt">SO_REUSEADDR</span>. This is especially useful for multicast or for clients that bind to a fixed local port and reconnect frequently.</li>
-<li><b>Windows:</b> Allows rebinding to a port in <span class="tt">TIME_WAIT</span>, but <b>does not</b> allow multiple concurrent binds to the same port.</li>
+<li><b>POSIX (Linux, BSD, macOS):</b><ul>
+<li>Permits multiple sockets to bind the same address/port as long as all use <span class="tt">SO_REUSEADDR</span>.</li>
+<li>Commonly used with multicast UDP, and for servers that need to restart quickly.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md606"></a>
-Use cases in client sockets:</h3>
+</li>
+<li><b>Windows:</b><ul>
+<li>Allows rebinding to a port in <span class="tt">TIME_WAIT</span>, but does <b>not</b> allow simultaneous binds.</li>
+<li>Microsoft recommends <span class="tt">SO_EXCLUSIVEADDRUSE</span> for exclusive ownership, but <span class="tt">SO_REUSEADDR</span> works for most cases.</li>
+</ul>
+</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md640"></a>
+Protocol Use Cases</h3>
 <ul>
-<li>Reconnecting P2P or UDP clients that bind to the same port repeatedly</li>
-<li>Multicast receivers</li>
-<li>High-performance test environments with rapid reconnect loops</li>
+<li><b>TCP Server Sockets</b>: Enables re-binding to a port immediately after shutdown.</li>
+<li><b>TCP Client Sockets</b>: Useful when binding to a fixed local port to reconnect rapidly.</li>
+<li><b>UDP Sockets</b>:<ul>
+<li>Allows multiple sockets to bind to the same port, often required for multicast listeners.</li>
+<li>Useful in P2P setups where port reuse is desired across short-lived sessions.</li>
 </ul>
-<p>Internally, this calls: </p><div class="fragment"><div class="line">setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, ...)</div>
-</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+</li>
+<li><b>Unix Domain Sockets</b>:<ul>
+<li>On some platforms, <span class="tt">SO_REUSEADDR</span> may be ignored or unnecessary for <span class="tt">AF_UNIX</span>, since file system semantics already handle path reusability. However, setting it is harmless and may be supported by your platform for consistency.</li>
+</ul>
+</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md641"></a>
+Example</h3>
+<div class="fragment"><div class="line">socket.setReuseAddress(<span class="keyword">true</span>); <span class="comment">// Enable port/path reuse before calling bind()</span></div>
+</div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>This method must be called <b>after socket creation</b> and <b>before bind()</b>. Improper use can lead to security issues or interference between applications.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">on</td><td>If <span class="tt">true</span>, enables address reuse; if <span class="tt">false</span>, disables it.</td></tr>
   </table>
@@ -986,13 +1039,15 @@ Use cases in client sockets:</h3>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket option cannot be applied.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is invalid or the option cannot be set.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga440e7ee9303d454df0c51fe6125cd2af" title="Queries whether SO_REUSEADDR is currently enabled on the socket.">getReuseAddress()</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga8e8783ada3142cd6c3b275e01b7b12f2" title="Queries whether the socket is currently configured to allow address reuse.">getReuseAddress()</a> </dd>
 <dd>
-<a class="el" href="group__tcp.html#gace1da4f860ac0af46d702cb5fc875a51" title="Binds the client socket to all interfaces using an ephemeral port.">bind()</a> </dd></dl>
+bind() </dd>
+<dd>
+<a href="https://man7.org/linux/man-pages/man7/socket.7.html">https://man7.org/linux/man-pages/man7/socket.7.html</a> </dd></dl>
 
 </div>
 </div>
@@ -1013,7 +1068,7 @@ Use cases in client sockets:</h3>
 
 <p>Sets the socket's send buffer size (SO_SNDBUF). </p>
 <p>Configures the size of the operating system's send buffer for this socket. A larger buffer can improve performance for high-bandwidth connections by allowing the system to buffer more outgoing data, reducing the risk of blocking during write operations when the network is temporarily congested.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md577"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md578"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses setsockopt() with SO_SNDBUF option to set kernel socket buffer size</li>
@@ -1026,7 +1081,7 @@ Implementation Details</h3>
 <li>Changes affect subsequent sends only, not data already in the buffer</li>
 <li>System limits may constrain maximum size based on available memory and OS policy</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md578"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md579"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
 <div class="line"> </div>
@@ -1086,13 +1141,34 @@ Example Usage</h3>
 </table>
 </div><div class="memdoc">
 
-<p>Update the socket descriptor used by this object. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Updates the socket descriptor used by this object. </p>
+<p>This method sets the internal socket file descriptor used by the <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> interface. It is typically called by derived classes after the socket has been moved, reassigned, or otherwise changed during the object's lifetime.</p>
+<p>This does <b>not</b> open, close, or validate the socket descriptor. It simply updates the internal <span class="tt">_sockFd</span> used by methods such as <span class="tt"><a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a></span> and <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span>.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md645"></a>
+When to Use</h3>
+<ul>
+<li>After a move constructor or move assignment updates the underlying socket</li>
+<li>After explicitly re-binding or re-creating a socket file descriptor</li>
+<li>When adapting an externally provided descriptor (e.g., from <span class="tt">accept()</span> or <span class="tt">socketpair()</span>)</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md646"></a>
+Example: Move assignment</h3>
+<div class="fragment"><div class="line"><a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a> = rhs._sockFd;</div>
+<div class="line"><a class="code hl_function" href="#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a>(<a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a>); <span class="comment">// keeps SocketOptions base class in sync</span></div>
+<div class="ttc" id="aclassjsocketpp_1_1SocketOptions_html_a44b54c91017594a7695bf315778fb131"><div class="ttname"><a href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">jsocketpp::SocketOptions::_sockFd</a></div><div class="ttdeci">SOCKET _sockFd</div><div class="ttdoc">Underlying socket file descriptor.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:382</div></div>
+<div class="ttc" id="agroup__socketopts_html_ga97706ddf21aab33a18db00bd0b8eb65d"><div class="ttname"><a href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a></div><div class="ttdeci">void setSocketFd(const SOCKET sock) noexcept</div><div class="ttdoc">Updates the socket descriptor used by this object.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:351</div></div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sock</td><td>New socket file descriptor. </td></tr>
+    <tr><td class="paramname">sock</td><td>The new socket file descriptor to associate with this object. May be <span class="tt">INVALID_SOCKET</span> to mark the socket as uninitialized or closed.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>This method does not perform error checking. It is the caller's responsibility to ensure the provided descriptor is valid and consistent with the derived class state.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a> </dd>
+<dd>
+<a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a> </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a> </dd></dl>
 
 </div>
 </div>
@@ -1117,10 +1193,10 @@ Example Usage</h3>
 
 <p>Configures the socket's linger behavior (SO_LINGER) on close. </p>
 <p>The SO_LINGER option controls how the socket behaves when it is closed and unsent data remains. It determines whether <span class="tt"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a></span> (or <span class="tt"><a class="el" href="group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a></span> followed by <span class="tt"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a></span>) blocks while the kernel attempts to flush unsent data, or whether it returns immediately and discards it.</p>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md597"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md598"></a>
 When enabled (<span class="tt">enable == true</span>):</h4>
 <p>The socket enters a "lingering" state on close. The OS will attempt to transmit any unsent data, blocking the <span class="tt"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a></span> call for up to <span class="tt">seconds</span>. If the data is fully sent before the timeout, the socket closes cleanly. Otherwise, it is forcefully closed after the timeout.</p>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md598"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md599"></a>
 When disabled (<span class="tt">enable == false</span>):</h4>
 <p>The socket closes immediately, even if unsent data remains. This can cause truncation or reset at the receiving end (e.g., the receiver may see a TCP RST instead of a graceful FIN).</p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1137,7 +1213,7 @@ When disabled (<span class="tt">enable == false</span>):</h4>
   </dd>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga1734c9ec9ae9c7dacf616fadc3b5f1cb" title="Retrieves the socket&#39;s current SO_LINGER configuration.">getSoLinger()</a></dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md599"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md600"></a>
 📌 Use Cases</h3>
 <ul>
 <li><b>Graceful TCP Shutdown</b>: When sending critical data (e.g., file footers, checksums), linger ensures the data is actually transmitted before closing.</li>
@@ -1178,7 +1254,7 @@ When disabled (<span class="tt">enable == false</span>):</h4>
 <li>On <b>POSIX</b> systems, the value is converted into a <span class="tt">timeval</span> structure.</li>
 <li>A negative value is invalid and will throw a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md593"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md594"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 9000);</div>
 <div class="line">sock.connect();</div>
@@ -1235,7 +1311,7 @@ Example Usage</h3>
 <li>On <b>POSIX</b>, it is converted into a <span class="tt">timeval</span> structure.</li>
 <li>A negative value is considered invalid and will result in a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md594"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md595"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
 <div class="line">sock.connect();</div>
@@ -1337,7 +1413,7 @@ Example Usage</h3>
 <p>When <span class="tt">TCP_NODELAY</span> is enabled (<span class="tt">on == true</span>), Nagle's algorithm is disabled. This causes small packets to be sent immediately, reducing latency for real-time or interactive applications (e.g., games, messaging, RPCs).</p>
 <p>When disabled (<span class="tt">on == false</span>), Nagle's algorithm is enabled. The socket coalesces small outgoing messages into larger packets to improve throughput and reduce congestion, but may introduce slight delays.</p>
 <p>By default, TCP_NODELAY is off (i.e., Nagle's algorithm is enabled).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md604"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md605"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -1403,7 +1479,7 @@ Example Usage</h3>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>It is the responsibility of the derived class to ensure that the socket descriptor remains valid for the lifetime of the <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> object.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>This class does not manage or close the socket descriptor. It assumes the derived class owns and controls the lifetime of the socket.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga97706ddf21aab33a18db00bd0b8eb65d" title="Update the socket descriptor used by this object.">setSocketFd()</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga97706ddf21aab33a18db00bd0b8eb65d" title="Updates the socket descriptor used by this object.">setSocketFd()</a> </dd>
 <dd>
 <a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a> </dd>
 <dd>

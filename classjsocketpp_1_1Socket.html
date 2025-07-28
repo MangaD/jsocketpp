@@ -258,10 +258,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:gac3c6f8848ff049eb3e31b4fe190dd624"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket.  <br /></td></tr>
 <tr class="memitem:ga2539928ed0829df5070384f907ea48f7" id="r_ga2539928ed0829df5070384f907ea48f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga2539928ed0829df5070384f907ea48f7">getTcpNoDelay</a> () const</td></tr>
 <tr class="memdesc:ga2539928ed0829df5070384f907ea48f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether TCP_NODELAY (Nagle's algorithm) is currently disabled.  <br /></td></tr>
-<tr class="memitem:ga5a0b2e189e91b53d7e5223d47eadffe3" id="r_ga5a0b2e189e91b53d7e5223d47eadffe3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga5a0b2e189e91b53d7e5223d47eadffe3">setReuseAddress</a> (bool on)</td></tr>
-<tr class="memdesc:ga5a0b2e189e91b53d7e5223d47eadffe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the SO_REUSEADDR socket option.  <br /></td></tr>
-<tr class="memitem:ga440e7ee9303d454df0c51fe6125cd2af" id="r_ga440e7ee9303d454df0c51fe6125cd2af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga440e7ee9303d454df0c51fe6125cd2af">getReuseAddress</a> () const</td></tr>
-<tr class="memdesc:ga440e7ee9303d454df0c51fe6125cd2af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether SO_REUSEADDR is currently enabled on the socket.  <br /></td></tr>
 <tr class="memitem:ga9aa580ef897d00e6e4200657076bb769" id="r_ga9aa580ef897d00e6e4200657076bb769"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga9aa580ef897d00e6e4200657076bb769">setKeepAlive</a> (bool on)</td></tr>
 <tr class="memdesc:ga9aa580ef897d00e6e4200657076bb769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP keepalive behavior for the socket.  <br /></td></tr>
 <tr class="memitem:gaefa84283aeb8880542d40bc7550b8d53" id="r_gaefa84283aeb8880542d40bc7550b8d53"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gaefa84283aeb8880542d40bc7550b8d53">getKeepAlive</a> () const</td></tr>
@@ -284,6 +280,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga1b7061a0f4d13e8d33d3065b8ad4998b inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a low-level socket option on the underlying socket.  <br /></td></tr>
 <tr class="memitem:ga6a5264b995eb2a1143f45c5de6ad92c3 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga6a5264b995eb2a1143f45c5de6ad92c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga6a5264b995eb2a1143f45c5de6ad92c3">getOption</a> (int level, int optName) const</td></tr>
 <tr class="memdesc:ga6a5264b995eb2a1143f45c5de6ad92c3 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current value of a low-level socket option.  <br /></td></tr>
+<tr class="memitem:gab358ea7ed49e95717b1e9438251b3d9a inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_gab358ea7ed49e95717b1e9438251b3d9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gab358ea7ed49e95717b1e9438251b3d9a">setReuseAddress</a> (bool on)</td></tr>
+<tr class="memdesc:gab358ea7ed49e95717b1e9438251b3d9a inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the <span class="tt">SO_REUSEADDR</span> socket option.  <br /></td></tr>
+<tr class="memitem:ga8e8783ada3142cd6c3b275e01b7b12f2 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga8e8783ada3142cd6c3b275e01b7b12f2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga8e8783ada3142cd6c3b275e01b7b12f2">getReuseAddress</a> () const</td></tr>
+<tr class="memdesc:ga8e8783ada3142cd6c3b275e01b7b12f2 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the socket is currently configured to allow address reuse.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -304,7 +304,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:ga41e5ecdf97be51a3a354429be87b12d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets internal shutdown state flags to <span class="tt">false</span>.  <br /></td></tr>
 <tr class="inherit_header pro_methods_classjsocketpp_1_1SocketOptions"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classjsocketpp_1_1SocketOptions')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classjsocketpp_1_1SocketOptions.html">jsocketpp::SocketOptions</a></td></tr>
 <tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d inherit pro_methods_classjsocketpp_1_1SocketOptions" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
-<tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d inherit pro_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the socket descriptor used by this object.  <br /></td></tr>
+<tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d inherit pro_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the socket descriptor used by this object.  <br /></td></tr>
+<tr class="memitem:gaace6c3364b4016979537571b36c58727 inherit pro_methods_classjsocketpp_1_1SocketOptions" id="r_gaace6c3364b4016979537571b36c58727"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gaace6c3364b4016979537571b36c58727">isPassiveSocket</a> () const noexcept</td></tr>
+<tr class="memdesc:gaace6c3364b4016979537571b36c58727 inherit pro_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the socket behaves as a passive (listening) socket.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -337,7 +339,7 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TCP client connection abstraction (Java-like interface). </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> class represents a TCP connection between your application and a remote host. It provides a high-level, easy-to-use, and cross-platform API for creating, connecting, sending, and receiving data over TCP sockets. Its interface is inspired by Java's <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> class, but uses modern C++20 features.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md487"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md488"></a>
 Key Features</h3>
 <ul>
 <li><b>Connect to remote hosts</b> using hostnames or IP addresses (IPv4/IPv6).</li>
@@ -348,7 +350,7 @@ Key Features</h3>
 <li><b>Exception-based error handling</b> via <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
 <li><b>Fine-grained control</b>: configure timeouts, non-blocking mode, TCP_NODELAY, SO_KEEPALIVE, etc.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md488"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md489"></a>
 Typical Usage Example</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="Socket_8hpp.html">jsocketpp/Socket.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -369,36 +371,36 @@ Typical Usage Example</h3>
 <div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:63</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:93</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md489"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md490"></a>
 Internal Buffer</h3>
 <ul>
 <li>The socket maintains an internal read buffer (default: <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a>).</li>
 <li>You can resize it with <span class="tt"><a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a></span> if you expect to receive larger or smaller messages.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md490"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md491"></a>
 Error Handling</h3>
 <ul>
 <li>Almost all methods throw <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">jsocketpp::SocketException</a></span> on error (e.g., connect failure, write error, etc).</li>
 <li>You should catch exceptions to handle network errors gracefully.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md491"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md492"></a>
 Thread Safety</h3>
 <ul>
 <li>Not thread-safe. Use a separate <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> object per thread if needed.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md492"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md493"></a>
 Platform Support</h3>
 <ul>
 <li>Windows, Linux, macOS. Handles all necessary platform differences internally.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md493"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md494"></a>
 Advanced Usage</h3>
 <ul>
 <li>Set non-blocking mode with <span class="tt"><a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5" title="Sets the socket to either non-blocking or blocking mode.">setNonBlocking()</a></span>.</li>
 <li>Tune socket options with <span class="tt">enableNoDelay()</span>, <span class="tt">enableKeepAlive()</span>, or <span class="tt">setTimeout()</span>.</li>
 <li>Check remote address with <span class="tt"><a class="el" href="group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc" title="Get the remote peer&#39;s address and port as a formatted string.">getRemoteSocketAddress()</a></span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md494"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md495"></a>
 See Also</h3>
 <ul>
 <li><a class="el" href="classjsocketpp_1_1ServerSocket.html">ServerSocket</a> - for listening to incoming connections</li>

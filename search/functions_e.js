@@ -13,7 +13,7 @@ var searchData=
   ['setnonblocking_10',['setNonBlocking',['../classjsocketpp_1_1DatagramSocket.html#ac341be6110a71d3fbe5438dd342b69eb',1,'jsocketpp::DatagramSocket::setNonBlocking()'],['../group__socketopts.html#ga6da405f0212b736e027c7d2e16222b44',1,'jsocketpp::ServerSocket::setNonBlocking()'],['../group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5',1,'jsocketpp::Socket::setNonBlocking()'],['../classjsocketpp_1_1UnixSocket.html#ab5e5db3a3b7945d5fa15507265a7c657',1,'jsocketpp::UnixSocket::setNonBlocking()']]],
   ['setoption_11',['setOption',['../group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b',1,'jsocketpp::SocketOptions']]],
   ['setreceivebuffersize_12',['setReceiveBufferSize',['../group__socketopts.html#ga0539576a97fe792c9cb67b8aee26477b',1,'jsocketpp::Socket']]],
-  ['setreuseaddress_13',['setReuseAddress',['../group__socketopts.html#ga32d53c151cb8b7aecc8da81f9e9aa1b6',1,'jsocketpp::ServerSocket::setReuseAddress()'],['../group__socketopts.html#ga5a0b2e189e91b53d7e5223d47eadffe3',1,'jsocketpp::Socket::setReuseAddress()']]],
+  ['setreuseaddress_13',['setReuseAddress',['../group__socketopts.html#gab358ea7ed49e95717b1e9438251b3d9a',1,'jsocketpp::SocketOptions']]],
   ['setreuseport_14',['setReusePort',['../group__tcp.html#ga6276b89030ccf50a67501f429a14e3a3',1,'jsocketpp::ServerSocket']]],
   ['setsendbuffersize_15',['setSendBufferSize',['../group__socketopts.html#ga243562caf78f87e481f657e26c59e1f0',1,'jsocketpp::Socket']]],
   ['setsocketfd_16',['setSocketFd',['../group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d',1,'jsocketpp::SocketOptions']]],
