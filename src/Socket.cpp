@@ -444,28 +444,6 @@ size_t Socket::writeAll(const std::string_view message) const
     return totalSent;
 }
 
-// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
-void Socket::setReceiveBufferSize(const std::size_t size)
-{
-    setOption(SOL_SOCKET, SO_RCVBUF, static_cast<int>(size));
-}
-
-// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
-void Socket::setSendBufferSize(const std::size_t size)
-{
-    setOption(SOL_SOCKET, SO_SNDBUF, static_cast<int>(size));
-}
-
-int Socket::getReceiveBufferSize() const
-{
-    return getOption(SOL_SOCKET, SO_RCVBUF);
-}
-
-int Socket::getSendBufferSize() const
-{
-    return getOption(SOL_SOCKET, SO_SNDBUF);
-}
-
 void Socket::setInternalBufferSize(const std::size_t newLen)
 {
     _internalBuffer.resize(newLen);
@@ -612,40 +590,6 @@ int Socket::getSoSendTimeout() const
                               "getsockopt(SO_SNDTIMEO) failed: " + SocketErrorMessage(GetSocketError()));
     return static_cast<int>(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 #endif
-}
-
-// NOLINTNEXTLINE(readability-make-member-function-const) - modifies socket state
-void Socket::setSoLinger(const bool enable, const int seconds)
-{
-    if (enable && seconds < 0)
-    {
-        throw SocketException("Socket::setSoLinger(): Linger timeout must be non-negative");
-    }
-
-    ::linger lingerOpt{};
-    lingerOpt.l_onoff = enable ? 1 : 0;
-    lingerOpt.l_linger = static_cast<decltype(lingerOpt.l_linger)>(enable ? seconds : 0);
-
-    const int result = ::setsockopt(_sockFd, SOL_SOCKET, SO_LINGER, reinterpret_cast<const char*>(&lingerOpt),
-                                    static_cast<socklen_t>(sizeof(lingerOpt)));
-
-    if (result < 0)
-    {
-        throw SocketException(GetSocketError(), "Socket::setSoLinger(): setsockopt(SO_LINGER) failed");
-    }
-}
-
-std::pair<bool, int> Socket::getSoLinger() const
-{
-    ::linger lingerOpt{};
-    auto optLen = static_cast<socklen_t>(sizeof(lingerOpt));
-
-    if (::getsockopt(_sockFd, SOL_SOCKET, SO_LINGER, reinterpret_cast<char*>(&lingerOpt), &optLen) < 0)
-    {
-        throw SocketException(GetSocketError(), "Socket::getSoLinger(): getsockopt(SO_LINGER) failed");
-    }
-
-    return {lingerOpt.l_onoff != 0, lingerOpt.l_onoff ? lingerOpt.l_linger : 0};
 }
 
 bool Socket::waitReady(bool forWrite, const int timeoutMillis) const

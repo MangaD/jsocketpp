@@ -17,7 +17,6 @@
 #pragma once
 
 #include "common.hpp"
-#include "SocketException.hpp"
 
 namespace jsocketpp
 {
@@ -314,6 +313,280 @@ class SocketOptions
      * @see https://man7.org/linux/man-pages/man7/socket.7.html
      */
     [[nodiscard]] bool getReuseAddress() const;
+
+    /**
+     * @brief Sets the socket's receive buffer size (SO_RCVBUF).
+     * @ingroup socketopts
+     *
+     * Configures the size of the kernel-level receive buffer for the underlying socket.
+     * This buffer controls how much data the operating system can queue before the
+     * application reads from the socket. Increasing this value can reduce packet loss
+     * and improve throughput under high load or network delay.
+     *
+     * ### Applicability
+     * This method is valid for all supported socket types:
+     * - **TCP (`Socket`)**: Recommended for high-latency or high-throughput connections.
+     * - **UDP (`DatagramSocket`)**: Critical for avoiding packet drops in high-volume flows.
+     * - **UNIX domain sockets**: Supported on most platforms.
+     * - **ServerSocket**: Affects the passive socket itself, not accepted clients.
+     *
+     * ### Platform Behavior
+     * - **Linux**: The kernel typically doubles the requested size to account for internal overhead.
+     * - **Windows**: Value may be rounded to OS-specific granularity.
+     * - **macOS/BSD**: Follows BSD semantics; may enforce stricter limits.
+     * - In all cases, system-wide limits apply (e.g., `/proc/sys/net/core/rmem_max` on Linux).
+     *
+     * ### Example
+     * @code
+     * datagramSocket.setReceiveBufferSize(256 * 1024); // Set 256 KB buffer
+     * int actual = datagramSocket.getReceiveBufferSize();
+     * std::cout << "OS applied buffer size: " << actual << " bytes\n";
+     * @endcode
+     *
+     * @param[in] size Desired receive buffer size in bytes. Actual value may be adjusted by the OS.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid or uninitialized
+     * - The call to `setsockopt()` fails
+     * - The requested size exceeds system limits
+     * - Insufficient permissions to increase buffer limits
+     *
+     * @note Always call this after socket creation and before heavy I/O.
+     * @see getReceiveBufferSize()
+     * @see setSendBufferSize()
+     * @see setInternalBufferSize()
+     */
+    void setReceiveBufferSize(std::size_t size);
+
+    /**
+     * @brief Retrieves the current receive buffer size (SO_RCVBUF) of the socket.
+     * @ingroup socketopts
+     *
+     * Queries the operating system for the size of the receive buffer allocated to
+     * this socket. This buffer temporarily holds incoming data before it is read
+     * by the application. The size is determined by system policy, user configuration,
+     * and the value set via `setReceiveBufferSize()`.
+     *
+     * ### Applicability
+     * This method works for:
+     * - **TCP sockets (`Socket`)**: Indicates how much inbound data can be queued before blocking or drop.
+     * - **UDP sockets (`DatagramSocket`)**: Critical for burst tolerance and loss avoidance.
+     * - **UNIX domain sockets**: Supported on most platforms.
+     * - **ServerSocket**: Reflects configuration of the passive socket itself (not accepted sockets).
+     *
+     * ### Platform Notes
+     * - **Linux**: Returned value is typically *twice* the requested size due to internal accounting.
+     * - **Windows**: Rounded to alignment boundaries; value reflects what was granted, not requested.
+     * - **BSD/macOS**: Exact behavior may vary, but returned size reflects the OS’s accepted setting.
+     *
+     * ### Example
+     * @code
+     * int size = socket.getReceiveBufferSize();
+     * std::cout << "Current OS receive buffer: " << size << " bytes\n";
+     * @endcode
+     *
+     * @return The actual receive buffer size in bytes as allocated by the operating system.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid (e.g., not open or moved-from)
+     * - The system call fails (e.g., due to low-level error)
+     * - Permissions are insufficient
+     *
+     * @note To verify that `setReceiveBufferSize()` took effect, compare the returned value here.
+     * @see setReceiveBufferSize()
+     * @see getSendBufferSize()
+     * @see setInternalBufferSize()
+     */
+    [[nodiscard]] int getReceiveBufferSize() const;
+
+    /**
+     * @brief Sets the socket's send buffer size (SO_SNDBUF).
+     * @ingroup socketopts
+     *
+     * Configures the size of the kernel-level send buffer for this socket. This buffer controls
+     * how much data the operating system can queue for transmission before blocking the sender
+     * or returning a partial write. Larger buffers help improve throughput, especially in high-bandwidth
+     * or high-latency network environments.
+     *
+     * ### Applicability
+     * This method is valid for all socket types:
+     * - **TCP (`Socket`)**: Helps reduce application-level blocking and improves write throughput.
+     * - **UDP (`DatagramSocket`)**: Allows higher burst rate; excess data is dropped if full.
+     * - **UNIX domain sockets**: Supported for local IPC buffering on most systems.
+     * - **ServerSocket**: Setting this has no meaningful effect on passive sockets.
+     *
+     * ### Platform Behavior
+     * - **Linux**: Kernel may double the size for internal overhead; limited by `/proc/sys/net/core/wmem_max`.
+     * - **Windows**: Rounded to system-specific page sizes or segment alignment.
+     * - **BSD/macOS**: Honors the request up to system-imposed limits.
+     * - All platforms may silently apply a different size than requested — verify with `getSendBufferSize()`.
+     *
+     * ### Example
+     * @code
+     * socket.setSendBufferSize(128 * 1024); // 128 KB buffer
+     * int actual = socket.getSendBufferSize();
+     * std::cout << "Effective send buffer: " << actual << " bytes\n";
+     * @endcode
+     *
+     * @param[in] size Desired send buffer size in bytes. The actual buffer size may be adjusted by the system.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid or uninitialized
+     * - The call to `setsockopt()` fails
+     * - The requested size exceeds system-imposed limits
+     * - Insufficient privileges are present
+     *
+     * @note Applies to future sends only; does not affect buffered data already enqueued.
+     * @see getSendBufferSize()
+     * @see setReceiveBufferSize()
+     * @see setInternalBufferSize()
+     */
+    void setSendBufferSize(std::size_t size);
+
+    /**
+     * @brief Retrieves the current send buffer size (SO_SNDBUF) of the socket.
+     * @ingroup socketopts
+     *
+     * Queries the operating system for the size of the send buffer allocated to this socket.
+     * This buffer holds outgoing data that has been written by the application but not yet
+     * transmitted over the network or IPC channel. A larger send buffer allows the socket
+     * to tolerate bursts of data or temporary network slowdowns without blocking the writer.
+     *
+     * ### Applicability
+     * This method is supported for:
+     * - **TCP sockets (`Socket`)**: Improves write throughput and non-blocking behavior.
+     * - **UDP sockets (`DatagramSocket`)**: Enables larger bursts of outgoing datagrams.
+     * - **UNIX domain sockets**: Applies to stream or datagram sockets on most platforms.
+     * - **ServerSocket**: Returns the buffer size of the passive socket, but has no effect on accepted sockets.
+     *
+     * ### Platform Notes
+     * - **Linux**: May return a value twice the requested size due to kernel bookkeeping.
+     * - **Windows**: Returns the actual allocated size, rounded internally by Winsock.
+     * - **BSD/macOS**: Behavior follows BSD socket semantics.
+     * - System-wide limits may apply, and the kernel may clamp, align, or ignore extreme values.
+     *
+     * ### Example
+     * @code
+     * int size = socket.getSendBufferSize();
+     * std::cout << "Send buffer size: " << size << " bytes\n";
+     * @endcode
+     *
+     * @return Actual send buffer size in bytes, as reported by the kernel.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid or closed
+     * - The `getsockopt()` call fails
+     * - Permissions are insufficient to query socket settings
+     *
+     * @note The value returned may differ from what was passed to `setSendBufferSize()`.
+     *       Always query after setting to determine the effective size.
+     *
+     * @see setSendBufferSize()
+     * @see getReceiveBufferSize()
+     * @see setReceiveBufferSize()
+     */
+    [[nodiscard]] int getSendBufferSize() const;
+
+    /**
+     * @brief Configures the socket's linger behavior (`SO_LINGER`) during close.
+     * @ingroup socketopts
+     *
+     * This method sets the `SO_LINGER` socket option, which controls how the socket behaves
+     * when it is closed and unsent data remains in the transmission buffer.
+     * It determines whether `close()` will return immediately (discarding unsent data),
+     * or block until the data is transmitted or a timeout expires.
+     *
+     * ### 🔁 Applicability
+     * - ✅ **TCP (`Socket`)**: Fully supported; governs graceful vs. abortive close behavior.
+     * - ✅ **UNIX stream sockets (`UnixSocket`)**: Supported on most platforms.
+     * - ⚠️ **UDP or UNIX datagram sockets (`DatagramSocket`)**: Technically accepted by some systems,
+     *   but `SO_LINGER` has **no effect** (ignored by the kernel).
+     * - ⚠️ **ServerSocket (listening)**: Affects only the listening socket itself; accepted
+     *   sockets must be configured separately.
+     *
+     * ### Behavior
+     * - **Linger enabled (`enable == true`)**:
+     *   - The OS will try to send remaining data on close.
+     *   - If data cannot be sent within `seconds`, the socket is closed forcibly.
+     *   - A timeout of `0` causes an **abortive close** (TCP RST is sent immediately).
+     *
+     * - **Linger disabled (`enable == false`)** (default):
+     *   - `close()` returns immediately.
+     *   - Unsent data may be discarded depending on system behavior.
+     *
+     * ### Example
+     * @code
+     * // Wait up to 5 seconds for graceful shutdown
+     * socket.setSoLinger(true, 5);
+     *
+     * // Immediately discard unsent data on close (send TCP RST)
+     * socket.setSoLinger(true, 0);
+     *
+     * // Standard non-blocking close behavior
+     * socket.setSoLinger(false, 0);
+     * @endcode
+     *
+     * @param enable Whether to enable lingering behavior on close.
+     * @param seconds Linger timeout (in seconds). Only meaningful if `enable == true`.
+     *                - Must be ≥ 0. `0` means abortive close.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - `setsockopt()` fails
+     * - The operation is not supported on the socket type (platform-dependent)
+     *
+     * @see getSoLinger()
+     * @see shutdown()
+     * @see close()
+     *
+     * @note Behavior is OS-specific. On POSIX, applies only to stream-oriented sockets.
+     * On Windows, similar semantics apply via Winsock.
+     */
+    void setSoLinger(bool enable, int seconds);
+
+    /**
+     * @brief Retrieves the current `SO_LINGER` configuration of the socket.
+     * @ingroup socketopts
+     *
+     * Queries the operating system for the current linger behavior configured
+     * on this socket. Linger settings determine whether the socket blocks on
+     * `close()` to allow unsent data to be transmitted, or terminates the
+     * connection immediately (potentially discarding unsent data).
+     *
+     * ### 🔁 Applicability
+     * - ✅ **TCP sockets (`Socket`)**: Fully supported; reflects actual linger settings.
+     * - ✅ **UNIX domain stream sockets**: Supported on most POSIX platforms.
+     * - ⚠️ **UDP / datagram sockets (`DatagramSocket`)**: `SO_LINGER` is silently ignored by most systems.
+     * - ⚠️ **ServerSocket**: Applies only to the passive (listening) socket. To inspect accepted clients,
+     *   query each returned `Socket` individually.
+     *
+     * ### Return Value
+     * Returns a pair `{enabled, timeout}`:
+     * - `first` (`bool`): Whether `SO_LINGER` is currently enabled.
+     * - `second` (`int`): Timeout value in seconds (typically `0` if disabled).
+     *
+     * ### Example
+     * @code
+     * auto [enabled, timeout] = socket.getSoLinger();
+     * if (enabled)
+     *     std::cout << "Linger is enabled for " << timeout << " seconds.\n";
+     * else
+     *     std::cout << "Linger is disabled.\n";
+     * @endcode
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - The system call fails
+     * - The option is unsupported or not implemented on the platform
+     *
+     * @see setSoLinger()
+     * @see shutdown()
+     * @see close()
+     *
+     * @note On many platforms, this option is only meaningful for stream-oriented sockets.
+     * Behavior for datagram sockets is undefined or silently ignored.
+     */
+    [[nodiscard]] std::pair<bool, int> getSoLinger() const;
 
   protected:
     /**

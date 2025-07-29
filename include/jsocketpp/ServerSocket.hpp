@@ -548,9 +548,9 @@ class ServerSocket : public SocketOptions
      * @ingroup tcp
      *
      * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
      * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
      * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
      * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
@@ -599,9 +599,9 @@ class ServerSocket : public SocketOptions
      *   - Zero: poll once
      *   - Positive: wait up to this many milliseconds
      * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
      * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
      * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
      * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
@@ -665,9 +665,9 @@ class ServerSocket : public SocketOptions
      *       `Socket::setSoTimeout()`.
      *
      * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
      * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
      * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
      * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
@@ -732,9 +732,9 @@ class ServerSocket : public SocketOptions
      *   - Zero: poll once
      *   - Positive: wait up to this many milliseconds
      * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
      * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
      * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
      * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
@@ -794,9 +794,9 @@ class ServerSocket : public SocketOptions
      * processes may result in race conditions or failures.
      *
      * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
      * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
      * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
      * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
@@ -859,9 +859,9 @@ class ServerSocket : public SocketOptions
      * `acceptBlocking()`.
      *
      * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
      * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
      * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
      * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
@@ -920,9 +920,9 @@ class ServerSocket : public SocketOptions
      * @note The `ServerSocket` object must outlive the returned future. Use caution when capturing `this`.
      *
      * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
      * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
      * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
      * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
@@ -982,9 +982,9 @@ class ServerSocket : public SocketOptions
      * @param[in] callback Completion handler with signature:
      *   `void callback(std::optional<Socket>, std::exception_ptr)`
      * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setReceiveBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
      * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setSendBufferSize()`.
+     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
      * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
      * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
      *
@@ -1473,8 +1473,8 @@ class ServerSocket : public SocketOptions
      * @param[in] recvBufferSize Optional size. If unset, defaults to `_defaultReceiveBufferSize`.
      * @return The effective buffer size to use.
      *
-     * @see setReceiveBufferSize()
-     * @see getReceiveBufferSize()
+     * @see setDefaultReceiveBufferSize()
+     * @see getDefaultReceiveBufferSize()
      * @see DefaultBufferSize
      *
      * @ingroup tcp
