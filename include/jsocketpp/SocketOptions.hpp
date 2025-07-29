@@ -858,6 +858,166 @@ class SocketOptions
      */
     [[nodiscard]] bool getKeepAlive() const;
 
+    /**
+     * @brief Sets the socket receive timeout (`SO_RCVTIMEO`) in milliseconds.
+     * @ingroup socketopts
+     *
+     * This method configures how long a blocking read operation may wait for incoming data
+     * before timing out. It affects all socket types that perform blocking I/O, including:
+     * - `Socket` (e.g., `read()`, `readExact()`, `readUntil()`)
+     * - `DatagramSocket` (e.g., `receiveFrom()`)
+     * - `UnixSocket` (e.g., `read()` or IPC reads)
+     *
+     * A timeout of `0` disables the timeout entirely, causing read operations to block
+     * indefinitely until data is available, the connection is closed, or an error occurs.
+     * A negative timeout is invalid and will result in an exception.
+     *
+     * ---
+     *
+     * ### 🔀 Platform Behavior
+     * - **Windows**: The timeout is passed as an `int` in milliseconds.
+     * - **POSIX**: The timeout is passed as a `struct timeval` (`seconds` + `microseconds`).
+     *
+     * ---
+     *
+     * ### Example: Set a 3-second receive timeout
+     * @code
+     * socket.setSoRecvTimeout(3000);  // Timeout after 3000 ms if no data arrives
+     * std::string line = socket.readUntil('\n');
+     * @endcode
+     *
+     * ---
+     *
+     * @param millis Timeout in milliseconds. Must be ≥ 0. Use `0` to disable the timeout.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - The timeout is negative
+     * - `setsockopt()` fails due to unsupported option or system-level error
+     *
+     * @see getSoRecvTimeout()
+     * @see setSoSendTimeout()
+     * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     */
+    void setSoRecvTimeout(int millis);
+
+    /**
+     * @brief Sets the socket send timeout (`SO_SNDTIMEO`) in milliseconds.
+     * @ingroup socketopts
+     *
+     * This method configures how long a blocking send operation (e.g., `write()`, `writeAll()`)
+     * may block before timing out. It affects all socket types that support writing:
+     * - `Socket` (TCP stream writes)
+     * - `DatagramSocket` (UDP send operations)
+     * - `UnixSocket` (interprocess writes)
+     *
+     * A timeout of `0` disables the timeout entirely, allowing send operations to block
+     * indefinitely until buffer space is available. A negative timeout is invalid and
+     * will result in an exception.
+     *
+     * ---
+     *
+     * ### 🔀 Platform Behavior
+     * - **Windows**: Timeout is set as a plain `int` in milliseconds.
+     * - **POSIX**: Timeout is specified via a `struct timeval` with second/microsecond precision.
+     *
+     * ---
+     *
+     * ### Example: Set a 5-second send timeout
+     * @code
+     * socket.setSoSendTimeout(5000);  // Timeout if write blocks for more than 5 seconds
+     * socket.writeAll(request);
+     * @endcode
+     *
+     * ---
+     *
+     * @param millis Timeout in milliseconds. Must be ≥ 0. Use `0` to disable the timeout.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - The timeout is negative
+     * - `setsockopt()` fails due to system-level error or unsupported option
+     *
+     * @see getSoSendTimeout()
+     * @see setSoRecvTimeout()
+     * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     */
+    void setSoSendTimeout(int millis);
+
+    /**
+     * @brief Retrieves the socket receive timeout (`SO_RCVTIMEO`) in milliseconds.
+     * @ingroup socketopts
+     *
+     * This method queries the configured timeout for blocking read operations,
+     * such as `read()`, `readExact()`, `receiveFrom()`, etc. The value returned
+     * represents the number of milliseconds a read will block before failing with a timeout.
+     *
+     * ---
+     *
+     * ### 🔀 Platform Behavior
+     * - **Windows**: Returns the timeout directly as an `int` in milliseconds.
+     * - **POSIX**: Retrieves a `struct timeval` and converts it to milliseconds.
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * int timeout = socket.getSoRecvTimeout();
+     * std::cout << "Read timeout is " << timeout << " ms\n";
+     * @endcode
+     *
+     * ---
+     *
+     * @return The current receive timeout in milliseconds.
+     *         A value of `0` indicates no timeout (i.e., blocking indefinitely).
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - `getsockopt()` fails
+     * - The timeout cannot be retrieved due to system-level error
+     *
+     * @see setSoRecvTimeout()
+     * @see getSoSendTimeout()
+     */
+    [[nodiscard]] int getSoRecvTimeout() const;
+
+    /**
+     * @brief Retrieves the socket send timeout (`SO_SNDTIMEO`) in milliseconds.
+     * @ingroup socketopts
+     *
+     * This method queries the configured timeout for blocking send operations,
+     * such as `write()`, `writeAll()`, or `sendTo()`. The returned value
+     * represents how long a send operation will block before timing out.
+     *
+     * ---
+     *
+     * ### 🔀 Platform Behavior
+     * - **Windows**: Timeout is retrieved as a plain `int` (milliseconds).
+     * - **POSIX**: The timeout is stored in a `struct timeval` and converted back.
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * int timeout = socket.getSoSendTimeout();
+     * std::cout << "Send timeout is " << timeout << " ms\n";
+     * @endcode
+     *
+     * ---
+     *
+     * @return The current send timeout in milliseconds.
+     *         A value of `0` indicates no timeout (i.e., blocking indefinitely).
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - `getsockopt()` fails
+     * - The system reports an unexpected or unsupported configuration
+     *
+     * @see setSoSendTimeout()
+     * @see getSoRecvTimeout()
+     */
+    [[nodiscard]] int getSoSendTimeout() const;
+
   protected:
     /**
      * @brief Updates the socket descriptor used by this object.

@@ -160,4 +160,66 @@ bool SocketOptions::getKeepAlive() const
     return getOption(SOL_SOCKET, SO_KEEPALIVE) != 0;
 }
 
+void SocketOptions::setSoRecvTimeout(int millis)
+{
+    if (millis < 0)
+        throw SocketException("setSoRecvTimeout() failed: timeout must be non-negative.");
+
+#ifdef _WIN32
+    // On Windows, timeout is specified directly as an integer in milliseconds
+    setOption(SOL_SOCKET, SO_RCVTIMEO, millis);
+#else
+    // On POSIX, use struct timeval
+    timeval tv{};
+    tv.tv_sec = millis / 1000;
+    tv.tv_usec = (millis % 1000) * 1000;
+
+    setOption(SOL_SOCKET, SO_RCVTIMEO, &tv, static_cast<socklen_t>(sizeof(tv)));
+#endif
+}
+
+void SocketOptions::setSoSendTimeout(int millis)
+{
+    if (millis < 0)
+        throw SocketException("setSoSendTimeout() failed: timeout must be non-negative.");
+
+#ifdef _WIN32
+    setOption(SOL_SOCKET, SO_SNDTIMEO, millis);
+#else
+    timeval tv{};
+    tv.tv_sec = millis / 1000;
+    tv.tv_usec = (millis % 1000) * 1000;
+
+    setOption(SOL_SOCKET, SO_SNDTIMEO, &tv, static_cast<socklen_t>(sizeof(tv)));
+#endif
+}
+
+int SocketOptions::getSoRecvTimeout() const
+{
+#ifdef _WIN32
+    return getOption(SOL_SOCKET, SO_RCVTIMEO);
+#else
+    timeval tv{};
+    socklen_t len = static_cast<socklen_t>(sizeof(tv));
+
+    getOption(SOL_SOCKET, SO_RCVTIMEO, &tv, &len);
+
+    return static_cast<int>(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+#endif
+}
+
+int SocketOptions::getSoSendTimeout() const
+{
+#ifdef _WIN32
+    return getOption(SOL_SOCKET, SO_SNDTIMEO);
+#else
+    timeval tv{};
+    socklen_t len = static_cast<socklen_t>(sizeof(tv));
+
+    getOption(SOL_SOCKET, SO_SNDTIMEO, &tv, &len);
+
+    return static_cast<int>(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+#endif
+}
+
 } // namespace jsocketpp
