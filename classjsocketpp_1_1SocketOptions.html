@@ -122,8 +122,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga74663905817ec41a5b3a7f3d7a16550d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor for safe polymorphic destruction.  <br /></td></tr>
 <tr class="memitem:ga1b7061a0f4d13e8d33d3065b8ad4998b" id="r_ga1b7061a0f4d13e8d33d3065b8ad4998b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b">setOption</a> (int level, int optName, int value)</td></tr>
 <tr class="memdesc:ga1b7061a0f4d13e8d33d3065b8ad4998b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a low-level socket option on the underlying socket.  <br /></td></tr>
+<tr class="memitem:ga04df6377e302cc0cedff070517021950" id="r_ga04df6377e302cc0cedff070517021950"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga04df6377e302cc0cedff070517021950">setOption</a> (int level, int optName, const void *value, socklen_t len)</td></tr>
+<tr class="memdesc:ga04df6377e302cc0cedff070517021950"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a low-level socket option using a structured or binary value.  <br /></td></tr>
 <tr class="memitem:ga6a5264b995eb2a1143f45c5de6ad92c3" id="r_ga6a5264b995eb2a1143f45c5de6ad92c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga6a5264b995eb2a1143f45c5de6ad92c3">getOption</a> (int level, int optName) const</td></tr>
 <tr class="memdesc:ga6a5264b995eb2a1143f45c5de6ad92c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current value of a low-level socket option.  <br /></td></tr>
+<tr class="memitem:ga9c068d958d55e865948b2015c82450a7" id="r_ga9c068d958d55e865948b2015c82450a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga9c068d958d55e865948b2015c82450a7">getOption</a> (int level, int optName, void *result, socklen_t *len) const</td></tr>
+<tr class="memdesc:ga9c068d958d55e865948b2015c82450a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a socket option into a structured or binary buffer.  <br /></td></tr>
 <tr class="memitem:gab358ea7ed49e95717b1e9438251b3d9a" id="r_gab358ea7ed49e95717b1e9438251b3d9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gab358ea7ed49e95717b1e9438251b3d9a">setReuseAddress</a> (bool on)</td></tr>
 <tr class="memdesc:gab358ea7ed49e95717b1e9438251b3d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the <span class="tt">SO_REUSEADDR</span> socket option.  <br /></td></tr>
 <tr class="memitem:ga8e8783ada3142cd6c3b275e01b7b12f2" id="r_ga8e8783ada3142cd6c3b275e01b7b12f2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga8e8783ada3142cd6c3b275e01b7b12f2">getReuseAddress</a> () const</td></tr>
@@ -140,6 +144,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga707a637112e5ec1309da4e6dfe2fddb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the socket's linger behavior (<span class="tt">SO_LINGER</span>) during close.  <br /></td></tr>
 <tr class="memitem:ga15ba6d555b0f3b7809c746f827398c5e" id="r_ga15ba6d555b0f3b7809c746f827398c5e"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga15ba6d555b0f3b7809c746f827398c5e">getSoLinger</a> () const</td></tr>
 <tr class="memdesc:ga15ba6d555b0f3b7809c746f827398c5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current <span class="tt">SO_LINGER</span> configuration of the socket.  <br /></td></tr>
+<tr class="memitem:gab3fbb8682b1313dc38abddd541ca4abf" id="r_gab3fbb8682b1313dc38abddd541ca4abf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gab3fbb8682b1313dc38abddd541ca4abf">setKeepAlive</a> (bool on)</td></tr>
+<tr class="memdesc:gab3fbb8682b1313dc38abddd541ca4abf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP-level keepalive behavior on the socket (<span class="tt">SO_KEEPALIVE</span>).  <br /></td></tr>
+<tr class="memitem:ga1193748a866e07a7f25e97a0640ad8dd" id="r_ga1193748a866e07a7f25e97a0640ad8dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga1193748a866e07a7f25e97a0640ad8dd">getKeepAlive</a> () const</td></tr>
+<tr class="memdesc:ga1193748a866e07a7f25e97a0640ad8dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether TCP-level keepalive (<span class="tt">SO_KEEPALIVE</span>) is currently enabled.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -156,14 +164,14 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Public base class for raw socket option access via <span class="tt">setsockopt()</span> and <span class="tt">getsockopt()</span>. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> class provides a unified, cross-platform interface for working with socket-level configuration options (e.g., <span class="tt">SO_REUSEADDR</span>, <span class="tt">SO_RCVBUF</span>, <span class="tt">TCP_NODELAY</span>). It is designed to be inherited by classes that manage socket descriptors, enabling those classes to expose low-level tunables without duplicating boilerplate code.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md608"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md603"></a>
 Intended Usage</h2>
 <ul>
 <li>Derived classes must pass a valid socket descriptor to the constructor of <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span>.</li>
 <li>After move construction or assignment, they must call <span class="tt"><a class="el" href="group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d" title="Updates the socket descriptor used by this object.">setSocketFd()</a></span> to update the descriptor.</li>
 <li>This class does <b>not</b> own the socket or manage its lifecycle (open, close, etc.).</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md609"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md604"></a>
 Supported Classes</h2>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span></li>

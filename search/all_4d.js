@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🧿_20unixsocket_20specific_20notes_0',['🧿 UnixSocket specific Notes',['../group__socketopts.html#autotoc_md616',1,'🧿 UnixSocket-specific Notes'],['../group__socketopts.html#autotoc_md625',1,'🧿 UnixSocket-specific Notes']]]
+  ['🧷_20unix_20domain_20socket_20ipc_0',['🧷 UNIX Domain Socket (IPC)',['../index.html#autotoc_md396',1,'']]]
 ];
