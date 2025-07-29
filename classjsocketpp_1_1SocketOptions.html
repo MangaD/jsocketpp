@@ -128,6 +128,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:gab358ea7ed49e95717b1e9438251b3d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the <span class="tt">SO_REUSEADDR</span> socket option.  <br /></td></tr>
 <tr class="memitem:ga8e8783ada3142cd6c3b275e01b7b12f2" id="r_ga8e8783ada3142cd6c3b275e01b7b12f2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga8e8783ada3142cd6c3b275e01b7b12f2">getReuseAddress</a> () const</td></tr>
 <tr class="memdesc:ga8e8783ada3142cd6c3b275e01b7b12f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the socket is currently configured to allow address reuse.  <br /></td></tr>
+<tr class="memitem:ga69fdecc0aaaef4bbd2826c448a8bbe1d" id="r_ga69fdecc0aaaef4bbd2826c448a8bbe1d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d">setReceiveBufferSize</a> (std::size_t size)</td></tr>
+<tr class="memdesc:ga69fdecc0aaaef4bbd2826c448a8bbe1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
+<tr class="memitem:ga2eaf2835ebba5587c238a0bd6c2be188" id="r_ga2eaf2835ebba5587c238a0bd6c2be188"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga2eaf2835ebba5587c238a0bd6c2be188">getReceiveBufferSize</a> () const</td></tr>
+<tr class="memdesc:ga2eaf2835ebba5587c238a0bd6c2be188"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current receive buffer size (SO_RCVBUF) of the socket.  <br /></td></tr>
+<tr class="memitem:ga8279b0c70f6a0fddf73d84aac691422b" id="r_ga8279b0c70f6a0fddf73d84aac691422b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b">setSendBufferSize</a> (std::size_t size)</td></tr>
+<tr class="memdesc:ga8279b0c70f6a0fddf73d84aac691422b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's send buffer size (SO_SNDBUF).  <br /></td></tr>
+<tr class="memitem:gaeb5f9d1ae3f1b7b9fdb94335b10723f6" id="r_gaeb5f9d1ae3f1b7b9fdb94335b10723f6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gaeb5f9d1ae3f1b7b9fdb94335b10723f6">getSendBufferSize</a> () const</td></tr>
+<tr class="memdesc:gaeb5f9d1ae3f1b7b9fdb94335b10723f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current send buffer size (SO_SNDBUF) of the socket.  <br /></td></tr>
+<tr class="memitem:ga707a637112e5ec1309da4e6dfe2fddb3" id="r_ga707a637112e5ec1309da4e6dfe2fddb3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga707a637112e5ec1309da4e6dfe2fddb3">setSoLinger</a> (bool enable, int seconds)</td></tr>
+<tr class="memdesc:ga707a637112e5ec1309da4e6dfe2fddb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the socket's linger behavior (<span class="tt">SO_LINGER</span>) during close.  <br /></td></tr>
+<tr class="memitem:ga15ba6d555b0f3b7809c746f827398c5e" id="r_ga15ba6d555b0f3b7809c746f827398c5e"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga15ba6d555b0f3b7809c746f827398c5e">getSoLinger</a> () const</td></tr>
+<tr class="memdesc:ga15ba6d555b0f3b7809c746f827398c5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current <span class="tt">SO_LINGER</span> configuration of the socket.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -144,14 +156,14 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Public base class for raw socket option access via <span class="tt">setsockopt()</span> and <span class="tt">getsockopt()</span>. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> class provides a unified, cross-platform interface for working with socket-level configuration options (e.g., <span class="tt">SO_REUSEADDR</span>, <span class="tt">SO_RCVBUF</span>, <span class="tt">TCP_NODELAY</span>). It is designed to be inherited by classes that manage socket descriptors, enabling those classes to expose low-level tunables without duplicating boilerplate code.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md620"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md608"></a>
 Intended Usage</h2>
 <ul>
 <li>Derived classes must pass a valid socket descriptor to the constructor of <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span>.</li>
 <li>After move construction or assignment, they must call <span class="tt"><a class="el" href="group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d" title="Updates the socket descriptor used by this object.">setSocketFd()</a></span> to update the descriptor.</li>
 <li>This class does <b>not</b> own the socket or manage its lifecycle (open, close, etc.).</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md621"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md609"></a>
 Supported Classes</h2>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span></li>

@@ -395,8 +395,8 @@ Friends</h2></td></tr>
 <li>Positive: wait up to this many milliseconds </li>
 </ul>
 </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setReceiveBufferSize()</span>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setSendBufferSize()</span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e" title="Set the default receive buffer size for accepted client sockets.">setDefaultReceiveBufferSize()</a></span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gadbeecdd1d47fb8244dab210fa297fcf9" title="Set the default send buffer size for accepted client sockets.">setDefaultSendBufferSize()</a></span>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">internalBufferSize</td><td>The internal buffer size used by the accepted socket for <span class="tt">read&lt;T&gt;()</span> operations. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gab42832248058c119c99ef60c4d72d478" title="Set the per-instance default internal buffer size used for buffered read operations.">setDefaultInternalBufferSize()</a></span>.</td></tr>
   </table>
   </dd>
@@ -481,8 +481,8 @@ Friends</h2></td></tr>
 - To safely use <span class="tt"><a class="el" href="#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span> in a multithreaded environment, protect access to the <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> with a mutex.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setReceiveBufferSize()</span>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setSendBufferSize()</span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e" title="Set the default receive buffer size for accepted client sockets.">setDefaultReceiveBufferSize()</a></span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gadbeecdd1d47fb8244dab210fa297fcf9" title="Set the default send buffer size for accepted client sockets.">setDefaultSendBufferSize()</a></span>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">internalBufferSize</td><td>The internal buffer size used by the accepted socket for <span class="tt">read&lt;T&gt;()</span> operations. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gab42832248058c119c99ef60c4d72d478" title="Set the per-instance default internal buffer size used for buffered read operations.">setDefaultInternalBufferSize()</a></span>.</td></tr>
   </table>
   </dd>
@@ -551,8 +551,8 @@ The <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" ti
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">callback</td><td>Completion handler with signature: <span class="tt">void callback(std::optional&lt;<a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a>&gt;, std::exception_ptr)</span> </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setReceiveBufferSize()</span>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setSendBufferSize()</span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e" title="Set the default receive buffer size for accepted client sockets.">setDefaultReceiveBufferSize()</a></span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gadbeecdd1d47fb8244dab210fa297fcf9" title="Set the default send buffer size for accepted client sockets.">setDefaultSendBufferSize()</a></span>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">internalBufferSize</td><td>The internal buffer size used by the accepted socket for <span class="tt">read&lt;T&gt;()</span> operations. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gab42832248058c119c99ef60c4d72d478" title="Set the per-instance default internal buffer size used for buffered read operations.">setDefaultInternalBufferSize()</a></span>.</td></tr>
   </table>
   </dd>
@@ -629,8 +629,8 @@ std::exception_ptr, std::rethrow_exception</dd></dl>
 The <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> object must outlive the returned future. Use caution when capturing <span class="tt">this</span>.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setReceiveBufferSize()</span>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setSendBufferSize()</span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e" title="Set the default receive buffer size for accepted client sockets.">setDefaultReceiveBufferSize()</a></span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gadbeecdd1d47fb8244dab210fa297fcf9" title="Set the default send buffer size for accepted client sockets.">setDefaultSendBufferSize()</a></span>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">internalBufferSize</td><td>The internal buffer size used by the accepted socket for <span class="tt">read&lt;T&gt;()</span> operations. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gab42832248058c119c99ef60c4d72d478" title="Set the per-instance default internal buffer size used for buffered read operations.">setDefaultInternalBufferSize()</a></span>.</td></tr>
   </table>
   </dd>
@@ -717,8 +717,8 @@ std::future, std::async</dd></dl>
 This method is <b>not thread safe</b>. Simultaneous <span class="tt">accept</span> calls on the same socket from multiple threads or processes may result in race conditions or failures.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setReceiveBufferSize()</span>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setSendBufferSize()</span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e" title="Set the default receive buffer size for accepted client sockets.">setDefaultReceiveBufferSize()</a></span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gadbeecdd1d47fb8244dab210fa297fcf9" title="Set the default send buffer size for accepted client sockets.">setDefaultSendBufferSize()</a></span>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">internalBufferSize</td><td>The internal buffer size used by the accepted socket for <span class="tt">read&lt;T&gt;()</span> operations. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gab42832248058c119c99ef60c4d72d478" title="Set the per-instance default internal buffer size used for buffered read operations.">setDefaultInternalBufferSize()</a></span>.</td></tr>
   </table>
   </dd>
@@ -760,7 +760,7 @@ This method is <b>not thread safe</b>. Simultaneous <span class="tt">accept</spa
 <div class="line">        <span class="keywordflow">throw</span>;</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Sets the socket to either non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:475</div></div>
+<div class="ttc" id="agroup__tcp_html_ga6cc57c26e230cb7ed7fa0174028811d5"><div class="ttname"><a href="#ga6cc57c26e230cb7ed7fa0174028811d5">jsocketpp::Socket::setNonBlocking</a></div><div class="ttdeci">void setNonBlocking(bool nonBlocking) const</div><div class="ttdoc">Sets the socket to either non-blocking or blocking mode.</div><div class="ttdef"><b>Definition</b> Socket.cpp:453</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -811,8 +811,8 @@ This method is <b>not thread safe</b>. Simultaneous <span class="tt">accept</spa
 For timeout-aware or readiness-checked accept patterns, use <span class="tt"><a class="el" href="#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">accept()</a></span>, <span class="tt"><a class="el" href="#ga91177064cad7d0c7f1fc63c4e1f34187" title="Attempt to accept an incoming client connection, returning immediately or after the configured timeou...">tryAccept()</a></span>, or <span class="tt"><a class="el" href="#ga69c4a45146fc3d3854f2e5684bf65c55" title="Accept an incoming client connection, always blocking until a client connects (unless the socket is s...">acceptBlocking()</a></span>.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setReceiveBufferSize()</span>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setSendBufferSize()</span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e" title="Set the default receive buffer size for accepted client sockets.">setDefaultReceiveBufferSize()</a></span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gadbeecdd1d47fb8244dab210fa297fcf9" title="Set the default send buffer size for accepted client sockets.">setDefaultSendBufferSize()</a></span>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">internalBufferSize</td><td>The internal buffer size used by the accepted socket for <span class="tt">read&lt;T&gt;()</span> operations. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gab42832248058c119c99ef60c4d72d478" title="Set the per-instance default internal buffer size used for buffered read operations.">setDefaultInternalBufferSize()</a></span>.</td></tr>
   </table>
   </dd>
@@ -1519,9 +1519,9 @@ Socket::getInternalBufferSize() </dd></dl>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The effective buffer size to use.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd>setReceiveBufferSize() </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e" title="Set the default receive buffer size for accepted client sockets.">setDefaultReceiveBufferSize()</a> </dd>
 <dd>
-getReceiveBufferSize() </dd>
+<a class="el" href="#ga29de003fbad91f7302115d26b89ac888" title="Get the current default receive buffer size for accepted client sockets.">getDefaultReceiveBufferSize()</a> </dd>
 <dd>
 <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for TCP socket read operations.">DefaultBufferSize</a> </dd></dl>
 
@@ -1559,9 +1559,9 @@ getReceiveBufferSize() </dd>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The effective buffer size to use for send operations.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd>setSendBufferSize() </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> </dd>
 <dd>
-getSendBufferSize() </dd>
+<a class="el" href="group__socketopts.html#gaeb5f9d1ae3f1b7b9fdb94335b10723f6" title="Retrieves the current send buffer size (SO_SNDBUF) of the socket.">getSendBufferSize()</a> </dd>
 <dd>
 <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for TCP socket read operations.">DefaultBufferSize</a> </dd></dl>
 
@@ -1678,13 +1678,13 @@ getSendBufferSize() </dd>
 <p>This method retrieves the status of the <span class="tt">SO_KEEPALIVE</span> option, which controls whether the operating system sends periodic keepalive probes on idle TCP connections.</p>
 <p>Keepalive is typically used to detect silently dropped or unreachable peers (e.g. due to cable disconnects, router failures, or crash/hang scenarios), especially in long-lived client/server sessions.</p>
 <p>This method does not check system-level keepalive intervals or behavior— it only verifies whether keepalive probing is enabled at the socket level.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md609"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md597"></a>
 Platform Behavior</h3>
 <ul>
 <li><b>Linux/macOS</b>: Returns <span class="tt">true</span> if <span class="tt">SO_KEEPALIVE</span> is active. Probe behavior is system-configured.</li>
 <li><b>Windows</b>: Also returns <span class="tt">true</span> if enabled. Idle time and probe rate can be adjusted via <span class="tt">SIO_KEEPALIVE_VALS</span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md610"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md598"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
 <div class="line">sock.connect();</div>
@@ -1933,7 +1933,7 @@ Example</h3>
 <p>Queries whether the socket is currently in non-blocking mode. </p>
 <p>Returns the current I/O mode of the socket. If the socket is in non-blocking mode, system calls like <span class="tt"><a class="el" href="#ga93cc325113abb7433288338ca3facde1" title="Establishes a TCP connection to the remote host with optional timeout control.">connect()</a></span>, <span class="tt"><a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read()</a></span>, and <span class="tt"><a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write()</a></span> will return immediately if the operation cannot be completed, often with <span class="tt">EWOULDBLOCK</span> (POSIX) or <span class="tt">WSAEWOULDBLOCK</span> (Windows). In blocking mode (default), these calls will wait until the operation completes, fails, or times out.</p>
 <p>This method provides a safe way to introspect socket behavior and conditionally modify it. It is especially useful in event-driven, multithreaded, or polling-based I/O systems where explicit control over blocking behavior is needed.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md592"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md584"></a>
 Implementation Details</h3>
 <ul>
 <li>On <b>Windows</b>, uses <span class="tt"><a class="el" href="namespacejsocketpp.html#a771a44f3967222b2e3221ed3120220af">ioctlsocket()</a></span> to query <span class="tt">FIONBIO</span> state.</li>
@@ -1941,7 +1941,7 @@ Implementation Details</h3>
 <li>Thread-safe with respect to other <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> instances.</li>
 <li>Performs one system call; time complexity is O(1).</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md593"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md585"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line"> </div>
@@ -2269,7 +2269,7 @@ Example</h3>
 <p>Reports whether the socket has been closed or invalidated. </p>
 <p>Returns <span class="tt">true</span> if the socket is no longer usable—either because it was explicitly closed, or because the underlying file descriptor has been released or never initialized.</p>
 <p>This method does not perform any system-level check or probing. It simply inspects the internal socket descriptor (<span class="tt">_sockFd</span>) and considers the socket closed if it is equal to <span class="tt">INVALID_SOCKET</span>. This reflects the same mechanism used internally for error detection and safety throughout the library.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md611"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md599"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
 <div class="line">assert(!sock.isClosed());</div>
@@ -2351,7 +2351,7 @@ Example</h3>
 <li>The socket cannot receive new data from the peer.</li>
 </ul>
 <p>This method tracks shutdown state internally—it does <b>not</b> query the operating system (as no portable API exists for that). It reflects the local state at the time of the last <span class="tt"><a class="el" href="#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a></span> call on this socket.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md612"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md600"></a>
 Use Cases</h3>
 <ul>
 <li>Preventing redundant or invalid read calls after a graceful shutdown.</li>
@@ -2428,7 +2428,7 @@ Use Cases</h3>
 <li>The system sends a FIN packet to the peer, indicating no more data will be sent.</li>
 </ul>
 <p>This method tracks shutdown state internally—it does <b>not</b> query the operating system, as no portable <span class="tt">getsockopt()</span> mechanism exists to detect output shutdown externally.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md613"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md601"></a>
 Use Cases</h3>
 <ul>
 <li>Enforcing proper protocol shutdown (e.g. sending EOF before receiving response).</li>
@@ -2506,7 +2506,7 @@ Use Cases</h3>
 
 <p>Check if the socket is valid and open for communication. </p>
 <p>This method checks if the socket has a valid file descriptor and is ready for communication. A socket is considered valid if it has been successfully created and has not been closed. However, a valid socket is not necessarily connected; use <a class="el" href="#gab1e4f32614be9a3609820f75dbcb4fc2" title="Indicates whether the socket has been successfully connected to a remote host.">isConnected()</a> to check the connection status.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md587"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md579"></a>
 Implementation Details</h3>
 <ul>
 <li>Checks if internal socket descriptor (_sockFd) is not INVALID_SOCKET</li>
@@ -2514,7 +2514,7 @@ Implementation Details</h3>
 <li>Thread-safe (const noexcept)</li>
 <li>Does not perform any system calls</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md588"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md580"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line"><span class="keywordflow">if</span> (sock.isValid()) {</div>
@@ -3553,7 +3553,7 @@ Example Usage</h3>
 
 <p>Reads data from the socket into a user-supplied buffer. </p>
 <p>This method provides direct access to the socket's receive functionality by reading data into a caller-provided buffer. It supports both "best-effort" single reads and exact-length reads that ensure all requested bytes are received.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md614"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md602"></a>
 Modes of Operation</h3>
 <ul>
 <li><b>Best-effort mode</b> (exact=false):<ul>
@@ -3571,7 +3571,7 @@ Modes of Operation</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md615"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md603"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -3585,7 +3585,7 @@ Example Usage</h3>
 <div class="line">uint32_t length;</div>
 <div class="line">sock.readInto(&amp;length, <span class="keyword">sizeof</span>(length), <span class="keyword">true</span>);</div>
 <div class="line"><span class="comment">// Always reads exactly 4 bytes or throws</span></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md616"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md604"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses recv() internally for actual reads</li>
@@ -4636,15 +4636,15 @@ This constructor is not thread safe. Do not share a <a class="el" href="classjso
 </div><div class="memdoc">
 
 <p>Sets the size of the internal read buffer used for string operations. </p>
-<p>This method controls the size of the internal buffer used by <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> operations. This is distinct from <a class="el" href="group__socketopts.html#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a>, which controls the operating system's socket buffer (SO_RCVBUF).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md584"></a>
+<p>This method controls the size of the internal buffer used by <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> operations. This is distinct from <a class="el" href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a>, which controls the operating system's socket buffer (SO_RCVBUF).</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md576"></a>
 Purpose</h3>
 <ul>
 <li>Controls maximum size of data readable in one <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> call</li>
 <li>Affects memory usage of the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object</li>
 <li>Does not affect system socket buffers or network behavior</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md585"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md577"></a>
 Implementation Details</h3>
 <ul>
 <li>Resizes internal std::vector&lt;char&gt; buffer</li>
@@ -4652,7 +4652,7 @@ Implementation Details</h3>
 <li>Not used for fixed-size <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read&lt;T&gt;()</a> operations</li>
 <li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md586"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md578"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -4674,11 +4674,11 @@ Example Usage</h3>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__socketopts.html#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> For setting the OS socket receive buffer </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> For setting the OS socket receive buffer </dd>
 <dd>
 <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> Uses this buffer for string operations </dd>
 <dd>
-<a class="el" href="group__socketopts.html#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> For setting the OS socket send buffer </dd></dl>
+<a class="el" href="group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> For setting the OS socket send buffer </dd></dl>
 
 </div>
 </div>
@@ -4734,21 +4734,21 @@ Example Usage</h3>
 <p>Enables or disables TCP keepalive behavior for the socket. </p>
 <p>Enabling <span class="tt">SO_KEEPALIVE</span> causes the operating system to periodically send keepalive probes on otherwise idle TCP connections. If the remote peer becomes unreachable or the connection silently fails (e.g., due to a crash or network issue), the system will detect this and close the socket with an error after several unacknowledged probes.</p>
 <p>When disabled (the default for most platforms), the TCP connection may remain open indefinitely even if the remote peer is no longer reachable—no liveness checking is performed by the kernel.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md606"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md594"></a>
 Use Cases</h3>
 <ul>
 <li>Long-lived client sessions (e.g., remote control, telemetry, streaming)</li>
 <li>Detecting peer failure in headless or embedded environments</li>
 <li>Avoiding resource leaks from zombie connections in servers</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md607"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md595"></a>
 Platform Notes</h3>
 <ul>
 <li><b>Linux</b>: Keepalive settings (idle time, probe count, interval) are configurable globally via: <span class="tt">/proc/sys/net/ipv4/tcp_keepalive_time</span>, <span class="tt">tcp_keepalive_intvl</span>, and <span class="tt">tcp_keepalive_probes</span>. Per-socket tuning requires additional socket options (not currently exposed here).</li>
 <li><b>Windows</b>: Default keepalive timeout is 2 hours. Per-socket tuning requires <span class="tt">WSAIoctl</span> with <span class="tt">SIO_KEEPALIVE_VALS</span> (not exposed here). Keepalive is disabled by default.</li>
 <li><b>macOS</b>: Controlled by system-level TCP settings. Limited application-level configurability.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md608"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md596"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
 <div class="line">sock.connect();</div>
@@ -4794,7 +4794,7 @@ Example</h3>
 <p>Sets the socket to either non-blocking or blocking mode. </p>
 <p>Configures the I/O mode of the socket. In non-blocking mode, operations such as <span class="tt"><a class="el" href="#ga93cc325113abb7433288338ca3facde1" title="Establishes a TCP connection to the remote host with optional timeout control.">connect()</a></span>, <span class="tt"><a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read()</a></span>, and <span class="tt"><a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write()</a></span> return immediately if they cannot complete, often with an error such as <span class="tt">EWOULDBLOCK</span> or <span class="tt">WSAEWOULDBLOCK</span>. This allows the application to avoid stalling the current thread and implement custom polling, timeout, or scheduling logic.</p>
 <p>In blocking mode (the default), these operations will block the calling thread until the operation completes, fails, or a timeout (e.g., <span class="tt">SO_RCVTIMEO</span>) occurs.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md589"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md581"></a>
 Implementation Details</h3>
 <ul>
 <li>On <b>Windows</b>, uses <span class="tt"><a class="el" href="namespacejsocketpp.html#a771a44f3967222b2e3221ed3120220af">ioctlsocket()</a></span> with <span class="tt">FIONBIO</span></li>
@@ -4803,7 +4803,7 @@ Implementation Details</h3>
 <li>Has no effect on other <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> instances or global behavior</li>
 <li>State is persistent until explicitly changed</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md590"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md582"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line"> </div>
@@ -4821,7 +4821,7 @@ Example Usage</h3>
 <div class="line">    }</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassjsocketpp_1_1SocketException_html_a05b11ce845a5ea121e331dda3039993d"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html#a05b11ce845a5ea121e331dda3039993d">jsocketpp::SocketException::getErrorCode</a></div><div class="ttdeci">int getErrorCode() const noexcept</div><div class="ttdoc">Retrieves the platform-specific error code associated with this exception.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:144</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md591"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md583"></a>
 Use Cases</h3>
 <ul>
 <li>Event-driven I/O (e.g., <span class="tt">select</span>, <span class="tt">poll</span>, <span class="tt">epoll</span>, <span class="tt">kqueue</span>)</li>
@@ -5268,9 +5268,9 @@ Initialization Flow</h3>
 <dd>
 <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for TCP socket read operations.">DefaultBufferSize</a> </dd>
 <dd>
-<a class="el" href="group__socketopts.html#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> </dd>
+<a class="el" href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> </dd>
 <dd>
-<a class="el" href="group__socketopts.html#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> </dd>
+<a class="el" href="group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> </dd>
 <dd>
 <a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> </dd></dl>
 
@@ -5327,8 +5327,8 @@ Initialization Flow</h3>
 <li>Positive: wait up to this many milliseconds </li>
 </ul>
 </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setReceiveBufferSize()</span>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setSendBufferSize()</span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e" title="Set the default receive buffer size for accepted client sockets.">setDefaultReceiveBufferSize()</a></span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gadbeecdd1d47fb8244dab210fa297fcf9" title="Set the default send buffer size for accepted client sockets.">setDefaultSendBufferSize()</a></span>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">internalBufferSize</td><td>The internal buffer size used by the accepted socket for <span class="tt">read&lt;T&gt;()</span> operations. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gab42832248058c119c99ef60c4d72d478" title="Set the per-instance default internal buffer size used for buffered read operations.">setDefaultInternalBufferSize()</a></span>.</td></tr>
   </table>
   </dd>
@@ -5408,8 +5408,8 @@ To specify a timeout for a single call, use <span class="tt">tryAccept(int timeo
 This method uses the logical timeout configured via <span class="tt"><a class="el" href="group__socketopts.html#ga2087f337f22de16821132208b94b1441" title="Set the logical timeout (in milliseconds) for accepting client connections.">setSoTimeout()</a></span> and does not rely on kernel-level socket timeouts. To control socket-level I/O timeout (for client sockets), see <span class="tt">Socket::setSoTimeout()</span>.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setReceiveBufferSize()</span>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt">setSendBufferSize()</span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>The receive buffer size (<span class="tt">SO_RCVBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e" title="Set the default receive buffer size for accepted client sockets.">setDefaultReceiveBufferSize()</a></span>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>The send buffer size (<span class="tt">SO_SNDBUF</span>) to apply to the accepted socket. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gadbeecdd1d47fb8244dab210fa297fcf9" title="Set the default send buffer size for accepted client sockets.">setDefaultSendBufferSize()</a></span>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">internalBufferSize</td><td>The internal buffer size used by the accepted socket for <span class="tt">read&lt;T&gt;()</span> operations. Defaults to <span class="tt">DefaultBufferSize</span>. Can also be set via <span class="tt"><a class="el" href="#gab42832248058c119c99ef60c4d72d478" title="Set the per-instance default internal buffer size used for buffered read operations.">setDefaultInternalBufferSize()</a></span>.</td></tr>
   </table>
   </dd>
@@ -5545,7 +5545,7 @@ Thread Safety</h3>
 <p>Waits for the socket to become ready for reading or writing. </p>
 <p>This method performs a blocking or timed wait until the socket is ready for either reading or writing, depending on the <span class="tt">forWrite</span> parameter. Internally, it uses the <span class="tt">select()</span> system call to monitor readiness.</p>
 <p>The timeout is specified in milliseconds. A negative timeout value (e.g., <span class="tt">-1</span>) causes the method to wait indefinitely until the socket becomes ready. A timeout of <span class="tt">0</span> performs a non-blocking poll.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md602"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md590"></a>
 Implementation Notes</h3>
 <ul>
 <li>Internally uses <span class="tt">select()</span> on both POSIX and Windows platforms.</li>
@@ -5553,7 +5553,7 @@ Implementation Notes</h3>
 <li>On Windows, the first parameter to <span class="tt">select()</span> is ignored and always set to 0.</li>
 <li>This method works for both blocking and non-blocking sockets.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md603"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md591"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -5561,7 +5561,7 @@ Example</h3>
 <div class="line">    std::string msg = sock.read&lt;std::string&gt;();</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Received: &quot;</span> &lt;&lt; msg &lt;&lt; <span class="stringliteral">&quot;\\n&quot;</span>;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md604"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md592"></a>
 Protocol Behavior</h3>
 <ul>
 <li><span class="tt">forWrite == false</span>: Waits for the socket to be readable (e.g., data available).</li>

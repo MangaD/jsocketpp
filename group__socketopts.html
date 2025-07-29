@@ -116,14 +116,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga7829c558cb7bf5e0a46d882df82acc19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the logical timeout (in milliseconds) for accept operations.  <br /></td></tr>
 <tr class="memitem:gad113886a7cc6100e5ef2c25ea504696e" id="r_gad113886a7cc6100e5ef2c25ea504696e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad113886a7cc6100e5ef2c25ea504696e">jsocketpp::ServerSocket::isPassiveSocket</a> () const noexcept override</td></tr>
 <tr class="memdesc:gad113886a7cc6100e5ef2c25ea504696e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies this socket as a passive (listening) socket.  <br /></td></tr>
-<tr class="memitem:ga0539576a97fe792c9cb67b8aee26477b" id="r_ga0539576a97fe792c9cb67b8aee26477b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b">jsocketpp::Socket::setReceiveBufferSize</a> (std::size_t size)</td></tr>
-<tr class="memdesc:ga0539576a97fe792c9cb67b8aee26477b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
-<tr class="memitem:ga243562caf78f87e481f657e26c59e1f0" id="r_ga243562caf78f87e481f657e26c59e1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga243562caf78f87e481f657e26c59e1f0">jsocketpp::Socket::setSendBufferSize</a> (std::size_t size)</td></tr>
-<tr class="memdesc:ga243562caf78f87e481f657e26c59e1f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's send buffer size (SO_SNDBUF).  <br /></td></tr>
-<tr class="memitem:ga53a0a6980058ce02034033b05f6ca389" id="r_ga53a0a6980058ce02034033b05f6ca389"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga53a0a6980058ce02034033b05f6ca389">jsocketpp::Socket::getReceiveBufferSize</a> () const</td></tr>
-<tr class="memdesc:ga53a0a6980058ce02034033b05f6ca389"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
-<tr class="memitem:gacb2d3979ff562c2ffd60b12a1b4c9897" id="r_gacb2d3979ff562c2ffd60b12a1b4c9897"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897">jsocketpp::Socket::getSendBufferSize</a> () const</td></tr>
-<tr class="memdesc:gacb2d3979ff562c2ffd60b12a1b4c9897"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the socket's send buffer size (SO_SNDBUF).  <br /></td></tr>
 <tr class="memitem:gaeabff1b6131c1570fe485304faa47491" id="r_gaeabff1b6131c1570fe485304faa47491"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaeabff1b6131c1570fe485304faa47491">jsocketpp::Socket::setSoRecvTimeout</a> (int millis)</td></tr>
 <tr class="memdesc:gaeabff1b6131c1570fe485304faa47491"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.  <br /></td></tr>
 <tr class="memitem:ga5182b15a2d0c4eb70eeeaa5f7c62aeed" id="r_ga5182b15a2d0c4eb70eeeaa5f7c62aeed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5182b15a2d0c4eb70eeeaa5f7c62aeed">jsocketpp::Socket::setSoSendTimeout</a> (int millis)</td></tr>
@@ -132,10 +124,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:gaaf45a79f9c216e52bd1593e4bdf8a334"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current socket read timeout (SO_RCVTIMEO) in milliseconds.  <br /></td></tr>
 <tr class="memitem:gab372986b4384867b48e82922aa2e1cbd" id="r_gab372986b4384867b48e82922aa2e1cbd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab372986b4384867b48e82922aa2e1cbd">jsocketpp::Socket::getSoSendTimeout</a> () const</td></tr>
 <tr class="memdesc:gab372986b4384867b48e82922aa2e1cbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current socket send timeout (SO_SNDTIMEO) in milliseconds.  <br /></td></tr>
-<tr class="memitem:ga895f76bf9c4745fc20074ef2491b02be" id="r_ga895f76bf9c4745fc20074ef2491b02be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga895f76bf9c4745fc20074ef2491b02be">jsocketpp::Socket::setSoLinger</a> (bool enable, int seconds)</td></tr>
-<tr class="memdesc:ga895f76bf9c4745fc20074ef2491b02be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the socket's linger behavior (SO_LINGER) on close.  <br /></td></tr>
-<tr class="memitem:ga1734c9ec9ae9c7dacf616fadc3b5f1cb" id="r_ga1734c9ec9ae9c7dacf616fadc3b5f1cb"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1734c9ec9ae9c7dacf616fadc3b5f1cb">jsocketpp::Socket::getSoLinger</a> () const</td></tr>
-<tr class="memdesc:ga1734c9ec9ae9c7dacf616fadc3b5f1cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the socket's current SO_LINGER configuration.  <br /></td></tr>
 <tr class="memitem:gac3c6f8848ff049eb3e31b4fe190dd624" id="r_gac3c6f8848ff049eb3e31b4fe190dd624"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac3c6f8848ff049eb3e31b4fe190dd624">jsocketpp::Socket::setTcpNoDelay</a> (bool on)</td></tr>
 <tr class="memdesc:gac3c6f8848ff049eb3e31b4fe190dd624"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket.  <br /></td></tr>
 <tr class="memitem:ga2539928ed0829df5070384f907ea48f7" id="r_ga2539928ed0829df5070384f907ea48f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2539928ed0829df5070384f907ea48f7">jsocketpp::Socket::getTcpNoDelay</a> () const</td></tr>
@@ -152,6 +140,18 @@ Functions</h2></td></tr>
 <tr class="memdesc:gab358ea7ed49e95717b1e9438251b3d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the <span class="tt">SO_REUSEADDR</span> socket option.  <br /></td></tr>
 <tr class="memitem:ga8e8783ada3142cd6c3b275e01b7b12f2" id="r_ga8e8783ada3142cd6c3b275e01b7b12f2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8e8783ada3142cd6c3b275e01b7b12f2">jsocketpp::SocketOptions::getReuseAddress</a> () const</td></tr>
 <tr class="memdesc:ga8e8783ada3142cd6c3b275e01b7b12f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the socket is currently configured to allow address reuse.  <br /></td></tr>
+<tr class="memitem:ga69fdecc0aaaef4bbd2826c448a8bbe1d" id="r_ga69fdecc0aaaef4bbd2826c448a8bbe1d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga69fdecc0aaaef4bbd2826c448a8bbe1d">jsocketpp::SocketOptions::setReceiveBufferSize</a> (std::size_t size)</td></tr>
+<tr class="memdesc:ga69fdecc0aaaef4bbd2826c448a8bbe1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's receive buffer size (SO_RCVBUF).  <br /></td></tr>
+<tr class="memitem:ga2eaf2835ebba5587c238a0bd6c2be188" id="r_ga2eaf2835ebba5587c238a0bd6c2be188"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2eaf2835ebba5587c238a0bd6c2be188">jsocketpp::SocketOptions::getReceiveBufferSize</a> () const</td></tr>
+<tr class="memdesc:ga2eaf2835ebba5587c238a0bd6c2be188"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current receive buffer size (SO_RCVBUF) of the socket.  <br /></td></tr>
+<tr class="memitem:ga8279b0c70f6a0fddf73d84aac691422b" id="r_ga8279b0c70f6a0fddf73d84aac691422b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8279b0c70f6a0fddf73d84aac691422b">jsocketpp::SocketOptions::setSendBufferSize</a> (std::size_t size)</td></tr>
+<tr class="memdesc:ga8279b0c70f6a0fddf73d84aac691422b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket's send buffer size (SO_SNDBUF).  <br /></td></tr>
+<tr class="memitem:gaeb5f9d1ae3f1b7b9fdb94335b10723f6" id="r_gaeb5f9d1ae3f1b7b9fdb94335b10723f6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaeb5f9d1ae3f1b7b9fdb94335b10723f6">jsocketpp::SocketOptions::getSendBufferSize</a> () const</td></tr>
+<tr class="memdesc:gaeb5f9d1ae3f1b7b9fdb94335b10723f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current send buffer size (SO_SNDBUF) of the socket.  <br /></td></tr>
+<tr class="memitem:ga707a637112e5ec1309da4e6dfe2fddb3" id="r_ga707a637112e5ec1309da4e6dfe2fddb3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga707a637112e5ec1309da4e6dfe2fddb3">jsocketpp::SocketOptions::setSoLinger</a> (bool enable, int seconds)</td></tr>
+<tr class="memdesc:ga707a637112e5ec1309da4e6dfe2fddb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the socket's linger behavior (<span class="tt">SO_LINGER</span>) during close.  <br /></td></tr>
+<tr class="memitem:ga15ba6d555b0f3b7809c746f827398c5e" id="r_ga15ba6d555b0f3b7809c746f827398c5e"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga15ba6d555b0f3b7809c746f827398c5e">jsocketpp::SocketOptions::getSoLinger</a> () const</td></tr>
+<tr class="memdesc:ga15ba6d555b0f3b7809c746f827398c5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current <span class="tt">SO_LINGER</span> configuration of the socket.  <br /></td></tr>
 <tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
 <tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the socket descriptor used by this object.  <br /></td></tr>
 <tr class="memitem:gaace6c3364b4016979537571b36c58727" id="r_gaace6c3364b4016979537571b36c58727"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaace6c3364b4016979537571b36c58727">jsocketpp::SocketOptions::isPassiveSocket</a> () const noexcept</td></tr>
@@ -230,11 +230,11 @@ Functions</h2></td></tr>
 <p>Retrieves the current value of a low-level socket option. </p>
 <p>This method queries the current value of a socket option via <span class="tt">getsockopt()</span> on the underlying socket descriptor. It is useful for verifying runtime socket configuration, inspecting platform defaults, and performing conditional logic based on system-level state.</p>
 <p>This interface applies uniformly across all socket types (e.g., <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>) and supports standard protocol levels and option names.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md630"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md618"></a>
 Example: Read the configured receive buffer size</h3>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> rcvBuf = socket.getOption(SOL_SOCKET, SO_RCVBUF);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md632"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md620"></a>
 ⚠️ ServerSocket-specific Notes</h3>
 <ul>
 <li><span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> returns the value of the option as applied to the <b>listening socket only</b>.</li>
@@ -242,18 +242,18 @@ Example: Read the configured receive buffer size</h3>
 <li>To inspect options for a client connection, call <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> on the accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> returned by <span class="tt">accept()</span>.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md634"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md622"></a>
 📡 DatagramSocket-specific Notes</h3>
 <ul>
 <li>Use <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> to inspect options like buffer sizes (<span class="tt">SO_RCVBUF</span>, <span class="tt">SO_SNDBUF</span>) and timeouts (<span class="tt">SO_RCVTIMEO</span>, <span class="tt">SO_SNDTIMEO</span>) for diagnostic or tuning purposes.</li>
 <li>On broadcast-enabled sockets (<span class="tt">SO_BROADCAST</span>), this method can verify that the option was set successfully.</li>
 <li>Behavior is the same whether the socket is connected or unconnected.</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md635"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md623"></a>
 Example: Get current timeout for receiving</h4>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> timeout = datagramSocket.getOption(SOL_SOCKET, SO_RCVTIMEO);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md637"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md625"></a>
 🧿 UnixSocket-specific Notes</h3>
 <ul>
 <li>Although Unix domain sockets are local, many <span class="tt">SOL_SOCKET</span> options are still supported and report useful values:<ul>
@@ -264,7 +264,7 @@ Example: Get current timeout for receiving</h4>
 </li>
 <li>This method is particularly useful for debugging IPC performance characteristics.</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md638"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md626"></a>
 Example: Read the actual receive buffer size used for a Unix socket</h4>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> size = unixSocket.getOption(SOL_SOCKET, SO_RCVBUF);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
@@ -287,8 +287,8 @@ Example: Read the actual receive buffer size used for a Unix socket</h4>
 
 </div>
 </div>
-<a id="ga53a0a6980058ce02034033b05f6ca389" name="ga53a0a6980058ce02034033b05f6ca389"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga53a0a6980058ce02034033b05f6ca389">&#9670;&#160;</a></span>getReceiveBufferSize()</h2>
+<a id="ga2eaf2835ebba5587c238a0bd6c2be188" name="ga2eaf2835ebba5587c238a0bd6c2be188"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2eaf2835ebba5587c238a0bd6c2be188">&#9670;&#160;</a></span>getReceiveBufferSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -297,7 +297,7 @@ Example: Read the actual receive buffer size used for a Unix socket</h4>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int Socket::getReceiveBufferSize </td>
+          <td class="memname">int jsocketpp::SocketOptions::getReceiveBufferSize </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -310,49 +310,45 @@ Example: Read the actual receive buffer size used for a Unix socket</h4>
 </table>
 </div><div class="memdoc">
 
-<p>Get the socket's receive buffer size (SO_RCVBUF). </p>
-<p>Retrieves the current size of the operating system's receive buffer for this socket. The receive buffer is used by the OS to store incoming data before it is read by the application. A larger buffer can help prevent data loss during high-bandwidth transfers or when the application cannot read data quickly enough.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md580"></a>
-Implementation Details</h3>
-<ul>
-<li>Uses getsockopt() with SO_RCVBUF option</li>
-<li>Returns actual buffer size allocated by OS</li>
-<li>On Linux, returned value may be twice the requested size due to kernel overhead</li>
-<li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
+<p>Retrieves the current receive buffer size (SO_RCVBUF) of the socket. </p>
+<p>Queries the operating system for the size of the receive buffer allocated to this socket. This buffer temporarily holds incoming data before it is read by the application. The size is determined by system policy, user configuration, and the value set via <span class="tt"><a class="el" href="#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a></span>.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md636"></a>
+Applicability</h3>
+<p>This method works for:</p><ul>
+<li><b>TCP sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Indicates how much inbound data can be queued before blocking or drop.</li>
+<li><b>UDP sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>)</b>: Critical for burst tolerance and loss avoidance.</li>
+<li><b>UNIX domain sockets</b>: Supported on most platforms.</li>
+<li><b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></b>: Reflects configuration of the passive socket itself (not accepted sockets).</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md581"></a>
-Example Usage</h3>
-<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
-<div class="line">sock.connect();</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Check current receive buffer size</span></div>
-<div class="line"><span class="keywordtype">int</span> size = sock.getReceiveBufferSize();</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current receive buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Increase if needed</span></div>
-<div class="line"><span class="keywordflow">if</span> (size &lt; 64 * 1024) {</div>
-<div class="line">    sock.setReceiveBufferSize(64 * 1024);</div>
-<div class="line">    size = sock.getReceiveBufferSize();</div>
-<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;New receive buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
-<div class="line">}</div>
-<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:11</div></div>
-</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>Current receive buffer size in bytes. Note that this may differ from the size requested via <a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> due to OS adjustments and overhead.</dd></dl>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md637"></a>
+Platform Notes</h3>
+<ul>
+<li><b>Linux</b>: Returned value is typically <em>twice</em> the requested size due to internal accounting.</li>
+<li><b>Windows</b>: Rounded to alignment boundaries; value reflects what was granted, not requested.</li>
+<li><b>BSD/macOS</b>: Exact behavior may vary, but returned size reflects the OS’s accepted setting.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md638"></a>
+Example</h3>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> size = socket.getReceiveBufferSize();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current OS receive buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>The actual receive buffer size in bytes as allocated by the operating system.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
-<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> is invalid (EBADF)</li>
-<li>System call fails (EFAULT)</li>
-<li>Insufficient permissions</li>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid (e.g., not open or moved-from)</li>
+<li>The system call fails (e.g., due to low-level error)</li>
+<li>Permissions are insufficient</li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> For setting the receive buffer size </dd>
+<dl class="section note"><dt>Note</dt><dd>To verify that <span class="tt"><a class="el" href="#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a></span> took effect, compare the returned value here. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> </dd>
 <dd>
-<a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get send buffer size </dd>
+<a class="el" href="#gaeb5f9d1ae3f1b7b9fdb94335b10723f6" title="Retrieves the current send buffer size (SO_SNDBUF) of the socket.">getSendBufferSize()</a> </dd>
 <dd>
-<a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html" title="Implementation-only utilities and platform abstractions for jsocketpp.">internal</a> string buffer size </dd></dl>
+setInternalBufferSize() </dd></dl>
 
 </div>
 </div>
@@ -386,20 +382,20 @@ Example Usage</h3>
 <li>UDP or multicast receivers sharing the same port</li>
 <li>Clients using fixed local ports across reconnects</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md642"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md630"></a>
 Platform Behavior</h3>
 <ul>
 <li><b>POSIX:</b> Multiple sockets can bind the same local address/port if all use <span class="tt">SO_REUSEADDR</span>.</li>
 <li><b>Windows:</b> <span class="tt">SO_REUSEADDR</span> allows rebinding to a port in <span class="tt">TIME_WAIT</span>, but does <b>not</b> allow simultaneous binds. Additionally, <span class="tt">SO_EXCLUSIVEADDRUSE</span> is enabled by default and disables reuse — this method reflects the effective state of <span class="tt">SO_REUSEADDR</span>, not <span class="tt">SO_EXCLUSIVEADDRUSE</span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md643"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md631"></a>
 Protocol Applicability</h3>
 <ul>
 <li><b>TCP:</b> Useful for both client and server sockets.</li>
 <li><b>UDP:</b> Required for multicast and shared-port scenarios.</li>
 <li><b>Unix domain sockets:</b> <span class="tt">SO_REUSEADDR</span> may be supported but is typically a no-op; Unix path conflicts are governed by the file system.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md644"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md632"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (!socket.getReuseAddress()) {</div>
 <div class="line">    socket.setReuseAddress(<span class="keyword">true</span>);</div>
@@ -418,8 +414,8 @@ Example</h3>
 
 </div>
 </div>
-<a id="gacb2d3979ff562c2ffd60b12a1b4c9897" name="gacb2d3979ff562c2ffd60b12a1b4c9897"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacb2d3979ff562c2ffd60b12a1b4c9897">&#9670;&#160;</a></span>getSendBufferSize()</h2>
+<a id="gaeb5f9d1ae3f1b7b9fdb94335b10723f6" name="gaeb5f9d1ae3f1b7b9fdb94335b10723f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeb5f9d1ae3f1b7b9fdb94335b10723f6">&#9670;&#160;</a></span>getSendBufferSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -428,7 +424,7 @@ Example</h3>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int Socket::getSendBufferSize </td>
+          <td class="memname">int jsocketpp::SocketOptions::getSendBufferSize </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -441,93 +437,113 @@ Example</h3>
 </table>
 </div><div class="memdoc">
 
-<p>Get the socket's send buffer size (SO_SNDBUF). </p>
-<p>Retrieves the current size of the operating system's send buffer for this socket. The send buffer is used by the OS to store outgoing data before it is transmitted over the network. A larger buffer can help improve performance during high-bandwidth transfers or when the network is temporarily congested.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md582"></a>
-Implementation Details</h3>
-<ul>
-<li>Uses getsockopt() with SO_SNDBUF option</li>
-<li>Returns actual buffer size allocated by OS</li>
-<li>On Linux, returned value may be twice the requested size due to kernel overhead</li>
-<li>Thread-safe with respect to other <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> instances</li>
+<p>Retrieves the current send buffer size (SO_SNDBUF) of the socket. </p>
+<p>Queries the operating system for the size of the send buffer allocated to this socket. This buffer holds outgoing data that has been written by the application but not yet transmitted over the network or IPC channel. A larger send buffer allows the socket to tolerate bursts of data or temporary network slowdowns without blocking the writer.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md642"></a>
+Applicability</h3>
+<p>This method is supported for:</p><ul>
+<li><b>TCP sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Improves write throughput and non-blocking behavior.</li>
+<li><b>UDP sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>)</b>: Enables larger bursts of outgoing datagrams.</li>
+<li><b>UNIX domain sockets</b>: Applies to stream or datagram sockets on most platforms.</li>
+<li><b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></b>: Returns the buffer size of the passive socket, but has no effect on accepted sockets.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md583"></a>
-Example Usage</h3>
-<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
-<div class="line">sock.connect();</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Check current send buffer size</span></div>
-<div class="line"><span class="keywordtype">int</span> size = sock.getSendBufferSize();</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current send buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Increase if needed</span></div>
-<div class="line"><span class="keywordflow">if</span> (size &lt; 64 * 1024) {</div>
-<div class="line">    sock.setSendBufferSize(64 * 1024);</div>
-<div class="line">    size = sock.getSendBufferSize();</div>
-<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;New send buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
-<div class="line">}</div>
-</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>Current send buffer size in bytes. Note that this may differ from the size requested via <a class="el" href="#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> due to OS adjustments and overhead.</dd></dl>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md643"></a>
+Platform Notes</h3>
+<ul>
+<li><b>Linux</b>: May return a value twice the requested size due to kernel bookkeeping.</li>
+<li><b>Windows</b>: Returns the actual allocated size, rounded internally by Winsock.</li>
+<li><b>BSD/macOS</b>: Behavior follows BSD socket semantics.</li>
+<li>System-wide limits may apply, and the kernel may clamp, align, or ignore extreme values.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md644"></a>
+Example</h3>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> size = socket.getSendBufferSize();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Send buffer size: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>Actual send buffer size in bytes, as reported by the kernel.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
-<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> is invalid (EBADF)</li>
-<li>System call fails (EFAULT)</li>
-<li>Insufficient permissions</li>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid or closed</li>
+<li>The <span class="tt">getsockopt()</span> call fails</li>
+<li>Permissions are insufficient to query socket settings</li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> For setting the send buffer size </dd>
+<dl class="section note"><dt>Note</dt><dd>The value returned may differ from what was passed to <span class="tt"><a class="el" href="#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a></span>. Always query after setting to determine the effective size.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> </dd>
 <dd>
-<a class="el" href="#ga53a0a6980058ce02034033b05f6ca389" title="Get the socket&#39;s receive buffer size (SO_RCVBUF).">getReceiveBufferSize()</a> Get receive buffer size </dd>
+<a class="el" href="#ga2eaf2835ebba5587c238a0bd6c2be188" title="Retrieves the current receive buffer size (SO_RCVBUF) of the socket.">getReceiveBufferSize()</a> </dd>
 <dd>
-<a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html" title="Implementation-only utilities and platform abstractions for jsocketpp.">internal</a> string buffer size </dd></dl>
+<a class="el" href="#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> </dd></dl>
 
 </div>
 </div>
-<a id="ga1734c9ec9ae9c7dacf616fadc3b5f1cb" name="ga1734c9ec9ae9c7dacf616fadc3b5f1cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1734c9ec9ae9c7dacf616fadc3b5f1cb">&#9670;&#160;</a></span>getSoLinger()</h2>
+<a id="ga15ba6d555b0f3b7809c746f827398c5e" name="ga15ba6d555b0f3b7809c746f827398c5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga15ba6d555b0f3b7809c746f827398c5e">&#9670;&#160;</a></span>getSoLinger()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::pair&lt; bool, int &gt; Socket::getSoLinger </td>
+          <td class="memname">std::pair&lt; bool, int &gt; jsocketpp::SocketOptions::getSoLinger </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Retrieves the socket's current SO_LINGER configuration. </p>
-<p>This method returns whether SO_LINGER is enabled, and if so, the number of seconds the socket will linger (i.e., block) on <a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a> to allow unsent data to be transmitted.</p>
-<p>If SO_LINGER is disabled, the socket closes immediately without attempting to flush unsent data. If enabled, <a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a> will block for up to the specified timeout before forcefully terminating the connection.</p>
-<dl class="section return"><dt>Returns</dt><dd>A pair <span class="tt">{enabled, timeout}</span>:<ul>
-<li><span class="tt">first</span> (bool): true if SO_LINGER is enabled, false otherwise</li>
-<li><span class="tt">second</span> (int): linger timeout in seconds (0 if disabled)</li>
-</ul>
-</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the SO_LINGER option could not be retrieved.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga895f76bf9c4745fc20074ef2491b02be" title="Configures the socket&#39;s linger behavior (SO_LINGER) on close.">setSoLinger()</a></dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md601"></a>
-📌 Use Cases</h3>
+<p>Retrieves the current <span class="tt">SO_LINGER</span> configuration of the socket. </p>
+<p>Queries the operating system for the current linger behavior configured on this socket. Linger settings determine whether the socket blocks on <span class="tt">close()</span> to allow unsent data to be transmitted, or terminates the connection immediately (potentially discarding unsent data).</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md648"></a>
+🔁 Applicability</h3>
 <ul>
-<li><b>Inspecting socket shutdown behavior</b>: Knowing whether the socket is in blocking close mode is helpful for debugging or optimizing teardown.</li>
-<li><b>Server socket diagnostics</b>: Some applications may dynamically adjust linger settings and wish to log or verify current values.</li>
+<li>✅ <b>TCP sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Fully supported; reflects actual linger settings.</li>
+<li>✅ <b>UNIX domain stream sockets</b>: Supported on most POSIX platforms.</li>
+<li>⚠️ <b>UDP / datagram sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>)</b>: <span class="tt">SO_LINGER</span> is silently ignored by most systems.</li>
+<li>⚠️ <b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></b>: Applies only to the passive (listening) socket. To inspect accepted clients, query each returned <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> individually.</li>
 </ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md649"></a>
+Return Value</h3>
+<p>Returns a pair <span class="tt">{enabled, timeout}</span>:</p><ul>
+<li><span class="tt">first</span> (<span class="tt">bool</span>): Whether <span class="tt">SO_LINGER</span> is currently enabled.</li>
+<li><span class="tt">second</span> (<span class="tt">int</span>): Timeout value in seconds (typically <span class="tt">0</span> if disabled).</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md650"></a>
+Example</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> [enabled, timeout] = socket.getSoLinger();</div>
 <div class="line"><span class="keywordflow">if</span> (enabled)</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Linger is enabled for &quot;</span> &lt;&lt; timeout &lt;&lt; <span class="stringliteral">&quot; seconds.\n&quot;</span>;</div>
 <div class="line"><span class="keywordflow">else</span></div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Linger is disabled.\n&quot;</span>;</div>
-</div><!-- fragment --> 
+</div><!-- fragment --><dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid</li>
+<li>The system call fails</li>
+<li>The option is unsupported or not implemented on the platform</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga707a637112e5ec1309da4e6dfe2fddb3" title="Configures the socket&#39;s linger behavior (SO_LINGER) during close.">setSoLinger()</a> </dd>
+<dd>
+shutdown() </dd>
+<dd>
+close()</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>On many platforms, this option is only meaningful for stream-oriented sockets. Behavior for datagram sockets is undefined or silently ignored. </dd></dl>
+
 </div>
 </div>
 <a id="gaaf45a79f9c216e52bd1593e4bdf8a334" name="gaaf45a79f9c216e52bd1593e4bdf8a334"></a>
@@ -552,7 +568,7 @@ Example Usage</h3>
 <li>On <b>Windows</b>, the timeout is stored as an <span class="tt">int</span> (milliseconds).</li>
 <li>On <b>POSIX</b>, the timeout is stored as a <span class="tt">timeval</span> and converted into milliseconds.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md596"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md588"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 9000);</div>
 <div class="line">sock.connect();</div>
@@ -561,6 +577,7 @@ Example Usage</h3>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> timeout = sock.getSoRecvTimeout(); <span class="comment">// Returns 3000</span></div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current read timeout: &quot;</span> &lt;&lt; timeout &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
+<div class="ttc" id="agroup__tcp_html_ga94a43fdd77f92eb63104dfd4168ba587"><div class="ttname"><a href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">jsocketpp::Socket::Socket</a></div><div class="ttdeci">Socket(SOCKET client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize, std::size_t sendBufferSize, std::size_t internalBufferSize)</div><div class="ttdoc">Protected constructor used internally to create Socket objects for accepted client connections.</div><div class="ttdef"><b>Definition</b> Socket.cpp:11</div></div>
 </div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>The current receive timeout in milliseconds. Returns 0 if disabled.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
@@ -598,7 +615,7 @@ Example Usage</h3>
 <li>On <b>Windows</b>, the timeout is returned directly as an integer (milliseconds).</li>
 <li>On <b>POSIX</b>, it reads a <span class="tt">timeval</span> structure and converts the result to milliseconds.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md597"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md589"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
 <div class="line">sock.connect();</div>
@@ -769,7 +786,7 @@ When <span class="tt">true</span> matters</h3>
 <li>On Windows, <span class="tt">SO_EXCLUSIVEADDRUSE</span> is used for passive sockets to control port reuse semantics.</li>
 <li>On POSIX systems, all sockets use <span class="tt">SO_REUSEADDR</span>, but server sockets may still follow different best practices.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md647"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md653"></a>
 Usage</h3>
 <ul>
 <li>Override this method in subclasses like <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> to return <span class="tt">true</span>.</li>
@@ -855,20 +872,20 @@ Usage</h3>
 <li>Enabling/disabling keepalive (<span class="tt">SO_KEEPALIVE</span>)</li>
 <li>Disabling Nagle’s algorithm for latency-sensitive TCP (<span class="tt">TCP_NODELAY</span>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md622"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md610"></a>
 ⚠️ ServerSocket-specific Notes</h3>
 <ul>
 <li>Setting options on a <b>listening socket</b> (e.g., <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>) only affects that socket, not the client sockets returned by <span class="tt">accept()</span>. Per-connection tuning must be applied to each accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>.</li>
 <li>Not all options are meaningful on passive (listening) sockets. Invalid combinations may result in <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> or system errors.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md623"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md611"></a>
 Example: Enable port reuse (recommended for servers)</h3>
 <div class="fragment"><div class="line">serverSocket.setOption(SOL_SOCKET, SO_REUSEADDR, 1);</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md624"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md612"></a>
 Example: Disable Nagle’s algorithm (for latency-sensitive clients)</h3>
 <div class="fragment"><div class="line">socket.setOption(IPPROTO_TCP, TCP_NODELAY, 1);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md626"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md614"></a>
 📡 DatagramSocket-specific Notes</h3>
 <ul>
 <li>You can use this method to enable <b>broadcast mode</b> (<span class="tt">SO_BROADCAST</span>) or adjust buffer sizes for high-throughput UDP workloads.</li>
@@ -876,10 +893,10 @@ Example: Disable Nagle’s algorithm (for latency-sensitive clients)</h3>
 <li>For unconnected UDP sockets, option changes affect all outgoing/incoming packets.</li>
 <li>For connected UDP sockets, the changes affect only the single destination connection.</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md627"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md615"></a>
 Example: Enable broadcast for a datagram socket</h4>
 <div class="fragment"><div class="line">datagramSocket.setOption(SOL_SOCKET, SO_BROADCAST, 1);</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md628"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md616"></a>
 🧿 UnixSocket-specific Notes</h3>
 <ul>
 <li>Although Unix domain sockets are local and do not use TCP/IP, many <span class="tt">SOL_SOCKET</span> options still apply:<ul>
@@ -890,7 +907,7 @@ Example: Enable broadcast for a datagram socket</h4>
 </li>
 <li>Options like <span class="tt">TCP_NODELAY</span> and <span class="tt">SO_KEEPALIVE</span> do not apply to Unix sockets.</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md629"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md617"></a>
 Example: Set a larger send buffer for inter-process communication</h4>
 <div class="fragment"><div class="line">unixSocket.setOption(SOL_SOCKET, SO_SNDBUF, 65536);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
@@ -913,14 +930,14 @@ Example: Set a larger send buffer for inter-process communication</h4>
 
 </div>
 </div>
-<a id="ga0539576a97fe792c9cb67b8aee26477b" name="ga0539576a97fe792c9cb67b8aee26477b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0539576a97fe792c9cb67b8aee26477b">&#9670;&#160;</a></span>setReceiveBufferSize()</h2>
+<a id="ga69fdecc0aaaef4bbd2826c448a8bbe1d" name="ga69fdecc0aaaef4bbd2826c448a8bbe1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga69fdecc0aaaef4bbd2826c448a8bbe1d">&#9670;&#160;</a></span>setReceiveBufferSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Socket::setReceiveBufferSize </td>
+          <td class="memname">void jsocketpp::SocketOptions::setReceiveBufferSize </td>
           <td>(</td>
           <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
           <td></td>
@@ -929,54 +946,52 @@ Example: Set a larger send buffer for inter-process communication</h4>
 </div><div class="memdoc">
 
 <p>Sets the socket's receive buffer size (SO_RCVBUF). </p>
-<p>Configures the size of the operating system's receive buffer for this socket. A larger buffer can improve performance for high-bandwidth connections by allowing the system to buffer more incoming data, reducing the risk of packet loss during temporary processing delays.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md576"></a>
-Implementation Details</h3>
+<p>Configures the size of the kernel-level receive buffer for the underlying socket. This buffer controls how much data the operating system can queue before the application reads from the socket. Increasing this value can reduce packet loss and improve throughput under high load or network delay.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md633"></a>
+Applicability</h3>
+<p>This method is valid for all supported socket types:</p><ul>
+<li><b>TCP (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Recommended for high-latency or high-throughput connections.</li>
+<li><b>UDP (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>)</b>: Critical for avoiding packet drops in high-volume flows.</li>
+<li><b>UNIX domain sockets</b>: Supported on most platforms.</li>
+<li><b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></b>: Affects the passive socket itself, not accepted clients.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md634"></a>
+Platform Behavior</h3>
 <ul>
-<li>Uses setsockopt() with SO_RCVBUF option to set kernel socket buffer size</li>
-<li>The operating system may adjust the requested size:<ul>
-<li>Linux typically doubles the value to account for bookkeeping overhead</li>
-<li>Windows may round to system-specific boundaries</li>
-<li>Maximum size is limited by system settings (/proc/sys/net/core/rmem_max on Linux)</li>
+<li><b>Linux</b>: The kernel typically doubles the requested size to account for internal overhead.</li>
+<li><b>Windows</b>: Value may be rounded to OS-specific granularity.</li>
+<li><b>macOS/BSD</b>: Follows BSD semantics; may enforce stricter limits.</li>
+<li>In all cases, system-wide limits apply (e.g., <span class="tt">/proc/sys/net/core/rmem_max</span> on Linux).</li>
 </ul>
-</li>
-<li>Changes affect subsequent receives only, not data already in the buffer</li>
-<li>System limits may constrain maximum size based on available memory and OS policy</li>
-</ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md577"></a>
-Example Usage</h3>
-<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Set 64KB receive buffer</span></div>
-<div class="line">sock.setReceiveBufferSize(64 * 1024);</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Verify actual size (may be different)</span></div>
-<div class="line"><span class="keywordtype">int</span> actualSize = sock.getReceiveBufferSize();</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Actual receive buffer size: &quot;</span> &lt;&lt; actualSize &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md635"></a>
+Example</h3>
+<div class="fragment"><div class="line">datagramSocket.setReceiveBufferSize(256 * 1024); <span class="comment">// Set 256 KB buffer</span></div>
+<div class="line"><span class="keywordtype">int</span> actual = datagramSocket.getReceiveBufferSize();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;OS applied buffer size: &quot;</span> &lt;&lt; actual &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>Desired receive buffer size in bytes. The actual size allocated may be adjusted by the operating system.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>Desired receive buffer size in bytes. Actual value may be adjusted by the OS.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
-<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> is invalid</li>
-<li>System call fails</li>
-<li>Requested size exceeds system limits</li>
-<li>Insufficient permissions</li>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid or uninitialized</li>
+<li>The call to <span class="tt">setsockopt()</span> fails</li>
+<li>The requested size exceeds system limits</li>
+<li>Insufficient permissions to increase buffer limits</li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>Some systems may double the specified size internally. Use <a class="el" href="#ga53a0a6980058ce02034033b05f6ca389" title="Get the socket&#39;s receive buffer size (SO_RCVBUF).">getReceiveBufferSize()</a> to verify the actual size.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get current send buffer size </dd>
+<dl class="section note"><dt>Note</dt><dd>Always call this after socket creation and before heavy I/O. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga2eaf2835ebba5587c238a0bd6c2be188" title="Retrieves the current receive buffer size (SO_RCVBUF) of the socket.">getReceiveBufferSize()</a> </dd>
 <dd>
-<a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> Set <a class="el" href="namespacejsocketpp_1_1internal.html" title="Implementation-only utilities and platform abstractions for jsocketpp.">internal</a> buffer size </dd>
+<a class="el" href="#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> </dd>
 <dd>
-<a class="el" href="#ga243562caf78f87e481f657e26c59e1f0" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> Set send buffer size </dd></dl>
+setInternalBufferSize() </dd></dl>
 
 </div>
 </div>
@@ -998,7 +1013,7 @@ Example Usage</h3>
 <p>Enables or disables the <span class="tt">SO_REUSEADDR</span> socket option. </p>
 <p>This option controls whether the socket is permitted to bind to a local address and port that is already in use or in the <span class="tt">TIME_WAIT</span> state. It is commonly used in both server and client contexts, and is applicable to TCP, UDP, and Unix domain sockets.</p>
 <p>Internally, this method invokes: </p><div class="fragment"><div class="line">setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, ...)</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md639"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md627"></a>
 Platform Behavior</h3>
 <ul>
 <li><b>POSIX (Linux, BSD, macOS):</b><ul>
@@ -1012,7 +1027,7 @@ Platform Behavior</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md640"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md628"></a>
 Protocol Use Cases</h3>
 <ul>
 <li><b>TCP Server Sockets</b>: Enables re-binding to a port immediately after shutdown.</li>
@@ -1027,7 +1042,7 @@ Protocol Use Cases</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md641"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md629"></a>
 Example</h3>
 <div class="fragment"><div class="line">socket.setReuseAddress(<span class="keyword">true</span>); <span class="comment">// Enable port/path reuse before calling bind()</span></div>
 </div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>This method must be called <b>after socket creation</b> and <b>before bind()</b>. Improper use can lead to security issues or interference between applications.</dd></dl>
@@ -1051,14 +1066,14 @@ bind() </dd>
 
 </div>
 </div>
-<a id="ga243562caf78f87e481f657e26c59e1f0" name="ga243562caf78f87e481f657e26c59e1f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga243562caf78f87e481f657e26c59e1f0">&#9670;&#160;</a></span>setSendBufferSize()</h2>
+<a id="ga8279b0c70f6a0fddf73d84aac691422b" name="ga8279b0c70f6a0fddf73d84aac691422b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8279b0c70f6a0fddf73d84aac691422b">&#9670;&#160;</a></span>setSendBufferSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Socket::setSendBufferSize </td>
+          <td class="memname">void jsocketpp::SocketOptions::setSendBufferSize </td>
           <td>(</td>
           <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
           <td></td>
@@ -1067,54 +1082,52 @@ bind() </dd>
 </div><div class="memdoc">
 
 <p>Sets the socket's send buffer size (SO_SNDBUF). </p>
-<p>Configures the size of the operating system's send buffer for this socket. A larger buffer can improve performance for high-bandwidth connections by allowing the system to buffer more outgoing data, reducing the risk of blocking during write operations when the network is temporarily congested.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md578"></a>
-Implementation Details</h3>
+<p>Configures the size of the kernel-level send buffer for this socket. This buffer controls how much data the operating system can queue for transmission before blocking the sender or returning a partial write. Larger buffers help improve throughput, especially in high-bandwidth or high-latency network environments.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md639"></a>
+Applicability</h3>
+<p>This method is valid for all socket types:</p><ul>
+<li><b>TCP (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Helps reduce application-level blocking and improves write throughput.</li>
+<li><b>UDP (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>)</b>: Allows higher burst rate; excess data is dropped if full.</li>
+<li><b>UNIX domain sockets</b>: Supported for local IPC buffering on most systems.</li>
+<li><b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></b>: Setting this has no meaningful effect on passive sockets.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md640"></a>
+Platform Behavior</h3>
 <ul>
-<li>Uses setsockopt() with SO_SNDBUF option to set kernel socket buffer size</li>
-<li>The operating system may adjust the requested size:<ul>
-<li>Linux typically doubles the value to account for bookkeeping overhead</li>
-<li>Windows may round to system-specific boundaries</li>
-<li>Maximum size is limited by system settings (/proc/sys/net/core/wmem_max on Linux)</li>
+<li><b>Linux</b>: Kernel may double the size for internal overhead; limited by <span class="tt">/proc/sys/net/core/wmem_max</span>.</li>
+<li><b>Windows</b>: Rounded to system-specific page sizes or segment alignment.</li>
+<li><b>BSD/macOS</b>: Honors the request up to system-imposed limits.</li>
+<li>All platforms may silently apply a different size than requested — verify with <span class="tt"><a class="el" href="#gaeb5f9d1ae3f1b7b9fdb94335b10723f6" title="Retrieves the current send buffer size (SO_SNDBUF) of the socket.">getSendBufferSize()</a></span>.</li>
 </ul>
-</li>
-<li>Changes affect subsequent sends only, not data already in the buffer</li>
-<li>System limits may constrain maximum size based on available memory and OS policy</li>
-</ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md579"></a>
-Example Usage</h3>
-<div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Set 64KB send buffer</span></div>
-<div class="line">sock.setSendBufferSize(64 * 1024);</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Verify actual size (may be different)</span></div>
-<div class="line"><span class="keywordtype">int</span> actualSize = sock.getSendBufferSize();</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Actual send buffer size: &quot;</span> &lt;&lt; actualSize &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md641"></a>
+Example</h3>
+<div class="fragment"><div class="line">socket.setSendBufferSize(128 * 1024); <span class="comment">// 128 KB buffer</span></div>
+<div class="line"><span class="keywordtype">int</span> actual = socket.getSendBufferSize();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Effective send buffer: &quot;</span> &lt;&lt; actual &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>Desired send buffer size in bytes. The actual size allocated may be adjusted by the operating system.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>Desired send buffer size in bytes. The actual buffer size may be adjusted by the system.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
-<li><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> is invalid</li>
-<li>System call fails</li>
-<li>Requested size exceeds system limits</li>
-<li>Insufficient permissions</li>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid or uninitialized</li>
+<li>The call to <span class="tt">setsockopt()</span> fails</li>
+<li>The requested size exceeds system-imposed limits</li>
+<li>Insufficient privileges are present</li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>Some systems may double the specified size internally. Use <a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> to verify the actual size.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga53a0a6980058ce02034033b05f6ca389" title="Get the socket&#39;s receive buffer size (SO_RCVBUF).">getReceiveBufferSize()</a> Get current receive buffer size </dd>
+<dl class="section note"><dt>Note</dt><dd>Applies to future sends only; does not affect buffered data already enqueued. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaeb5f9d1ae3f1b7b9fdb94335b10723f6" title="Retrieves the current send buffer size (SO_SNDBUF) of the socket.">getSendBufferSize()</a> </dd>
 <dd>
-<a class="el" href="#ga0539576a97fe792c9cb67b8aee26477b" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> Set receive buffer size </dd>
+<a class="el" href="#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> </dd>
 <dd>
-<a class="el" href="#gacb2d3979ff562c2ffd60b12a1b4c9897" title="Get the socket&#39;s send buffer size (SO_SNDBUF).">getSendBufferSize()</a> Get current send buffer size </dd></dl>
+setInternalBufferSize() </dd></dl>
 
 </div>
 </div>
@@ -1144,19 +1157,19 @@ Example Usage</h3>
 <p>Updates the socket descriptor used by this object. </p>
 <p>This method sets the internal socket file descriptor used by the <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> interface. It is typically called by derived classes after the socket has been moved, reassigned, or otherwise changed during the object's lifetime.</p>
 <p>This does <b>not</b> open, close, or validate the socket descriptor. It simply updates the internal <span class="tt">_sockFd</span> used by methods such as <span class="tt"><a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a></span> and <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md645"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md651"></a>
 When to Use</h3>
 <ul>
 <li>After a move constructor or move assignment updates the underlying socket</li>
 <li>After explicitly re-binding or re-creating a socket file descriptor</li>
 <li>When adapting an externally provided descriptor (e.g., from <span class="tt">accept()</span> or <span class="tt">socketpair()</span>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md646"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md652"></a>
 Example: Move assignment</h3>
 <div class="fragment"><div class="line"><a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a> = rhs._sockFd;</div>
 <div class="line"><a class="code hl_function" href="#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a>(<a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a>); <span class="comment">// keeps SocketOptions base class in sync</span></div>
-<div class="ttc" id="aclassjsocketpp_1_1SocketOptions_html_a44b54c91017594a7695bf315778fb131"><div class="ttname"><a href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">jsocketpp::SocketOptions::_sockFd</a></div><div class="ttdeci">SOCKET _sockFd</div><div class="ttdoc">Underlying socket file descriptor.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:382</div></div>
-<div class="ttc" id="agroup__socketopts_html_ga97706ddf21aab33a18db00bd0b8eb65d"><div class="ttname"><a href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a></div><div class="ttdeci">void setSocketFd(const SOCKET sock) noexcept</div><div class="ttdoc">Updates the socket descriptor used by this object.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:351</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1SocketOptions_html_a44b54c91017594a7695bf315778fb131"><div class="ttname"><a href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">jsocketpp::SocketOptions::_sockFd</a></div><div class="ttdeci">SOCKET _sockFd</div><div class="ttdoc">Underlying socket file descriptor.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:655</div></div>
+<div class="ttc" id="agroup__socketopts_html_ga97706ddf21aab33a18db00bd0b8eb65d"><div class="ttname"><a href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a></div><div class="ttdeci">void setSocketFd(const SOCKET sock) noexcept</div><div class="ttdoc">Updates the socket descriptor used by this object.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:624</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sock</td><td>The new socket file descriptor to associate with this object. May be <span class="tt">INVALID_SOCKET</span> to mark the socket as uninitialized or closed.</td></tr>
@@ -1172,14 +1185,14 @@ Example: Move assignment</h3>
 
 </div>
 </div>
-<a id="ga895f76bf9c4745fc20074ef2491b02be" name="ga895f76bf9c4745fc20074ef2491b02be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga895f76bf9c4745fc20074ef2491b02be">&#9670;&#160;</a></span>setSoLinger()</h2>
+<a id="ga707a637112e5ec1309da4e6dfe2fddb3" name="ga707a637112e5ec1309da4e6dfe2fddb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga707a637112e5ec1309da4e6dfe2fddb3">&#9670;&#160;</a></span>setSoLinger()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Socket::setSoLinger </td>
+          <td class="memname">void jsocketpp::SocketOptions::setSoLinger </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enable</em></span>, </td>
         </tr>
@@ -1191,44 +1204,69 @@ Example: Move assignment</h3>
       </table>
 </div><div class="memdoc">
 
-<p>Configures the socket's linger behavior (SO_LINGER) on close. </p>
-<p>The SO_LINGER option controls how the socket behaves when it is closed and unsent data remains. It determines whether <span class="tt"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a></span> (or <span class="tt"><a class="el" href="group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a></span> followed by <span class="tt"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a></span>) blocks while the kernel attempts to flush unsent data, or whether it returns immediately and discards it.</p>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md598"></a>
-When enabled (<span class="tt">enable == true</span>):</h4>
-<p>The socket enters a "lingering" state on close. The OS will attempt to transmit any unsent data, blocking the <span class="tt"><a class="el" href="group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8" title="Closes the socket connection and releases associated resources.">close()</a></span> call for up to <span class="tt">seconds</span>. If the data is fully sent before the timeout, the socket closes cleanly. Otherwise, it is forcefully closed after the timeout.</p>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md599"></a>
-When disabled (<span class="tt">enable == false</span>):</h4>
-<p>The socket closes immediately, even if unsent data remains. This can cause truncation or reset at the receiving end (e.g., the receiver may see a TCP RST instead of a graceful FIN).</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Configures the socket's linger behavior (<span class="tt">SO_LINGER</span>) during close. </p>
+<p>This method sets the <span class="tt">SO_LINGER</span> socket option, which controls how the socket behaves when it is closed and unsent data remains in the transmission buffer. It determines whether <span class="tt">close()</span> will return immediately (discarding unsent data), or block until the data is transmitted or a timeout expires.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md645"></a>
+🔁 Applicability</h3>
+<ul>
+<li>✅ <b>TCP (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Fully supported; governs graceful vs. abortive close behavior.</li>
+<li>✅ <b>UNIX stream sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>)</b>: Supported on most platforms.</li>
+<li>⚠️ <b>UDP or UNIX datagram sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>)</b>: Technically accepted by some systems, but <span class="tt">SO_LINGER</span> has <b>no effect</b> (ignored by the kernel).</li>
+<li>⚠️ <b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> (listening)</b>: Affects only the listening socket itself; accepted sockets must be configured separately.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md646"></a>
+Behavior</h3>
+<ul>
+<li><b>Linger enabled (<span class="tt">enable == true</span>)</b>:<ul>
+<li>The OS will try to send remaining data on close.</li>
+<li>If data cannot be sent within <span class="tt">seconds</span>, the socket is closed forcibly.</li>
+<li>A timeout of <span class="tt">0</span> causes an <b>abortive close</b> (TCP RST is sent immediately).</li>
+</ul>
+</li>
+<li><b>Linger disabled (<span class="tt">enable == false</span>)</b> (default):<ul>
+<li><span class="tt">close()</span> returns immediately.</li>
+<li>Unsent data may be discarded depending on system behavior.</li>
+</ul>
+</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md647"></a>
+Example</h3>
+<div class="fragment"><div class="line"><span class="comment">// Wait up to 5 seconds for graceful shutdown</span></div>
+<div class="line">socket.setSoLinger(<span class="keyword">true</span>, 5);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Immediately discard unsent data on close (send TCP RST)</span></div>
+<div class="line">socket.setSoLinger(<span class="keyword">true</span>, 0);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Standard non-blocking close behavior</span></div>
+<div class="line">socket.setSoLinger(<span class="keyword">false</span>, 0);</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">enable</td><td>Whether to enable linger mode. </td></tr>
-    <tr><td class="paramname">seconds</td><td>Timeout duration in seconds. Only used when <code class="param">enable</code> is true. Must be non-negative. A value of 0 causes an abortive close (RST).</td></tr>
+    <tr><td class="paramname">enable</td><td>Whether to enable lingering behavior on close. </td></tr>
+    <tr><td class="paramname">seconds</td><td>Linger timeout (in seconds). Only meaningful if <span class="tt">enable == true</span>.<ul>
+<li>Must be ≥ 0. <span class="tt">0</span> means abortive close.</li>
+</ul>
+</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the SO_LINGER option could not be applied.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid</li>
+<li><span class="tt">setsockopt()</span> fails</li>
+<li>The operation is not supported on the socket type (platform-dependent)</li>
+</ul>
+</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga1734c9ec9ae9c7dacf616fadc3b5f1cb" title="Retrieves the socket&#39;s current SO_LINGER configuration.">getSoLinger()</a></dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md600"></a>
-📌 Use Cases</h3>
-<ul>
-<li><b>Graceful TCP Shutdown</b>: When sending critical data (e.g., file footers, checksums), linger ensures the data is actually transmitted before closing.</li>
-<li><b>Fast Connection Teardown</b>: Disabling linger (or enabling with 0 seconds) is useful in high-load servers or testing tools where you need to immediately free resources.</li>
-<li><b>Avoiding TIME_WAIT Accumulation</b>: With linger disabled, the socket doesn't wait, which reduces kernel resource usage but can cause abrupt termination.</li>
-</ul>
-<div class="fragment"><div class="line"><span class="comment">// Wait up to 5 seconds for pending data to be sent on close()</span></div>
-<div class="line">socket.setSoLinger(<span class="keyword">true</span>, 5);</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Immediately abort on close, discard unsent data, and send TCP RST</span></div>
-<div class="line">socket.setSoLinger(<span class="keyword">true</span>, 0);</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Disable lingering entirely (standard close behavior)</span></div>
-<div class="line">socket.setSoLinger(<span class="keyword">false</span>, 0);</div>
-</div><!-- fragment --> 
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga15ba6d555b0f3b7809c746f827398c5e" title="Retrieves the current SO_LINGER configuration of the socket.">getSoLinger()</a> </dd>
+<dd>
+shutdown() </dd>
+<dd>
+close()</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Behavior is OS-specific. On POSIX, applies only to stream-oriented sockets. On Windows, similar semantics apply via Winsock. </dd></dl>
+
 </div>
 </div>
 <a id="gaeabff1b6131c1570fe485304faa47491" name="gaeabff1b6131c1570fe485304faa47491"></a>
@@ -1254,7 +1292,7 @@ When disabled (<span class="tt">enable == false</span>):</h4>
 <li>On <b>POSIX</b> systems, the value is converted into a <span class="tt">timeval</span> structure.</li>
 <li>A negative value is invalid and will throw a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md594"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md586"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 9000);</div>
 <div class="line">sock.connect();</div>
@@ -1311,7 +1349,7 @@ Example Usage</h3>
 <li>On <b>POSIX</b>, it is converted into a <span class="tt">timeval</span> structure.</li>
 <li>A negative value is considered invalid and will result in a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md595"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md587"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
 <div class="line">sock.connect();</div>
@@ -1413,7 +1451,7 @@ Example Usage</h3>
 <p>When <span class="tt">TCP_NODELAY</span> is enabled (<span class="tt">on == true</span>), Nagle's algorithm is disabled. This causes small packets to be sent immediately, reducing latency for real-time or interactive applications (e.g., games, messaging, RPCs).</p>
 <p>When disabled (<span class="tt">on == false</span>), Nagle's algorithm is enabled. The socket coalesces small outgoing messages into larger packets to improve throughput and reduce congestion, but may introduce slight delays.</p>
 <p>By default, TCP_NODELAY is off (i.e., Nagle's algorithm is enabled).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md605"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md593"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>

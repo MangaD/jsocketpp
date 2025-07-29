@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['larger_20send_20buffer_20for_20inter_20process_20communication_0',['Example: Set a larger send buffer for inter-process communication',['../group__socketopts.html#autotoc_md629',1,'']]],
-  ['latency_20sensitive_20clients_1',['Example: Disable Nagle’s algorithm (for latency-sensitive clients)',['../group__socketopts.html#autotoc_md624',1,'']]],
+  ['larger_20send_20buffer_20for_20inter_20process_20communication_0',['Example: Set a larger send buffer for inter-process communication',['../group__socketopts.html#autotoc_md617',1,'']]],
+  ['latency_20sensitive_20clients_1',['Example: Disable Nagle’s algorithm (for latency-sensitive clients)',['../group__socketopts.html#autotoc_md612',1,'']]],
   ['leavegroup_2',['leaveGroup',['../classjsocketpp_1_1MulticastSocket.html#af7317567ceae9b90967ec5a29d003af3',1,'jsocketpp::MulticastSocket']]],
   ['level_20timeouts_3',['OS-Level Timeouts',['../group__async__io.html#autotoc_md119',1,'']]],
   ['libraries_4',['Comparison: &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; vs Other C++ Socket Libraries',['../group__socket__library__comparison.html',1,'']]],
@@ -13,7 +13,7 @@ var searchData=
   ['license_10',['LICENSE',['../LICENSE.html',1,'']]],
   ['license_11',['License',['../index.html#autotoc_md409',1,'⚖️ License'],['../group__BUILD__AND__USAGE.html#autotoc_md24',1,'License']]],
   ['lifecycle_12',['Lifecycle',['../group__sockets__theory.html#autotoc_md282',1,'4. How Sockets Work: The Lifecycle'],['../group__socket__states.html#autotoc_md246',1,'TCP Socket Lifecycle']]],
-  ['limitations_13',['Limitations',['../group__address__reuse.html#autotoc_md86',1,'⚠️ Java’s Approach and Its Limitations'],['../index.html#autotoc_md380',1,'⚠️ Limitations'],['../group__tcp.html#autotoc_md512',1,'Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md652',1,'Limitations']]],
+  ['limitations_13',['Limitations',['../group__address__reuse.html#autotoc_md86',1,'⚠️ Java’s Approach and Its Limitations'],['../index.html#autotoc_md380',1,'⚠️ Limitations'],['../group__tcp.html#autotoc_md512',1,'Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md658',1,'Limitations']]],
   ['limitations_3a_14',['Limitations:',['../group__async__io.html#autotoc_md144',1,'']]],
   ['linking_20the_20library_15',['Linking the Library',['../group__BUILD__AND__USAGE.html#autotoc_md14',1,'']]],
   ['linux_16',['Unix/Linux',['../group__address__reuse.html#autotoc_md76',1,'']]],
