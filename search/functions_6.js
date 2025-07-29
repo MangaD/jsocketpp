@@ -30,8 +30,8 @@ var searchData=
   ['getsocketerror_27',['GetSocketError',['../namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad',1,'jsocketpp']]],
   ['getsocketpath_28',['getSocketPath',['../classjsocketpp_1_1UnixSocket.html#a7595a11516389b7690e3f387d999b01c',1,'jsocketpp::UnixSocket']]],
   ['getsolinger_29',['getSoLinger',['../group__socketopts.html#ga15ba6d555b0f3b7809c746f827398c5e',1,'jsocketpp::SocketOptions']]],
-  ['getsorecvtimeout_30',['getSoRecvTimeout',['../group__socketopts.html#gaaf45a79f9c216e52bd1593e4bdf8a334',1,'jsocketpp::Socket']]],
-  ['getsosendtimeout_31',['getSoSendTimeout',['../group__socketopts.html#gab372986b4384867b48e82922aa2e1cbd',1,'jsocketpp::Socket']]],
+  ['getsorecvtimeout_30',['getSoRecvTimeout',['../group__socketopts.html#gaaee02a4007c38decf8925319b9f3e5f2',1,'jsocketpp::SocketOptions']]],
+  ['getsosendtimeout_31',['getSoSendTimeout',['../group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0',1,'jsocketpp::SocketOptions']]],
   ['getsotimeout_32',['getSoTimeout',['../group__socketopts.html#ga7829c558cb7bf5e0a46d882df82acc19',1,'jsocketpp::ServerSocket']]],
   ['gettcpnodelay_33',['getTcpNoDelay',['../group__socketopts.html#ga2539928ed0829df5070384f907ea48f7',1,'jsocketpp::Socket']]],
   ['gettimetolive_34',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]]

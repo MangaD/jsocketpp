@@ -4,5 +4,5 @@ var searchData=
   ['⚠️_20java’s_20approach_20and_20its_20limitations_1',['⚠️ Java’s Approach and Its Limitations',['../group__address__reuse.html#autotoc_md86',1,'']]],
   ['⚠️_20limitations_2',['⚠️ Limitations',['../index.html#autotoc_md380',1,'']]],
   ['⚠️_20misconceptions_20and_20caveats_3',['⚠️ Misconceptions and caveats',['../group__address__reuse.html#autotoc_md58',1,'']]],
-  ['⚠️_20serversocket_20specific_20notes_4',['⚠️ ServerSocket specific Notes',['../group__socketopts.html#autotoc_md608',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md619',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md628',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md639',1,'⚠️ ServerSocket-specific Notes']]]
+  ['⚠️_20serversocket_20specific_20notes_4',['⚠️ ServerSocket specific Notes',['../group__socketopts.html#autotoc_md604',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md615',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md624',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md635',1,'⚠️ ServerSocket-specific Notes']]]
 ];

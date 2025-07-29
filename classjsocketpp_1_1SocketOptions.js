@@ -9,6 +9,8 @@ var classjsocketpp_1_1SocketOptions =
     [ "getReuseAddress", "group__socketopts.html#ga8e8783ada3142cd6c3b275e01b7b12f2", null ],
     [ "getSendBufferSize", "group__socketopts.html#gaeb5f9d1ae3f1b7b9fdb94335b10723f6", null ],
     [ "getSoLinger", "group__socketopts.html#ga15ba6d555b0f3b7809c746f827398c5e", null ],
+    [ "getSoRecvTimeout", "group__socketopts.html#gaaee02a4007c38decf8925319b9f3e5f2", null ],
+    [ "getSoSendTimeout", "group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0", null ],
     [ "isPassiveSocket", "group__socketopts.html#gaace6c3364b4016979537571b36c58727", null ],
     [ "setKeepAlive", "group__socketopts.html#gab3fbb8682b1313dc38abddd541ca4abf", null ],
     [ "setOption", "group__socketopts.html#ga04df6377e302cc0cedff070517021950", null ],
@@ -18,5 +20,7 @@ var classjsocketpp_1_1SocketOptions =
     [ "setSendBufferSize", "group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b", null ],
     [ "setSocketFd", "group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d", null ],
     [ "setSoLinger", "group__socketopts.html#ga707a637112e5ec1309da4e6dfe2fddb3", null ],
+    [ "setSoRecvTimeout", "group__socketopts.html#ga5ad18e598507d04059bdaff086b01721", null ],
+    [ "setSoSendTimeout", "group__socketopts.html#ga7107a9da459b00bf39ec2fe4d3e83396", null ],
     [ "_sockFd", "classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131", null ]
 ];

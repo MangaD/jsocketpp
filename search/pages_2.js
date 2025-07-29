@@ -13,9 +13,10 @@ var searchData=
   ['3_20poco_3a_3anet_10',['3. Poco::Net',['../group__socket__library__comparison.html#autotoc_md233',1,'']]],
   ['3_20raw_20socket_20communication_11',['3.3 Raw Socket Communication',['../group__underlying__socket__api.html#autotoc_md307',1,'']]],
   ['3_20raw_20sockets_12',['2.3. Raw Sockets',['../group__sockets__theory.html#autotoc_md267',1,'']]],
-  ['3_20socket_20address_20families_13',['3. Socket Address Families',['../group__sockets__theory.html#autotoc_md280',1,'']]],
-  ['3_20socket_20types_14',['2.3 Socket Types',['../group__underlying__socket__api.html#autotoc_md303',1,'']]],
-  ['3_20test_20coverage_20for_20cross_20platform_3a_15',['3. &lt;b&gt;Test Coverage for Cross-Platform&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md338',1,'']]],
-  ['3_20the_20jsocketpp_20approach_3a_20port_20in_20constructor_20bind_20listen_20explicit_16',['3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit',['../group__ServerSocket__Lifecycle.html#autotoc_md31',1,'']]],
-  ['3_20udp_20sockets_20datagramsocket_20multicastsocket_17',['3. UDP Sockets (&lt;span class=&quot;tt&quot;&gt;DatagramSocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;MulticastSocket&lt;/span&gt;)',['../group__socket-options.html#autotoc_md212',1,'']]]
+  ['3_20second_20receive_20timeout_13',['Example: Set a 3-second receive timeout',['../group__socketopts.html#autotoc_md675',1,'']]],
+  ['3_20socket_20address_20families_14',['3. Socket Address Families',['../group__sockets__theory.html#autotoc_md280',1,'']]],
+  ['3_20socket_20types_15',['2.3 Socket Types',['../group__underlying__socket__api.html#autotoc_md303',1,'']]],
+  ['3_20test_20coverage_20for_20cross_20platform_3a_16',['3. &lt;b&gt;Test Coverage for Cross-Platform&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md338',1,'']]],
+  ['3_20the_20jsocketpp_20approach_3a_20port_20in_20constructor_20bind_20listen_20explicit_17',['3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit',['../group__ServerSocket__Lifecycle.html#autotoc_md31',1,'']]],
+  ['3_20udp_20sockets_20datagramsocket_20multicastsocket_18',['3. UDP Sockets (&lt;span class=&quot;tt&quot;&gt;DatagramSocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;MulticastSocket&lt;/span&gt;)',['../group__socket-options.html#autotoc_md212',1,'']]]
 ];

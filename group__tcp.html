@@ -1912,7 +1912,7 @@ Example Usage</h3>
 <dd>
 <a class="el" href="#ga6b39b1375048cc167409b5b513c3ad8c" title="Waits for the socket to become ready for reading or writing.">waitReady()</a> To handle non-blocking I/O with timeout </dd>
 <dd>
-<a class="el" href="group__socketopts.html#gaeabff1b6131c1570fe485304faa47491" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To control timeout in blocking mode </dd></dl>
+<a class="el" href="group__socketopts.html#ga5ad18e598507d04059bdaff086b01721" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To control timeout in blocking mode </dd></dl>
 
 </div>
 </div>
@@ -2207,7 +2207,7 @@ Example</h3>
 <p>Reports whether the socket has been closed or invalidated. </p>
 <p>Returns <span class="tt">true</span> if the socket is no longer usable—either because it was explicitly closed, or because the underlying file descriptor has been released or never initialized.</p>
 <p>This method does not perform any system-level check or probing. It simply inspects the internal socket descriptor (<span class="tt">_sockFd</span>) and considers the socket closed if it is equal to <span class="tt">INVALID_SOCKET</span>. This reflects the same mechanism used internally for error detection and safety throughout the library.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md594"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md590"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
 <div class="line">assert(!sock.isClosed());</div>
@@ -2289,7 +2289,7 @@ Example</h3>
 <li>The socket cannot receive new data from the peer.</li>
 </ul>
 <p>This method tracks shutdown state internally—it does <b>not</b> query the operating system (as no portable API exists for that). It reflects the local state at the time of the last <span class="tt"><a class="el" href="#gaacbacf59cf8239e66c80c66a09243ec3" title="Shutdown specific communication aspects of the socket.">shutdown()</a></span> call on this socket.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md595"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md591"></a>
 Use Cases</h3>
 <ul>
 <li>Preventing redundant or invalid read calls after a graceful shutdown.</li>
@@ -2366,7 +2366,7 @@ Use Cases</h3>
 <li>The system sends a FIN packet to the peer, indicating no more data will be sent.</li>
 </ul>
 <p>This method tracks shutdown state internally—it does <b>not</b> query the operating system, as no portable <span class="tt">getsockopt()</span> mechanism exists to detect output shutdown externally.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md596"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md592"></a>
 Use Cases</h3>
 <ul>
 <li>Enforcing proper protocol shutdown (e.g. sending EOF before receiving response).</li>
@@ -2863,7 +2863,7 @@ Memory Safety: Do not use this method with types containing pointers, virtual ta
 <dd>
 <a class="el" href="#gab1aaaa6572bcf756be7bcdb801e35812" title="Reads a length-prefixed payload using a fixed-size prefix type.">readPrefixed()</a> For reading length-prefixed dynamic types </dd>
 <dd>
-<a class="el" href="group__socketopts.html#gaeabff1b6131c1570fe485304faa47491" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To configure <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read</a> timeout behavior </dd>
+<a class="el" href="group__socketopts.html#ga5ad18e598507d04059bdaff086b01721" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To configure <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read</a> timeout behavior </dd>
 <dd>
 <a class="el" href="#gab1e4f32614be9a3609820f75dbcb4fc2" title="Indicates whether the socket has been successfully connected to a remote host.">isConnected()</a> To check whether the socket is currently usable </dd></dl>
 
@@ -3014,7 +3014,7 @@ Example Usage</h3>
 <dd>
 <a class="el" href="#ga6cc57c26e230cb7ed7fa0174028811d5" title="Sets the socket to either non-blocking or blocking mode.">setNonBlocking()</a> To configure socket non-blocking behavior </dd>
 <dd>
-<a class="el" href="group__socketopts.html#gaeabff1b6131c1570fe485304faa47491" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To configure <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read</a> timeout </dd></dl>
+<a class="el" href="group__socketopts.html#ga5ad18e598507d04059bdaff086b01721" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To configure <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read</a> timeout </dd></dl>
 
 </div>
 </div>
@@ -3096,7 +3096,7 @@ Example Usage</h3>
 <dd>
 <a class="el" href="#ga6b39b1375048cc167409b5b513c3ad8c" title="Waits for the socket to become ready for reading or writing.">waitReady()</a> To wait for readiness explicitly </dd>
 <dd>
-<a class="el" href="group__socketopts.html#gaeabff1b6131c1570fe485304faa47491" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To set socket-level timeout defaults </dd></dl>
+<a class="el" href="group__socketopts.html#ga5ad18e598507d04059bdaff086b01721" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To set socket-level timeout defaults </dd></dl>
 
 </div>
 </div>
@@ -3230,7 +3230,7 @@ This method returns an empty string if n == 0.</dd></dl>
 <dd>
 <a class="el" href="#ga46777f128a2a23cba8972aefd4b86828" title="Reads data from the socket until a specified delimiter character is encountered.">readUntil()</a> For delimiter-based reads (e.g. lines or tokens) </dd>
 <dd>
-<a class="el" href="group__socketopts.html#gaeabff1b6131c1570fe485304faa47491" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To configure blocking behavior </dd></dl>
+<a class="el" href="group__socketopts.html#ga5ad18e598507d04059bdaff086b01721" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To configure blocking behavior </dd></dl>
 
 </div>
 </div>
@@ -3491,7 +3491,7 @@ Example Usage</h3>
 
 <p>Reads data from the socket into a user-supplied buffer. </p>
 <p>This method provides direct access to the socket's receive functionality by reading data into a caller-provided buffer. It supports both "best-effort" single reads and exact-length reads that ensure all requested bytes are received.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md597"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md593"></a>
 Modes of Operation</h3>
 <ul>
 <li><b>Best-effort mode</b> (exact=false):<ul>
@@ -3509,7 +3509,7 @@ Modes of Operation</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md598"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md594"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -3523,7 +3523,7 @@ Example Usage</h3>
 <div class="line">uint32_t length;</div>
 <div class="line">sock.readInto(&amp;length, <span class="keyword">sizeof</span>(length), <span class="keyword">true</span>);</div>
 <div class="line"><span class="comment">// Always reads exactly 4 bytes or throws</span></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md599"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md595"></a>
 Implementation Details</h3>
 <ul>
 <li>Uses recv() internally for actual reads</li>
@@ -3895,7 +3895,7 @@ Example Usage</h3>
 <dd>
 <a class="el" href="#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a> To configure buffer size for bulk <span class="tt">recv()</span> </dd>
 <dd>
-<a class="el" href="group__socketopts.html#gaeabff1b6131c1570fe485304faa47491" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To control <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read</a> timeout duration </dd></dl>
+<a class="el" href="group__socketopts.html#ga5ad18e598507d04059bdaff086b01721" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> To control <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read</a> timeout duration </dd></dl>
 
 </div>
 </div>
@@ -4728,7 +4728,7 @@ Use Cases</h3>
 <dd>
 <a class="el" href="#ga6b39b1375048cc167409b5b513c3ad8c" title="Waits for the socket to become ready for reading or writing.">waitReady()</a> To manually wait for readiness in non-blocking mode </dd>
 <dd>
-<a class="el" href="group__socketopts.html#gaeabff1b6131c1570fe485304faa47491" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> and <a class="el" href="group__socketopts.html#ga5182b15a2d0c4eb70eeeaa5f7c62aeed" title="Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.">setSoSendTimeout()</a> For blocking mode timeouts </dd></dl>
+<a class="el" href="group__socketopts.html#ga5ad18e598507d04059bdaff086b01721" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a> and <a class="el" href="group__socketopts.html#ga7107a9da459b00bf39ec2fe4d3e83396" title="Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.">setSoSendTimeout()</a> For blocking mode timeouts </dd></dl>
 
 </div>
 </div>
@@ -5423,7 +5423,7 @@ Thread Safety</h3>
 <p>Waits for the socket to become ready for reading or writing. </p>
 <p>This method performs a blocking or timed wait until the socket is ready for either reading or writing, depending on the <span class="tt">forWrite</span> parameter. Internally, it uses the <span class="tt">select()</span> system call to monitor readiness.</p>
 <p>The timeout is specified in milliseconds. A negative timeout value (e.g., <span class="tt">-1</span>) causes the method to wait indefinitely until the socket becomes ready. A timeout of <span class="tt">0</span> performs a non-blocking poll.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md590"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md586"></a>
 Implementation Notes</h3>
 <ul>
 <li>Internally uses <span class="tt">select()</span> on both POSIX and Windows platforms.</li>
@@ -5431,7 +5431,7 @@ Implementation Notes</h3>
 <li>On Windows, the first parameter to <span class="tt">select()</span> is ignored and always set to 0.</li>
 <li>This method works for both blocking and non-blocking sockets.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md591"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md587"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga94a43fdd77f92eb63104dfd4168ba587">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 8080);</div>
 <div class="line">sock.connect();</div>
@@ -5439,7 +5439,7 @@ Example</h3>
 <div class="line">    std::string msg = sock.read&lt;std::string&gt;();</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Received: &quot;</span> &lt;&lt; msg &lt;&lt; <span class="stringliteral">&quot;\\n&quot;</span>;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md592"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md588"></a>
 Protocol Behavior</h3>
 <ul>
 <li><span class="tt">forWrite == false</span>: Waits for the socket to be readable (e.g., data available).</li>
@@ -5577,7 +5577,7 @@ Example Usage</h3>
 <dd>
 <a class="el" href="#ga6cc57c26e230cb7ed7fa0174028811d5" title="Sets the socket to either non-blocking or blocking mode.">setNonBlocking()</a> To configure non-blocking socket behavior </dd>
 <dd>
-<a class="el" href="group__socketopts.html#ga5182b15a2d0c4eb70eeeaa5f7c62aeed" title="Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.">setSoSendTimeout()</a> To configure <a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write</a> timeouts </dd></dl>
+<a class="el" href="group__socketopts.html#ga7107a9da459b00bf39ec2fe4d3e83396" title="Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.">setSoSendTimeout()</a> To configure <a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write</a> timeouts </dd></dl>
 
 </div>
 </div>
@@ -5645,7 +5645,7 @@ Example Usage</h3>
 <dd>
 <a class="el" href="#ga964bb0e901179bc5eac126d77b0590eb" title="Writes the full payload with a total timeout across all retries.">writeWithTotalTimeout()</a> For full delivery under time constraints </dd>
 <dd>
-<a class="el" href="group__socketopts.html#ga5182b15a2d0c4eb70eeeaa5f7c62aeed" title="Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.">setSoSendTimeout()</a> To configure <a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write</a> timeouts </dd>
+<a class="el" href="group__socketopts.html#ga7107a9da459b00bf39ec2fe4d3e83396" title="Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.">setSoSendTimeout()</a> To configure <a class="el" href="#ga8b952bd8912694754bb34ab763aa8daa" title="Sends data to the socket using a single, best-effort write operation.">write</a> timeouts </dd>
 <dd>
 <a class="el" href="#ga6cc57c26e230cb7ed7fa0174028811d5" title="Sets the socket to either non-blocking or blocking mode.">setNonBlocking()</a> To avoid blocking behavior </dd>
 <dd>

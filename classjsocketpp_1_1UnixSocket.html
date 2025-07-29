@@ -211,6 +211,14 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:gab3fbb8682b1313dc38abddd541ca4abf inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables TCP-level keepalive behavior on the socket (<span class="tt">SO_KEEPALIVE</span>).  <br /></td></tr>
 <tr class="memitem:ga1193748a866e07a7f25e97a0640ad8dd inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga1193748a866e07a7f25e97a0640ad8dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga1193748a866e07a7f25e97a0640ad8dd">getKeepAlive</a> () const</td></tr>
 <tr class="memdesc:ga1193748a866e07a7f25e97a0640ad8dd inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether TCP-level keepalive (<span class="tt">SO_KEEPALIVE</span>) is currently enabled.  <br /></td></tr>
+<tr class="memitem:ga5ad18e598507d04059bdaff086b01721 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga5ad18e598507d04059bdaff086b01721"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga5ad18e598507d04059bdaff086b01721">setSoRecvTimeout</a> (int millis)</td></tr>
+<tr class="memdesc:ga5ad18e598507d04059bdaff086b01721 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket receive timeout (<span class="tt">SO_RCVTIMEO</span>) in milliseconds.  <br /></td></tr>
+<tr class="memitem:ga7107a9da459b00bf39ec2fe4d3e83396 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga7107a9da459b00bf39ec2fe4d3e83396"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga7107a9da459b00bf39ec2fe4d3e83396">setSoSendTimeout</a> (int millis)</td></tr>
+<tr class="memdesc:ga7107a9da459b00bf39ec2fe4d3e83396 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket send timeout (<span class="tt">SO_SNDTIMEO</span>) in milliseconds.  <br /></td></tr>
+<tr class="memitem:gaaee02a4007c38decf8925319b9f3e5f2 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_gaaee02a4007c38decf8925319b9f3e5f2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gaaee02a4007c38decf8925319b9f3e5f2">getSoRecvTimeout</a> () const</td></tr>
+<tr class="memdesc:gaaee02a4007c38decf8925319b9f3e5f2 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the socket receive timeout (<span class="tt">SO_RCVTIMEO</span>) in milliseconds.  <br /></td></tr>
+<tr class="memitem:ga1bef2499ed5c13367dc73752484298c0 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga1bef2499ed5c13367dc73752484298c0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0">getSoSendTimeout</a> () const</td></tr>
+<tr class="memdesc:ga1bef2499ed5c13367dc73752484298c0 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the socket send timeout (<span class="tt">SO_SNDTIMEO</span>) in milliseconds.  <br /></td></tr>
 <tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
 <tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the socket descriptor used by this object.  <br /></td></tr>
 <tr class="memitem:gaace6c3364b4016979537571b36c58727 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_gaace6c3364b4016979537571b36c58727"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gaace6c3364b4016979537571b36c58727">isPassiveSocket</a> () const noexcept</td></tr>
@@ -220,7 +228,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p>Cross-platform abstraction for Unix domain sockets. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span> class provides a convenient, modern C++20-style interface for using Unix domain sockets, also known as AF_UNIX sockets. Unix sockets are used for fast inter-process communication (IPC) on the same host, and use a file path on the local file system for addressing.</p>
 <p>On POSIX platforms (Linux, macOS), AF_UNIX sockets are widely supported. On Windows, support is available in Windows 10 (1803+, build 17134) and newer.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md680"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md696"></a>
 Main Features</h2>
 <ul>
 <li><b>Bind</b>: Create and bind a socket to a filesystem path for listening/accepting connections.</li>
@@ -233,7 +241,7 @@ Main Features</h2>
 <dl class="section note"><dt>Note</dt><dd>Not thread-safe. Each <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span> should only be used from one thread at a time. </dd>
 <dd>
 On Windows, AF_UNIX is supported on Windows 10 1803 and later only. On unsupported platforms, attempting to use this class will result in a compilation error.</dd></dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md681"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md697"></a>
 Example: Simple Echo Server</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="UnixSocket_8hpp.html">jsocketpp/UnixSocket.hpp</a>&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
@@ -255,7 +263,7 @@ Example: Simple Echo Server</h2>
 <div class="ttc" id="aclassjsocketpp_1_1UnixSocket_html_abecab540df2b16e50b09de7b8d38c43e"><div class="ttname"><a href="#abecab540df2b16e50b09de7b8d38c43e">jsocketpp::UnixSocket::write</a></div><div class="ttdeci">size_t write(std::string_view data) const</div><div class="ttdoc">Writes data to the socket.</div><div class="ttdef"><b>Definition</b> UnixSocket.cpp:141</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
 <div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md682"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md698"></a>
 Example: Simple Client</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="UnixSocket_8hpp.html">jsocketpp/UnixSocket.hpp</a>&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
@@ -266,7 +274,7 @@ Example: Simple Client</h2>
 <div class="line">    sock.write(<span class="stringliteral">&quot;Hello, Unix domain socket!&quot;</span>);</div>
 <div class="line">    std::string response = sock.read&lt;std::string&gt;();</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md683"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md699"></a>
 Limitations</h2>
 <ul>
 <li>Not suitable for remote (network) connections; only for IPC on the same host.</li>
