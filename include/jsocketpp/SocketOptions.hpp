@@ -96,82 +96,174 @@ class SocketOptions
      *
      * This method configures a socket option using the system-level `setsockopt()` interface.
      * Socket options allow advanced users to fine-tune behavior related to performance,
-     * protocol semantics, and resource usage.
+     * protocol semantics, reliability, and resource usage.
      *
-     * This API is common to all socket types (e.g., `Socket`, `ServerSocket`, `DatagramSocket`, `UnixSocket`)
-     * and supports options at multiple protocol levels, such as `SOL_SOCKET` and `IPPROTO_TCP`.
+     * This API is available on all socket types provided by the library, including:
+     * - `Socket` (TCP stream sockets)
+     * - `ServerSocket` (listening sockets)
+     * - `DatagramSocket` (UDP)
+     * - `UnixSocket` (UNIX domain stream or datagram sockets)
      *
-     * Typical use cases include:
-     * - Enabling address reuse (`SO_REUSEADDR`)
-     * - Adjusting receive/send buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`)
-     * - Enabling/disabling keepalive (`SO_KEEPALIVE`)
-     * - Disabling Nagle’s algorithm for latency-sensitive TCP (`TCP_NODELAY`)
+     * It supports options at multiple protocol levels, such as `SOL_SOCKET`, `IPPROTO_TCP`, and `IPPROTO_UDP`.
+     *
+     * ---
+     *
+     * ### 🔧 Common Use Cases
+     * - Enable address reuse (`SO_REUSEADDR`) for TCP/UDP servers
+     * - Enable TCP keepalive (`SO_KEEPALIVE`) for long-lived connections
+     * - Tune send/receive buffer sizes (`SO_SNDBUF`, `SO_RCVBUF`)
+     * - Disable Nagle’s algorithm (`TCP_NODELAY`) for latency-sensitive TCP clients
+     * - Enable broadcast mode (`SO_BROADCAST`) on UDP sockets
+     *
+     * ---
      *
      * ### ⚠️ ServerSocket-specific Notes
-     * - Setting options on a **listening socket** (e.g., `ServerSocket`) only affects that socket, not the
-     *   client sockets returned by `accept()`. Per-connection tuning must be applied to each accepted `Socket`.
-     * - Not all options are meaningful on passive (listening) sockets. Invalid combinations may result in
-     *   `SocketException` or system errors.
+     * - Setting options on a **listening socket** only affects the acceptor socket.
+     * - Options do **not** propagate to client sockets returned by `accept()`.
+     * - Common use: `SO_REUSEADDR` before `bind()`.
      *
-     * ### Example: Enable port reuse (recommended for servers)
      * @code
      * serverSocket.setOption(SOL_SOCKET, SO_REUSEADDR, 1);
-     * @endcode
-     *
-     * ### Example: Disable Nagle’s algorithm (for latency-sensitive clients)
-     * @code
-     * socket.setOption(IPPROTO_TCP, TCP_NODELAY, 1);
      * @endcode
      *
      * ---
      *
      * ### 📡 DatagramSocket-specific Notes
-     * - You can use this method to enable **broadcast mode** (`SO_BROADCAST`) or adjust buffer sizes for
-     *   high-throughput UDP workloads.
-     * - It also supports setting timeouts via `SO_RCVTIMEO` and `SO_SNDTIMEO`.
-     * - For unconnected UDP sockets, option changes affect all outgoing/incoming packets.
-     * - For connected UDP sockets, the changes affect only the single destination connection.
+     * - Useful for enabling `SO_BROADCAST`, tuning buffer sizes, or applying timeouts (`SO_RCVTIMEO`, `SO_SNDTIMEO`)
+     * - For connected UDP sockets, options affect the single remote peer.
+     * - For unconnected sockets, they apply to all traffic.
      *
-     * #### Example: Enable broadcast for a datagram socket
      * @code
      * datagramSocket.setOption(SOL_SOCKET, SO_BROADCAST, 1);
      * @endcode
      *
-     * ### 🧿 UnixSocket-specific Notes
-     * - Although Unix domain sockets are local and do not use TCP/IP, many `SOL_SOCKET` options still apply:
-     *   - `SO_RCVBUF`, `SO_SNDBUF` for buffer control
-     *   - `SO_RCVTIMEO`, `SO_SNDTIMEO` for timeouts
-     *   - `SO_PASSCRED` to enable credential passing (on supported platforms)
-     * - Options like `TCP_NODELAY` and `SO_KEEPALIVE` do not apply to Unix sockets.
+     * ---
      *
-     * #### Example: Set a larger send buffer for inter-process communication
+     * ### 🧿 UnixSocket-specific Notes
+     * - Although not TCP/IP-based, many `SOL_SOCKET` options apply:
+     *   - `SO_RCVBUF`, `SO_SNDBUF` (buffer tuning)
+     *   - `SO_PASSCRED` (credential passing)
+     *   - `SO_RCVTIMEO`, `SO_SNDTIMEO` (timeouts)
+     * - TCP-level options like `TCP_NODELAY` are **not supported**.
+     *
      * @code
      * unixSocket.setOption(SOL_SOCKET, SO_SNDBUF, 65536);
      * @endcode
      *
-     * @param level    The protocol level at which the option resides (e.g., `SOL_SOCKET`, `IPPROTO_TCP`).
-     * @param optName  The name of the option to set (e.g., `SO_REUSEADDR`, `SO_RCVBUF`).
-     * @param value    Integer value to assign to the option.
+     * ---
      *
-     * @throws SocketException if the option is invalid, unsupported, or if `setsockopt()` fails.
+     * @param level   The protocol level at which the option resides (e.g., `SOL_SOCKET`, `IPPROTO_TCP`).
+     * @param optName The name of the socket option (e.g., `SO_REUSEADDR`, `TCP_NODELAY`).
+     * @param value   Integer value to assign to the option.
      *
-     * @see getOption()
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - `setsockopt()` fails due to unsupported option or platform error
+     *
+     * @see getOption(int, int) For querying current option values
+     * @see setOption(int, int, const void*, socklen_t) For structured or binary options
      * @see https://man7.org/linux/man-pages/man2/setsockopt.2.html
      */
     void setOption(int level, int optName, int value);
 
     /**
+     * @brief Sets a low-level socket option using a structured or binary value.
+     * @ingroup socketopts
+     *
+     * This overload of `setOption()` configures advanced socket options that require
+     * passing complex values via a memory buffer, such as `struct linger`, protocol-specific
+     * flags, or platform-defined structures.
+     *
+     * Socket options allow advanced users to customize performance, transport behavior,
+     * and resource usage. This method is applicable to all supported socket types:
+     *
+     * - `Socket` (TCP stream sockets)
+     * - `ServerSocket` (listening TCP sockets)
+     * - `DatagramSocket` (UDP)
+     * - `UnixSocket` (UNIX domain stream or datagram)
+     *
+     * It supports options at various protocol levels, including:
+     * - `SOL_SOCKET` for generic socket behavior
+     * - `IPPROTO_TCP` for TCP-specific options
+     * - `IPPROTO_UDP`, `IPPROTO_IP`, etc.
+     *
+     * ---
+     *
+     * ### 🧩 Use Cases
+     * - Configure linger behavior with `SO_LINGER` using `struct linger`
+     * - Apply platform-specific options that require binary data
+     * - Set multicast interface (`IP_MULTICAST_IF`) or IPv6 options
+     *
+     * ---
+     *
+     * ### Example: Set `SO_LINGER` to linger for 5 seconds on close
+     * @code
+     * linger lin;
+     * lin.l_onoff = 1;
+     * lin.l_linger = 5;
+     * socket.setOption(SOL_SOCKET, SO_LINGER, &lin, sizeof(linger));
+     * @endcode
+     *
+     * ---
+     *
+     * ### ⚠️ ServerSocket-specific Notes
+     * - Only affects the passive/listening socket itself.
+     * - Accepted sockets must be configured separately.
+     *
+     * ### 📡 DatagramSocket-specific Notes
+     * - Can be used for multicast, broadcast, timeouts, etc.
+     * - Accepts raw buffers for protocol-level socket options.
+     *
+     * ### 🧿 UnixSocket-specific Notes
+     * - Common options include `SO_PASSCRED`, `SO_RCVBUF`, `SO_SNDTIMEO`
+     * - TCP-specific options (e.g., `TCP_NODELAY`) are not supported.
+     *
+     * ---
+     *
+     * @param level   Protocol level (e.g., `SOL_SOCKET`, `IPPROTO_TCP`)
+     * @param optName Option name (e.g., `SO_LINGER`, `IP_TOS`)
+     * @param value   Pointer to a buffer containing the option value
+     * @param len     Size of the buffer in bytes
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - `setsockopt()` fails due to invalid parameters or unsupported option
+     *
+     * @note This method is intended for structured or binary values.
+     * For simple integer options, use `setOption(int, int, int)` instead.
+     *
+     * @see setOption(int, int, int)
+     * @see getOption(int, int, void*, socklen_t*)
+     * @see https://man7.org/linux/man-pages/man2/setsockopt.2.html
+     */
+    void setOption(int level, int optName, const void* value, socklen_t len);
+
+    /**
      * @brief Retrieves the current value of a low-level socket option.
      * @ingroup socketopts
      *
-     * This method queries the current value of a socket option via `getsockopt()` on the
-     * underlying socket descriptor. It is useful for verifying runtime socket configuration,
-     * inspecting platform defaults, and performing conditional logic based on system-level state.
+     * This method queries a socket option using the system-level `getsockopt()` interface.
+     * It returns the current value as an integer and is useful for inspecting platform
+     * defaults, runtime configuration, or verifying changes made via `setOption()`.
      *
-     * This interface applies uniformly across all socket types (e.g., `Socket`, `ServerSocket`,
-     * `DatagramSocket`, `UnixSocket`) and supports standard protocol levels and option names.
+     * This method is supported by all socket types provided by the library:
+     * - `Socket` (TCP)
+     * - `ServerSocket` (listening)
+     * - `DatagramSocket` (UDP)
+     * - `UnixSocket` (UNIX domain)
      *
-     * ### Example: Read the configured receive buffer size
+     * It supports standard protocol levels such as `SOL_SOCKET`, `IPPROTO_TCP`, and `IPPROTO_UDP`.
+     *
+     * ---
+     *
+     * ### 🔧 Use Cases
+     * - Verify receive/send buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - Check if keepalive or broadcast is enabled (`SO_KEEPALIVE`, `SO_BROADCAST`)
+     * - Inspect linger state (`SO_LINGER`) via the structured overload
+     *
+     * ---
+     *
+     * ### Example: Read configured receive buffer size
      * @code
      * int rcvBuf = socket.getOption(SOL_SOCKET, SO_RCVBUF);
      * @endcode
@@ -179,19 +271,21 @@ class SocketOptions
      * ---
      *
      * ### ⚠️ ServerSocket-specific Notes
-     * - `getOption()` returns the value of the option as applied to the **listening socket only**.
-     * - Options like `SO_RCVBUF`, `SO_REUSEADDR`, and `SO_LINGER` are meaningful before or during `listen()`.
-     * - To inspect options for a client connection, call `getOption()` on the accepted `Socket` returned by `accept()`.
+     * - Applies only to the listening socket.
+     * - Use this to inspect pre-accept behavior such as:
+     *   - `SO_REUSEADDR`, `SO_LINGER`, `SO_RCVBUF`, etc.
+     * - Accepted client sockets must be queried individually.
+     *
+     * @code
+     * int reuse = serverSocket.getOption(SOL_SOCKET, SO_REUSEADDR);
+     * @endcode
      *
      * ---
      *
      * ### 📡 DatagramSocket-specific Notes
-     * - Use `getOption()` to inspect options like buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`) and timeouts
-     *   (`SO_RCVTIMEO`, `SO_SNDTIMEO`) for diagnostic or tuning purposes.
-     * - On broadcast-enabled sockets (`SO_BROADCAST`), this method can verify that the option was set successfully.
-     * - Behavior is the same whether the socket is connected or unconnected.
+     * - Useful for checking `SO_BROADCAST`, `SO_RCVTIMEO`, `SO_SNDTIMEO`, and buffer sizes.
+     * - Behavior is consistent across connected and unconnected UDP sockets.
      *
-     * #### Example: Get current timeout for receiving
      * @code
      * int timeout = datagramSocket.getOption(SOL_SOCKET, SO_RCVTIMEO);
      * @endcode
@@ -199,27 +293,108 @@ class SocketOptions
      * ---
      *
      * ### 🧿 UnixSocket-specific Notes
-     * - Although Unix domain sockets are local, many `SOL_SOCKET` options are still supported and report useful values:
-     *   - `SO_RCVBUF`, `SO_SNDBUF`: Report actual system-allocated buffer sizes
-     *   - `SO_RCVTIMEO`, `SO_SNDTIMEO`: Inspect timeouts for IPC calls
-     *   - `SO_PASSCRED`: Check whether credential passing is enabled
-     * - This method is particularly useful for debugging IPC performance characteristics.
+     * - `SO_RCVBUF`, `SO_SNDBUF`, `SO_PASSCRED`, and timeout options are supported.
+     * - Can be used for IPC performance diagnostics.
      *
-     * #### Example: Read the actual receive buffer size used for a Unix socket
      * @code
-     * int size = unixSocket.getOption(SOL_SOCKET, SO_RCVBUF);
+     * int bufSize = unixSocket.getOption(SOL_SOCKET, SO_SNDBUF);
      * @endcode
      *
-     * @param level   The protocol level (e.g., `SOL_SOCKET`, `IPPROTO_TCP`).
-     * @param optName The name of the socket option to retrieve (e.g., `SO_RCVBUF`, `SO_KEEPALIVE`).
-     * @return        The integer value of the specified socket option.
+     * ---
      *
-     * @throws SocketException if the operation fails, the socket is invalid, or the option is not supported.
+     * @param level   Protocol level (e.g., `SOL_SOCKET`, `IPPROTO_TCP`)
+     * @param optName Socket option name (e.g., `SO_KEEPALIVE`, `SO_SNDBUF`)
+     * @return        Integer value of the requested option
      *
-     * @see setOption()
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - The option is unsupported or improperly configured
+     * - The `getsockopt()` call fails
+     *
+     * @see setOption(int, int, int)
+     * @see getOption(int, int, void*, socklen_t*) For retrieving structured options
      * @see https://man7.org/linux/man-pages/man2/getsockopt.2.html
      */
     [[nodiscard]] int getOption(int level, int optName) const;
+
+    /**
+     * @brief Retrieves a socket option into a structured or binary buffer.
+     * @ingroup socketopts
+     *
+     * This overload of `getOption()` allows querying complex or platform-specific socket options
+     * that require structured output (e.g., `struct linger`, `struct timeval`, etc.).
+     * It wraps the system-level `getsockopt()` call using a raw memory buffer and returns
+     * the result through the provided pointer.
+     *
+     * The semantics are identical to the `getOption(int, int)` overload, but this version
+     * is used for retrieving non-integer options.
+     *
+     * This method works uniformly across:
+     * - `Socket` (TCP)
+     * - `ServerSocket` (listening TCP)
+     * - `DatagramSocket` (UDP)
+     * - `UnixSocket` (local IPC)
+     *
+     * ---
+     *
+     * ### 🔧 Use Cases
+     * - Query `SO_LINGER` using `struct linger`
+     * - Read timeout values into `struct timeval`
+     * - Inspect platform-specific flags or metadata structures
+     * - Use with low-level protocol options that return binary data
+     *
+     * ---
+     *
+     * ### Example: Read `SO_LINGER` setting
+     * @code
+     * linger lin{};
+     * socklen_t len = sizeof(lin);
+     * socket.getOption(SOL_SOCKET, SO_LINGER, &lin, &len);
+     *
+     * if (lin.l_onoff)
+     *     std::cout << "Linger enabled for " << lin.l_linger << " seconds.\n";
+     * else
+     *     std::cout << "Linger is disabled.\n";
+     * @endcode
+     *
+     * ---
+     *
+     * ### ⚠️ ServerSocket-specific Notes
+     * - Applies to the listening socket only (not accepted clients).
+     * - Common for querying `SO_LINGER`, `SO_RCVBUF`, etc.
+     *
+     * ---
+     *
+     * ### 📡 DatagramSocket-specific Notes
+     * - Use to inspect structured timeouts (`SO_RCVTIMEO`) or multicast settings.
+     * - Valid on both connected and unconnected sockets.
+     *
+     * ---
+     *
+     * ### 🧿 UnixSocket-specific Notes
+     * - Retrieve `SO_PASSCRED`, buffer sizes, and timeouts using appropriate structures.
+     * - Useful for debugging IPC characteristics and system resource tuning.
+     *
+     * ---
+     *
+     * @param level   Protocol level (e.g., `SOL_SOCKET`, `IPPROTO_TCP`)
+     * @param optName Socket option name (e.g., `SO_LINGER`)
+     * @param result  Pointer to a buffer to receive the option value
+     * @param len     Pointer to the size of the buffer. On return, holds the actual size used.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid or closed
+     * - `result` or `len` is null
+     * - The option is unsupported or the system call fails
+     *
+     * @note The caller is responsible for allocating and sizing the buffer.
+     * The `len` parameter must be set to the size of the buffer before the call.
+     *
+     * @see getOption(int, int) For integer-based options
+     * @see setOption(int, int, const void*, socklen_t) For setting structured values
+     * @see https://man7.org/linux/man-pages/man2/getsockopt.2.html
+     */
+    void getOption(int level, int optName, void* result, socklen_t* len) const;
 
     /**
      * @brief Enables or disables the `SO_REUSEADDR` socket option.
@@ -587,6 +762,101 @@ class SocketOptions
      * Behavior for datagram sockets is undefined or silently ignored.
      */
     [[nodiscard]] std::pair<bool, int> getSoLinger() const;
+
+    /**
+     * @brief Enables or disables TCP-level keepalive behavior on the socket (`SO_KEEPALIVE`).
+     * @ingroup socketopts
+     *
+     * Configures the `SO_KEEPALIVE` socket option, which instructs the operating system
+     * to periodically send keepalive probes on otherwise idle **stream-oriented sockets**.
+     * This helps detect half-open connections where the remote peer has silently disconnected,
+     * crashed, or become unreachable without sending a FIN or RST.
+     *
+     * ### 🔁 Applicability
+     * - ✅ **TCP sockets (`Socket`)**: Fully supported and commonly used.
+     * - ✅ **UNIX domain stream sockets (`UnixSocket`)**: Supported on most POSIX platforms.
+     * - ✅ **Accepted client sockets in `ServerSocket`**: Enable per-socket after `accept()`.
+     * - ⚠️ **UDP or datagram sockets (`DatagramSocket`)**: Not applicable. Most systems ignore this flag.
+     *
+     * ### Platform Behavior
+     * - **Linux**: Keepalive timing is controlled by `/proc/sys/net/ipv4/tcp_keepalive_*` parameters.
+     *   Per-socket tuning (e.g., idle, interval, probes) is available using advanced options (not exposed here).
+     * - **Windows**: Default timeout is ~2 hours. Fine-tuning requires `WSAIoctl` with `SIO_KEEPALIVE_VALS`.
+     * - **macOS/BSD**: Controlled by system-level TCP settings; per-socket control is limited.
+     *
+     * ### Effects
+     * - If enabled (`on == true`), the OS sends periodic probes on idle connections.
+     *   If the peer does not respond after several attempts, the connection is forcefully closed.
+     * - If disabled (`on == false`), no keepalive probes are sent. The socket may remain open indefinitely.
+     *
+     * ### Example
+     * @code
+     * socket.setKeepAlive(true);  // Enable periodic liveness checks on TCP
+     * @endcode
+     *
+     * @param on Set to `true` to enable keepalive, or `false` to disable it.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - `SO_KEEPALIVE` is unsupported for this socket type
+     * - The system call fails due to platform-level constraints
+     *
+     * @see getKeepAlive()
+     * @see setOption()
+     * @see https://man7.org/linux/man-pages/man7/tcp.7.html
+     *
+     * @note This method does not configure the keepalive **timing parameters** (interval, probes, timeout).
+     *       Use platform-specific APIs for advanced tuning.
+     */
+    void setKeepAlive(bool on);
+
+    /**
+     * @brief Checks whether TCP-level keepalive (`SO_KEEPALIVE`) is currently enabled.
+     * @ingroup socketopts
+     *
+     * This method queries the socket's current `SO_KEEPALIVE` setting, which determines
+     * whether the operating system sends periodic keepalive probes to verify that
+     * idle, stream-oriented connections are still alive.
+     *
+     * Keepalive is especially useful for detecting silent disconnects in long-lived
+     * connections (e.g., crash, power loss, cable pull) where no TCP FIN/RST is received.
+     *
+     * ### 🔁 Applicability
+     * - ✅ **TCP sockets (`Socket`)**: Fully supported. Returns the current setting.
+     * - ✅ **UNIX domain stream sockets (`UnixSocket`)**: Supported on most POSIX platforms.
+     * - ✅ **Accepted sockets in `ServerSocket`**: Each accepted socket can be queried individually.
+     * - ⚠️ **UDP / datagram sockets (`DatagramSocket`)**: Most systems ignore this option;
+     *   querying may return `false` or raise an error depending on platform behavior.
+     *
+     * ### Platform Behavior
+     * - **Linux/macOS/BSD**: Returns `true` if `SO_KEEPALIVE` is enabled at the socket level.
+     *   Probe intervals and behavior are system-controlled unless overridden via additional options.
+     * - **Windows**: Returns `true` if enabled. Advanced tuning requires use of `WSAIoctl`.
+     *
+     * ### Example
+     * @code
+     * if (!socket.getKeepAlive()) {
+     *     socket.setKeepAlive(true);
+     *     std::cout << "Keepalive enabled.\n";
+     * }
+     * @endcode
+     *
+     * @return `true` if keepalive is enabled; `false` if disabled.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid or closed
+     * - `getsockopt()` fails
+     * - The platform does not support the option on this socket type
+     *
+     * @see setKeepAlive()
+     * @see setOption()
+     * @see https://man7.org/linux/man-pages/man7/tcp.7.html
+     *
+     * @note This method only checks whether `SO_KEEPALIVE` is enabled.
+     *       It does **not** report the configured keepalive timing parameters
+     *       (interval, probes, idle time), which are system-defined.
+     */
+    [[nodiscard]] bool getKeepAlive() const;
 
   protected:
     /**
