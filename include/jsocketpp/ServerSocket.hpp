@@ -1280,51 +1280,6 @@ class ServerSocket : public SocketOptions
      */
     [[nodiscard]] std::size_t getDefaultInternalBufferSize() const noexcept { return _defaultInternalBufferSize; }
 
-#if defined(SO_REUSEPORT)
-    /**
-     * @brief Enable or disable the SO_REUSEPORT socket option.
-     *
-     * The SO_REUSEPORT option allows multiple sockets on the same host to bind to the same port number,
-     * enabling load balancing of incoming connections across multiple processes or threads.
-     * This can dramatically improve scalability for high-performance servers (such as web servers or proxies).
-     *
-     * @warning SO_REUSEPORT is **not supported on all platforms**. It is available on:
-     *   - Linux kernel 3.9 and later
-     *   - Many BSD systems (FreeBSD 10+, OpenBSD, macOS 10.9+)
-     *   - **Not supported on Windows**
-     *
-     * If you compile or run on a platform where SO_REUSEPORT is unavailable, this method will **not be present**.
-     * Use conditional compilation (`#ifdef SO_REUSEPORT`) if you require portability.
-     *
-     * Improper use of SO_REUSEPORT may result in complex behavior and should only be used if you fully understand
-     * its implications (e.g., distributing incoming connections evenly across processes).
-     *
-     * @param[in] enable Set to `true` to enable SO_REUSEPORT, `false` to disable.
-     * @throws SocketException if setting the option fails.
-     *
-     * @see https://man7.org/linux/man-pages/man7/socket.7.html
-     *
-     * @ingroup tcp
-     */
-    void setReusePort(bool enable);
-
-    /**
-     * @brief Query whether SO_REUSEPORT is enabled for this socket.
-     *
-     * This method returns the current status of the SO_REUSEPORT option on this socket.
-     * Like `setReusePort()`, this method is only available on platforms that define `SO_REUSEPORT`.
-     *
-     * @return `true` if SO_REUSEPORT is enabled, `false` otherwise.
-     * @throws SocketException if querying the option fails.
-     *
-     * @see setReusePort(bool)
-     * @see https://man7.org/linux/man-pages/man7/socket.7.html
-     *
-     * @ingroup tcp
-     */
-    [[nodiscard]] bool getReusePort() const;
-#endif
-
   protected:
     /**
      * @brief Cleans up server socket resources and throws a SocketException.

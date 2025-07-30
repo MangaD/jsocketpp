@@ -490,15 +490,3 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     return result > 0;
 #endif
 }
-
-#if defined(SO_REUSEPORT)
-void ServerSocket::setReusePort(const bool enable)
-{
-    setOption(SOL_SOCKET, SO_REUSEPORT, enable ? 1 : 0);
-}
-
-bool ServerSocket::getReusePort() const
-{
-    return getOption(SOL_SOCKET, SO_REUSEPORT) != 0;
-}
-#endif

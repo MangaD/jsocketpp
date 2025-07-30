@@ -1424,6 +1424,111 @@ class SocketOptions
 
 #endif
 
+#if defined(SO_REUSEPORT)
+
+    /**
+     * @brief Enables or disables the `SO_REUSEPORT` socket option.
+     * @ingroup socketopts
+     *
+     * This method configures the `SO_REUSEPORT` option, which allows multiple sockets to bind
+     * to the **same IP address and port combination**, enabling parallelism in multi-threaded or
+     * multi-process applications. Unlike `SO_REUSEADDR`, which allows re-binding during `TIME_WAIT`,
+     * `SO_REUSEPORT` permits **simultaneous binding** by multiple sockets.
+     *
+     * ---
+     *
+     * ### 🌍 Applicability
+     * - `ServerSocket`: ✅ Enables load-balanced accept loops across threads or processes
+     * - `DatagramSocket`: ✅ Permits shared reception on a multicast port (platform-dependent)
+     * - `Socket`: ✅ Technically allowed, but rarely used in clients
+     * - `UnixSocket`: ❌ Not supported; this method is not compiled on unsupported platforms
+     *
+     * ---
+     *
+     * ### 🔀 Platform Support
+     * - ✅ Linux (kernel ≥ 3.9)
+     * - ✅ BSD-based systems (FreeBSD, macOS)
+     * - ❌ Windows: Not available — this method is excluded at compile time
+     *
+     * ---
+     *
+     * ### Example: Enable shared port binding
+     * @code
+     * #if defined(SO_REUSEPORT)
+     *     serverSocket.setReusePort(true);
+     *     serverSocket.bind("0.0.0.0", 8080);
+     *     serverSocket.listen();
+     * #endif
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] enable `true` to allow multiple sockets to bind the same port (`SO_REUSEPORT = 1`),
+     *                   or `false` to disable the shared binding behavior (`SO_REUSEPORT = 0`).
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - The system call fails (`setsockopt()` error)
+     * - The option is used improperly (e.g., after `bind()`)
+     *
+     * @note This option must be set **before** calling `bind()`. Behavior is undefined if changed after binding.
+     *
+     * @see getReusePort()
+     * @see setReuseAddress()
+     * @see https://lwn.net/Articles/542629/
+     */
+    void setReusePort(const bool enable);
+
+    /**
+     * @brief Checks whether the `SO_REUSEPORT` option is currently enabled on the socket.
+     * @ingroup socketopts
+     *
+     * This method queries the `SO_REUSEPORT` setting via `getsockopt()` to determine
+     * whether the socket is configured to allow multiple bindings to the same address/port.
+     *
+     * ---
+     *
+     * ### 🌍 Applicability
+     * - `ServerSocket`: ✅ Used to verify shared accept-mode configuration
+     * - `DatagramSocket`: ✅ Useful for multicast receivers or redundant UDP listeners
+     * - `Socket`: ✅ Rare, but valid for bound client sockets
+     * - `UnixSocket`: ❌ Not applicable — method excluded at compile time
+     *
+     * ---
+     *
+     * ### 🔀 Platform Support
+     * - ✅ **Linux (≥ 3.9)**, FreeBSD, macOS (some BSDs require extra sysctls)
+     * - ❌ **Windows**: Not supported — this method is not compiled
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * #if defined(SO_REUSEPORT)
+     * if (socket.getReusePort()) {
+     *     std::cout << "Port reuse is enabled.\n";
+     * } else {
+     *     std::cout << "Port reuse is not enabled.\n";
+     * }
+     * #endif
+     * @endcode
+     *
+     * ---
+     *
+     * @return `true` if `SO_REUSEPORT` is enabled on the socket; `false` otherwise.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid or uninitialized
+     * - The system call fails (`getsockopt()` error)
+     * - The option is not supported or the socket type is incompatible
+     *
+     * @see setReusePort()
+     * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     */
+    [[nodiscard]] bool getReusePort() const;
+
+#endif
+
   protected:
     /**
      * @brief Updates the socket descriptor used by this object.

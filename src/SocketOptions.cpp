@@ -307,4 +307,18 @@ bool SocketOptions::getIPv6Only() const
 
 #endif
 
+#if defined(SO_REUSEPORT)
+
+void SocketOptions::setReusePort(const bool enable)
+{
+    setOption(SOL_SOCKET, SO_REUSEPORT, enable ? 1 : 0);
+}
+
+bool SocketOptions::getReusePort() const
+{
+    return getOption(SOL_SOCKET, SO_REUSEPORT) != 0;
+}
+
+#endif
+
 } // namespace jsocketpp
