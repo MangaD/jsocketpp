@@ -229,6 +229,10 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:ga9839dd8837c7519a627f28b3a4c7a513 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables Nagle’s algorithm (<span class="tt">TCP_NODELAY</span>) on TCP sockets.  <br /></td></tr>
 <tr class="memitem:ga05137fbdc55ab065739e220b7a4f41c0 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga05137fbdc55ab065739e220b7a4f41c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga05137fbdc55ab065739e220b7a4f41c0">getTcpNoDelay</a> () const</td></tr>
 <tr class="memdesc:ga05137fbdc55ab065739e220b7a4f41c0 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether Nagle's algorithm (<span class="tt">TCP_NODELAY</span>) is currently disabled.  <br /></td></tr>
+<tr class="memitem:gab96d6fa640ac34113cb1f76bfbf970dc inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_gab96d6fa640ac34113cb1f76bfbf970dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gab96d6fa640ac34113cb1f76bfbf970dc">setIPv6Only</a> (bool enable)</td></tr>
+<tr class="memdesc:gab96d6fa640ac34113cb1f76bfbf970dc inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables <span class="tt">IPV6_V6ONLY</span> mode for IPv6-capable sockets.  <br /></td></tr>
+<tr class="memitem:ga1d44e7f23739c1ef4a9ad550b4a1ff1d inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga1d44e7f23739c1ef4a9ad550b4a1ff1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga1d44e7f23739c1ef4a9ad550b4a1ff1d">getIPv6Only</a> () const</td></tr>
+<tr class="memdesc:ga1d44e7f23739c1ef4a9ad550b4a1ff1d inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the <span class="tt">IPV6_V6ONLY</span> option is enabled on this socket.  <br /></td></tr>
 <tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
 <tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the socket descriptor used by this object.  <br /></td></tr>
 <tr class="memitem:gaace6c3364b4016979537571b36c58727 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_gaace6c3364b4016979537571b36c58727"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gaace6c3364b4016979537571b36c58727">isPassiveSocket</a> () const noexcept</td></tr>
@@ -238,7 +242,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p>Cross-platform abstraction for Unix domain sockets. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span> class provides a convenient, modern C++20-style interface for using Unix domain sockets, also known as AF_UNIX sockets. Unix sockets are used for fast inter-process communication (IPC) on the same host, and use a file path on the local file system for addressing.</p>
 <p>On POSIX platforms (Linux, macOS), AF_UNIX sockets are widely supported. On Windows, support is available in Windows 10 (1803+, build 17134) and newer.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md728"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md744"></a>
 Main Features</h2>
 <ul>
 <li><b>Bind</b>: Create and bind a socket to a filesystem path for listening/accepting connections.</li>
@@ -251,7 +255,7 @@ Main Features</h2>
 <dl class="section note"><dt>Note</dt><dd>Not thread-safe. Each <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span> should only be used from one thread at a time. </dd>
 <dd>
 On Windows, AF_UNIX is supported on Windows 10 1803 and later only. On unsupported platforms, attempting to use this class will result in a compilation error.</dd></dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md729"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md745"></a>
 Example: Simple Echo Server</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="UnixSocket_8hpp.html">jsocketpp/UnixSocket.hpp</a>&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
@@ -273,7 +277,7 @@ Example: Simple Echo Server</h2>
 <div class="ttc" id="aclassjsocketpp_1_1UnixSocket_html_abecab540df2b16e50b09de7b8d38c43e"><div class="ttname"><a href="#abecab540df2b16e50b09de7b8d38c43e">jsocketpp::UnixSocket::write</a></div><div class="ttdeci">size_t write(std::string_view data) const</div><div class="ttdoc">Writes data to the socket.</div><div class="ttdef"><b>Definition</b> UnixSocket.cpp:141</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
 <div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md730"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md746"></a>
 Example: Simple Client</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="UnixSocket_8hpp.html">jsocketpp/UnixSocket.hpp</a>&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
@@ -284,7 +288,7 @@ Example: Simple Client</h2>
 <div class="line">    sock.write(<span class="stringliteral">&quot;Hello, Unix domain socket!&quot;</span>);</div>
 <div class="line">    std::string response = sock.read&lt;std::string&gt;();</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md731"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md747"></a>
 Limitations</h2>
 <ul>
 <li>Not suitable for remote (network) connections; only for IPC on the same host.</li>

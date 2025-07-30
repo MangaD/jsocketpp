@@ -19,7 +19,7 @@ var searchData=
   ['on_20unix_20linux_3a_16',['On Unix/Linux:',['../group__address__reuse.html#autotoc_md55',1,'']]],
   ['on_20windows_17',['on Windows',['../index.html#autotoc_md420',1,'Does it work on Windows?'],['../group__address__reuse.html#autotoc_md88',1,'Why This is Problematic on Windows']]],
   ['on_20windows_3a_18',['On Windows:',['../group__address__reuse.html#autotoc_md62',1,'On Windows:'],['../group__address__reuse.html#autotoc_md63',1,'On Windows:']]],
-  ['only_19',['only',['../group__address__reuse.html#autotoc_md64',1,'<span class="tt">SO_EXCLUSIVEADDRUSE</span> (Windows only)'],['../group__address__reuse.html#autotoc_md72',1,'<span class="tt">SO_REUSEPORT</span> (Unix/Linux only)']]],
+  ['only_19',['only',['../group__address__reuse.html#autotoc_md64',1,'<span class="tt">SO_EXCLUSIVEADDRUSE</span> (Windows only)'],['../group__address__reuse.html#autotoc_md72',1,'<span class="tt">SO_REUSEPORT</span> (Unix/Linux only)'],['../group__socketopts.html#autotoc_md738',1,'Example: Check if socket is IPv6-only']]],
   ['only_3a_20',['&lt;b&gt;With &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; only&lt;/b&gt;:',['../group__address__reuse.html#autotoc_md77',1,'']]],
   ['operate_21',['5. Under the Hood: How Sockets Operate',['../group__sockets__theory.html#autotoc_md286',1,'']]],
   ['operation_22',['Operation',['../group__socketopts.html#autotoc_md697',1,'⏱️ Behavior Summary by Operation'],['../group__tcp.html#autotoc_md587',1,'Modes of Operation']]],

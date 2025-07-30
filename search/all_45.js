@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['🛠️_20how_20it_20works_20internally_0',['🛠️ How it works internally',['../group__address__reuse.html#autotoc_md70',1,'']]],
-  ['🛠_20developer_20tooling_1',['🛠 Developer Tooling',['../index.html#autotoc_md404',1,'']]]
+  ['🚦_20blocking_20vs_20non_20blocking_20sockets_0',['🚦 Blocking vs Non-Blocking Sockets',['../group__async__io.html#autotoc_md114',1,'']]]
 ];

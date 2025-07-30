@@ -156,10 +156,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:gaeb5adb24bd7f50eaf8b52aa4441ffe71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the server socket has been closed.  <br /></td></tr>
 <tr class="memitem:ga61c1904213b0971817ec917fd2a01ccf" id="r_ga61c1904213b0971817ec917fd2a01ccf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga61c1904213b0971817ec917fd2a01ccf">jsocketpp::ServerSocket::waitReady</a> (std::optional&lt; int &gt; timeoutMillis=std::nullopt) const</td></tr>
 <tr class="memdesc:ga61c1904213b0971817ec917fd2a01ccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for the server socket to become ready to accept an incoming connection.  <br /></td></tr>
-<tr class="memitem:ga41b156c31f7b6d0ce08112c466a32719" id="r_ga41b156c31f7b6d0ce08112c466a32719"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga41b156c31f7b6d0ce08112c466a32719">jsocketpp::ServerSocket::setIPv6Only</a> (bool enable)</td></tr>
-<tr class="memdesc:ga41b156c31f7b6d0ce08112c466a32719"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable IPv6-only mode for this server socket.  <br /></td></tr>
-<tr class="memitem:gaf92910f35cea80082897f0767eb76933" id="r_gaf92910f35cea80082897f0767eb76933"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf92910f35cea80082897f0767eb76933">jsocketpp::ServerSocket::getIPv6Only</a> () const</td></tr>
-<tr class="memdesc:gaf92910f35cea80082897f0767eb76933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether IPv6-only mode is enabled.  <br /></td></tr>
 <tr class="memitem:gaf644d3fccaebced95dd6bc2055bbed3e" id="r_gaf644d3fccaebced95dd6bc2055bbed3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf644d3fccaebced95dd6bc2055bbed3e">jsocketpp::ServerSocket::setDefaultReceiveBufferSize</a> (const std::size_t size)</td></tr>
 <tr class="memdesc:gaf644d3fccaebced95dd6bc2055bbed3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the default receive buffer size for accepted client sockets.  <br /></td></tr>
 <tr class="memitem:ga29de003fbad91f7302115d26b89ac888" id="r_ga29de003fbad91f7302115d26b89ac888"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga29de003fbad91f7302115d26b89ac888">jsocketpp::ServerSocket::getDefaultReceiveBufferSize</a> () const noexcept</td></tr>
@@ -1554,41 +1550,6 @@ Socket::getInternalBufferSize() </dd></dl>
 <a class="el" href="group__socketopts.html#gaeb5f9d1ae3f1b7b9fdb94335b10723f6" title="Retrieves the current send buffer size (SO_SNDBUF) of the socket.">getSendBufferSize()</a> </dd>
 <dd>
 <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for TCP socket read operations.">DefaultBufferSize</a> </dd></dl>
-
-</div>
-</div>
-<a id="gaf92910f35cea80082897f0767eb76933" name="gaf92910f35cea80082897f0767eb76933"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf92910f35cea80082897f0767eb76933">&#9670;&#160;</a></span>getIPv6Only()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ServerSocket::getIPv6Only </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Query whether IPv6-only mode is enabled. </p>
-<dl class="section return"><dt>Returns</dt><dd>True if the socket is in IPv6-only mode, false if dual-stack. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is not IPv6, not open, or on system error. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga41b156c31f7b6d0ce08112c466a32719" title="Enable or disable IPv6-only mode for this server socket.">setIPv6Only()</a> </dd></dl>
 
 </div>
 </div>
@@ -4491,40 +4452,6 @@ Example Usage</h3>
 <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> Uses this buffer for string operations </dd>
 <dd>
 <a class="el" href="group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> For setting the OS socket send buffer </dd></dl>
-
-</div>
-</div>
-<a id="ga41b156c31f7b6d0ce08112c466a32719" name="ga41b156c31f7b6d0ce08112c466a32719"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga41b156c31f7b6d0ce08112c466a32719">&#9670;&#160;</a></span>setIPv6Only()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ServerSocket::setIPv6Only </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable or disable IPv6-only mode for this server socket. </p>
-<p>By default, an IPv6 socket is configured in dual-stack mode (accepts both IPv6 and IPv4 connections) on most platforms. Enabling IPv6-only mode restricts the socket to <b>only</b> IPv6 connections.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td>True to enable IPv6-only mode, false to allow dual-stack. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is not IPv6, already bound, or on system error. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>Must be called before <a class="el" href="#ga1ca989ba16d32862dd4fa9bbb2b165b5" title="Binds the server socket to the configured port and network interface.">bind()</a>. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaf92910f35cea80082897f0767eb76933" title="Query whether IPv6-only mode is enabled.">getIPv6Only()</a> </dd></dl>
 
 </div>
 </div>

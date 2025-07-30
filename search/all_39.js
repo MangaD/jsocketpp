@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['🔀_20platform_20behavior_0',['🔀 Platform Behavior',['../group__socketopts.html#autotoc_md673',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md678',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md683',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md688',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md693',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md704',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md713',1,'🔀 Platform Behavior']]]
+  ['📦_20applicable_20socket_20types_0',['📦 Applicable Socket Types',['../group__socketopts.html#autotoc_md695',1,'']]],
+  ['📦_20common_20use_20cases_1',['📦 Common use cases',['../group__address__reuse.html#autotoc_md57',1,'']]],
+  ['📦_20installation_2',['📦 Installation',['../index.html#autotoc_md382',1,'']]]
 ];

@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['🕐_20socket_20timeouts_0',['🕐 Socket Timeouts',['../group__async__io.html#autotoc_md118',1,'']]]
+  ['🔧_20common_20use_20cases_0',['🔧 Common Use Cases',['../group__socketopts.html#autotoc_md602',1,'']]],
+  ['🔧_20manual_20integration_1',['🔧 Manual Integration',['../index.html#autotoc_md387',1,'']]],
+  ['🔧_20platform_20toolchain_20support_2',['🔧 Platform &amp;amp; Toolchain Support',['../index.html#autotoc_md374',1,'']]],
+  ['🔧_20use_20cases_3',['🔧 Use Cases',['../group__socketopts.html#autotoc_md620',1,'🔧 Use Cases'],['../group__socketopts.html#autotoc_md631',1,'🔧 Use Cases']]]
 ];

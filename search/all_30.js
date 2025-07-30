@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['💡_20summary_20table_0',['💡 Summary Table',['../group__address__reuse.html#autotoc_md100',1,'']]],
-  ['💡_20use_20cases_1',['💡 Use Cases',['../group__socketopts.html#autotoc_md711',1,'']]],
-  ['💡_20why_20jsocketpp_2',['💡 Why jsocketpp?',['../index.html#autotoc_md370',1,'']]]
+  ['🎯_20purpose_0',['🎯 Purpose',['../group__address__reuse.html#autotoc_md66',1,'']]]
 ];

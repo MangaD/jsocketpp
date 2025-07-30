@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🌐_20multicast_20receiver_0',['🌐 Multicast Receiver',['../index.html#autotoc_md394',1,'']]]
+  ['🌍_20applicability_20by_20socket_20type_0',['🌍 Applicability by Socket Type',['../group__socketopts.html#autotoc_md725',1,'🌍 Applicability by Socket Type'],['../group__socketopts.html#autotoc_md734',1,'🌍 Applicability by Socket Type']]]
 ];

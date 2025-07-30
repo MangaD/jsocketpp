@@ -10,7 +10,7 @@ var searchData=
   ['geteffectivesendbuffersize_7',['getEffectiveSendBufferSize',['../group__tcp.html#ga1308a8d172508999834853ccb35607e8',1,'jsocketpp::ServerSocket']]],
   ['geterrorcode_8',['getErrorCode',['../classjsocketpp_1_1SocketException.html#a05b11ce845a5ea121e331dda3039993d',1,'jsocketpp::SocketException']]],
   ['gethostaddr_9',['getHostAddr',['../namespacejsocketpp.html#a09423d4d9f10bd09813732010662ee43',1,'jsocketpp']]],
-  ['getipv6only_10',['getIPv6Only',['../group__tcp.html#gaf92910f35cea80082897f0767eb76933',1,'jsocketpp::ServerSocket']]],
+  ['getipv6only_10',['getIPv6Only',['../group__socketopts.html#ga1d44e7f23739c1ef4a9ad550b4a1ff1d',1,'jsocketpp::SocketOptions']]],
   ['getkeepalive_11',['getKeepAlive',['../group__socketopts.html#ga1193748a866e07a7f25e97a0640ad8dd',1,'jsocketpp::SocketOptions']]],
   ['getlocalip_12',['getLocalIp',['../classjsocketpp_1_1ServerSocket.html#a4aa141b9b1bb274d582dba05f2fee136',1,'jsocketpp::ServerSocket::getLocalIp()'],['../group__tcp.html#ga6cd36845f959c2bf075c475e5fdc7620',1,'jsocketpp::Socket::getLocalIp()']]],
   ['getlocalport_13',['getLocalPort',['../group__tcp.html#gad3b2807577129c652044f17626c6e01a',1,'jsocketpp::ServerSocket::getLocalPort()'],['../group__tcp.html#gac10f731a7d1e90c18688266fe5db969e',1,'jsocketpp::Socket::getLocalPort()']]],

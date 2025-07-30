@@ -162,6 +162,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga9839dd8837c7519a627f28b3a4c7a513"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables Nagle’s algorithm (<span class="tt">TCP_NODELAY</span>) on TCP sockets.  <br /></td></tr>
 <tr class="memitem:ga05137fbdc55ab065739e220b7a4f41c0" id="r_ga05137fbdc55ab065739e220b7a4f41c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga05137fbdc55ab065739e220b7a4f41c0">jsocketpp::SocketOptions::getTcpNoDelay</a> () const</td></tr>
 <tr class="memdesc:ga05137fbdc55ab065739e220b7a4f41c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether Nagle's algorithm (<span class="tt">TCP_NODELAY</span>) is currently disabled.  <br /></td></tr>
+<tr class="memitem:gab96d6fa640ac34113cb1f76bfbf970dc" id="r_gab96d6fa640ac34113cb1f76bfbf970dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab96d6fa640ac34113cb1f76bfbf970dc">jsocketpp::SocketOptions::setIPv6Only</a> (bool enable)</td></tr>
+<tr class="memdesc:gab96d6fa640ac34113cb1f76bfbf970dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables <span class="tt">IPV6_V6ONLY</span> mode for IPv6-capable sockets.  <br /></td></tr>
+<tr class="memitem:ga1d44e7f23739c1ef4a9ad550b4a1ff1d" id="r_ga1d44e7f23739c1ef4a9ad550b4a1ff1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1d44e7f23739c1ef4a9ad550b4a1ff1d">jsocketpp::SocketOptions::getIPv6Only</a> () const</td></tr>
+<tr class="memdesc:ga1d44e7f23739c1ef4a9ad550b4a1ff1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the <span class="tt">IPV6_V6ONLY</span> option is enabled on this socket.  <br /></td></tr>
 <tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
 <tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the socket descriptor used by this object.  <br /></td></tr>
 <tr class="memitem:gaace6c3364b4016979537571b36c58727" id="r_gaace6c3364b4016979537571b36c58727"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaace6c3364b4016979537571b36c58727">jsocketpp::SocketOptions::isPassiveSocket</a> () const noexcept</td></tr>
@@ -175,6 +179,77 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Some options may not be available or meaningful on all platforms. Platform-specific behavior is documented per function.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd>Socket::setSoLinger(), Socket::getSoLinger(), Socket::setTcpNoDelay(), etc. </dd></dl>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="ga1d44e7f23739c1ef4a9ad550b4a1ff1d" name="ga1d44e7f23739c1ef4a9ad550b4a1ff1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1d44e7f23739c1ef4a9ad550b4a1ff1d">&#9670;&#160;</a></span>getIPv6Only()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::SocketOptions::getIPv6Only </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Queries whether the <span class="tt">IPV6_V6ONLY</span> option is enabled on this socket. </p>
+<p>This method checks whether the socket is currently restricted to IPv6-only traffic, or whether it allows dual-stack operation (accepting both IPv6 and IPv4-mapped addresses).</p>
+<p>The <span class="tt">IPV6_V6ONLY</span> flag is primarily relevant to sockets using the <span class="tt">AF_INET6</span> address family.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md734"></a>
+🌍 Applicability by Socket Type</h3>
+<ul>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Affects accept() behavior for IPv6 listeners</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>: ✅ Optional, useful for bound clients or diagnostic purposes</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>: ✅ Relevant when binding to IPv6 multicast or wildcard addresses</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable; throws if called</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md736"></a>
+⚠️ Platform Behavior</h3>
+<ul>
+<li><b>Linux</b>: Defaults to <span class="tt">false</span> (dual-stack), but configurable</li>
+<li><b>Windows</b>: Defaults to <span class="tt">true</span> (IPv6-only), must be explicitly disabled</li>
+<li><b>macOS/BSD</b>: May disallow toggling at runtime or enforce <span class="tt">true</span></li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md738"></a>
+Example: Check if socket is IPv6-only</h3>
+<div class="fragment"><div class="line"><span class="keywordflow">if</span> (socket.getIPv6Only()) {</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;This socket is IPv6-only.\n&quot;</span>;</div>
+<div class="line">} <span class="keywordflow">else</span> {</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Dual-stack mode is active.\n&quot;</span>;</div>
+<div class="line">}</div>
+</div><!-- fragment --><hr  />
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if <span class="tt">IPV6_V6ONLY</span> is enabled (IPv6-only mode), <span class="tt">false</span> if dual-stack is allowed.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid or closed</li>
+<li>The system call fails (<span class="tt">getsockopt()</span> error)</li>
+<li>The socket is not an IPv6 socket (i.e., <span class="tt">AF_INET6</span>)</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Always check that the socket is using the <span class="tt">AF_INET6</span> family before interpreting this flag. Calling this method on a non-IPv6 socket will throw.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gab96d6fa640ac34113cb1f76bfbf970dc" title="Enables or disables IPV6_V6ONLY mode for IPv6-capable sockets.">setIPv6Only()</a> </dd>
+<dd>
+<a href="https://man7.org/linux/man-pages/man7/ipv6.7.html">https://man7.org/linux/man-pages/man7/ipv6.7.html</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga1193748a866e07a7f25e97a0640ad8dd" name="ga1193748a866e07a7f25e97a0640ad8dd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga1193748a866e07a7f25e97a0640ad8dd">&#9670;&#160;</a></span>getKeepAlive()</h2>
 
@@ -383,8 +458,8 @@ Example: Read configured receive buffer size</h3>
 </div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">level</td><td>Protocol level (e.g., <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>) </td></tr>
-    <tr><td class="paramname">optName</td><td><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> option name (e.g., <span class="tt">SO_KEEPALIVE</span>, <span class="tt">SO_SNDBUF</span>) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">level</td><td>Protocol level (e.g., <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">optName</td><td><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> option name (e.g., <span class="tt">SO_KEEPALIVE</span>, <span class="tt">SO_SNDBUF</span>) </td></tr>
   </table>
   </dd>
 </dl>
@@ -490,10 +565,10 @@ Example: Read <span class="tt">SO_LINGER</span> setting</h3>
 <hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">level</td><td>Protocol level (e.g., <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>) </td></tr>
-    <tr><td class="paramname">optName</td><td><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> option name (e.g., <span class="tt">SO_LINGER</span>) </td></tr>
-    <tr><td class="paramname">result</td><td>Pointer to a buffer to receive the option value </td></tr>
-    <tr><td class="paramname">len</td><td>Pointer to the size of the buffer. On return, holds the actual size used.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">level</td><td>Protocol level (e.g., <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">optName</td><td><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> option name (e.g., <span class="tt">SO_LINGER</span>) </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">result</td><td>Pointer to a buffer to receive the option value </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">len</td><td>Pointer to the size of the buffer. On return, holds the actual size used.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1138,7 +1213,7 @@ When <span class="tt">true</span> matters</h3>
 <li>On Windows, <span class="tt">SO_EXCLUSIVEADDRUSE</span> is used for passive sockets to control port reuse semantics.</li>
 <li>On POSIX systems, all sockets use <span class="tt">SO_REUSEADDR</span>, but server sockets may still follow different best practices.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md726"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md742"></a>
 Usage</h3>
 <ul>
 <li>Override this method in subclasses like <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> to return <span class="tt">true</span>.</li>
@@ -1153,6 +1228,84 @@ Usage</h3>
 <a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> </dd></dl>
 
 <p>Reimplemented in <a class="el" href="#gad113886a7cc6100e5ef2c25ea504696e">jsocketpp::ServerSocket</a>.</p>
+
+</div>
+</div>
+<a id="gab96d6fa640ac34113cb1f76bfbf970dc" name="gab96d6fa640ac34113cb1f76bfbf970dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab96d6fa640ac34113cb1f76bfbf970dc">&#9670;&#160;</a></span>setIPv6Only()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jsocketpp::SocketOptions::setIPv6Only </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enables or disables <span class="tt">IPV6_V6ONLY</span> mode for IPv6-capable sockets. </p>
+<p>This method configures the <span class="tt">IPV6_V6ONLY</span> socket option, which determines whether an IPv6 socket can accept <b>only</b> IPv6 connections or <b>both</b> IPv6 and IPv4-mapped addresses (e.g., <span class="tt">::ffff:a.b.c.d</span>).</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md725"></a>
+🌍 Applicability by Socket Type</h3>
+<ul>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Common — determines which protocols are accepted via <span class="tt">bind()</span></li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>: ✅ Optional — may control behavior of outgoing connections or bound local endpoint</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>: ✅ Applies when binding to <span class="tt">::</span> for dual-stack multicast or receiving</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable — local domain sockets do not use IP protocols</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md727"></a>
+🔀 Platform Behavior</h3>
+<ul>
+<li><b>Linux</b>: <span class="tt">IPV6_V6ONLY</span> defaults to <span class="tt">0</span> (dual-stack enabled)</li>
+<li><b>Windows</b>: Defaults to <span class="tt">1</span> (IPv6-only); must disable explicitly for dual-stack</li>
+<li><b>macOS / BSD</b>: Often defaults to <span class="tt">1</span>, some systems disallow disabling</li>
+</ul>
+<p>⚠️ On all platforms, this option <b>must be set before <span class="tt">bind()</span></b>. Changing it afterward is undefined or ignored.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md729"></a>
+💡 Use Cases</h3>
+<ul>
+<li>Enforce strict IPv6-only policy (security or protocol compliance)</li>
+<li>Enable dual-stack sockets that handle both IPv6 and IPv4 transparently</li>
+<li>Configure UDP or multicast receivers to receive from both protocol families</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md731"></a>
+Example</h3>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1ServerSocket.html">ServerSocket</a> server(AF_INET6);</div>
+<div class="line">server.setIPv6Only(<span class="keyword">true</span>);      <span class="comment">// Only allow IPv6 clients</span></div>
+<div class="line">server.bind(<span class="stringliteral">&quot;::&quot;</span>, 8080);</div>
+<div class="line">server.listen();</div>
+<div class="ttc" id="aclassjsocketpp_1_1ServerSocket_html"><div class="ttname"><a href="classjsocketpp_1_1ServerSocket.html">jsocketpp::ServerSocket</a></div><div class="ttdoc">TCP server socket abstraction for cross-platform C++ networking.</div><div class="ttdef"><b>Definition</b> ServerSocket.hpp:100</div></div>
+</div><!-- fragment --><hr  />
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td><span class="tt">true</span> to enable IPv6-only mode (<span class="tt">IPV6_V6ONLY = 1</span>), <span class="tt">false</span> to allow dual-stack operation (<span class="tt">IPV6_V6ONLY = 0</span>).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is not valid</li>
+<li>The option is unsupported on the platform or socket type</li>
+<li>The system call (<span class="tt">setsockopt()</span>) fails</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This setting has no effect on UNIX domain sockets, and calling it on one will throw.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga1d44e7f23739c1ef4a9ad550b4a1ff1d" title="Queries whether the IPV6_V6ONLY option is enabled on this socket.">getIPv6Only()</a> </dd>
+<dd>
+<a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a> </dd>
+<dd>
+<a href="https://man7.org/linux/man-pages/man7/ipv6.7.html">https://man7.org/linux/man-pages/man7/ipv6.7.html</a> </dd></dl>
 
 </div>
 </div>
@@ -1199,7 +1352,7 @@ Example</h3>
 <div class="fragment"><div class="line">socket.setKeepAlive(<span class="keyword">true</span>);  <span class="comment">// Enable periodic liveness checks on TCP</span></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">on</td><td>Set to <span class="tt">true</span> to enable keepalive, or <span class="tt">false</span> to disable it.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">on</td><td>Set to <span class="tt">true</span> to enable keepalive, or <span class="tt">false</span> to disable it.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1297,7 +1450,7 @@ Example: Enable non-blocking mode on a client socket</h3>
 </div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nonBlocking</td><td><span class="tt">true</span> to enable non-blocking mode, <span class="tt">false</span> to restore blocking mode.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">nonBlocking</td><td><span class="tt">true</span> to enable non-blocking mode, <span class="tt">false</span> to restore blocking mode.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1401,10 +1554,10 @@ Example: Set <span class="tt">SO_LINGER</span> to linger for 5 seconds on close<
 <hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">level</td><td>Protocol level (e.g., <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>) </td></tr>
-    <tr><td class="paramname">optName</td><td>Option name (e.g., <span class="tt">SO_LINGER</span>, <span class="tt">IP_TOS</span>) </td></tr>
-    <tr><td class="paramname">value</td><td>Pointer to a buffer containing the option value </td></tr>
-    <tr><td class="paramname">len</td><td>Size of the buffer in bytes</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">level</td><td>Protocol level (e.g., <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">optName</td><td>Option name (e.g., <span class="tt">SO_LINGER</span>, <span class="tt">IP_TOS</span>) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>Pointer to a buffer containing the option value </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>Size of the buffer in bytes</td></tr>
   </table>
   </dd>
 </dl>
@@ -1504,9 +1657,9 @@ getOption(int, int, void*, socklen_t*) </dd>
 </div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">level</td><td>The protocol level at which the option resides (e.g., <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>). </td></tr>
-    <tr><td class="paramname">optName</td><td>The name of the socket option (e.g., <span class="tt">SO_REUSEADDR</span>, <span class="tt">TCP_NODELAY</span>). </td></tr>
-    <tr><td class="paramname">value</td><td>Integer value to assign to the option.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">level</td><td>The protocol level at which the option resides (e.g., <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">optName</td><td>The name of the socket option (e.g., <span class="tt">SO_REUSEADDR</span>, <span class="tt">TCP_NODELAY</span>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>Integer value to assign to the option.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1646,7 +1799,7 @@ Example</h3>
 </div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>This method must be called <b>after socket creation</b> and <b>before bind()</b>. Improper use can lead to security issues or interference between applications.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">on</td><td>If <span class="tt">true</span>, enables address reuse; if <span class="tt">false</span>, disables it.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">on</td><td>If <span class="tt">true</span>, enables address reuse; if <span class="tt">false</span>, disables it.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1755,22 +1908,22 @@ setInternalBufferSize() </dd></dl>
 <p>Updates the socket descriptor used by this object. </p>
 <p>This method sets the internal socket file descriptor used by the <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> interface. It is typically called by derived classes after the socket has been moved, reassigned, or otherwise changed during the object's lifetime.</p>
 <p>This does <b>not</b> open, close, or validate the socket descriptor. It simply updates the internal <span class="tt">_sockFd</span> used by methods such as <span class="tt"><a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a></span> and <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md724"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md740"></a>
 When to Use</h3>
 <ul>
 <li>After a move constructor or move assignment updates the underlying socket</li>
 <li>After explicitly re-binding or re-creating a socket file descriptor</li>
 <li>When adapting an externally provided descriptor (e.g., from <span class="tt">accept()</span> or <span class="tt">socketpair()</span>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md725"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md741"></a>
 Example: Move assignment</h3>
 <div class="fragment"><div class="line"><a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a> = rhs._sockFd;</div>
 <div class="line"><a class="code hl_function" href="#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a>(<a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a>); <span class="comment">// keeps SocketOptions base class in sync</span></div>
-<div class="ttc" id="aclassjsocketpp_1_1SocketOptions_html_a44b54c91017594a7695bf315778fb131"><div class="ttname"><a href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">jsocketpp::SocketOptions::_sockFd</a></div><div class="ttdeci">SOCKET _sockFd</div><div class="ttdoc">Underlying socket file descriptor.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1376</div></div>
-<div class="ttc" id="agroup__socketopts_html_ga97706ddf21aab33a18db00bd0b8eb65d"><div class="ttname"><a href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a></div><div class="ttdeci">void setSocketFd(const SOCKET sock) noexcept</div><div class="ttdoc">Updates the socket descriptor used by this object.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1345</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1SocketOptions_html_a44b54c91017594a7695bf315778fb131"><div class="ttname"><a href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">jsocketpp::SocketOptions::_sockFd</a></div><div class="ttdeci">SOCKET _sockFd</div><div class="ttdoc">Underlying socket file descriptor.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1491</div></div>
+<div class="ttc" id="agroup__socketopts_html_ga97706ddf21aab33a18db00bd0b8eb65d"><div class="ttname"><a href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a></div><div class="ttdeci">void setSocketFd(const SOCKET sock) noexcept</div><div class="ttdoc">Updates the socket descriptor used by this object.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1460</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sock</td><td>The new socket file descriptor to associate with this object. May be <span class="tt">INVALID_SOCKET</span> to mark the socket as uninitialized or closed.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sock</td><td>The new socket file descriptor to associate with this object. May be <span class="tt">INVALID_SOCKET</span> to mark the socket as uninitialized or closed.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1839,8 +1992,8 @@ Example</h3>
 <div class="line">socket.setSoLinger(<span class="keyword">false</span>, 0);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">enable</td><td>Whether to enable lingering behavior on close. </td></tr>
-    <tr><td class="paramname">seconds</td><td>Linger timeout (in seconds). Only meaningful if <span class="tt">enable == true</span>.<ul>
+    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td>Whether to enable lingering behavior on close. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">seconds</td><td>Linger timeout (in seconds). Only meaningful if <span class="tt">enable == true</span>.<ul>
 <li>Must be ≥ 0. <span class="tt">0</span> means abortive close.</li>
 </ul>
 </td></tr>
@@ -1904,7 +2057,7 @@ Example: Set a 3-second receive timeout</h3>
 </div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">millis</td><td>Timeout in milliseconds. Must be ≥ 0. Use <span class="tt">0</span> to disable the timeout.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">millis</td><td>Timeout in milliseconds. Must be ≥ 0. Use <span class="tt">0</span> to disable the timeout.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1964,7 +2117,7 @@ Example: Set a 5-second send timeout</h3>
 </div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">millis</td><td>Timeout in milliseconds. Must be ≥ 0. Use <span class="tt">0</span> to disable the timeout.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">millis</td><td>Timeout in milliseconds. Must be ≥ 0. Use <span class="tt">0</span> to disable the timeout.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2092,7 +2245,7 @@ Example: Disable Nagle’s algorithm to reduce latency</h3>
 </div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">on</td><td>If <span class="tt">true</span>, disables Nagle's algorithm (<span class="tt">TCP_NODELAY = 1</span>), enabling immediate sends. If <span class="tt">false</span>, enables Nagle's algorithm (<span class="tt">TCP_NODELAY = 0</span>) to batch small writes.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">on</td><td>If <span class="tt">true</span>, disables Nagle's algorithm (<span class="tt">TCP_NODELAY = 1</span>), enabling immediate sends. If <span class="tt">false</span>, enables Nagle's algorithm (<span class="tt">TCP_NODELAY = 0</span>) to batch small writes.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2143,7 +2296,7 @@ Example: Disable Nagle’s algorithm to reduce latency</h3>
 <p>Constructs a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> object that uses the provided socket file descriptor for all subsequent <span class="tt"><a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a></span> and <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span> calls. This constructor is intended to be used by derived socket classes (e.g., <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>) to delegate option-handling responsibilities without duplicating system-specific logic.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sock</td><td>A valid socket descriptor (e.g., from <span class="tt">socket()</span>, <span class="tt">accept()</span>, etc.), or <span class="tt">INVALID_SOCKET</span> if the object is not yet initialized.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sock</td><td>A valid socket descriptor (e.g., from <span class="tt">socket()</span>, <span class="tt">accept()</span>, etc.), or <span class="tt">INVALID_SOCKET</span> if the object is not yet initialized.</td></tr>
   </table>
   </dd>
 </dl>

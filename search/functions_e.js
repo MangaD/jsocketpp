@@ -6,7 +6,7 @@ var searchData=
   ['setdefaultreceivebuffersize_3',['setDefaultReceiveBufferSize',['../group__tcp.html#gaf644d3fccaebced95dd6bc2055bbed3e',1,'jsocketpp::ServerSocket']]],
   ['setdefaultsendbuffersize_4',['setDefaultSendBufferSize',['../group__tcp.html#gadbeecdd1d47fb8244dab210fa297fcf9',1,'jsocketpp::ServerSocket']]],
   ['setinternalbuffersize_5',['setInternalBufferSize',['../group__tcp.html#ga3fb196157a1cde167c47a596c9235c91',1,'jsocketpp::Socket']]],
-  ['setipv6only_6',['setIPv6Only',['../group__tcp.html#ga41b156c31f7b6d0ce08112c466a32719',1,'jsocketpp::ServerSocket']]],
+  ['setipv6only_6',['setIPv6Only',['../group__socketopts.html#gab96d6fa640ac34113cb1f76bfbf970dc',1,'jsocketpp::SocketOptions']]],
   ['setkeepalive_7',['setKeepAlive',['../group__socketopts.html#gab3fbb8682b1313dc38abddd541ca4abf',1,'jsocketpp::SocketOptions']]],
   ['setloopbackmode_8',['setLoopbackMode',['../classjsocketpp_1_1MulticastSocket.html#ab6608be5d1aff24ad5077f6ea9a9168a',1,'jsocketpp::MulticastSocket']]],
   ['setmulticastinterface_9',['setMulticastInterface',['../classjsocketpp_1_1MulticastSocket.html#af0d5d684dcbfcf62907482ae3ac98948',1,'jsocketpp::MulticastSocket']]],
