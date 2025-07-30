@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🔀_20platform_20behavior_0',['🔀 Platform Behavior',['../group__socketopts.html#autotoc_md668',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md673',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md678',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md683',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md688',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md699',1,'🔀 Platform Behavior']]]
+  ['🔀_20platform_20behavior_0',['🔀 Platform Behavior',['../group__socketopts.html#autotoc_md667',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md672',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md677',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md682',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md687',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md698',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md707',1,'🔀 Platform Behavior']]]
 ];

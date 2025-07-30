@@ -33,6 +33,6 @@ var searchData=
   ['getsorecvtimeout_30',['getSoRecvTimeout',['../group__socketopts.html#gaaee02a4007c38decf8925319b9f3e5f2',1,'jsocketpp::SocketOptions']]],
   ['getsosendtimeout_31',['getSoSendTimeout',['../group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0',1,'jsocketpp::SocketOptions']]],
   ['getsotimeout_32',['getSoTimeout',['../group__socketopts.html#ga7829c558cb7bf5e0a46d882df82acc19',1,'jsocketpp::ServerSocket']]],
-  ['gettcpnodelay_33',['getTcpNoDelay',['../group__socketopts.html#ga2539928ed0829df5070384f907ea48f7',1,'jsocketpp::Socket']]],
+  ['gettcpnodelay_33',['getTcpNoDelay',['../group__socketopts.html#ga05137fbdc55ab065739e220b7a4f41c0',1,'jsocketpp::SocketOptions']]],
   ['gettimetolive_34',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]]
 ];

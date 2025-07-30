@@ -3,7 +3,7 @@ var searchData=
   ['handles_20blocking_20and_20timeouts_0',['⏱ How jsocketpp Handles Blocking and Timeouts',['../group__async__io.html#autotoc_md122',1,'']]],
   ['handling_1',['Error Handling',['../classjsocketpp_1_1Socket.html#autotoc_md491',1,'']]],
   ['handling_2',['🧪 Socket state handling',['../group__address__reuse.html#autotoc_md60',1,'']]],
-  ['handling_20socket_20exceptions_3',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md592',1,'']]],
+  ['handling_20socket_20exceptions_3',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md591',1,'']]],
   ['handling_20work_4',['How does error handling work?',['../index.html#autotoc_md416',1,'']]],
   ['happens_20when_20multiple_20sockets_20bind_20to_20the_20same_20port_5',['🧪 What Happens When Multiple Sockets Bind to the Same Port?',['../group__address__reuse.html#autotoc_md74',1,'']]],
   ['helpers_6',['Internal Helpers',['../group__internal.html',1,'']]],

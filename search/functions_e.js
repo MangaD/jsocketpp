@@ -21,7 +21,7 @@ var searchData=
   ['setsorecvtimeout_18',['setSoRecvTimeout',['../group__socketopts.html#ga5ad18e598507d04059bdaff086b01721',1,'jsocketpp::SocketOptions']]],
   ['setsosendtimeout_19',['setSoSendTimeout',['../group__socketopts.html#ga7107a9da459b00bf39ec2fe4d3e83396',1,'jsocketpp::SocketOptions']]],
   ['setsotimeout_20',['setSoTimeout',['../group__socketopts.html#ga2087f337f22de16821132208b94b1441',1,'jsocketpp::ServerSocket']]],
-  ['settcpnodelay_21',['setTcpNoDelay',['../group__socketopts.html#gac3c6f8848ff049eb3e31b4fe190dd624',1,'jsocketpp::Socket']]],
+  ['settcpnodelay_21',['setTcpNoDelay',['../group__socketopts.html#ga9839dd8837c7519a627f28b3a4c7a513',1,'jsocketpp::SocketOptions']]],
   ['settimeout_22',['setTimeout',['../classjsocketpp_1_1DatagramSocket.html#a540c0e48e02529eec6b9605e141433c5',1,'jsocketpp::DatagramSocket::setTimeout()'],['../classjsocketpp_1_1UnixSocket.html#a4b599e3ea9497908dbf3d7a2cc79f1c8',1,'jsocketpp::UnixSocket::setTimeout()']]],
   ['settimetolive_23',['setTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#a72172a10bc5ba13a908f31c791c90ec5',1,'jsocketpp::MulticastSocket']]],
   ['shutdown_24',['shutdown',['../group__tcp.html#gaacbacf59cf8239e66c80c66a09243ec3',1,'jsocketpp::Socket']]],
