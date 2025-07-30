@@ -1353,39 +1353,6 @@ class ServerSocket : public SocketOptions
     [[nodiscard]] bool getReusePort() const;
 #endif
 
-    /**
-     * @brief Get the underlying native socket handle/descriptor.
-     *
-     * This method provides low-level access to the native socket handle (file descriptor on Unix-like systems,
-     * SOCKET handle on Windows) for advanced usage scenarios such as:
-     * - Integration with external event loops (select, poll, epoll)
-     * - Platform-specific socket operations not exposed by the jsocketpp API
-     * - Custom socket monitoring or diagnostics
-     *
-     * @warning HANDLE WITH CARE:
-     * - DO NOT close or shutdown the socket using this handle directly
-     * - DO NOT modify socket options or state without careful consideration
-     * - DO NOT store the handle beyond the lifetime of the ServerSocket object
-     * - DO NOT share the handle between threads without proper synchronization
-     *
-     * Improper use of the raw socket handle can lead to:
-     * - Resource leaks
-     * - Double-close scenarios
-     * - Undefined behavior
-     * - Thread safety violations
-     * - Broken socket state
-     *
-     * @note The handle remains owned and managed by the ServerSocket object.
-     *       It will be automatically closed when the ServerSocket is destroyed.
-     *
-     * @return The native socket handle/descriptor
-     *
-     * @see acceptBlocking(), setOption()
-     *
-     * @ingroup tcp
-     */
-    [[nodiscard]] SOCKET getHandle() const { return _serverSocket; }
-
   protected:
     /**
      * @brief Cleans up server socket resources and throws a SocketException.

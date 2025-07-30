@@ -91,6 +91,60 @@ class SocketOptions
     virtual ~SocketOptions() = default;
 
     /**
+     * @brief Retrieves the native socket handle (file descriptor or OS-level handle).
+     * @ingroup socketopts
+     *
+     * This method provides low-level access to the socket’s operating system identifier:
+     * - On **POSIX** systems, this is an integer file descriptor (`int`)
+     * - On **Windows**, this is a `SOCKET` handle (`uintptr_t`-like)
+     *
+     * It is intended for **advanced use cases only**, such as:
+     * - Integrating with external event loops (`select()`, `poll()`, `epoll`, `kqueue`)
+     * - Passing the socket to platform APIs or native libraries
+     * - Monitoring socket state or readiness using system primitives
+     *
+     * ---
+     *
+     * ### ⚠️ HANDLE WITH EXTREME CARE
+     * This method exposes the raw handle **without ownership transfer**. Misuse may lead to:
+     * - Resource leaks (if manually closed)
+     * - Double-close or shutdown
+     * - Corruption of internal state
+     * - Thread-safety issues in multithreaded environments
+     * - Broken invariants inside the jsocketpp abstraction
+     *
+     * ---
+     *
+     * ### ✅ Safe Usage Guidelines
+     * - **DO** use this handle for non-destructive introspection (e.g., `poll()`, `select()`)
+     * - **DO NOT** call `close()`, `shutdown()`, or `setsockopt()` directly unless you fully understand the
+     * consequences
+     * - **DO NOT** store the handle beyond the lifetime of the socket object
+     * - **DO NOT** share across threads without synchronization
+     *
+     * ---
+     *
+     * ### Example: Use with `select()`
+     * @code
+     * fd_set readSet;
+     * FD_ZERO(&readSet);
+     * FD_SET(socket.getSocketFd(), &readSet);
+     *
+     * if (::select(socket.getSocketFd() + 1, &readSet, nullptr, nullptr, &timeout) > 0) {
+     *     std::cout << "Socket is readable!\n";
+     * }
+     * @endcode
+     *
+     * @return The underlying OS-level socket identifier (`SOCKET` or file descriptor).
+     *         Returns `INVALID_SOCKET` if the socket is not initialized.
+     *
+     * @see setSocketFd() – Internal method for synchronizing base state
+     * @see setOption(), getOption()
+     * @see waitReady(), setNonBlocking()
+     */
+    [[nodiscard]] SOCKET getSocketFd() const noexcept { return _sockFd; }
+
+    /**
      * @brief Sets a low-level socket option on the underlying socket.
      * @ingroup socketopts
      *
