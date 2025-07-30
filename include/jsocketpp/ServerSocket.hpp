@@ -1092,40 +1092,6 @@ class ServerSocket : public SocketOptions
     [[nodiscard]] bool isClosed() const noexcept { return this->_serverSocket == INVALID_SOCKET; }
 
     /**
-     * @brief Set the server socket to non-blocking or blocking mode.
-     *
-     * When in non-blocking mode, the `accept()` call will return immediately if no connections are pending,
-     * instead of blocking until a client connects.
-     *
-     * This is useful for integrating the server socket into event loops or custom I/O polling systems.
-     *
-     * @note This only affects the listening server socket. The accepted sockets returned by `accept()`
-     * remain in blocking mode by default and must be configured separately.
-     *
-     * @param[in] nonBlocking true to enable non-blocking mode, false for blocking (default).
-     * @throws SocketException on error.
-     *
-     * @see acceptBlocking(), acceptNonBlocking()
-     *
-     * @ingroup socketopts
-     */
-    void setNonBlocking(bool nonBlocking);
-
-    /**
-     * @brief Check if the server socket is in non-blocking mode.
-     *
-     * This function queries the socket's current blocking mode.
-     * In non-blocking mode, operations like accept() return immediately
-     * if no connection is available, instead of blocking.
-     *
-     * @return true if the socket is non-blocking, false if it is blocking.
-     * @throws SocketException if the socket flags cannot be retrieved.
-     *
-     * @ingroup socketopts
-     */
-    [[nodiscard]] bool getNonBlocking() const;
-
-    /**
      * @brief Waits for the server socket to become ready to accept an incoming connection.
      * @ingroup tcp
      *

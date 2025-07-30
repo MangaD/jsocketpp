@@ -450,62 +450,6 @@ void Socket::setInternalBufferSize(const std::size_t newLen)
     _internalBuffer.shrink_to_fit();
 }
 
-void Socket::setNonBlocking(bool nonBlocking) const
-{
-    if (_sockFd == INVALID_SOCKET)
-    {
-        throw SocketException("setNonBlocking() called on invalid socket.");
-    }
-
-#ifdef _WIN32
-    u_long mode = nonBlocking ? 1 : 0;
-    if (ioctlsocket(_sockFd, FIONBIO, &mode) != 0)
-    {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    }
-#else
-    int flags = fcntl(_sockFd, F_GETFL, 0);
-    if (flags == -1)
-    {
-        throw SocketException(GetSocketError(), "setNonBlocking(): failed to get file descriptor flags.");
-    }
-
-    if (nonBlocking)
-        flags |= O_NONBLOCK;
-    else
-        flags &= ~O_NONBLOCK;
-
-    if (fcntl(_sockFd, F_SETFL, flags) == -1)
-    {
-        throw SocketException(GetSocketError(), "setNonBlocking(): failed to set file descriptor flags.");
-    }
-#endif
-}
-
-bool Socket::getNonBlocking() const
-{
-    if (_sockFd == INVALID_SOCKET)
-    {
-        throw SocketException("getNonBlocking() called on invalid socket.");
-    }
-
-#ifdef _WIN32
-    u_long mode = 0;
-    if (ioctlsocket(_sockFd, FIONBIO, &mode) != 0)
-    {
-        throw SocketException(GetSocketError(), "getNonBlocking(): ioctlsocket() failed.");
-    }
-    return mode != 0;
-#else
-    int flags = fcntl(_sockFd, F_GETFL, 0);
-    if (flags == -1)
-    {
-        throw SocketException(GetSocketError(), "getNonBlocking(): fcntl(F_GETFL) failed.");
-    }
-    return (flags & O_NONBLOCK) != 0;
-#endif
-}
-
 bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
 {
     if (_sockFd == INVALID_SOCKET)

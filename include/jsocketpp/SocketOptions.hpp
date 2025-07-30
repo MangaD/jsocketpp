@@ -1018,6 +1018,129 @@ class SocketOptions
      */
     [[nodiscard]] int getSoSendTimeout() const;
 
+    /**
+     * @brief Enables or disables non-blocking mode on the socket.
+     * @ingroup socketopts
+     *
+     * This method configures the I/O blocking behavior of the socket. In **non-blocking mode**,
+     * system calls such as `read()`, `write()`, `connect()`, and `accept()` return immediately
+     * if they cannot proceed, rather than blocking the calling thread. This enables asynchronous
+     * or event-driven designs where the application explicitly manages readiness.
+     *
+     * In **blocking mode** (the default), these calls block the thread until they complete,
+     * time out (if configured), or fail.
+     *
+     * ---
+     *
+     * ### 🔀 Platform Behavior
+     * - **POSIX**: Uses `fcntl()` to set or clear the `O_NONBLOCK` flag.
+     * - **Windows**: Uses `ioctlsocket()` with the `FIONBIO` control code.
+     * - **Effect**: Changes apply immediately and persist for the life of the socket.
+     *
+     * ---
+     *
+     * ### 📦 Applicable Socket Types
+     * This operation is available on all socket types in this library:
+     * - `Socket` (TCP client)
+     * - `ServerSocket` (listening/acceptor)
+     * - `DatagramSocket` (UDP)
+     * - `UnixSocket` (UNIX domain stream/datagram)
+     *
+     * ---
+     *
+     * ### ⏱️ Behavior Summary by Operation
+     * | Operation     | In Blocking Mode                     | In Non-Blocking Mode                               |
+     * |---------------|--------------------------------------|----------------------------------------------------|
+     * `connect()`     | Blocks until connected or timeout    | Returns immediately; may require polling `write`   |
+     * `read()`        | Waits for data or EOF                | Returns `-1` with `EWOULDBLOCK` if no data         |
+     * `write()`       | Waits for buffer availability        | Returns `-1` if buffer full                        |
+     * `accept()`      | Waits for pending connection         | Returns `-1` with `EWOULDBLOCK` if none available  |
+     * `recvfrom()`    | Waits for incoming datagram          | Returns `-1` if no datagram received               |
+     *
+     * ---
+     *
+     * ### ✅ Use Cases
+     * - Event-driven I/O (with `select`, `poll`, `epoll`, or `kqueue`)
+     * - GUI or game loops that must avoid blocking the main thread
+     * - High-performance servers handling thousands of concurrent clients
+     * - Real-time systems with custom scheduling and retry logic
+     *
+     * ---
+     *
+     * ### Example: Enable non-blocking mode on a client socket
+     * @code
+     * Socket sock("example.com", 80);
+     * sock.setNonBlocking(true);
+     *
+     * if (!sock.waitReady(true, 3000)) {
+     *     throw TimeoutException("Connection timed out");
+     * }
+     * @endcode
+     *
+     * ---
+     *
+     * @param nonBlocking `true` to enable non-blocking mode, `false` to restore blocking mode.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid (`EBADF`)
+     * - Platform-specific system calls fail
+     * - Permissions or capabilities are insufficient
+     *
+     * @note This setting only affects the current socket instance. It does **not** affect sockets
+     * returned by `accept()` (you must call `setNonBlocking()` on each accepted socket).
+     *
+     * @see getNonBlocking()
+     * @see waitReady() To wait for readiness in non-blocking mode
+     * @see setSoRecvTimeout() For timeout control in blocking mode
+     */
+    void setNonBlocking(bool nonBlocking);
+
+    /**
+     * @brief Queries whether the socket is currently in non-blocking mode.
+     * @ingroup socketopts
+     *
+     * This method inspects the I/O mode of the socket and returns `true` if it is configured
+     * for non-blocking operations. In non-blocking mode, I/O system calls return immediately
+     * if they cannot complete, rather than blocking the calling thread.
+     *
+     * ---
+     *
+     * ### 🔀 Platform Behavior
+     * - **POSIX**: Checks the `O_NONBLOCK` flag using `fcntl(F_GETFL)`.
+     * - **Windows**: No direct API exists to query non-blocking state. This function
+     *   will conservatively return `false` and emit a warning if queried.
+     *
+     * ---
+     *
+     * ### Use Cases
+     * - Debugging or inspecting socket configuration
+     * - Adaptive I/O logic based on runtime state
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * if (!socket.getNonBlocking()) {
+     *     socket.setNonBlocking(true);
+     * }
+     * @endcode
+     *
+     * ---
+     *
+     * @return `true` if the socket is in non-blocking mode, `false` otherwise.
+     *         On Windows, always returns `false` due to lack of system support.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - The system query fails (e.g., `fcntl` returns error on POSIX)
+     *
+     * @note On Windows, there is **no way to detect** the current non-blocking state via public APIs.
+     * You must track it manually in application logic if needed.
+     *
+     * @see setNonBlocking()
+     */
+    [[nodiscard]] bool getNonBlocking() const;
+
   protected:
     /**
      * @brief Updates the socket descriptor used by this object.

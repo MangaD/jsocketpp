@@ -420,45 +420,6 @@ void ServerSocket::acceptAsync(std::function<void(std::optional<Socket>, std::ex
         .detach(); // Detach so thread runs independently; lifetime is managed by the OS
 }
 
-// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
-void ServerSocket::setNonBlocking(bool nonBlocking)
-{
-#ifdef _WIN32
-    u_long mode = nonBlocking ? 1 : 0;
-    if (ioctlsocket(_serverSocket, FIONBIO, &mode) != 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-#else
-    int flags = fcntl(_serverSocket, F_GETFL, 0);
-    if (flags == -1)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    if (nonBlocking)
-        flags |= O_NONBLOCK;
-    else
-        flags &= ~O_NONBLOCK;
-    if (fcntl(_serverSocket, F_SETFL, flags) == -1)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-#endif
-}
-
-bool ServerSocket::getNonBlocking() const
-{
-#ifdef _WIN32
-    u_long mode = 0;
-    if (ioctlsocket(_serverSocket, FIONBIO, &mode) != 0)
-    {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    }
-    return mode != 0;
-#else
-    const int flags = fcntl(_serverSocket, F_GETFL, 0);
-    if (flags == -1)
-    {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    }
-    return (flags & O_NONBLOCK) != 0;
-#endif
-}
-
 bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
 {
     if (_serverSocket == INVALID_SOCKET)

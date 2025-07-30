@@ -222,4 +222,43 @@ int SocketOptions::getSoSendTimeout() const
 #endif
 }
 
+// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
+void SocketOptions::setNonBlocking(bool nonBlocking)
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException("setNonBlocking() failed: socket is not open.");
+
+#ifdef _WIN32
+    u_long mode = nonBlocking ? 1 : 0;
+    if (::ioctlsocket(_sockFd, FIONBIO, &mode) != 0)
+        throw SocketException(GetSocketError(), "ioctlsocket(FIONBIO) failed");
+#else
+    int flags = ::fcntl(_sockFd, F_GETFL, 0);
+    if (flags < 0)
+        throw SocketException(errno, "fcntl(F_GETFL) failed");
+
+    const int newFlags = nonBlocking ? (flags | O_NONBLOCK) : (flags & ~O_NONBLOCK);
+    if (::fcntl(_sockFd, F_SETFL, newFlags) < 0)
+        throw SocketException(errno, "fcntl(F_SETFL) failed");
+#endif
+}
+
+bool SocketOptions::getNonBlocking() const
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException("getNonBlocking() failed: socket is not open.");
+
+#ifdef _WIN32
+    // Windows has no ioctl/FIONBIO read mode — not supported by design.
+    // You must track non-blocking state in application logic.
+    return false;
+#else
+    const int flags = ::fcntl(_sockFd, F_GETFL, 0);
+    if (flags < 0)
+        throw SocketException(errno, "fcntl(F_GETFL) failed");
+
+    return (flags & O_NONBLOCK) != 0;
+#endif
+}
+
 } // namespace jsocketpp
