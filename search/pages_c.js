@@ -25,7 +25,7 @@ var searchData=
   ['cleanup_22',['Resource Cleanup',['../group__tcp.html#autotoc_md482',1,'']]],
   ['cleanup_3a_23',['1.2 &lt;b&gt;Testing Socket Initialization and Cleanup&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md334',1,'']]],
   ['clear_20api_24',['c) Clear API',['../group__ServerSocket__Lifecycle.html#autotoc_md37',1,'']]],
-  ['client_25',['Client',['../classjsocketpp_1_1UnixSocket.html#autotoc_md746',1,'Example: Simple Client'],['../classjsocketpp_1_1DatagramSocket.html#autotoc_md465',1,'Example: Simple UDP Echo Server and Client']]],
+  ['client_25',['Client',['../classjsocketpp_1_1UnixSocket.html#autotoc_md760',1,'Example: Simple Client'],['../classjsocketpp_1_1DatagramSocket.html#autotoc_md465',1,'Example: Simple UDP Echo Server and Client']]],
   ['client_20c_20af_5finet_26',['5.2 UDP Server and Client (C, AF_INET)',['../group__underlying__socket__api.html#autotoc_md311',1,'']]],
   ['client_20integration_20test_3a_27',['Example of a Simple Server-Client Integration Test:',['../group__unit__tests.html#autotoc_md337',1,'']]],
   ['client_20python_20af_5finet_28',['5.1 TCP Server and Client (Python, AF_INET)',['../group__underlying__socket__api.html#autotoc_md310',1,'']]],

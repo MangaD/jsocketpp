@@ -61,7 +61,7 @@ var searchData=
   ['to_20the_20same_20port_58',['🧪 What Happens When Multiple Sockets Bind to the Same Port?',['../group__address__reuse.html#autotoc_md74',1,'']]],
   ['to_20the_20socket_20api_59',['1. Introduction to the Socket API',['../group__underlying__socket__api.html#autotoc_md299',1,'']]],
   ['to_20the_20vcpkg_20registry_60',['5. Submit to the vcpkg Registry',['../group__vcpkg__publish__guide.html#autotoc_md357',1,'']]],
-  ['to_20use_61',['When to Use',['../group__socketopts.html#autotoc_md740',1,'']]],
+  ['to_20use_61',['When to Use',['../group__socketopts.html#autotoc_md754',1,'']]],
   ['toolchain_20support_62',['🔧 Platform &amp;amp; Toolchain Support',['../index.html#autotoc_md374',1,'']]],
   ['tooling_63',['🛠 Developer Tooling',['../index.html#autotoc_md404',1,'']]],
   ['tools_20for_20unit_20testing_20in_20c_2020_3a_64',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md331',1,'']]],

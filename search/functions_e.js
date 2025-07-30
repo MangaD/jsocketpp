@@ -14,7 +14,7 @@ var searchData=
   ['setoption_11',['setOption',['../group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b',1,'jsocketpp::SocketOptions::setOption(int level, int optName, int value)'],['../group__socketopts.html#ga04df6377e302cc0cedff070517021950',1,'jsocketpp::SocketOptions::setOption(int level, int optName, const void *value, socklen_t len)']]],
   ['setreceivebuffersize_12',['setReceiveBufferSize',['../group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d',1,'jsocketpp::SocketOptions']]],
   ['setreuseaddress_13',['setReuseAddress',['../group__socketopts.html#gab358ea7ed49e95717b1e9438251b3d9a',1,'jsocketpp::SocketOptions']]],
-  ['setreuseport_14',['setReusePort',['../group__tcp.html#ga6276b89030ccf50a67501f429a14e3a3',1,'jsocketpp::ServerSocket']]],
+  ['setreuseport_14',['setReusePort',['../group__socketopts.html#ga05c3ae5067a7d83965249d00c5d564c3',1,'jsocketpp::SocketOptions']]],
   ['setsendbuffersize_15',['setSendBufferSize',['../group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b',1,'jsocketpp::SocketOptions']]],
   ['setsocketfd_16',['setSocketFd',['../group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d',1,'jsocketpp::SocketOptions']]],
   ['setsolinger_17',['setSoLinger',['../group__socketopts.html#ga707a637112e5ec1309da4e6dfe2fddb3',1,'jsocketpp::SocketOptions']]],

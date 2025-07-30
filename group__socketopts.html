@@ -166,6 +166,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:gab96d6fa640ac34113cb1f76bfbf970dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables <span class="tt">IPV6_V6ONLY</span> mode for IPv6-capable sockets.  <br /></td></tr>
 <tr class="memitem:ga1d44e7f23739c1ef4a9ad550b4a1ff1d" id="r_ga1d44e7f23739c1ef4a9ad550b4a1ff1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1d44e7f23739c1ef4a9ad550b4a1ff1d">jsocketpp::SocketOptions::getIPv6Only</a> () const</td></tr>
 <tr class="memdesc:ga1d44e7f23739c1ef4a9ad550b4a1ff1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the <span class="tt">IPV6_V6ONLY</span> option is enabled on this socket.  <br /></td></tr>
+<tr class="memitem:ga05c3ae5067a7d83965249d00c5d564c3" id="r_ga05c3ae5067a7d83965249d00c5d564c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga05c3ae5067a7d83965249d00c5d564c3">jsocketpp::SocketOptions::setReusePort</a> (const bool enable)</td></tr>
+<tr class="memdesc:ga05c3ae5067a7d83965249d00c5d564c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the <span class="tt">SO_REUSEPORT</span> socket option.  <br /></td></tr>
+<tr class="memitem:ga0472e21ad70ac9b778aac3d6177577ca" id="r_ga0472e21ad70ac9b778aac3d6177577ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0472e21ad70ac9b778aac3d6177577ca">jsocketpp::SocketOptions::getReusePort</a> () const</td></tr>
+<tr class="memdesc:ga0472e21ad70ac9b778aac3d6177577ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the <span class="tt">SO_REUSEPORT</span> option is currently enabled on the socket.  <br /></td></tr>
 <tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
 <tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the socket descriptor used by this object.  <br /></td></tr>
 <tr class="memitem:gaace6c3364b4016979537571b36c58727" id="r_gaace6c3364b4016979537571b36c58727"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaace6c3364b4016979537571b36c58727">jsocketpp::SocketOptions::isPassiveSocket</a> () const noexcept</td></tr>
@@ -719,6 +723,76 @@ Example</h3>
 
 </div>
 </div>
+<a id="ga0472e21ad70ac9b778aac3d6177577ca" name="ga0472e21ad70ac9b778aac3d6177577ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0472e21ad70ac9b778aac3d6177577ca">&#9670;&#160;</a></span>getReusePort()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::SocketOptions::getReusePort </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks whether the <span class="tt">SO_REUSEPORT</span> option is currently enabled on the socket. </p>
+<p>This method queries the <span class="tt">SO_REUSEPORT</span> setting via <span class="tt">getsockopt()</span> to determine whether the socket is configured to allow multiple bindings to the same address/port.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md748"></a>
+🌍 Applicability</h3>
+<ul>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Used to verify shared accept-mode configuration</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>: ✅ Useful for multicast receivers or redundant UDP listeners</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>: ✅ Rare, but valid for bound client sockets</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable — method excluded at compile time</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md750"></a>
+🔀 Platform Support</h3>
+<ul>
+<li>✅ <b>Linux (≥ 3.9)</b>, FreeBSD, macOS (some BSDs require extra sysctls)</li>
+<li>❌ <b>Windows</b>: Not supported — this method is not compiled</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md752"></a>
+Example</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#if defined(SO_REUSEPORT)</span></div>
+<div class="line"><span class="keywordflow">if</span> (socket.getReusePort()) {</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Port reuse is enabled.\n&quot;</span>;</div>
+<div class="line">} <span class="keywordflow">else</span> {</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Port reuse is not enabled.\n&quot;</span>;</div>
+<div class="line">}</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+</div><!-- fragment --><hr  />
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if <span class="tt">SO_REUSEPORT</span> is enabled on the socket; <span class="tt">false</span> otherwise.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid or uninitialized</li>
+<li>The system call fails (<span class="tt">getsockopt()</span> error)</li>
+<li>The option is not supported or the socket type is incompatible</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga05c3ae5067a7d83965249d00c5d564c3" title="Enables or disables the SO_REUSEPORT socket option.">setReusePort()</a> </dd>
+<dd>
+<a href="https://man7.org/linux/man-pages/man7/socket.7.html">https://man7.org/linux/man-pages/man7/socket.7.html</a> </dd></dl>
+
+</div>
+</div>
 <a id="gaeb5f9d1ae3f1b7b9fdb94335b10723f6" name="gaeb5f9d1ae3f1b7b9fdb94335b10723f6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaeb5f9d1ae3f1b7b9fdb94335b10723f6">&#9670;&#160;</a></span>getSendBufferSize()</h2>
 
@@ -1213,7 +1287,7 @@ When <span class="tt">true</span> matters</h3>
 <li>On Windows, <span class="tt">SO_EXCLUSIVEADDRUSE</span> is used for passive sockets to control port reuse semantics.</li>
 <li>On POSIX systems, all sockets use <span class="tt">SO_REUSEADDR</span>, but server sockets may still follow different best practices.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md742"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md756"></a>
 Usage</h3>
 <ul>
 <li>Override this method in subclasses like <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> to return <span class="tt">true</span>.</li>
@@ -1817,6 +1891,75 @@ bind() </dd>
 
 </div>
 </div>
+<a id="ga05c3ae5067a7d83965249d00c5d564c3" name="ga05c3ae5067a7d83965249d00c5d564c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga05c3ae5067a7d83965249d00c5d564c3">&#9670;&#160;</a></span>setReusePort()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jsocketpp::SocketOptions::setReusePort </td>
+          <td>(</td>
+          <td class="paramtype">const bool</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enables or disables the <span class="tt">SO_REUSEPORT</span> socket option. </p>
+<p>This method configures the <span class="tt">SO_REUSEPORT</span> option, which allows multiple sockets to bind to the <b>same IP address and port combination</b>, enabling parallelism in multi-threaded or multi-process applications. Unlike <span class="tt">SO_REUSEADDR</span>, which allows re-binding during <span class="tt">TIME_WAIT</span>, <span class="tt">SO_REUSEPORT</span> permits <b>simultaneous binding</b> by multiple sockets.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md741"></a>
+🌍 Applicability</h3>
+<ul>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Enables load-balanced accept loops across threads or processes</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>: ✅ Permits shared reception on a multicast port (platform-dependent)</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>: ✅ Technically allowed, but rarely used in clients</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not supported; this method is not compiled on unsupported platforms</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md743"></a>
+🔀 Platform Support</h3>
+<ul>
+<li>✅ Linux (kernel ≥ 3.9)</li>
+<li>✅ BSD-based systems (FreeBSD, macOS)</li>
+<li>❌ Windows: Not available — this method is excluded at compile time</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md745"></a>
+Example: Enable shared port binding</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#if defined(SO_REUSEPORT)</span></div>
+<div class="line">    serverSocket.setReusePort(<span class="keyword">true</span>);</div>
+<div class="line">    serverSocket.bind(<span class="stringliteral">&quot;0.0.0.0&quot;</span>, 8080);</div>
+<div class="line">    serverSocket.listen();</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+</div><!-- fragment --><hr  />
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td><span class="tt">true</span> to allow multiple sockets to bind the same port (<span class="tt">SO_REUSEPORT = 1</span>), or <span class="tt">false</span> to disable the shared binding behavior (<span class="tt">SO_REUSEPORT = 0</span>).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid</li>
+<li>The system call fails (<span class="tt">setsockopt()</span> error)</li>
+<li>The option is used improperly (e.g., after <span class="tt">bind()</span>)</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This option must be set <b>before</b> calling <span class="tt">bind()</span>. Behavior is undefined if changed after binding.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga0472e21ad70ac9b778aac3d6177577ca" title="Checks whether the SO_REUSEPORT option is currently enabled on the socket.">getReusePort()</a> </dd>
+<dd>
+<a class="el" href="#gab358ea7ed49e95717b1e9438251b3d9a" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress()</a> </dd>
+<dd>
+<a href="https://lwn.net/Articles/542629/">https://lwn.net/Articles/542629/</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga8279b0c70f6a0fddf73d84aac691422b" name="ga8279b0c70f6a0fddf73d84aac691422b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga8279b0c70f6a0fddf73d84aac691422b">&#9670;&#160;</a></span>setSendBufferSize()</h2>
 
@@ -1908,19 +2051,19 @@ setInternalBufferSize() </dd></dl>
 <p>Updates the socket descriptor used by this object. </p>
 <p>This method sets the internal socket file descriptor used by the <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> interface. It is typically called by derived classes after the socket has been moved, reassigned, or otherwise changed during the object's lifetime.</p>
 <p>This does <b>not</b> open, close, or validate the socket descriptor. It simply updates the internal <span class="tt">_sockFd</span> used by methods such as <span class="tt"><a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a></span> and <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md740"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md754"></a>
 When to Use</h3>
 <ul>
 <li>After a move constructor or move assignment updates the underlying socket</li>
 <li>After explicitly re-binding or re-creating a socket file descriptor</li>
 <li>When adapting an externally provided descriptor (e.g., from <span class="tt">accept()</span> or <span class="tt">socketpair()</span>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md741"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md755"></a>
 Example: Move assignment</h3>
 <div class="fragment"><div class="line"><a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a> = rhs._sockFd;</div>
 <div class="line"><a class="code hl_function" href="#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a>(<a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a>); <span class="comment">// keeps SocketOptions base class in sync</span></div>
-<div class="ttc" id="aclassjsocketpp_1_1SocketOptions_html_a44b54c91017594a7695bf315778fb131"><div class="ttname"><a href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">jsocketpp::SocketOptions::_sockFd</a></div><div class="ttdeci">SOCKET _sockFd</div><div class="ttdoc">Underlying socket file descriptor.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1491</div></div>
-<div class="ttc" id="agroup__socketopts_html_ga97706ddf21aab33a18db00bd0b8eb65d"><div class="ttname"><a href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a></div><div class="ttdeci">void setSocketFd(const SOCKET sock) noexcept</div><div class="ttdoc">Updates the socket descriptor used by this object.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1460</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1SocketOptions_html_a44b54c91017594a7695bf315778fb131"><div class="ttname"><a href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">jsocketpp::SocketOptions::_sockFd</a></div><div class="ttdeci">SOCKET _sockFd</div><div class="ttdoc">Underlying socket file descriptor.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1596</div></div>
+<div class="ttc" id="agroup__socketopts_html_ga97706ddf21aab33a18db00bd0b8eb65d"><div class="ttname"><a href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a></div><div class="ttdeci">void setSocketFd(const SOCKET sock) noexcept</div><div class="ttdoc">Updates the socket descriptor used by this object.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1565</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">sock</td><td>The new socket file descriptor to associate with this object. May be <span class="tt">INVALID_SOCKET</span> to mark the socket as uninitialized or closed.</td></tr>

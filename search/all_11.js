@@ -25,7 +25,7 @@ var searchData=
   ['getremoteport_22',['getRemotePort',['../group__tcp.html#ga2840142258bae9535c6421d6cd3dce1c',1,'jsocketpp::Socket']]],
   ['getremotesocketaddress_23',['getRemoteSocketAddress',['../group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc',1,'jsocketpp::Socket']]],
   ['getreuseaddress_24',['getReuseAddress',['../group__socketopts.html#ga8e8783ada3142cd6c3b275e01b7b12f2',1,'jsocketpp::SocketOptions']]],
-  ['getreuseport_25',['getReusePort',['../group__tcp.html#ga7c00ace5b0756299ea0cbd77074e856d',1,'jsocketpp::ServerSocket']]],
+  ['getreuseport_25',['getReusePort',['../group__socketopts.html#ga0472e21ad70ac9b778aac3d6177577ca',1,'jsocketpp::SocketOptions']]],
   ['gets_20right_26',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md107',1,'']]],
   ['getsendbuffersize_27',['getSendBufferSize',['../group__socketopts.html#gaeb5f9d1ae3f1b7b9fdb94335b10723f6',1,'jsocketpp::SocketOptions']]],
   ['getsocketerror_28',['GetSocketError',['../namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad',1,'jsocketpp']]],

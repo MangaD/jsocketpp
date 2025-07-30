@@ -31,7 +31,7 @@ var searchData=
   ['cleanupsockets_28',['CleanupSockets',['../namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c',1,'jsocketpp']]],
   ['clear_29',['clear',['../classjsocketpp_1_1DatagramPacket.html#a7853459de9f4e83363ed341bb465930a',1,'jsocketpp::DatagramPacket']]],
   ['clear_20api_30',['c) Clear API',['../group__ServerSocket__Lifecycle.html#autotoc_md37',1,'']]],
-  ['client_31',['Client',['../classjsocketpp_1_1UnixSocket.html#autotoc_md746',1,'Example: Simple Client'],['../classjsocketpp_1_1DatagramSocket.html#autotoc_md465',1,'Example: Simple UDP Echo Server and Client']]],
+  ['client_31',['Client',['../classjsocketpp_1_1UnixSocket.html#autotoc_md760',1,'Example: Simple Client'],['../classjsocketpp_1_1DatagramSocket.html#autotoc_md465',1,'Example: Simple UDP Echo Server and Client']]],
   ['client_20c_20af_5finet_32',['5.2 UDP Server and Client (C, AF_INET)',['../group__underlying__socket__api.html#autotoc_md311',1,'']]],
   ['client_20integration_20test_3a_33',['Example of a Simple Server-Client Integration Test:',['../group__unit__tests.html#autotoc_md337',1,'']]],
   ['client_20python_20af_5finet_34',['5.1 TCP Server and Client (Python, AF_INET)',['../group__underlying__socket__api.html#autotoc_md310',1,'']]],

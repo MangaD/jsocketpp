@@ -168,10 +168,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:gab42832248058c119c99ef60c4d72d478"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the per-instance default internal buffer size used for buffered read operations.  <br /></td></tr>
 <tr class="memitem:gac1f9d646223bb7c733216b484f517d46" id="r_gac1f9d646223bb7c733216b484f517d46"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac1f9d646223bb7c733216b484f517d46">jsocketpp::ServerSocket::getDefaultInternalBufferSize</a> () const noexcept</td></tr>
 <tr class="memdesc:gac1f9d646223bb7c733216b484f517d46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the per-instance default internal buffer size used for buffered read operations.  <br /></td></tr>
-<tr class="memitem:ga6276b89030ccf50a67501f429a14e3a3" id="r_ga6276b89030ccf50a67501f429a14e3a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6276b89030ccf50a67501f429a14e3a3">jsocketpp::ServerSocket::setReusePort</a> (bool enable)</td></tr>
-<tr class="memdesc:ga6276b89030ccf50a67501f429a14e3a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable the SO_REUSEPORT socket option.  <br /></td></tr>
-<tr class="memitem:ga7c00ace5b0756299ea0cbd77074e856d" id="r_ga7c00ace5b0756299ea0cbd77074e856d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7c00ace5b0756299ea0cbd77074e856d">jsocketpp::ServerSocket::getReusePort</a> () const</td></tr>
-<tr class="memdesc:ga7c00ace5b0756299ea0cbd77074e856d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether SO_REUSEPORT is enabled for this socket.  <br /></td></tr>
 <tr class="memitem:gab5572cb795d9b45ee50a0ddf9cb9c075" id="r_gab5572cb795d9b45ee50a0ddf9cb9c075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab5572cb795d9b45ee50a0ddf9cb9c075">jsocketpp::ServerSocket::cleanupAndThrow</a> (int errorCode)</td></tr>
 <tr class="memdesc:gab5572cb795d9b45ee50a0ddf9cb9c075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up server socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.  <br /></td></tr>
 <tr class="memitem:gae01e7a531be7a5addb83ff6b9bb111e8" id="r_gae01e7a531be7a5addb83ff6b9bb111e8"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae01e7a531be7a5addb83ff6b9bb111e8">jsocketpp::ServerSocket::getEffectiveReceiveBufferSize</a> (const std::optional&lt; std::size_t &gt; recvBufferSize) const</td></tr>
@@ -1875,44 +1871,6 @@ Socket::getInternalBufferSize() </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classjsocketpp_1_1Socket.html#af3b50f84b3c8e869b9f8ff64da0bd315" title="Convert an address and port to a string using getnameinfo.">addressToString()</a> Static utility method for general address conversion. </dd>
 <dd>
 <a class="el" href="classjsocketpp_1_1Socket.html#a68f996973d1497cb476c44025aac401b" title="Convert a string (ip:port) to sockaddr_storage.">stringToAddress()</a> Convert string address back to binary form. </dd></dl>
-
-</div>
-</div>
-<a id="ga7c00ace5b0756299ea0cbd77074e856d" name="ga7c00ace5b0756299ea0cbd77074e856d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7c00ace5b0756299ea0cbd77074e856d">&#9670;&#160;</a></span>getReusePort()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ServerSocket::getReusePort </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Query whether SO_REUSEPORT is enabled for this socket. </p>
-<p>This method returns the current status of the SO_REUSEPORT option on this socket. Like <span class="tt"><a class="el" href="#ga6276b89030ccf50a67501f429a14e3a3" title="Enable or disable the SO_REUSEPORT socket option.">setReusePort()</a></span>, this method is only available on platforms that define <span class="tt">SO_REUSEPORT</span>.</p>
-<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if SO_REUSEPORT is enabled, <span class="tt">false</span> otherwise. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if querying the option fails.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga6276b89030ccf50a67501f429a14e3a3" title="Enable or disable the SO_REUSEPORT socket option.">setReusePort(bool)</a> </dd>
-<dd>
-<a href="https://man7.org/linux/man-pages/man7/socket.7.html">https://man7.org/linux/man-pages/man7/socket.7.html</a> </dd></dl>
 
 </div>
 </div>
@@ -4452,47 +4410,6 @@ Example Usage</h3>
 <a class="el" href="namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f" title="Read a string from the socket (connected UDP).">read&lt;std::string&gt;()</a> Uses this buffer for string operations </dd>
 <dd>
 <a class="el" href="group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> For setting the OS socket send buffer </dd></dl>
-
-</div>
-</div>
-<a id="ga6276b89030ccf50a67501f429a14e3a3" name="ga6276b89030ccf50a67501f429a14e3a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6276b89030ccf50a67501f429a14e3a3">&#9670;&#160;</a></span>setReusePort()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ServerSocket::setReusePort </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable or disable the SO_REUSEPORT socket option. </p>
-<p>The SO_REUSEPORT option allows multiple sockets on the same host to bind to the same port number, enabling load balancing of incoming connections across multiple processes or threads. This can dramatically improve scalability for high-performance servers (such as web servers or proxies).</p>
-<dl class="section warning"><dt>Warning</dt><dd>SO_REUSEPORT is <b>not supported on all platforms</b>. It is available on:<ul>
-<li>Linux kernel 3.9 and later</li>
-<li>Many BSD systems (FreeBSD 10+, OpenBSD, macOS 10.9+)</li>
-<li><b>Not supported on Windows</b></li>
-</ul>
-</dd></dl>
-<p>If you compile or run on a platform where SO_REUSEPORT is unavailable, this method will <b>not be present</b>. Use conditional compilation (<span class="tt">#ifdef SO_REUSEPORT</span>) if you require portability.</p>
-<p>Improper use of SO_REUSEPORT may result in complex behavior and should only be used if you fully understand its implications (e.g., distributing incoming connections evenly across processes).</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td>Set to <span class="tt">true</span> to enable SO_REUSEPORT, <span class="tt">false</span> to disable. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if setting the option fails.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a href="https://man7.org/linux/man-pages/man7/socket.7.html">https://man7.org/linux/man-pages/man7/socket.7.html</a> </dd></dl>
 
 </div>
 </div>

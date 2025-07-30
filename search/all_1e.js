@@ -74,7 +74,7 @@ var searchData=
   ['to_20the_20same_20port_71',['🧪 What Happens When Multiple Sockets Bind to the Same Port?',['../group__address__reuse.html#autotoc_md74',1,'']]],
   ['to_20the_20socket_20api_72',['to the Socket API',['../group__underlying__socket__api.html#autotoc_md299',1,'1. Introduction to the Socket API'],['../group__underlying__socket__api.html',1,'Comprehensive Guide to the Socket API']]],
   ['to_20the_20vcpkg_20registry_73',['to the vcpkg Registry',['../group__vcpkg__publish__guide.html#autotoc_md357',1,'5. Submit to the vcpkg Registry'],['../group__vcpkg__publish__guide.html',1,'Publishing &lt;tt&gt;jsocketpp&lt;/tt&gt; to the vcpkg Registry']]],
-  ['to_20use_74',['When to Use',['../group__socketopts.html#autotoc_md740',1,'']]],
+  ['to_20use_74',['When to Use',['../group__socketopts.html#autotoc_md754',1,'']]],
   ['toiovec_75',['toIOVec',['../group__internal.html#ga7701a273337a71485ba1583df464b178',1,'jsocketpp::internal::toIOVec(const BufferView *buffers, const std::size_t count)'],['../group__internal.html#gacdd48d04c87ec69aff97c5d29dbfe1a1',1,'jsocketpp::internal::toIOVec(const std::span&lt; const BufferView &gt; buffers)']]],
   ['tonetwork_76',['toNetwork',['../namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5',1,'jsocketpp::net::toNetwork(const uint16_t val)'],['../namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a',1,'jsocketpp::net::toNetwork(const uint32_t val)']]],
   ['toolchain_20support_77',['🔧 Platform &amp;amp; Toolchain Support',['../index.html#autotoc_md374',1,'']]],
