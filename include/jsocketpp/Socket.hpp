@@ -2618,69 +2618,6 @@ class Socket : public SocketOptions
     bool waitReady(bool forWrite, int timeoutMillis) const;
 
     /**
-     * @brief Enables or disables TCP_NODELAY (Nagle's algorithm) on the socket.
-     * @ingroup socketopts
-     *
-     * When `TCP_NODELAY` is enabled (`on == true`), Nagle's algorithm is disabled.
-     * This causes small packets to be sent immediately, reducing latency for
-     * real-time or interactive applications (e.g., games, messaging, RPCs).
-     *
-     * When disabled (`on == false`), Nagle's algorithm is enabled. The socket
-     * coalesces small outgoing messages into larger packets to improve throughput
-     * and reduce congestion, but may introduce slight delays.
-     *
-     * By default, TCP_NODELAY is off (i.e., Nagle's algorithm is enabled).
-     *
-     * ### Example Usage
-     * @code{.cpp}
-     * Socket sock("example.com", 8080);
-     * sock.connect();
-     *
-     * // Disable Nagle's algorithm to reduce latency
-     * sock.setTcpNoDelay(true);
-     *
-     * sock.write("low-latency payload");
-     * @endcode
-     *
-     * @param on If `true`, disables Nagle's algorithm to reduce latency.
-     *           If `false`, enables Nagle's algorithm to improve throughput.
-     *
-     * @throws SocketException If setting the option fails due to:
-     *         - Invalid socket descriptor (`EBADF`)
-     *         - Socket already closed or invalid state
-     *         - Lack of permission (`EACCES`)
-     *         - Option not supported on this socket (`ENOPROTOOPT`)
-     *
-     * @see getTcpNoDelay()
-     * @see https://en.wikipedia.org/wiki/Nagle's_algorithm
-     */
-    void setTcpNoDelay(bool on);
-
-    /**
-     * @brief Checks whether TCP_NODELAY (Nagle's algorithm) is currently disabled.
-     * @ingroup socketopts
-     *
-     * This method queries the current state of the TCP_NODELAY option on the socket.
-     * If enabled, small packets are sent immediately without delay (i.e., Nagle's algorithm is disabled),
-     * reducing latency for interactive applications. If disabled, the system may batch small packets
-     * to improve throughput.
-     *
-     * Internally, this reads the value of the TCP_NODELAY option using:
-     * @code
-     * getsockopt(fd, IPPROTO_TCP, TCP_NODELAY, ...)
-     * @endcode
-     *
-     * @return `true` if TCP_NODELAY is enabled (Nagle's algorithm is off),
-     *         `false` if Nagle's algorithm is active.
-     *
-     * @throws SocketException if the option cannot be retrieved.
-     *
-     * @see setTcpNoDelay(bool on)
-     * @see https://en.wikipedia.org/wiki/Nagle's_algorithm
-     */
-    [[nodiscard]] bool getTcpNoDelay() const;
-
-    /**
      * @brief Convert an address and port to a string using getnameinfo.
      *
      * Uses getnameinfo to convert a sockaddr_storage structure to a human-readable string (ip:port).

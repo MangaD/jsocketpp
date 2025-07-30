@@ -490,17 +490,6 @@ bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
     return result > 0;
 }
 
-// NOLINTNEXTLINE(readability-make-member-function-const) - changes socket state
-void Socket::setTcpNoDelay(const bool on)
-{
-    setOption(IPPROTO_TCP, TCP_NODELAY, on ? 1 : 0);
-}
-
-[[nodiscard]] bool Socket::getTcpNoDelay() const
-{
-    return getOption(IPPROTO_TCP, TCP_NODELAY) != 0;
-}
-
 std::string Socket::addressToString(const sockaddr_storage& addr)
 {
     char ip[INET6_ADDRSTRLEN] = {0};

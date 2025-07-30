@@ -1141,6 +1141,120 @@ class SocketOptions
      */
     [[nodiscard]] bool getNonBlocking() const;
 
+    /**
+     * @brief Enables or disables Nagle’s algorithm (`TCP_NODELAY`) on TCP sockets.
+     * @ingroup socketopts
+     *
+     * This method configures the `TCP_NODELAY` option, which controls the behavior of **Nagle's algorithm**
+     * for stream-oriented TCP sockets (`SOCK_STREAM`). Nagle's algorithm aims to reduce network congestion
+     * by delaying small outgoing packets until previous ones are acknowledged — effectively "coalescing" writes.
+     *
+     * Disabling Nagle’s algorithm (i.e., setting `TCP_NODELAY = 1`) allows small packets to be sent immediately,
+     * which is ideal for latency-sensitive applications. Enabling it (i.e., setting `TCP_NODELAY = 0`) improves
+     * throughput by batching writes, but introduces potential delays.
+     *
+     * ---
+     *
+     * ### 💡 Use Cases
+     * - **Latency-sensitive applications**:
+     *   - Games, remote control, real-time messaging, RPC
+     *   - Disabling Nagle (`on = true`) minimizes delay in sending small payloads
+     * - **Bulk transfer or high-throughput services**:
+     *   - Enabling Nagle (`on = false`) reduces packet count and improves network efficiency
+     *
+     * ---
+     *
+     * ### 🔀 Platform Behavior
+     * - Universally available on TCP/IP sockets (`AF_INET`, `AF_INET6` with `SOCK_STREAM`)
+     * - **POSIX**: Uses `setsockopt()` with `IPPROTO_TCP` and `TCP_NODELAY`
+     * - **Windows**: Uses Winsock with same option names
+     * - Has **no effect** on:
+     *   - UDP sockets (`DatagramSocket`)
+     *   - UNIX domain sockets (`UnixSocket`)
+     *   - Non-TCP protocols or non-stream sockets
+     *
+     * ---
+     *
+     * ### Example: Disable Nagle’s algorithm to reduce latency
+     * @code
+     * Socket sock("example.com", 443);
+     * sock.connect();
+     *
+     * sock.setTcpNoDelay(true);  // Disable Nagle — send immediately
+     * sock.write("small interactive packet");
+     * @endcode
+     *
+     * ---
+     *
+     * @param on If `true`, disables Nagle's algorithm (`TCP_NODELAY = 1`), enabling immediate sends.
+     *           If `false`, enables Nagle's algorithm (`TCP_NODELAY = 0`) to batch small writes.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid or closed
+     * - The option is unsupported on the current socket type
+     * - The `setsockopt()` call fails due to system error or permission issue
+     *
+     * @note Calling this method on a non-TCP socket will raise an exception.
+     *       You can catch `SocketException` to handle cross-socket behavior gracefully.
+     *
+     * @see getTcpNoDelay()
+     * @see https://en.wikipedia.org/wiki/Nagle%27s_algorithm
+     * @see https://man7.org/linux/man-pages/man7/tcp.7.html
+     */
+    void setTcpNoDelay(bool on);
+
+    /**
+     * @brief Queries whether Nagle's algorithm (`TCP_NODELAY`) is currently disabled.
+     * @ingroup socketopts
+     *
+     * This method checks if `TCP_NODELAY` is set on the socket, which controls the behavior
+     * of **Nagle's algorithm** for TCP connections. When `TCP_NODELAY` is enabled (`true`),
+     * small writes are sent immediately without waiting to coalesce packets. When disabled (`false`),
+     * the system may buffer small packets to improve network efficiency.
+     *
+     * ---
+     *
+     * ### 🔍 Applicability
+     * This option applies only to:
+     * - TCP stream sockets (`SOCK_STREAM` with `AF_INET` or `AF_INET6`)
+     *
+     * It does **not** apply to:
+     * - UDP sockets (`DatagramSocket`)
+     * - UNIX domain sockets (`UnixSocket`)
+     * - Listening sockets (`ServerSocket`) — check accepted `Socket` objects instead
+     *
+     * ---
+     *
+     * ### Use Cases
+     * - Determine latency behavior at runtime
+     * - Validate low-latency configuration in unit tests
+     * - Debug unexpected TCP buffering issues
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * if (!socket.getTcpNoDelay()) {
+     *     socket.setTcpNoDelay(true);  // Reduce latency
+     * }
+     * @endcode
+     *
+     * ---
+     *
+     * @return `true` if Nagle's algorithm is disabled (`TCP_NODELAY = 1`),
+     *         `false` if Nagle’s algorithm is enabled (`TCP_NODELAY = 0`)
+     *
+     * @throws SocketException if:
+     * - The socket is invalid or closed
+     * - The option is not supported on the current socket type
+     * - A system-level query fails (`getsockopt()` error)
+     *
+     * @see setTcpNoDelay()
+     * @see https://en.wikipedia.org/wiki/Nagle%27s_algorithm
+     * @see https://man7.org/linux/man-pages/man7/tcp.7.html
+     */
+    [[nodiscard]] bool getTcpNoDelay() const;
+
   protected:
     /**
      * @brief Updates the socket descriptor used by this object.

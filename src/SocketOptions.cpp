@@ -261,4 +261,14 @@ bool SocketOptions::getNonBlocking() const
 #endif
 }
 
+void SocketOptions::setTcpNoDelay(const bool on)
+{
+    setOption(IPPROTO_TCP, TCP_NODELAY, on ? 1 : 0);
+}
+
+bool SocketOptions::getTcpNoDelay() const
+{
+    return getOption(IPPROTO_TCP, TCP_NODELAY) != 0;
+}
+
 } // namespace jsocketpp
