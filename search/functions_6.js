@@ -18,7 +18,7 @@ var searchData=
   ['getloopbackmode_15',['getLoopbackMode',['../classjsocketpp_1_1MulticastSocket.html#aef04ca6c33896469f8be76b3f2f9da1c',1,'jsocketpp::MulticastSocket']]],
   ['getmulticastinterface_16',['getMulticastInterface',['../classjsocketpp_1_1MulticastSocket.html#aa47a2a344af40c080a860d5ee0883fd0',1,'jsocketpp::MulticastSocket']]],
   ['getnestedexception_17',['getNestedException',['../classjsocketpp_1_1SocketException.html#a0a4733c45939c5ac9388e26ae463de91',1,'jsocketpp::SocketException']]],
-  ['getnonblocking_18',['getNonBlocking',['../group__socketopts.html#ga36a682afc71359dc6889357bf7394b70',1,'jsocketpp::ServerSocket::getNonBlocking()'],['../group__tcp.html#ga70c008492e223265394080a88b3c0b5a',1,'jsocketpp::Socket::getNonBlocking()']]],
+  ['getnonblocking_18',['getNonBlocking',['../group__socketopts.html#ga56fa4549b175d2913b64a43f1ecd2409',1,'jsocketpp::SocketOptions']]],
   ['getoption_19',['getOption',['../group__socketopts.html#ga6a5264b995eb2a1143f45c5de6ad92c3',1,'jsocketpp::SocketOptions::getOption(int level, int optName) const'],['../group__socketopts.html#ga9c068d958d55e865948b2015c82450a7',1,'jsocketpp::SocketOptions::getOption(int level, int optName, void *result, socklen_t *len) const']]],
   ['getreceivebuffersize_20',['getReceiveBufferSize',['../group__socketopts.html#ga2eaf2835ebba5587c238a0bd6c2be188',1,'jsocketpp::SocketOptions']]],
   ['getremoteip_21',['getRemoteIp',['../group__tcp.html#ga273e2d4847b5407bb8eef56d9e88996e',1,'jsocketpp::Socket']]],

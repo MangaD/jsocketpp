@@ -80,7 +80,7 @@ var NAVTREEINDEX =
 [
 "BufferView_8hpp.html",
 "group__exceptions.html",
-"server_8cpp.html#ad783a901702495179902ed7bf93f8178"
+"socket__gtest_8cpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

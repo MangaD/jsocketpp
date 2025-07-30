@@ -228,10 +228,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga3fb196157a1cde167c47a596c9235c91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the size of the internal read buffer used for string operations.  <br /></td></tr>
 <tr class="memitem:gae2b10ef466023b380a34b062359c0f65" id="r_gae2b10ef466023b380a34b062359c0f65"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#gae2b10ef466023b380a34b062359c0f65">isValid</a> () const noexcept</td></tr>
 <tr class="memdesc:gae2b10ef466023b380a34b062359c0f65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the socket is valid and open for communication.  <br /></td></tr>
-<tr class="memitem:ga6cc57c26e230cb7ed7fa0174028811d5" id="r_ga6cc57c26e230cb7ed7fa0174028811d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5">setNonBlocking</a> (bool nonBlocking) const</td></tr>
-<tr class="memdesc:ga6cc57c26e230cb7ed7fa0174028811d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the socket to either non-blocking or blocking mode.  <br /></td></tr>
-<tr class="memitem:ga70c008492e223265394080a88b3c0b5a" id="r_ga70c008492e223265394080a88b3c0b5a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga70c008492e223265394080a88b3c0b5a">getNonBlocking</a> () const</td></tr>
-<tr class="memdesc:ga70c008492e223265394080a88b3c0b5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the socket is currently in non-blocking mode.  <br /></td></tr>
 <tr class="memitem:ga6b39b1375048cc167409b5b513c3ad8c" id="r_ga6b39b1375048cc167409b5b513c3ad8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga6b39b1375048cc167409b5b513c3ad8c">waitReady</a> (bool forWrite, int timeoutMillis) const</td></tr>
 <tr class="memdesc:ga6b39b1375048cc167409b5b513c3ad8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for the socket to become ready for reading or writing.  <br /></td></tr>
 <tr class="memitem:gac3c6f8848ff049eb3e31b4fe190dd624" id="r_gac3c6f8848ff049eb3e31b4fe190dd624"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#gac3c6f8848ff049eb3e31b4fe190dd624">setTcpNoDelay</a> (bool on)</td></tr>
@@ -288,6 +284,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:gaaee02a4007c38decf8925319b9f3e5f2 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the socket receive timeout (<span class="tt">SO_RCVTIMEO</span>) in milliseconds.  <br /></td></tr>
 <tr class="memitem:ga1bef2499ed5c13367dc73752484298c0 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga1bef2499ed5c13367dc73752484298c0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0">getSoSendTimeout</a> () const</td></tr>
 <tr class="memdesc:ga1bef2499ed5c13367dc73752484298c0 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the socket send timeout (<span class="tt">SO_SNDTIMEO</span>) in milliseconds.  <br /></td></tr>
+<tr class="memitem:ga5f2dffc2949b06b1d945e590bce7f05b inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga5f2dffc2949b06b1d945e590bce7f05b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga5f2dffc2949b06b1d945e590bce7f05b">setNonBlocking</a> (bool nonBlocking)</td></tr>
+<tr class="memdesc:ga5f2dffc2949b06b1d945e590bce7f05b inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables non-blocking mode on the socket.  <br /></td></tr>
+<tr class="memitem:ga56fa4549b175d2913b64a43f1ecd2409 inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga56fa4549b175d2913b64a43f1ecd2409"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga56fa4549b175d2913b64a43f1ecd2409">getNonBlocking</a> () const</td></tr>
+<tr class="memdesc:ga56fa4549b175d2913b64a43f1ecd2409 inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether the socket is currently in non-blocking mode.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -400,7 +400,7 @@ Platform Support</h3>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md494"></a>
 Advanced Usage</h3>
 <ul>
-<li>Set non-blocking mode with <span class="tt"><a class="el" href="group__tcp.html#ga6cc57c26e230cb7ed7fa0174028811d5" title="Sets the socket to either non-blocking or blocking mode.">setNonBlocking()</a></span>.</li>
+<li>Set non-blocking mode with <span class="tt"><a class="el" href="group__socketopts.html#ga5f2dffc2949b06b1d945e590bce7f05b" title="Enables or disables non-blocking mode on the socket.">setNonBlocking()</a></span>.</li>
 <li>Tune socket options with <span class="tt">enableNoDelay()</span>, <span class="tt">enableKeepAlive()</span>, or <span class="tt">setTimeout()</span>.</li>
 <li>Check remote address with <span class="tt"><a class="el" href="group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc" title="Get the remote peer&#39;s address and port as a formatted string.">getRemoteSocketAddress()</a></span>.</li>
 </ul>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🧩_20use_20cases_0',['🧩 Use Cases',['../group__socketopts.html#autotoc_md611',1,'']]]
+  ['🧩_20use_20cases_0',['🧩 Use Cases',['../group__socketopts.html#autotoc_md606',1,'']]]
 ];
