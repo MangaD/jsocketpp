@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['⚠️_20incompatibility_0',['⚠️ Incompatibility',['../group__address__reuse.html#autotoc_md68',1,'']]],
-  ['⚠️_20java’s_20approach_20and_20its_20limitations_1',['⚠️ Java’s Approach and Its Limitations',['../group__address__reuse.html#autotoc_md86',1,'']]],
-  ['⚠️_20limitations_2',['⚠️ Limitations',['../index.html#autotoc_md380',1,'']]],
-  ['⚠️_20misconceptions_20and_20caveats_3',['⚠️ Misconceptions and caveats',['../group__address__reuse.html#autotoc_md58',1,'']]],
-  ['⚠️_20serversocket_20specific_20notes_4',['⚠️ ServerSocket specific Notes',['../group__socketopts.html#autotoc_md598',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md609',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md618',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md629',1,'⚠️ ServerSocket-specific Notes']]]
+  ['⚠️_20handle_20with_20extreme_20care_0',['⚠️ HANDLE WITH EXTREME CARE',['../group__socketopts.html#autotoc_md596',1,'']]],
+  ['⚠️_20incompatibility_1',['⚠️ Incompatibility',['../group__address__reuse.html#autotoc_md68',1,'']]],
+  ['⚠️_20java’s_20approach_20and_20its_20limitations_2',['⚠️ Java’s Approach and Its Limitations',['../group__address__reuse.html#autotoc_md86',1,'']]],
+  ['⚠️_20limitations_3',['⚠️ Limitations',['../index.html#autotoc_md380',1,'']]],
+  ['⚠️_20misconceptions_20and_20caveats_4',['⚠️ Misconceptions and caveats',['../group__address__reuse.html#autotoc_md58',1,'']]],
+  ['⚠️_20serversocket_20specific_20notes_5',['⚠️ ServerSocket specific Notes',['../group__socketopts.html#autotoc_md604',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md615',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md624',1,'⚠️ ServerSocket-specific Notes'],['../group__socketopts.html#autotoc_md635',1,'⚠️ ServerSocket-specific Notes']]]
 ];

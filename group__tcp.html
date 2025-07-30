@@ -176,8 +176,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga6276b89030ccf50a67501f429a14e3a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable the SO_REUSEPORT socket option.  <br /></td></tr>
 <tr class="memitem:ga7c00ace5b0756299ea0cbd77074e856d" id="r_ga7c00ace5b0756299ea0cbd77074e856d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7c00ace5b0756299ea0cbd77074e856d">jsocketpp::ServerSocket::getReusePort</a> () const</td></tr>
 <tr class="memdesc:ga7c00ace5b0756299ea0cbd77074e856d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether SO_REUSEPORT is enabled for this socket.  <br /></td></tr>
-<tr class="memitem:ga41041b0802d4d9e00bdfbe046902e500" id="r_ga41041b0802d4d9e00bdfbe046902e500"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga41041b0802d4d9e00bdfbe046902e500">jsocketpp::ServerSocket::getHandle</a> () const</td></tr>
-<tr class="memdesc:ga41041b0802d4d9e00bdfbe046902e500"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the underlying native socket handle/descriptor.  <br /></td></tr>
 <tr class="memitem:gab5572cb795d9b45ee50a0ddf9cb9c075" id="r_gab5572cb795d9b45ee50a0ddf9cb9c075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab5572cb795d9b45ee50a0ddf9cb9c075">jsocketpp::ServerSocket::cleanupAndThrow</a> (int errorCode)</td></tr>
 <tr class="memdesc:gab5572cb795d9b45ee50a0ddf9cb9c075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up server socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.  <br /></td></tr>
 <tr class="memitem:gae01e7a531be7a5addb83ff6b9bb111e8" id="r_gae01e7a531be7a5addb83ff6b9bb111e8"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae01e7a531be7a5addb83ff6b9bb111e8">jsocketpp::ServerSocket::getEffectiveReceiveBufferSize</a> (const std::optional&lt; std::size_t &gt; recvBufferSize) const</td></tr>
@@ -1556,55 +1554,6 @@ Socket::getInternalBufferSize() </dd></dl>
 <a class="el" href="group__socketopts.html#gaeb5f9d1ae3f1b7b9fdb94335b10723f6" title="Retrieves the current send buffer size (SO_SNDBUF) of the socket.">getSendBufferSize()</a> </dd>
 <dd>
 <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for TCP socket read operations.">DefaultBufferSize</a> </dd></dl>
-
-</div>
-</div>
-<a id="ga41041b0802d4d9e00bdfbe046902e500" name="ga41041b0802d4d9e00bdfbe046902e500"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga41041b0802d4d9e00bdfbe046902e500">&#9670;&#160;</a></span>getHandle()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> jsocketpp::ServerSocket::getHandle </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get the underlying native socket handle/descriptor. </p>
-<p>This method provides low-level access to the native socket handle (file descriptor on Unix-like systems, <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> handle on Windows) for advanced usage scenarios such as:</p><ul>
-<li>Integration with external event loops (select, poll, epoll)</li>
-<li>Platform-specific socket operations not exposed by the jsocketpp API</li>
-<li>Custom socket monitoring or diagnostics</li>
-</ul>
-<dl class="section warning"><dt>Warning</dt><dd>HANDLE WITH CARE:<ul>
-<li>DO NOT close or shutdown the socket using this handle directly</li>
-<li>DO NOT modify socket options or state without careful consideration</li>
-<li>DO NOT store the handle beyond the lifetime of the <a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> object</li>
-<li>DO NOT share the handle between threads without proper synchronization</li>
-</ul>
-</dd></dl>
-<p>Improper use of the raw socket handle can lead to:</p><ul>
-<li>Resource leaks</li>
-<li>Double-close scenarios</li>
-<li>Undefined behavior</li>
-<li>Thread safety violations</li>
-<li>Broken socket state</li>
-</ul>
-<dl class="section note"><dt>Note</dt><dd>The handle remains owned and managed by the <a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> object. It will be automatically closed when the <a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> is destroyed.</dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>The native socket handle/descriptor</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga69c4a45146fc3d3854f2e5684bf65c55" title="Accept an incoming client connection, always blocking until a client connects (unless the socket is s...">acceptBlocking()</a>, <a class="el" href="group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a> </dd></dl>
 
 </div>
 </div>

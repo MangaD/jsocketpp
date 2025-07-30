@@ -19,7 +19,6 @@ var classjsocketpp_1_1ServerSocket =
     [ "getEffectiveInternalBufferSize", "group__tcp.html#gaecfe7c73148ce4d9727405ed70517993", null ],
     [ "getEffectiveReceiveBufferSize", "group__tcp.html#gae01e7a531be7a5addb83ff6b9bb111e8", null ],
     [ "getEffectiveSendBufferSize", "group__tcp.html#ga1308a8d172508999834853ccb35607e8", null ],
-    [ "getHandle", "group__tcp.html#ga41041b0802d4d9e00bdfbe046902e500", null ],
     [ "getIPv6Only", "group__tcp.html#gaf92910f35cea80082897f0767eb76933", null ],
     [ "getLocalIp", "classjsocketpp_1_1ServerSocket.html#a4aa141b9b1bb274d582dba05f2fee136", null ],
     [ "getLocalPort", "group__tcp.html#gad3b2807577129c652044f17626c6e01a", null ],

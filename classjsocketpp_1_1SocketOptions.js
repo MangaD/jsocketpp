@@ -9,6 +9,7 @@ var classjsocketpp_1_1SocketOptions =
     [ "getReceiveBufferSize", "group__socketopts.html#ga2eaf2835ebba5587c238a0bd6c2be188", null ],
     [ "getReuseAddress", "group__socketopts.html#ga8e8783ada3142cd6c3b275e01b7b12f2", null ],
     [ "getSendBufferSize", "group__socketopts.html#gaeb5f9d1ae3f1b7b9fdb94335b10723f6", null ],
+    [ "getSocketFd", "group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794", null ],
     [ "getSoLinger", "group__socketopts.html#ga15ba6d555b0f3b7809c746f827398c5e", null ],
     [ "getSoRecvTimeout", "group__socketopts.html#gaaee02a4007c38decf8925319b9f3e5f2", null ],
     [ "getSoSendTimeout", "group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0", null ],
