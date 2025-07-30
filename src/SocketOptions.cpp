@@ -271,4 +271,40 @@ bool SocketOptions::getTcpNoDelay() const
     return getOption(IPPROTO_TCP, TCP_NODELAY) != 0;
 }
 
+#if defined(IPV6_V6ONLY)
+
+void SocketOptions::setIPv6Only(const bool enable)
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException("setIPv6Only() failed: socket is not open.");
+
+    sockaddr_storage ss{};
+    socklen_t len = sizeof(ss);
+    if (::getsockname(_sockFd, reinterpret_cast<sockaddr*>(&ss), &len) != 0)
+        throw SocketException(GetSocketError(), "setIPv6Only() failed: getsockname() failed");
+
+    if (ss.ss_family != AF_INET6)
+        throw SocketException("setIPv6Only() failed: socket is not IPv6");
+
+    setOption(IPPROTO_IPV6, IPV6_V6ONLY, enable ? 1 : 0);
+}
+
+bool SocketOptions::getIPv6Only() const
+{
+    if (_sockFd == INVALID_SOCKET)
+        throw SocketException("getIPv6Only() failed: socket is not open.");
+
+    sockaddr_storage ss{};
+    socklen_t len = sizeof(ss);
+    if (::getsockname(_sockFd, reinterpret_cast<sockaddr*>(&ss), &len) != 0)
+        throw SocketException(GetSocketError(), "getIPv6Only() failed: getsockname() failed");
+
+    if (ss.ss_family != AF_INET6)
+        throw SocketException("getIPv6Only() failed: socket is not IPv6");
+
+    return getOption(IPPROTO_IPV6, IPV6_V6ONLY) != 0;
+}
+
+#endif
+
 } // namespace jsocketpp

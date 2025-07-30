@@ -1176,34 +1176,6 @@ class ServerSocket : public SocketOptions
      */
     [[nodiscard]] int getSoTimeout() const noexcept { return _soTimeoutMillis; }
 
-#if defined(IPV6_V6ONLY)
-    /**
-     * @brief Enable or disable IPv6-only mode for this server socket.
-     *
-     * By default, an IPv6 socket is configured in dual-stack mode (accepts both IPv6 and IPv4 connections)
-     * on most platforms. Enabling IPv6-only mode restricts the socket to **only** IPv6 connections.
-     *
-     * @param[in] enable True to enable IPv6-only mode, false to allow dual-stack.
-     * @throws SocketException if the socket is not IPv6, already bound, or on system error.
-     * @note Must be called before bind().
-     * @see getIPv6Only()
-     *
-     * @ingroup tcp
-     */
-    void setIPv6Only(bool enable);
-
-    /**
-     * @brief Query whether IPv6-only mode is enabled.
-     *
-     * @return True if the socket is in IPv6-only mode, false if dual-stack.
-     * @throws SocketException if the socket is not IPv6, not open, or on system error.
-     * @see setIPv6Only()
-     *
-     * @ingroup tcp
-     */
-    [[nodiscard]] bool getIPv6Only() const;
-#endif
-
     /**
      * @brief Set the default receive buffer size for accepted client sockets.
      *

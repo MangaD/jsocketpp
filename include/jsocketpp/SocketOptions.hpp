@@ -59,8 +59,8 @@ class SocketOptions
      * by derived socket classes (e.g., `Socket`, `ServerSocket`, `UnixSocket`) to delegate
      * option-handling responsibilities without duplicating system-specific logic.
      *
-     * @param sock A valid socket descriptor (e.g., from `socket()`, `accept()`, etc.), or
-     *             `INVALID_SOCKET` if the object is not yet initialized.
+     * @param[in] sock A valid socket descriptor (e.g., from `socket()`, `accept()`, etc.), or
+     *                 `INVALID_SOCKET` if the object is not yet initialized.
      *
      * @note It is the responsibility of the derived class to ensure that the socket descriptor
      *       remains valid for the lifetime of the `SocketOptions` object.
@@ -206,9 +206,9 @@ class SocketOptions
      *
      * ---
      *
-     * @param level   The protocol level at which the option resides (e.g., `SOL_SOCKET`, `IPPROTO_TCP`).
-     * @param optName The name of the socket option (e.g., `SO_REUSEADDR`, `TCP_NODELAY`).
-     * @param value   Integer value to assign to the option.
+     * @param[in] level   The protocol level at which the option resides (e.g., `SOL_SOCKET`, `IPPROTO_TCP`).
+     * @param[in] optName The name of the socket option (e.g., `SO_REUSEADDR`, `TCP_NODELAY`).
+     * @param[in] value   Integer value to assign to the option.
      *
      * @throws SocketException if:
      * - The socket is invalid
@@ -274,10 +274,10 @@ class SocketOptions
      *
      * ---
      *
-     * @param level   Protocol level (e.g., `SOL_SOCKET`, `IPPROTO_TCP`)
-     * @param optName Option name (e.g., `SO_LINGER`, `IP_TOS`)
-     * @param value   Pointer to a buffer containing the option value
-     * @param len     Size of the buffer in bytes
+     * @param[in] level   Protocol level (e.g., `SOL_SOCKET`, `IPPROTO_TCP`)
+     * @param[in] optName Option name (e.g., `SO_LINGER`, `IP_TOS`)
+     * @param[in] value   Pointer to a buffer containing the option value
+     * @param[in] len     Size of the buffer in bytes
      *
      * @throws SocketException if:
      * - The socket is invalid
@@ -356,9 +356,9 @@ class SocketOptions
      *
      * ---
      *
-     * @param level   Protocol level (e.g., `SOL_SOCKET`, `IPPROTO_TCP`)
-     * @param optName Socket option name (e.g., `SO_KEEPALIVE`, `SO_SNDBUF`)
-     * @return        Integer value of the requested option
+     * @param[in] level   Protocol level (e.g., `SOL_SOCKET`, `IPPROTO_TCP`)
+     * @param[in] optName Socket option name (e.g., `SO_KEEPALIVE`, `SO_SNDBUF`)
+     * @return            Integer value of the requested option
      *
      * @throws SocketException if:
      * - The socket is invalid
@@ -431,10 +431,10 @@ class SocketOptions
      *
      * ---
      *
-     * @param level   Protocol level (e.g., `SOL_SOCKET`, `IPPROTO_TCP`)
-     * @param optName Socket option name (e.g., `SO_LINGER`)
-     * @param result  Pointer to a buffer to receive the option value
-     * @param len     Pointer to the size of the buffer. On return, holds the actual size used.
+     * @param[in]  level   Protocol level (e.g., `SOL_SOCKET`, `IPPROTO_TCP`)
+     * @param[in]  optName Socket option name (e.g., `SO_LINGER`)
+     * @param[out] result  Pointer to a buffer to receive the option value
+     * @param[out] len     Pointer to the size of the buffer. On return, holds the actual size used.
      *
      * @throws SocketException if:
      * - The socket is invalid or closed
@@ -490,7 +490,7 @@ class SocketOptions
      * @warning This method must be called **after socket creation** and **before bind()**.
      *          Improper use can lead to security issues or interference between applications.
      *
-     * @param on If `true`, enables address reuse; if `false`, disables it.
+     * @param[in] on If `true`, enables address reuse; if `false`, disables it.
      *
      * @throws SocketException if the socket is invalid or the option cannot be set.
      *
@@ -755,9 +755,9 @@ class SocketOptions
      * socket.setSoLinger(false, 0);
      * @endcode
      *
-     * @param enable Whether to enable lingering behavior on close.
-     * @param seconds Linger timeout (in seconds). Only meaningful if `enable == true`.
-     *                - Must be ≥ 0. `0` means abortive close.
+     * @param[in] enable  Whether to enable lingering behavior on close.
+     * @param[in] seconds Linger timeout (in seconds). Only meaningful if `enable == true`.
+     *                    - Must be ≥ 0. `0` means abortive close.
      *
      * @throws SocketException if:
      * - The socket is invalid
@@ -848,7 +848,7 @@ class SocketOptions
      * socket.setKeepAlive(true);  // Enable periodic liveness checks on TCP
      * @endcode
      *
-     * @param on Set to `true` to enable keepalive, or `false` to disable it.
+     * @param[in] on Set to `true` to enable keepalive, or `false` to disable it.
      *
      * @throws SocketException if:
      * - The socket is invalid
@@ -942,7 +942,7 @@ class SocketOptions
      *
      * ---
      *
-     * @param millis Timeout in milliseconds. Must be ≥ 0. Use `0` to disable the timeout.
+     * @param[in] millis Timeout in milliseconds. Must be ≥ 0. Use `0` to disable the timeout.
      *
      * @throws SocketException if:
      * - The socket is invalid
@@ -985,7 +985,7 @@ class SocketOptions
      *
      * ---
      *
-     * @param millis Timeout in milliseconds. Must be ≥ 0. Use `0` to disable the timeout.
+     * @param[in] millis Timeout in milliseconds. Must be ≥ 0. Use `0` to disable the timeout.
      *
      * @throws SocketException if:
      * - The socket is invalid
@@ -1133,7 +1133,7 @@ class SocketOptions
      *
      * ---
      *
-     * @param nonBlocking `true` to enable non-blocking mode, `false` to restore blocking mode.
+     * @param[in] nonBlocking `true` to enable non-blocking mode, `false` to restore blocking mode.
      *
      * @throws SocketException if:
      * - The socket is invalid (`EBADF`)
@@ -1240,8 +1240,8 @@ class SocketOptions
      *
      * ---
      *
-     * @param on If `true`, disables Nagle's algorithm (`TCP_NODELAY = 1`), enabling immediate sends.
-     *           If `false`, enables Nagle's algorithm (`TCP_NODELAY = 0`) to batch small writes.
+     * @param[in] on If `true`, disables Nagle's algorithm (`TCP_NODELAY = 1`), enabling immediate sends.
+     *               If `false`, enables Nagle's algorithm (`TCP_NODELAY = 0`) to batch small writes.
      *
      * @throws SocketException if:
      * - The socket is invalid or closed
@@ -1309,6 +1309,121 @@ class SocketOptions
      */
     [[nodiscard]] bool getTcpNoDelay() const;
 
+#if defined(IPV6_V6ONLY)
+
+    /**
+     * @brief Enables or disables `IPV6_V6ONLY` mode for IPv6-capable sockets.
+     * @ingroup socketopts
+     *
+     * This method configures the `IPV6_V6ONLY` socket option, which determines whether an IPv6 socket
+     * can accept **only** IPv6 connections or **both** IPv6 and IPv4-mapped addresses (e.g., `::ffff:a.b.c.d`).
+     *
+     * ---
+     *
+     * ### 🌍 Applicability by Socket Type
+     * - `ServerSocket`: ✅ Common — determines which protocols are accepted via `bind()`
+     * - `Socket`: ✅ Optional — may control behavior of outgoing connections or bound local endpoint
+     * - `DatagramSocket`: ✅ Applies when binding to `::` for dual-stack multicast or receiving
+     * - `UnixSocket`: ❌ Not applicable — local domain sockets do not use IP protocols
+     *
+     * ---
+     *
+     * ### 🔀 Platform Behavior
+     * - **Linux**: `IPV6_V6ONLY` defaults to `0` (dual-stack enabled)
+     * - **Windows**: Defaults to `1` (IPv6-only); must disable explicitly for dual-stack
+     * - **macOS / BSD**: Often defaults to `1`, some systems disallow disabling
+     *
+     * ⚠️ On all platforms, this option **must be set before `bind()`**. Changing it afterward is undefined or ignored.
+     *
+     * ---
+     *
+     * ### 💡 Use Cases
+     * - Enforce strict IPv6-only policy (security or protocol compliance)
+     * - Enable dual-stack sockets that handle both IPv6 and IPv4 transparently
+     * - Configure UDP or multicast receivers to receive from both protocol families
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * ServerSocket server(AF_INET6);
+     * server.setIPv6Only(true);      // Only allow IPv6 clients
+     * server.bind("::", 8080);
+     * server.listen();
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] enable `true` to enable IPv6-only mode (`IPV6_V6ONLY = 1`),
+     *                   `false` to allow dual-stack operation (`IPV6_V6ONLY = 0`).
+     *
+     * @throws SocketException if:
+     * - The socket is not valid
+     * - The option is unsupported on the platform or socket type
+     * - The system call (`setsockopt()`) fails
+     *
+     * @note This setting has no effect on UNIX domain sockets, and calling it on one will throw.
+     *
+     * @see getIPv6Only()
+     * @see setOption()
+     * @see https://man7.org/linux/man-pages/man7/ipv6.7.html
+     */
+    void setIPv6Only(bool enable);
+
+    /**
+     * @brief Queries whether the `IPV6_V6ONLY` option is enabled on this socket.
+     * @ingroup socketopts
+     *
+     * This method checks whether the socket is currently restricted to IPv6-only traffic,
+     * or whether it allows dual-stack operation (accepting both IPv6 and IPv4-mapped addresses).
+     *
+     * The `IPV6_V6ONLY` flag is primarily relevant to sockets using the `AF_INET6` address family.
+     *
+     * ---
+     *
+     * ### 🌍 Applicability by Socket Type
+     * - `ServerSocket`: ✅ Affects accept() behavior for IPv6 listeners
+     * - `Socket`: ✅ Optional, useful for bound clients or diagnostic purposes
+     * - `DatagramSocket`: ✅ Relevant when binding to IPv6 multicast or wildcard addresses
+     * - `UnixSocket`: ❌ Not applicable; throws if called
+     *
+     * ---
+     *
+     * ### ⚠️ Platform Behavior
+     * - **Linux**: Defaults to `false` (dual-stack), but configurable
+     * - **Windows**: Defaults to `true` (IPv6-only), must be explicitly disabled
+     * - **macOS/BSD**: May disallow toggling at runtime or enforce `true`
+     *
+     * ---
+     *
+     * ### Example: Check if socket is IPv6-only
+     * @code
+     * if (socket.getIPv6Only()) {
+     *     std::cout << "This socket is IPv6-only.\n";
+     * } else {
+     *     std::cout << "Dual-stack mode is active.\n";
+     * }
+     * @endcode
+     *
+     * ---
+     *
+     * @return `true` if `IPV6_V6ONLY` is enabled (IPv6-only mode), `false` if dual-stack is allowed.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid or closed
+     * - The system call fails (`getsockopt()` error)
+     * - The socket is not an IPv6 socket (i.e., `AF_INET6`)
+     *
+     * @note Always check that the socket is using the `AF_INET6` family before interpreting this flag.
+     * Calling this method on a non-IPv6 socket will throw.
+     *
+     * @see setIPv6Only()
+     * @see https://man7.org/linux/man-pages/man7/ipv6.7.html
+     */
+    [[nodiscard]] bool getIPv6Only() const;
+
+#endif
+
   protected:
     /**
      * @brief Updates the socket descriptor used by this object.
@@ -1332,8 +1447,8 @@ class SocketOptions
      * setSocketFd(_sockFd); // keeps SocketOptions base class in sync
      * @endcode
      *
-     * @param sock The new socket file descriptor to associate with this object. May be `INVALID_SOCKET`
-     *             to mark the socket as uninitialized or closed.
+     * @param[in] sock The new socket file descriptor to associate with this object. May be `INVALID_SOCKET`
+     *                 to mark the socket as uninitialized or closed.
      *
      * @note This method does not perform error checking. It is the caller's responsibility to ensure
      *       the provided descriptor is valid and consistent with the derived class state.
