@@ -112,6 +112,8 @@ Classes</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ga1573f70de77ed93d522f2f9273181469" id="r_ga1573f70de77ed93d522f2f9273181469"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1573f70de77ed93d522f2f9273181469">jsocketpp::DatagramSocket::DatagramSocket</a> ()=delete</td></tr>
 <tr class="memdesc:ga1573f70de77ed93d522f2f9273181469"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a> class.  <br /></td></tr>
+<tr class="memitem:ga379ff0e20d62b5f0c815d48614597005" id="r_ga379ff0e20d62b5f0c815d48614597005"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga379ff0e20d62b5f0c815d48614597005">jsocketpp::MulticastSocket::MulticastSocket</a> ()=delete</td></tr>
+<tr class="memdesc:ga379ff0e20d62b5f0c815d48614597005"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a> class.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Classes and functions for UDP datagram networking. </p>
@@ -154,6 +156,47 @@ Rationale</h3>
 </div><!-- fragment --><dl class="section see"><dt>See also</dt><dd>DatagramSocket(Port, std::string_view) Constructor for binding to port </dd>
 <dd>
 DatagramSocket(SOCKET, const sockaddr_storage&amp;, socklen_t) Constructor from accepted socket </dd></dl>
+
+</div>
+</div>
+<a id="ga379ff0e20d62b5f0c815d48614597005" name="ga379ff0e20d62b5f0c815d48614597005"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga379ff0e20d62b5f0c815d48614597005">&#9670;&#160;</a></span>MulticastSocket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">jsocketpp::MulticastSocket::MulticastSocket </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel delete">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a> class. </p>
+<p>The default constructor is explicitly deleted to prevent the creation of uninitialized <span class="tt"><a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a></span> objects. A multicast socket must be constructed with a valid port and group membership configuration to function correctly.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md478"></a>
+Rationale</h3>
+<ul>
+<li>Prevents creation of sockets not joined to any multicast group</li>
+<li>Enforces explicit binding and group setup for predictable behavior</li>
+<li>Maintains integrity of RAII-based resource acquisition</li>
+</ul>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga379ff0e20d62b5f0c815d48614597005">MulticastSocket</a> s;               <span class="comment">// ❌ Compilation error (deleted constructor)</span></div>
+<div class="line"><a class="code hl_function" href="#ga379ff0e20d62b5f0c815d48614597005">MulticastSocket</a> s(4446, <span class="stringliteral">&quot;239.0.0.1&quot;</span>); <span class="comment">// ✅ Joins multicast group on port 4446</span></div>
+<div class="ttc" id="agroup__udp_html_ga379ff0e20d62b5f0c815d48614597005"><div class="ttname"><a href="#ga379ff0e20d62b5f0c815d48614597005">jsocketpp::MulticastSocket::MulticastSocket</a></div><div class="ttdeci">MulticastSocket()=delete</div><div class="ttdoc">Default constructor (deleted) for MulticastSocket class.</div></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd>MulticastSocket(Port, std::string_view group, std::string_view iface) Constructor with group join </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1MulticastSocket.html#ad0efe916fe4a309dca8889112ddbdf3f" title="Joins a multicast group.">joinGroup()</a>, <a class="el" href="classjsocketpp_1_1MulticastSocket.html#af7317567ceae9b90967ec5a29d003af3" title="Leaves a multicast group.">leaveGroup()</a>, setMulticastLoopback() for multicast control </dd></dl>
 
 </div>
 </div>

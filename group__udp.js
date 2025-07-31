@@ -50,6 +50,7 @@ var group__udp =
       [ "_sockFd", "classjsocketpp_1_1DatagramSocket.html#ad6f0154db35669c0aa1929d415e71048", null ]
     ] ],
     [ "jsocketpp::MulticastSocket", "classjsocketpp_1_1MulticastSocket.html", [
+      [ "MulticastSocket", "group__udp.html#ga379ff0e20d62b5f0c815d48614597005", null ],
       [ "MulticastSocket", "classjsocketpp_1_1MulticastSocket.html#a4671cefd5b0b7f7e936b0d436c6fd308", null ],
       [ "getCurrentGroup", "classjsocketpp_1_1MulticastSocket.html#a3fd7dbdf1bfffe953c6fa7a64dccdfad", null ],
       [ "getLoopbackMode", "classjsocketpp_1_1MulticastSocket.html#aef04ca6c33896469f8be76b3f2f9da1c", null ],
@@ -65,5 +66,6 @@ var group__udp =
       [ "_loopbackEnabled", "classjsocketpp_1_1MulticastSocket.html#afee075e307c36c143cf62a119a8f7e9a", null ],
       [ "_ttl", "classjsocketpp_1_1MulticastSocket.html#ac0001a7d48ce8157b9c487963599f2b5", null ]
     ] ],
-    [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga1573f70de77ed93d522f2f9273181469", null ]
+    [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga1573f70de77ed93d522f2f9273181469", null ],
+    [ "jsocketpp::MulticastSocket::MulticastSocket", "group__udp.html#ga379ff0e20d62b5f0c815d48614597005", null ]
 ];

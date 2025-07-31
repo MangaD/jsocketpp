@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"server_8cpp.html#a8348483da59fb305dfc63392f54bef3f":[6,0,3,1,2],
 "server_8cpp.html#ad783a901702495179902ed7bf93f8178":[6,0,3,1,3],
 "server_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4":[6,0,3,1,0],
 "socket__gtest_8cpp.html":[6,0,3,2],

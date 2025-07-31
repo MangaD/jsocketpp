@@ -113,6 +113,8 @@ Inheritance diagram for jsocketpp::MulticastSocket:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ga379ff0e20d62b5f0c815d48614597005" id="r_ga379ff0e20d62b5f0c815d48614597005"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga379ff0e20d62b5f0c815d48614597005">MulticastSocket</a> ()=delete</td></tr>
+<tr class="memdesc:ga379ff0e20d62b5f0c815d48614597005"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a> class.  <br /></td></tr>
 <tr class="memitem:a4671cefd5b0b7f7e936b0d436c6fd308" id="r_a4671cefd5b0b7f7e936b0d436c6fd308"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4671cefd5b0b7f7e936b0d436c6fd308">MulticastSocket</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port=0, std::size_t bufferSize=2048)</td></tr>
 <tr class="memdesc:a4671cefd5b0b7f7e936b0d436c6fd308"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a multicast socket optionally bound to a local port and buffer size.  <br /></td></tr>
 <tr class="memitem:ad0efe916fe4a309dca8889112ddbdf3f" id="r_ad0efe916fe4a309dca8889112ddbdf3f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0efe916fe4a309dca8889112ddbdf3f">joinGroup</a> (const std::string &amp;groupAddr, const std::string &amp;iface=&quot;&quot;)</td></tr>
@@ -285,7 +287,7 @@ What is Multicast?</h3>
 Usage Example (Receiving)</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
 <div class="line">* <span class="comment">// Create a multicast socket bound to port 5000</span></div>
-<div class="line"><a class="code hl_function" href="#a4671cefd5b0b7f7e936b0d436c6fd308">MulticastSocket</a> socket(5000);</div>
+<div class="line"><a class="code hl_function" href="group__udp.html#ga379ff0e20d62b5f0c815d48614597005">MulticastSocket</a> socket(5000);</div>
 <div class="line">* <span class="comment">// Join the multicast group &quot;239.255.0.1&quot; on the default interface</span></div>
 <div class="line">socket.joinGroup(<span class="stringliteral">&quot;239.255.0.1&quot;</span>);</div>
 <div class="line">* <span class="comment">// Receive a datagram packet (blocking)</span></div>
@@ -297,13 +299,13 @@ Usage Example (Receiving)</h3>
 <div class="line"><span class="comment">// Leave the group when done</span></div>
 <div class="line">socket.leaveGroup(<span class="stringliteral">&quot;239.255.0.1&quot;</span>);</div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramPacket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramPacket.html">jsocketpp::DatagramPacket</a></div><div class="ttdoc">Represents a UDP datagram packet, encapsulating both payload and addressing information.</div><div class="ttdef"><b>Definition</b> DatagramPacket.hpp:48</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1MulticastSocket_html_a4671cefd5b0b7f7e936b0d436c6fd308"><div class="ttname"><a href="#a4671cefd5b0b7f7e936b0d436c6fd308">jsocketpp::MulticastSocket::MulticastSocket</a></div><div class="ttdeci">MulticastSocket(Port port=0, std::size_t bufferSize=2048)</div><div class="ttdoc">Constructs a multicast socket optionally bound to a local port and buffer size.</div><div class="ttdef"><b>Definition</b> MulticastSocket.cpp:5</div></div>
+<div class="ttc" id="agroup__udp_html_ga379ff0e20d62b5f0c815d48614597005"><div class="ttname"><a href="group__udp.html#ga379ff0e20d62b5f0c815d48614597005">jsocketpp::MulticastSocket::MulticastSocket</a></div><div class="ttdeci">MulticastSocket()=delete</div><div class="ttdoc">Default constructor (deleted) for MulticastSocket class.</div></div>
 <div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md476"></a>
 Usage Example (Sending)</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_function" href="#a4671cefd5b0b7f7e936b0d436c6fd308">MulticastSocket</a> socket;</div>
+<div class="line"><a class="code hl_function" href="group__udp.html#ga379ff0e20d62b5f0c815d48614597005">MulticastSocket</a> socket;</div>
 <div class="line">socket.<a class="code hl_function" href="#a72172a10bc5ba13a908f31c791c90ec5">setTimeToLive</a>(2); <span class="comment">// Limit to 2 router hops</span></div>
 <div class="line"><a class="code hl_class" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> packet(<span class="stringliteral">&quot;Hello, multicast!&quot;</span>, <span class="stringliteral">&quot;239.255.0.1&quot;</span>, 5000);</div>
 <div class="line">socket.<a class="code hl_function" href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0">write</a>(packet);</div>
