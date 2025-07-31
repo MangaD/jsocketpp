@@ -211,20 +211,88 @@ class DatagramSocket : public SocketOptions
     ~DatagramSocket() noexcept override;
 
     /**
-     * @brief Copy constructor (deleted).
+     * @brief Copy constructor (deleted) for DatagramSocket.
+     * @ingroup udp
+     *
+     * The copy constructor is explicitly deleted to prevent copying of `DatagramSocket`
+     * instances. This class wraps a native socket file descriptor (`SOCKET`) and manages
+     * system-level resources that cannot be safely or meaningfully duplicated.
+     *
+     * Copying would result in multiple objects referring to the same underlying socket,
+     * which would violate ownership semantics and could lead to:
+     * - Double closure of the same socket
+     * - Undefined behavior in concurrent scenarios
+     * - Silent data corruption if two sockets share internal buffers
+     *
+     * Instead, use move semantics to transfer ownership safely between instances.
+     *
+     * @note All socket classes in the library are non-copyable by design to preserve
+     * RAII guarantees and strict resource control.
+     *
+     * @code{.cpp}
+     * DatagramSocket a(12345);
+     * DatagramSocket b = a; // ❌ Compilation error (copy constructor is deleted)
+     * @endcode
+     *
+     * @see DatagramSocket(DatagramSocket&&) noexcept
      */
     DatagramSocket(const DatagramSocket&) = delete;
 
     /**
-     * @brief Copy assignment operator (deleted).
+     * @brief Copy assignment operator (deleted) for DatagramSocket.
+     * @ingroup udp
+     *
+     * The copy assignment operator is explicitly deleted to prevent assignment between
+     * `DatagramSocket` instances. This class manages a native socket file descriptor
+     * and internal buffers, which must have clear ownership semantics.
+     *
+     * Allowing copy assignment would result in:
+     * - Multiple objects referring to the same underlying socket
+     * - Risk of double-close or concurrent misuse
+     * - Broken RAII guarantees and undefined behavior
+     *
+     * This deletion enforces safe, move-only usage patterns consistent across the socket library.
+     *
+     * @note Use move assignment (`operator=(DatagramSocket&&)`) if you need to transfer ownership.
+     *
+     * @code{.cpp}
+     * DatagramSocket a(12345);
+     * DatagramSocket b;
+     * b = a; // ❌ Compilation error (copy assignment is deleted)
+     * @endcode
+     *
+     * @see operator=(DatagramSocket&&) noexcept
      */
     DatagramSocket& operator=(const DatagramSocket&) = delete;
 
     /**
-     * @brief Move constructor.
+     * @brief Move constructor for DatagramSocket.
+     * @ingroup udp
      *
-     * Transfers ownership of the socket and resources from another DatagramSocket.
-     * The moved-from object is left in a valid but unspecified state.
+     * Transfers ownership of the underlying socket file descriptor and internal state
+     * from another `DatagramSocket` instance. After the move, the source object is left
+     * in a valid but unspecified state and should not be used.
+     *
+     * ### What Is Transferred
+     * - Native socket handle (`_sockFd`)
+     * - Address resolution pointers (`_addrInfoPtr`, `_selectedAddrInfo`)
+     * - Local address metadata
+     * - Internal receive buffer
+     * - Port number
+     *
+     * ### Rationale
+     * - Enables safe transfer of socket ownership
+     * - Preserves resource integrity without duplicating system handles
+     * - Supports RAII and container use (e.g., `std::vector<DatagramSocket>`)
+     *
+     * @note The moved-from object is invalidated and cannot be reused.
+     *
+     * @code{.cpp}
+     * DatagramSocket a(12345);
+     * DatagramSocket b = std::move(a); // ✅ b now owns the socket
+     * @endcode
+     *
+     * @see operator=(DatagramSocket&&) noexcept
      */
     DatagramSocket(DatagramSocket&& rhs) noexcept
         : SocketOptions(rhs.getSocketFd()), _addrInfoPtr(std::move(rhs._addrInfoPtr)),
@@ -232,7 +300,6 @@ class DatagramSocket : public SocketOptions
           _buffer(std::move(rhs._buffer)), _port(rhs._port)
     {
         rhs.setSocketFd(INVALID_SOCKET);
-        rhs._addrInfoPtr = nullptr;
         rhs._selectedAddrInfo = nullptr;
         rhs._localAddrLen = 0;
         rhs._port = 0;
@@ -247,7 +314,16 @@ class DatagramSocket : public SocketOptions
     {
         if (this != &rhs)
         {
-            close();
+            // Clean up current socket
+            try
+            {
+                close(); // Clean up existing resources
+            }
+            catch (...)
+            {
+            }
+
+            // Transfer ownership
             setSocketFd(rhs.getSocketFd());
             _localAddr = rhs._localAddr;
             _localAddrLen = rhs._localAddrLen;
@@ -256,6 +332,7 @@ class DatagramSocket : public SocketOptions
             _buffer = std::move(rhs._buffer);
             _port = rhs._port;
 
+            // Reset source
             rhs.setSocketFd(INVALID_SOCKET);
             rhs._addrInfoPtr = nullptr;
             rhs._selectedAddrInfo = nullptr;
