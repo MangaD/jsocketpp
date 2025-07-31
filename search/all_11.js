@@ -43,6 +43,6 @@ var searchData=
   ['guarantees_40',['RAII Guarantees',['../group__udp.html#autotoc_md472',1,'']]],
   ['guide_41',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
   ['guide_20to_20the_20socket_20api_42',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['guidelines_43',['Guidelines',['../group__socketopts.html#autotoc_md611',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md433',1,'3. Code Style Guidelines']]],
+  ['guidelines_43',['Guidelines',['../group__socketopts.html#autotoc_md617',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md433',1,'3. Code Style Guidelines']]],
   ['guides_44',['User Guides',['../group__docs.html',1,'']]]
 ];

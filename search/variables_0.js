@@ -12,7 +12,7 @@ var searchData=
   ['_5ferrorcode_9',['_errorCode',['../classjsocketpp_1_1SocketException.html#ad5935c3ed7b7e0e4ee34e5cdbb3c232b',1,'jsocketpp::SocketException']]],
   ['_5finputshutdown_10',['_inputShutdown',['../classjsocketpp_1_1Socket.html#a57d7f824fde7a28a536ef6e63fb0c7bf',1,'jsocketpp::Socket']]],
   ['_5finternalbuffer_11',['_internalBuffer',['../classjsocketpp_1_1Socket.html#a05964f49b3ce4b2d9f2413fd40d4d174',1,'jsocketpp::Socket']]],
-  ['_5fisbound_12',['_isBound',['../classjsocketpp_1_1ServerSocket.html#a7eab52c9455b134172f3b71ba0b2722a',1,'jsocketpp::ServerSocket::_isBound'],['../classjsocketpp_1_1Socket.html#ae689d75e85e7d24f7dcca98704daf82d',1,'jsocketpp::Socket::_isBound']]],
+  ['_5fisbound_12',['_isBound',['../classjsocketpp_1_1DatagramSocket.html#a8c77f16fcae1c86b679a0567de055b7d',1,'jsocketpp::DatagramSocket::_isBound'],['../classjsocketpp_1_1ServerSocket.html#a7eab52c9455b134172f3b71ba0b2722a',1,'jsocketpp::ServerSocket::_isBound'],['../classjsocketpp_1_1Socket.html#ae689d75e85e7d24f7dcca98704daf82d',1,'jsocketpp::Socket::_isBound']]],
   ['_5fisconnected_13',['_isConnected',['../classjsocketpp_1_1DatagramSocket.html#acc0850711b172f6c6c8bf0649c530ea0',1,'jsocketpp::DatagramSocket::_isConnected'],['../classjsocketpp_1_1Socket.html#aa36c3591cf5dd284183a7cdb3ba3fb39',1,'jsocketpp::Socket::_isConnected']]],
   ['_5fislistening_14',['_isListening',['../classjsocketpp_1_1ServerSocket.html#a1a1cb37f9d062197674a9129d51f1e44',1,'jsocketpp::ServerSocket::_isListening'],['../classjsocketpp_1_1UnixSocket.html#a6e53399010d864381f42f5e1f1fd91ed',1,'jsocketpp::UnixSocket::_isListening']]],
   ['_5flocaladdr_15',['_localAddr',['../classjsocketpp_1_1DatagramSocket.html#a87523b567e1963c683584ed19c1d6f84',1,'jsocketpp::DatagramSocket']]],

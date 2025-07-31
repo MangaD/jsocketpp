@@ -129,8 +129,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:gab613123c8bf1aca6aec451b1140e2f82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a>.  <br /></td></tr>
 <tr class="memitem:a38397874bcb62f889cb6fefa20b45ba6" id="r_a38397874bcb62f889cb6fefa20b45ba6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38397874bcb62f889cb6fefa20b45ba6">operator=</a> (<a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> &amp;&amp;rhs) noexcept</td></tr>
 <tr class="memdesc:a38397874bcb62f889cb6fefa20b45ba6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator.  <br /></td></tr>
-<tr class="memitem:a6b6e8a44cf433169ec106c4ae50c84ad" id="r_a6b6e8a44cf433169ec106c4ae50c84ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b6e8a44cf433169ec106c4ae50c84ad">bind</a> () const</td></tr>
-<tr class="memdesc:a6b6e8a44cf433169ec106c4ae50c84ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind the datagram socket to the configured port set in the constructor.  <br /></td></tr>
+<tr class="memitem:ga550b67d7ad08c5cb068bb2b66d2c2c49" id="r_ga550b67d7ad08c5cb068bb2b66d2c2c49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga550b67d7ad08c5cb068bb2b66d2c2c49">bind</a> ()</td></tr>
+<tr class="memdesc:ga550b67d7ad08c5cb068bb2b66d2c2c49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the datagram socket to all available interfaces on an ephemeral port.  <br /></td></tr>
+<tr class="memitem:ga6f4ba9267e5d2a48e0ab85553b55f03a" id="r_ga6f4ba9267e5d2a48e0ab85553b55f03a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga6f4ba9267e5d2a48e0ab85553b55f03a">bind</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
+<tr class="memdesc:ga6f4ba9267e5d2a48e0ab85553b55f03a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the datagram socket to a specific local port on all network interfaces.  <br /></td></tr>
+<tr class="memitem:gaff03e4ff5f58f0440dec821c02355185" id="r_gaff03e4ff5f58f0440dec821c02355185"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gaff03e4ff5f58f0440dec821c02355185">bind</a> (std::string_view host, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
+<tr class="memdesc:gaff03e4ff5f58f0440dec821c02355185"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the datagram socket to a specific local IP address and port.  <br /></td></tr>
 <tr class="memitem:a3fa731104100275903b074ba2b65b839" id="r_a3fa731104100275903b074ba2b65b839"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fa731104100275903b074ba2b65b839">connect</a> (int timeoutMillis=-1)</td></tr>
 <tr class="memdesc:a3fa731104100275903b074ba2b65b839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connects the datagram socket to the remote host and port with optional timeout handling.  <br /></td></tr>
 <tr class="memitem:af34dc33d47f23ca13e9a63d4b1fcdee0" id="r_af34dc33d47f23ca13e9a63d4b1fcdee0"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af34dc33d47f23ca13e9a63d4b1fcdee0">write</a> (const <a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> &amp;packet) const</td></tr>
@@ -258,6 +262,8 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:ae157621acf76031b55ce263898d18aa7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal buffer for read operations.  <br /></td></tr>
 <tr class="memitem:ac4995ba9286d5dc4ad521a80a43c634a" id="r_ac4995ba9286d5dc4ad521a80a43c634a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4995ba9286d5dc4ad521a80a43c634a">_port</a></td></tr>
 <tr class="memdesc:ac4995ba9286d5dc4ad521a80a43c634a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number the socket is bound to (if applicable).  <br /></td></tr>
+<tr class="memitem:a8c77f16fcae1c86b679a0567de055b7d" id="r_a8c77f16fcae1c86b679a0567de055b7d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c77f16fcae1c86b679a0567de055b7d">_isBound</a> = false</td></tr>
+<tr class="memdesc:a8c77f16fcae1c86b679a0567de055b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the socket is bound to an address.  <br /></td></tr>
 <tr class="memitem:acc0850711b172f6c6c8bf0649c530ea0" id="r_acc0850711b172f6c6c8bf0649c530ea0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc0850711b172f6c6c8bf0649c530ea0">_isConnected</a> = false</td></tr>
 <tr class="memdesc:acc0850711b172f6c6c8bf0649c530ea0"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the socket is connected to a remote host.  <br /></td></tr>
 </table>
@@ -309,8 +315,8 @@ Example: Simple UDP Echo Server and Client</h2>
 <div class="line">    client.<a class="code hl_function" href="#a58152e567e2d41ee6d612355ac0eb548">read</a>(response);</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Server replied: &quot;</span> &lt;&lt; std::string(response.buffer.begin(), response.buffer.end()) &lt;&lt; std::endl;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_a58152e567e2d41ee6d612355ac0eb548"><div class="ttname"><a href="#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket::read</a></div><div class="ttdeci">size_t read(DatagramPacket &amp;packet, bool resizeBuffer=true) const</div><div class="ttdoc">Receives a UDP datagram and fills the provided DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:362</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_af34dc33d47f23ca13e9a63d4b1fcdee0"><div class="ttname"><a href="#af34dc33d47f23ca13e9a63d4b1fcdee0">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">size_t write(const DatagramPacket &amp;packet) const</div><div class="ttdoc">Write data to a remote host using a DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:251</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_a58152e567e2d41ee6d612355ac0eb548"><div class="ttname"><a href="#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket::read</a></div><div class="ttdeci">size_t read(DatagramPacket &amp;packet, bool resizeBuffer=true) const</div><div class="ttdoc">Receives a UDP datagram and fills the provided DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:402</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_af34dc33d47f23ca13e9a63d4b1fcdee0"><div class="ttname"><a href="#af34dc33d47f23ca13e9a63d4b1fcdee0">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">size_t write(const DatagramPacket &amp;packet) const</div><div class="ttdoc">Write data to a remote host using a DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:291</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md467"></a>
 Notes</h2>
 <ul>
@@ -322,31 +328,6 @@ Notes</h2>
 <dd>
 <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">jsocketpp::SocketException</a> </dd></dl>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a6b6e8a44cf433169ec106c4ae50c84ad" name="a6b6e8a44cf433169ec106c4ae50c84ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b6e8a44cf433169ec106c4ae50c84ad">&#9670;&#160;</a></span>bind()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void DatagramSocket::bind </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Bind the datagram socket to the configured port set in the constructor. </p>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>on error. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a1973415ece2f77f191b250b9e9690733" name="a1973415ece2f77f191b250b9e9690733"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1973415ece2f77f191b250b9e9690733">&#9670;&#160;</a></span>cleanupAndThrow()</h2>
 
@@ -969,6 +950,30 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 
 <p>Internal buffer for read operations. </p>
+
+</div>
+</div>
+<a id="a8c77f16fcae1c86b679a0567de055b7d" name="a8c77f16fcae1c86b679a0567de055b7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c77f16fcae1c86b679a0567de055b7d">&#9670;&#160;</a></span>_isBound</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::DatagramSocket::_isBound = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True if the socket is bound to an address. </p>
 
 </div>
 </div>

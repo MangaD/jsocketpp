@@ -124,12 +124,176 @@ Functions</h2></td></tr>
 <tr class="memdesc:gab67aad3e2d477982f19d17ab80607417"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment operator (deleted) for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a>.  <br /></td></tr>
 <tr class="memitem:gab613123c8bf1aca6aec451b1140e2f82" id="r_gab613123c8bf1aca6aec451b1140e2f82"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab613123c8bf1aca6aec451b1140e2f82">jsocketpp::DatagramSocket::DatagramSocket</a> (<a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> &amp;&amp;rhs) noexcept</td></tr>
 <tr class="memdesc:gab613123c8bf1aca6aec451b1140e2f82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a>.  <br /></td></tr>
+<tr class="memitem:ga550b67d7ad08c5cb068bb2b66d2c2c49" id="r_ga550b67d7ad08c5cb068bb2b66d2c2c49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">jsocketpp::DatagramSocket::bind</a> ()</td></tr>
+<tr class="memdesc:ga550b67d7ad08c5cb068bb2b66d2c2c49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the datagram socket to all available interfaces on an ephemeral port.  <br /></td></tr>
+<tr class="memitem:ga6f4ba9267e5d2a48e0ab85553b55f03a" id="r_ga6f4ba9267e5d2a48e0ab85553b55f03a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6f4ba9267e5d2a48e0ab85553b55f03a">jsocketpp::DatagramSocket::bind</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
+<tr class="memdesc:ga6f4ba9267e5d2a48e0ab85553b55f03a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the datagram socket to a specific local port on all network interfaces.  <br /></td></tr>
+<tr class="memitem:gaff03e4ff5f58f0440dec821c02355185" id="r_gaff03e4ff5f58f0440dec821c02355185"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaff03e4ff5f58f0440dec821c02355185">jsocketpp::DatagramSocket::bind</a> (std::string_view host, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
+<tr class="memdesc:gaff03e4ff5f58f0440dec821c02355185"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the datagram socket to a specific local IP address and port.  <br /></td></tr>
 <tr class="memitem:ga379ff0e20d62b5f0c815d48614597005" id="r_ga379ff0e20d62b5f0c815d48614597005"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga379ff0e20d62b5f0c815d48614597005">jsocketpp::MulticastSocket::MulticastSocket</a> ()=delete</td></tr>
 <tr class="memdesc:ga379ff0e20d62b5f0c815d48614597005"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a> class.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Classes and functions for UDP datagram networking. </p>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="ga550b67d7ad08c5cb068bb2b66d2c2c49" name="ga550b67d7ad08c5cb068bb2b66d2c2c49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">&#9670;&#160;</a></span>bind() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DatagramSocket::bind </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Binds the datagram socket to all available interfaces on an ephemeral port. </p>
+<p>This method binds the <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> to an ephemeral (auto-assigned) port on all local network interfaces (<span class="tt">INADDR_ANY</span> for IPv4 or <span class="tt">in6addr_any</span> for IPv6), depending on system configuration and address resolution.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md475"></a>
+Common Use Cases</h3>
+<ul>
+<li>UDP client sockets that do not require a specific port</li>
+<li>Transient sockets used for fire-and-forget messages or RPC</li>
+<li>Systems with NAT traversal where source port is flexible</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md476"></a>
+Behavior</h3>
+<ul>
+<li>Uses <span class="tt">getaddrinfo()</span> to resolve wildcard binding addresses (e.g., "0.0.0.0" or "::")</li>
+<li>Binds to the first successfully resolved and compatible address</li>
+<li>Updates internal state to reflect bound status</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>This method may only be called once per socket instance. Rebinding is not supported. </dd>
+<dd>
+If the socket was constructed with an already-resolved address, this will override it.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if address resolution or binding fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> sock;</div>
+<div class="line">sock.<a class="code hl_function" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">bind</a>(); <span class="comment">// Bound to 0.0.0.0:ephemeral</span></div>
+<div class="ttc" id="agroup__udp_html_ga1573f70de77ed93d522f2f9273181469"><div class="ttname"><a href="#ga1573f70de77ed93d522f2f9273181469">jsocketpp::DatagramSocket::DatagramSocket</a></div><div class="ttdeci">DatagramSocket()=delete</div><div class="ttdoc">Default constructor (deleted) for DatagramSocket class.</div></div>
+<div class="ttc" id="agroup__udp_html_ga550b67d7ad08c5cb068bb2b66d2c2c49"><div class="ttname"><a href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">jsocketpp::DatagramSocket::bind</a></div><div class="ttdeci">void bind()</div><div class="ttdoc">Binds the datagram socket to all available interfaces on an ephemeral port.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:177</div></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga6f4ba9267e5d2a48e0ab85553b55f03a" title="Binds the datagram socket to a specific local port on all network interfaces.">bind(Port)</a>, <a class="el" href="#gaff03e4ff5f58f0440dec821c02355185" title="Binds the datagram socket to a specific local IP address and port.">bind(std::string_view, Port)</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#a7f5db1dfd005c2541ecee41fbd160eb1" title="Get the local socket&#39;s address as a string (ip:port).">getLocalSocketAddress()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga6f4ba9267e5d2a48e0ab85553b55f03a" name="ga6f4ba9267e5d2a48e0ab85553b55f03a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6f4ba9267e5d2a48e0ab85553b55f03a">&#9670;&#160;</a></span>bind() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DatagramSocket::bind </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Binds the datagram socket to a specific local port on all network interfaces. </p>
+<p>This overload binds the socket to the given UDP <span class="tt">port</span> across all available network interfaces, using a wildcard address (<span class="tt">0.0.0.0</span> for IPv4 or <span class="tt">::</span> for IPv6).</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md477"></a>
+Common Use Cases</h3>
+<ul>
+<li>Server-side sockets that need to receive packets on a known port</li>
+<li>P2P or NAT traversal clients using fixed source ports</li>
+<li>Test setups or replay systems where port number must be predictable</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md478"></a>
+Behavior</h3>
+<ul>
+<li>Uses <span class="tt">getaddrinfo()</span> with AI_PASSIVE and a null host to resolve wildcard binding addresses</li>
+<li>Attempts all resolved addresses until bind succeeds</li>
+<li>If successful, updates internal bound state and allows subsequent <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a61dfe82025f17e3041c5b5acca2369eb" title="Read a trivially copyable type from the socket (connected UDP).">read()</a></span>/<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06" title="Receive a datagram into a trivially copyable type.">recvFrom()</a></span> calls</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">port</td><td>UDP port number to bind to. Must be in the range [1, 65535] or 0 for ephemeral.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This method may only be called once. Rebinding is not supported. </dd>
+<dd>
+If the port is already in use, a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> will be thrown.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if binding fails or the socket is already bound.</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> server;</div>
+<div class="line">server.<a class="code hl_function" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">bind</a>(12345); <span class="comment">// Bind to port 12345 on all interfaces</span></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a>, <a class="el" href="#gaff03e4ff5f58f0440dec821c02355185" title="Binds the datagram socket to a specific local IP address and port.">bind(std::string_view, Port)</a>, <a class="el" href="group__socketopts.html#gab358ea7ed49e95717b1e9438251b3d9a" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress()</a> </dd></dl>
+
+</div>
+</div>
+<a id="gaff03e4ff5f58f0440dec821c02355185" name="gaff03e4ff5f58f0440dec821c02355185"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaff03e4ff5f58f0440dec821c02355185">&#9670;&#160;</a></span>bind() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DatagramSocket::bind </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>host</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Binds the datagram socket to a specific local IP address and port. </p>
+<p>This method allows full control over the local binding interface by specifying both the local IP address (<span class="tt">host</span>) and port. It supports IPv4 and IPv6 addresses, including loopback, multicast-capable interfaces, and link-local addresses.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md479"></a>
+Common Use Cases</h3>
+<ul>
+<li>Multihomed systems binding to a specific NIC/interface</li>
+<li>Clients or servers requiring fixed local IP-port pairing</li>
+<li>Binding to loopback or link-local addresses</li>
+<li>Low-level networking tools (e.g., packet sniffers, trace clients)</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md480"></a>
+Behavior</h3>
+<ul>
+<li>Uses <span class="tt">getaddrinfo()</span> to resolve the provided IP/hostname and port</li>
+<li>Tries all resolved addresses until one binds successfully</li>
+<li>Updates internal state to reflect the binding result</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">host</td><td>Local IP address or hostname to bind to (e.g., "127.0.0.1", "::1", "eth0.local"). Use "0.0.0.0" or "::" to bind to all interfaces (same as <span class="tt">bind(port)</span>). </td></tr>
+    <tr><td class="paramname">port</td><td>Local UDP port number to bind to. Use 0 for ephemeral port assignment.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This method may only be called once. Rebinding is not supported. </dd>
+<dd>
+If resolution fails, or no address can be bound, a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> is thrown.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if address resolution or binding fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> sock;</div>
+<div class="line">sock.<a class="code hl_function" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">bind</a>(<span class="stringliteral">&quot;192.168.1.42&quot;</span>, 9000); <span class="comment">// Bind to specific interface and port</span></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a>, <a class="el" href="#ga6f4ba9267e5d2a48e0ab85553b55f03a" title="Binds the datagram socket to a specific local port on all network interfaces.">bind(Port)</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#a7f5db1dfd005c2541ecee41fbd160eb1" title="Get the local socket&#39;s address as a string (ip:port).">getLocalSocketAddress()</a>, <a class="el" href="group__socketopts.html#gab358ea7ed49e95717b1e9438251b3d9a" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress()</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga1573f70de77ed93d522f2f9273181469" name="ga1573f70de77ed93d522f2f9273181469"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga1573f70de77ed93d522f2f9273181469">&#9670;&#160;</a></span>DatagramSocket() <span class="overload">[1/5]</span></h2>
 
@@ -164,7 +328,6 @@ Rationale</h3>
 </ul>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> s;         <span class="comment">// ❌ Compilation error (deleted constructor)</span></div>
 <div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> s(12345);  <span class="comment">// ✅ Valid: binds to port 12345</span></div>
-<div class="ttc" id="agroup__udp_html_ga1573f70de77ed93d522f2f9273181469"><div class="ttname"><a href="#ga1573f70de77ed93d522f2f9273181469">jsocketpp::DatagramSocket::DatagramSocket</a></div><div class="ttdeci">DatagramSocket()=delete</div><div class="ttdoc">Default constructor (deleted) for DatagramSocket class.</div></div>
 </div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga85f4de1e83b91e82cf27d9ac78a48a24" title="Constructs a UDP socket, optionally bound to the specified local port.">DatagramSocket(Port, std::size_t)</a> Constructor for binding to port </dd></dl>
 
 </div>
@@ -317,7 +480,7 @@ Buffer Size Notes</h3>
 <div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> client(0, 4096);     <span class="comment">// ✅ Client socket with auto-assigned port</span></div>
 </div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for socket read operations.">DefaultBufferSize</a> for tuning guidelines and rationale </dd>
 <dd>
-<a class="el" href="classjsocketpp_1_1DatagramSocket.html#a61dfe82025f17e3041c5b5acca2369eb" title="Read a trivially copyable type from the socket (connected UDP).">read()</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0" title="Write data to a remote host using a DatagramPacket.">write()</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#a6b6e8a44cf433169ec106c4ae50c84ad" title="Bind the datagram socket to the configured port set in the constructor.">bind()</a> for usage </dd></dl>
+<a class="el" href="classjsocketpp_1_1DatagramSocket.html#a61dfe82025f17e3041c5b5acca2369eb" title="Read a trivially copyable type from the socket (connected UDP).">read()</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0" title="Write data to a remote host using a DatagramPacket.">write()</a>, <a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a> for usage </dd></dl>
 
 </div>
 </div>
@@ -353,7 +516,7 @@ Usage Patterns</h3>
 <ul>
 <li>Call <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to the remote host and port with optional timeout handling.">connect()</a></span> manually if you want to establish a default remote peer.</li>
 <li>Or use the <span class="tt">write(message, host, port)</span> overload for connectionless sends.</li>
-<li>Or call <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a6b6e8a44cf433169ec106c4ae50c84ad" title="Bind the datagram socket to the configured port set in the constructor.">bind()</a></span> to use it as a UDP server or receiver.</li>
+<li>Or call <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> to use it as a UDP server or receiver.</li>
 </ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md471"></a>
 Buffering</h3>
@@ -375,7 +538,7 @@ Buffering</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> client(<span class="stringliteral">&quot;example.com&quot;</span>, 9999); <span class="comment">// Prepare for later connect()</span></div>
 <div class="line">client.connect();                           <span class="comment">// ✅ Explicitly connect when ready</span></div>
 <div class="line">client.write(<span class="stringliteral">&quot;Hello&quot;</span>);                      <span class="comment">// Send to connected peer</span></div>
-</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to the remote host and port with optional timeout handling.">connect()</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#a6b6e8a44cf433169ec106c4ae50c84ad" title="Bind the datagram socket to the configured port set in the constructor.">bind()</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0" title="Write data to a remote host using a DatagramPacket.">write()</a>, <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for socket read operations.">DefaultBufferSize</a> </dd></dl>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to the remote host and port with optional timeout handling.">connect()</a>, <a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0" title="Write data to a remote host using a DatagramPacket.">write()</a>, <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for socket read operations.">DefaultBufferSize</a> </dd></dl>
 
 </div>
 </div>
@@ -404,7 +567,7 @@ Buffering</h3>
 
 <p>Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a> class. </p>
 <p>The default constructor is explicitly deleted to prevent the creation of uninitialized <span class="tt"><a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a></span> objects. A multicast socket must be constructed with a valid port and group membership configuration to function correctly.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md485"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md491"></a>
 Rationale</h3>
 <ul>
 <li>Prevents creation of sockets not joined to any multicast group</li>
