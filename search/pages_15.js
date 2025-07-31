@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['latency_0',['Example: Disable Nagle’s algorithm to reduce latency',['../group__socketopts.html#autotoc_md726',1,'']]],
+  ['latency_0',['Example: Disable Nagle’s algorithm to reduce latency',['../group__socketopts.html#autotoc_md728',1,'']]],
   ['level_20timeouts_1',['OS-Level Timeouts',['../group__async__io.html#autotoc_md119',1,'']]],
   ['library_2',['Library',['../group__BUILD__AND__USAGE.html#autotoc_md6',1,'Building the Library'],['../group__BUILD__AND__USAGE.html#autotoc_md14',1,'Linking the Library']]],
   ['library_3',['1. jsocketpp (this library)',['../group__socket__library__comparison.html#autotoc_md229',1,'']]],
@@ -9,9 +9,9 @@ var searchData=
   ['library_20for_20vcpkg_6',['2. Prepare Your Library for vcpkg',['../group__vcpkg__publish__guide.html#autotoc_md349',1,'']]],
   ['license_7',['License',['../index.html#autotoc_md409',1,'⚖️ License'],['../group__BUILD__AND__USAGE.html#autotoc_md24',1,'License']]],
   ['lifecycle_8',['Lifecycle',['../group__sockets__theory.html#autotoc_md282',1,'4. How Sockets Work: The Lifecycle'],['../group__socket__states.html#autotoc_md246',1,'TCP Socket Lifecycle']]],
-  ['limitations_9',['Limitations',['../group__address__reuse.html#autotoc_md86',1,'⚠️ Java’s Approach and Its Limitations'],['../index.html#autotoc_md380',1,'⚠️ Limitations'],['../group__tcp.html#autotoc_md520',1,'Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md772',1,'Limitations']]],
+  ['limitations_9',['Limitations',['../group__address__reuse.html#autotoc_md86',1,'⚠️ Java’s Approach and Its Limitations'],['../index.html#autotoc_md380',1,'⚠️ Limitations'],['../group__tcp.html#autotoc_md522',1,'Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md774',1,'Limitations']]],
   ['limitations_3a_10',['Limitations:',['../group__async__io.html#autotoc_md144',1,'']]],
-  ['linger_20for_205_20seconds_20on_20close_11',['Example: Set &lt;span class=&quot;tt&quot;&gt;SO_LINGER&lt;/span&gt; to linger for 5 seconds on close',['../group__socketopts.html#autotoc_md624',1,'']]],
+  ['linger_20for_205_20seconds_20on_20close_11',['Example: Set &lt;span class=&quot;tt&quot;&gt;SO_LINGER&lt;/span&gt; to linger for 5 seconds on close',['../group__socketopts.html#autotoc_md626',1,'']]],
   ['linking_20the_20library_12',['Linking the Library',['../group__BUILD__AND__USAGE.html#autotoc_md14',1,'']]],
   ['linux_13',['Unix/Linux',['../group__address__reuse.html#autotoc_md76',1,'']]],
   ['linux_20macos_20unix_14',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md289',1,'']]],

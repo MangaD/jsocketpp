@@ -79,7 +79,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BufferView_8hpp.html",
-"group__internal.html#ga7701a273337a71485ba1583df464b178",
+"group__jsocketpp.html",
 "server_8cpp.html#a79ce93ece9993ed95743932c99227de8"
 ];
 
