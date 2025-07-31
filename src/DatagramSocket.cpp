@@ -39,11 +39,12 @@ DatagramSocket::DatagramSocket(const std::string_view host, const Port port, con
 
     // Resolve the local address and port to be used by the server
     const std::string portStr = std::to_string(_port);
+    addrinfo* rawAddrInfo = nullptr;
     const auto ret =
         ::getaddrinfo((host.empty() ? nullptr : host.data()), // Node (hostname or IP address); nullptr means local host
                       portStr.c_str(),                        // Service (port number or service name) as a C-string
-                      &hints,       // Pointer to struct addrinfo with hints about the type of socket
-                      &_addrInfoPtr // Output: pointer to a linked list of results (set by getaddrinfo)
+                      &hints,      // Pointer to struct addrinfo with hints about the type of socket
+                      &rawAddrInfo // Output: pointer to a linked list of results (set by getaddrinfo)
         );
 
     if (ret != 0)
@@ -56,36 +57,38 @@ DatagramSocket::DatagramSocket(const std::string_view host, const Port port, con
 #endif
     }
 
+    _addrInfoPtr.reset(rawAddrInfo); // transfer ownership
+
     // Try all available addresses (IPv6/IPv4) to create a SOCKET for
-    _sockFd = INVALID_SOCKET;
-    for (addrinfo* p = _addrInfoPtr; p != nullptr; p = p->ai_next)
+    for (addrinfo* p = _addrInfoPtr.get(); p != nullptr; p = p->ai_next)
     {
-        _sockFd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-        if (_sockFd != INVALID_SOCKET)
+        setSocketFd(socket(p->ai_family, p->ai_socktype, p->ai_protocol));
+        if (getSocketFd() != INVALID_SOCKET)
         {
             // Store the address that worked
             _selectedAddrInfo = p;
             break;
         }
     }
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
     {
-        const auto error = GetSocketError();
-        freeaddrinfo(_addrInfoPtr); // ignore errors from freeaddrinfo
-        _addrInfoPtr = nullptr;
-        throw SocketException(error, SocketErrorMessage(error));
+        cleanupAndThrow(GetSocketError());
     }
-
-    setSocketFd(_sockFd);
 }
 
 void DatagramSocket::cleanupAndThrow(const int errorCode)
 {
-    // Clean up addrinfo and throw exception with the error
-    freeaddrinfo(_addrInfoPtr); // ignore errors from freeaddrinfo
-    _addrInfoPtr = nullptr;
+    if (getSocketFd() != INVALID_SOCKET)
+    {
+        CloseSocket(getSocketFd());
+        setSocketFd(INVALID_SOCKET);
+
+        // CloseSocket error is ignored.
+        // TODO: Consider adding an internal flag, nested exception, or user-configurable error handler
+        //       to report errors in future versions.
+    }
+    _addrInfoPtr.reset();
     _selectedAddrInfo = nullptr;
-    setSocketFd(INVALID_SOCKET);
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
@@ -101,6 +104,19 @@ DatagramSocket::~DatagramSocket() noexcept
     }
 }
 
+void DatagramSocket::close()
+{
+    if (getSocketFd() != INVALID_SOCKET)
+    {
+        if (CloseSocket(getSocketFd()))
+            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+        setSocketFd(INVALID_SOCKET);
+    }
+    _addrInfoPtr.reset();
+    _selectedAddrInfo = nullptr;
+}
+
 void DatagramSocket::bind() const
 {
     // Ensure that we have already selected an address during construction
@@ -108,7 +124,7 @@ void DatagramSocket::bind() const
         throw SocketException("bind() failed: no valid addrinfo found");
 
     const auto res = ::bind(
-        _sockFd,                    // The socket file descriptor to bind.
+        getSocketFd(),              // The socket file descriptor to bind.
         _selectedAddrInfo->ai_addr, // Pointer to the sockaddr structure (address and port) to bind to.
 #ifdef _WIN32
         static_cast<int>(_selectedAddrInfo->ai_addrlen) // Size of the sockaddr structure (cast to int for Windows).
@@ -141,7 +157,7 @@ void DatagramSocket::connect(const int timeoutMillis)
     }
 
     // Attempt to connect to the remote host
-    const auto res = ::connect(_sockFd, _selectedAddrInfo->ai_addr,
+    const auto res = ::connect(getSocketFd(), _selectedAddrInfo->ai_addr,
 #ifdef _WIN32
                                static_cast<int>(_selectedAddrInfo->ai_addrlen) // Windows: cast to int
 #else
@@ -178,14 +194,14 @@ void DatagramSocket::connect(const int timeoutMillis)
 
             fd_set fds;
             FD_ZERO(&fds);
-            FD_SET(_sockFd, &fds);
+            FD_SET(getSocketFd(), &fds);
 
 #ifdef _WIN32
             // On Windows, the first parameter to select is ignored, but must be set to 0
             auto result = select(0, nullptr, &fds, nullptr, &tv);
 #else
             // On Linux/Unix, the first parameter to select should be the highest file descriptor + 1
-            auto result = select(_sockFd + 1, nullptr, &fds, nullptr, &tv);
+            auto result = select(getSocketFd() + 1, nullptr, &fds, nullptr, &tv);
 #endif
 
             // If select() timed out or failed, reset the socket to blocking mode
@@ -219,7 +235,7 @@ size_t DatagramSocket::write(std::string_view message) const
 #ifndef _WIN32
     flags = MSG_NOSIGNAL; // Don't send SIGPIPE on broken pipe
 #endif
-    const auto sent = ::send(_sockFd, message.data(),
+    const auto sent = ::send(getSocketFd(), message.data(),
 #ifdef _WIN32
                              static_cast<int>(message.size()),
 #else
@@ -261,7 +277,7 @@ size_t DatagramSocket::write(const DatagramPacket& packet) const
                 ret, SocketErrorMessageWrap(ret, true));
 #endif
         }
-        const auto sent = sendto(_sockFd, packet.buffer.data(),
+        const auto sent = sendto(getSocketFd(), packet.buffer.data(),
 #ifdef _WIN32
                                  static_cast<int>(packet.buffer.size()), // Windows: cast to int
 #else
@@ -282,7 +298,7 @@ size_t DatagramSocket::write(const DatagramPacket& packet) const
     }
 
     // Connected send
-    const auto sent = send(_sockFd, packet.buffer.data(),
+    const auto sent = send(getSocketFd(), packet.buffer.data(),
 #ifdef _WIN32
                            static_cast<int>(packet.buffer.size()), // Windows: cast to int
 #else
@@ -323,7 +339,7 @@ size_t DatagramSocket::write(std::string_view message, const std::string_view ho
 #endif
     }
 
-    const auto sent = sendto(_sockFd, message.data(),
+    const auto sent = sendto(getSocketFd(), message.data(),
 #ifdef _WIN32
                              static_cast<int>(message.size()), // Windows: cast to int
 #else
@@ -352,7 +368,7 @@ size_t DatagramSocket::read(DatagramPacket& packet, const bool resizeBuffer) con
     socklen_t addrLen = sizeof(srcAddr);
 
     // Receive the datagram
-    const auto received = recvfrom(_sockFd, packet.buffer.data(),
+    const auto received = recvfrom(getSocketFd(), packet.buffer.data(),
 #ifdef _WIN32
                                    static_cast<int>(packet.buffer.size()),
 #else
@@ -390,38 +406,21 @@ size_t DatagramSocket::read(DatagramPacket& packet, const bool resizeBuffer) con
     return static_cast<size_t>(received);
 }
 
-void DatagramSocket::close()
-{
-    if (_sockFd != INVALID_SOCKET)
-    {
-        if (CloseSocket(this->_sockFd))
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
-        _sockFd = INVALID_SOCKET;
-        setSocketFd(INVALID_SOCKET);
-    }
-    if (_addrInfoPtr)
-    {
-        freeaddrinfo(_addrInfoPtr); // ignore errors from freeaddrinfo
-        _addrInfoPtr = nullptr;
-    }
-    _selectedAddrInfo = nullptr;
-}
-
 void DatagramSocket::setNonBlocking(bool nonBlocking) const
 {
 #ifdef _WIN32
     u_long mode = nonBlocking ? 1 : 0;
-    if (ioctlsocket(_sockFd, FIONBIO, &mode) != 0)
+    if (ioctlsocket(getSocketFd(), FIONBIO, &mode) != 0)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #else
-    int flags = fcntl(_sockFd, F_GETFL, 0);
+    int flags = fcntl(getSocketFd(), F_GETFL, 0);
     if (flags == -1)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (nonBlocking)
         flags |= O_NONBLOCK;
     else
         flags &= ~O_NONBLOCK;
-    if (fcntl(_sockFd, F_SETFL, flags) == -1)
+    if (fcntl(getSocketFd(), F_SETFL, flags) == -1)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #endif
 }
@@ -429,9 +428,9 @@ void DatagramSocket::setNonBlocking(bool nonBlocking) const
 void DatagramSocket::setTimeout(int millis) const
 {
 #ifdef _WIN32
-    if (setsockopt(_sockFd, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&millis), sizeof(millis)) ==
+    if (setsockopt(getSocketFd(), SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&millis), sizeof(millis)) ==
             SOCKET_ERROR ||
-        setsockopt(_sockFd, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&millis), sizeof(millis)) ==
+        setsockopt(getSocketFd(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&millis), sizeof(millis)) ==
             SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #else
@@ -441,8 +440,8 @@ void DatagramSocket::setTimeout(int millis) const
         tv.tv_sec = millis / 1000;
         tv.tv_usec = (millis % 1000) * 1000;
     }
-    if (setsockopt(_sockFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR ||
-        setsockopt(_sockFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
+    if (setsockopt(getSocketFd(), SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR ||
+        setsockopt(getSocketFd(), SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #endif
 }
@@ -452,7 +451,7 @@ std::string DatagramSocket::getLocalSocketAddress() const
     sockaddr_storage addr{};
     socklen_t len = sizeof(addr);
 
-    if (getsockname(_sockFd, reinterpret_cast<sockaddr*>(&addr), &len) != 0)
+    if (getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &len) != 0)
     {
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     }
@@ -481,7 +480,7 @@ std::string DatagramSocket::getLocalSocketAddress() const
 void DatagramSocket::enableBroadcast(const bool enable) const
 {
     const int flag = enable ? 1 : 0;
-    if (setsockopt(_sockFd, SOL_SOCKET, SO_BROADCAST,
+    if (setsockopt(getSocketFd(), SOL_SOCKET, SO_BROADCAST,
 #ifdef _WIN32
                    reinterpret_cast<const char*>(&flag),
 #else

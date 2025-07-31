@@ -326,12 +326,11 @@ class ServerSocket : public SocketOptions
      * @ingroup tcp
      */
     ServerSocket(ServerSocket&& rhs) noexcept
-        : SocketOptions(rhs._serverSocket), _serverSocket(rhs._serverSocket), _srvAddrInfo(std::move(rhs._srvAddrInfo)),
+        : SocketOptions(rhs.getSocketFd()), _srvAddrInfo(std::move(rhs._srvAddrInfo)),
           _selectedAddrInfo(rhs._selectedAddrInfo), _port(rhs._port), _isBound(rhs._isBound),
           _isListening(rhs._isListening), _soTimeoutMillis(rhs._soTimeoutMillis),
           _defaultReceiveBufferSize(rhs._defaultReceiveBufferSize)
     {
-        rhs._serverSocket = INVALID_SOCKET;
         rhs.setSocketFd(INVALID_SOCKET);
         rhs._selectedAddrInfo = nullptr;
         rhs._isBound = false;
@@ -379,8 +378,7 @@ class ServerSocket : public SocketOptions
             }
 
             // Transfer ownership
-            _serverSocket = rhs._serverSocket;
-            setSocketFd(_serverSocket);
+            setSocketFd(rhs.getSocketFd());
             _srvAddrInfo = std::move(rhs._srvAddrInfo);
             _selectedAddrInfo = rhs._selectedAddrInfo;
             _port = rhs._port;
@@ -389,8 +387,7 @@ class ServerSocket : public SocketOptions
             _soTimeoutMillis = rhs._soTimeoutMillis;
             _defaultReceiveBufferSize = rhs._defaultReceiveBufferSize;
 
-            // Reset source
-            rhs._serverSocket = INVALID_SOCKET;
+            // Reset source;
             rhs.setSocketFd(INVALID_SOCKET);
             rhs._selectedAddrInfo = nullptr;
             rhs._isBound = false;
@@ -1098,7 +1095,7 @@ class ServerSocket : public SocketOptions
      *
      * @ingroup tcp
      */
-    [[nodiscard]] bool isValid() const noexcept { return this->_serverSocket != INVALID_SOCKET; }
+    [[nodiscard]] bool isValid() const noexcept { return getSocketFd() != INVALID_SOCKET; }
 
     /**
      * @brief Check if the server socket has been closed.
@@ -1112,7 +1109,7 @@ class ServerSocket : public SocketOptions
      *
      * @ingroup tcp
      */
-    [[nodiscard]] bool isClosed() const noexcept { return this->_serverSocket == INVALID_SOCKET; }
+    [[nodiscard]] bool isClosed() const noexcept { return getSocketFd() == INVALID_SOCKET; }
 
     /**
      * @brief Waits for the server socket to become ready to accept an incoming connection.
@@ -1438,7 +1435,6 @@ class ServerSocket : public SocketOptions
                 getEffectiveInternalBufferSize(internal)};
     }
 
-    SOCKET _serverSocket = INVALID_SOCKET;        ///< Underlying socket file descriptor.
     internal::AddrinfoPtr _srvAddrInfo = nullptr; ///< Address info for binding (from getaddrinfo)
     addrinfo* _selectedAddrInfo = nullptr;        ///< Selected address info for binding
     Port _port;                                   ///< Port number the server will listen on

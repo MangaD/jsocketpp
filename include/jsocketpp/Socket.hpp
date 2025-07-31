@@ -151,7 +151,7 @@ class Socket : public SocketOptions
      * ### Rationale
      * - Prevents accidental creation of an invalid socket
      * - Enforces explicit resource ownership and initialization
-     * - Avoids ambiguity around object state (e.g., _sockFd = INVALID_SOCKET)
+     * - Avoids ambiguity around object state (e.g., getSocketFd() = INVALID_SOCKET)
      *
      * @code{.cpp}
      * Socket s;               // ❌ Compilation error (deleted constructor)
@@ -246,7 +246,7 @@ class Socket : public SocketOptions
      * 5. Resets the source object to a valid but empty state
      *
      * The moved-from socket (rhs) remains valid but will be in a default-constructed
-     * state with no active connection (_sockFd = INVALID_SOCKET).
+     * state with no active connection (getSocketFd() = INVALID_SOCKET).
      *
      * @param[in,out] rhs The Socket object to move from. After the move, rhs will
      *                    be left in a valid but disconnected state.
@@ -258,13 +258,11 @@ class Socket : public SocketOptions
      * @see operator=(Socket&&) Move assignment operator
      */
     Socket(Socket&& rhs) noexcept
-        : SocketOptions(rhs._sockFd), _sockFd(rhs._sockFd), _remoteAddr(rhs._remoteAddr),
-          _remoteAddrLen(rhs._remoteAddrLen), _cliAddrInfo(std::move(rhs._cliAddrInfo)),
-          _selectedAddrInfo(rhs._selectedAddrInfo), _internalBuffer(std::move(rhs._internalBuffer)),
-          _isBound(rhs._isBound), _isConnected(rhs._isConnected), _inputShutdown(rhs._inputShutdown),
-          _outputShutdown(rhs._outputShutdown)
+        : SocketOptions(rhs.getSocketFd()), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
+          _cliAddrInfo(std::move(rhs._cliAddrInfo)), _selectedAddrInfo(rhs._selectedAddrInfo),
+          _internalBuffer(std::move(rhs._internalBuffer)), _isBound(rhs._isBound), _isConnected(rhs._isConnected),
+          _inputShutdown(rhs._inputShutdown), _outputShutdown(rhs._outputShutdown)
     {
-        rhs._sockFd = INVALID_SOCKET;
         rhs.setSocketFd(INVALID_SOCKET);
         rhs._selectedAddrInfo = nullptr;
         rhs._isBound = false;
@@ -347,8 +345,7 @@ class Socket : public SocketOptions
             }
 
             // Transfer ownership
-            _sockFd = rhs._sockFd;
-            setSocketFd(_sockFd);
+            setSocketFd(rhs.getSocketFd());
             _remoteAddr = rhs._remoteAddr;
             _remoteAddrLen = rhs._remoteAddrLen;
             _cliAddrInfo = std::move(rhs._cliAddrInfo);
@@ -360,7 +357,6 @@ class Socket : public SocketOptions
             _outputShutdown = rhs._outputShutdown;
 
             // Reset source
-            rhs._sockFd = INVALID_SOCKET;
             rhs.setSocketFd(INVALID_SOCKET);
             rhs._selectedAddrInfo = nullptr;
             rhs._isBound = false;
@@ -756,13 +752,13 @@ class Socket : public SocketOptions
 
         while (remaining > 0)
         {
-            const auto len = recv(_sockFd, reinterpret_cast<char*>(buffer.data()) + totalRead,
+            const auto len = ::recv(getSocketFd(), reinterpret_cast<char*>(buffer.data()) + totalRead,
 #ifdef _WIN32
-                                  static_cast<int>(remaining),
+                                    static_cast<int>(remaining),
 #else
-                                  remaining,
+                                    remaining,
 #endif
-                                  0);
+                                    0);
 
             if (len == SOCKET_ERROR)
                 throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
@@ -2526,7 +2522,7 @@ class Socket : public SocketOptions
      * use isConnected() to check the connection status.
      *
      * ### Implementation Details
-     * - Checks if internal socket descriptor (_sockFd) is not INVALID_SOCKET
+     * - Checks if internal socket descriptor (getSocketFd()) is not INVALID_SOCKET
      * - Fast, constant-time operation (O(1))
      * - Thread-safe (const noexcept)
      * - Does not perform any system calls
@@ -2551,7 +2547,7 @@ class Socket : public SocketOptions
      * @see isConnected() Check if socket is actually connected
      * @see close() Invalidates the socket
      */
-    [[nodiscard]] bool isValid() const noexcept { return _sockFd != INVALID_SOCKET; }
+    [[nodiscard]] bool isValid() const noexcept { return getSocketFd() != INVALID_SOCKET; }
 
     /**
      * @brief Waits for the socket to become ready for reading or writing.
@@ -2645,7 +2641,7 @@ class Socket : public SocketOptions
      * closed, or because the underlying file descriptor has been released or never initialized.
      *
      * This method does not perform any system-level check or probing. It simply inspects
-     * the internal socket descriptor (`_sockFd`) and considers the socket closed if it is
+     * the internal socket descriptor (`getSocketFd()`) and considers the socket closed if it is
      * equal to `INVALID_SOCKET`. This reflects the same mechanism used internally for
      * error detection and safety throughout the library.
      *
@@ -2665,7 +2661,7 @@ class Socket : public SocketOptions
      * @see isConnected()
      * @see isBound()
      */
-    [[nodiscard]] bool isClosed() const noexcept { return _sockFd == INVALID_SOCKET; }
+    [[nodiscard]] bool isClosed() const noexcept { return getSocketFd() == INVALID_SOCKET; }
 
     /**
      * @brief Checks whether the socket's input stream has been shutdown.
@@ -2791,7 +2787,7 @@ class Socket : public SocketOptions
      * @brief Cleans up client socket resources and throws a SocketException.
      *
      * This method performs internal cleanup of the client socket's resources, including:
-     * - Closing the socket if it is open (`_sockFd`)
+     * - Closing the socket if it is open (`getSocketFd()`)
      * - Releasing any allocated address resolution data (`_cliAddrInfo`)
      * - Resetting `_selectedAddrInfo` to null
      *
@@ -2841,8 +2837,7 @@ class Socket : public SocketOptions
     }
 
   private:
-    SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor.
-    sockaddr_storage _remoteAddr;    ///< sockaddr_in for IPv4; sockaddr_in6 for IPv6; sockaddr_storage for both
+    sockaddr_storage _remoteAddr; ///< sockaddr_in for IPv4; sockaddr_in6 for IPv6; sockaddr_storage for both
     ///< (portability)
     mutable socklen_t _remoteAddrLen = 0;         ///< Length of remote address (for recvfrom/recvmsg)
     internal::AddrinfoPtr _cliAddrInfo = nullptr; ///< Address info for connection (from getaddrinfo)
@@ -2912,7 +2907,7 @@ class Socket : public SocketOptions
  */
 template <> inline std::string Socket::read()
 {
-    const auto len = recv(_sockFd, _internalBuffer.data(),
+    const auto len = recv(getSocketFd(), _internalBuffer.data(),
 #ifdef _WIN32
                           static_cast<int>(_internalBuffer.size()),
 #else

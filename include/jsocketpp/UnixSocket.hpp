@@ -180,7 +180,7 @@ class UnixSocket : SocketOptions
     {
         static_assert(std::is_trivially_copyable_v<T>, "UnixSocket::read<T>() only supports trivially copyable types");
         T value;
-        const int len = ::recv(_sockFd, reinterpret_cast<char*>(&value),
+        const int len = ::recv(getSocketFd(), reinterpret_cast<char*>(&value),
 #ifdef _WIN32
                                static_cast<int>(sizeof(T)),
 #else
@@ -203,7 +203,7 @@ class UnixSocket : SocketOptions
      * @brief Checks if the socket is valid (open).
      * @return true if the socket is valid, false otherwise.
      */
-    [[nodiscard]] bool isValid() const { return this->_sockFd != INVALID_SOCKET; }
+    [[nodiscard]] bool isValid() const { return getSocketFd() != INVALID_SOCKET; }
 
     /**
      * @brief Returns the path of the Unix domain socket.
@@ -247,11 +247,10 @@ class UnixSocket : SocketOptions
     UnixSocket() : SocketOptions(INVALID_SOCKET), _buffer(512) {}
 
   private:
-    SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor.
-    bool _isListening = false;       ///< True if the socket is listening for connections.
-    std::string _socketPath{};       ///< Path for the Unix domain socket.
-    SOCKADDR_UN _addr{};             ///< Address structure for Unix domain sockets.
-    std::vector<char> _buffer;       ///< Internal buffer for read operations.
+    bool _isListening = false; ///< True if the socket is listening for connections.
+    std::string _socketPath{}; ///< Path for the Unix domain socket.
+    SOCKADDR_UN _addr{};       ///< Address structure for Unix domain sockets.
+    std::vector<char> _buffer; ///< Internal buffer for read operations.
 };
 
 /**
@@ -267,7 +266,7 @@ class UnixSocket : SocketOptions
  */
 template <> inline std::string UnixSocket::read()
 {
-    const auto len = static_cast<int>(recv(_sockFd, _buffer.data(),
+    const auto len = static_cast<int>(recv(getSocketFd(), _buffer.data(),
 #ifdef _WIN32
                                            static_cast<int>(_buffer.size()),
 #else

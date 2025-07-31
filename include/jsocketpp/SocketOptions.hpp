@@ -51,6 +51,29 @@ class SocketOptions
 {
   public:
     /**
+     * @brief Default constructor (deleted) for SocketOptions base class.
+     * @ingroup socketopts
+     *
+     * This constructor is explicitly deleted to prevent the creation of
+     * uninitialized `SocketOptions` objects. Subclasses like `Socket`, `ServerSocket`,
+     * or `DatagramSocket` must initialize the socket handle explicitly via constructor
+     * arguments or system calls.
+     *
+     * ### Rationale
+     * - Prevents misuse of base class in isolation
+     * - Enforces proper ownership semantics for `_sockFd`
+     * - Ensures all derived types have valid or explicitly invalid sockets
+     *
+     * @code{.cpp}
+     * SocketOptions opt; // ❌ Compilation error (deleted constructor)
+     * @endcode
+     *
+     * @see SocketOptions(SOCKET) Constructor with explicit socket handle
+     * @see close(), setSocketFd(), getSocketFd()
+     */
+    SocketOptions() = delete;
+
+    /**
      * @brief Initializes the socket option interface with a specific socket descriptor.
      * @ingroup socketopts
      *
@@ -89,6 +112,113 @@ class SocketOptions
      * @note Declared `virtual` to support inheritance and polymorphism.
      */
     virtual ~SocketOptions() = default;
+
+    /**
+     * @brief Copy constructor (deleted) for SocketOptions.
+     * @ingroup socketopts
+     *
+     * The copy constructor is explicitly deleted to prevent accidental copying of
+     * `SocketOptions` instances. Since the class wraps a native socket handle (`SOCKET`),
+     * copying it would result in multiple objects referring to the same socket,
+     * leading to unsafe behavior such as double-closing or unexpected side effects.
+     *
+     * All derived socket classes in the library (e.g., `Socket`, `ServerSocket`, `DatagramSocket`)
+     * are also non-copyable to preserve strict ownership semantics and RAII guarantees.
+     *
+     * @note Use move semantics (`SocketOptions(SocketOptions&&)`) to transfer ownership explicitly.
+     *
+     * @code{.cpp}
+     * SocketOptions a(sockFd);
+     * SocketOptions b = a; // ❌ Compilation error (copy constructor is deleted)
+     * @endcode
+     *
+     * @see SocketOptions(SocketOptions&&) noexcept
+     */
+    SocketOptions(const SocketOptions&) = delete;
+
+    /**
+     * @brief Move constructor for SocketOptions.
+     * @ingroup socketopts
+     *
+     * Transfers the socket handle (`_sockFd`) and internal state from another `SocketOptions`
+     * instance. After the move, the source object is left in a valid but unspecified state
+     * (typically with `_sockFd` set to `INVALID_SOCKET`).
+     *
+     * This enables safe and efficient transfer of socket ownership in derived classes,
+     * such as `Socket`, `DatagramSocket`, or `ServerSocket`, without invoking unnecessary
+     * system calls or duplicating file descriptors.
+     *
+     * ### Rationale
+     * - Enables move semantics for socket objects
+     * - Prevents accidental use-after-move by invalidating the source `_sockFd`
+     * - Supports RAII-friendly container usage (e.g., `std::vector<DatagramSocket>`)
+     *
+     * @warning After the move, the source object should not be used for socket operations.
+     *
+     * @code{.cpp}
+     * SocketOptions a(sockFd);
+     * SocketOptions b = std::move(a); // ✅ Transfers socket handle to b
+     * @endcode
+     *
+     * @see operator=(SocketOptions&&) noexcept
+     */
+    SocketOptions(SocketOptions&&) noexcept = default;
+
+    /**
+     * @brief Copy assignment operator (deleted) for SocketOptions.
+     * @ingroup socketopts
+     *
+     * The copy assignment operator is explicitly deleted to prevent reassignment
+     * between `SocketOptions` instances. Copying would duplicate the socket handle
+     * without transferring ownership, leading to potential issues such as:
+     *
+     * - Double `close()` calls on the same socket
+     * - Confusing ownership semantics
+     * - Race conditions in multithreaded environments
+     *
+     * This deletion is consistent with the rest of the socket library, where all socket
+     * classes are designed to be non-copyable and resource-owning via RAII.
+     *
+     * @note Use move assignment (`operator=(SocketOptions&&)`) to transfer ownership safely.
+     *
+     * @code{.cpp}
+     * SocketOptions a(sockFd);
+     * SocketOptions b;
+     * b = a; // ❌ Compilation error (copy assignment is deleted)
+     * @endcode
+     *
+     * @see operator=(SocketOptions&&) noexcept
+     */
+    SocketOptions& operator=(const SocketOptions&) = delete;
+
+    /**
+     * @brief Move assignment operator for SocketOptions.
+     * @ingroup socketopts
+     *
+     * Transfers the socket handle (`_sockFd`) and internal state from another
+     * `SocketOptions` instance to this one. Any existing state in the current object
+     * is overwritten. The moved-from object is left in a valid but unspecified state
+     * (usually with `_sockFd == INVALID_SOCKET`).
+     *
+     * This operator supports efficient reassignment of socket resources in derived classes
+     * while preserving RAII guarantees and preventing resource leaks.
+     *
+     * ### Rationale
+     * - Allows efficient reassignment of socket wrappers
+     * - Ensures only one object retains ownership of the socket handle
+     * - Preserves safe ownership semantics across the library
+     *
+     * @warning The moved-from object should not be used after assignment.
+     *
+     * @code{.cpp}
+     * SocketOptions a(sockFd1);
+     * SocketOptions b(sockFd2);
+     * b = std::move(a); // ✅ b now owns sockFd1, sockFd2 is released or overwritten
+     * @endcode
+     *
+     * @see SocketOptions(SocketOptions&&) noexcept
+     */
+    SocketOptions& operator=(SocketOptions&&) noexcept = default;
 
     /**
      * @brief Retrieves the native socket handle (file descriptor or OS-level handle).

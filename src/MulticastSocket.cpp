@@ -76,7 +76,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
             mReq.imr_interface.s_addr = htonl(INADDR_ANY);
         }
 
-        if (setsockopt(_sockFd, IPPROTO_IP, IP_ADD_MEMBERSHIP,
+        if (setsockopt(getSocketFd(), IPPROTO_IP, IP_ADD_MEMBERSHIP,
 #ifdef _WIN32
                        reinterpret_cast<const char*>(&mReq),
 #else
@@ -138,7 +138,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
 #else
         constexpr int option = IPV6_JOIN_GROUP;
 #endif
-        if (setsockopt(_sockFd, level, option,
+        if (setsockopt(getSocketFd(), level, option,
 #ifdef _WIN32
                        reinterpret_cast<const char*>(&mReq6),
 #else
@@ -228,7 +228,7 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
             mReq.imr_interface.s_addr = htonl(INADDR_ANY);
         }
 
-        if (setsockopt(_sockFd, IPPROTO_IP, IP_DROP_MEMBERSHIP,
+        if (setsockopt(getSocketFd(), IPPROTO_IP, IP_DROP_MEMBERSHIP,
 #ifdef _WIN32
                        reinterpret_cast<const char*>(&mReq),
 #else
@@ -286,7 +286,7 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
 #else
         constexpr int option = IPV6_LEAVE_GROUP;
 #endif
-        if (setsockopt(_sockFd, level, option,
+        if (setsockopt(getSocketFd(), level, option,
 #ifdef _WIN32
                        reinterpret_cast<const char*>(&mReq6),
 #else
@@ -322,21 +322,23 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
 #ifdef _WIN32
         // IPv4: set to INADDR_ANY
         auto addr = INADDR_ANY;
-        if (setsockopt(_sockFd, IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char*>(&addr), sizeof(addr)) < 0)
+        if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char*>(&addr), sizeof(addr)) <
+            0)
             throw SocketException(GetSocketError(), "Failed to clear IPv4 multicast interface");
         // IPv6: set to 0
         DWORD idx = 0;
-        if (setsockopt(_sockFd, IPPROTO_IPV6, IPV6_MULTICAST_IF, reinterpret_cast<const char*>(&idx), sizeof(idx)) < 0)
+        if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, reinterpret_cast<const char*>(&idx),
+                       sizeof(idx)) < 0)
             throw SocketException(GetSocketError(), "Failed to clear IPv6 multicast interface");
 #else
         // IPv4: set to INADDR_ANY
         in_addr addr{};
         addr.s_addr = htonl(INADDR_ANY);
-        if (setsockopt(_sockFd, IPPROTO_IP, IP_MULTICAST_IF, &addr, sizeof(addr)) < 0)
+        if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, &addr, sizeof(addr)) < 0)
             throw SocketException(GetSocketError(), "Failed to clear IPv4 multicast interface");
         // IPv6: set to 0
         unsigned int idx = 0;
-        if (setsockopt(_sockFd, IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
+        if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
             throw SocketException(GetSocketError(), "Failed to clear IPv6 multicast interface");
 #endif
         _currentInterface.clear();
@@ -350,10 +352,11 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
         // Set IPv4 outgoing interface
 #ifdef _WIN32
         DWORD addr = v4addr.s_addr;
-        if (setsockopt(_sockFd, IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char*>(&addr), sizeof(addr)) < 0)
+        if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char*>(&addr), sizeof(addr)) <
+            0)
             throw SocketException(GetSocketError(), "Failed to set IPv4 multicast interface to " + iface);
 #else
-        if (setsockopt(_sockFd, IPPROTO_IP, IP_MULTICAST_IF, &v4addr, sizeof(v4addr)) < 0)
+        if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, &v4addr, sizeof(v4addr)) < 0)
             throw SocketException(GetSocketError(), "Failed to set IPv4 multicast interface to " + iface);
 #endif
         _currentInterface = iface;
@@ -367,7 +370,8 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
     if (!iface.empty() && end && *end == '\0' && idx > 0)
     {
         // Numeric index specified as string
-        if (setsockopt(_sockFd, IPPROTO_IPV6, IPV6_MULTICAST_IF, reinterpret_cast<const char*>(&idx), sizeof(idx)) < 0)
+        if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, reinterpret_cast<const char*>(&idx),
+                       sizeof(idx)) < 0)
             throw SocketException(GetSocketError(), "Failed to set IPv6 multicast interface to index " + iface);
         _currentInterface = iface;
         return;
@@ -384,7 +388,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
         if (!iface.empty() && (!end || *end != '\0' || idx == 0))
             throw SocketException("Invalid IPv6 interface: " + iface);
     }
-    if (setsockopt(_sockFd, IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
+    if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
         throw SocketException(GetSocketError(), "Failed to set IPv6 multicast interface to " + iface);
     _currentInterface = iface;
 #endif
@@ -402,23 +406,24 @@ void MulticastSocket::setTimeToLive(int ttl)
     // Windows wants a DWORD, Linux wants an int
 #ifdef _WIN32
     auto v4ttl = static_cast<DWORD>(ttl);
-    if (setsockopt(_sockFd, IPPROTO_IP, IP_MULTICAST_TTL, reinterpret_cast<const char*>(&v4ttl), sizeof(v4ttl)) < 0)
+    if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_TTL, reinterpret_cast<const char*>(&v4ttl), sizeof(v4ttl)) <
+        0)
         throw SocketException(GetSocketError(), "Failed to set IPv4 multicast TTL");
 #else
     int v4ttl = ttl;
-    if (setsockopt(_sockFd, IPPROTO_IP, IP_MULTICAST_TTL, &v4ttl, sizeof(v4ttl)) < 0)
+    if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_TTL, &v4ttl, sizeof(v4ttl)) < 0)
         throw SocketException(GetSocketError(), "Failed to set IPv4 multicast TTL");
 #endif
 
     // Set hop limit for IPv6 multicast
 #ifdef _WIN32
     auto v6hops = static_cast<DWORD>(ttl);
-    if (setsockopt(_sockFd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, reinterpret_cast<const char*>(&v6hops), sizeof(v6hops)) <
-        0)
+    if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_HOPS, reinterpret_cast<const char*>(&v6hops),
+                   sizeof(v6hops)) < 0)
         throw SocketException(GetSocketError(), "Failed to set IPv6 multicast hop limit");
 #else
     int v6hops = ttl;
-    if (setsockopt(_sockFd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, &v6hops, sizeof(v6hops)) < 0)
+    if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_HOPS, &v6hops, sizeof(v6hops)) < 0)
         throw SocketException(GetSocketError(), "Failed to set IPv6 multicast hop limit");
 #endif
 
@@ -441,7 +446,7 @@ void MulticastSocket::setLoopbackMode(const bool enable)
     if (family == AF_INET6)
     {
         // IPv6 multicast loopback
-        result = setsockopt(_sockFd, IPPROTO_IPV6, IPV6_MULTICAST_LOOP,
+        result = setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_LOOP,
 #ifdef _WIN32
                             reinterpret_cast<const char*>(&flag),
 #else
@@ -452,7 +457,7 @@ void MulticastSocket::setLoopbackMode(const bool enable)
     else
     {
         // IPv4 multicast loopback (default)
-        result = setsockopt(_sockFd, IPPROTO_IP, IP_MULTICAST_LOOP,
+        result = setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_LOOP,
 #ifdef _WIN32
                             reinterpret_cast<const char*>(&flag),
 #else

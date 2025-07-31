@@ -73,8 +73,8 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
         if (p->ai_family == AF_INET6)
         {
             // Attempt to create a socket using the current address
-            _serverSocket = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-            if (_serverSocket == INVALID_SOCKET)
+            setSocketFd(socket(p->ai_family, p->ai_socktype, p->ai_protocol));
+            if (getSocketFd() == INVALID_SOCKET)
                 continue; // If socket creation failed, try the next address
 
             // Store the address that worked
@@ -95,7 +95,7 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
     }
 
     // If no IPv6 address worked, fallback to IPv4
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
     {
         for (addrinfo* p = _srvAddrInfo.get(); p != nullptr; p = p->ai_next)
         {
@@ -103,8 +103,8 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
             if (p->ai_family == AF_INET)
             {
                 // Attempt to create a socket using the current address (IPv4)
-                _serverSocket = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-                if (_serverSocket == INVALID_SOCKET)
+                setSocketFd(socket(p->ai_family, p->ai_socktype, p->ai_protocol));
+                if (getSocketFd() == INVALID_SOCKET)
                     continue; // If socket creation failed, try the next address
 
                 // Store the address that worked
@@ -114,12 +114,10 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
         }
     }
 
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
     {
         cleanupAndThrow(GetSocketError());
     }
-
-    setSocketFd(_serverSocket);
 
     // Set socket options for address reuse
     try
@@ -143,10 +141,10 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
 
 void ServerSocket::cleanupAndThrow(const int errorCode)
 {
-    if (_serverSocket != INVALID_SOCKET)
+    if (getSocketFd() != INVALID_SOCKET)
     {
-        CloseSocket(_serverSocket);
-        _serverSocket = INVALID_SOCKET;
+        CloseSocket(getSocketFd());
+        setSocketFd(INVALID_SOCKET);
 
         // CloseSocket error is ignored.
         // TODO: Consider adding an internal flag, nested exception, or user-configurable error handler
@@ -154,19 +152,18 @@ void ServerSocket::cleanupAndThrow(const int errorCode)
     }
     _srvAddrInfo.reset();
     _selectedAddrInfo = nullptr;
-    setSocketFd(_serverSocket);
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
 std::string ServerSocket::getLocalIp(const bool convertIPv4Mapped) const
 {
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         return {};
 
     sockaddr_storage addr{};
     socklen_t addrLen = sizeof(addr);
 
-    if (::getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int err = GetSocketError();
         throw SocketException(err, "getsockname() failed: " + SocketErrorMessage(err));
@@ -177,13 +174,13 @@ std::string ServerSocket::getLocalIp(const bool convertIPv4Mapped) const
 
 Port ServerSocket::getLocalPort() const
 {
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         return 0;
 
     sockaddr_storage addr{};
     socklen_t addrLen = sizeof(addr);
 
-    if (::getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int err = GetSocketError();
         throw SocketException(err, "getsockname() failed: " + SocketErrorMessage(err));
@@ -194,18 +191,18 @@ Port ServerSocket::getLocalPort() const
 
 std::string ServerSocket::getLocalSocketAddress() const
 {
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         return "";
 
     sockaddr_storage addr{};
     socklen_t len = sizeof(addr);
-    if (getsockname(_serverSocket, reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
+    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
     char host[INET6_ADDRSTRLEN]{};
     char serv[6]{};
-    if (getnameinfo(reinterpret_cast<sockaddr*>(&addr), len, host, sizeof(host), serv, sizeof(serv),
-                    NI_NUMERICHOST | NI_NUMERICSERV) != 0)
+    if (::getnameinfo(reinterpret_cast<sockaddr*>(&addr), len, host, sizeof(host), serv, sizeof(serv),
+                      NI_NUMERICHOST | NI_NUMERICSERV) != 0)
         return "";
 
     return std::string(host) + ":" + serv;
@@ -227,12 +224,11 @@ ServerSocket::~ServerSocket() noexcept
 
 void ServerSocket::close()
 {
-    if (this->_serverSocket != INVALID_SOCKET)
+    if (getSocketFd() != INVALID_SOCKET)
     {
-        if (CloseSocket(this->_serverSocket))
+        if (CloseSocket(getSocketFd()))
             throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
 
-        this->_serverSocket = INVALID_SOCKET;
         setSocketFd(INVALID_SOCKET);
     }
     _srvAddrInfo.reset();
@@ -248,7 +244,7 @@ void ServerSocket::bind()
         throw SocketException("bind() failed: no valid addrinfo found");
 
     const auto res = ::bind(
-        _serverSocket,              // The socket file descriptor to bind.
+        getSocketFd(),              // The socket file descriptor to bind.
         _selectedAddrInfo->ai_addr, // Pointer to the sockaddr structure (address and port) to bind to.
 #ifdef _WIN32
         static_cast<int>(_selectedAddrInfo->ai_addrlen) // Size of the sockaddr structure (cast to int for Windows).
@@ -267,7 +263,7 @@ void ServerSocket::bind()
 
 void ServerSocket::listen(const int backlog /* = 128 */)
 {
-    if (::listen(_serverSocket, backlog) == SOCKET_ERROR)
+    if (::listen(getSocketFd(), backlog) == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
     _isListening = true;
@@ -277,7 +273,7 @@ Socket ServerSocket::accept(const std::optional<std::size_t> recvBufferSize,
                             const std::optional<std::size_t> sendBufferSize,
                             const std::optional<std::size_t> internalBufferSize) const
 {
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
 
     const auto [resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf] =
@@ -293,7 +289,7 @@ Socket ServerSocket::accept(int timeoutMillis, const std::optional<std::size_t> 
                             const std::optional<std::size_t> sendBufferSize,
                             const std::optional<std::size_t> internalBufferSize) const
 {
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
 
     const auto [resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf] =
@@ -309,7 +305,7 @@ std::optional<Socket> ServerSocket::tryAccept(const std::optional<std::size_t> r
                                               const std::optional<std::size_t> sendBufferSize,
                                               const std::optional<std::size_t> internalBufferSize) const
 {
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
 
     const auto [resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf] =
@@ -325,7 +321,7 @@ std::optional<Socket> ServerSocket::tryAccept(int timeoutMillis, const std::opti
                                               const std::optional<std::size_t> sendBufferSize,
                                               const std::optional<std::size_t> internalBufferSize) const
 {
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
 
     const auto [resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf] =
@@ -341,13 +337,13 @@ Socket ServerSocket::acceptBlocking(const std::optional<std::size_t> recvBufferS
                                     const std::optional<std::size_t> sendBufferSize,
                                     const std::optional<std::size_t> internalBufferSize) const
 {
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
 
     sockaddr_storage clientAddr{};
     socklen_t clientAddrLen = sizeof(clientAddr);
 
-    const SOCKET clientSocket = ::accept(_serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrLen);
+    const SOCKET clientSocket = ::accept(getSocketFd(), reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrLen);
     if (clientSocket == INVALID_SOCKET)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
@@ -360,13 +356,13 @@ std::optional<Socket> ServerSocket::acceptNonBlocking(const std::optional<std::s
                                                       const std::optional<std::size_t> sendBufferSize,
                                                       const std::optional<std::size_t> internalBufferSize) const
 {
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
 
     sockaddr_storage clientAddr{};
     socklen_t addrLen = sizeof(clientAddr);
 
-    const SOCKET clientSocket = ::accept(_serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &addrLen);
+    const SOCKET clientSocket = ::accept(getSocketFd(), reinterpret_cast<sockaddr*>(&clientAddr), &addrLen);
     if (clientSocket == INVALID_SOCKET)
     {
         const int err = GetSocketError();
@@ -422,7 +418,7 @@ void ServerSocket::acceptAsync(std::function<void(std::optional<Socket>, std::ex
 
 bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
 {
-    if (_serverSocket == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
     {
         throw SocketException(EINVAL, "waitReady() failed: server socket is not initialized");
     }
@@ -433,7 +429,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
 #ifndef _WIN32
     // --- POSIX: Use poll() for readiness notification ---
     pollfd pfd{};
-    pfd.fd = _serverSocket;
+    pfd.fd = getSocketFd();
     pfd.events = POLLIN; // Monitor for readability (incoming connection)
     pfd.revents = 0;
 
@@ -448,7 +444,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     return result > 0 && (pfd.revents & POLLIN);
 #else
     // --- Windows: Use select() for readiness notification ---
-    if (_serverSocket >= FD_SETSIZE)
+    if (getSocketFd() >= FD_SETSIZE)
     {
         throw SocketException("waitReady() failed: socket descriptor exceeds FD_SETSIZE (" +
                               std::to_string(FD_SETSIZE) + "), select() cannot be used");
@@ -457,7 +453,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     // We want to monitor this server socket for readability (i.e., incoming connection).
     fd_set readFds;
     FD_ZERO(&readFds);               // Clear the set of file descriptors
-    FD_SET(_serverSocket, &readFds); // Add our server socket to the set
+    FD_SET(getSocketFd(), &readFds); // Add our server socket to the set
 
     // Prepare the timeout structure for select()
     timeval tv{};
@@ -480,7 +476,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     // If millis is negative, we leave tvPtr as nullptr — meaning select() will block indefinitely.
 
     // Call select() to wait for the server socket to become readable (i.e., a client is attempting to connect).
-    int result = select(static_cast<int>(_serverSocket) + 1, &readFds, nullptr, nullptr, tvPtr);
+    int result = select(static_cast<int>(getSocketFd()) + 1, &readFds, nullptr, nullptr, tvPtr);
     if (result < 0)
     {
         throw SocketException(GetSocketError(), "select() failed while waiting for incoming connection");

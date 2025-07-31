@@ -184,7 +184,29 @@ class DatagramSocket : public SocketOptions
     DatagramSocket(std::string_view host, Port port, std::size_t bufferSize = DefaultBufferSize);
 
     /**
-     * @brief Destructor. Closes the socket and frees resources.
+     * @brief Destructor. Closes the socket and releases all associated resources.
+     * @ingroup udp
+     *
+     * Cleans up system resources associated with the UDP socket, including:
+     * - Closing the socket file descriptor (via `closesocket()` or `close()`)
+     * - Freeing address resolution memory (`freeaddrinfo`)
+     *
+     * This destructor ensures that sockets are properly closed on destruction,
+     * following the RAII (Resource Acquisition Is Initialization) pattern. If
+     * any errors occur during cleanup, they are caught and logged to `std::cerr`
+     * but will not propagate exceptions, preserving `noexcept` semantics.
+     *
+     * ### RAII Guarantees
+     * - Automatically releases system resources when the object goes out of scope
+     * - Prevents socket leaks in exception paths or early returns
+     * - Ensures consistent teardown behavior across platforms
+     *
+     * @note If you require custom error handling for cleanup failures, call
+     * `close()` manually before destruction.
+     *
+     * @warning Do not reuse a `DatagramSocket` after it has been destroyed or moved from.
+     *
+     * @see close()
      */
     ~DatagramSocket() noexcept override;
 
@@ -205,11 +227,10 @@ class DatagramSocket : public SocketOptions
      * The moved-from object is left in a valid but unspecified state.
      */
     DatagramSocket(DatagramSocket&& rhs) noexcept
-        : SocketOptions(rhs._sockFd), _sockFd(rhs._sockFd), _addrInfoPtr(rhs._addrInfoPtr),
+        : SocketOptions(rhs.getSocketFd()), _addrInfoPtr(std::move(rhs._addrInfoPtr)),
           _selectedAddrInfo(rhs._selectedAddrInfo), _localAddr(rhs._localAddr), _localAddrLen(rhs._localAddrLen),
           _buffer(std::move(rhs._buffer)), _port(rhs._port)
     {
-        rhs._sockFd = INVALID_SOCKET;
         rhs.setSocketFd(INVALID_SOCKET);
         rhs._addrInfoPtr = nullptr;
         rhs._selectedAddrInfo = nullptr;
@@ -227,16 +248,14 @@ class DatagramSocket : public SocketOptions
         if (this != &rhs)
         {
             close();
-            _sockFd = rhs._sockFd;
-            setSocketFd(_sockFd);
+            setSocketFd(rhs.getSocketFd());
             _localAddr = rhs._localAddr;
             _localAddrLen = rhs._localAddrLen;
-            _addrInfoPtr = rhs._addrInfoPtr;
+            _addrInfoPtr = std::move(rhs._addrInfoPtr);
             _selectedAddrInfo = rhs._selectedAddrInfo;
             _buffer = std::move(rhs._buffer);
             _port = rhs._port;
 
-            rhs._sockFd = INVALID_SOCKET;
             rhs.setSocketFd(INVALID_SOCKET);
             rhs._addrInfoPtr = nullptr;
             rhs._selectedAddrInfo = nullptr;
@@ -341,7 +360,7 @@ class DatagramSocket : public SocketOptions
             throw SocketException("DatagramSocket is not connected.");
 
         T value;
-        const int n = ::recv(_sockFd, reinterpret_cast<char*>(&value), sizeof(T), 0);
+        const int n = ::recv(getSocketFd(), reinterpret_cast<char*>(&value), sizeof(T), 0);
 
         if (n == SOCKET_ERROR)
             throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
@@ -367,7 +386,7 @@ class DatagramSocket : public SocketOptions
         sockaddr_storage srcAddr{};
         socklen_t srcLen = sizeof(srcAddr);
         T value;
-        const auto n = ::recvfrom(_sockFd, reinterpret_cast<char*>(&value), sizeof(T), 0,
+        const auto n = ::recvfrom(getSocketFd(), reinterpret_cast<char*>(&value), sizeof(T), 0,
                                   reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
         if (n == SOCKET_ERROR)
             throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
@@ -431,7 +450,7 @@ class DatagramSocket : public SocketOptions
      * @brief Check if the datagram socket is valid (open).
      * @return true if valid, false otherwise.
      */
-    [[nodiscard]] bool isValid() const { return _sockFd != INVALID_SOCKET; }
+    [[nodiscard]] bool isValid() const { return getSocketFd() != INVALID_SOCKET; }
 
     /**
      * @brief Check if the datagram socket is connected to a remote host.
@@ -465,9 +484,8 @@ class DatagramSocket : public SocketOptions
     void cleanupAndThrow(int errorCode);
 
     // Also required for MulticastSocket, hence protected.
-    SOCKET _sockFd = INVALID_SOCKET;       ///< Underlying socket file descriptor.
-    addrinfo* _addrInfoPtr = nullptr;      ///< Address info pointer for bind/connect.
-    addrinfo* _selectedAddrInfo = nullptr; ///< Selected address info for connection
+    internal::AddrinfoPtr _addrInfoPtr = nullptr; ///< Address info pointer for bind/connect.
+    addrinfo* _selectedAddrInfo = nullptr;        ///< Selected address info for connection
 
   private:
     sockaddr_storage _localAddr{};       ///< Local address structure.
@@ -488,7 +506,7 @@ template <> inline std::string DatagramSocket::read<std::string>()
         throw SocketException("DatagramSocket is not connected.");
 
     _buffer.resize(_buffer.size()); // Ensure buffer is sized
-    const auto n = ::recv(_sockFd, _buffer.data(),
+    const auto n = ::recv(getSocketFd(), _buffer.data(),
 #ifdef _WIN32
                           static_cast<int>(_buffer.size()),
 #else
@@ -513,7 +531,7 @@ template <> inline std::string DatagramSocket::recvFrom<std::string>(std::string
 {
     sockaddr_storage srcAddr{};
     socklen_t srcLen = sizeof(srcAddr);
-    const auto n = ::recvfrom(_sockFd, _buffer.data(),
+    const auto n = ::recvfrom(getSocketFd(), _buffer.data(),
 #ifdef _WIN32
                               static_cast<int>(_buffer.size()),
 #else

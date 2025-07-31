@@ -10,8 +10,7 @@ using namespace jsocketpp;
 
 Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_t len, const std::size_t recvBufferSize,
                const std::size_t sendBufferSize, const std::size_t internalBufferSize)
-    : SocketOptions(client), _sockFd(client), _remoteAddr(addr), _remoteAddrLen(len),
-      _internalBuffer(internalBufferSize)
+    : SocketOptions(client), _remoteAddr(addr), _remoteAddrLen(len), _internalBuffer(internalBufferSize)
 {
     // setInternalBufferSize(internalBufferSize); // redundant, is in initializer list already
     setReceiveBufferSize(recvBufferSize);
@@ -34,7 +33,7 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
     const std::string portStr = std::to_string(port);
 
     addrinfo* rawCliAddrInfo = nullptr;
-    if (const auto ret = getaddrinfo(host.data(), portStr.c_str(), &hints, &rawCliAddrInfo); ret != 0)
+    if (const auto ret = ::getaddrinfo(host.data(), portStr.c_str(), &hints, &rawCliAddrInfo); ret != 0)
     {
         throw SocketException(
 #ifdef _WIN32
@@ -48,20 +47,18 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
     // Try all available addresses (IPv6/IPv4) to create a SOCKET for
     for (addrinfo* p = _cliAddrInfo.get(); p != nullptr; p = p->ai_next)
     {
-        _sockFd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-        if (_sockFd != INVALID_SOCKET)
+        setSocketFd(socket(p->ai_family, p->ai_socktype, p->ai_protocol));
+        if (getSocketFd() != INVALID_SOCKET)
         {
             // Store the address that worked
             _selectedAddrInfo = p;
             break;
         }
     }
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
     {
         cleanupAndThrow(GetSocketError());
     }
-
-    setSocketFd(_sockFd);
 
     // Apply all buffer size configurations
     setInternalBufferSize(internalBufferSize.value_or(DefaultBufferSize));
@@ -71,10 +68,10 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
 
 void Socket::cleanupAndThrow(const int errorCode)
 {
-    if (_sockFd != INVALID_SOCKET)
+    if (getSocketFd() != INVALID_SOCKET)
     {
-        CloseSocket(_sockFd);
-        _sockFd = INVALID_SOCKET;
+        CloseSocket(getSocketFd());
+        setSocketFd(INVALID_SOCKET);
 
         // CloseSocket error is ignored.
         // TODO: Consider adding an internal flag, nested exception, or user-configurable error handler
@@ -115,7 +112,7 @@ void Socket::bind(const std::string_view localHost, const Port port)
 
     for (const addrinfo* p = result.get(); p != nullptr; p = p->ai_next)
     {
-        if (::bind(_sockFd, p->ai_addr, static_cast<socklen_t>(p->ai_addrlen)) == 0)
+        if (::bind(getSocketFd(), p->ai_addr, static_cast<socklen_t>(p->ai_addrlen)) == 0)
         {
             _isBound = true;
             return; // success
@@ -157,11 +154,11 @@ void Socket::connect(const int timeoutMillis)
     std::optional<internal::ScopedBlockingMode> blockingGuard;
     if (useNonBlocking)
     {
-        blockingGuard.emplace(_sockFd, true); // Set non-blocking temporarily
+        blockingGuard.emplace(getSocketFd(), true); // Set non-blocking temporarily
     }
 
     // Attempt to initiate the connection
-    const auto res = ::connect(_sockFd, _selectedAddrInfo->ai_addr,
+    const auto res = ::connect(getSocketFd(), _selectedAddrInfo->ai_addr,
 #ifdef _WIN32
                                static_cast<int>(_selectedAddrInfo->ai_addrlen)
 #else
@@ -186,7 +183,7 @@ void Socket::connect(const int timeoutMillis)
         }
 
         // Check FD_SETSIZE limit before using select()
-        if (_sockFd >= FD_SETSIZE)
+        if (getSocketFd() >= FD_SETSIZE)
         {
             throw SocketException("connect(): socket descriptor exceeds FD_SETSIZE (" + std::to_string(FD_SETSIZE) +
                                   "), select() cannot be used");
@@ -199,7 +196,7 @@ void Socket::connect(const int timeoutMillis)
 
         fd_set writeFds;
         FD_ZERO(&writeFds);
-        FD_SET(_sockFd, &writeFds);
+        FD_SET(getSocketFd(), &writeFds);
 
 #ifdef _WIN32
         const int selectResult = ::select(0, nullptr, &writeFds, nullptr, &tv);
@@ -207,7 +204,7 @@ void Socket::connect(const int timeoutMillis)
         int selectResult;
         do
         {
-            selectResult = ::select(_sockFd + 1, nullptr, &writeFds, nullptr, &tv);
+            selectResult = ::select(getSocketFd() + 1, nullptr, &writeFds, nullptr, &tv);
         } while (selectResult < 0 && errno == EINTR);
 #endif
 
@@ -221,7 +218,8 @@ void Socket::connect(const int timeoutMillis)
         int so_error = 0;
         socklen_t len = sizeof(so_error);
         // SO_ERROR is always retrieved as int (POSIX & Windows agree on semantics)
-        if (::getsockopt(_sockFd, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&so_error), &len) < 0 || so_error != 0)
+        if (::getsockopt(getSocketFd(), SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&so_error), &len) < 0 ||
+            so_error != 0)
         {
             throw SocketException(so_error, SocketErrorMessage(so_error));
         }
@@ -251,12 +249,11 @@ Socket::~Socket() noexcept
  */
 void Socket::close()
 {
-    if (_sockFd != INVALID_SOCKET)
+    if (getSocketFd() != INVALID_SOCKET)
     {
-        if (CloseSocket(_sockFd))
+        if (CloseSocket(getSocketFd()))
             throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
 
-        _sockFd = INVALID_SOCKET;
         setSocketFd(INVALID_SOCKET);
     }
     _cliAddrInfo.reset();
@@ -301,9 +298,9 @@ void Socket::shutdown(ShutdownMode how) const
 #endif
 
     // Ensure the socket is valid before attempting to shutdown
-    if (_sockFd != INVALID_SOCKET)
+    if (getSocketFd() != INVALID_SOCKET)
     {
-        if (::shutdown(_sockFd, shutdownType))
+        if (::shutdown(getSocketFd(), shutdownType))
         {
             throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
         }
@@ -315,7 +312,7 @@ std::string Socket::getRemoteIp(const bool convertIPv4Mapped) const
     sockaddr_storage addr{};
     socklen_t addrLen = sizeof(addr);
 
-    if (::getpeername(_sockFd, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int err = GetSocketError();
         throw SocketException(err, "getpeername() failed: " + SocketErrorMessage(err));
@@ -329,7 +326,7 @@ Port Socket::getRemotePort() const
     sockaddr_storage addr{};
     socklen_t addrLen = sizeof(addr);
 
-    if (::getpeername(_sockFd, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int err = GetSocketError();
         throw SocketException(err, "getpeername() failed: " + SocketErrorMessage(err));
@@ -343,7 +340,7 @@ std::string Socket::getLocalIp(const bool convertIPv4Mapped) const
     sockaddr_storage addr{};
     socklen_t addrLen = sizeof(addr);
 
-    if (::getsockname(_sockFd, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int err = GetSocketError();
         throw SocketException(err, "getsockname() failed: " + SocketErrorMessage(err));
@@ -357,7 +354,7 @@ Port Socket::getLocalPort() const
     sockaddr_storage addr{};
     socklen_t addrLen = sizeof(addr);
 
-    if (::getsockname(_sockFd, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int err = GetSocketError();
         throw SocketException(err, "getsockname() failed: " + SocketErrorMessage(err));
@@ -415,7 +412,7 @@ size_t Socket::write(std::string_view message) const
 #ifndef _WIN32
     flags = MSG_NOSIGNAL; // Prevent SIGPIPE on write to a closed socket (POSIX)
 #endif
-    const auto len = send(_sockFd, message.data(),
+    const auto len = send(getSocketFd(), message.data(),
 #ifdef _WIN32
                           static_cast<int>(message.size()), // Windows: cast to int
 #else
@@ -452,11 +449,11 @@ void Socket::setInternalBufferSize(const std::size_t newLen)
 
 bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Invalid socket");
 
     // Guard against file descriptors exceeding FD_SETSIZE, which causes UB in FD_SET()
-    if (_sockFd >= FD_SETSIZE)
+    if (getSocketFd() >= FD_SETSIZE)
     {
         throw SocketException("Socket descriptor exceeds FD_SETSIZE (" + std::to_string(FD_SETSIZE) +
                               "), cannot use select()");
@@ -464,7 +461,7 @@ bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
 
     fd_set fds;
     FD_ZERO(&fds);
-    FD_SET(_sockFd, &fds);
+    FD_SET(getSocketFd(), &fds);
 
     // Default to zero-timeout for non-blocking poll
     timeval tv{0, 0};
@@ -481,7 +478,8 @@ bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
     result = select(0, forWrite ? nullptr : &fds, forWrite ? &fds : nullptr, nullptr, &tv);
 #else
     // On POSIX, first argument must be the highest fd + 1
-    result = select(static_cast<int>(_sockFd) + 1, forWrite ? nullptr : &fds, forWrite ? &fds : nullptr, nullptr, &tv);
+    result =
+        select(static_cast<int>(getSocketFd()) + 1, forWrite ? nullptr : &fds, forWrite ? &fds : nullptr, nullptr, &tv);
 #endif
 
     if (result < 0)
@@ -576,7 +574,7 @@ std::string Socket::readExact(const std::size_t n) const
     {
         const auto remaining = n - totalRead;
 
-        const auto len = recv(_sockFd, result.data() + totalRead,
+        const auto len = recv(getSocketFd(), result.data() + totalRead,
 #ifdef _WIN32
                               static_cast<int>(remaining),
 #else
@@ -611,7 +609,7 @@ std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, co
     while (totalRead < maxLen)
     {
         const std::size_t toRead = (std::min) (_internalBuffer.size(), maxLen - totalRead);
-        const auto len = recv(_sockFd, _internalBuffer.data(),
+        const auto len = recv(getSocketFd(), _internalBuffer.data(),
 #ifdef _WIN32
                               static_cast<int>(toRead),
 #else
@@ -660,7 +658,7 @@ std::string Socket::readAtMost(std::size_t n) const
 
     std::string result(n, '\0'); // Preallocate n bytes initialized to null
 
-    const auto len = recv(_sockFd, result.data(),
+    const auto len = recv(getSocketFd(), result.data(),
 #ifdef _WIN32
                           static_cast<int>(n),
 #else
@@ -692,7 +690,7 @@ std::size_t Socket::readIntoInternal(void* buffer, std::size_t len, const bool e
 
     do
     {
-        const auto bytesRead = recv(_sockFd, out + totalRead,
+        const auto bytesRead = recv(getSocketFd(), out + totalRead,
 #ifdef _WIN32
                                     static_cast<int>(len - totalRead),
 #else
@@ -728,7 +726,7 @@ std::string Socket::readAtMostWithTimeout(std::size_t n, const int timeoutMillis
     std::string result;
     result.resize(n); // max allocation
 
-    const auto len = recv(_sockFd, result.data(),
+    const auto len = recv(getSocketFd(), result.data(),
 #ifdef _WIN32
                           static_cast<int>(n),
 #else
@@ -748,16 +746,16 @@ std::string Socket::readAtMostWithTimeout(std::size_t n, const int timeoutMillis
 
 std::string Socket::readAvailable() const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("readAvailable() called on invalid socket");
 
 #ifdef _WIN32
     u_long bytesAvailable = 0;
-    if (ioctlsocket(_sockFd, FIONREAD, &bytesAvailable) != 0)
+    if (ioctlsocket(getSocketFd(), FIONREAD, &bytesAvailable) != 0)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #else
     int bytesAvailable = 0;
-    if (ioctl(_sockFd, FIONREAD, &bytesAvailable) < 0)
+    if (ioctl(getSocketFd(), FIONREAD, &bytesAvailable) < 0)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #endif
 
@@ -767,7 +765,7 @@ std::string Socket::readAvailable() const
     std::string result;
     result.resize(static_cast<std::size_t>(bytesAvailable));
 
-    const auto len = recv(_sockFd, result.data(),
+    const auto len = recv(getSocketFd(), result.data(),
 #ifdef _WIN32
                           static_cast<int>(bytesAvailable),
 #else
@@ -787,7 +785,7 @@ std::string Socket::readAvailable() const
 
 std::size_t Socket::readIntoAvailable(void* buffer, const std::size_t bufferSize) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("readIntoAvailable() called on invalid socket");
 
     if (buffer == nullptr || bufferSize == 0)
@@ -795,11 +793,11 @@ std::size_t Socket::readIntoAvailable(void* buffer, const std::size_t bufferSize
 
 #ifdef _WIN32
     u_long bytesAvailable = 0;
-    if (ioctlsocket(_sockFd, FIONREAD, &bytesAvailable) != 0)
+    if (ioctlsocket(getSocketFd(), FIONREAD, &bytesAvailable) != 0)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #else
     int bytesAvailable = 0;
-    if (ioctl(_sockFd, FIONREAD, &bytesAvailable) < 0)
+    if (ioctl(getSocketFd(), FIONREAD, &bytesAvailable) < 0)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 #endif
 
@@ -808,7 +806,7 @@ std::size_t Socket::readIntoAvailable(void* buffer, const std::size_t bufferSize
 
     const std::size_t toRead = std::min<std::size_t>(static_cast<std::size_t>(bytesAvailable), bufferSize);
 
-    const auto len = recv(_sockFd,
+    const auto len = recv(getSocketFd(),
 #ifdef _WIN32
                           static_cast<char*>(buffer), static_cast<int>(toRead),
 #else
@@ -827,7 +825,7 @@ std::size_t Socket::readIntoAvailable(void* buffer, const std::size_t bufferSize
 
 std::string Socket::peek(std::size_t n) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("peek() called on invalid socket");
 
     if (n == 0)
@@ -836,7 +834,7 @@ std::string Socket::peek(std::size_t n) const
     std::string result;
     result.resize(n);
 
-    const auto len = recv(_sockFd, result.data(),
+    const auto len = recv(getSocketFd(), result.data(),
 #ifdef _WIN32
                           static_cast<int>(n),
 #else
@@ -856,7 +854,7 @@ std::string Socket::peek(std::size_t n) const
 
 void Socket::discard(const std::size_t n, const std::size_t chunkSize /* = 1024 */) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("discard(): attempted on invalid socket.");
 
     if (n == 0)
@@ -872,7 +870,7 @@ void Socket::discard(const std::size_t n, const std::size_t chunkSize /* = 1024 
     {
         const std::size_t toRead = (std::min) (chunkSize, n - totalDiscarded);
 
-        const auto len = recv(_sockFd, tempBuffer.data(),
+        const auto len = recv(getSocketFd(), tempBuffer.data(),
 #ifdef _WIN32
                               static_cast<int>(toRead),
 #else
@@ -896,7 +894,7 @@ void Socket::discard(const std::size_t n, const std::size_t chunkSize /* = 1024 
 
 std::size_t Socket::writev(std::span<const std::string_view> buffers) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("writev() called on invalid socket");
 
 #ifdef _WIN32
@@ -914,7 +912,7 @@ std::size_t Socket::writev(std::span<const std::string_view> buffers) const
 
     DWORD bytesSent = 0;
     if (const int result =
-            WSASend(_sockFd, wsabufs.data(), static_cast<DWORD>(wsabufs.size()), &bytesSent, 0, nullptr, nullptr);
+            WSASend(getSocketFd(), wsabufs.data(), static_cast<DWORD>(wsabufs.size()), &bytesSent, 0, nullptr, nullptr);
         result == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
@@ -933,7 +931,7 @@ std::size_t Socket::writev(std::span<const std::string_view> buffers) const
         iovecs.push_back(io);
     }
 
-    ssize_t bytesSent = ::writev(_sockFd, iovecs.data(), static_cast<int>(iovecs.size()));
+    ssize_t bytesSent = ::writev(getSocketFd(), iovecs.data(), static_cast<int>(iovecs.size()));
     if (bytesSent == -1)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
@@ -985,7 +983,7 @@ std::size_t Socket::writevAll(std::span<const std::string_view> buffers) const
 
 std::size_t Socket::writeAtMostWithTimeout(std::string_view data, const int timeoutMillis) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("writeAtMostWithTimeout() called on invalid socket");
 
     if (data.empty())
@@ -995,7 +993,7 @@ std::size_t Socket::writeAtMostWithTimeout(std::string_view data, const int time
         throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
                                      "Write timed out after " + std::to_string(timeoutMillis) + " ms");
 
-    const auto len = send(_sockFd,
+    const auto len = send(getSocketFd(),
 #ifdef _WIN32
                           data.data(), static_cast<int>(data.size()),
 #else
@@ -1014,7 +1012,7 @@ std::size_t Socket::writeAtMostWithTimeout(std::string_view data, const int time
 
 std::size_t Socket::writeFrom(const void* data, std::size_t len) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("writeFrom() called on invalid socket");
 
     if (!data || len == 0)
@@ -1022,7 +1020,7 @@ std::size_t Socket::writeFrom(const void* data, std::size_t len) const
 
     const auto* ptr = static_cast<const char*>(data);
 
-    const auto sent = send(_sockFd,
+    const auto sent = send(getSocketFd(),
 #ifdef _WIN32
                            ptr, static_cast<int>(len),
 #else
@@ -1041,7 +1039,7 @@ std::size_t Socket::writeFrom(const void* data, std::size_t len) const
 
 std::size_t Socket::writeFromAll(const void* data, const std::size_t len) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("writeFromAll() called on invalid socket");
 
     if (!data || len == 0)
@@ -1054,7 +1052,7 @@ std::size_t Socket::writeFromAll(const void* data, const std::size_t len) const
     {
         const std::size_t remaining = len - totalSent;
 
-        const auto sent = send(_sockFd,
+        const auto sent = send(getSocketFd(),
 #ifdef _WIN32
                                ptr + totalSent, static_cast<int>(remaining),
 #else
@@ -1076,7 +1074,7 @@ std::size_t Socket::writeFromAll(const void* data, const std::size_t len) const
 
 std::size_t Socket::writeWithTotalTimeout(const std::string_view data, const int timeoutMillis) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("writeWithTotalTimeout() called on invalid socket");
 
     if (data.empty())
@@ -1100,7 +1098,7 @@ std::size_t Socket::writeWithTotalTimeout(const std::string_view data, const int
             throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "Socket not writable within remaining timeout window");
         }
 
-        const auto sent = send(_sockFd,
+        const auto sent = send(getSocketFd(),
 #ifdef _WIN32
                                ptr + totalSent, static_cast<int>(remaining),
 #else
@@ -1123,7 +1121,7 @@ std::size_t Socket::writeWithTotalTimeout(const std::string_view data, const int
 
 std::size_t Socket::writevWithTotalTimeout(std::span<const std::string_view> buffers, const int timeoutMillis) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("writevWithTotalTimeout() called on invalid socket");
 
     if (buffers.empty())
@@ -1179,7 +1177,7 @@ std::size_t Socket::writevWithTotalTimeout(std::span<const std::string_view> buf
 
 std::size_t Socket::readv(std::span<BufferView> buffers) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("readv() called on invalid socket");
 
     if (buffers.empty())
@@ -1190,8 +1188,8 @@ std::size_t Socket::readv(std::span<BufferView> buffers) const
 
     DWORD bytesReceived = 0;
     DWORD flags = 0;
-    const int result =
-        WSARecv(_sockFd, wsaBufs.data(), static_cast<DWORD>(wsaBufs.size()), &bytesReceived, &flags, nullptr, nullptr);
+    const int result = WSARecv(getSocketFd(), wsaBufs.data(), static_cast<DWORD>(wsaBufs.size()), &bytesReceived,
+                               &flags, nullptr, nullptr);
     if (result == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
@@ -1202,7 +1200,7 @@ std::size_t Socket::readv(std::span<BufferView> buffers) const
 
 #else
     const auto ioVecs = internal::toIOVec(buffers);
-    const ssize_t bytes = ::readv(_sockFd, ioVecs.data(), static_cast<int>(ioVecs.size()));
+    const ssize_t bytes = ::readv(getSocketFd(), ioVecs.data(), static_cast<int>(ioVecs.size()));
     if (bytes < 0)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
@@ -1215,7 +1213,7 @@ std::size_t Socket::readv(std::span<BufferView> buffers) const
 
 std::size_t Socket::readvAll(std::span<BufferView> buffers) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("readvAll() called on invalid socket");
 
     std::vector pending(buffers.begin(), buffers.end());
@@ -1260,7 +1258,7 @@ std::size_t Socket::readvAll(std::span<BufferView> buffers) const
 
 std::size_t Socket::readvAllWithTotalTimeout(std::span<BufferView> buffers, const int timeoutMillis) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("readvAllWithTotalTimeout() called on invalid socket");
 
     if (buffers.empty())
@@ -1317,7 +1315,7 @@ std::size_t Socket::readvAllWithTotalTimeout(std::span<BufferView> buffers, cons
 
 std::size_t Socket::readvAtMostWithTimeout(const std::span<BufferView> buffers, const int timeoutMillis) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("readvAtMostWithTimeout() called on invalid socket");
 
     if (buffers.empty())
@@ -1331,7 +1329,7 @@ std::size_t Socket::readvAtMostWithTimeout(const std::span<BufferView> buffers, 
 
 std::size_t Socket::writevFrom(std::span<const BufferView> buffers) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("writevFrom() called on invalid socket");
 
     if (buffers.empty())
@@ -1342,7 +1340,7 @@ std::size_t Socket::writevFrom(std::span<const BufferView> buffers) const
 
     DWORD bytesSent = 0;
     if (const int result =
-            WSASend(_sockFd, wsaBufs.data(), static_cast<DWORD>(wsaBufs.size()), &bytesSent, 0, nullptr, nullptr);
+            WSASend(getSocketFd(), wsaBufs.data(), static_cast<DWORD>(wsaBufs.size()), &bytesSent, 0, nullptr, nullptr);
         result == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
@@ -1351,7 +1349,7 @@ std::size_t Socket::writevFrom(std::span<const BufferView> buffers) const
 #else
     const auto ioVecs = internal::toIOVec(buffers);
 
-    const ssize_t written = ::writev(_sockFd, ioVecs.data(), static_cast<int>(ioVecs.size()));
+    const ssize_t written = ::writev(getSocketFd(), ioVecs.data(), static_cast<int>(ioVecs.size()));
     if (written < 0)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
 
@@ -1361,7 +1359,7 @@ std::size_t Socket::writevFrom(std::span<const BufferView> buffers) const
 
 std::size_t Socket::writevFromAll(std::span<BufferView> buffers) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("writevFromAll() called on invalid socket");
 
     std::vector pending(buffers.begin(), buffers.end());
@@ -1404,7 +1402,7 @@ std::size_t Socket::writevFromAll(std::span<BufferView> buffers) const
 
 std::size_t Socket::writevFromWithTotalTimeout(std::span<BufferView> buffers, const int timeoutMillis) const
 {
-    if (_sockFd == INVALID_SOCKET)
+    if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("writevFromWithTotalTimeout() called on invalid socket");
 
     if (buffers.empty())
