@@ -157,9 +157,7 @@ Rationale</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> s;         <span class="comment">// ❌ Compilation error (deleted constructor)</span></div>
 <div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> s(12345);  <span class="comment">// ✅ Valid: binds to port 12345</span></div>
 <div class="ttc" id="agroup__udp_html_ga1573f70de77ed93d522f2f9273181469"><div class="ttname"><a href="#ga1573f70de77ed93d522f2f9273181469">jsocketpp::DatagramSocket::DatagramSocket</a></div><div class="ttdeci">DatagramSocket()=delete</div><div class="ttdoc">Default constructor (deleted) for DatagramSocket class.</div></div>
-</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd>DatagramSocket(Port, std::string_view) Constructor for binding to port </dd>
-<dd>
-DatagramSocket(SOCKET, const sockaddr_storage&amp;, socklen_t) Constructor from accepted socket </dd></dl>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga85f4de1e83b91e82cf27d9ac78a48a24" title="Constructs a UDP socket, optionally bound to the specified local port.">DatagramSocket(Port, std::size_t)</a> Constructor for binding to port </dd></dl>
 
 </div>
 </div>
