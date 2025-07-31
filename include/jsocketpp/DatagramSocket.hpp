@@ -85,6 +85,30 @@ class DatagramSocket : public SocketOptions
 {
   public:
     /**
+     * @brief Default constructor (deleted) for DatagramSocket class.
+     * @ingroup udp
+     *
+     * The default constructor is explicitly deleted to prevent the creation of
+     * uninitialized `DatagramSocket` objects. Each datagram socket must be explicitly
+     * constructed with a valid port number (or socket descriptor) to participate in
+     * sending or receiving UDP packets.
+     *
+     * ### Rationale
+     * - Prevents the creation of sockets without binding context
+     * - Enforces correct construction for unicast, broadcast, or multicast use
+     * - Avoids silent failures from using an unbound or invalid socket
+     *
+     * @code{.cpp}
+     * DatagramSocket s;         // ❌ Compilation error (deleted constructor)
+     * DatagramSocket s(12345);  // ✅ Valid: binds to port 12345
+     * @endcode
+     *
+     * @see DatagramSocket(Port, std::string_view) Constructor for binding to port
+     * @see DatagramSocket(SOCKET, const sockaddr_storage&, socklen_t) Constructor from accepted socket
+     */
+    DatagramSocket() = delete;
+
+    /**
      * @brief Constructs a UDP socket optionally bound to a local port.
      * @param port The local UDP port to bind to (0 means any available port).
      *            Common scenarios:
