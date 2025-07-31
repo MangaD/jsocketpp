@@ -103,34 +103,85 @@ class DatagramSocket : public SocketOptions
      * DatagramSocket s(12345);  // ✅ Valid: binds to port 12345
      * @endcode
      *
-     * @see DatagramSocket(Port, std::string_view) Constructor for binding to port
-     * @see DatagramSocket(SOCKET, const sockaddr_storage&, socklen_t) Constructor from accepted socket
+     * @see DatagramSocket(Port, std::size_t) Constructor for binding to port
      */
     DatagramSocket() = delete;
 
     /**
-     * @brief Constructs a UDP socket optionally bound to a local port.
-     * @param port The local UDP port to bind to (0 means any available port).
-     *            Common scenarios:
-     *            - Server: Use specific port (e.g., 8888) that clients know
-     *            - Client: Use 0 to get any available port
-     * @param bufferSize Size of the receive buffer in bytes (default: 2048).
-     *                   Choose based on your expected maximum datagram size:
-     *                   - IPv4: Max 65,507 bytes
-     *                   - IPv6: Max 65,527 bytes
-     *                   - Typical values: 1024-8192 bytes
-     * @throws SocketException if socket creation or binding fails
+     * @brief Constructs a UDP socket, optionally bound to the specified local port.
+     * @ingroup udp
+     *
+     * Initializes a new `DatagramSocket` and binds it to the given local port. If `port` is set to `0`,
+     * the system will assign an ephemeral port automatically. The internal receive buffer is sized
+     * according to the provided `bufferSize` parameter.
+     *
+     * This constructor is commonly used for both client and server scenarios:
+     * - **Server mode**: Bind to a fixed port (e.g., `8888`) so clients know where to send packets.
+     * - **Client mode**: Use port `0` to auto-select an available ephemeral port.
+     *
+     * ### Buffer Size Notes
+     * The `bufferSize` parameter defines the size of the internal receive buffer. Choose a size
+     * appropriate to your application's expected datagram payload size:
+     *
+     * - **Maximum UDP payloads**:
+     *   - IPv4: up to 65,507 bytes
+     *   - IPv6: up to 65,527 bytes
+     * - **Typical practical values**: 1024, 2048, 4096, 8192
+     *
+     * Exceeding the maximum payload size will cause packet truncation.
+     *
+     * @param port The local UDP port to bind to. Use `0` to auto-select a port.
+     * @param bufferSize Size (in bytes) of the receive buffer. Defaults to `DefaultBufferSize` (4096 bytes).
+     *
+     * @throws SocketException if socket creation or binding fails.
+     *
+     * @code{.cpp}
+     * DatagramSocket server(12345);       // ✅ Server socket on port 12345
+     * DatagramSocket client(0, 4096);     // ✅ Client socket with auto-assigned port
+     * @endcode
+     *
+     * @see DefaultBufferSize for tuning guidelines and rationale
+     * @see read(), write(), bind() for usage
      */
-    explicit DatagramSocket(Port port, std::size_t bufferSize = 2048);
+    explicit DatagramSocket(Port port, std::size_t bufferSize = DefaultBufferSize);
 
     /**
-     * @brief Construct a datagram socket to a remote host and port.
-     * @param host Hostname or IP address to connect to.
-     * @param port UDP port number.
-     * @param bufferSize Size of the internal receive buffer (default: 2048).
-     * @throws SocketException on failure.
+     * @brief Constructs a datagram socket and resolves the given remote host and port.
+     * @ingroup udp
+     *
+     * This constructor initializes a UDP `DatagramSocket` and resolves the provided remote
+     * `host` and `port`, preparing the socket for a later connection via `connect()` or
+     * for direct use in connectionless communication (e.g., `write(message, host, port)`).
+     *
+     * @note This constructor does **not** automatically call `connect()`.
+     *       The socket remains unconnected until `connect()` is explicitly invoked.
+     *       This allows greater flexibility for connectionless communication or deferred setup.
+     *
+     * ### Usage Patterns
+     * - Call `connect()` manually if you want to establish a default remote peer.
+     * - Or use the `write(message, host, port)` overload for connectionless sends.
+     * - Or call `bind()` to use it as a UDP server or receiver.
+     *
+     * ### Buffering
+     * The internal read buffer is sized according to `bufferSize`. This buffer is used for
+     * reading fixed-size or string messages when the socket is in connected mode.
+     *
+     * @param host Hostname or IP address of the intended remote peer (IPv4 or IPv6).
+     *             Leave empty for local binding or unconnected use.
+     * @param port UDP port number of the peer or target address.
+     * @param bufferSize Size of the internal receive buffer in bytes. Defaults to `DefaultBufferSize`.
+     *
+     * @throws SocketException if socket creation or address resolution fails.
+     *
+     * @code{.cpp}
+     * DatagramSocket client("example.com", 9999); // Prepare for later connect()
+     * client.connect();                           // ✅ Explicitly connect when ready
+     * client.write("Hello");                      // Send to connected peer
+     * @endcode
+     *
+     * @see connect(), bind(), write(), DefaultBufferSize
      */
-    DatagramSocket(std::string_view host, Port port, std::size_t bufferSize = 2048);
+    DatagramSocket(std::string_view host, Port port, std::size_t bufferSize = DefaultBufferSize);
 
     /**
      * @brief Destructor. Closes the socket and frees resources.

@@ -334,39 +334,44 @@ enum class ShutdownMode
 using Port = std::uint16_t;
 
 /**
- * @brief Default internal buffer size (in bytes) for TCP socket read operations.
+ * @brief Default internal buffer size (in bytes) for socket read operations.
  * @ingroup core
  *
  * This constant defines the default size (4096 bytes / 4 KB) of the internal read buffer
- * used by both `Socket` and `ServerSocket` instances unless explicitly overridden.
+ * used across various socket classes in the library unless explicitly overridden.
  *
- * It applies to:
- * - Client-side `Socket` instances constructed without a custom buffer size
- * - Server-accepted `Socket` instances created via `ServerSocket::accept()`
+ * ### Applies to
+ * - **TCP client sockets** (`Socket`) when constructed without a custom `internalBufferSize`
+ * - **Accepted TCP sockets** via `ServerSocket::accept()`
+ * - **UDP sockets** (`DatagramSocket`) when no explicit `bufferSize` is passed
+ * - May also serve as a guideline for other buffer sizes (e.g., send/receive buffers)
  *
  * ### Rationale
- * - **Memory-efficient:** 4096 bytes matches the typical memory page size on most operating systems.
- * - **Performance-optimized:** Large enough to hold common protocol messages (e.g., HTTP headers, WebSocket frames)
- *   without reallocation or multiple reads.
- * - **Concurrency-friendly:** Balances throughput and memory footprint across thousands of concurrent connections.
+ * - **Memory-efficient:** 4096 bytes aligns with the typical memory page size on most systems.
+ * - **Performance-optimized:** Large enough for common protocol messages (e.g., HTTP, DNS, WebSocket)
+ * - **Concurrency-friendly:** Balances throughput and memory usage across many simultaneous sockets.
  *
  * ### Customization
- * - You may override this value by:
- *   - Passing a custom `bufferSize` to `Socket` or `ServerSocket::accept()`
- *   - Calling `setInternalBufferSize()` after construction
- *   - Setting `SO_RCVBUF` via `setReceiveBufferSize()` for kernel buffer tuning
+ * Override this value by:
+ * - Passing a custom buffer size to socket constructors (e.g., `DatagramSocket(port, 8192)`)
+ * - Calling `setInternalBufferSize()` after construction
+ * - Tuning system-level buffers via `setReceiveBufferSize()` or `setSendBufferSize()`
  *
  * ### When to Adjust
- * - Increase if your application routinely expects:
- *   - High-throughput data transfers
- *   - Large protocol frames (e.g., file uploads, streaming)
- * - Decrease for memory-constrained or embedded environments
+ * Increase if:
+ * - Your application transfers large datagrams or stream data (e.g., file uploads, media streams)
+ * - You want to reduce syscall overhead by reading more per call
+ *
+ * Decrease if:
+ * - Operating in memory-constrained environments (e.g., embedded systems)
+ * - Managing a large number of idle sockets where footprint matters more than speed
  *
  * @see Socket
  * @see ServerSocket
+ * @see DatagramSocket
  * @see Socket::setInternalBufferSize()
- * @see Socket::setReceiveBufferSize()
- * @see Socket::setSendBufferSize()
+ * @see SocketOptions::setReceiveBufferSize()
+ * @see SocketOptions::setSendBufferSize()
  */
 inline constexpr std::size_t DefaultBufferSize = 4096;
 
