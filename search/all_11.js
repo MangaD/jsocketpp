@@ -42,6 +42,6 @@ var searchData=
   ['google_20mock_3a_39',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md341',1,'']]],
   ['guide_40',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
   ['guide_20to_20the_20socket_20api_41',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['guidelines_42',['Guidelines',['../group__socketopts.html#autotoc_md598',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md433',1,'3. Code Style Guidelines']]],
+  ['guidelines_42',['Guidelines',['../group__socketopts.html#autotoc_md599',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md433',1,'3. Code Style Guidelines']]],
   ['guides_43',['User Guides',['../group__docs.html',1,'']]]
 ];

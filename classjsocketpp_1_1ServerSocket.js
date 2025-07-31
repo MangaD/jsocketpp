@@ -1,5 +1,6 @@
 var classjsocketpp_1_1ServerSocket =
 [
+    [ "ServerSocket", "group__tcp.html#ga58290010ec759550485b8eeede8d931a", null ],
     [ "ServerSocket", "group__tcp.html#gad389848c3e0fcadcfe5f581ab8c8fbb8", null ],
     [ "ServerSocket", "group__tcp.html#gac6eeb69e3b15334e7c224edf30248fe3", null ],
     [ "ServerSocket", "group__tcp.html#gace3560ea1b99e15c1564e430e8848500", null ],

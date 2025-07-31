@@ -1,6 +1,7 @@
 var group__tcp =
 [
     [ "jsocketpp::ServerSocket", "classjsocketpp_1_1ServerSocket.html", [
+      [ "ServerSocket", "group__tcp.html#ga58290010ec759550485b8eeede8d931a", null ],
       [ "ServerSocket", "group__tcp.html#gad389848c3e0fcadcfe5f581ab8c8fbb8", null ],
       [ "ServerSocket", "group__tcp.html#gac6eeb69e3b15334e7c224edf30248fe3", null ],
       [ "ServerSocket", "group__tcp.html#gace3560ea1b99e15c1564e430e8848500", null ],
@@ -196,6 +197,7 @@ var group__tcp =
     [ "jsocketpp::Socket::readvAtMostWithTimeout", "group__tcp.html#ga6a8b2fada7df0ddec9b6f2c491f4f92b", null ],
     [ "jsocketpp::Socket::resetShutdownFlags", "group__tcp.html#ga41e5ecdf97be51a3a354429be87b12d0", null ],
     [ "jsocketpp::ServerSocket::resolveBuffers", "group__tcp.html#ga069d29c3ff8b80ee9a7cb9e1e39f930a", null ],
+    [ "jsocketpp::ServerSocket::ServerSocket", "group__tcp.html#ga58290010ec759550485b8eeede8d931a", null ],
     [ "jsocketpp::ServerSocket::ServerSocket", "group__tcp.html#gac6eeb69e3b15334e7c224edf30248fe3", null ],
     [ "jsocketpp::ServerSocket::ServerSocket", "group__tcp.html#gad389848c3e0fcadcfe5f581ab8c8fbb8", null ],
     [ "jsocketpp::ServerSocket::ServerSocket", "group__tcp.html#gace3560ea1b99e15c1564e430e8848500", null ],
