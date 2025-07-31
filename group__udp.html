@@ -107,9 +107,56 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cross-platform UDP socket class with Java-style interface.  <a href="classjsocketpp_1_1DatagramSocket.html#details">More...</a><br /></td></tr>
 <tr class="memitem:jsocketpp_3A_3AMulticastSocket" id="r_jsocketpp_3A_3AMulticastSocket"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1MulticastSocket.html">jsocketpp::MulticastSocket</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cross-platform multicast UDP socket class (IPv4/IPv6).  <a href="classjsocketpp_1_1MulticastSocket.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga1573f70de77ed93d522f2f9273181469" id="r_ga1573f70de77ed93d522f2f9273181469"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1573f70de77ed93d522f2f9273181469">jsocketpp::DatagramSocket::DatagramSocket</a> ()=delete</td></tr>
+<tr class="memdesc:ga1573f70de77ed93d522f2f9273181469"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a> class.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Classes and functions for UDP datagram networking. </p>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="ga1573f70de77ed93d522f2f9273181469" name="ga1573f70de77ed93d522f2f9273181469"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1573f70de77ed93d522f2f9273181469">&#9670;&#160;</a></span>DatagramSocket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">jsocketpp::DatagramSocket::DatagramSocket </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel delete">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a> class. </p>
+<p>The default constructor is explicitly deleted to prevent the creation of uninitialized <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> objects. Each datagram socket must be explicitly constructed with a valid port number (or socket descriptor) to participate in sending or receiving UDP packets.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md467"></a>
+Rationale</h3>
+<ul>
+<li>Prevents the creation of sockets without binding context</li>
+<li>Enforces correct construction for unicast, broadcast, or multicast use</li>
+<li>Avoids silent failures from using an unbound or invalid socket</li>
+</ul>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> s;         <span class="comment">// ❌ Compilation error (deleted constructor)</span></div>
+<div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> s(12345);  <span class="comment">// ✅ Valid: binds to port 12345</span></div>
+<div class="ttc" id="agroup__udp_html_ga1573f70de77ed93d522f2f9273181469"><div class="ttname"><a href="#ga1573f70de77ed93d522f2f9273181469">jsocketpp::DatagramSocket::DatagramSocket</a></div><div class="ttdeci">DatagramSocket()=delete</div><div class="ttdoc">Default constructor (deleted) for DatagramSocket class.</div></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd>DatagramSocket(Port, std::string_view) Constructor for binding to port </dd>
+<dd>
+DatagramSocket(SOCKET, const sockaddr_storage&amp;, socklen_t) Constructor from accepted socket </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

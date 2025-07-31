@@ -1,5 +1,6 @@
 var classjsocketpp_1_1DatagramSocket =
 [
+    [ "DatagramSocket", "group__udp.html#ga1573f70de77ed93d522f2f9273181469", null ],
     [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#a9c44b1cef3fe97aeab9052fd81798ff9", null ],
     [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#af6d82bc3786b10031c711cd796b5eabc", null ],
     [ "~DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#af2be0b146f197d55cc55a5ba8b619166", null ],

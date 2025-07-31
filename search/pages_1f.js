@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['value_0',['Return Value',['../group__socketopts.html#autotoc_md664',1,'']]],
+  ['value_0',['Return Value',['../group__socketopts.html#autotoc_md665',1,'']]],
   ['vcpkg_1',['vcpkg',['../index.html#autotoc_md383',1,'✅ vcpkg'],['../group__vcpkg__publish__guide.html#autotoc_md349',1,'2. Prepare Your Library for vcpkg']]],
   ['vcpkg_20json_2',['Example &lt;span class=&quot;tt&quot;&gt;vcpkg.json&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md352',1,'']]],
   ['vcpkg_20portfile_3',['3. Create a vcpkg Portfile',['../group__vcpkg__publish__guide.html#autotoc_md351',1,'']]],

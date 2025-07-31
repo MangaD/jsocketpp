@@ -154,6 +154,7 @@ var NAVTREEINDEX1 =
 "group__tcp.html#gaf80aa30f2806a17b930878841dfab7ad":[3,1,2,13],
 "group__tcp.html#gafa933f0914d99522c857b30f64c9ce32":[3,1,2,101],
 "group__udp.html":[3,1,3],
+"group__udp.html#ga1573f70de77ed93d522f2f9273181469":[3,1,3,3],
 "group__underlying__socket__api.html":[3,0,11],
 "group__unit__tests.html":[3,0,12],
 "group__unix.html":[3,1,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "server_8cpp.html#a4857915d0f2802d2b82b314ff594f2b0":[6,0,3,1,5],
 "server_8cpp.html#a61749f92d7d24b6244ff5d301f889197":[6,0,3,1,1],
 "server_8cpp.html#a79ce93ece9993ed95743932c99227de8":[6,0,3,1,4],
-"server_8cpp.html#a8348483da59fb305dfc63392f54bef3f":[6,0,3,1,2],
-"server_8cpp.html#ad783a901702495179902ed7bf93f8178":[6,0,3,1,3]
+"server_8cpp.html#a8348483da59fb305dfc63392f54bef3f":[6,0,3,1,2]
 };
