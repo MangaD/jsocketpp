@@ -1,8 +1,11 @@
 var group__socketopts =
 [
     [ "jsocketpp::SocketOptions", "classjsocketpp_1_1SocketOptions.html", [
+      [ "SocketOptions", "group__socketopts.html#ga9e263722ea800db82c34769d8f49be3a", null ],
       [ "SocketOptions", "group__socketopts.html#gab6fea2ad1b8aac819f3726ab8846527b", null ],
       [ "~SocketOptions", "group__socketopts.html#ga74663905817ec41a5b3a7f3d7a16550d", null ],
+      [ "SocketOptions", "group__socketopts.html#ga64de913573af3ff3cb6f40bcb71c1ba0", null ],
+      [ "SocketOptions", "group__socketopts.html#ga244a62ac8b74854e58066a242976793d", null ],
       [ "getIPv6Only", "group__socketopts.html#ga1d44e7f23739c1ef4a9ad550b4a1ff1d", null ],
       [ "getKeepAlive", "group__socketopts.html#ga1193748a866e07a7f25e97a0640ad8dd", null ],
       [ "getNonBlocking", "group__socketopts.html#ga56fa4549b175d2913b64a43f1ecd2409", null ],
@@ -18,6 +21,8 @@ var group__socketopts =
       [ "getSoSendTimeout", "group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0", null ],
       [ "getTcpNoDelay", "group__socketopts.html#ga05137fbdc55ab065739e220b7a4f41c0", null ],
       [ "isPassiveSocket", "group__socketopts.html#gaace6c3364b4016979537571b36c58727", null ],
+      [ "operator=", "group__socketopts.html#gacd5f26363d219e39f4a8fbce1bec758a", null ],
+      [ "operator=", "group__socketopts.html#gac396d98978063f302938aa9ee80bf634", null ],
       [ "setIPv6Only", "group__socketopts.html#gab96d6fa640ac34113cb1f76bfbf970dc", null ],
       [ "setKeepAlive", "group__socketopts.html#gab3fbb8682b1313dc38abddd541ca4abf", null ],
       [ "setNonBlocking", "group__socketopts.html#ga5f2dffc2949b06b1d945e590bce7f05b", null ],
@@ -51,6 +56,8 @@ var group__socketopts =
     [ "jsocketpp::SocketOptions::getTcpNoDelay", "group__socketopts.html#ga05137fbdc55ab065739e220b7a4f41c0", null ],
     [ "jsocketpp::ServerSocket::isPassiveSocket", "group__socketopts.html#gad113886a7cc6100e5ef2c25ea504696e", null ],
     [ "jsocketpp::SocketOptions::isPassiveSocket", "group__socketopts.html#gaace6c3364b4016979537571b36c58727", null ],
+    [ "jsocketpp::SocketOptions::operator=", "group__socketopts.html#gacd5f26363d219e39f4a8fbce1bec758a", null ],
+    [ "jsocketpp::SocketOptions::operator=", "group__socketopts.html#gac396d98978063f302938aa9ee80bf634", null ],
     [ "jsocketpp::SocketOptions::setIPv6Only", "group__socketopts.html#gab96d6fa640ac34113cb1f76bfbf970dc", null ],
     [ "jsocketpp::SocketOptions::setKeepAlive", "group__socketopts.html#gab3fbb8682b1313dc38abddd541ca4abf", null ],
     [ "jsocketpp::SocketOptions::setNonBlocking", "group__socketopts.html#ga5f2dffc2949b06b1d945e590bce7f05b", null ],
@@ -66,6 +73,9 @@ var group__socketopts =
     [ "jsocketpp::SocketOptions::setSoSendTimeout", "group__socketopts.html#ga7107a9da459b00bf39ec2fe4d3e83396", null ],
     [ "jsocketpp::ServerSocket::setSoTimeout", "group__socketopts.html#ga2087f337f22de16821132208b94b1441", null ],
     [ "jsocketpp::SocketOptions::setTcpNoDelay", "group__socketopts.html#ga9839dd8837c7519a627f28b3a4c7a513", null ],
+    [ "jsocketpp::SocketOptions::SocketOptions", "group__socketopts.html#ga9e263722ea800db82c34769d8f49be3a", null ],
     [ "jsocketpp::SocketOptions::SocketOptions", "group__socketopts.html#gab6fea2ad1b8aac819f3726ab8846527b", null ],
+    [ "jsocketpp::SocketOptions::SocketOptions", "group__socketopts.html#ga64de913573af3ff3cb6f40bcb71c1ba0", null ],
+    [ "jsocketpp::SocketOptions::SocketOptions", "group__socketopts.html#ga244a62ac8b74854e58066a242976793d", null ],
     [ "jsocketpp::SocketOptions::~SocketOptions", "group__socketopts.html#ga74663905817ec41a5b3a7f3d7a16550d", null ]
 ];

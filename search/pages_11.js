@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['handle_20with_20extreme_20care_0',['⚠️ HANDLE WITH EXTREME CARE',['../group__socketopts.html#autotoc_md604',1,'']]],
+  ['handle_20with_20extreme_20care_0',['⚠️ HANDLE WITH EXTREME CARE',['../group__socketopts.html#autotoc_md607',1,'']]],
   ['handles_20blocking_20and_20timeouts_1',['⏱ How jsocketpp Handles Blocking and Timeouts',['../group__async__io.html#autotoc_md122',1,'']]],
   ['handling_2',['Error Handling',['../classjsocketpp_1_1Socket.html#autotoc_md499',1,'']]],
   ['handling_3',['🧪 Socket state handling',['../group__address__reuse.html#autotoc_md60',1,'']]],
