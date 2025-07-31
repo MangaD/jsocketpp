@@ -117,26 +117,66 @@ void DatagramSocket::close()
     _selectedAddrInfo = nullptr;
 }
 
-void DatagramSocket::bind() const
+void DatagramSocket::bind(std::string_view host, Port port)
 {
-    // Ensure that we have already selected an address during construction
-    if (_selectedAddrInfo == nullptr)
-        throw SocketException("bind() failed: no valid addrinfo found");
-
-    const auto res = ::bind(
-        getSocketFd(),              // The socket file descriptor to bind.
-        _selectedAddrInfo->ai_addr, // Pointer to the sockaddr structure (address and port) to bind to.
-#ifdef _WIN32
-        static_cast<int>(_selectedAddrInfo->ai_addrlen) // Size of the sockaddr structure (cast to int for Windows).
-#else
-        _selectedAddrInfo->ai_addrlen // Size of the sockaddr structure (for Linux/Unix).
-#endif
-    );
-
-    if (res == SOCKET_ERROR)
+    if (_isConnected)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        throw SocketException("DatagramSocket::bind(): socket is already connected");
     }
+
+    if (_isBound)
+    {
+        throw SocketException("DatagramSocket::bind(): socket is already bound");
+    }
+
+    addrinfo hints{};
+    hints.ai_family = AF_UNSPEC;     // IPv4 or IPv6
+    hints.ai_socktype = SOCK_DGRAM;  // Datagram socket
+    hints.ai_protocol = IPPROTO_UDP; // UDP
+    hints.ai_flags = AI_PASSIVE;     // Allow wildcard addresses (e.g., 0.0.0.0)
+
+    const std::string portStr = std::to_string(port);
+    addrinfo* rawResult = nullptr;
+
+    if (const int ret = ::getaddrinfo(host.empty() ? nullptr : host.data(), portStr.c_str(), &hints, &rawResult);
+        ret != 0 || rawResult == nullptr)
+    {
+#ifdef _WIN32
+        throw SocketException(GetSocketError(), "DatagramSocket::bind(): getaddrinfo() failed");
+#else
+        throw SocketException(ret, "DatagramSocket::bind(): getaddrinfo() failed");
+#endif
+    }
+
+    const internal::AddrinfoPtr result{rawResult};
+
+    for (const addrinfo* p = result.get(); p != nullptr; p = p->ai_next)
+    {
+        if (::bind(getSocketFd(), p->ai_addr,
+#ifdef _WIN32
+                   static_cast<int>(p->ai_addrlen)
+#else
+                   p->ai_addrlen
+#endif
+                       ) == 0)
+        {
+            _isBound = true;
+            return;
+        }
+    }
+
+    const int error = GetSocketError();
+    throw SocketException(error, "DatagramSocket::bind(): bind() failed");
+}
+
+void DatagramSocket::bind(const Port port)
+{
+    bind("0.0.0.0", port);
+}
+
+void DatagramSocket::bind()
+{
+    bind("0.0.0.0", 0);
 }
 
 void DatagramSocket::connect(const int timeoutMillis)

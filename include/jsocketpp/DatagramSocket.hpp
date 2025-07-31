@@ -343,10 +343,106 @@ class DatagramSocket : public SocketOptions
     }
 
     /**
-     * @brief Bind the datagram socket to the configured port set in the constructor.
-     * @throws SocketException on error.
+     * @brief Binds the datagram socket to all available interfaces on an ephemeral port.
+     * @ingroup udp
+     *
+     * This method binds the `DatagramSocket` to an ephemeral (auto-assigned) port
+     * on all local network interfaces (`INADDR_ANY` for IPv4 or `in6addr_any` for IPv6),
+     * depending on system configuration and address resolution.
+     *
+     * ### Common Use Cases
+     * - UDP client sockets that do not require a specific port
+     * - Transient sockets used for fire-and-forget messages or RPC
+     * - Systems with NAT traversal where source port is flexible
+     *
+     * ### Behavior
+     * - Uses `getaddrinfo()` to resolve wildcard binding addresses (e.g., "0.0.0.0" or "::")
+     * - Binds to the first successfully resolved and compatible address
+     * - Updates internal state to reflect bound status
+     *
+     * @note This method may only be called once per socket instance. Rebinding is not supported.
+     * @note If the socket was constructed with an already-resolved address, this will override it.
+     *
+     * @throws SocketException if address resolution or binding fails.
+     *
+     * @code{.cpp}
+     * DatagramSocket sock;
+     * sock.bind(); // Bound to 0.0.0.0:ephemeral
+     * @endcode
+     *
+     * @see bind(Port), bind(std::string_view, Port), getLocalSocketAddress()
      */
-    void bind() const;
+    void bind();
+
+    /**
+     * @brief Binds the datagram socket to a specific local port on all network interfaces.
+     * @ingroup udp
+     *
+     * This overload binds the socket to the given UDP `port` across all available network
+     * interfaces, using a wildcard address (`0.0.0.0` for IPv4 or `::` for IPv6).
+     *
+     * ### Common Use Cases
+     * - Server-side sockets that need to receive packets on a known port
+     * - P2P or NAT traversal clients using fixed source ports
+     * - Test setups or replay systems where port number must be predictable
+     *
+     * ### Behavior
+     * - Uses `getaddrinfo()` with AI_PASSIVE and a null host to resolve wildcard binding addresses
+     * - Attempts all resolved addresses until bind succeeds
+     * - If successful, updates internal bound state and allows subsequent `read()`/`recvFrom()` calls
+     *
+     * @param port UDP port number to bind to. Must be in the range [1, 65535] or 0 for ephemeral.
+     *
+     * @note This method may only be called once. Rebinding is not supported.
+     * @note If the port is already in use, a `SocketException` will be thrown.
+     *
+     * @throws SocketException if binding fails or the socket is already bound.
+     *
+     * @code{.cpp}
+     * DatagramSocket server;
+     * server.bind(12345); // Bind to port 12345 on all interfaces
+     * @endcode
+     *
+     * @see bind(), bind(std::string_view, Port), setReuseAddress()
+     */
+    void bind(Port port);
+
+    /**
+     * @brief Binds the datagram socket to a specific local IP address and port.
+     * @ingroup udp
+     *
+     * This method allows full control over the local binding interface by specifying
+     * both the local IP address (`host`) and port. It supports IPv4 and IPv6 addresses,
+     * including loopback, multicast-capable interfaces, and link-local addresses.
+     *
+     * ### Common Use Cases
+     * - Multihomed systems binding to a specific NIC/interface
+     * - Clients or servers requiring fixed local IP-port pairing
+     * - Binding to loopback or link-local addresses
+     * - Low-level networking tools (e.g., packet sniffers, trace clients)
+     *
+     * ### Behavior
+     * - Uses `getaddrinfo()` to resolve the provided IP/hostname and port
+     * - Tries all resolved addresses until one binds successfully
+     * - Updates internal state to reflect the binding result
+     *
+     * @param host Local IP address or hostname to bind to (e.g., "127.0.0.1", "::1", "eth0.local").
+     *             Use "0.0.0.0" or "::" to bind to all interfaces (same as `bind(port)`).
+     * @param port Local UDP port number to bind to. Use 0 for ephemeral port assignment.
+     *
+     * @note This method may only be called once. Rebinding is not supported.
+     * @note If resolution fails, or no address can be bound, a `SocketException` is thrown.
+     *
+     * @throws SocketException if address resolution or binding fails.
+     *
+     * @code{.cpp}
+     * DatagramSocket sock;
+     * sock.bind("192.168.1.42", 9000); // Bind to specific interface and port
+     * @endcode
+     *
+     * @see bind(), bind(Port), getLocalSocketAddress(), setReuseAddress()
+     */
+    void bind(std::string_view host, Port port);
 
     /**
      * @brief Connects the datagram socket to the remote host and port with optional timeout handling.
@@ -569,6 +665,7 @@ class DatagramSocket : public SocketOptions
     mutable socklen_t _localAddrLen = 0; ///< Length of local address.
     std::vector<char> _buffer;           ///< Internal buffer for read operations.
     Port _port;                          ///< Port number the socket is bound to (if applicable).
+    bool _isBound = false;               ///< True if the socket is bound to an address
     bool _isConnected = false;           ///< True if the socket is connected to a remote host.
 };
 
