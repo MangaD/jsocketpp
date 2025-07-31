@@ -1,7 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"group__exceptions.html":[3,1,5],
-"group__exceptions.html#ga05d0ab6631b95d88ca1c2c6f920c190e":[3,1,5,2],
 "group__internal.html":[3,1,1],
 "group__internal.html#ga413d5e88aaee47a98645a9760884bec0":[3,1,1,9],
 "group__internal.html#ga53db0a38699800e21866a0ded1b433ba":[3,1,1,8],
@@ -155,7 +153,9 @@ var NAVTREEINDEX1 =
 "group__tcp.html#gafa933f0914d99522c857b30f64c9ce32":[3,1,2,101],
 "group__udp.html":[3,1,3],
 "group__udp.html#ga1573f70de77ed93d522f2f9273181469":[3,1,3,3],
-"group__udp.html#ga379ff0e20d62b5f0c815d48614597005":[3,1,3,4],
+"group__udp.html#ga379ff0e20d62b5f0c815d48614597005":[3,1,3,6],
+"group__udp.html#ga692dfa79c5dca805435249ec2da27497":[3,1,3,5],
+"group__udp.html#ga85f4de1e83b91e82cf27d9ac78a48a24":[3,1,3,4],
 "group__underlying__socket__api.html":[3,0,11],
 "group__unit__tests.html":[3,0,12],
 "group__unix.html":[3,1,4],

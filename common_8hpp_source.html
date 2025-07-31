@@ -271,93 +271,93 @@ $(function(){initNavTree('common_8hpp_source.html','',''); });
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span></div>
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno"><a class="line" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">  334</a></span><span class="keyword">using </span><a class="code hl_typedef" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> = std::uint16_t;</div>
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span></div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno"><a class="line" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">  371</a></span><span class="keyword">inline</span> <span class="keyword">constexpr</span> std::size_t <a class="code hl_variable" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a> = 4096;</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span></div>
-<div class="foldopen" id="foldopen00389" data-start="{" data-end="}">
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno"><a class="line" href="group__core.html#gab0ac1b9850480abafeb047a4f96792a0">  389</a></span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="group__core.html#gab0ac1b9850480abafeb047a4f96792a0">isIPv4MappedIPv6</a>(<span class="keyword">const</span> sockaddr_in6* addr6)</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>{</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    <span class="keywordflow">return</span> IN6_IS_ADDR_V4MAPPED(&amp;addr6-&gt;sin6_addr);</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>}</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno"><a class="line" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">  376</a></span><span class="keyword">inline</span> <span class="keyword">constexpr</span> std::size_t <a class="code hl_variable" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a> = 4096;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span></div>
+<div class="foldopen" id="foldopen00394" data-start="{" data-end="}">
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno"><a class="line" href="group__core.html#gab0ac1b9850480abafeb047a4f96792a0">  394</a></span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="group__core.html#gab0ac1b9850480abafeb047a4f96792a0">isIPv4MappedIPv6</a>(<span class="keyword">const</span> sockaddr_in6* addr6)</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>{</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keywordflow">return</span> IN6_IS_ADDR_V4MAPPED(&amp;addr6-&gt;sin6_addr);</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>}</div>
 </div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span></div>
-<div class="foldopen" id="foldopen00408" data-start="{" data-end="}">
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno"><a class="line" href="group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d">  408</a></span><span class="keyword">inline</span> sockaddr_in <a class="code hl_function" href="group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d">convertIPv4MappedIPv6ToIPv4</a>(<span class="keyword">const</span> sockaddr_in6&amp; addr6)</div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>{</div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    sockaddr_in addr4{};</div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    addr4.sin_family = AF_INET;</div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    addr4.sin_port = addr6.sin6_port;</div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    std::memcpy(&amp;addr4.sin_addr.s_addr, addr6.sin6_addr.s6_addr + 12, <span class="keyword">sizeof</span>(addr4.sin_addr.s_addr));</div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keywordflow">return</span> addr4;</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>}</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span></div>
+<div class="foldopen" id="foldopen00413" data-start="{" data-end="}">
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno"><a class="line" href="group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d">  413</a></span><span class="keyword">inline</span> sockaddr_in <a class="code hl_function" href="group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d">convertIPv4MappedIPv6ToIPv4</a>(<span class="keyword">const</span> sockaddr_in6&amp; addr6)</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>{</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    sockaddr_in addr4{};</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    addr4.sin_family = AF_INET;</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    addr4.sin_port = addr6.sin6_port;</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    std::memcpy(&amp;addr4.sin_addr.s_addr, addr6.sin6_addr.s6_addr + 12, <span class="keyword">sizeof</span>(addr4.sin_addr.s_addr));</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    <span class="keywordflow">return</span> addr4;</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>}</div>
 </div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span></div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>std::string <a class="code hl_function" href="namespacejsocketpp.html#a18428d088b7f3b2e55efe9adc49e10a9">ipFromSockaddr</a>(<span class="keyword">const</span> sockaddr* addr, <span class="keywordtype">bool</span> convertIPv4Mapped = <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span></div>
-<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span><a class="code hl_typedef" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> <a class="code hl_function" href="namespacejsocketpp.html#a71637861db9b297572bc1de3df56a59a">portFromSockaddr</a>(<span class="keyword">const</span> sockaddr* addr);</div>
-<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span> </div>
-<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>} <span class="comment">// namespace jsocketpp</span></div>
-<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span></div>
-<div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacejsocketpp_1_1net.html">jsocketpp::net</a></div>
-<div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span>{</div>
-<div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span></div>
-<div class="foldopen" id="foldopen00491" data-start="{" data-end="}">
-<div class="line"><a id="l00491" name="l00491"></a><span class="lineno"><a class="line" href="namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5">  491</a></span><span class="keyword">inline</span> uint16_t <a class="code hl_function" href="namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5">toNetwork</a>(<span class="keyword">const</span> uint16_t val)</div>
-<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span>{</div>
-<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span>    <span class="keywordflow">return</span> htons(val);</div>
-<div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>}</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span></div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>std::string <a class="code hl_function" href="namespacejsocketpp.html#a18428d088b7f3b2e55efe9adc49e10a9">ipFromSockaddr</a>(<span class="keyword">const</span> sockaddr* addr, <span class="keywordtype">bool</span> convertIPv4Mapped = <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span></div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span><a class="code hl_typedef" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> <a class="code hl_function" href="namespacejsocketpp.html#a71637861db9b297572bc1de3df56a59a">portFromSockaddr</a>(<span class="keyword">const</span> sockaddr* addr);</div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span> </div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>} <span class="comment">// namespace jsocketpp</span></div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span></div>
+<div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacejsocketpp_1_1net.html">jsocketpp::net</a></div>
+<div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span>{</div>
+<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span></div>
+<div class="foldopen" id="foldopen00496" data-start="{" data-end="}">
+<div class="line"><a id="l00496" name="l00496"></a><span class="lineno"><a class="line" href="namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5">  496</a></span><span class="keyword">inline</span> uint16_t <a class="code hl_function" href="namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5">toNetwork</a>(<span class="keyword">const</span> uint16_t val)</div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>{</div>
+<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>    <span class="keywordflow">return</span> htons(val);</div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>}</div>
 </div>
-<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span></div>
-<div class="foldopen" id="foldopen00499" data-start="{" data-end="}">
-<div class="line"><a id="l00499" name="l00499"></a><span class="lineno"><a class="line" href="namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a">  499</a></span><span class="keyword">inline</span> uint32_t <a class="code hl_function" href="namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5">toNetwork</a>(<span class="keyword">const</span> uint32_t val)</div>
-<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>{</div>
-<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>    <span class="keywordflow">return</span> htonl(val);</div>
-<div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>}</div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span></div>
+<div class="foldopen" id="foldopen00504" data-start="{" data-end="}">
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno"><a class="line" href="namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a">  504</a></span><span class="keyword">inline</span> uint32_t <a class="code hl_function" href="namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5">toNetwork</a>(<span class="keyword">const</span> uint32_t val)</div>
+<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>{</div>
+<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>    <span class="keywordflow">return</span> htonl(val);</div>
+<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>}</div>
 </div>
-<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span></div>
-<div class="foldopen" id="foldopen00507" data-start="{" data-end="}">
-<div class="line"><a id="l00507" name="l00507"></a><span class="lineno"><a class="line" href="namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37">  507</a></span><span class="keyword">inline</span> uint16_t <a class="code hl_function" href="namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37">fromNetwork</a>(<span class="keyword">const</span> uint16_t val)</div>
-<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>{</div>
-<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>    <span class="keywordflow">return</span> ntohs(val);</div>
-<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>}</div>
+<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span></div>
+<div class="foldopen" id="foldopen00512" data-start="{" data-end="}">
+<div class="line"><a id="l00512" name="l00512"></a><span class="lineno"><a class="line" href="namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37">  512</a></span><span class="keyword">inline</span> uint16_t <a class="code hl_function" href="namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37">fromNetwork</a>(<span class="keyword">const</span> uint16_t val)</div>
+<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>{</div>
+<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>    <span class="keywordflow">return</span> ntohs(val);</div>
+<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>}</div>
 </div>
-<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span></div>
-<div class="foldopen" id="foldopen00515" data-start="{" data-end="}">
-<div class="line"><a id="l00515" name="l00515"></a><span class="lineno"><a class="line" href="namespacejsocketpp_1_1net.html#acca9e860a0a33d2508bfa9986049db8c">  515</a></span><span class="keyword">inline</span> uint32_t <a class="code hl_function" href="namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37">fromNetwork</a>(<span class="keyword">const</span> uint32_t val)</div>
-<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>{</div>
-<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>    <span class="keywordflow">return</span> ntohl(val);</div>
-<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>}</div>
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span></div>
+<div class="foldopen" id="foldopen00520" data-start="{" data-end="}">
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno"><a class="line" href="namespacejsocketpp_1_1net.html#acca9e860a0a33d2508bfa9986049db8c">  520</a></span><span class="keyword">inline</span> uint32_t <a class="code hl_function" href="namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37">fromNetwork</a>(<span class="keyword">const</span> uint32_t val)</div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>{</div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>    <span class="keywordflow">return</span> ntohl(val);</div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>}</div>
 </div>
-<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span> </div>
-<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>} <span class="comment">// namespace jsocketpp::net</span></div>
-<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span> </div>
-<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacejsocketpp_1_1internal.html">jsocketpp::internal</a></div>
-<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>{</div>
-<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span></div>
-<div class="foldopen" id="foldopen00546" data-start="{" data-end="};">
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno"><a class="line" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html">  546</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html">AddrinfoDeleter</a></div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>{</div>
-<div class="foldopen" id="foldopen00552" data-start="{" data-end="}">
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno"><a class="line" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html#a9717c2230739ecb2817a2837b4896e60">  552</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html#a9717c2230739ecb2817a2837b4896e60">operator()</a>(addrinfo* p) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>    {</div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>        <span class="keywordflow">if</span> (p)</div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>            freeaddrinfo(p);</div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>    }</div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span> </div>
+<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>} <span class="comment">// namespace jsocketpp::net</span></div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span> </div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacejsocketpp_1_1internal.html">jsocketpp::internal</a></div>
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>{</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span></div>
+<div class="foldopen" id="foldopen00551" data-start="{" data-end="};">
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno"><a class="line" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html">  551</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html">AddrinfoDeleter</a></div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>{</div>
+<div class="foldopen" id="foldopen00557" data-start="{" data-end="}">
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno"><a class="line" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html#a9717c2230739ecb2817a2837b4896e60">  557</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html#a9717c2230739ecb2817a2837b4896e60">operator()</a>(addrinfo* p) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>    {</div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>        <span class="keywordflow">if</span> (p)</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>            freeaddrinfo(p);</div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>    }</div>
 </div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>};</div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>};</div>
 </div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span></div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno"><a class="line" href="group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646">  582</a></span><span class="keyword">using </span><a class="code hl_typedef" href="group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646">AddrinfoPtr</a> = std::unique_ptr&lt;addrinfo, AddrinfoDeleter&gt;;</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>} <span class="comment">// namespace jsocketpp::internal</span></div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span></div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno"><a class="line" href="group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646">  587</a></span><span class="keyword">using </span><a class="code hl_typedef" href="group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646">AddrinfoPtr</a> = std::unique_ptr&lt;addrinfo, AddrinfoDeleter&gt;;</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>} <span class="comment">// namespace jsocketpp::internal</span></div>
 <div class="ttc" id="aSocketException_8hpp_html"><div class="ttname"><a href="SocketException_8hpp.html">SocketException.hpp</a></div><div class="ttdoc">Exception class for socket-related errors in jsocketpp.</div></div>
 <div class="ttc" id="agroup__core_html_ga1a7be273748ae3d91bc5ebe6499788a7"><div class="ttname"><a href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">jsocketpp::Port</a></div><div class="ttdeci">std::uint16_t Port</div><div class="ttdoc">Type alias representing a TCP or UDP port number (1–65535).</div><div class="ttdef"><b>Definition</b> common.hpp:334</div></div>
-<div class="ttc" id="agroup__core_html_ga4da3763b1f8385b27ebbe44cdcfdfc8d"><div class="ttname"><a href="group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d">jsocketpp::convertIPv4MappedIPv6ToIPv4</a></div><div class="ttdeci">sockaddr_in convertIPv4MappedIPv6ToIPv4(const sockaddr_in6 &amp;addr6)</div><div class="ttdoc">Converts an IPv4-mapped IPv6 address to a pure IPv4 sockaddr_in.</div><div class="ttdef"><b>Definition</b> common.hpp:408</div></div>
-<div class="ttc" id="agroup__core_html_gab0ac1b9850480abafeb047a4f96792a0"><div class="ttname"><a href="group__core.html#gab0ac1b9850480abafeb047a4f96792a0">jsocketpp::isIPv4MappedIPv6</a></div><div class="ttdeci">bool isIPv4MappedIPv6(const sockaddr_in6 *addr6)</div><div class="ttdoc">Checks if a given sockaddr_in6 represents an IPv4-mapped IPv6 address.</div><div class="ttdef"><b>Definition</b> common.hpp:389</div></div>
-<div class="ttc" id="agroup__core_html_gafa19c7cbeb622b106835021215b8d6b7"><div class="ttname"><a href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">jsocketpp::DefaultBufferSize</a></div><div class="ttdeci">constexpr std::size_t DefaultBufferSize</div><div class="ttdoc">Default internal buffer size (in bytes) for TCP socket read operations.</div><div class="ttdef"><b>Definition</b> common.hpp:371</div></div>
-<div class="ttc" id="agroup__internal_html_ga62d9b0682386f85cca0aadbdfbb76646"><div class="ttname"><a href="group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646">jsocketpp::internal::AddrinfoPtr</a></div><div class="ttdeci">std::unique_ptr&lt; addrinfo, AddrinfoDeleter &gt; AddrinfoPtr</div><div class="ttdoc">Smart pointer that manages addrinfo* resources using AddrinfoDeleter.</div><div class="ttdef"><b>Definition</b> common.hpp:582</div></div>
+<div class="ttc" id="agroup__core_html_ga4da3763b1f8385b27ebbe44cdcfdfc8d"><div class="ttname"><a href="group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d">jsocketpp::convertIPv4MappedIPv6ToIPv4</a></div><div class="ttdeci">sockaddr_in convertIPv4MappedIPv6ToIPv4(const sockaddr_in6 &amp;addr6)</div><div class="ttdoc">Converts an IPv4-mapped IPv6 address to a pure IPv4 sockaddr_in.</div><div class="ttdef"><b>Definition</b> common.hpp:413</div></div>
+<div class="ttc" id="agroup__core_html_gab0ac1b9850480abafeb047a4f96792a0"><div class="ttname"><a href="group__core.html#gab0ac1b9850480abafeb047a4f96792a0">jsocketpp::isIPv4MappedIPv6</a></div><div class="ttdeci">bool isIPv4MappedIPv6(const sockaddr_in6 *addr6)</div><div class="ttdoc">Checks if a given sockaddr_in6 represents an IPv4-mapped IPv6 address.</div><div class="ttdef"><b>Definition</b> common.hpp:394</div></div>
+<div class="ttc" id="agroup__core_html_gafa19c7cbeb622b106835021215b8d6b7"><div class="ttname"><a href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">jsocketpp::DefaultBufferSize</a></div><div class="ttdeci">constexpr std::size_t DefaultBufferSize</div><div class="ttdoc">Default internal buffer size (in bytes) for socket read operations.</div><div class="ttdef"><b>Definition</b> common.hpp:376</div></div>
+<div class="ttc" id="agroup__internal_html_ga62d9b0682386f85cca0aadbdfbb76646"><div class="ttname"><a href="group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646">jsocketpp::internal::AddrinfoPtr</a></div><div class="ttdeci">std::unique_ptr&lt; addrinfo, AddrinfoDeleter &gt; AddrinfoPtr</div><div class="ttdoc">Smart pointer that manages addrinfo* resources using AddrinfoDeleter.</div><div class="ttdef"><b>Definition</b> common.hpp:587</div></div>
 <div class="ttc" id="anamespacejsocketpp_1_1internal_html"><div class="ttname"><a href="namespacejsocketpp_1_1internal.html">jsocketpp::internal</a></div><div class="ttdoc">Implementation-only utilities and platform abstractions for jsocketpp.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:52</div></div>
 <div class="ttc" id="anamespacejsocketpp_1_1net_html"><div class="ttname"><a href="namespacejsocketpp_1_1net.html">jsocketpp::net</a></div><div class="ttdoc">Endianness utilities for network byte order conversion.</div></div>
-<div class="ttc" id="anamespacejsocketpp_1_1net_html_a30e0ea56a20c62070f079482d8cabfa5"><div class="ttname"><a href="namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5">jsocketpp::net::toNetwork</a></div><div class="ttdeci">uint16_t toNetwork(const uint16_t val)</div><div class="ttdoc">Converts a 16-bit unsigned integer from host to network byte order.</div><div class="ttdef"><b>Definition</b> common.hpp:491</div></div>
-<div class="ttc" id="anamespacejsocketpp_1_1net_html_adbc3d8ebcf4347173f61e55e236c8b37"><div class="ttname"><a href="namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37">jsocketpp::net::fromNetwork</a></div><div class="ttdeci">uint16_t fromNetwork(const uint16_t val)</div><div class="ttdoc">Converts a 16-bit unsigned integer from network to host byte order.</div><div class="ttdef"><b>Definition</b> common.hpp:507</div></div>
+<div class="ttc" id="anamespacejsocketpp_1_1net_html_a30e0ea56a20c62070f079482d8cabfa5"><div class="ttname"><a href="namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5">jsocketpp::net::toNetwork</a></div><div class="ttdeci">uint16_t toNetwork(const uint16_t val)</div><div class="ttdoc">Converts a 16-bit unsigned integer from host to network byte order.</div><div class="ttdef"><b>Definition</b> common.hpp:496</div></div>
+<div class="ttc" id="anamespacejsocketpp_1_1net_html_adbc3d8ebcf4347173f61e55e236c8b37"><div class="ttname"><a href="namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37">jsocketpp::net::fromNetwork</a></div><div class="ttdeci">uint16_t fromNetwork(const uint16_t val)</div><div class="ttdoc">Converts a 16-bit unsigned integer from network to host byte order.</div><div class="ttdef"><b>Definition</b> common.hpp:512</div></div>
 <div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
 <div class="ttc" id="anamespacejsocketpp_html_a027103bbab1364c1f878d5c49c0af67c"><div class="ttname"><a href="namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c">jsocketpp::CleanupSockets</a></div><div class="ttdeci">int CleanupSockets()</div><div class="ttdef"><b>Definition</b> common.hpp:216</div></div>
 <div class="ttc" id="anamespacejsocketpp_html_a09423d4d9f10bd09813732010662ee43"><div class="ttname"><a href="namespacejsocketpp.html#a09423d4d9f10bd09813732010662ee43">jsocketpp::getHostAddr</a></div><div class="ttdeci">std::vector&lt; std::string &gt; getHostAddr()</div><div class="ttdoc">Get all local network interface addresses as strings.</div><div class="ttdef"><b>Definition</b> common.cpp:120</div></div>
@@ -378,8 +378,8 @@ $(function(){initNavTree('common_8hpp_source.html','',''); });
 <div class="ttc" id="anamespacejsocketpp_html_ac484f9eb8a74658aa491da1d1bc15eda"><div class="ttname"><a href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">jsocketpp::SOCKET</a></div><div class="ttdeci">int SOCKET</div><div class="ttdef"><b>Definition</b> common.hpp:238</div></div>
 <div class="ttc" id="anamespacejsocketpp_html_adc2dd9860dec2a3c3189e756288d5ba2"><div class="ttname"><a href="namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2">jsocketpp::SOCKET_ERROR</a></div><div class="ttdeci">constexpr SOCKET SOCKET_ERROR</div><div class="ttdef"><b>Definition</b> common.hpp:240</div></div>
 <div class="ttc" id="anamespacejsocketpp_html_aef7428a3f4d80452442ecf3edfdbc89a"><div class="ttname"><a href="namespacejsocketpp.html#aef7428a3f4d80452442ecf3edfdbc89a">jsocketpp::InitSockets</a></div><div class="ttdeci">int InitSockets()</div><div class="ttdef"><b>Definition</b> common.hpp:210</div></div>
-<div class="ttc" id="astructjsocketpp_1_1internal_1_1AddrinfoDeleter_html"><div class="ttname"><a href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html">jsocketpp::internal::AddrinfoDeleter</a></div><div class="ttdoc">Custom deleter for addrinfo* pointers to support RAII-style cleanup.</div><div class="ttdef"><b>Definition</b> common.hpp:547</div></div>
-<div class="ttc" id="astructjsocketpp_1_1internal_1_1AddrinfoDeleter_html_a9717c2230739ecb2817a2837b4896e60"><div class="ttname"><a href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html#a9717c2230739ecb2817a2837b4896e60">jsocketpp::internal::AddrinfoDeleter::operator()</a></div><div class="ttdeci">void operator()(addrinfo *p) const noexcept</div><div class="ttdoc">Deletes an addrinfo* by calling freeaddrinfo().</div><div class="ttdef"><b>Definition</b> common.hpp:552</div></div>
+<div class="ttc" id="astructjsocketpp_1_1internal_1_1AddrinfoDeleter_html"><div class="ttname"><a href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html">jsocketpp::internal::AddrinfoDeleter</a></div><div class="ttdoc">Custom deleter for addrinfo* pointers to support RAII-style cleanup.</div><div class="ttdef"><b>Definition</b> common.hpp:552</div></div>
+<div class="ttc" id="astructjsocketpp_1_1internal_1_1AddrinfoDeleter_html_a9717c2230739ecb2817a2837b4896e60"><div class="ttname"><a href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html#a9717c2230739ecb2817a2837b4896e60">jsocketpp::internal::AddrinfoDeleter::operator()</a></div><div class="ttdeci">void operator()(addrinfo *p) const noexcept</div><div class="ttdoc">Deletes an addrinfo* by calling freeaddrinfo().</div><div class="ttdef"><b>Definition</b> common.hpp:557</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

@@ -17,8 +17,8 @@ var group__udp =
     ] ],
     [ "jsocketpp::DatagramSocket", "classjsocketpp_1_1DatagramSocket.html", [
       [ "DatagramSocket", "group__udp.html#ga1573f70de77ed93d522f2f9273181469", null ],
-      [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#a9c44b1cef3fe97aeab9052fd81798ff9", null ],
-      [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#af6d82bc3786b10031c711cd796b5eabc", null ],
+      [ "DatagramSocket", "group__udp.html#ga85f4de1e83b91e82cf27d9ac78a48a24", null ],
+      [ "DatagramSocket", "group__udp.html#ga692dfa79c5dca805435249ec2da27497", null ],
       [ "~DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#af2be0b146f197d55cc55a5ba8b619166", null ],
       [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#a3d08597b24d9c7a3fe43dd291ee85148", null ],
       [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#ab613123c8bf1aca6aec451b1140e2f82", null ],
@@ -67,5 +67,7 @@ var group__udp =
       [ "_ttl", "classjsocketpp_1_1MulticastSocket.html#ac0001a7d48ce8157b9c487963599f2b5", null ]
     ] ],
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga1573f70de77ed93d522f2f9273181469", null ],
+    [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga85f4de1e83b91e82cf27d9ac78a48a24", null ],
+    [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga692dfa79c5dca805435249ec2da27497", null ],
     [ "jsocketpp::MulticastSocket::MulticastSocket", "group__udp.html#ga379ff0e20d62b5f0c815d48614597005", null ]
 ];

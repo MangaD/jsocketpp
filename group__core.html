@@ -124,7 +124,7 @@ Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:gafa19c7cbeb622b106835021215b8d6b7" id="r_gafa19c7cbeb622b106835021215b8d6b7"><td class="memItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafa19c7cbeb622b106835021215b8d6b7">jsocketpp::DefaultBufferSize</a> = 4096</td></tr>
-<tr class="memdesc:gafa19c7cbeb622b106835021215b8d6b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default internal buffer size (in bytes) for TCP socket read operations.  <br /></td></tr>
+<tr class="memdesc:gafa19c7cbeb622b106835021215b8d6b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default internal buffer size (in bytes) for socket read operations.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Internal types, platform abstractions, and utility functions used across the jsocketpp library. </p>
@@ -190,7 +190,7 @@ Port </dd></dl>
 
 <p>Converts an IPv4-mapped IPv6 address to a pure IPv4 sockaddr_in. </p>
 <p>This function extracts the embedded IPv4 address from an IPv4-mapped IPv6 address. It preserves the port number and fills a fully valid <span class="tt">sockaddr_in</span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md460"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md461"></a>
 Preconditions</h3>
 <ul>
 <li>The input must be an IPv4-mapped IPv6 address.</li>
@@ -264,48 +264,51 @@ Preconditions</h3>
 </table>
 </div><div class="memdoc">
 
-<p>Default internal buffer size (in bytes) for TCP socket read operations. </p>
-<p>This constant defines the default size (4096 bytes / 4 KB) of the internal read buffer used by both <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> and <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> instances unless explicitly overridden.</p>
-<p>It applies to:</p><ul>
-<li>Client-side <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> instances constructed without a custom buffer size</li>
-<li>Server-accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> instances created via <span class="tt"><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">ServerSocket::accept()</a></span></li>
-</ul>
+<p>Default internal buffer size (in bytes) for socket read operations. </p>
+<p>This constant defines the default size (4096 bytes / 4 KB) of the internal read buffer used across various socket classes in the library unless explicitly overridden.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md457"></a>
-Rationale</h3>
+Applies to</h3>
 <ul>
-<li><b>Memory-efficient:</b> 4096 bytes matches the typical memory page size on most operating systems.</li>
-<li><b>Performance-optimized:</b> Large enough to hold common protocol messages (e.g., HTTP headers, WebSocket frames) without reallocation or multiple reads.</li>
-<li><b>Concurrency-friendly:</b> Balances throughput and memory footprint across thousands of concurrent connections.</li>
+<li><b>TCP client sockets</b> (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>) when constructed without a custom <span class="tt">internalBufferSize</span></li>
+<li><b>Accepted TCP sockets</b> via <span class="tt"><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">ServerSocket::accept()</a></span></li>
+<li><b>UDP sockets</b> (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>) when no explicit <span class="tt">bufferSize</span> is passed</li>
+<li>May also serve as a guideline for other buffer sizes (e.g., send/receive buffers)</li>
 </ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md458"></a>
-Customization</h3>
+Rationale</h3>
 <ul>
-<li>You may override this value by:<ul>
-<li>Passing a custom <span class="tt">bufferSize</span> to <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> or <span class="tt"><a class="el" href="group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3" title="Accept an incoming client connection, respecting the configured socket timeout.">ServerSocket::accept()</a></span></li>
-<li>Calling <span class="tt">setInternalBufferSize()</span> after construction</li>
-<li>Setting <span class="tt">SO_RCVBUF</span> via <span class="tt">setReceiveBufferSize()</span> for kernel buffer tuning</li>
-</ul>
-</li>
+<li><b>Memory-efficient:</b> 4096 bytes aligns with the typical memory page size on most systems.</li>
+<li><b>Performance-optimized:</b> Large enough for common protocol messages (e.g., HTTP, DNS, WebSocket)</li>
+<li><b>Concurrency-friendly:</b> Balances throughput and memory usage across many simultaneous sockets.</li>
 </ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md459"></a>
-When to Adjust</h3>
-<ul>
-<li>Increase if your application routinely expects:<ul>
-<li>High-throughput data transfers</li>
-<li>Large protocol frames (e.g., file uploads, streaming)</li>
+Customization</h3>
+<p>Override this value by:</p><ul>
+<li>Passing a custom buffer size to socket constructors (e.g., <span class="tt">DatagramSocket(port, 8192)</span>)</li>
+<li>Calling <span class="tt">setInternalBufferSize()</span> after construction</li>
+<li>Tuning system-level buffers via <span class="tt">setReceiveBufferSize()</span> or <span class="tt">setSendBufferSize()</span></li>
 </ul>
-</li>
-<li>Decrease for memory-constrained or embedded environments</li>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md460"></a>
+When to Adjust</h3>
+<p>Increase if:</p><ul>
+<li>Your application transfers large datagrams or stream data (e.g., file uploads, media streams)</li>
+<li>You want to reduce syscall overhead by reading more per call</li>
+</ul>
+<p>Decrease if:</p><ul>
+<li>Operating in memory-constrained environments (e.g., embedded systems)</li>
+<li>Managing a large number of idle sockets where footprint matters more than speed</li>
 </ul>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> </dd>
 <dd>
 <a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> </dd>
 <dd>
+<a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a> </dd>
+<dd>
 <a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">Socket::setInternalBufferSize()</a> </dd>
 <dd>
-<a class="el" href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">Socket::setReceiveBufferSize()</a> </dd>
+<a class="el" href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">SocketOptions::setReceiveBufferSize()</a> </dd>
 <dd>
-<a class="el" href="group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">Socket::setSendBufferSize()</a> </dd></dl>
+<a class="el" href="group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">SocketOptions::setSendBufferSize()</a> </dd></dl>
 
 </div>
 </div>

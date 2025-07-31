@@ -112,6 +112,10 @@ Classes</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ga1573f70de77ed93d522f2f9273181469" id="r_ga1573f70de77ed93d522f2f9273181469"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1573f70de77ed93d522f2f9273181469">jsocketpp::DatagramSocket::DatagramSocket</a> ()=delete</td></tr>
 <tr class="memdesc:ga1573f70de77ed93d522f2f9273181469"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a> class.  <br /></td></tr>
+<tr class="memitem:ga85f4de1e83b91e82cf27d9ac78a48a24" id="r_ga85f4de1e83b91e82cf27d9ac78a48a24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga85f4de1e83b91e82cf27d9ac78a48a24">jsocketpp::DatagramSocket::DatagramSocket</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::size_t bufferSize=<a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a>)</td></tr>
+<tr class="memdesc:ga85f4de1e83b91e82cf27d9ac78a48a24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a UDP socket, optionally bound to the specified local port.  <br /></td></tr>
+<tr class="memitem:ga692dfa79c5dca805435249ec2da27497" id="r_ga692dfa79c5dca805435249ec2da27497"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga692dfa79c5dca805435249ec2da27497">jsocketpp::DatagramSocket::DatagramSocket</a> (std::string_view host, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::size_t bufferSize=<a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a>)</td></tr>
+<tr class="memdesc:ga692dfa79c5dca805435249ec2da27497"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a datagram socket and resolves the given remote host and port.  <br /></td></tr>
 <tr class="memitem:ga379ff0e20d62b5f0c815d48614597005" id="r_ga379ff0e20d62b5f0c815d48614597005"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga379ff0e20d62b5f0c815d48614597005">jsocketpp::MulticastSocket::MulticastSocket</a> ()=delete</td></tr>
 <tr class="memdesc:ga379ff0e20d62b5f0c815d48614597005"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a> class.  <br /></td></tr>
 </table>
@@ -119,7 +123,7 @@ Functions</h2></td></tr>
 <p>Classes and functions for UDP datagram networking. </p>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="ga1573f70de77ed93d522f2f9273181469" name="ga1573f70de77ed93d522f2f9273181469"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1573f70de77ed93d522f2f9273181469">&#9670;&#160;</a></span>DatagramSocket()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1573f70de77ed93d522f2f9273181469">&#9670;&#160;</a></span>DatagramSocket() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -143,7 +147,7 @@ Functions</h2></td></tr>
 
 <p>Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a> class. </p>
 <p>The default constructor is explicitly deleted to prevent the creation of uninitialized <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> objects. Each datagram socket must be explicitly constructed with a valid port number (or socket descriptor) to participate in sending or receiving UDP packets.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md467"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md468"></a>
 Rationale</h3>
 <ul>
 <li>Prevents the creation of sockets without binding context</li>
@@ -156,6 +160,130 @@ Rationale</h3>
 </div><!-- fragment --><dl class="section see"><dt>See also</dt><dd>DatagramSocket(Port, std::string_view) Constructor for binding to port </dd>
 <dd>
 DatagramSocket(SOCKET, const sockaddr_storage&amp;, socklen_t) Constructor from accepted socket </dd></dl>
+
+</div>
+</div>
+<a id="ga85f4de1e83b91e82cf27d9ac78a48a24" name="ga85f4de1e83b91e82cf27d9ac78a48a24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga85f4de1e83b91e82cf27d9ac78a48a24">&#9670;&#160;</a></span>DatagramSocket() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DatagramSocket::DatagramSocket </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>bufferSize</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs a UDP socket, optionally bound to the specified local port. </p>
+<p>Initializes a new <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> and binds it to the given local port. If <span class="tt">port</span> is set to <span class="tt">0</span>, the system will assign an ephemeral port automatically. The internal receive buffer is sized according to the provided <span class="tt">bufferSize</span> parameter.</p>
+<p>This constructor is commonly used for both client and server scenarios:</p><ul>
+<li><b>Server mode</b>: Bind to a fixed port (e.g., <span class="tt">8888</span>) so clients know where to send packets.</li>
+<li><b>Client mode</b>: Use port <span class="tt">0</span> to auto-select an available ephemeral port.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md469"></a>
+Buffer Size Notes</h3>
+<p>The <span class="tt">bufferSize</span> parameter defines the size of the internal receive buffer. Choose a size appropriate to your application's expected datagram payload size:</p>
+<ul>
+<li><b>Maximum UDP payloads</b>:<ul>
+<li>IPv4: up to 65,507 bytes</li>
+<li>IPv6: up to 65,527 bytes</li>
+</ul>
+</li>
+<li><b>Typical practical values</b>: 1024, 2048, 4096, 8192</li>
+</ul>
+<p>Exceeding the maximum payload size will cause packet truncation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">port</td><td>The local UDP port to bind to. Use <span class="tt">0</span> to auto-select a port. </td></tr>
+    <tr><td class="paramname">bufferSize</td><td>Size (in bytes) of the receive buffer. Defaults to <span class="tt">DefaultBufferSize</span> (4096 bytes).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if socket creation or binding fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> server(12345);       <span class="comment">// ✅ Server socket on port 12345</span></div>
+<div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> client(0, 4096);     <span class="comment">// ✅ Client socket with auto-assigned port</span></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for socket read operations.">DefaultBufferSize</a> for tuning guidelines and rationale </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1DatagramSocket.html#a61dfe82025f17e3041c5b5acca2369eb" title="Read a trivially copyable type from the socket (connected UDP).">read()</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0" title="Write data to a remote host using a DatagramPacket.">write()</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#a6b6e8a44cf433169ec106c4ae50c84ad" title="Bind the datagram socket to the configured port set in the constructor.">bind()</a> for usage </dd></dl>
+
+</div>
+</div>
+<a id="ga692dfa79c5dca805435249ec2da27497" name="ga692dfa79c5dca805435249ec2da27497"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga692dfa79c5dca805435249ec2da27497">&#9670;&#160;</a></span>DatagramSocket() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DatagramSocket::DatagramSocket </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>host</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>bufferSize</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructs a datagram socket and resolves the given remote host and port. </p>
+<p>This constructor initializes a UDP <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> and resolves the provided remote <span class="tt">host</span> and <span class="tt">port</span>, preparing the socket for a later connection via <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to the remote host and port with optional timeout handling.">connect()</a></span> or for direct use in connectionless communication (e.g., <span class="tt">write(message, host, port)</span>).</p>
+<dl class="section note"><dt>Note</dt><dd>This constructor does <b>not</b> automatically call <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to the remote host and port with optional timeout handling.">connect()</a></span>. The socket remains unconnected until <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to the remote host and port with optional timeout handling.">connect()</a></span> is explicitly invoked. This allows greater flexibility for connectionless communication or deferred setup.</dd></dl>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md470"></a>
+Usage Patterns</h3>
+<ul>
+<li>Call <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to the remote host and port with optional timeout handling.">connect()</a></span> manually if you want to establish a default remote peer.</li>
+<li>Or use the <span class="tt">write(message, host, port)</span> overload for connectionless sends.</li>
+<li>Or call <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a6b6e8a44cf433169ec106c4ae50c84ad" title="Bind the datagram socket to the configured port set in the constructor.">bind()</a></span> to use it as a UDP server or receiver.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md471"></a>
+Buffering</h3>
+<p>The internal read buffer is sized according to <span class="tt">bufferSize</span>. This buffer is used for reading fixed-size or string messages when the socket is in connected mode.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">host</td><td>Hostname or IP address of the intended remote peer (IPv4 or IPv6). Leave empty for local binding or unconnected use. </td></tr>
+    <tr><td class="paramname">port</td><td>UDP port number of the peer or target address. </td></tr>
+    <tr><td class="paramname">bufferSize</td><td>Size of the internal receive buffer in bytes. Defaults to <span class="tt">DefaultBufferSize</span>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if socket creation or address resolution fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> client(<span class="stringliteral">&quot;example.com&quot;</span>, 9999); <span class="comment">// Prepare for later connect()</span></div>
+<div class="line">client.connect();                           <span class="comment">// ✅ Explicitly connect when ready</span></div>
+<div class="line">client.write(<span class="stringliteral">&quot;Hello&quot;</span>);                      <span class="comment">// Send to connected peer</span></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to the remote host and port with optional timeout handling.">connect()</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#a6b6e8a44cf433169ec106c4ae50c84ad" title="Bind the datagram socket to the configured port set in the constructor.">bind()</a>, <a class="el" href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0" title="Write data to a remote host using a DatagramPacket.">write()</a>, <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7" title="Default internal buffer size (in bytes) for socket read operations.">DefaultBufferSize</a> </dd></dl>
 
 </div>
 </div>
@@ -184,7 +312,7 @@ DatagramSocket(SOCKET, const sockaddr_storage&amp;, socklen_t) Constructor from 
 
 <p>Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a> class. </p>
 <p>The default constructor is explicitly deleted to prevent the creation of uninitialized <span class="tt"><a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a></span> objects. A multicast socket must be constructed with a valid port and group membership configuration to function correctly.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md478"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md482"></a>
 Rationale</h3>
 <ul>
 <li>Prevents creation of sockets not joined to any multicast group</li>

@@ -190,14 +190,14 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Public base class for raw socket option access via <span class="tt">setsockopt()</span> and <span class="tt">getsockopt()</span>. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> class provides a unified, cross-platform interface for working with socket-level configuration options (e.g., <span class="tt">SO_REUSEADDR</span>, <span class="tt">SO_RCVBUF</span>, <span class="tt">TCP_NODELAY</span>). It is designed to be inherited by classes that manage socket descriptors, enabling those classes to expose low-level tunables without duplicating boilerplate code.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md596"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md600"></a>
 Intended Usage</h2>
 <ul>
 <li>Derived classes must pass a valid socket descriptor to the constructor of <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span>.</li>
 <li>After move construction or assignment, they must call <span class="tt"><a class="el" href="group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d" title="Updates the socket descriptor used by this object.">setSocketFd()</a></span> to update the descriptor.</li>
 <li>This class does <b>not</b> own the socket or manage its lifecycle (open, close, etc.).</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md597"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md601"></a>
 Supported Classes</h2>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span></li>
