@@ -3,7 +3,7 @@ var classjsocketpp_1_1DatagramSocket =
     [ "DatagramSocket", "group__udp.html#ga1573f70de77ed93d522f2f9273181469", null ],
     [ "DatagramSocket", "group__udp.html#ga85f4de1e83b91e82cf27d9ac78a48a24", null ],
     [ "DatagramSocket", "group__udp.html#ga692dfa79c5dca805435249ec2da27497", null ],
-    [ "~DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#af2be0b146f197d55cc55a5ba8b619166", null ],
+    [ "~DatagramSocket", "group__udp.html#gaf2be0b146f197d55cc55a5ba8b619166", null ],
     [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#a3d08597b24d9c7a3fe43dd291ee85148", null ],
     [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html#ab613123c8bf1aca6aec451b1140e2f82", null ],
     [ "bind", "classjsocketpp_1_1DatagramSocket.html#a6b6e8a44cf433169ec106c4ae50c84ad", null ],
@@ -24,12 +24,11 @@ var classjsocketpp_1_1DatagramSocket =
     [ "write", "classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0", null ],
     [ "write", "classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29", null ],
     [ "write", "classjsocketpp_1_1DatagramSocket.html#a7e2b02ba6e9a630fdbde52b88863ec99", null ],
-    [ "_addrInfoPtr", "classjsocketpp_1_1DatagramSocket.html#aed79ee75a2f86f6f137ea33fcfb9f1ca", null ],
+    [ "_addrInfoPtr", "classjsocketpp_1_1DatagramSocket.html#a69d32acc4bd03ebb19fed330d7ff612a", null ],
     [ "_buffer", "classjsocketpp_1_1DatagramSocket.html#ae157621acf76031b55ce263898d18aa7", null ],
     [ "_isConnected", "classjsocketpp_1_1DatagramSocket.html#acc0850711b172f6c6c8bf0649c530ea0", null ],
     [ "_localAddr", "classjsocketpp_1_1DatagramSocket.html#a87523b567e1963c683584ed19c1d6f84", null ],
     [ "_localAddrLen", "classjsocketpp_1_1DatagramSocket.html#a471ce3677773b7fb9fb7766e247bc76f", null ],
     [ "_port", "classjsocketpp_1_1DatagramSocket.html#ac4995ba9286d5dc4ad521a80a43c634a", null ],
-    [ "_selectedAddrInfo", "classjsocketpp_1_1DatagramSocket.html#ac91cdd138597ae9cf75389cf41a24d83", null ],
-    [ "_sockFd", "classjsocketpp_1_1DatagramSocket.html#ad6f0154db35669c0aa1929d415e71048", null ]
+    [ "_selectedAddrInfo", "classjsocketpp_1_1DatagramSocket.html#ac91cdd138597ae9cf75389cf41a24d83", null ]
 ];

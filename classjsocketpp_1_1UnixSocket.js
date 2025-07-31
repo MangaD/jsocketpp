@@ -24,6 +24,5 @@ var classjsocketpp_1_1UnixSocket =
     [ "_addr", "classjsocketpp_1_1UnixSocket.html#a0437bf95925bca4cf13dd0fb0a9ad44d", null ],
     [ "_buffer", "classjsocketpp_1_1UnixSocket.html#ad8f0d70297d20ce4d25fc12a28ffd657", null ],
     [ "_isListening", "classjsocketpp_1_1UnixSocket.html#a6e53399010d864381f42f5e1f1fd91ed", null ],
-    [ "_socketPath", "classjsocketpp_1_1UnixSocket.html#a324077c9d23ae6de38014520beca8c24", null ],
-    [ "_sockFd", "classjsocketpp_1_1UnixSocket.html#a6acdbdcd8197d46742a65be96df0eaec", null ]
+    [ "_socketPath", "classjsocketpp_1_1UnixSocket.html#a324077c9d23ae6de38014520beca8c24", null ]
 ];

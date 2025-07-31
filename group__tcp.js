@@ -48,7 +48,6 @@ var group__tcp =
       [ "_isListening", "classjsocketpp_1_1ServerSocket.html#a1a1cb37f9d062197674a9129d51f1e44", null ],
       [ "_port", "classjsocketpp_1_1ServerSocket.html#a1f46490b73ad2133a735c221fe481f4e", null ],
       [ "_selectedAddrInfo", "classjsocketpp_1_1ServerSocket.html#a3d85400180a3ee56838c165e7b459e80", null ],
-      [ "_serverSocket", "classjsocketpp_1_1ServerSocket.html#a7286800af0502d88ff1460f875cd178d", null ],
       [ "_soTimeoutMillis", "classjsocketpp_1_1ServerSocket.html#a21ecaaf4b757a2dd9cee37231381706f", null ],
       [ "_srvAddrInfo", "classjsocketpp_1_1ServerSocket.html#a98d2690356bf0f8a20d0f4251d7f4b3b", null ]
     ] ],
@@ -128,8 +127,7 @@ var group__tcp =
       [ "_outputShutdown", "classjsocketpp_1_1Socket.html#a6a1f26e61572ad71ac342559fe94ca47", null ],
       [ "_remoteAddr", "classjsocketpp_1_1Socket.html#afde2fd1d94981d579025ffee115c877c", null ],
       [ "_remoteAddrLen", "classjsocketpp_1_1Socket.html#a9b495d6a442ffc2ead89a1e3d3232970", null ],
-      [ "_selectedAddrInfo", "classjsocketpp_1_1Socket.html#ac4ae016cffe61f7c8ba9572ed98922aa", null ],
-      [ "_sockFd", "classjsocketpp_1_1Socket.html#a9a1c3578c781b51d5f59313c6c4aef6c", null ]
+      [ "_selectedAddrInfo", "classjsocketpp_1_1Socket.html#ac4ae016cffe61f7c8ba9572ed98922aa", null ]
     ] ],
     [ "jsocketpp::ServerSocket::accept", "group__tcp.html#gade468e5107bb8b7138432b5d91fb8a87", null ],
     [ "jsocketpp::ServerSocket::accept", "group__tcp.html#ga88ad062242d5dfa9dd3c97e4460d04e3", null ],

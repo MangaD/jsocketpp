@@ -75,6 +75,5 @@ var classjsocketpp_1_1Socket =
     [ "_outputShutdown", "classjsocketpp_1_1Socket.html#a6a1f26e61572ad71ac342559fe94ca47", null ],
     [ "_remoteAddr", "classjsocketpp_1_1Socket.html#afde2fd1d94981d579025ffee115c877c", null ],
     [ "_remoteAddrLen", "classjsocketpp_1_1Socket.html#a9b495d6a442ffc2ead89a1e3d3232970", null ],
-    [ "_selectedAddrInfo", "classjsocketpp_1_1Socket.html#ac4ae016cffe61f7c8ba9572ed98922aa", null ],
-    [ "_sockFd", "classjsocketpp_1_1Socket.html#a9a1c3578c781b51d5f59313c6c4aef6c", null ]
+    [ "_selectedAddrInfo", "classjsocketpp_1_1Socket.html#ac4ae016cffe61f7c8ba9572ed98922aa", null ]
 ];

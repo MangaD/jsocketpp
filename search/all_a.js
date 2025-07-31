@@ -1,7 +1,7 @@
 var searchData=
 [
   ['_5faddr_0',['_addr',['../classjsocketpp_1_1UnixSocket.html#a0437bf95925bca4cf13dd0fb0a9ad44d',1,'jsocketpp::UnixSocket']]],
-  ['_5faddrinfoptr_1',['_addrInfoPtr',['../classjsocketpp_1_1DatagramSocket.html#aed79ee75a2f86f6f137ea33fcfb9f1ca',1,'jsocketpp::DatagramSocket']]],
+  ['_5faddrinfoptr_1',['_addrInfoPtr',['../classjsocketpp_1_1DatagramSocket.html#a69d32acc4bd03ebb19fed330d7ff612a',1,'jsocketpp::DatagramSocket']]],
   ['_5fbuffer_2',['_buffer',['../classjsocketpp_1_1DatagramSocket.html#ae157621acf76031b55ce263898d18aa7',1,'jsocketpp::DatagramSocket::_buffer'],['../classjsocketpp_1_1UnixSocket.html#ad8f0d70297d20ce4d25fc12a28ffd657',1,'jsocketpp::UnixSocket::_buffer']]],
   ['_5fcliaddrinfo_3',['_cliAddrInfo',['../classjsocketpp_1_1Socket.html#a50a79dbf8d56379ae0bfbfa2a186a9f1',1,'jsocketpp::Socket']]],
   ['_5fcurrentgroup_4',['_currentGroup',['../classjsocketpp_1_1MulticastSocket.html#a76d7a48934af994c867fb2650ccfd83b',1,'jsocketpp::MulticastSocket']]],
@@ -24,12 +24,11 @@ var searchData=
   ['_5fremoteaddr_21',['_remoteAddr',['../classjsocketpp_1_1Socket.html#afde2fd1d94981d579025ffee115c877c',1,'jsocketpp::Socket']]],
   ['_5fremoteaddrlen_22',['_remoteAddrLen',['../classjsocketpp_1_1Socket.html#a9b495d6a442ffc2ead89a1e3d3232970',1,'jsocketpp::Socket']]],
   ['_5fselectedaddrinfo_23',['_selectedAddrInfo',['../classjsocketpp_1_1DatagramSocket.html#ac91cdd138597ae9cf75389cf41a24d83',1,'jsocketpp::DatagramSocket::_selectedAddrInfo'],['../classjsocketpp_1_1ServerSocket.html#a3d85400180a3ee56838c165e7b459e80',1,'jsocketpp::ServerSocket::_selectedAddrInfo'],['../classjsocketpp_1_1Socket.html#ac4ae016cffe61f7c8ba9572ed98922aa',1,'jsocketpp::Socket::_selectedAddrInfo']]],
-  ['_5fserversocket_24',['_serverSocket',['../classjsocketpp_1_1ServerSocket.html#a7286800af0502d88ff1460f875cd178d',1,'jsocketpp::ServerSocket']]],
-  ['_5fsock_25',['_sock',['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#a1c11185c53ef3f7ce4d579d9604af40f',1,'jsocketpp::internal::ScopedBlockingMode']]],
-  ['_5fsocketpath_26',['_socketPath',['../classjsocketpp_1_1UnixSocket.html#a324077c9d23ae6de38014520beca8c24',1,'jsocketpp::UnixSocket']]],
-  ['_5fsockfd_27',['_sockFd',['../classjsocketpp_1_1DatagramSocket.html#ad6f0154db35669c0aa1929d415e71048',1,'jsocketpp::DatagramSocket::_sockFd'],['../classjsocketpp_1_1Socket.html#a9a1c3578c781b51d5f59313c6c4aef6c',1,'jsocketpp::Socket::_sockFd'],['../classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131',1,'jsocketpp::SocketOptions::_sockFd'],['../classjsocketpp_1_1UnixSocket.html#a6acdbdcd8197d46742a65be96df0eaec',1,'jsocketpp::UnixSocket::_sockFd']]],
-  ['_5fsotimeoutmillis_28',['_soTimeoutMillis',['../classjsocketpp_1_1ServerSocket.html#a21ecaaf4b757a2dd9cee37231381706f',1,'jsocketpp::ServerSocket']]],
-  ['_5fsrvaddrinfo_29',['_srvAddrInfo',['../classjsocketpp_1_1ServerSocket.html#a98d2690356bf0f8a20d0f4251d7f4b3b',1,'jsocketpp::ServerSocket']]],
-  ['_5fttl_30',['_ttl',['../classjsocketpp_1_1MulticastSocket.html#ac0001a7d48ce8157b9c487963599f2b5',1,'jsocketpp::MulticastSocket']]],
-  ['_5fwasblocking_31',['_wasBlocking',['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#a58ebaaf8ebaf3a5add20e838663a3dff',1,'jsocketpp::internal::ScopedBlockingMode']]]
+  ['_5fsock_24',['_sock',['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#a1c11185c53ef3f7ce4d579d9604af40f',1,'jsocketpp::internal::ScopedBlockingMode']]],
+  ['_5fsocketpath_25',['_socketPath',['../classjsocketpp_1_1UnixSocket.html#a324077c9d23ae6de38014520beca8c24',1,'jsocketpp::UnixSocket']]],
+  ['_5fsockfd_26',['_sockFd',['../classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131',1,'jsocketpp::SocketOptions']]],
+  ['_5fsotimeoutmillis_27',['_soTimeoutMillis',['../classjsocketpp_1_1ServerSocket.html#a21ecaaf4b757a2dd9cee37231381706f',1,'jsocketpp::ServerSocket']]],
+  ['_5fsrvaddrinfo_28',['_srvAddrInfo',['../classjsocketpp_1_1ServerSocket.html#a98d2690356bf0f8a20d0f4251d7f4b3b',1,'jsocketpp::ServerSocket']]],
+  ['_5fttl_29',['_ttl',['../classjsocketpp_1_1MulticastSocket.html#ac0001a7d48ce8157b9c487963599f2b5',1,'jsocketpp::MulticastSocket']]],
+  ['_5fwasblocking_30',['_wasBlocking',['../classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#a58ebaaf8ebaf3a5add20e838663a3dff',1,'jsocketpp::internal::ScopedBlockingMode']]]
 ];
