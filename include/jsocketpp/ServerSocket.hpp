@@ -100,6 +100,29 @@ class ServerSocket : public SocketOptions
 {
   public:
     /**
+     * @brief Default constructor (deleted) for ServerSocket class.
+     * @ingroup tcp
+     *
+     * The default constructor is explicitly deleted to prevent the creation of
+     * uninitialized `ServerSocket` objects. Each server socket must be explicitly
+     * constructed with a valid port and configuration parameters to ensure correct
+     * binding and listening behavior.
+     *
+     * ### Rationale
+     * - Prevents creation of non-functional server sockets
+     * - Enforces proper initialization with port, backlog, and reuse options
+     * - Ensures RAII ownership over system-level resources
+     *
+     * @code{.cpp}
+     * ServerSocket s;          // ❌ Compilation error (deleted constructor)
+     * ServerSocket s(8080);    // ✅ Valid usage: bind to port 8080
+     * @endcode
+     *
+     * @see ServerSocket(Port, std::string_view, bool, bool, int, bool) Primary constructor
+     */
+    ServerSocket() = delete;
+
+    /**
      * @brief Constructs a ServerSocket for listening to incoming TCP connections with full configuration control.
      *
      * This constructor creates a TCP server socket that supports both IPv4 and IPv6, with flexible options

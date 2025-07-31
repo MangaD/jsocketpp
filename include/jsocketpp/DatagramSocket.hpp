@@ -1,6 +1,9 @@
 /**
  * @file DatagramSocket.hpp
  * @brief UDP datagram socket abstraction for jsocketpp.
+ * @author MangaD
+ * @date 2025
+ * @version 1.0
  */
 
 #pragma once

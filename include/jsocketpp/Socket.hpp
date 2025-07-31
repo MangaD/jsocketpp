@@ -82,7 +82,7 @@ namespace jsocketpp
  *
  * ### Advanced Usage
  * - Set non-blocking mode with `setNonBlocking()`.
- * - Tune socket options with `enableNoDelay()`, `enableKeepAlive()`, or `setTimeout()`.
+ * - Tune socket options with `setTcpNoDelay()`, `setKeepAlive()`, and more.
  * - Check remote address with `getRemoteSocketAddress()`.
  *
  * ### See Also
