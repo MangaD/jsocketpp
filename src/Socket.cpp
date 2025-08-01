@@ -318,32 +318,6 @@ void Socket::shutdown(ShutdownMode how) const
     }
 }
 
-std::string Socket::getRemoteIp(const bool convertIPv4Mapped) const
-{
-    sockaddr_storage addr{};
-    socklen_t addrLen = sizeof(addr);
-
-    if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
-    {
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
-    }
-
-    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
-}
-
-Port Socket::getRemotePort() const
-{
-    sockaddr_storage addr{};
-    socklen_t addrLen = sizeof(addr);
-
-    if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
-    {
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
-    }
-
-    return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
-}
-
 std::string Socket::getLocalIp(const bool convertIPv4Mapped) const
 {
     if (getSocketFd() == INVALID_SOCKET)
@@ -376,48 +350,42 @@ Port Socket::getLocalPort() const
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
 }
 
-std::string Socket::getLocalSocketAddress(bool convertIPv4Mapped) const
+std::string Socket::getLocalSocketAddress(const bool convertIPv4Mapped) const
 {
     return getLocalIp(convertIPv4Mapped) + ":" + std::to_string(getLocalPort());
 }
 
-// http://www.microhowto.info/howto/convert_an_ip_address_to_a_human_readable_string_in_c.html
-std::string Socket::getRemoteSocketAddress(const bool convertIPv4Mapped /* = true */) const
+std::string Socket::getRemoteIp(const bool convertIPv4Mapped) const
 {
-    if (_remoteAddrLen == 0)
-        return ""; // Or throw, depending on API contract
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("getRemoteIp() failed: socket is not open.");
 
-    sockaddr_storage tempAddr = _remoteAddr;
-    socklen_t tempLen = _remoteAddrLen;
+    sockaddr_storage remoteAddr{};
+    socklen_t addrLen = sizeof(remoteAddr);
 
-    if (convertIPv4Mapped && tempAddr.ss_family == AF_INET6)
-    {
-        if (const auto* addr6 = reinterpret_cast<const sockaddr_in6*>(&tempAddr); isIPv4MappedIPv6(addr6))
-        {
-            const sockaddr_in addr4 = convertIPv4MappedIPv6ToIPv4(*addr6);
-            std::memset(&tempAddr, 0, sizeof(tempAddr));
-            std::memcpy(&tempAddr, &addr4, sizeof(addr4));
-            tempLen = sizeof(addr4);
-        }
-    }
+    if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&remoteAddr), &addrLen) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
 
-    char host[NI_MAXHOST] = {};
-    char serv[NI_MAXSERV] = {};
-    const int ret = getnameinfo(reinterpret_cast<const sockaddr*>(&tempAddr), tempLen, host, sizeof(host), serv,
-                                sizeof(serv), NI_NUMERICHOST | NI_NUMERICSERV);
+    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr), convertIPv4Mapped);
+}
 
-    if (ret != 0)
-    {
-        throw SocketException(
-#ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
-#else
-            ret, SocketErrorMessageWrap(ret, true));
-#endif
-    }
+Port Socket::getRemotePort() const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("getRemotePort() failed: socket is not open.");
 
-    const bool isIPv6 = tempAddr.ss_family == AF_INET6;
-    return isIPv6 ? "[" + std::string(host) + "]:" + serv : std::string(host) + ":" + serv;
+    sockaddr_storage remoteAddr{};
+    socklen_t addrLen = sizeof(remoteAddr);
+
+    if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&remoteAddr), &addrLen) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+    return portFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr));
+}
+
+std::string Socket::getRemoteSocketAddress(bool convertIPv4Mapped) const
+{
+    return getRemoteIp(convertIPv4Mapped) + ":" + std::to_string(getRemotePort());
 }
 
 size_t Socket::write(std::string_view message) const
