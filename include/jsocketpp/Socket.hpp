@@ -404,8 +404,8 @@ class Socket : public SocketOptions
      * It can only be called once; repeated calls will throw.
      * Internally uses `getaddrinfo()` for resolution and retries all returned addresses until binding succeeds.
      *
-     * @param localHost A local IP address or hostname to bind to (e.g., "127.0.0.1" or "::1").
-     * @param port      Port number to bind to. Use `0` to allow the OS to auto-assign one.
+     * @param[in] localHost A local IP address or hostname to bind to (e.g., "127.0.0.1" or "::1").
+     * @param[in] port      Port number to bind to. Use `0` to allow the OS to auto-assign one.
      *
      * @throws SocketException if resolution or binding fails, or if the socket is already bound.
      *
@@ -422,7 +422,7 @@ class Socket : public SocketOptions
      * This overload binds to all available network interfaces using a specific local port.
      * Equivalent to calling `bind("0.0.0.0", port)`.
      *
-     * @param port Port number to bind to.
+     * @param[in] port Port number to bind to.
      *
      * @throws SocketException if binding fails or the socket is already bound.
      */
@@ -499,7 +499,7 @@ class Socket : public SocketOptions
      * If the socket is using an IPv4-mapped IPv6 address (e.g., ::ffff:192.168.1.10) and
      * @p convertIPv4Mapped is true, the result is converted to the original IPv4 form.
      *
-     * @param convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to pure IPv4.
+     * @param[in] convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to pure IPv4.
      * @return Remote IP address as a string (e.g., "203.0.113.42" or "2001:db8::1").
      *
      * @throws SocketException if the socket is not connected or the address cannot be resolved.
@@ -528,7 +528,7 @@ class Socket : public SocketOptions
      * If the address is an IPv4-mapped IPv6 address (::ffff:a.b.c.d) and
      * @p convertIPv4Mapped is true, it is converted to the original IPv4 form.
      *
-     * @param convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to plain IPv4.
+     * @param[in] convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to plain IPv4.
      * @return Local IP address as a string.
      *
      * @throws SocketException if the socket is not bound or the address cannot be retrieved.
@@ -556,7 +556,7 @@ class Socket : public SocketOptions
      * If the IP address is an IPv4-mapped IPv6 (e.g., ::ffff:192.0.2.1) and @p convertIPv4Mapped is true,
      * the IPv6 form is simplified to plain IPv4.
      *
-     * @param convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to pure IPv4.
+     * @param[in] convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to pure IPv4.
      * @return A string representing the local socket address (e.g., "127.0.0.1:8080").
      *
      * @throws SocketException if the local address or port cannot be retrieved.
@@ -911,8 +911,8 @@ class Socket : public SocketOptions
      * std::string data = sock.readLine(8192, false);
      * @endcode
      *
-     * @param maxLen Maximum number of bytes to read (default: 8192)
-     * @param includeDelimiter Whether to include the newline in the returned string (default: true)
+     * @param[in] maxLen Maximum number of bytes to read (default: 8192)
+     * @param[in] includeDelimiter Whether to include the newline in the returned string (default: true)
      * @return std::string containing the line read
      * @throws SocketException on error or if line exceeds maxLen
      *
@@ -1254,7 +1254,7 @@ class Socket : public SocketOptions
      * @tparam T The unsigned integral type used for the length prefix (e.g., `uint32_t`).
      *           Must be a trivially copyable type.
      *
-     * @param maxPayloadLen Maximum allowed length of the decoded payload in bytes.
+     * @param[in] maxPayloadLen Maximum allowed length of the decoded payload in bytes.
      *                      If the decoded prefix exceeds this, an exception is thrown.
      *
      * @return The payload as a `std::string`, excluding the length prefix.
@@ -1368,8 +1368,8 @@ class Socket : public SocketOptions
      * }
      * @endcode
      *
-     * @param buffer Pointer to the memory where received data will be stored.
-     * @param bufferSize Maximum number of bytes to store in the buffer.
+     * @param[out] buffer Pointer to the memory where received data will be stored.
+     * @param[in] bufferSize Maximum number of bytes to store in the buffer.
      * @return The number of bytes actually read (may be 0 if no data is available).
      *
      * @throws SocketException If:
@@ -1406,7 +1406,7 @@ class Socket : public SocketOptions
      * std::size_t received = sock.readv(views);
      * @endcode
      *
-     * @param buffers A span of BufferView objects describing writable regions.
+     * @param[out] buffers A span of BufferView objects describing writable regions.
      * @return The total number of bytes read into the buffer sequence.
      *
      * @throws SocketException If:
@@ -1443,7 +1443,7 @@ class Socket : public SocketOptions
      * sock.readvAll(views);
      * @endcode
      *
-     * @param buffers A span of writable buffer views to fill completely.
+     * @param[out] buffers A span of writable buffer views to fill completely.
      * @return Total number of bytes read (equal to sum of buffer sizes).
      *
      * @throws SocketException If:
@@ -1483,8 +1483,8 @@ class Socket : public SocketOptions
      * sock.readvAllWithTotalTimeout(views, 2000); // Must finish in 2 seconds
      * @endcode
      *
-     * @param buffers Span of BufferView objects describing writable memory regions.
-     * @param timeoutMillis Maximum allowed duration for the entire read operation, in milliseconds.
+     * @param[out] buffers Span of BufferView objects describing writable memory regions.
+     * @param[in] timeoutMillis Maximum allowed duration for the entire read operation, in milliseconds.
      *
      * @return The total number of bytes read (must equal the sum of all buffer sizes on success).
      *
@@ -1539,8 +1539,8 @@ class Socket : public SocketOptions
      * std::cout << "Received " << n << " bytes.\n";
      * @endcode
      *
-     * @param buffers Span of writable `BufferView`s to receive incoming data.
-     * @param timeoutMillis Time in milliseconds to wait for readability:
+     * @param[out] buffers Span of writable `BufferView`s to receive incoming data.
+     * @param[in] timeoutMillis Time in milliseconds to wait for readability:
      *                      - > 0: Wait up to this duration
      *                      - 0: Non-blocking (poll)
      *                      - < 0: Invalid; throws exception
@@ -1585,7 +1585,7 @@ class Socket : public SocketOptions
      * }
      * @endcode
      *
-     * @param n Maximum number of bytes to peek at.
+     * @param[in] n Maximum number of bytes to peek at.
      * @return A string containing up to `n` bytes from the receive buffer.
      *
      * @throws SocketException If:
@@ -1886,8 +1886,8 @@ class Socket : public SocketOptions
      * @tparam T The unsigned integral type used for the length prefix (e.g., `uint32_t`).
      *           Must be trivially copyable.
      *
-     * @param payload The payload data to send. The length of this view will be encoded
-     *        as the prefix and must not exceed the maximum representable value of type `T`.
+     * @param[in] payload The payload data to send. The length of this view will be encoded
+     *            as the prefix and must not exceed the maximum representable value of type `T`.
      *
      * @return The total number of bytes written (prefix + payload).
      *
@@ -1972,8 +1972,8 @@ class Socket : public SocketOptions
      * @tparam T The unsigned integral type used for the length prefix (e.g., `uint32_t`).
      *           Must be a trivially copyable type.
      *
-     * @param data Pointer to the binary payload data.
-     * @param len Number of bytes to write from `data`.
+     * @param[in] data Pointer to the binary payload data.
+     * @param[in] len Number of bytes to write from `data`.
      *
      * @return Total number of bytes written (`sizeof(T) + len`).
      *
@@ -2055,7 +2055,7 @@ class Socket : public SocketOptions
      * std::size_t sent = sock.writev(segments);
      * @endcode
      *
-     * @param buffers A span of string views to send as a scatter/gather I/O batch.
+     * @param[in] buffers A span of string views to send as a scatter/gather I/O batch.
      * @return Total number of bytes sent.
      *
      * @throws SocketException If:
@@ -2094,7 +2094,7 @@ class Socket : public SocketOptions
      * sock.writevAll(fragments);
      * @endcode
      *
-     * @param buffers A span of string fragments to send as a contiguous logical payload.
+     * @param[in] buffers A span of string fragments to send as a contiguous logical payload.
      * @return Total number of bytes written (equal to sum of all buffer sizes).
      *
      * @throws SocketException If:
@@ -2142,8 +2142,8 @@ class Socket : public SocketOptions
      * }
      * @endcode
      *
-     * @param data The data to send.
-     * @param timeoutMillis Maximum time to wait for writability, in milliseconds:
+     * @param[in] data The data to send.
+     * @param[in] timeoutMillis Maximum time to wait for writability, in milliseconds:
      *                      - > 0: Wait up to the given duration
      *                      - 0: Poll immediately (non-blocking)
      *                      - < 0: Invalid; throws exception
@@ -2179,8 +2179,8 @@ class Socket : public SocketOptions
      * std::size_t sent = sock.writeFrom(buffer, sizeof(buffer));
      * @endcode
      *
-     * @param data Pointer to the memory to write.
-     * @param len Number of bytes to send.
+     * @param[in] data Pointer to the memory to write.
+     * @param[in] len Number of bytes to send.
      * @return The number of bytes successfully written (can be < len).
      *
      * @throws SocketException If:
@@ -2210,8 +2210,8 @@ class Socket : public SocketOptions
      * sock.writeFromAll(payload.data(), payload.size());
      * @endcode
      *
-     * @param data Pointer to the binary buffer to send.
-     * @param len Number of bytes to transmit.
+     * @param[in] data Pointer to the binary buffer to send.
+     * @param[in] len Number of bytes to transmit.
      * @return The total number of bytes written (equal to `len` on success).
      *
      * @throws SocketException If:
@@ -2260,8 +2260,8 @@ class Socket : public SocketOptions
      * }
      * @endcode
      *
-     * @param data The data to send.
-     * @param timeoutMillis Maximum time in milliseconds to send the full payload.
+     * @param[in] data The data to send.
+     * @param[in] timeoutMillis Maximum time in milliseconds to send the full payload.
      *
      * @return Total number of bytes written (equals `data.size()` on success).
      *
@@ -2319,8 +2319,8 @@ class Socket : public SocketOptions
      * }
      * @endcode
      *
-     * @param buffers Span of string views representing logically distinct memory segments to send in order.
-     * @param timeoutMillis Total allowed duration in milliseconds to complete the operation.
+     * @param[in] buffers Span of string views representing logically distinct memory segments to send in order.
+     * @param[in] timeoutMillis Total allowed duration in milliseconds to complete the operation.
      *
      * @return Total number of bytes sent (must equal the sum of all buffer sizes on success).
      *
@@ -2363,7 +2363,7 @@ class Socket : public SocketOptions
      * std::size_t sent = sock.writevFrom(buffers);
      * @endcode
      *
-     * @param buffers A span of BufferView elements (data + size).
+     * @param[in] buffers A span of BufferView elements (data + size).
      * @return Number of bytes successfully written (can be < total).
      *
      * @throws SocketException If:
@@ -2396,7 +2396,7 @@ class Socket : public SocketOptions
      * sock.writevFromAll(buffers);
      * @endcode
      *
-     * @param buffers A span of raw buffers to send completely.
+     * @param[in] buffers A span of raw buffers to send completely.
      * @return Total number of bytes written (equal to sum of buffer sizes).
      *
      * @throws SocketException If:
@@ -2449,8 +2449,8 @@ class Socket : public SocketOptions
      * }
      * @endcode
      *
-     * @param buffers A span of `BufferView` objects representing raw memory regions to send.
-     * @param timeoutMillis Total timeout duration in milliseconds across all write attempts.
+     * @param[in] buffers A span of `BufferView` objects representing raw memory regions to send.
+     * @param[in] timeoutMillis Total timeout duration in milliseconds across all write attempts.
      *
      * @return Total number of bytes written (equal to the sum of all buffer sizes on success).
      *
@@ -2582,8 +2582,8 @@ class Socket : public SocketOptions
      * - `forWrite == false`: Waits for the socket to be readable (e.g., data available).
      * - `forWrite == true`:  Waits for the socket to be writable (e.g., buffer space available).
      *
-     * @param forWrite If true, waits for the socket to become writable; if false, waits for it to be readable.
-     * @param timeoutMillis Timeout in milliseconds. Use `-1` for infinite wait, or `0` for non-blocking polling.
+     * @param[in] forWrite If true, waits for the socket to become writable; if false, waits for it to be readable.
+     * @param[in] timeoutMillis Timeout in milliseconds. Use `-1` for infinite wait, or `0` for non-blocking polling.
      *
      * @retval true  The socket is ready for I/O.
      * @retval false The timeout expired before the socket became ready.
@@ -2619,7 +2619,7 @@ class Socket : public SocketOptions
      * Uses getnameinfo to convert a sockaddr_storage structure to a human-readable string (ip:port).
      * Handles both IPv4 and IPv6 addresses.
      *
-     * @param addr sockaddr_storage structure.
+     * @param[in] addr sockaddr_storage structure.
      * @return String representation (ip:port).
      * @throws SocketException if getnameinfo fails.
      */
@@ -2628,8 +2628,8 @@ class Socket : public SocketOptions
     /**
      * @brief Convert a string (ip:port) to sockaddr_storage.
      *
-     * @param str Address string.
-     * @param addr Output sockaddr_storage.
+     * @param[in] str Address string.
+     * @param[out] addr Output sockaddr_storage.
      */
     static void stringToAddress(const std::string& str, sockaddr_storage& addr);
 

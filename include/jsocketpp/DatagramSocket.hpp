@@ -130,8 +130,8 @@ class DatagramSocket : public SocketOptions
      *
      * Exceeding the maximum payload size will cause packet truncation.
      *
-     * @param port The local UDP port to bind to. Use `0` to auto-select a port.
-     * @param bufferSize Size (in bytes) of the receive buffer. Defaults to `DefaultBufferSize` (4096 bytes).
+     * @param[in] port The local UDP port to bind to. Use `0` to auto-select a port.
+     * @param[in] bufferSize Size (in bytes) of the receive buffer. Defaults to `DefaultBufferSize` (4096 bytes).
      *
      * @throws SocketException if socket creation or binding fails.
      *
@@ -166,10 +166,10 @@ class DatagramSocket : public SocketOptions
      * The internal read buffer is sized according to `bufferSize`. This buffer is used for
      * reading fixed-size or string messages when the socket is in connected mode.
      *
-     * @param host Hostname or IP address of the intended remote peer (IPv4 or IPv6).
+     * @param[in] host Hostname or IP address of the intended remote peer (IPv4 or IPv6).
      *             Leave empty for local binding or unconnected use.
-     * @param port UDP port number of the peer or target address.
-     * @param bufferSize Size of the internal receive buffer in bytes. Defaults to `DefaultBufferSize`.
+     * @param[in] port UDP port number of the peer or target address.
+     * @param[in] bufferSize Size of the internal receive buffer in bytes. Defaults to `DefaultBufferSize`.
      *
      * @throws SocketException if socket creation or address resolution fails.
      *
@@ -338,7 +338,7 @@ class DatagramSocket : public SocketOptions
      * assert(b.isValid());
      * @endcode
      *
-     * @param rhs The source `DatagramSocket` to move from.
+     * @param[in,out] rhs The source `DatagramSocket` to move from.
      * @return Reference to the updated `*this` object.
      *
      * @see DatagramSocket(DatagramSocket&&) noexcept
@@ -425,7 +425,7 @@ class DatagramSocket : public SocketOptions
      * - Attempts all resolved addresses until bind succeeds
      * - If successful, updates internal bound state and allows subsequent `read()`/`recvFrom()` calls
      *
-     * @param port UDP port number to bind to. Must be in the range [1, 65535] or 0 for ephemeral.
+     * @param[in] port UDP port number to bind to. Must be in the range [1, 65535] or 0 for ephemeral.
      *
      * @note This method may only be called once. Rebinding is not supported.
      * @note If the port is already in use, a `SocketException` will be thrown.
@@ -460,9 +460,9 @@ class DatagramSocket : public SocketOptions
      * - Tries all resolved addresses until one binds successfully
      * - Updates internal state to reflect the binding result
      *
-     * @param host Local IP address or hostname to bind to (e.g., "127.0.0.1", "::1", "eth0.local").
+     * @param[in] host Local IP address or hostname to bind to (e.g., "127.0.0.1", "::1", "eth0.local").
      *             Use "0.0.0.0" or "::" to bind to all interfaces (same as `bind(port)`).
-     * @param port Local UDP port number to bind to. Use 0 for ephemeral port assignment.
+     * @param[in] port Local UDP port number to bind to. Use 0 for ephemeral port assignment.
      *
      * @note This method may only be called once. Rebinding is not supported.
      * @note If resolution fails, or no address can be bound, a `SocketException` is thrown.
@@ -569,9 +569,9 @@ class DatagramSocket : public SocketOptions
      * }
      * @endcode
      *
-     * @param timeoutMillis Timeout in milliseconds:
-     *                      - `< 0`: Blocking connect (default behavior)
-     *                      - `>= 0`: Non-blocking connect with timeout
+     * @param[in] timeoutMillis Timeout in milliseconds:
+     *                          - `< 0`: Blocking connect (default behavior)
+     *                          - `>= 0`: Non-blocking connect with timeout
      *
      * @throws SocketTimeoutException If the connection does not complete before the timeout.
      * @throws SocketException If:
