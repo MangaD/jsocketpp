@@ -928,7 +928,7 @@ The socket must not be already bound. </dd></dl>
 <p>This overload binds to all available network interfaces using a specific local port. Equivalent to calling <span class="tt">bind("0.0.0.0", port)</span>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">port</td><td><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number to bind to.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">port</td><td><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number to bind to.</td></tr>
   </table>
   </dd>
 </dl>
@@ -973,8 +973,8 @@ Common Use Cases:</h3>
 <p>This method must be called after the socket is constructed and before <span class="tt"><a class="el" href="#ga93cc325113abb7433288338ca3facde1" title="Establishes a TCP connection to the remote host with optional timeout control.">connect()</a></span>. It can only be called once; repeated calls will throw. Internally uses <span class="tt">getaddrinfo()</span> for resolution and retries all returned addresses until binding succeeds.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">localHost</td><td>A local IP address or hostname to bind to (e.g., "127.0.0.1" or "::1"). </td></tr>
-    <tr><td class="paramname">port</td><td><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number to bind to. Use <span class="tt">0</span> to allow the OS to auto-assign one.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">localHost</td><td>A local IP address or hostname to bind to (e.g., "127.0.0.1" or "::1"). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">port</td><td><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number to bind to. Use <span class="tt">0</span> to allow the OS to auto-assign one.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1580,7 +1580,7 @@ Socket::getInternalBufferSize() </dd></dl>
 <p>This method returns the local interface IP address assigned to the socket, in numeric string format (e.g., "127.0.0.1", "192.168.1.5", or "fe80::1"). If the address is an IPv4-mapped IPv6 address (::ffff:a.b.c.d) and <code class="param">convertIPv4Mapped</code> is true, it is converted to the original IPv4 form.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to plain IPv4. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to plain IPv4. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1737,7 +1737,7 @@ Socket::getInternalBufferSize() </dd></dl>
 <p>This method combines the local IP address and port into a single human-readable string. If the IP address is an IPv4-mapped IPv6 (e.g., ::ffff:192.0.2.1) and <code class="param">convertIPv4Mapped</code> is true, the IPv6 form is simplified to plain IPv4.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to pure IPv4. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to pure IPv4. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1778,7 +1778,7 @@ Socket::getInternalBufferSize() </dd></dl>
 <p>This method returns the remote peer's IP address in numeric form (IPv4 or IPv6). If the socket is using an IPv4-mapped IPv6 address (e.g., ::ffff:192.168.1.10) and <code class="param">convertIPv4Mapped</code> is true, the result is converted to the original IPv4 form.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to pure IPv4. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to pure IPv4. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2583,7 +2583,7 @@ Example Usage</h3>
 <div class="line">}</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">n</td><td>Maximum number of bytes to peek at. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">n</td><td>Maximum number of bytes to peek at. </td></tr>
   </table>
   </dd>
 </dl>
@@ -3191,8 +3191,8 @@ Example Usage</h3>
 <div class="line">}</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffer</td><td>Pointer to the memory where received data will be stored. </td></tr>
-    <tr><td class="paramname">bufferSize</td><td>Maximum number of bytes to store in the buffer. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>Pointer to the memory where received data will be stored. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bufferSize</td><td>Maximum number of bytes to store in the buffer. </td></tr>
   </table>
   </dd>
 </dl>
@@ -3451,8 +3451,8 @@ Example Usage</h3>
 <div class="line">std::string data = sock.readLine(8192, <span class="keyword">false</span>);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">maxLen</td><td>Maximum number of bytes to read (default: 8192) </td></tr>
-    <tr><td class="paramname">includeDelimiter</td><td>Whether to include the newline in the returned string (default: true) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">maxLen</td><td>Maximum number of bytes to read (default: 8192) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">includeDelimiter</td><td>Whether to include the newline in the returned string (default: true) </td></tr>
   </table>
   </dd>
 </dl>
@@ -3628,7 +3628,7 @@ Protocol Format</h3>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">maxPayloadLen</td><td>Maximum allowed length of the decoded payload in bytes. If the decoded prefix exceeds this, an exception is thrown.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">maxPayloadLen</td><td>Maximum allowed length of the decoded payload in bytes. If the decoded prefix exceeds this, an exception is thrown.</td></tr>
   </table>
   </dd>
 </dl>
@@ -3771,7 +3771,7 @@ Example Usage</h3>
 <div class="ttc" id="astructjsocketpp_1_1BufferView_html"><div class="ttname"><a href="structjsocketpp_1_1BufferView.html">jsocketpp::BufferView</a></div><div class="ttdoc">Represents a raw writable memory region for scatter/gather I/O.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:46</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffers</td><td>A span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> objects describing writable regions. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffers</td><td>A span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> objects describing writable regions. </td></tr>
   </table>
   </dd>
 </dl>
@@ -3824,7 +3824,7 @@ Example Usage</h3>
 <div class="line">sock.readvAll(views);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffers</td><td>A span of writable buffer views to fill completely. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffers</td><td>A span of writable buffer views to fill completely. </td></tr>
   </table>
   </dd>
 </dl>
@@ -3885,8 +3885,8 @@ Example Usage</h3>
 <div class="line">sock.readvAllWithTotalTimeout(views, 2000); <span class="comment">// Must finish in 2 seconds</span></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffers</td><td>Span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> objects describing writable memory regions. </td></tr>
-    <tr><td class="paramname">timeoutMillis</td><td>Maximum allowed duration for the entire read operation, in milliseconds.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffers</td><td>Span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> objects describing writable memory regions. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timeoutMillis</td><td>Maximum allowed duration for the entire read operation, in milliseconds.</td></tr>
   </table>
   </dd>
 </dl>
@@ -3960,8 +3960,8 @@ Example Usage</h3>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Received &quot;</span> &lt;&lt; n &lt;&lt; <span class="stringliteral">&quot; bytes.\n&quot;</span>;</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffers</td><td>Span of writable <span class="tt"><a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a></span>s to receive incoming data. </td></tr>
-    <tr><td class="paramname">timeoutMillis</td><td>Time in milliseconds to wait for readability:<ul>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffers</td><td>Span of writable <span class="tt"><a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a></span>s to receive incoming data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timeoutMillis</td><td>Time in milliseconds to wait for readability:<ul>
 <li>&gt; 0: Wait up to this duration</li>
 <li>0: Non-blocking (poll)</li>
 <li>&lt; 0: Invalid; throws exception</li>
@@ -5175,8 +5175,8 @@ Protocol Behavior</h3>
 </ul>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">forWrite</td><td>If true, waits for the socket to become writable; if false, waits for it to be readable. </td></tr>
-    <tr><td class="paramname">timeoutMillis</td><td>Timeout in milliseconds. Use <span class="tt">-1</span> for infinite wait, or <span class="tt">0</span> for non-blocking polling.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">forWrite</td><td>If true, waits for the socket to become writable; if false, waits for it to be readable. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timeoutMillis</td><td>Timeout in milliseconds. Use <span class="tt">-1</span> for infinite wait, or <span class="tt">0</span> for non-blocking polling.</td></tr>
   </table>
   </dd>
 </dl>
@@ -5425,8 +5425,8 @@ Example Usage</h3>
 <div class="line">}</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td>The data to send. </td></tr>
-    <tr><td class="paramname">timeoutMillis</td><td>Maximum time to wait for writability, in milliseconds:<ul>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>The data to send. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timeoutMillis</td><td>Maximum time to wait for writability, in milliseconds:<ul>
 <li>&gt; 0: Wait up to the given duration</li>
 <li>0: Poll immediately (non-blocking)</li>
 <li>&lt; 0: Invalid; throws exception</li>
@@ -5483,8 +5483,8 @@ Example Usage</h3>
 <div class="line">std::size_t sent = sock.writeFrom(buffer, <span class="keyword">sizeof</span>(buffer));</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td>Pointer to the memory to write. </td></tr>
-    <tr><td class="paramname">len</td><td>Number of bytes to send. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to the memory to write. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>Number of bytes to send. </td></tr>
   </table>
   </dd>
 </dl>
@@ -5536,8 +5536,8 @@ Example Usage</h3>
 <div class="line">sock.writeFromAll(payload.data(), payload.size());</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td>Pointer to the binary buffer to send. </td></tr>
-    <tr><td class="paramname">len</td><td>Number of bytes to transmit. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to the binary buffer to send. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>Number of bytes to transmit. </td></tr>
   </table>
   </dd>
 </dl>
@@ -5623,7 +5623,7 @@ Protocol Format</h3>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">payload</td><td>The payload data to send. The length of this view will be encoded as the prefix and must not exceed the maximum representable value of type <span class="tt">T</span>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">payload</td><td>The payload data to send. The length of this view will be encoded as the prefix and must not exceed the maximum representable value of type <span class="tt">T</span>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -5707,8 +5707,8 @@ Protocol Format</h3>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td>Pointer to the binary payload data. </td></tr>
-    <tr><td class="paramname">len</td><td>Number of bytes to write from <span class="tt">data</span>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to the binary payload data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>Number of bytes to write from <span class="tt">data</span>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -5770,7 +5770,7 @@ Example Usage</h3>
 <div class="line">std::size_t sent = sock.writev(segments);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffers</td><td>A span of string views to send as a scatter/gather I/O batch. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffers</td><td>A span of string views to send as a scatter/gather I/O batch. </td></tr>
   </table>
   </dd>
 </dl>
@@ -5828,7 +5828,7 @@ Example Usage</h3>
 <div class="line">sock.writevAll(fragments);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffers</td><td>A span of string fragments to send as a contiguous logical payload. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffers</td><td>A span of string fragments to send as a contiguous logical payload. </td></tr>
   </table>
   </dd>
 </dl>
@@ -5882,7 +5882,7 @@ Example Usage</h3>
 <div class="line">std::size_t sent = sock.writevFrom(buffers);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffers</td><td>A span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> elements (data + size). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffers</td><td>A span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> elements (data + size). </td></tr>
   </table>
   </dd>
 </dl>
@@ -5933,7 +5933,7 @@ Example Usage</h3>
 <div class="line">sock.writevFromAll(buffers);</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffers</td><td>A span of raw buffers to send completely. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffers</td><td>A span of raw buffers to send completely. </td></tr>
   </table>
   </dd>
 </dl>
@@ -6005,8 +6005,8 @@ Example Usage</h3>
 <div class="line">}</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffers</td><td>A span of <span class="tt"><a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a></span> objects representing raw memory regions to send. </td></tr>
-    <tr><td class="paramname">timeoutMillis</td><td>Total timeout duration in milliseconds across all write attempts.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffers</td><td>A span of <span class="tt"><a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a></span> objects representing raw memory regions to send. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timeoutMillis</td><td>Total timeout duration in milliseconds across all write attempts.</td></tr>
   </table>
   </dd>
 </dl>
@@ -6084,8 +6084,8 @@ Example Usage</h3>
 <div class="line">}</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffers</td><td>Span of string views representing logically distinct memory segments to send in order. </td></tr>
-    <tr><td class="paramname">timeoutMillis</td><td>Total allowed duration in milliseconds to complete the operation.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffers</td><td>Span of string views representing logically distinct memory segments to send in order. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timeoutMillis</td><td>Total allowed duration in milliseconds to complete the operation.</td></tr>
   </table>
   </dd>
 </dl>
@@ -6159,8 +6159,8 @@ Example Usage</h3>
 <div class="line">}</div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td>The data to send. </td></tr>
-    <tr><td class="paramname">timeoutMillis</td><td>Maximum time in milliseconds to send the full payload.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>The data to send. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timeoutMillis</td><td>Maximum time in milliseconds to send the full payload.</td></tr>
   </table>
   </dd>
 </dl>

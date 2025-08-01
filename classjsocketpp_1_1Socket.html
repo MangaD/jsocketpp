@@ -456,7 +456,7 @@ See Also</h3>
 <p>Uses getnameinfo to convert a sockaddr_storage structure to a human-readable string (ip:port). Handles both IPv4 and IPv6 addresses.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">addr</td><td>sockaddr_storage structure. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">addr</td><td>sockaddr_storage structure. </td></tr>
   </table>
   </dd>
 </dl>
@@ -500,8 +500,8 @@ See Also</h3>
 <p>Convert a string (ip:port) to sockaddr_storage. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">str</td><td>Address string. </td></tr>
-    <tr><td class="paramname">addr</td><td>Output sockaddr_storage. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">str</td><td>Address string. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">addr</td><td>Output sockaddr_storage. </td></tr>
   </table>
   </dd>
 </dl>
