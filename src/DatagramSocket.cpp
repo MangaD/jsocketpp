@@ -484,27 +484,6 @@ size_t DatagramSocket::read(DatagramPacket& packet, const bool resizeBuffer) con
     return static_cast<size_t>(received);
 }
 
-void DatagramSocket::setTimeout(int millis) const
-{
-#ifdef _WIN32
-    if (setsockopt(getSocketFd(), SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&millis), sizeof(millis)) ==
-            SOCKET_ERROR ||
-        setsockopt(getSocketFd(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&millis), sizeof(millis)) ==
-            SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-#else
-    timeval tv{0, 0};
-    if (millis >= 0)
-    {
-        tv.tv_sec = millis / 1000;
-        tv.tv_usec = (millis % 1000) * 1000;
-    }
-    if (setsockopt(getSocketFd(), SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR ||
-        setsockopt(getSocketFd(), SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-#endif
-}
-
 std::string DatagramSocket::getLocalIp(const bool convertIPv4Mapped) const
 {
     if (getSocketFd() == INVALID_SOCKET)

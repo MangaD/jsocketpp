@@ -1054,20 +1054,6 @@ class DatagramSocket : public SocketOptions
     void close();
 
     /**
-     * @brief Sets the socket's receive timeout.
-     *
-     * @param millis Timeout in milliseconds:
-     *                 - 0: No timeout (blocking mode)
-     *                 - >0: Wait up to specified milliseconds
-     *               Common values:
-     *                 - 1000 (1 second): Quick response time
-     *                 - 5000 (5 seconds): Balance between responsiveness and reliability
-     *                 - 30000 (30 seconds): Long-running operations
-     * @throws SocketException if setting timeout fails
-     */
-    void setTimeout(int millis) const;
-
-    /**
      * @brief Checks whether the datagram socket is valid and ready for use.
      * @ingroup udp
      *
