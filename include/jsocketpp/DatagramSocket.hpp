@@ -306,9 +306,43 @@ class DatagramSocket : public SocketOptions
     }
 
     /**
-     * @brief Move assignment operator.
+     * @brief Move assignment operator for DatagramSocket.
+     * @ingroup udp
      *
-     * Releases any owned resources and transfers ownership from another DatagramSocket.
+     * Releases any resources owned by this socket instance and transfers ownership
+     * from another `DatagramSocket` object (`rhs`). After the operation:
+     *
+     * - This socket adopts the file descriptor, buffer, and internal state from `rhs`
+     * - The source object is left in a valid but unspecified state (`INVALID_SOCKET`)
+     * - Existing resources in the destination socket are released via `close()`
+     *
+     * ### Ownership Transferred
+     * - Native socket handle (`_sockFd`)
+     * - Resolved address pointers (`_addrInfoPtr`, `_selectedAddrInfo`)
+     * - Local address metadata (`_localAddr`, `_localAddrLen`)
+     * - Internal read buffer
+     * - Port number (for tracking purposes)
+     *
+     * ### Notes
+     * @note This method is `noexcept` and safe to use in container scenarios (e.g., `std::vector<DatagramSocket>`).
+     * @note After the move, `rhs` will be left in an uninitialized state and should not be used except for destruction
+     * or reassignment.
+     * @note If `close()` throws during cleanup, the exception is suppressed to preserve noexcept guarantees.
+     *
+     * ### Example
+     * @code{.cpp}
+     * DatagramSocket a(12345);
+     * DatagramSocket b;
+     * b = std::move(a); // b now owns the socket previously held by a
+     * assert(!a.isValid());
+     * assert(b.isValid());
+     * @endcode
+     *
+     * @param rhs The source `DatagramSocket` to move from.
+     * @return Reference to the updated `*this` object.
+     *
+     * @see DatagramSocket(DatagramSocket&&) noexcept
+     * @see close(), isValid()
      */
     DatagramSocket& operator=(DatagramSocket&& rhs) noexcept
     {
