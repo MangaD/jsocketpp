@@ -21,7 +21,7 @@ var searchData=
   ['what_20jsocketpp_20gets_20right_18',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md107',1,'']]],
   ['when_20multiple_20sockets_20bind_20to_20the_20same_20port_19',['🧪 What Happens When Multiple Sockets Bind to the Same Port?',['../group__address__reuse.html#autotoc_md74',1,'']]],
   ['when_20to_20adjust_20',['When to Adjust',['../group__core.html#autotoc_md460',1,'']]],
-  ['when_20to_20use_21',['When to Use',['../group__socketopts.html#autotoc_md789',1,'']]],
+  ['when_20to_20use_21',['When to Use',['../group__socketopts.html#autotoc_md803',1,'']]],
   ['when_20true_20matters_22',['When &lt;span class=&quot;tt&quot;&gt;true&lt;/span&gt; matters',['../group__socketopts.html#autotoc_md519',1,'']]],
   ['why_20jsocketpp_23',['💡 Why jsocketpp?',['../index.html#autotoc_md370',1,'']]],
   ['why_20not_20expose_20windows_20so_5freuseaddr_24',['Why Not Expose Windows &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt;?',['../group__address__reuse.html#autotoc_md98',1,'']]],

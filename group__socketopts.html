@@ -172,6 +172,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga9839dd8837c7519a627f28b3a4c7a513"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables Nagle’s algorithm (<span class="tt">TCP_NODELAY</span>) on TCP sockets.  <br /></td></tr>
 <tr class="memitem:ga05137fbdc55ab065739e220b7a4f41c0" id="r_ga05137fbdc55ab065739e220b7a4f41c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga05137fbdc55ab065739e220b7a4f41c0">jsocketpp::SocketOptions::getTcpNoDelay</a> () const</td></tr>
 <tr class="memdesc:ga05137fbdc55ab065739e220b7a4f41c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries whether Nagle's algorithm (<span class="tt">TCP_NODELAY</span>) is currently disabled.  <br /></td></tr>
+<tr class="memitem:gacb9e27d93d3107ad8641fa7a179658c6" id="r_gacb9e27d93d3107ad8641fa7a179658c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacb9e27d93d3107ad8641fa7a179658c6">jsocketpp::SocketOptions::setBroadcast</a> (bool on)</td></tr>
+<tr class="memdesc:gacb9e27d93d3107ad8641fa7a179658c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the ability to send UDP broadcast messages.  <br /></td></tr>
+<tr class="memitem:gab0df7d40f7d6b40737cbf3271be57f37" id="r_gab0df7d40f7d6b40737cbf3271be57f37"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab0df7d40f7d6b40737cbf3271be57f37">jsocketpp::SocketOptions::getBroadcast</a> () const</td></tr>
+<tr class="memdesc:gab0df7d40f7d6b40737cbf3271be57f37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the socket is currently allowed to send broadcast messages.  <br /></td></tr>
 <tr class="memitem:gab96d6fa640ac34113cb1f76bfbf970dc" id="r_gab96d6fa640ac34113cb1f76bfbf970dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab96d6fa640ac34113cb1f76bfbf970dc">jsocketpp::SocketOptions::setIPv6Only</a> (bool enable)</td></tr>
 <tr class="memdesc:gab96d6fa640ac34113cb1f76bfbf970dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables <span class="tt">IPV6_V6ONLY</span> mode for IPv6-capable sockets.  <br /></td></tr>
 <tr class="memitem:ga1d44e7f23739c1ef4a9ad550b4a1ff1d" id="r_ga1d44e7f23739c1ef4a9ad550b4a1ff1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1d44e7f23739c1ef4a9ad550b4a1ff1d">jsocketpp::SocketOptions::getIPv6Only</a> () const</td></tr>
@@ -193,6 +197,66 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Some options may not be available or meaningful on all platforms. Platform-specific behavior is documented per function.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd>Socket::setSoLinger(), Socket::getSoLinger(), Socket::setTcpNoDelay(), etc. </dd></dl>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="gab0df7d40f7d6b40737cbf3271be57f37" name="gab0df7d40f7d6b40737cbf3271be57f37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab0df7d40f7d6b40737cbf3271be57f37">&#9670;&#160;</a></span>getBroadcast()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::SocketOptions::getBroadcast </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks whether the socket is currently allowed to send broadcast messages. </p>
+<p>This method retrieves the <span class="tt">SO_BROADCAST</span> option using <span class="tt">getsockopt()</span> to determine whether the socket can send datagrams to broadcast addresses like <span class="tt">255.255.255.255</span>.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md769"></a>
+Applicability</h3>
+<ul>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>: ✅ Primary use case</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> (TCP): ❌ Invalid, will throw</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md771"></a>
+Example</h3>
+<div class="fragment"><div class="line"><span class="keywordflow">if</span> (datagramSocket.getBroadcast()) {</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Broadcast is enabled.\n&quot;</span>;</div>
+<div class="line">} <span class="keywordflow">else</span> {</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Broadcast is disabled.\n&quot;</span>;</div>
+<div class="line">}</div>
+</div><!-- fragment --><hr  />
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if broadcast mode is enabled, <span class="tt">false</span> otherwise.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid</li>
+<li>The system call fails (<span class="tt">getsockopt()</span> error)</li>
+<li>The socket type is incompatible with this option</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gacb9e27d93d3107ad8641fa7a179658c6" title="Enables or disables the ability to send UDP broadcast messages.">setBroadcast()</a> </dd>
+<dd>
+<a href="https://man7.org/linux/man-pages/man7/socket.7.html">https://man7.org/linux/man-pages/man7/socket.7.html</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga1d44e7f23739c1ef4a9ad550b4a1ff1d" name="ga1d44e7f23739c1ef4a9ad550b4a1ff1d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga1d44e7f23739c1ef4a9ad550b4a1ff1d">&#9670;&#160;</a></span>getIPv6Only()</h2>
 
@@ -220,7 +284,7 @@ Functions</h2></td></tr>
 <p>This method checks whether the socket is currently restricted to IPv6-only traffic, or whether it allows dual-stack operation (accepting both IPv6 and IPv4-mapped addresses).</p>
 <p>The <span class="tt">IPV6_V6ONLY</span> flag is primarily relevant to sockets using the <span class="tt">AF_INET6</span> address family.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md769"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md783"></a>
 🌍 Applicability by Socket Type</h3>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Affects accept() behavior for IPv6 listeners</li>
@@ -229,7 +293,7 @@ Functions</h2></td></tr>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable; throws if called</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md771"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md785"></a>
 ⚠️ Platform Behavior</h3>
 <ul>
 <li><b>Linux</b>: Defaults to <span class="tt">false</span> (dual-stack), but configurable</li>
@@ -237,7 +301,7 @@ Functions</h2></td></tr>
 <li><b>macOS/BSD</b>: May disallow toggling at runtime or enforce <span class="tt">true</span></li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md773"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md787"></a>
 Example: Check if socket is IPv6-only</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (socket.getIPv6Only()) {</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;This socket is IPv6-only.\n&quot;</span>;</div>
@@ -759,7 +823,7 @@ Example</h3>
 <p>Checks whether the <span class="tt">SO_REUSEPORT</span> option is currently enabled on the socket. </p>
 <p>This method queries the <span class="tt">SO_REUSEPORT</span> setting via <span class="tt">getsockopt()</span> to determine whether the socket is configured to allow multiple bindings to the same address/port.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md783"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md797"></a>
 🌍 Applicability</h3>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Used to verify shared accept-mode configuration</li>
@@ -768,14 +832,14 @@ Example</h3>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable — method excluded at compile time</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md785"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md799"></a>
 🔀 Platform Support</h3>
 <ul>
 <li>✅ <b>Linux (≥ 3.9)</b>, FreeBSD, macOS (some BSDs require extra sysctls)</li>
 <li>❌ <b>Windows</b>: Not supported — this method is not compiled</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md787"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md801"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#if defined(SO_REUSEPORT)</span></div>
 <div class="line"><span class="keywordflow">if</span> (socket.getReusePort()) {</div>
@@ -1297,7 +1361,7 @@ When <span class="tt">true</span> matters</h3>
 <li>On Windows, <span class="tt">SO_EXCLUSIVEADDRUSE</span> is used for passive sockets to control port reuse semantics.</li>
 <li>On POSIX systems, all sockets use <span class="tt">SO_REUSEADDR</span>, but server sockets may still follow different best practices.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md791"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md805"></a>
 Usage</h3>
 <ul>
 <li>Override this method in subclasses like <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> to return <span class="tt">true</span>.</li>
@@ -1396,6 +1460,85 @@ Rationale</h3>
 
 </div>
 </div>
+<a id="gacb9e27d93d3107ad8641fa7a179658c6" name="gacb9e27d93d3107ad8641fa7a179658c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacb9e27d93d3107ad8641fa7a179658c6">&#9670;&#160;</a></span>setBroadcast()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jsocketpp::SocketOptions::setBroadcast </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>on</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enables or disables the ability to send UDP broadcast messages. </p>
+<p>This method sets the <span class="tt">SO_BROADCAST</span> socket option, which allows the socket to send datagrams to broadcast addresses (e.g., <span class="tt">255.255.255.255</span> or <span class="tt">192.168.1.255</span>).</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md760"></a>
+🌍 Applicability</h3>
+<ul>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>: ✅ Required for broadcasting over UDP</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> (TCP): ❌ Not applicable — will throw</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ❌ Not applicable</li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md762"></a>
+🔐 Platform Behavior</h3>
+<ul>
+<li>Most OSes require <span class="tt">SO_BROADCAST = 1</span> before sending to broadcast addresses</li>
+<li>Without it, <span class="tt">sendto()</span> to a broadcast address may fail with <span class="tt">EACCES</span> or <span class="tt">Permission denied</span></li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md764"></a>
+Use Cases</h3>
+<ul>
+<li>UDP service discovery (e.g., mDNS, SSDP)</li>
+<li>Device presence announcements</li>
+<li>Peer-to-peer local communication</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md766"></a>
+Example</h3>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> sock(AF_INET);</div>
+<div class="line">sock.setBroadcast(<span class="keyword">true</span>);</div>
+<div class="line">sock.bind(<span class="stringliteral">&quot;0.0.0.0&quot;</span>, 0);</div>
+<div class="line"> </div>
+<div class="line">sockaddr_in broadcastAddr = {};</div>
+<div class="line">broadcastAddr.sin_family = AF_INET;</div>
+<div class="line">broadcastAddr.sin_port = htons(12345);</div>
+<div class="line">inet_pton(AF_INET, <span class="stringliteral">&quot;255.255.255.255&quot;</span>, &amp;broadcastAddr.sin_addr);</div>
+<div class="line"> </div>
+<div class="line">sock.sendTo(<span class="stringliteral">&quot;Hello LAN&quot;</span>, <span class="keyword">reinterpret_cast&lt;</span>sockaddr*<span class="keyword">&gt;</span>(&amp;broadcastAddr), <span class="keyword">sizeof</span>(broadcastAddr));</div>
+<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a></div><div class="ttdoc">Cross-platform UDP socket class with Java-style interface.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:85</div></div>
+</div><!-- fragment --><hr  />
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">on</td><td><span class="tt">true</span> to enable broadcast permission, <span class="tt">false</span> to disable it.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if:<ul>
+<li>The socket is invalid</li>
+<li>The option is not supported by the socket type</li>
+<li>The system call fails (e.g., <span class="tt">EBADF</span>, <span class="tt">ENOPROTOOPT</span>, <span class="tt">EACCES</span>)</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gab0df7d40f7d6b40737cbf3271be57f37" title="Checks whether the socket is currently allowed to send broadcast messages.">getBroadcast()</a> </dd>
+<dd>
+<a href="https://man7.org/linux/man-pages/man7/socket.7.html">https://man7.org/linux/man-pages/man7/socket.7.html</a> </dd></dl>
+
+</div>
+</div>
 <a id="gab96d6fa640ac34113cb1f76bfbf970dc" name="gab96d6fa640ac34113cb1f76bfbf970dc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gab96d6fa640ac34113cb1f76bfbf970dc">&#9670;&#160;</a></span>setIPv6Only()</h2>
 
@@ -1414,7 +1557,7 @@ Rationale</h3>
 <p>Enables or disables <span class="tt">IPV6_V6ONLY</span> mode for IPv6-capable sockets. </p>
 <p>This method configures the <span class="tt">IPV6_V6ONLY</span> socket option, which determines whether an IPv6 socket can accept <b>only</b> IPv6 connections or <b>both</b> IPv6 and IPv4-mapped addresses (e.g., <span class="tt">::ffff:a.b.c.d</span>).</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md760"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md774"></a>
 🌍 Applicability by Socket Type</h3>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Common — determines which protocols are accepted via <span class="tt">bind()</span></li>
@@ -1423,7 +1566,7 @@ Rationale</h3>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable — local domain sockets do not use IP protocols</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md762"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md776"></a>
 🔀 Platform Behavior</h3>
 <ul>
 <li><b>Linux</b>: <span class="tt">IPV6_V6ONLY</span> defaults to <span class="tt">0</span> (dual-stack enabled)</li>
@@ -1432,7 +1575,7 @@ Rationale</h3>
 </ul>
 <p>⚠️ On all platforms, this option <b>must be set before <span class="tt">bind()</span></b>. Changing it afterward is undefined or ignored.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md764"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md778"></a>
 💡 Use Cases</h3>
 <ul>
 <li>Enforce strict IPv6-only policy (security or protocol compliance)</li>
@@ -1440,7 +1583,7 @@ Rationale</h3>
 <li>Configure UDP or multicast receivers to receive from both protocol families</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md766"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md780"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1ServerSocket.html">ServerSocket</a> server(AF_INET6);</div>
 <div class="line">server.setIPv6Only(<span class="keyword">true</span>);      <span class="comment">// Only allow IPv6 clients</span></div>
@@ -2000,7 +2143,7 @@ bind() </dd>
 <p>Enables or disables the <span class="tt">SO_REUSEPORT</span> socket option. </p>
 <p>This method configures the <span class="tt">SO_REUSEPORT</span> option, which allows multiple sockets to bind to the <b>same IP address and port combination</b>, enabling parallelism in multi-threaded or multi-process applications. Unlike <span class="tt">SO_REUSEADDR</span>, which allows re-binding during <span class="tt">TIME_WAIT</span>, <span class="tt">SO_REUSEPORT</span> permits <b>simultaneous binding</b> by multiple sockets.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md776"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md790"></a>
 🌍 Applicability</h3>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Enables load-balanced accept loops across threads or processes</li>
@@ -2009,7 +2152,7 @@ bind() </dd>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not supported; this method is not compiled on unsupported platforms</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md778"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md792"></a>
 🔀 Platform Support</h3>
 <ul>
 <li>✅ Linux (kernel ≥ 3.9)</li>
@@ -2017,7 +2160,7 @@ bind() </dd>
 <li>❌ Windows: Not available — this method is excluded at compile time</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md780"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md794"></a>
 Example: Enable shared port binding</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#if defined(SO_REUSEPORT)</span></div>
 <div class="line">    serverSocket.setReusePort(<span class="keyword">true</span>);</div>
@@ -2142,19 +2285,19 @@ setInternalBufferSize() </dd></dl>
 <p>Updates the socket descriptor used by this object. </p>
 <p>This method sets the internal socket file descriptor used by the <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> interface. It is typically called by derived classes after the socket has been moved, reassigned, or otherwise changed during the object's lifetime.</p>
 <p>This does <b>not</b> open, close, or validate the socket descriptor. It simply updates the internal <span class="tt">_sockFd</span> used by methods such as <span class="tt"><a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a></span> and <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md789"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md803"></a>
 When to Use</h3>
 <ul>
 <li>After a move constructor or move assignment updates the underlying socket</li>
 <li>After explicitly re-binding or re-creating a socket file descriptor</li>
 <li>When adapting an externally provided descriptor (e.g., from <span class="tt">accept()</span> or <span class="tt">socketpair()</span>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md790"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md804"></a>
 Example: Move assignment</h3>
 <div class="fragment"><div class="line"><a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a> = rhs._sockFd;</div>
 <div class="line"><a class="code hl_function" href="#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a>(<a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a>); <span class="comment">// keeps SocketOptions base class in sync</span></div>
-<div class="ttc" id="aclassjsocketpp_1_1SocketOptions_html_a44b54c91017594a7695bf315778fb131"><div class="ttname"><a href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">jsocketpp::SocketOptions::_sockFd</a></div><div class="ttdeci">SOCKET _sockFd</div><div class="ttdoc">Underlying socket file descriptor.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1726</div></div>
-<div class="ttc" id="agroup__socketopts_html_ga97706ddf21aab33a18db00bd0b8eb65d"><div class="ttname"><a href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a></div><div class="ttdeci">void setSocketFd(const SOCKET sock) noexcept</div><div class="ttdoc">Updates the socket descriptor used by this object.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1695</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1SocketOptions_html_a44b54c91017594a7695bf315778fb131"><div class="ttname"><a href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">jsocketpp::SocketOptions::_sockFd</a></div><div class="ttdeci">SOCKET _sockFd</div><div class="ttdoc">Underlying socket file descriptor.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1823</div></div>
+<div class="ttc" id="agroup__socketopts_html_ga97706ddf21aab33a18db00bd0b8eb65d"><div class="ttname"><a href="#ga97706ddf21aab33a18db00bd0b8eb65d">jsocketpp::SocketOptions::setSocketFd</a></div><div class="ttdeci">void setSocketFd(const SOCKET sock) noexcept</div><div class="ttdoc">Updates the socket descriptor used by this object.</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:1792</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">sock</td><td>The new socket file descriptor to associate with this object. May be <span class="tt">INVALID_SOCKET</span> to mark the socket as uninitialized or closed.</td></tr>

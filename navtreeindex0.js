@@ -128,7 +128,7 @@ var NAVTREEINDEX0 =
 "classjsocketpp_1_1SocketInitializer.html#abf048d846dc2e8835b00f10120287974":[4,0,0,9,1],
 "classjsocketpp_1_1SocketInitializer.html#abf048d846dc2e8835b00f10120287974":[5,0,0,8,1],
 "classjsocketpp_1_1SocketOptions.html":[3,1,6,0],
-"classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131":[3,1,6,0,36],
+"classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131":[3,1,6,0,38],
 "classjsocketpp_1_1SocketTimeoutException.html":[3,1,5,1],
 "classjsocketpp_1_1SocketTimeoutException.html#a83c08928ca631472282ca3b0ce3c952a":[3,1,5,1,0],
 "classjsocketpp_1_1UnixSocket.html":[3,1,4,0],

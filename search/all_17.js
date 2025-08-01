@@ -2,7 +2,7 @@ var searchData=
 [
   ['macos_20unix_0',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md289',1,'']]],
   ['main_1',['main',['../client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;client.cpp'],['../server_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;server.cpp']]],
-  ['main_20features_2',['Main Features',['../classjsocketpp_1_1UnixSocket.html#autotoc_md793',1,'']]],
+  ['main_20features_2',['Main Features',['../classjsocketpp_1_1UnixSocket.html#autotoc_md807',1,'']]],
   ['main_20tcp_20socket_20states_3',['Main TCP Socket States',['../group__socket__states.html#autotoc_md247',1,'']]],
   ['make_20sense_20to_20provide_20poll_20and_20epoll_20as_20alternatives_4',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
   ['make_20your_20cmake_20project_20conan_20friendly_5',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md166',1,'']]],
@@ -34,7 +34,7 @@ var searchData=
   ['modes_20of_20operation_31',['Modes of Operation',['../group__tcp.html#autotoc_md619',1,'']]],
   ['module_32',['4. Qt Network Module',['../group__socket__library__comparison.html#autotoc_md235',1,'']]],
   ['more_20resources_33',['More Resources',['../group__socket__states.html#autotoc_md257',1,'']]],
-  ['move_20assignment_34',['Example: Move assignment',['../group__socketopts.html#autotoc_md790',1,'']]],
+  ['move_20assignment_34',['Example: Move assignment',['../group__socketopts.html#autotoc_md804',1,'']]],
   ['multicast_35',['What is Multicast?',['../classjsocketpp_1_1MulticastSocket.html#autotoc_md503',1,'']]],
   ['multicast_20and_20broadcast_36',['Multicast and Broadcast',['../group__underlying__socket__api.html#autotoc_md315',1,'6.3 Multicast and Broadcast'],['../group__underlying__socket__api.html#autotoc_md325',1,'6.3 Multicast and Broadcast']]],
   ['multicast_20receiver_37',['🌐 Multicast Receiver',['../index.html#autotoc_md394',1,'']]],
