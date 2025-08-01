@@ -79,7 +79,6 @@ void Socket::cleanupAndThrow(const int errorCode)
     }
     _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
-    setSocketFd(INVALID_SOCKET);
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
