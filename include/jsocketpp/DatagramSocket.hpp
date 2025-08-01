@@ -766,21 +766,79 @@ class DatagramSocket : public SocketOptions
     std::string getLocalSocketAddress() const;
 
     /**
-     * @brief Check if the datagram socket is valid (open).
-     * @return true if valid, false otherwise.
+     * @brief Checks whether the datagram socket is valid and ready for use.
+     * @ingroup udp
+     *
+     * Returns `true` if the socket has a valid file descriptor and has not been closed
+     * or moved-from. A valid datagram socket can be used for sending and receiving UDP
+     * packets, though it may or may not be bound or connected.
+     *
+     * This method performs a quick, local check:
+     * - It does **not** verify whether the socket is bound (see `isBound()`)
+     * - It does **not** verify whether the socket is connected (see `isConnected()`)
+     * - It does **not** query the operating system or socket state
+     *
+     * ### Use Cases
+     * - Guarding against use-after-close
+     * - Early validation in test or utility code
+     * - Precondition checks before `bind()` or `connect()`
+     *
+     * ### Implementation Details
+     * - Returns `true` if `getSocketFd() != INVALID_SOCKET`
+     * - Constant-time, thread-safe, no system calls
+     *
+     * @return `true` if the socket is open and usable; `false` if it was closed, moved-from, or failed to initialize.
+     *
+     * @note A valid socket may be unbound or unconnected. Use `isBound()` and `isConnected()` to query those states.
+     *
+     * ### Example
+     * @code{.cpp}
+     * DatagramSocket sock("example.com", 9999);
+     * assert(sock.isValid());
+     * sock.connect();
+     * sock.close();
+     * assert(!sock.isValid()); // ✅ socket no longer usable
+     * @endcode
+     *
+     * @see isBound(), isConnected(), close(), getSocketFd()
      */
-    [[nodiscard]] bool isValid() const { return getSocketFd() != INVALID_SOCKET; }
+    [[nodiscard]] bool isValid() const noexcept { return getSocketFd() != INVALID_SOCKET; }
 
     /**
-     * @brief Check if the datagram socket is connected to a remote host.
+     * @brief Checks whether the socket has been closed or is otherwise invalid.
+     * @ingroup tcp
      *
-     * For UDP sockets, "connected" means that the socket has been associated with a specific
-     * remote address using connect(). This doesn't establish a true connection like TCP,
-     * but allows send() and recv() to be used instead of sendto() and recvfrom().
+     * Returns `true` if the socket is no longer usable—either because it was explicitly closed
+     * via `close()`, or because it was never successfully initialized (i.e., holds an invalid
+     * file descriptor).
      *
-     * @return true if the socket is connected to a remote host, false otherwise.
+     * This method does **not** perform any system-level query (such as `poll()` or `getsockopt()`).
+     * Instead, it inspects the internal socket descriptor using `getSocketFd()` and returns `true`
+     * if it equals `INVALID_SOCKET`. This is the same invariant used throughout the library for
+     * ensuring safe socket operations.
+     *
+     * ### Common Scenarios
+     * - The socket was default-initialized or failed during construction
+     * - The socket was explicitly closed via `close()`
+     * - The socket was moved-from, leaving the source in a valid but unusable state
+     *
+     * @note Once a socket is closed, it cannot be reused. You must create a new instance if
+     *       you wish to open a new connection.
+     *
+     * @return `true` if the socket is closed or invalid, `false` if it is open and usable.
+     *
+     * ### Example
+     * @code
+     * Socket sock("example.com", 443);
+     * assert(!sock.isClosed());
+     * sock.connect();
+     * sock.close();
+     * assert(sock.isClosed()); // ✅
+     * @endcode
+     *
+     * @see close(), isConnected(), isBound(), getSocketFd()
      */
-    [[nodiscard]] bool isConnected() const { return this->_isConnected; }
+    [[nodiscard]] bool isClosed() const noexcept { return getSocketFd() == INVALID_SOCKET; }
 
     /**
      * @brief Enable or disable the ability to send broadcast packets.
