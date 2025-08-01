@@ -62,7 +62,6 @@ var NAVTREEINDEX0 =
 "classjsocketpp_1_1DatagramSocket.html#a7f5db1dfd005c2541ecee41fbd160eb1":[3,1,3,1,14],
 "classjsocketpp_1_1DatagramSocket.html#a87523b567e1963c683584ed19c1d6f84":[3,1,3,1,33],
 "classjsocketpp_1_1DatagramSocket.html#a8c77f16fcae1c86b679a0567de055b7d":[3,1,3,1,31],
-"classjsocketpp_1_1DatagramSocket.html#a9962c2782fe6549bf5781f0301f70906":[3,1,3,1,16],
 "classjsocketpp_1_1DatagramSocket.html#a9d0a9582b3a2a72bf62f182dbc33c352":[3,1,3,1,10],
 "classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29":[3,1,3,1,27],
 "classjsocketpp_1_1DatagramSocket.html#ab3ad0faf65e430cc8867d76c6a84df87":[3,1,3,1,13],
@@ -70,7 +69,6 @@ var NAVTREEINDEX0 =
 "classjsocketpp_1_1DatagramSocket.html#ac4995ba9286d5dc4ad521a80a43c634a":[3,1,3,1,35],
 "classjsocketpp_1_1DatagramSocket.html#ac91cdd138597ae9cf75389cf41a24d83":[3,1,3,1,36],
 "classjsocketpp_1_1DatagramSocket.html#acc0850711b172f6c6c8bf0649c530ea0":[3,1,3,1,32],
-"classjsocketpp_1_1DatagramSocket.html#ad22196f6878ce6d48bd8a133424d777a":[3,1,3,1,18],
 "classjsocketpp_1_1DatagramSocket.html#ae157621acf76031b55ce263898d18aa7":[3,1,3,1,30],
 "classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0":[3,1,3,1,26],
 "classjsocketpp_1_1MulticastSocket.html":[3,1,3,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX0 =
 "group__internal.html#ga7701a273337a71485ba1583df464b178":[3,1,1,5],
 "group__internal.html#gacdd48d04c87ec69aff97c5d29dbfe1a1":[3,1,1,6],
 "group__internal.html#gae140ce724d1cfc733f3c2dbccf0cf60b":[3,1,1,7],
-"group__jsocketpp.html":[3,1]
+"group__jsocketpp.html":[3,1],
+"group__select__poll__epoll__iocp.html":[3,0,6],
+"group__socket-options.html":[3,0,7]
 };
