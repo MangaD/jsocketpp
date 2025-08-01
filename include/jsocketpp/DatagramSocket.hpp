@@ -445,33 +445,179 @@ class DatagramSocket : public SocketOptions
     void bind(std::string_view host, Port port);
 
     /**
-     * @brief Connects the datagram socket to the remote host and port with optional timeout handling.
+     * @brief Indicates whether the datagram socket has been explicitly bound to a local address or port.
+     * @ingroup udp
      *
-     * This function binds the datagram socket to a specific remote destination (host and port) for sending
-     * subsequent datagrams. Although UDP is connectionless, calling `connect()` on a datagram socket allows
-     * the socket to send datagrams to a specific destination without needing to specify the address each time.
+     * Returns `true` if the socket has successfully completed a call to one of the `bind()` overloads.
+     * Binding is optional for UDP sockets, but is commonly required for:
      *
-     * The connection process works as follows:
-     * - In **non-blocking mode**, the connection attempt proceeds immediately. If the connection cannot be
-     *   completed right away, it will return `EINPROGRESS` (or `WSAEINPROGRESS` on Windows), indicating that
-     *   the connection is still in progress.
-     * - **`select()`** is used to wait for the socket to be ready for communication within the specified timeout.
-     * - If no timeout is specified (i.e., `timeoutMillis < 0`), the socket connects in blocking mode, which
-     *   will block until either the connection completes or an error occurs.
-     * - If the connection fails or times out, an exception is thrown with the relevant error code and message.
+     * - Receiving datagrams on a specific port (e.g., UDP server or listener)
+     * - Specifying a fixed source port (e.g., for NAT traversal or P2P scenarios)
+     * - Selecting a specific local interface in multihomed systems
+     * - Participating in multicast or broadcast communication
      *
-     * This function is cross-platform and works on both Windows and Linux systems.
+     * @note A datagram socket can only be bound once. Attempting to bind again will throw.
+     * @note If the socket was constructed with a port but `bind()` is never called, it remains unbound.
+     * @note Binding must occur before calling `connect()` or sending datagrams from an unconnected socket.
      *
-     * @param timeoutMillis The maximum time to wait for the connection to be established, in milliseconds.
-     *                      If set to a negative value, the connection will be attempted in blocking mode
-     *                      (no timeout). If set to a non-negative value, the connection will be attempted in
-     *                      non-blocking mode, and `select()` will be used to wait for the connection to complete
-     *                      within the specified timeout.
+     * ### Example
+     * @code
+     * DatagramSocket sock;
+     * sock.bind(12345);
+     * if (sock.isBound()) {
+     *     std::cout << "Listening on " << sock.getLocalSocketAddress() << "\n";
+     * }
+     * @endcode
      *
-     * @throws SocketException If the connection fails, times out, or if there is an error during the connection
-     * attempt. The exception will contain the error code and message describing the failure.
+     * @return `true` if the socket has been bound to a local address/port, `false` otherwise.
+     *
+     * @see bind(), isConnected(), getLocalSocketAddress()
+     */
+    [[nodiscard]] bool isBound() const noexcept { return _isBound; }
+
+    /**
+     * @brief Connects the datagram socket to a remote peer with optional timeout handling.
+     * @ingroup udp
+     *
+     * Although UDP is a connectionless protocol, calling `connect()` on a datagram socket binds it
+     * to a specific remote address and port. This simplifies socket usage by:
+     *
+     * - Filtering inbound datagrams to only accept packets from the connected peer
+     * - Allowing `write()`, `read()`, and `recv()` without needing to specify a destination
+     * - Enabling use of `send()`/`recv()` semantics while retaining the performance of UDP
+     *
+     * This method supports both blocking and non-blocking connection attempts based on the
+     * `timeoutMillis` parameter. Internally, it uses `::connect()` and may wait for the socket
+     * to become writable via `::select()` if timeout-based non-blocking mode is used.
+     *
+     * ### Connection Modes
+     * - **Blocking Mode** (`timeoutMillis < 0`):
+     *   - Performs a traditional blocking `connect()` system call.
+     *   - Returns only after success or failure.
+     *
+     * - **Non-blocking Mode with Timeout** (`timeoutMillis >= 0`):
+     *   - Temporarily switches the socket to non-blocking mode (RAII-managed).
+     *   - Initiates the connection and waits for socket write readiness using `select()`.
+     *   - After readiness, confirms success using `getsockopt(SO_ERROR)`.
+     *   - Restores the original blocking mode automatically after completion.
+     *
+     * ### Implementation Details
+     * - Uses `ScopedBlockingMode` to safely revert socket mode.
+     * - Retries `select()` on POSIX if interrupted by signals (`EINTR`).
+     * - Checks `FD_SETSIZE` to avoid platform limits on select()'able descriptors.
+     * - Properly verifies socket status using `getsockopt(SO_ERROR)` even after select success.
+     * - Updates `_isConnected` only after a successful connection.
+     *
+     * @note Unlike TCP, this method does **not establish a session** or guarantee delivery.
+     *       It simply associates the socket with a default remote endpoint.
+     *
+     * @note This method throws if the socket is already connected or if no resolved address is available.
+     *
+     * ### Platform Notes
+     * - On **POSIX**, `select()` only supports descriptors `< FD_SETSIZE` (typically 1024).
+     * - On **Windows**, `select()` accepts higher descriptors, but practical limits still apply.
+     *
+     * ### Example Usage
+     * @code{.cpp}
+     * DatagramSocket client("example.com", 9999);
+     *
+     * // Blocking connect
+     * client.connect();
+     *
+     * // Non-blocking connect with 3-second timeout
+     * try {
+     *     client.connect(3000);
+     *     client.write("ping");
+     * } catch (const SocketTimeoutException& timeout) {
+     *     std::cerr << "Connection timed out\\n";
+     * } catch (const SocketException& ex) {
+     *     std::cerr << "Connect failed: " << ex.what() << std::endl;
+     * }
+     * @endcode
+     *
+     * @param timeoutMillis Timeout in milliseconds:
+     *                      - `< 0`: Blocking connect (default behavior)
+     *                      - `>= 0`: Non-blocking connect with timeout
+     *
+     * @throws SocketTimeoutException If the connection does not complete before the timeout.
+     * @throws SocketException If:
+     *         - The socket is already connected
+     *         - No address was resolved during construction
+     *         - The descriptor exceeds `select()` limits
+     *         - The connection fails or is refused
+     *         - Socket readiness check via `getsockopt(SO_ERROR)` fails
+     *
+     * @see isConnected(), write(), read<T>(), disconnect(), setNonBlocking()
      */
     void connect(int timeoutMillis = -1);
+
+    /**
+     * @brief Disconnects the datagram socket from its currently connected peer.
+     * @ingroup udp
+     *
+     * This method disassociates the datagram socket from the previously connected
+     * remote host and port, returning it to an unconnected state. After disconnection:
+     *
+     * - The socket can receive datagrams from any remote source.
+     * - You must specify a destination when calling `write()` or `sendto()`.
+     * - The internal `_isConnected` flag is cleared.
+     *
+     * This is useful for switching from connected-mode (e.g., unicast-only) to
+     * connectionless mode (e.g., dynamic peer-to-peer or server-mode behavior).
+     *
+     * ### Behavior
+     * - Internally calls `::connect()` with a null address (or `AF_UNSPEC`) to break the association.
+     * - This is supported on most platforms (e.g., Linux, Windows).
+     * - No data is lost or flushed—this only affects connection state.
+     *
+     * @note This method is a no-op if the socket is already unconnected.
+     * @note After disconnection, calling `write()` without a destination will throw.
+     *
+     * ### Example
+     * @code{.cpp}
+     * DatagramSocket sock("example.com", 9999);
+     * sock.connect();
+     * sock.write("hello"); // connected mode
+     * sock.disconnect();
+     * sock.write("hello", "example.org", 8888); // connectionless mode
+     * @endcode
+     *
+     * @throws SocketException if the underlying disconnect operation fails.
+     *
+     * @see connect(), isConnected(), write(), read<T>()
+     */
+    void disconnect();
+
+    /**
+     * @brief Indicates whether the datagram socket is connected to a specific remote peer.
+     * @ingroup udp
+     *
+     * Returns `true` if the socket has been successfully connected to a remote address and port
+     * using the `connect()` method. While UDP is a connectionless protocol, invoking `connect()`
+     * on a datagram socket enables connection-oriented semantics:
+     *
+     * - Filters incoming datagrams to only accept from the connected peer
+     * - Allows use of `send()` / `recv()` instead of `sendto()` / `recvfrom()`
+     * - Enables simplified calls like `write("message")` or `read<T>()`
+     *
+     * @note This method reflects the internal connection state as tracked by the library.
+     * @note It does not verify whether the remote host is reachable or alive.
+     * @note Unconnected sockets may still send and receive using `write(host, port)` or `write(DatagramPacket)`.
+     *
+     * ### Example
+     * @code
+     * DatagramSocket sock("example.com", 9999);
+     * sock.connect();
+     * if (sock.isConnected()) {
+     *     sock.write("ping");
+     * }
+     * @endcode
+     *
+     * @return `true` if the socket has been logically connected to a peer, `false` otherwise.
+     *
+     * @see connect(), write(std::string_view), read<T>(), disconnect()
+     */
+    [[nodiscard]] bool isConnected() const noexcept { return _isConnected; }
 
     /**
      * @brief Write data to a remote host using a DatagramPacket.

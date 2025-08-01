@@ -84,6 +84,11 @@ void Socket::cleanupAndThrow(const int errorCode)
 
 void Socket::bind(const std::string_view localHost, const Port port)
 {
+    if (_isConnected)
+    {
+        throw SocketException("Socket::bind(): socket is already connected");
+    }
+
     if (_isBound)
     {
         throw SocketException("Socket::bind(): socket is already bound");
@@ -98,7 +103,8 @@ void Socket::bind(const std::string_view localHost, const Port port)
     const std::string portStr = std::to_string(port);
     addrinfo* rawResult = nullptr;
 
-    if (auto ret = ::getaddrinfo(localHost.data(), portStr.c_str(), &hints, &rawResult); ret != 0)
+    if (auto ret = ::getaddrinfo(localHost.data(), portStr.c_str(), &hints, &rawResult);
+        ret != 0 || rawResult == nullptr)
     {
         throw SocketException(
 #ifdef _WIN32
@@ -112,7 +118,13 @@ void Socket::bind(const std::string_view localHost, const Port port)
 
     for (const addrinfo* p = result.get(); p != nullptr; p = p->ai_next)
     {
-        if (::bind(getSocketFd(), p->ai_addr, static_cast<socklen_t>(p->ai_addrlen)) == 0)
+        if (::bind(getSocketFd(), p->ai_addr,
+#ifdef _WIN32
+                   static_cast<int>(p->ai_addrlen)
+#else
+                   p->ai_addrlen
+#endif
+                       ) == 0)
         {
             _isBound = true;
             return; // success
@@ -234,7 +246,7 @@ Socket::~Socket() noexcept
     {
         close();
     }
-    catch (std::exception&)
+    catch (...)
     {
         // Suppress all exceptions to maintain noexcept guarantee.
         // TODO: Consider adding an internal flag or user-configurable error handler

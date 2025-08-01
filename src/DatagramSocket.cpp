@@ -1,5 +1,9 @@
 #include "jsocketpp/DatagramSocket.hpp"
+#include "jsocketpp/internal/ScopedBlockingMode.hpp"
 #include "jsocketpp/SocketException.hpp"
+#include "jsocketpp/SocketTimeoutException.hpp"
+
+#include <optional>
 
 using namespace jsocketpp;
 
@@ -98,9 +102,11 @@ DatagramSocket::~DatagramSocket() noexcept
     {
         close();
     }
-    catch (std::exception& e)
+    catch (...)
     {
-        std::cerr << e.what() << std::endl;
+        // Suppress all exceptions to maintain noexcept guarantee.
+        // TODO: Consider adding an internal flag or user-configurable error handler
+        //       to report destructor-time errors in future versions.
     }
 }
 
@@ -115,6 +121,8 @@ void DatagramSocket::close()
     }
     _addrInfoPtr.reset();
     _selectedAddrInfo = nullptr;
+    _isBound = false;
+    _isConnected = false;
 }
 
 void DatagramSocket::bind(const std::string_view host, const Port port)
@@ -181,19 +189,26 @@ void DatagramSocket::bind()
 
 void DatagramSocket::connect(const int timeoutMillis)
 {
+    if (_isConnected)
+    {
+        throw SocketException("connect() called on an already-connected socket");
+    }
+
     // Ensure that we have already selected an address during construction
     if (_selectedAddrInfo == nullptr)
     {
         throw SocketException("connect() failed: no valid addrinfo found");
     }
 
-    // Flag to track whether we're in non-blocking mode
-    const bool isNonBlocking = (timeoutMillis >= 0);
+    // Determine if we should use non-blocking connect logic
+    const bool useNonBlocking = (timeoutMillis >= 0);
 
-    // Set the socket to non-blocking mode if a timeout is specified
-    if (isNonBlocking)
+    // Automatically switch to non-blocking if needed, and restore original mode later
+    // NOLINTNEXTLINE - Temporarily switch to non-blocking mode (RAII-reverted)
+    std::optional<internal::ScopedBlockingMode> blockingGuard;
+    if (useNonBlocking)
     {
-        setNonBlocking(true); // This sets the socket to non-blocking mode
+        blockingGuard.emplace(getSocketFd(), true); // Set non-blocking temporarily
     }
 
     // Attempt to connect to the remote host
@@ -209,58 +224,81 @@ void DatagramSocket::connect(const int timeoutMillis)
     {
         auto error = GetSocketError();
 
-        // If the error is EINPROGRESS or EWOULDBLOCK, it means the connection is in progress
-        // which is expected in non-blocking mode
+        // On most platforms, these errors indicate a non-blocking connection in progress
 #ifdef _WIN32
-        // Windows: Check if WSAEINPROGRESS or WSAEWOULDBLOCK is returned
-        if (error != WSAEINPROGRESS && error != WSAEWOULDBLOCK)
+        const bool wouldBlock = (error == WSAEINPROGRESS || error == WSAEWOULDBLOCK);
 #else
-        // Linux/Unix: Check if EINPROGRESS or EWOULDBLOCK is returned
-        if (error != EINPROGRESS && error != EWOULDBLOCK)
+        const bool wouldBlock = (error == EINPROGRESS || error == EWOULDBLOCK);
 #endif
+
+        if (!useNonBlocking || !wouldBlock)
         {
-            // Reset the socket to blocking mode before throwing the exception
-            if (isNonBlocking)
-                setNonBlocking(false);
             throw SocketException(error, SocketErrorMessage(error));
         }
 
-        // If we're in non-blocking mode, use select to wait for the connection to complete
-        if (isNonBlocking)
+        // Check FD_SETSIZE limit before using select()
+        if (getSocketFd() >= FD_SETSIZE)
         {
-            timeval tv{};
-            tv.tv_sec = timeoutMillis / 1000;
-            tv.tv_usec = (timeoutMillis % 1000) * 1000;
+            throw SocketException("connect(): socket descriptor exceeds FD_SETSIZE (" + std::to_string(FD_SETSIZE) +
+                                  "), select() cannot be used");
+        }
 
-            fd_set fds;
-            FD_ZERO(&fds);
-            FD_SET(getSocketFd(), &fds);
+        // Wait until socket becomes writable (connection ready or failed)
+        timeval tv{};
+        tv.tv_sec = timeoutMillis / 1000;
+        tv.tv_usec = (timeoutMillis % 1000) * 1000;
+
+        fd_set writeFds;
+        FD_ZERO(&writeFds);
+        FD_SET(getSocketFd(), &writeFds);
 
 #ifdef _WIN32
-            // On Windows, the first parameter to select is ignored, but must be set to 0
-            auto result = select(0, nullptr, &fds, nullptr, &tv);
+        const int selectResult = ::select(0, nullptr, &writeFds, nullptr, &tv);
 #else
-            // On Linux/Unix, the first parameter to select should be the highest file descriptor + 1
-            auto result = select(getSocketFd() + 1, nullptr, &fds, nullptr, &tv);
+        int selectResult;
+        do
+        {
+            selectResult = ::select(getSocketFd() + 1, nullptr, &writeFds, nullptr, &tv);
+        } while (selectResult < 0 && errno == EINTR);
 #endif
 
-            // If select() timed out or failed, reset the socket to blocking mode
-            if (result <= 0)
-            {
-                // Reset the socket to blocking mode before throwing the timeout exception
-                setNonBlocking(false);
-                throw SocketException("Connection timed out or failed.");
-            }
+        if (selectResult == 0)
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
+                                         "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
+        if (selectResult < 0)
+            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+        // Even if select() reports writable, we must check if the connection actually succeeded
+        int so_error = 0;
+        socklen_t len = sizeof(so_error);
+        // SO_ERROR is always retrieved as int (POSIX & Windows agree on semantics)
+        if (::getsockopt(getSocketFd(), SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&so_error), &len) < 0 ||
+            so_error != 0)
+        {
+            throw SocketException(so_error, SocketErrorMessage(so_error));
         }
     }
 
-    // After the connection attempt, if we used non-blocking mode, reset to blocking mode
-    if (isNonBlocking)
+    _isConnected = true;
+    // Socket mode will be restored automatically via ScopedBlockingMode destructor
+}
+
+void DatagramSocket::disconnect()
+{
+    if (!_isConnected)
+        return; // Already disconnected — no-op
+
+    // Disconnect using AF_UNSPEC to break the peer association
+    sockaddr_storage nullAddr{};
+    nullAddr.ss_family = AF_UNSPEC;
+
+    if (const int res = ::connect(getSocketFd(), reinterpret_cast<sockaddr*>(&nullAddr), sizeof(nullAddr));
+        res == SOCKET_ERROR)
     {
-        setNonBlocking(false); // Reset the socket back to blocking mode
+        throw SocketException(GetSocketError(), "DatagramSocket::disconnect(): disconnect failed");
     }
 
-    _isConnected = true;
+    _isConnected = false;
 }
 
 size_t DatagramSocket::write(std::string_view message) const
