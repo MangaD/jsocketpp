@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['value_0',['Return Value',['../group__socketopts.html#autotoc_md698',1,'']]],
+  ['value_0',['Return Value',['../group__socketopts.html#autotoc_md737',1,'']]],
   ['vcpkg_1',['vcpkg',['../index.html#autotoc_md383',1,'✅ vcpkg'],['../group__vcpkg__publish__guide.html#autotoc_md349',1,'2. Prepare Your Library for vcpkg']]],
   ['vcpkg_20json_2',['Example &lt;span class=&quot;tt&quot;&gt;vcpkg.json&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md352',1,'']]],
   ['vcpkg_20portfile_3',['3. Create a vcpkg Portfile',['../group__vcpkg__publish__guide.html#autotoc_md351',1,'']]],
@@ -8,5 +8,6 @@ var searchData=
   ['via_20select_5',['Custom Timeouts via &lt;span class=&quot;tt&quot;&gt;select()&lt;/span&gt;',['../group__async__io.html#autotoc_md120',1,'']]],
   ['vs_20boost_20asio_6',['🔁 jsocketpp vs Boost.Asio',['../index.html#autotoc_md376',1,'']]],
   ['vs_20generic_20methods_7',['Dedicated Methods vs. Generic Methods',['../group__socket-options.html#autotoc_md219',1,'']]],
-  ['vs_20non_20blocking_20sockets_8',['🚦 Blocking vs Non-Blocking Sockets',['../group__async__io.html#autotoc_md114',1,'']]]
+  ['vs_20ipv6_8',['IPv4 vs IPv6',['../group__udp.html#autotoc_md511',1,'']]],
+  ['vs_20non_20blocking_20sockets_9',['🚦 Blocking vs Non-Blocking Sockets',['../group__async__io.html#autotoc_md114',1,'']]]
 ];

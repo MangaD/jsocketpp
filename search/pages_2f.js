@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['💡_20summary_20table_0',['💡 Summary Table',['../group__address__reuse.html#autotoc_md100',1,'']]],
-  ['💡_20use_20cases_1',['💡 Use Cases',['../group__socketopts.html#autotoc_md746',1,'💡 Use Cases'],['../group__socketopts.html#autotoc_md778',1,'💡 Use Cases']]],
-  ['💡_20why_20jsocketpp_2',['💡 Why jsocketpp?',['../index.html#autotoc_md370',1,'']]]
+  ['💡_20platform_20notes_0',['💡 Platform Notes',['../group__udp.html#autotoc_md528',1,'']]],
+  ['💡_20summary_20table_1',['💡 Summary Table',['../group__address__reuse.html#autotoc_md100',1,'']]],
+  ['💡_20use_20cases_2',['💡 Use Cases',['../group__socketopts.html#autotoc_md785',1,'💡 Use Cases'],['../group__socketopts.html#autotoc_md817',1,'💡 Use Cases']]],
+  ['💡_20why_20jsocketpp_3',['💡 Why jsocketpp?',['../index.html#autotoc_md370',1,'']]]
 ];
