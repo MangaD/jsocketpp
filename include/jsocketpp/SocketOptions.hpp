@@ -1439,6 +1439,103 @@ class SocketOptions
      */
     [[nodiscard]] bool getTcpNoDelay() const;
 
+    /**
+     * @brief Enables or disables the ability to send UDP broadcast messages.
+     * @ingroup socketopts
+     *
+     * This method sets the `SO_BROADCAST` socket option, which allows the socket to
+     * send datagrams to broadcast addresses (e.g., `255.255.255.255` or `192.168.1.255`).
+     *
+     * ---
+     *
+     * ### 🌍 Applicability
+     * - `DatagramSocket`: ✅ Required for broadcasting over UDP
+     * - `Socket` (TCP): ❌ Not applicable — will throw
+     * - `ServerSocket`: ❌ Not applicable
+     * - `UnixSocket`: ❌ Not applicable
+     *
+     * ---
+     *
+     * ### 🔐 Platform Behavior
+     * - Most OSes require `SO_BROADCAST = 1` before sending to broadcast addresses
+     * - Without it, `sendto()` to a broadcast address may fail with `EACCES` or `Permission denied`
+     *
+     * ---
+     *
+     * ### Use Cases
+     * - UDP service discovery (e.g., mDNS, SSDP)
+     * - Device presence announcements
+     * - Peer-to-peer local communication
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * DatagramSocket sock(AF_INET);
+     * sock.setBroadcast(true);
+     * sock.bind("0.0.0.0", 0);
+     *
+     * sockaddr_in broadcastAddr = {};
+     * broadcastAddr.sin_family = AF_INET;
+     * broadcastAddr.sin_port = htons(12345);
+     * inet_pton(AF_INET, "255.255.255.255", &broadcastAddr.sin_addr);
+     *
+     * sock.sendTo("Hello LAN", reinterpret_cast<sockaddr*>(&broadcastAddr), sizeof(broadcastAddr));
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] on `true` to enable broadcast permission, `false` to disable it.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - The option is not supported by the socket type
+     * - The system call fails (e.g., `EBADF`, `ENOPROTOOPT`, `EACCES`)
+     *
+     * @see getBroadcast()
+     * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     */
+    void setBroadcast(bool on);
+
+    /**
+     * @brief Checks whether the socket is currently allowed to send broadcast messages.
+     * @ingroup socketopts
+     *
+     * This method retrieves the `SO_BROADCAST` option using `getsockopt()` to determine
+     * whether the socket can send datagrams to broadcast addresses like `255.255.255.255`.
+     *
+     * ---
+     *
+     * ### Applicability
+     * - `DatagramSocket`: ✅ Primary use case
+     * - `Socket` (TCP): ❌ Invalid, will throw
+     * - `ServerSocket`, `UnixSocket`: ❌ Not applicable
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * if (datagramSocket.getBroadcast()) {
+     *     std::cout << "Broadcast is enabled.\n";
+     * } else {
+     *     std::cout << "Broadcast is disabled.\n";
+     * }
+     * @endcode
+     *
+     * ---
+     *
+     * @return `true` if broadcast mode is enabled, `false` otherwise.
+     *
+     * @throws SocketException if:
+     * - The socket is invalid
+     * - The system call fails (`getsockopt()` error)
+     * - The socket type is incompatible with this option
+     *
+     * @see setBroadcast()
+     * @see https://man7.org/linux/man-pages/man7/socket.7.html
+     */
+    [[nodiscard]] bool getBroadcast() const;
+
 #if defined(IPV6_V6ONLY)
 
     /**

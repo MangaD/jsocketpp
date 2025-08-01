@@ -271,6 +271,16 @@ bool SocketOptions::getTcpNoDelay() const
     return getOption(IPPROTO_TCP, TCP_NODELAY) != 0;
 }
 
+void SocketOptions::setBroadcast(const bool on)
+{
+    setOption(SOL_SOCKET, SO_BROADCAST, on ? 1 : 0);
+}
+
+bool SocketOptions::getBroadcast() const
+{
+    return getOption(SOL_SOCKET, SO_BROADCAST) != 0;
+}
+
 #if defined(IPV6_V6ONLY)
 
 void SocketOptions::setIPv6Only(const bool enable)
