@@ -135,8 +135,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga6f4ba9267e5d2a48e0ab85553b55f03a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the datagram socket to a specific local port on all network interfaces.  <br /></td></tr>
 <tr class="memitem:gaff03e4ff5f58f0440dec821c02355185" id="r_gaff03e4ff5f58f0440dec821c02355185"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gaff03e4ff5f58f0440dec821c02355185">bind</a> (std::string_view host, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
 <tr class="memdesc:gaff03e4ff5f58f0440dec821c02355185"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the datagram socket to a specific local IP address and port.  <br /></td></tr>
-<tr class="memitem:a3fa731104100275903b074ba2b65b839" id="r_a3fa731104100275903b074ba2b65b839"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fa731104100275903b074ba2b65b839">connect</a> (int timeoutMillis=-1)</td></tr>
-<tr class="memdesc:a3fa731104100275903b074ba2b65b839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connects the datagram socket to the remote host and port with optional timeout handling.  <br /></td></tr>
+<tr class="memitem:gadd6a72af69e4e8e1e8701c60a7e728f1" id="r_gadd6a72af69e4e8e1e8701c60a7e728f1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gadd6a72af69e4e8e1e8701c60a7e728f1">isBound</a> () const noexcept</td></tr>
+<tr class="memdesc:gadd6a72af69e4e8e1e8701c60a7e728f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the datagram socket has been explicitly bound to a local address or port.  <br /></td></tr>
+<tr class="memitem:ga3fa731104100275903b074ba2b65b839" id="r_ga3fa731104100275903b074ba2b65b839"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga3fa731104100275903b074ba2b65b839">connect</a> (int timeoutMillis=-1)</td></tr>
+<tr class="memdesc:ga3fa731104100275903b074ba2b65b839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connects the datagram socket to a remote peer with optional timeout handling.  <br /></td></tr>
+<tr class="memitem:ga02b08c333a2f109a3b19ec7b3c0cecf9" id="r_ga02b08c333a2f109a3b19ec7b3c0cecf9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga02b08c333a2f109a3b19ec7b3c0cecf9">disconnect</a> ()</td></tr>
+<tr class="memdesc:ga02b08c333a2f109a3b19ec7b3c0cecf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disconnects the datagram socket from its currently connected peer.  <br /></td></tr>
+<tr class="memitem:gac3b7c4a5fc5a21372c4a9cadb3e85efb" id="r_gac3b7c4a5fc5a21372c4a9cadb3e85efb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gac3b7c4a5fc5a21372c4a9cadb3e85efb">isConnected</a> () const noexcept</td></tr>
+<tr class="memdesc:gac3b7c4a5fc5a21372c4a9cadb3e85efb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the datagram socket is connected to a specific remote peer.  <br /></td></tr>
 <tr class="memitem:af34dc33d47f23ca13e9a63d4b1fcdee0" id="r_af34dc33d47f23ca13e9a63d4b1fcdee0"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af34dc33d47f23ca13e9a63d4b1fcdee0">write</a> (const <a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> &amp;packet) const</td></tr>
 <tr class="memdesc:af34dc33d47f23ca13e9a63d4b1fcdee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write data to a remote host using a <a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a>.  <br /></td></tr>
 <tr class="memitem:ab17c043006b0c35944a1809996b30c29" id="r_ab17c043006b0c35944a1809996b30c29"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab17c043006b0c35944a1809996b30c29">write</a> (std::string_view message) const</td></tr>
@@ -315,8 +321,8 @@ Example: Simple UDP Echo Server and Client</h2>
 <div class="line">    client.<a class="code hl_function" href="#a58152e567e2d41ee6d612355ac0eb548">read</a>(response);</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Server replied: &quot;</span> &lt;&lt; std::string(response.buffer.begin(), response.buffer.end()) &lt;&lt; std::endl;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_a58152e567e2d41ee6d612355ac0eb548"><div class="ttname"><a href="#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket::read</a></div><div class="ttdeci">size_t read(DatagramPacket &amp;packet, bool resizeBuffer=true) const</div><div class="ttdoc">Receives a UDP datagram and fills the provided DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:402</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_af34dc33d47f23ca13e9a63d4b1fcdee0"><div class="ttname"><a href="#af34dc33d47f23ca13e9a63d4b1fcdee0">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">size_t write(const DatagramPacket &amp;packet) const</div><div class="ttdoc">Write data to a remote host using a DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:291</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_a58152e567e2d41ee6d612355ac0eb548"><div class="ttname"><a href="#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket::read</a></div><div class="ttdeci">size_t read(DatagramPacket &amp;packet, bool resizeBuffer=true) const</div><div class="ttdoc">Receives a UDP datagram and fills the provided DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:440</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_af34dc33d47f23ca13e9a63d4b1fcdee0"><div class="ttname"><a href="#af34dc33d47f23ca13e9a63d4b1fcdee0">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">size_t write(const DatagramPacket &amp;packet) const</div><div class="ttdoc">Write data to a remote host using a DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:329</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md467"></a>
 Notes</h2>
 <ul>
@@ -384,45 +390,6 @@ Notes</h2>
 </div><div class="memdoc">
 
 <p>Close the datagram socket. </p>
-
-</div>
-</div>
-<a id="a3fa731104100275903b074ba2b65b839" name="a3fa731104100275903b074ba2b65b839"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3fa731104100275903b074ba2b65b839">&#9670;&#160;</a></span>connect()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void DatagramSocket::connect </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>timeoutMillis</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Connects the datagram socket to the remote host and port with optional timeout handling. </p>
-<p>This function binds the datagram socket to a specific remote destination (host and port) for sending subsequent datagrams. Although UDP is connectionless, calling <span class="tt"><a class="el" href="#a3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to the remote host and port with optional timeout handling.">connect()</a></span> on a datagram socket allows the socket to send datagrams to a specific destination without needing to specify the address each time.</p>
-<p>The connection process works as follows:</p><ul>
-<li>In <b>non-blocking mode</b>, the connection attempt proceeds immediately. If the connection cannot be completed right away, it will return <span class="tt">EINPROGRESS</span> (or <span class="tt">WSAEINPROGRESS</span> on Windows), indicating that the connection is still in progress.</li>
-<li><b><span class="tt">select()</span></b> is used to wait for the socket to be ready for communication within the specified timeout.</li>
-<li>If no timeout is specified (i.e., <span class="tt">timeoutMillis &lt; 0</span>), the socket connects in blocking mode, which will block until either the connection completes or an error occurs.</li>
-<li>If the connection fails or times out, an exception is thrown with the relevant error code and message.</li>
-</ul>
-<p>This function is cross-platform and works on both Windows and Linux systems.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timeoutMillis</td><td>The maximum time to wait for the connection to be established, in milliseconds. If set to a negative value, the connection will be attempted in blocking mode (no timeout). If set to a non-negative value, the connection will be attempted in non-blocking mode, and <span class="tt">select()</span> will be used to wait for the connection to complete within the specified timeout.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the connection fails, times out, or if there is an error during the connection attempt. The exception will contain the error code and message describing the failure. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -501,7 +468,7 @@ Notes</h2>
 </div><div class="memdoc">
 
 <p>Check if the datagram socket is connected to a remote host. </p>
-<p>For UDP sockets, "connected" means that the socket has been associated with a specific remote address using <a class="el" href="#a3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to the remote host and port with optional timeout handling.">connect()</a>. This doesn't establish a true connection like TCP, but allows send() and recv() to be used instead of sendto() and recvfrom().</p>
+<p>For UDP sockets, "connected" means that the socket has been associated with a specific remote address using <a class="el" href="group__udp.html#ga3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to a remote peer with optional timeout handling.">connect()</a>. This doesn't establish a true connection like TCP, but allows send() and recv() to be used instead of sendto() and recvfrom().</p>
 <dl class="section return"><dt>Returns</dt><dd>true if the socket is connected to a remote host, false otherwise. </dd></dl>
 
 </div>
