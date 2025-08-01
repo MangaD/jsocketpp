@@ -79,7 +79,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BufferView_8hpp.html",
-"group__socket__library__comparison.html",
+"group__socket__states.html",
 "namespacemembers_vars.html"
 ];
 

@@ -20,7 +20,7 @@ var classjsocketpp_1_1DatagramSocket =
     [ "isConnected", "group__udp.html#gac3b7c4a5fc5a21372c4a9cadb3e85efb", null ],
     [ "isValid", "group__udp.html#gab33da807656e2ab920707d60605844f5", null ],
     [ "operator=", "group__udp.html#gab67aad3e2d477982f19d17ab80607417", null ],
-    [ "operator=", "classjsocketpp_1_1DatagramSocket.html#a38397874bcb62f889cb6fefa20b45ba6", null ],
+    [ "operator=", "group__udp.html#ga38397874bcb62f889cb6fefa20b45ba6", null ],
     [ "read", "classjsocketpp_1_1DatagramSocket.html#a61dfe82025f17e3041c5b5acca2369eb", null ],
     [ "read", "classjsocketpp_1_1DatagramSocket.html#a58152e567e2d41ee6d612355ac0eb548", null ],
     [ "recvFrom", "classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06", null ],

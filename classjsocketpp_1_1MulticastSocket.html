@@ -150,8 +150,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:gab67aad3e2d477982f19d17ab80607417 inherit pub_methods_classjsocketpp_1_1DatagramSocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment operator (deleted) for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a>.  <br /></td></tr>
 <tr class="memitem:gab613123c8bf1aca6aec451b1140e2f82 inherit pub_methods_classjsocketpp_1_1DatagramSocket" id="r_gab613123c8bf1aca6aec451b1140e2f82"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gab613123c8bf1aca6aec451b1140e2f82">DatagramSocket</a> (<a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> &amp;&amp;rhs) noexcept</td></tr>
 <tr class="memdesc:gab613123c8bf1aca6aec451b1140e2f82 inherit pub_methods_classjsocketpp_1_1DatagramSocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a>.  <br /></td></tr>
-<tr class="memitem:a38397874bcb62f889cb6fefa20b45ba6 inherit pub_methods_classjsocketpp_1_1DatagramSocket" id="r_a38397874bcb62f889cb6fefa20b45ba6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a38397874bcb62f889cb6fefa20b45ba6">operator=</a> (<a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> &amp;&amp;rhs) noexcept</td></tr>
-<tr class="memdesc:a38397874bcb62f889cb6fefa20b45ba6 inherit pub_methods_classjsocketpp_1_1DatagramSocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator.  <br /></td></tr>
+<tr class="memitem:ga38397874bcb62f889cb6fefa20b45ba6 inherit pub_methods_classjsocketpp_1_1DatagramSocket" id="r_ga38397874bcb62f889cb6fefa20b45ba6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga38397874bcb62f889cb6fefa20b45ba6">operator=</a> (<a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> &amp;&amp;rhs) noexcept</td></tr>
+<tr class="memdesc:ga38397874bcb62f889cb6fefa20b45ba6 inherit pub_methods_classjsocketpp_1_1DatagramSocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a>.  <br /></td></tr>
 <tr class="memitem:ga550b67d7ad08c5cb068bb2b66d2c2c49 inherit pub_methods_classjsocketpp_1_1DatagramSocket" id="r_ga550b67d7ad08c5cb068bb2b66d2c2c49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga550b67d7ad08c5cb068bb2b66d2c2c49">bind</a> ()</td></tr>
 <tr class="memdesc:ga550b67d7ad08c5cb068bb2b66d2c2c49 inherit pub_methods_classjsocketpp_1_1DatagramSocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the datagram socket to all available interfaces on an ephemeral port.  <br /></td></tr>
 <tr class="memitem:ga6f4ba9267e5d2a48e0ab85553b55f03a inherit pub_methods_classjsocketpp_1_1DatagramSocket" id="r_ga6f4ba9267e5d2a48e0ab85553b55f03a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga6f4ba9267e5d2a48e0ab85553b55f03a">bind</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port)</td></tr>
@@ -294,14 +294,14 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Cross-platform multicast UDP socket class (IPv4/IPv6). </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a></span> class extends <a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> to provide high-level, Java-inspired support for multicast networking. It works on both Windows and Linux, and supports both IPv4 and IPv6 multicast groups.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md500"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md503"></a>
 What is Multicast?</h3>
 <ul>
 <li><b>Multicast</b> allows you to send a single UDP packet to multiple hosts subscribed to a multicast group address.</li>
 <li>It is useful for applications such as real-time data feeds, streaming media, and network discovery protocols.</li>
 <li>Each group is identified by a special IP address (224.0.0.0–239.255.255.255 for IPv4, <span class="tt">ff00::/8</span> for IPv6).</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md501"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md504"></a>
 Usage Example (Receiving)</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
 <div class="line">* <span class="comment">// Create a multicast socket bound to port 5000</span></div>
@@ -319,7 +319,7 @@ Usage Example (Receiving)</h3>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramPacket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramPacket.html">jsocketpp::DatagramPacket</a></div><div class="ttdoc">Represents a UDP datagram packet, encapsulating both payload and addressing information.</div><div class="ttdef"><b>Definition</b> DatagramPacket.hpp:48</div></div>
 <div class="ttc" id="agroup__udp_html_ga379ff0e20d62b5f0c815d48614597005"><div class="ttname"><a href="group__udp.html#ga379ff0e20d62b5f0c815d48614597005">jsocketpp::MulticastSocket::MulticastSocket</a></div><div class="ttdeci">MulticastSocket()=delete</div><div class="ttdoc">Default constructor (deleted) for MulticastSocket class.</div></div>
 <div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md502"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md505"></a>
 Usage Example (Sending)</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
 <div class="line"> </div>
@@ -329,7 +329,7 @@ Usage Example (Sending)</h3>
 <div class="line">socket.<a class="code hl_function" href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0">write</a>(packet);</div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_af34dc33d47f23ca13e9a63d4b1fcdee0"><div class="ttname"><a href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">size_t write(const DatagramPacket &amp;packet) const</div><div class="ttdoc">Write data to a remote host using a DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:329</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1MulticastSocket_html_a72172a10bc5ba13a908f31c791c90ec5"><div class="ttname"><a href="#a72172a10bc5ba13a908f31c791c90ec5">jsocketpp::MulticastSocket::setTimeToLive</a></div><div class="ttdeci">void setTimeToLive(int ttl)</div><div class="ttdoc">Set the time-to-live (TTL) for outgoing multicast packets.</div><div class="ttdef"><b>Definition</b> MulticastSocket.cpp:385</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md503"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md506"></a>
 Features</h3>
 <ul>
 <li>Join/leave multicast groups on a specific interface or all interfaces.</li>

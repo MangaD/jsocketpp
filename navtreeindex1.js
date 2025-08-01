@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"group__socket__library__comparison.html":[3,0,8],
 "group__socket__states.html":[3,0,9],
 "group__socketopts.html":[3,1,6],
 "group__socketopts.html#ga0472e21ad70ac9b778aac3d6177577ca":[3,1,6,8],
@@ -150,6 +149,7 @@ var NAVTREEINDEX1 =
 "group__udp.html#ga02b08c333a2f109a3b19ec7b3c0cecf9":[3,1,3,12],
 "group__udp.html#ga1573f70de77ed93d522f2f9273181469":[3,1,3,7],
 "group__udp.html#ga379ff0e20d62b5f0c815d48614597005":[3,1,3,16],
+"group__udp.html#ga38397874bcb62f889cb6fefa20b45ba6":[3,1,3,18],
 "group__udp.html#ga3d08597b24d9c7a3fe43dd291ee85148":[3,1,3,8],
 "group__udp.html#ga3fa731104100275903b074ba2b65b839":[3,1,3,6],
 "group__udp.html#ga550b67d7ad08c5cb068bb2b66d2c2c49":[3,1,3,3],
@@ -161,7 +161,7 @@ var NAVTREEINDEX1 =
 "group__udp.html#gab67aad3e2d477982f19d17ab80607417":[3,1,3,17],
 "group__udp.html#gac3b7c4a5fc5a21372c4a9cadb3e85efb":[3,1,3,14],
 "group__udp.html#gadd6a72af69e4e8e1e8701c60a7e728f1":[3,1,3,13],
-"group__udp.html#gaf2be0b146f197d55cc55a5ba8b619166":[3,1,3,18],
+"group__udp.html#gaf2be0b146f197d55cc55a5ba8b619166":[3,1,3,19],
 "group__udp.html#gaff03e4ff5f58f0440dec821c02355185":[3,1,3,5],
 "group__underlying__socket__api.html":[3,0,11],
 "group__unit__tests.html":[3,0,12],
