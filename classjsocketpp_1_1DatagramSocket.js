@@ -28,7 +28,6 @@ var classjsocketpp_1_1DatagramSocket =
     [ "read", "classjsocketpp_1_1DatagramSocket.html#a61dfe82025f17e3041c5b5acca2369eb", null ],
     [ "read", "classjsocketpp_1_1DatagramSocket.html#a58152e567e2d41ee6d612355ac0eb548", null ],
     [ "recvFrom", "classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06", null ],
-    [ "setTimeout", "classjsocketpp_1_1DatagramSocket.html#a540c0e48e02529eec6b9605e141433c5", null ],
     [ "write", "classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0", null ],
     [ "write", "classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29", null ],
     [ "write", "classjsocketpp_1_1DatagramSocket.html#a7e2b02ba6e9a630fdbde52b88863ec99", null ],

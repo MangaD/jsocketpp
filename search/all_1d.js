@@ -64,7 +64,7 @@ var searchData=
   ['setsosendtimeout_61',['setSoSendTimeout',['../group__socketopts.html#ga7107a9da459b00bf39ec2fe4d3e83396',1,'jsocketpp::SocketOptions']]],
   ['setsotimeout_62',['setSoTimeout',['../group__socketopts.html#ga2087f337f22de16821132208b94b1441',1,'jsocketpp::ServerSocket']]],
   ['settcpnodelay_63',['setTcpNoDelay',['../group__socketopts.html#ga9839dd8837c7519a627f28b3a4c7a513',1,'jsocketpp::SocketOptions']]],
-  ['settimeout_64',['setTimeout',['../classjsocketpp_1_1DatagramSocket.html#a540c0e48e02529eec6b9605e141433c5',1,'jsocketpp::DatagramSocket::setTimeout()'],['../classjsocketpp_1_1UnixSocket.html#a4b599e3ea9497908dbf3d7a2cc79f1c8',1,'jsocketpp::UnixSocket::setTimeout()']]],
+  ['settimeout_64',['setTimeout',['../classjsocketpp_1_1UnixSocket.html#a4b599e3ea9497908dbf3d7a2cc79f1c8',1,'jsocketpp::UnixSocket']]],
   ['settimetolive_65',['setTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#a72172a10bc5ba13a908f31c791c90ec5',1,'jsocketpp::MulticastSocket']]],
   ['setting_66',['Example: Read &lt;span class=&quot;tt&quot;&gt;SO_LINGER&lt;/span&gt; setting',['../group__socketopts.html#autotoc_md740',1,'']]],
   ['setting_20up_20real_20server_20and_20client_3a_67',['2.1 &lt;b&gt;Setting Up Real Server and Client&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md336',1,'']]],

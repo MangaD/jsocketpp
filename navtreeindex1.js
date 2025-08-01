@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"group__socketopts.html#ga1193748a866e07a7f25e97a0640ad8dd":[3,1,6,4],
 "group__socketopts.html#ga15ba6d555b0f3b7809c746f827398c5e":[3,1,6,13],
 "group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b":[3,1,6,27],
 "group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0":[3,1,6,15],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a":[4,0,0,1,3],
 "namespacejsocketpp_1_1net.html#acca9e860a0a33d2508bfa9986049db8c":[4,0,0,1,1],
 "namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37":[4,0,0,1,0],
-"namespacemembers.html":[4,1,0]
+"namespacemembers.html":[4,1,0],
+"namespacemembers_enum.html":[4,1,4]
 };
