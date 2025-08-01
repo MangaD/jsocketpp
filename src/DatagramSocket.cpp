@@ -117,7 +117,7 @@ void DatagramSocket::close()
     _selectedAddrInfo = nullptr;
 }
 
-void DatagramSocket::bind(std::string_view host, Port port)
+void DatagramSocket::bind(const std::string_view host, const Port port)
 {
     if (_isConnected)
     {
@@ -141,10 +141,11 @@ void DatagramSocket::bind(std::string_view host, Port port)
     if (const int ret = ::getaddrinfo(host.empty() ? nullptr : host.data(), portStr.c_str(), &hints, &rawResult);
         ret != 0 || rawResult == nullptr)
     {
+        throw SocketException(
 #ifdef _WIN32
-        throw SocketException(GetSocketError(), "DatagramSocket::bind(): getaddrinfo() failed");
+            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
 #else
-        throw SocketException(ret, "DatagramSocket::bind(): getaddrinfo() failed");
+            ret, SocketErrorMessageWrap(ret, true));
 #endif
     }
 
@@ -165,8 +166,7 @@ void DatagramSocket::bind(std::string_view host, Port port)
         }
     }
 
-    const int error = GetSocketError();
-    throw SocketException(error, "DatagramSocket::bind(): bind() failed");
+    throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
 }
 
 void DatagramSocket::bind(const Port port)

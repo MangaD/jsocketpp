@@ -21,19 +21,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
     addrinfo* res = nullptr;
     if (const int ret = getaddrinfo(groupAddr.c_str(), nullptr, &hints, &res); ret != 0 || !res)
     {
-        throw SocketException(
-#ifdef _WIN32
-            GetSocketError(),
-#else
-            ret,
-#endif
-            SocketErrorMessageWrap(
-#ifdef _WIN32
-                GetSocketError(),
-#else
-                ret,
-#endif
-                true));
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
     }
 
     if (res->ai_family == AF_INET)
@@ -467,7 +455,7 @@ void MulticastSocket::setLoopbackMode(const bool enable)
     }
     if (result == SOCKET_ERROR)
     {
-        throw SocketException(GetSocketError(), "Failed to set multicast loopback mode.");
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
     }
     _loopbackEnabled = enable; // (Optional: if you want to store it as a private member)
 }

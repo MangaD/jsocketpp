@@ -165,8 +165,7 @@ std::string ServerSocket::getLocalIp(const bool convertIPv4Mapped) const
 
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
-        const int err = GetSocketError();
-        throw SocketException(err, "getsockname() failed: " + SocketErrorMessage(err));
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
     }
 
     return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
@@ -182,8 +181,7 @@ Port ServerSocket::getLocalPort() const
 
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
-        const int err = GetSocketError();
-        throw SocketException(err, "getsockname() failed: " + SocketErrorMessage(err));
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
     }
 
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
@@ -438,7 +436,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     int result = poll(&pfd, 1, timeout);
     if (result < 0)
     {
-        throw SocketException(GetSocketError(), "poll() failed while waiting for incoming connection");
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
     }
     // poll() returns the number of fds with events. Check for POLLIN.
     return result > 0 && (pfd.revents & POLLIN);
@@ -479,7 +477,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     int result = select(static_cast<int>(getSocketFd()) + 1, &readFds, nullptr, nullptr, tvPtr);
     if (result < 0)
     {
-        throw SocketException(GetSocketError(), "select() failed while waiting for incoming connection");
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
     }
     // select() returns the number of sockets that are ready.
     // If it's greater than 0, our server socket is ready to accept a connection.
