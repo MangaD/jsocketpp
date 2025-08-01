@@ -346,6 +346,9 @@ Port Socket::getRemotePort() const
 
 std::string Socket::getLocalIp(const bool convertIPv4Mapped) const
 {
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("getLocalIp() failed: socket is not open.");
+
     sockaddr_storage addr{};
     socklen_t addrLen = sizeof(addr);
 
@@ -359,6 +362,9 @@ std::string Socket::getLocalIp(const bool convertIPv4Mapped) const
 
 Port Socket::getLocalPort() const
 {
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("getLocalPort() failed: socket is not open.");
+
     sockaddr_storage addr{};
     socklen_t addrLen = sizeof(addr);
 

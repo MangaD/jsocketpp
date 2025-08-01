@@ -654,6 +654,248 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] bool isConnected() const noexcept { return _isConnected; }
 
     /**
+     * @brief Retrieves the local IP address this socket is bound to.
+     * @ingroup socketopts
+     *
+     * This method queries the system to determine which local IP address has been assigned
+     * to the socket, typically as a result of a successful `bind()` or `connect()` call.
+     *
+     * ---
+     *
+     * ### 🌍 Applicability
+     * - `DatagramSocket`: ✅ Always safe to call after `bind()`
+     * - Works for both IPv4 and IPv6 sockets
+     * - Also works if the socket was auto-bound to a port by the OS (`bind(0)`)
+     *
+     * ---
+     *
+     * @param[in] convertIPv4Mapped If `true`, IPv4-mapped IPv6 addresses (e.g., `::ffff:192.0.2.1`)
+     *                              will be returned as plain IPv4 strings (`192.0.2.1`). If `false`,
+     *                              the raw mapped form is preserved.
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * DatagramSocket sock(AF_INET);
+     * sock.bind("0.0.0.0", 12345);
+     *
+     * std::string localIP = sock.getLocalIp();
+     * std::cout << "Bound to local IP: " << localIP << "\n";
+     * @endcode
+     *
+     * ---
+     *
+     * @return A string representing the local IP address (e.g., "192.168.1.10", "::1").
+     *
+     * @throws SocketException if the socket is invalid, unbound, or the system call fails.
+     *
+     * @see getLocalPort()
+     * @see getLocalSocketAddress()
+     * @see https://man7.org/linux/man-pages/man2/getsockname.2.html
+     */
+    [[nodiscard]] std::string DatagramSocket::getLocalIp(bool convertIPv4Mapped = true) const;
+
+    /**
+     * @brief Retrieves the local port number this datagram socket is bound to.
+     * @ingroup udp
+     *
+     * This method returns the local UDP port that the socket is currently bound to,
+     * either explicitly via `bind()` or implicitly assigned by the operating system.
+     *
+     * ---
+     *
+     * ### 🌍 Applicability
+     * - Valid after a successful `bind()` or `connect()`
+     * - Works for both IPv4 and IPv6 UDP sockets
+     * - Safe for sockets that were automatically bound to ephemeral ports (`port = 0`)
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * DatagramSocket sock(AF_INET);
+     * sock.bind("0.0.0.0", 0); // Let OS pick an ephemeral port
+     *
+     * Port port = sock.getLocalPort();
+     * std::cout << "Dynamically bound to port: " << port << "\n";
+     * @endcode
+     *
+     * ---
+     *
+     * @return The local UDP port number (in host byte order).
+     *
+     * @throws SocketException if the socket is not open or the system call fails.
+     *
+     * @see getLocalIp() To retrieve the bound IP address
+     * @see getLocalSocketAddress() For a formatted "IP:port" string
+     * @see https://man7.org/linux/man-pages/man2/getsockname.2.html
+     */
+    [[nodiscard]] Port DatagramSocket::getLocalPort() const;
+
+    /**
+     * @brief Retrieves the full local socket address in the form "IP:port".
+     * @ingroup udp
+     *
+     * This method combines the results of `getLocalIp()` and `getLocalPort()` into a
+     * single formatted string representing the socket's current local binding.
+     *
+     * ---
+     *
+     * ### 🔍 Format
+     * - For IPv4: `"192.168.0.42:12345"`
+     * - For IPv6: `"[fe80::1]:12345"` (wrapped in square brackets for URI compatibility)
+     *
+     * ---
+     *
+     * ### 🌍 Applicability
+     * - Works for both IPv4 and IPv6 UDP sockets
+     * - Safe after `bind()` or `connect()` to examine the bound interface and port
+     * - Useful for logging, debugging, metrics, and connection tracking
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * DatagramSocket sock(AF_INET6);
+     * sock.bind("::", 9999);
+     *
+     * std::string addr = sock.getLocalSocketAddress();
+     * std::cout << "Listening on: " << addr << "\n";
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] convertIPv4Mapped If `true`, IPv4-mapped IPv6 addresses will be returned in plain IPv4 format.
+     *                              If `false`, the raw mapped form is retained.
+     *
+     * @return A string in the format `"IP:port"` or `"[IPv6]:port"`.
+     *
+     * @throws SocketException if the socket is invalid or address retrieval fails.
+     *
+     * @see getLocalIp()
+     * @see getLocalPort()
+     * @see getRemoteSocketAddress() For peer address
+     */
+    [[nodiscard]] std::string getLocalSocketAddress(bool convertIPv4Mapped = true) const;
+
+    /**
+     * @brief Retrieves the IP address of the remote peer this datagram socket is connected to.
+     * @ingroup udp
+     *
+     * This method returns the IP address of the remote endpoint to which this UDP socket is
+     * logically connected using `connect()`. If the socket is not connected, this method throws.
+     *
+     * This is primarily useful in client-side applications or UDP-based protocols that require
+     * a fixed communication peer and benefit from `connect()`-based filtering and error detection.
+     *
+     * ---
+     *
+     * ### IPv4 vs IPv6
+     * - Supports both IPv4 and IPv6 sockets
+     * - If `convertIPv4Mapped == true`, IPv4-mapped IPv6 addresses will be returned as plain IPv4
+     * - Otherwise, IPv6-mapped IPv4 addresses will remain in their mapped form (`::ffff:192.0.2.1`)
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * DatagramSocket sock(AF_INET);
+     * sock.connect("192.168.1.100", 9000);
+     *
+     * std::string peerIp = sock.getRemoteIp();
+     * std::cout << "Connected to: " << peerIp << "\n";
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] convertIPv4Mapped Whether to normalize IPv4-mapped IPv6 addresses
+     * @return The IP address of the connected peer in string format
+     *
+     * @throws SocketException if the socket is not connected or the address cannot be retrieved
+     *
+     * @see connect()
+     * @see getRemotePort()
+     * @see getRemoteSocketAddress()
+     */
+    [[nodiscard]] std::string getRemoteIp(bool convertIPv4Mapped = true) const;
+
+    /**
+     * @brief Retrieves the port number of the remote peer this datagram socket is connected to.
+     * @ingroup udp
+     *
+     * This method returns the UDP port number of the peer to which the socket is currently
+     * connected via `connect()`. If the socket is not connected, an exception is thrown.
+     *
+     * ---
+     *
+     * ### 📡 Use Cases
+     * - Useful in client-side or semi-connected UDP scenarios to track the destination port
+     * - Enables diagnostic output (e.g. `"Sending to IP:port"`)
+     * - Allows verification after `connect()` to check actual remote binding
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * DatagramSocket sock("fe80::1", 7000); // Connect to remote IPv6 peer
+     *
+     * Port port = sock.getRemotePort();
+     * std::cout << "Remote port: " << port << "\n";
+     * @endcode
+     *
+     * ---
+     *
+     * @return The 16-bit UDP port of the connected peer (in host byte order).
+     *
+     * @throws SocketException if the socket is not connected or the port cannot be determined.
+     *
+     * @see getRemoteIp()
+     * @see getRemoteSocketAddress()
+     * @see connect()
+     */
+    [[nodiscard]] Port getRemotePort() const;
+
+    /**
+     * @brief Get the remote peer's address and port as a formatted string.
+     * @ingroup udp
+     *
+     * This method returns the IP address and port of the connected remote endpoint,
+     * formatted as a single string. It is only valid if the socket is connected via `connect()`.
+     *
+     * The output is of the form:
+     * - IPv4: `"192.168.1.100:9000"`
+     * - IPv6: `"[fe80::1]:9000"`
+     *
+     * ---
+     *
+     * ### Use Cases
+     * - Logging or displaying connection targets
+     * - Diagnostics or telemetry for connected clients
+     * - Simplified UI or monitoring output
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * DatagramSocket sock("192.168.1.100", 9000);
+     * std::cout << "Connected to: " << sock.getRemoteSocketAddress() << "\n";
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] convertIPv4Mapped If true, IPv4-mapped IPv6 addresses will be normalized to IPv4 form.
+     * @return A formatted string in the form "IP:port" or "[IPv6]:port"
+     *
+     * @throws SocketException if the socket is not connected or address retrieval fails.
+     *
+     * @see getRemoteIp()
+     * @see getRemotePort()
+     * @see getLocalSocketAddress()
+     */
+    [[nodiscard]] std::string getRemoteSocketAddress(bool convertIPv4Mapped = true) const;
+
+    /**
      * @brief Write data to a remote host using a DatagramPacket.
      *
      * Sends the data contained in the packet's buffer to the address and port
@@ -768,16 +1010,48 @@ class DatagramSocket : public SocketOptions
     }
 
     /**
-     * @brief Close the datagram socket.
+     * @brief Closes the datagram socket and releases its underlying system resources.
+     * @ingroup udp
+     *
+     * This method shuts down and closes the underlying UDP socket file descriptor or handle.
+     * Once closed, the socket can no longer send or receive packets. This is a terminal operation —
+     * any further use of the socket (e.g. `sendTo()`, `bind()`, or `setOption()`) will result in exceptions.
+     *
+     * ---
+     *
+     * ### 🧱 Effects
+     * - The socket becomes invalid (`_sockFd == INVALID_SOCKET`)
+     * - Any pending operations are aborted
+     * - The operating system reclaims the socket descriptor
+     *
+     * ---
+     *
+     * ### 💡 Platform Notes
+     * - On **POSIX**, this calls `::close(_sockFd)`
+     * - On **Windows**, this calls `::closesocket(_sockFd)`
+     * - If the socket was already closed, calling this again has no effect (safe)
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * DatagramSocket sock(AF_INET);
+     * sock.bind("0.0.0.0", 9999);
+     *
+     * // ... use the socket ...
+     *
+     * sock.close(); // Fully tear down the socket
+     * @endcode
+     *
+     * @throws SocketException only if the system close operation fails unexpectedly.
+     *
+     * @note After calling `close()`, the socket becomes unusable and must not be reused.
+     *       Use `isClosed()` to verify socket state before performing further operations.
+     *
+     * @see isClosed() To check whether the socket has already been closed
+     * @see setOption() To configure socket options before or after bind
      */
     void close();
-
-    /**
-     * @brief Set the socket to non-blocking or blocking mode.
-     * @param nonBlocking true for non-blocking, false for blocking.
-     * @throws SocketException on error.
-     */
-    void setNonBlocking(bool nonBlocking) const;
 
     /**
      * @brief Sets the socket's receive timeout.
@@ -792,12 +1066,6 @@ class DatagramSocket : public SocketOptions
      * @throws SocketException if setting timeout fails
      */
     void setTimeout(int millis) const;
-
-    /**
-     * @brief Get the local socket's address as a string (ip:port).
-     * @return String representation of the local address.
-     */
-    std::string getLocalSocketAddress() const;
 
     /**
      * @brief Checks whether the datagram socket is valid and ready for use.
@@ -873,13 +1141,6 @@ class DatagramSocket : public SocketOptions
      * @see close(), isConnected(), isBound(), getSocketFd()
      */
     [[nodiscard]] bool isClosed() const noexcept { return getSocketFd() == INVALID_SOCKET; }
-
-    /**
-     * @brief Enable or disable the ability to send broadcast packets.
-     * @param enable Set to true to enable broadcast, false to disable.
-     * @throws SocketException on error.
-     */
-    void enableBroadcast(bool enable) const;
 
   protected:
     /**

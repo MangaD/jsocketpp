@@ -271,7 +271,7 @@ std::string jsocketpp::ipFromSockaddr(const sockaddr* addr, const bool convertIP
     {
         const auto* sa = reinterpret_cast<const sockaddr_in*>(addr);
         if (!inet_ntop(AF_INET, &sa->sin_addr, buf, sizeof(buf)))
-            throw SocketException(GetSocketError(), "inet_ntop(AF_INET) failed");
+            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
     }
     else if (addr->sa_family == AF_INET6)
     {
@@ -285,7 +285,7 @@ std::string jsocketpp::ipFromSockaddr(const sockaddr* addr, const bool convertIP
         }
 
         if (!inet_ntop(AF_INET6, &sa6->sin6_addr, buf, sizeof(buf)))
-            throw SocketException(GetSocketError(), "inet_ntop(AF_INET6) failed");
+            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
     }
     else
     {

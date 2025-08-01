@@ -484,25 +484,6 @@ size_t DatagramSocket::read(DatagramPacket& packet, const bool resizeBuffer) con
     return static_cast<size_t>(received);
 }
 
-void DatagramSocket::setNonBlocking(bool nonBlocking) const
-{
-#ifdef _WIN32
-    u_long mode = nonBlocking ? 1 : 0;
-    if (ioctlsocket(getSocketFd(), FIONBIO, &mode) != 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-#else
-    int flags = fcntl(getSocketFd(), F_GETFL, 0);
-    if (flags == -1)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    if (nonBlocking)
-        flags |= O_NONBLOCK;
-    else
-        flags &= ~O_NONBLOCK;
-    if (fcntl(getSocketFd(), F_SETFL, flags) == -1)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-#endif
-}
-
 void DatagramSocket::setTimeout(int millis) const
 {
 #ifdef _WIN32
@@ -524,46 +505,68 @@ void DatagramSocket::setTimeout(int millis) const
 #endif
 }
 
-std::string DatagramSocket::getLocalSocketAddress() const
+std::string DatagramSocket::getLocalIp(const bool convertIPv4Mapped) const
 {
-    sockaddr_storage addr{};
-    socklen_t len = sizeof(addr);
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("getLocalIp() failed: socket is not open.");
 
-    if (getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &len) != 0)
-    {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    }
+    sockaddr_storage localAddr{};
+    socklen_t addrLen = sizeof(localAddr);
 
-    char host[NI_MAXHOST]{};
-    char serv[NI_MAXSERV]{};
-    if (const auto ret = getnameinfo(reinterpret_cast<sockaddr*>(&addr), len, host, sizeof(host), serv, sizeof(serv),
-                                     NI_NUMERICHOST | NI_NUMERICSERV);
-        ret != 0)
-    {
-        throw SocketException(
-#ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
-#else
-            ret, SocketErrorMessageWrap(ret, true));
-#endif
-    }
-    return std::string(host) + ":" + serv;
+    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&localAddr), &addrLen) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&localAddr), convertIPv4Mapped);
 }
 
-/**
- * @brief Enable or disable the ability to send broadcast packets.
- * @param enable Set to true to enable broadcast, false to disable.
- * @throws SocketException on error.
- */
-void DatagramSocket::enableBroadcast(const bool enable) const
+Port DatagramSocket::getLocalPort() const
 {
-    const int flag = enable ? 1 : 0;
-    if (setsockopt(getSocketFd(), SOL_SOCKET, SO_BROADCAST,
-#ifdef _WIN32
-                   reinterpret_cast<const char*>(&flag),
-#else
-                   &flag,
-#endif
-                   sizeof(flag)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("getLocalPort() failed: socket is not open.");
+
+    sockaddr_storage addr{};
+    socklen_t addrLen = sizeof(addr);
+
+    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+    return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
+}
+
+std::string DatagramSocket::getLocalSocketAddress(const bool convertIPv4Mapped) const
+{
+    return getLocalIp(convertIPv4Mapped) + ":" + std::to_string(getLocalPort());
+}
+
+std::string DatagramSocket::getRemoteIp(const bool convertIPv4Mapped) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("getRemoteIp() failed: socket is not open.");
+
+    sockaddr_storage remoteAddr{};
+    socklen_t addrLen = sizeof(remoteAddr);
+
+    if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&remoteAddr), &addrLen) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr), convertIPv4Mapped);
+}
+
+Port DatagramSocket::getRemotePort() const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("getRemotePort() failed: socket is not open.");
+
+    sockaddr_storage remoteAddr{};
+    socklen_t addrLen = sizeof(remoteAddr);
+
+    if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&remoteAddr), &addrLen) == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+    return portFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr));
+}
+
+std::string DatagramSocket::getRemoteSocketAddress(const bool convertIPv4Mapped) const
+{
+    return getRemoteIp(convertIPv4Mapped) + ":" + std::to_string(getRemotePort());
 }
