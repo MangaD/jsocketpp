@@ -148,13 +148,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ga108098c3eb5682c553e3f5433ed0e132" id="r_ga108098c3eb5682c553e3f5433ed0e132"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga108098c3eb5682c553e3f5433ed0e132">DatagramSocket::getLocalPort</a> () const</td></tr>
 <tr class="memdesc:ga108098c3eb5682c553e3f5433ed0e132"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the local port number this datagram socket is bound to.  <br /></td></tr>
 <tr class="memitem:ga9a7f8475868acca97f90dcd66df7f943" id="r_ga9a7f8475868acca97f90dcd66df7f943"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga9a7f8475868acca97f90dcd66df7f943">getLocalSocketAddress</a> (bool convertIPv4Mapped=true) const</td></tr>
-<tr class="memdesc:ga9a7f8475868acca97f90dcd66df7f943"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the full local socket address in the form "IP:port".  <br /></td></tr>
+<tr class="memdesc:ga9a7f8475868acca97f90dcd66df7f943"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the local socket address as a formatted string in the form <span class="tt">"IP:port"</span>.  <br /></td></tr>
 <tr class="memitem:ga204770d3dea411d09d5f0efd8bac5725" id="r_ga204770d3dea411d09d5f0efd8bac5725"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga204770d3dea411d09d5f0efd8bac5725">getRemoteIp</a> (bool convertIPv4Mapped=true) const</td></tr>
-<tr class="memdesc:ga204770d3dea411d09d5f0efd8bac5725"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the IP address of the remote peer this datagram socket is connected to.  <br /></td></tr>
+<tr class="memdesc:ga204770d3dea411d09d5f0efd8bac5725"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the IP address of the remote peer for the most recent datagram exchange.  <br /></td></tr>
 <tr class="memitem:ga6d1dbfd5b854e120b352a27b541e5841" id="r_ga6d1dbfd5b854e120b352a27b541e5841"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga6d1dbfd5b854e120b352a27b541e5841">getRemotePort</a> () const</td></tr>
-<tr class="memdesc:ga6d1dbfd5b854e120b352a27b541e5841"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the port number of the remote peer this datagram socket is connected to.  <br /></td></tr>
+<tr class="memdesc:ga6d1dbfd5b854e120b352a27b541e5841"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the port number of the remote peer for the most recent datagram exchange.  <br /></td></tr>
 <tr class="memitem:gacb3c554671141c0370445b2b7e9a6061" id="r_gacb3c554671141c0370445b2b7e9a6061"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gacb3c554671141c0370445b2b7e9a6061">getRemoteSocketAddress</a> (bool convertIPv4Mapped=true) const</td></tr>
-<tr class="memdesc:gacb3c554671141c0370445b2b7e9a6061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the remote peer's address and port as a formatted string.  <br /></td></tr>
+<tr class="memdesc:gacb3c554671141c0370445b2b7e9a6061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the remote peer’s socket address in the form <span class="tt">"IP:port"</span>.  <br /></td></tr>
 <tr class="memitem:af34dc33d47f23ca13e9a63d4b1fcdee0" id="r_af34dc33d47f23ca13e9a63d4b1fcdee0"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af34dc33d47f23ca13e9a63d4b1fcdee0">write</a> (const <a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> &amp;packet) const</td></tr>
 <tr class="memdesc:af34dc33d47f23ca13e9a63d4b1fcdee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write data to a remote host using a <a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a>.  <br /></td></tr>
 <tr class="memitem:ab17c043006b0c35944a1809996b30c29" id="r_ab17c043006b0c35944a1809996b30c29"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab17c043006b0c35944a1809996b30c29">write</a> (std::string_view message) const</td></tr>
@@ -163,9 +163,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a7e2b02ba6e9a630fdbde52b88863ec99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a datagram to a specific host and port (connectionless UDP).  <br /></td></tr>
 <tr class="memitem:a58152e567e2d41ee6d612355ac0eb548" id="r_a58152e567e2d41ee6d612355ac0eb548"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58152e567e2d41ee6d612355ac0eb548">read</a> (<a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> &amp;packet, bool resizeBuffer=true) const</td></tr>
 <tr class="memdesc:a58152e567e2d41ee6d612355ac0eb548"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a UDP datagram and fills the provided <a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a>.  <br /></td></tr>
-<tr class="memitem:a61dfe82025f17e3041c5b5acca2369eb" id="r_a61dfe82025f17e3041c5b5acca2369eb"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a61dfe82025f17e3041c5b5acca2369eb template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61dfe82025f17e3041c5b5acca2369eb">read</a> ()</td></tr>
-<tr class="memdesc:a61dfe82025f17e3041c5b5acca2369eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a trivially copyable type from the socket (connected UDP).  <br /></td></tr>
+<tr class="memitem:ga916c70c6333b0efe028695eaa159cdab" id="r_ga916c70c6333b0efe028695eaa159cdab"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ga916c70c6333b0efe028695eaa159cdab template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga916c70c6333b0efe028695eaa159cdab">DatagramSocket::read</a> ()</td></tr>
+<tr class="memdesc:ga916c70c6333b0efe028695eaa159cdab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a fixed-size, trivially copyable object of type <span class="tt">T</span> from the datagram socket.  <br /></td></tr>
 <tr class="memitem:a227984f842fa768c2e7cc9a4b585bf06" id="r_a227984f842fa768c2e7cc9a4b585bf06"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a227984f842fa768c2e7cc9a4b585bf06 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a227984f842fa768c2e7cc9a4b585bf06">recvFrom</a> (std::string *senderAddr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort)</td></tr>
 <tr class="memdesc:a227984f842fa768c2e7cc9a4b585bf06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a datagram into a trivially copyable type.  <br /></td></tr>
@@ -268,6 +268,10 @@ Protected Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
+<tr class="memitem:ac53f064c3e7249b78d895121d3ead632" id="r_ac53f064c3e7249b78d895121d3ead632"><td class="memItemLeft" align="right" valign="top">sockaddr_storage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac53f064c3e7249b78d895121d3ead632">_remoteAddr</a> {}</td></tr>
+<tr class="memdesc:ac53f064c3e7249b78d895121d3ead632"><td class="mdescLeft">&#160;</td><td class="mdescRight">Storage for the address of the most recent sender (used in unconnected mode).  <br /></td></tr>
+<tr class="memitem:acc234405e43a22139930c6b2611927c8" id="r_acc234405e43a22139930c6b2611927c8"><td class="memItemLeft" align="right" valign="top">socklen_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc234405e43a22139930c6b2611927c8">_remoteAddrLen</a> = 0</td></tr>
+<tr class="memdesc:acc234405e43a22139930c6b2611927c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Length of the valid address data in <span class="tt">_remoteAddr</span> (0 if none received yet).  <br /></td></tr>
 <tr class="memitem:a87523b567e1963c683584ed19c1d6f84" id="r_a87523b567e1963c683584ed19c1d6f84"><td class="memItemLeft" align="right" valign="top">sockaddr_storage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a87523b567e1963c683584ed19c1d6f84">_localAddr</a> {}</td></tr>
 <tr class="memdesc:a87523b567e1963c683584ed19c1d6f84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Local address structure.  <br /></td></tr>
 <tr class="memitem:a471ce3677773b7fb9fb7766e247bc76f" id="r_a471ce3677773b7fb9fb7766e247bc76f"><td class="memItemLeft" align="right" valign="top">socklen_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a471ce3677773b7fb9fb7766e247bc76f">_localAddrLen</a> = 0</td></tr>
@@ -315,7 +319,7 @@ Example: Simple UDP Echo Server and Client</h2>
 <div class="line">}</div>
 <div class="ttc" id="aDatagramSocket_8hpp_html"><div class="ttname"><a href="DatagramSocket_8hpp.html">DatagramSocket.hpp</a></div><div class="ttdoc">UDP datagram socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramPacket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramPacket.html">jsocketpp::DatagramPacket</a></div><div class="ttdoc">Represents a UDP datagram packet, encapsulating both payload and addressing information.</div><div class="ttdef"><b>Definition</b> DatagramPacket.hpp:48</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a></div><div class="ttdoc">Cross-platform UDP socket class with Java-style interface.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:85</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a></div><div class="ttdoc">Cross-platform UDP socket class with Java-style interface.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:86</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="comment">// --- Client ---</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="DatagramSocket_8hpp.html">jsocketpp/DatagramSocket.hpp</a>&gt;</span></div>
@@ -382,50 +386,8 @@ Notes</h2>
 
 </div>
 </div>
-<a id="a61dfe82025f17e3041c5b5acca2369eb" name="a61dfe82025f17e3041c5b5acca2369eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61dfe82025f17e3041c5b5acca2369eb">&#9670;&#160;</a></span>read() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">T jsocketpp::DatagramSocket::read </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Read a trivially copyable type from the socket (connected UDP). </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Type to read (must be trivially copyable). </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Value of type T received from the socket. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>on error or disconnect. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a58152e567e2d41ee6d612355ac0eb548" name="a58152e567e2d41ee6d612355ac0eb548"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58152e567e2d41ee6d612355ac0eb548">&#9670;&#160;</a></span>read() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a58152e567e2d41ee6d612355ac0eb548">&#9670;&#160;</a></span>read()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -821,6 +783,54 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 
 <p><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number the socket is bound to (if applicable). </p>
+
+</div>
+</div>
+<a id="ac53f064c3e7249b78d895121d3ead632" name="ac53f064c3e7249b78d895121d3ead632"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac53f064c3e7249b78d895121d3ead632">&#9670;&#160;</a></span>_remoteAddr</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">sockaddr_storage jsocketpp::DatagramSocket::_remoteAddr {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Storage for the address of the most recent sender (used in unconnected mode). </p>
+
+</div>
+</div>
+<a id="acc234405e43a22139930c6b2611927c8" name="acc234405e43a22139930c6b2611927c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc234405e43a22139930c6b2611927c8">&#9670;&#160;</a></span>_remoteAddrLen</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">socklen_t jsocketpp::DatagramSocket::_remoteAddrLen = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Length of the valid address data in <span class="tt">_remoteAddr</span> (0 if none received yet). </p>
 
 </div>
 </div>

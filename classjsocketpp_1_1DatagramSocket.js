@@ -14,6 +14,7 @@ var classjsocketpp_1_1DatagramSocket =
     [ "connect", "group__udp.html#ga3fa731104100275903b074ba2b65b839", null ],
     [ "DatagramSocket::getLocalIp", "group__socketopts.html#ga4ee622997e2f6da65a6d955931affc12", null ],
     [ "DatagramSocket::getLocalPort", "group__udp.html#ga108098c3eb5682c553e3f5433ed0e132", null ],
+    [ "DatagramSocket::read", "group__udp.html#ga916c70c6333b0efe028695eaa159cdab", null ],
     [ "disconnect", "group__udp.html#ga02b08c333a2f109a3b19ec7b3c0cecf9", null ],
     [ "getLocalSocketAddress", "group__udp.html#ga9a7f8475868acca97f90dcd66df7f943", null ],
     [ "getRemoteIp", "group__udp.html#ga204770d3dea411d09d5f0efd8bac5725", null ],
@@ -25,7 +26,6 @@ var classjsocketpp_1_1DatagramSocket =
     [ "isValid", "group__udp.html#gab33da807656e2ab920707d60605844f5", null ],
     [ "operator=", "group__udp.html#gab67aad3e2d477982f19d17ab80607417", null ],
     [ "operator=", "group__udp.html#ga38397874bcb62f889cb6fefa20b45ba6", null ],
-    [ "read", "classjsocketpp_1_1DatagramSocket.html#a61dfe82025f17e3041c5b5acca2369eb", null ],
     [ "read", "classjsocketpp_1_1DatagramSocket.html#a58152e567e2d41ee6d612355ac0eb548", null ],
     [ "recvFrom", "classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06", null ],
     [ "write", "classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0", null ],
@@ -38,5 +38,7 @@ var classjsocketpp_1_1DatagramSocket =
     [ "_localAddr", "classjsocketpp_1_1DatagramSocket.html#a87523b567e1963c683584ed19c1d6f84", null ],
     [ "_localAddrLen", "classjsocketpp_1_1DatagramSocket.html#a471ce3677773b7fb9fb7766e247bc76f", null ],
     [ "_port", "classjsocketpp_1_1DatagramSocket.html#ac4995ba9286d5dc4ad521a80a43c634a", null ],
+    [ "_remoteAddr", "classjsocketpp_1_1DatagramSocket.html#ac53f064c3e7249b78d895121d3ead632", null ],
+    [ "_remoteAddrLen", "classjsocketpp_1_1DatagramSocket.html#acc234405e43a22139930c6b2611927c8", null ],
     [ "_selectedAddrInfo", "classjsocketpp_1_1DatagramSocket.html#ac91cdd138597ae9cf75389cf41a24d83", null ]
 ];

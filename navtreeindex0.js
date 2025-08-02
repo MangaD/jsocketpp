@@ -54,15 +54,16 @@ var NAVTREEINDEX0 =
 "classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06":[3,1,3,1,27],
 "classjsocketpp_1_1DatagramSocket.html#a471ce3677773b7fb9fb7766e247bc76f":[3,1,3,1,36],
 "classjsocketpp_1_1DatagramSocket.html#a58152e567e2d41ee6d612355ac0eb548":[3,1,3,1,26],
-"classjsocketpp_1_1DatagramSocket.html#a61dfe82025f17e3041c5b5acca2369eb":[3,1,3,1,25],
 "classjsocketpp_1_1DatagramSocket.html#a69d32acc4bd03ebb19fed330d7ff612a":[3,1,3,1,31],
 "classjsocketpp_1_1DatagramSocket.html#a7e2b02ba6e9a630fdbde52b88863ec99":[3,1,3,1,30],
 "classjsocketpp_1_1DatagramSocket.html#a87523b567e1963c683584ed19c1d6f84":[3,1,3,1,35],
 "classjsocketpp_1_1DatagramSocket.html#a8c77f16fcae1c86b679a0567de055b7d":[3,1,3,1,33],
 "classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29":[3,1,3,1,29],
 "classjsocketpp_1_1DatagramSocket.html#ac4995ba9286d5dc4ad521a80a43c634a":[3,1,3,1,37],
-"classjsocketpp_1_1DatagramSocket.html#ac91cdd138597ae9cf75389cf41a24d83":[3,1,3,1,38],
+"classjsocketpp_1_1DatagramSocket.html#ac53f064c3e7249b78d895121d3ead632":[3,1,3,1,38],
+"classjsocketpp_1_1DatagramSocket.html#ac91cdd138597ae9cf75389cf41a24d83":[3,1,3,1,40],
 "classjsocketpp_1_1DatagramSocket.html#acc0850711b172f6c6c8bf0649c530ea0":[3,1,3,1,34],
+"classjsocketpp_1_1DatagramSocket.html#acc234405e43a22139930c6b2611927c8":[3,1,3,1,39],
 "classjsocketpp_1_1DatagramSocket.html#ae157621acf76031b55ce263898d18aa7":[3,1,3,1,32],
 "classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0":[3,1,3,1,28],
 "classjsocketpp_1_1MulticastSocket.html":[3,1,3,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "group__socketopts.html#ga0472e21ad70ac9b778aac3d6177577ca":[3,1,6,10],
 "group__socketopts.html#ga04df6377e302cc0cedff070517021950":[3,1,6,26],
 "group__socketopts.html#ga05137fbdc55ab065739e220b7a4f41c0":[3,1,6,17],
-"group__socketopts.html#ga05c3ae5067a7d83965249d00c5d564c3":[3,1,6,30],
-"group__socketopts.html#ga1193748a866e07a7f25e97a0640ad8dd":[3,1,6,4]
+"group__socketopts.html#ga05c3ae5067a7d83965249d00c5d564c3":[3,1,6,30]
 };
