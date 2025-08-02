@@ -12,6 +12,7 @@
 #include "DatagramPacket.hpp"
 #include "SocketOptions.hpp"
 
+#include <bit>
 #include <string>
 
 namespace jsocketpp
@@ -734,164 +735,197 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] Port DatagramSocket::getLocalPort() const;
 
     /**
-     * @brief Retrieves the full local socket address in the form "IP:port".
+     * @brief Retrieves the local socket address as a formatted string in the form `"IP:port"`.
      * @ingroup udp
      *
-     * This method combines the results of `getLocalIp()` and `getLocalPort()` into a
-     * single formatted string representing the socket's current local binding.
+     * This method returns the socket's local IP address and port in a human-readable format,
+     * such as `"127.0.0.1:12345"` or `"::1:54321"`. It works for both explicitly bound sockets
+     * and sockets where the OS has auto-assigned an ephemeral port after the first `sendTo()`
+     * or `connect()` call.
      *
      * ---
      *
-     * ### 🔍 Format
-     * - For IPv4: `"192.168.0.42:12345"`
-     * - For IPv6: `"[fe80::1]:12345"` (wrapped in square brackets for URI compatibility)
+     * ### Use Cases
+     * - Logging which interface and port the socket is bound to
+     * - Debugging multicast or broadcast socket behavior
+     * - Confirming OS-assigned ports in dynamic binding scenarios
+     * - Introspection during runtime for monitoring tools or metrics
      *
      * ---
      *
-     * ### 🌍 Applicability
-     * - Works for both IPv4 and IPv6 UDP sockets
-     * - Safe after `bind()` or `connect()` to examine the bound interface and port
-     * - Useful for logging, debugging, metrics, and connection tracking
+     * ### IPv6 Handling
+     * If the socket is bound to an IPv4-mapped IPv6 address (e.g., `::ffff:192.0.2.1`) and
+     * `@p convertIPv4Mapped` is true (default), the method simplifies it to standard IPv4 format.
      *
      * ---
      *
      * ### Example
      * @code
      * DatagramSocket sock(AF_INET6);
-     * sock.bind("::", 9999);
+     * sock.bind(0); // OS assigns an ephemeral port
      *
-     * std::string addr = sock.getLocalSocketAddress();
-     * std::cout << "Listening on: " << addr << "\n";
+     * std::cout << "Local socket: " << sock.getLocalSocketAddress() << "\n";
+     * // Output: "192.0.2.5:50437"
      * @endcode
      *
-     * ---
+     * @param[in] convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to IPv4 (default: true).
+     * @return A string in the form `"IP:port"` representing the local address and port.
      *
-     * @param[in] convertIPv4Mapped If `true`, IPv4-mapped IPv6 addresses will be returned in plain IPv4 format.
-     *                              If `false`, the raw mapped form is retained.
-     *
-     * @return A string in the format `"IP:port"` or `"[IPv6]:port"`.
-     *
-     * @throws SocketException if the socket is invalid or address retrieval fails.
+     * @throws SocketException if the socket is not bound or the local address cannot be retrieved.
      *
      * @see getLocalIp()
      * @see getLocalPort()
-     * @see getRemoteSocketAddress() For peer address
+     * @see bind()
      */
     [[nodiscard]] std::string getLocalSocketAddress(bool convertIPv4Mapped = true) const;
 
     /**
-     * @brief Retrieves the IP address of the remote peer this datagram socket is connected to.
+     * @brief Retrieves the IP address of the remote peer for the most recent datagram exchange.
      * @ingroup udp
      *
-     * This method returns the IP address of the remote endpoint to which this UDP socket is
-     * logically connected using `connect()`. If the socket is not connected, this method throws.
-     *
-     * This is primarily useful in client-side applications or UDP-based protocols that require
-     * a fixed communication peer and benefit from `connect()`-based filtering and error detection.
+     * This method returns the remote IP address as a string (e.g., `"192.168.1.42"` or `"::1"`),
+     * depending on the current connection state of the socket:
      *
      * ---
      *
-     * ### IPv4 vs IPv6
-     * - Supports both IPv4 and IPv6 sockets
-     * - If `convertIPv4Mapped == true`, IPv4-mapped IPv6 addresses will be returned as plain IPv4
-     * - Otherwise, IPv6-mapped IPv4 addresses will remain in their mapped form (`::ffff:192.0.2.1`)
+     * ### 🔁 Behavior Based on Connection Mode
+     * - **Connected DatagramSocket**: Uses `getpeername()` to obtain the address of the fixed remote peer.
+     * - **Unconnected DatagramSocket**: Returns the IP address of the sender from the most recent `recvfrom()` call.
+     *   If no datagram has yet been received, the method throws a `SocketException`.
+     *
+     * ---
+     *
+     * ### IPv6 Handling
+     * If the returned IP is an IPv4-mapped IPv6 address (e.g., `::ffff:192.0.2.1`) and
+     * `@p convertIPv4Mapped` is true (default), the address is simplified to IPv4 form.
+     *
+     * ---
+     *
+     * ### Example (Unconnected Mode)
+     * @code
+     * DatagramSocket sock(AF_INET);
+     * sock.bind(4567);
+     *
+     * std::vector<std::byte> buf(1024);
+     * sock.receiveFrom(buf); // waits for first message
+     *
+     * std::string peerIp = sock.getRemoteIp();
+     * std::cout << "Last datagram was from: " << peerIp << "\n";
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] convertIPv4Mapped Whether to simplify IPv4-mapped IPv6 addresses (default: true).
+     * @return IP address of the connected peer, or the last datagram sender.
+     *
+     * @throws SocketException If:
+     * - The socket is not open
+     * - In connected mode, `getpeername()` fails
+     * - In unconnected mode, no datagram has been received yet
+     *
+     * @see getRemotePort()
+     * @see getRemoteSocketAddress()
+     * @see isConnected()
+     */
+    [[nodiscard]] std::string getRemoteIp(bool convertIPv4Mapped = true) const;
+
+    /**
+     * @brief Retrieves the port number of the remote peer for the most recent datagram exchange.
+     * @ingroup udp
+     *
+     * This method returns the remote port number in **host byte order**, depending on the socket’s mode:
+     *
+     * ---
+     *
+     * ### 🔁 Behavior by Mode
+     * - **Connected DatagramSocket**: Uses `getpeername()` to determine the port of the fixed peer.
+     * - **Unconnected DatagramSocket**: Returns the port from the most recent `recvfrom()` call.
+     *   If no datagram has been received yet, an exception is thrown.
+     *
+     * ---
+     *
+     * ### Use Cases
+     * - Debugging or logging the origin of a datagram
+     * - Protocol dispatching based on sender’s port
+     * - Maintaining peer state or statistics per source
      *
      * ---
      *
      * ### Example
      * @code
      * DatagramSocket sock(AF_INET);
-     * sock.connect("192.168.1.100", 9000);
+     * sock.bind(9876);
      *
-     * std::string peerIp = sock.getRemoteIp();
-     * std::cout << "Connected to: " << peerIp << "\n";
+     * std::array<char, 128> buffer{};
+     * sock.receiveFrom(buffer);
+     *
+     * std::cout << "Sender port: " << sock.getRemotePort() << "\n";
      * @endcode
      *
      * ---
      *
-     * @param[in] convertIPv4Mapped Whether to normalize IPv4-mapped IPv6 addresses
-     * @return The IP address of the connected peer in string format
+     * @return Port number of the connected peer or last datagram sender, in host byte order.
      *
-     * @throws SocketException if the socket is not connected or the address cannot be retrieved
-     *
-     * @see connect()
-     * @see getRemotePort()
-     * @see getRemoteSocketAddress()
-     */
-    [[nodiscard]] std::string getRemoteIp(bool convertIPv4Mapped = true) const;
-
-    /**
-     * @brief Retrieves the port number of the remote peer this datagram socket is connected to.
-     * @ingroup udp
-     *
-     * This method returns the UDP port number of the peer to which the socket is currently
-     * connected via `connect()`. If the socket is not connected, an exception is thrown.
-     *
-     * ---
-     *
-     * ### 📡 Use Cases
-     * - Useful in client-side or semi-connected UDP scenarios to track the destination port
-     * - Enables diagnostic output (e.g. `"Sending to IP:port"`)
-     * - Allows verification after `connect()` to check actual remote binding
-     *
-     * ---
-     *
-     * ### Example
-     * @code
-     * DatagramSocket sock("fe80::1", 7000); // Connect to remote IPv6 peer
-     *
-     * Port port = sock.getRemotePort();
-     * std::cout << "Remote port: " << port << "\n";
-     * @endcode
-     *
-     * ---
-     *
-     * @return The 16-bit UDP port of the connected peer (in host byte order).
-     *
-     * @throws SocketException if the socket is not connected or the port cannot be determined.
+     * @throws SocketException If:
+     * - The socket is invalid or closed
+     * - In connected mode, `getpeername()` fails
+     * - In unconnected mode, no datagram has been received yet
      *
      * @see getRemoteIp()
      * @see getRemoteSocketAddress()
-     * @see connect()
+     * @see isConnected()
      */
     [[nodiscard]] Port getRemotePort() const;
 
     /**
-     * @brief Get the remote peer's address and port as a formatted string.
+     * @brief Retrieves the remote peer’s socket address in the form `"IP:port"`.
      * @ingroup udp
      *
-     * This method returns the IP address and port of the connected remote endpoint,
-     * formatted as a single string. It is only valid if the socket is connected via `connect()`.
-     *
-     * The output is of the form:
-     * - IPv4: `"192.168.1.100:9000"`
-     * - IPv6: `"[fe80::1]:9000"`
+     * This method returns the formatted address of the remote peer that this datagram socket
+     * is either:
+     * - **Connected to** (via `connect()`) —or—
+     * - **Most recently received a message from** (via `recvfrom()` in unconnected mode)
      *
      * ---
      *
-     * ### Use Cases
-     * - Logging or displaying connection targets
-     * - Diagnostics or telemetry for connected clients
-     * - Simplified UI or monitoring output
+     * ### Behavior by Connection Mode
+     * - **Connected DatagramSocket**: Uses `getpeername()` to query the bound peer address.
+     * - **Unconnected DatagramSocket**: Returns the address of the last sender from a successful `recvfrom()` call.
+     *   If no datagram has been received yet, an exception is thrown.
+     *
+     * ---
+     *
+     * ### IPv6 Handling
+     * If the remote IP is an IPv4-mapped IPv6 address (e.g., `::ffff:192.0.2.1`) and
+     * `@p convertIPv4Mapped` is `true`, the address will be simplified to standard IPv4 format.
      *
      * ---
      *
      * ### Example
      * @code
-     * DatagramSocket sock("192.168.1.100", 9000);
-     * std::cout << "Connected to: " << sock.getRemoteSocketAddress() << "\n";
+     * DatagramSocket sock(AF_INET);
+     * sock.bind(12345);
+     *
+     * std::array<char, 256> buffer{};
+     * sock.receiveFrom(buffer); // wait for any sender
+     *
+     * std::string remote = sock.getRemoteSocketAddress();
+     * std::cout << "Received from: " << remote << "\n"; // "192.168.0.42:56789"
      * @endcode
      *
      * ---
      *
-     * @param[in] convertIPv4Mapped If true, IPv4-mapped IPv6 addresses will be normalized to IPv4 form.
-     * @return A formatted string in the form "IP:port" or "[IPv6]:port"
+     * @param[in] convertIPv4Mapped Whether to simplify IPv4-mapped IPv6 addresses (default: true).
+     * @return Remote socket address as a string in the format `"IP:port"`.
      *
-     * @throws SocketException if the socket is not connected or address retrieval fails.
+     * @throws SocketException If:
+     * - The socket is not open
+     * - In unconnected mode, no datagram has been received yet
+     * - In connected mode, if `getpeername()` fails
      *
      * @see getRemoteIp()
      * @see getRemotePort()
-     * @see getLocalSocketAddress()
+     * @see isConnected()
      */
     [[nodiscard]] std::string getRemoteSocketAddress(bool convertIPv4Mapped = true) const;
 
@@ -941,29 +975,122 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] size_t read(DatagramPacket& packet, bool resizeBuffer = true) const;
 
     /**
-     * @brief Read a trivially copyable type from the socket (connected UDP).
-     * @tparam T Type to read (must be trivially copyable).
-     * @return Value of type T received from the socket.
-     * @throws SocketException on error or disconnect.
+     * @brief Reads a fixed-size, trivially copyable object of type `T` from the datagram socket.
+     * @ingroup udp
+     *
+     * This method receives a full UDP datagram and deserializes it into a binary-safe
+     * object of type `T`. It works seamlessly in both connected and unconnected modes:
+     *
+     * ---
+     *
+     * ### 🔁 Connection Modes
+     * - If the socket is **connected** (via `connect()`), this method uses `recv()` and only accepts
+     *   datagrams from the fixed peer.
+     * - If the socket is **unconnected**, it uses `recvfrom()` and captures the sender's address.
+     *   The sender’s address will be stored internally and can be accessed using `getRemoteIp()` and `getRemotePort()`.
+     *
+     * ---
+     *
+     * ### Implementation Details
+     * - Performs a single `recv()` or `recvfrom()` call (no looping)
+     * - Requires the received datagram to be at least `sizeof(T)` bytes
+     * - Excess bytes (if any) are silently discarded
+     * - Enforces type constraints: `std::is_trivially_copyable` and `std::is_standard_layout`
+     * - Performs **no** endianness conversion or decoding logic
+     *
+     * ---
+     *
+     * ### Use Cases
+     * - Receiving fixed-size protocol packets (e.g., headers, commands, binary structs)
+     * - Message-based IoT or telemetry systems
+     * - High-performance UDP applications requiring raw data deserialization
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * struct Packet {
+     *     std::uint32_t id;
+     *     std::uint16_t flags;
+     *     char payload[64];
+     * };
+     *
+     * DatagramSocket sock(AF_INET);
+     * sock.bind(12345);
+     *
+     * // Wait for one UDP packet of exactly sizeof(Packet)
+     * Packet p = sock.read<Packet>();
+     * std::cout << "Received packet with ID: " << p.id << "\n";
+     * @endcode
+     *
+     * ---
+     *
+     * @tparam T A trivially copyable POD type to deserialize
+     * @return Fully constructed object of type `T` from the received message
+     *
+     * @throws SocketException If:
+     * - The socket is not open or bound
+     * - A network or system error occurs (`ECONNRESET`, `EINVAL`, etc.)
+     * - The received datagram is shorter than `sizeof(T)`
+     *
+     * @warning No endianness normalization is applied. Fields must be converted manually if needed.
+     *
+     * @warning Do not use this with types containing pointers, virtual methods, padding, or platform-specific layouts.
+     *
+     * @note If the socket is unconnected, this method also updates the remote peer address
+     *       for use with `getRemoteIp()` and `getRemotePort()`.
+     *
+     * @see write()           For sending POD messages
+     * @see receiveFrom()     For full message + peer address access
+     * @see isConnected()     To check connection mode
+     * @see getRemoteIp(), getRemotePort()
      */
-    template <typename T> T read()
+    template <typename T> [[nodiscard]] T DatagramSocket::read()
     {
-        static_assert(std::is_trivially_copyable_v<T>,
-                      "DatagramSocket::read<T>() only supports trivially copyable types");
+        static_assert(std::is_trivially_copyable_v<T>, "DatagramSocket::read<T>() requires a trivially copyable type");
+        static_assert(std::is_standard_layout_v<T>, "DatagramSocket::read<T>() requires a standard layout type");
 
-        if (!_isConnected)
-            throw SocketException("DatagramSocket is not connected.");
+        std::array<std::byte, sizeof(T)> buffer{};
 
-        T value;
-        const int n = ::recv(getSocketFd(), reinterpret_cast<char*>(&value), sizeof(T), 0);
+        int bytesReceived = 0;
 
-        if (n == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-        if (n == 0)
-            throw SocketException("Connection closed by remote host.");
-        if (n != sizeof(T))
-            throw SocketException("Partial read: did not receive a complete T object.");
-        return value;
+        if (isConnected())
+        {
+            bytesReceived = ::recv(getSocketFd(), reinterpret_cast<char*>(buffer.data()),
+#ifdef _WIN32
+                                   static_cast<int>(buffer.size()),
+#else
+                                   buffer.size(),
+#endif
+                                   0);
+        }
+        else
+        {
+            sockaddr_storage srcAddr{};
+            socklen_t srcLen = sizeof(srcAddr);
+
+            bytesReceived = ::recvfrom(getSocketFd(), reinterpret_cast<char*>(buffer.data()),
+#ifdef _WIN32
+                                       static_cast<int>(buffer.size()),
+#else
+                                       buffer.size(),
+#endif
+                                       0, reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
+
+            if (bytesReceived >= 0)
+            {
+                _remoteAddr = srcAddr;
+                _remoteAddrLen = srcLen;
+            }
+        }
+
+        if (bytesReceived == SOCKET_ERROR)
+            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+        if (bytesReceived < static_cast<int>(sizeof(T)))
+            throw SocketException("Datagram too short for fixed-size read<T>(); expected full object.");
+
+        return std::bit_cast<T>(buffer);
     }
 
     /**
@@ -1146,7 +1273,9 @@ class DatagramSocket : public SocketOptions
     addrinfo* _selectedAddrInfo = nullptr;        ///< Selected address info for connection
 
   private:
-    sockaddr_storage _localAddr{};       ///< Local address structure.
+    sockaddr_storage _remoteAddr{}; ///< Storage for the address of the most recent sender (used in unconnected mode).
+    socklen_t _remoteAddrLen = 0;   ///< Length of the valid address data in `_remoteAddr` (0 if none received yet).
+    sockaddr_storage _localAddr{};  ///< Local address structure.
     mutable socklen_t _localAddrLen = 0; ///< Length of local address.
     std::vector<char> _buffer;           ///< Internal buffer for read operations.
     Port _port;                          ///< Port number the socket is bound to (if applicable).

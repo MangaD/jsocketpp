@@ -522,13 +522,24 @@ std::string DatagramSocket::getRemoteIp(const bool convertIPv4Mapped) const
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("getRemoteIp() failed: socket is not open.");
 
-    sockaddr_storage remoteAddr{};
-    socklen_t addrLen = sizeof(remoteAddr);
+    sockaddr_storage addr{};
+    socklen_t addrLen = sizeof(addr);
 
-    if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&remoteAddr), &addrLen) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    if (isConnected())
+    {
+        if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    }
+    else
+    {
+        if (_remoteAddrLen == 0)
+            throw SocketException("getRemoteIp() failed: no datagram received yet (unconnected socket).");
 
-    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr), convertIPv4Mapped);
+        addr = _remoteAddr;
+        addrLen = _remoteAddrLen;
+    }
+
+    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
 }
 
 Port DatagramSocket::getRemotePort() const
@@ -536,13 +547,24 @@ Port DatagramSocket::getRemotePort() const
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("getRemotePort() failed: socket is not open.");
 
-    sockaddr_storage remoteAddr{};
-    socklen_t addrLen = sizeof(remoteAddr);
+    sockaddr_storage addr{};
+    socklen_t addrLen = sizeof(addr);
 
-    if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&remoteAddr), &addrLen) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    if (isConnected())
+    {
+        if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    }
+    else
+    {
+        if (_remoteAddrLen == 0)
+            throw SocketException("getRemotePort() failed: no datagram received yet (unconnected socket).");
 
-    return portFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr));
+        addr = _remoteAddr;
+        addrLen = _remoteAddrLen;
+    }
+
+    return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
 }
 
 std::string DatagramSocket::getRemoteSocketAddress(const bool convertIPv4Mapped) const
