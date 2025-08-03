@@ -2,13 +2,10 @@ var searchData=
 [
   ['datagrampacket_0',['DatagramPacket',['../classjsocketpp_1_1DatagramPacket.html#a867c818e26b61fa3c67ddbe787290360',1,'jsocketpp::DatagramPacket::DatagramPacket(const size_t size=0)'],['../classjsocketpp_1_1DatagramPacket.html#a5803e1a27c20cb4d14de90d0684fbf6a',1,'jsocketpp::DatagramPacket::DatagramPacket(std::string_view data, std::string addr, const Port prt)'],['../classjsocketpp_1_1DatagramPacket.html#a070f1208a81266d23623603e34c91307',1,'jsocketpp::DatagramPacket::DatagramPacket(const char *data, const size_t len, std::string addr, const Port prt)'],['../classjsocketpp_1_1DatagramPacket.html#aa49b8c37fb337e2e5471b34a87a3b5fb',1,'jsocketpp::DatagramPacket::DatagramPacket(const DatagramPacket &amp;)=default'],['../classjsocketpp_1_1DatagramPacket.html#a5eaf290d360b39c612a4c8724a0d9e6f',1,'jsocketpp::DatagramPacket::DatagramPacket(DatagramPacket &amp;&amp;) noexcept=default']]],
   ['datagramsocket_1',['DatagramSocket',['../group__udp.html#ga1573f70de77ed93d522f2f9273181469',1,'jsocketpp::DatagramSocket::DatagramSocket()=delete'],['../group__udp.html#ga85f4de1e83b91e82cf27d9ac78a48a24',1,'jsocketpp::DatagramSocket::DatagramSocket(Port port, std::size_t bufferSize=DefaultBufferSize)'],['../group__udp.html#ga692dfa79c5dca805435249ec2da27497',1,'jsocketpp::DatagramSocket::DatagramSocket(std::string_view host, Port port, std::size_t bufferSize=DefaultBufferSize)'],['../group__udp.html#ga3d08597b24d9c7a3fe43dd291ee85148',1,'jsocketpp::DatagramSocket::DatagramSocket(const DatagramSocket &amp;)=delete'],['../group__udp.html#gab613123c8bf1aca6aec451b1140e2f82',1,'jsocketpp::DatagramSocket::DatagramSocket(DatagramSocket &amp;&amp;rhs) noexcept']]],
-  ['datagramsocket_3a_3agetlocalip_2',['getLocalIp',['../group__socketopts.html#ga4ee622997e2f6da65a6d955931affc12',1,'jsocketpp::DatagramSocket']]],
-  ['datagramsocket_3a_3agetlocalport_3',['getLocalPort',['../group__udp.html#ga108098c3eb5682c553e3f5433ed0e132',1,'jsocketpp::DatagramSocket']]],
-  ['datagramsocket_3a_3aread_4',['read',['../group__udp.html#ga916c70c6333b0efe028695eaa159cdab',1,'jsocketpp::DatagramSocket']]],
-  ['datagramsocket_3a_3aread_3c_20std_3a_3astring_20_3e_5',['read&lt; std::string &gt;',['../group__udp.html#ga30deb297e9c8fae8da50947d4a29c95f',1,'jsocketpp']]],
-  ['datagramsocket_3a_3arecvfrom_3c_20std_3a_3astring_20_3e_6',['recvFrom&lt; std::string &gt;',['../namespacejsocketpp.html#aa5ff7535f7cd1c89724bcfd6715e55ba',1,'jsocketpp']]],
-  ['datagramsocket_3a_3awrite_3c_20std_3a_3astring_20_3e_7',['write&lt; std::string &gt;',['../group__udp.html#ga5d219ae0c5ace0c42fad1b8295a7c2a1',1,'jsocketpp']]],
-  ['datagramsocket_3a_3awrite_3c_20std_3a_3astring_5fview_20_3e_8',['write&lt; std::string_view &gt;',['../group__udp.html#gaca86a9f7b311fd106801b9e49d01fb27',1,'jsocketpp']]],
-  ['discard_9',['discard',['../group__tcp.html#ga7492730c56e0bf5a4c67227df7bc4033',1,'jsocketpp::Socket']]],
-  ['disconnect_10',['disconnect',['../group__udp.html#ga02b08c333a2f109a3b19ec7b3c0cecf9',1,'jsocketpp::DatagramSocket']]]
+  ['datagramsocket_3a_3aread_3c_20std_3a_3astring_20_3e_2',['read&lt; std::string &gt;',['../group__udp.html#ga30deb297e9c8fae8da50947d4a29c95f',1,'jsocketpp']]],
+  ['datagramsocket_3a_3arecvfrom_3c_20std_3a_3astring_20_3e_3',['recvFrom&lt; std::string &gt;',['../namespacejsocketpp.html#aa5ff7535f7cd1c89724bcfd6715e55ba',1,'jsocketpp']]],
+  ['datagramsocket_3a_3awrite_3c_20std_3a_3astring_20_3e_4',['write&lt; std::string &gt;',['../group__udp.html#ga5d219ae0c5ace0c42fad1b8295a7c2a1',1,'jsocketpp']]],
+  ['datagramsocket_3a_3awrite_3c_20std_3a_3astring_5fview_20_3e_5',['write&lt; std::string_view &gt;',['../group__udp.html#gaca86a9f7b311fd106801b9e49d01fb27',1,'jsocketpp']]],
+  ['discard_6',['discard',['../group__tcp.html#ga7492730c56e0bf5a4c67227df7bc4033',1,'jsocketpp::Socket']]],
+  ['disconnect_7',['disconnect',['../group__udp.html#ga02b08c333a2f109a3b19ec7b3c0cecf9',1,'jsocketpp::DatagramSocket']]]
 ];

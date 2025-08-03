@@ -106,8 +106,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga4ee622997e2f6da65a6d955931affc12" id="r_ga4ee622997e2f6da65a6d955931affc12"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4ee622997e2f6da65a6d955931affc12">jsocketpp::DatagramSocket::DatagramSocket::getLocalIp</a> (bool convertIPv4Mapped=true) const</td></tr>
-<tr class="memdesc:ga4ee622997e2f6da65a6d955931affc12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the local IP address this socket is bound to.  <br /></td></tr>
+<tr class="memitem:ga93a142cf918c58f939454b296baf0963" id="r_ga93a142cf918c58f939454b296baf0963"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga93a142cf918c58f939454b296baf0963">jsocketpp::DatagramSocket::getLocalIp</a> (bool convertIPv4Mapped=true) const</td></tr>
+<tr class="memdesc:ga93a142cf918c58f939454b296baf0963"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the local IP address this socket is bound to.  <br /></td></tr>
 <tr class="memitem:ga2087f337f22de16821132208b94b1441" id="r_ga2087f337f22de16821132208b94b1441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2087f337f22de16821132208b94b1441">jsocketpp::ServerSocket::setSoTimeout</a> (const int timeoutMillis)</td></tr>
 <tr class="memdesc:ga2087f337f22de16821132208b94b1441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the logical timeout (in milliseconds) for accepting client connections.  <br /></td></tr>
 <tr class="memitem:ga7829c558cb7bf5e0a46d882df82acc19" id="r_ga7829c558cb7bf5e0a46d882df82acc19"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7829c558cb7bf5e0a46d882df82acc19">jsocketpp::ServerSocket::getSoTimeout</a> () const noexcept</td></tr>
@@ -199,71 +199,6 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Some options may not be available or meaningful on all platforms. Platform-specific behavior is documented per function.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd>Socket::setSoLinger(), Socket::getSoLinger(), Socket::setTcpNoDelay(), etc. </dd></dl>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="ga4ee622997e2f6da65a6d955931affc12" name="ga4ee622997e2f6da65a6d955931affc12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4ee622997e2f6da65a6d955931affc12">&#9670;&#160;</a></span>DatagramSocket::getLocalIp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string jsocketpp::DatagramSocket::DatagramSocket::getLocalIp </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>convertIPv4Mapped</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Retrieves the local IP address this socket is bound to. </p>
-<p>This method queries the system to determine which local IP address has been assigned to the socket, typically as a result of a successful <span class="tt"><a class="el" href="group__udp.html#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> or <span class="tt"><a class="el" href="group__udp.html#ga3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to a remote peer with optional timeout handling.">connect()</a></span> call.</p>
-<hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md514"></a>
-🌍 Applicability</h3>
-<ul>
-<li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>: ✅ Always safe to call after <span class="tt"><a class="el" href="group__udp.html#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span></li>
-<li>Works for both IPv4 and IPv6 sockets</li>
-<li>Also works if the socket was auto-bound to a port by the OS (<span class="tt">bind(0)</span>)</li>
-</ul>
-<hr  />
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>If <span class="tt">true</span>, IPv4-mapped IPv6 addresses (e.g., <span class="tt">::ffff:192.0.2.1</span>) will be returned as plain IPv4 strings (<span class="tt">192.0.2.1</span>). If <span class="tt">false</span>, the raw mapped form is preserved.</td></tr>
-  </table>
-  </dd>
-</dl>
-<hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md517"></a>
-Example</h3>
-<div class="fragment"><div class="line"><a class="code hl_function" href="group__udp.html#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> sock(AF_INET);</div>
-<div class="line">sock.bind(<span class="stringliteral">&quot;0.0.0.0&quot;</span>, 12345);</div>
-<div class="line"> </div>
-<div class="line">std::string localIP = sock.getLocalIp();</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Bound to local IP: &quot;</span> &lt;&lt; localIP &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="ttc" id="agroup__udp_html_ga1573f70de77ed93d522f2f9273181469"><div class="ttname"><a href="group__udp.html#ga1573f70de77ed93d522f2f9273181469">jsocketpp::DatagramSocket::DatagramSocket</a></div><div class="ttdeci">DatagramSocket()=delete</div><div class="ttdoc">Default constructor (deleted) for DatagramSocket class.</div></div>
-</div><!-- fragment --><hr  />
-<dl class="section return"><dt>Returns</dt><dd>A string representing the local IP address (e.g., "192.168.1.10", "::1").</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is invalid, unbound, or the system call fails.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__udp.html#ga108098c3eb5682c553e3f5433ed0e132" title="Retrieves the local port number this datagram socket is bound to.">getLocalPort()</a> </dd>
-<dd>
-<a class="el" href="group__udp.html#ga9a7f8475868acca97f90dcd66df7f943" title="Retrieves the local socket address as a formatted string in the form &quot;IP:port&quot;.">getLocalSocketAddress()</a> </dd>
-<dd>
-<a href="https://man7.org/linux/man-pages/man2/getsockname.2.html">https://man7.org/linux/man-pages/man2/getsockname.2.html</a> </dd></dl>
-
-</div>
-</div>
 <a id="gab0df7d40f7d6b40737cbf3271be57f37" name="gab0df7d40f7d6b40737cbf3271be57f37"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gab0df7d40f7d6b40737cbf3271be57f37">&#9670;&#160;</a></span>getBroadcast()</h2>
 
@@ -459,6 +394,71 @@ Example</h3>
 <dd>
 <a href="https://man7.org/linux/man-pages/man7/tcp.7.html">https://man7.org/linux/man-pages/man7/tcp.7.html</a></dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This method only checks whether <span class="tt">SO_KEEPALIVE</span> is enabled. It does <b>not</b> report the configured keepalive timing parameters (interval, probes, idle time), which are system-defined. </dd></dl>
+
+</div>
+</div>
+<a id="ga93a142cf918c58f939454b296baf0963" name="ga93a142cf918c58f939454b296baf0963"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga93a142cf918c58f939454b296baf0963">&#9670;&#160;</a></span>getLocalIp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string DatagramSocket::getLocalIp </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>convertIPv4Mapped</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves the local IP address this socket is bound to. </p>
+<p>This method queries the system to determine which local IP address has been assigned to the socket, typically as a result of a successful <span class="tt"><a class="el" href="group__udp.html#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> or <span class="tt"><a class="el" href="group__udp.html#ga3fa731104100275903b074ba2b65b839" title="Connects the datagram socket to a remote peer with optional timeout handling.">connect()</a></span> call.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md514"></a>
+🌍 Applicability</h3>
+<ul>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>: ✅ Always safe to call after <span class="tt"><a class="el" href="group__udp.html#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span></li>
+<li>Works for both IPv4 and IPv6 sockets</li>
+<li>Also works if the socket was auto-bound to a port by the OS (<span class="tt">bind(0)</span>)</li>
+</ul>
+<hr  />
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>If <span class="tt">true</span>, IPv4-mapped IPv6 addresses (e.g., <span class="tt">::ffff:192.0.2.1</span>) will be returned as plain IPv4 strings (<span class="tt">192.0.2.1</span>). If <span class="tt">false</span>, the raw mapped form is preserved.</td></tr>
+  </table>
+  </dd>
+</dl>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md517"></a>
+Example</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="group__udp.html#ga1573f70de77ed93d522f2f9273181469">DatagramSocket</a> sock(AF_INET);</div>
+<div class="line">sock.bind(<span class="stringliteral">&quot;0.0.0.0&quot;</span>, 12345);</div>
+<div class="line"> </div>
+<div class="line">std::string localIP = sock.getLocalIp();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Bound to local IP: &quot;</span> &lt;&lt; localIP &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="ttc" id="agroup__udp_html_ga1573f70de77ed93d522f2f9273181469"><div class="ttname"><a href="group__udp.html#ga1573f70de77ed93d522f2f9273181469">jsocketpp::DatagramSocket::DatagramSocket</a></div><div class="ttdeci">DatagramSocket()=delete</div><div class="ttdoc">Default constructor (deleted) for DatagramSocket class.</div></div>
+</div><!-- fragment --><hr  />
+<dl class="section return"><dt>Returns</dt><dd>A string representing the local IP address (e.g., "192.168.1.10", "::1").</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is invalid, unbound, or the system call fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__udp.html#gaacb1d9e513c65bd800769d5194a4559f" title="Retrieves the local port number this datagram socket is bound to.">getLocalPort()</a> </dd>
+<dd>
+<a class="el" href="group__udp.html#ga9a7f8475868acca97f90dcd66df7f943" title="Retrieves the local socket address as a formatted string in the form &quot;IP:port&quot;.">getLocalSocketAddress()</a> </dd>
+<dd>
+<a href="https://man7.org/linux/man-pages/man2/getsockname.2.html">https://man7.org/linux/man-pages/man2/getsockname.2.html</a> </dd></dl>
 
 </div>
 </div>

@@ -41,10 +41,10 @@ var group__socketopts =
       [ "setTcpNoDelay", "group__socketopts.html#ga9839dd8837c7519a627f28b3a4c7a513", null ],
       [ "_sockFd", "classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131", null ]
     ] ],
-    [ "jsocketpp::DatagramSocket::getLocalIp", "group__socketopts.html#ga4ee622997e2f6da65a6d955931affc12", null ],
     [ "jsocketpp::SocketOptions::getBroadcast", "group__socketopts.html#gab0df7d40f7d6b40737cbf3271be57f37", null ],
     [ "jsocketpp::SocketOptions::getIPv6Only", "group__socketopts.html#ga1d44e7f23739c1ef4a9ad550b4a1ff1d", null ],
     [ "jsocketpp::SocketOptions::getKeepAlive", "group__socketopts.html#ga1193748a866e07a7f25e97a0640ad8dd", null ],
+    [ "jsocketpp::DatagramSocket::getLocalIp", "group__socketopts.html#ga93a142cf918c58f939454b296baf0963", null ],
     [ "jsocketpp::SocketOptions::getNonBlocking", "group__socketopts.html#ga56fa4549b175d2913b64a43f1ecd2409", null ],
     [ "jsocketpp::SocketOptions::getOption", "group__socketopts.html#ga6a5264b995eb2a1143f45c5de6ad92c3", null ],
     [ "jsocketpp::SocketOptions::getOption", "group__socketopts.html#ga9c068d958d55e865948b2015c82450a7", null ],
