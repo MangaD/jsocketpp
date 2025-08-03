@@ -7,6 +7,8 @@ var searchData=
   ['datagramsocket_3a_3aread_4',['read',['../group__udp.html#ga916c70c6333b0efe028695eaa159cdab',1,'jsocketpp::DatagramSocket']]],
   ['datagramsocket_3a_3aread_3c_20std_3a_3astring_20_3e_5',['read&lt; std::string &gt;',['../group__udp.html#ga30deb297e9c8fae8da50947d4a29c95f',1,'jsocketpp']]],
   ['datagramsocket_3a_3arecvfrom_3c_20std_3a_3astring_20_3e_6',['recvFrom&lt; std::string &gt;',['../namespacejsocketpp.html#aa5ff7535f7cd1c89724bcfd6715e55ba',1,'jsocketpp']]],
-  ['discard_7',['discard',['../group__tcp.html#ga7492730c56e0bf5a4c67227df7bc4033',1,'jsocketpp::Socket']]],
-  ['disconnect_8',['disconnect',['../group__udp.html#ga02b08c333a2f109a3b19ec7b3c0cecf9',1,'jsocketpp::DatagramSocket']]]
+  ['datagramsocket_3a_3awrite_3c_20std_3a_3astring_20_3e_7',['write&lt; std::string &gt;',['../group__udp.html#ga5d219ae0c5ace0c42fad1b8295a7c2a1',1,'jsocketpp']]],
+  ['datagramsocket_3a_3awrite_3c_20std_3a_3astring_5fview_20_3e_8',['write&lt; std::string_view &gt;',['../group__udp.html#gaad2b30f329aeab7a2468575261ec4fea',1,'jsocketpp']]],
+  ['discard_9',['discard',['../group__tcp.html#ga7492730c56e0bf5a4c67227df7bc4033',1,'jsocketpp::Socket']]],
+  ['disconnect_10',['disconnect',['../group__udp.html#ga02b08c333a2f109a3b19ec7b3c0cecf9',1,'jsocketpp::DatagramSocket']]]
 ];

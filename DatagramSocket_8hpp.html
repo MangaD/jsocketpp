@@ -119,6 +119,12 @@ Functions</h2></td></tr>
 <tr class="memitem:aa5ff7535f7cd1c89724bcfd6715e55ba" id="r_aa5ff7535f7cd1c89724bcfd6715e55ba"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:aa5ff7535f7cd1c89724bcfd6715e55ba template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejsocketpp.html#aa5ff7535f7cd1c89724bcfd6715e55ba">jsocketpp::DatagramSocket::recvFrom&lt; std::string &gt;</a> (std::string *senderAddr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort)</td></tr>
 <tr class="memdesc:aa5ff7535f7cd1c89724bcfd6715e55ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a datagram as a string (connectionless).  <br /></td></tr>
+<tr class="memitem:ga5d219ae0c5ace0c42fad1b8295a7c2a1" id="r_ga5d219ae0c5ace0c42fad1b8295a7c2a1"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ga5d219ae0c5ace0c42fad1b8295a7c2a1 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga5d219ae0c5ace0c42fad1b8295a7c2a1">jsocketpp::DatagramSocket::write&lt; std::string &gt;</a> (const std::string &amp;value)</td></tr>
+<tr class="memdesc:ga5d219ae0c5ace0c42fad1b8295a7c2a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">write&lt;T&gt;()</span> to send a <span class="tt">std::string</span> as a UDP datagram.  <br /></td></tr>
+<tr class="memitem:gaad2b30f329aeab7a2468575261ec4fea" id="r_gaad2b30f329aeab7a2468575261ec4fea"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:gaad2b30f329aeab7a2468575261ec4fea template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gaad2b30f329aeab7a2468575261ec4fea">jsocketpp::DatagramSocket::write&lt; std::string_view &gt;</a> (std::string_view view)</td></tr>
+<tr class="memdesc:gaad2b30f329aeab7a2468575261ec4fea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">write&lt;T&gt;()</span> to send a <span class="tt">std::string_view</span> as a UDP datagram.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>UDP datagram socket abstraction for jsocketpp. </p>
