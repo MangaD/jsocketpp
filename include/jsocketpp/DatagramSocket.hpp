@@ -1602,4 +1602,148 @@ template <> inline std::string DatagramSocket::recvFrom<std::string>(std::string
     return {_buffer.data(), static_cast<size_t>(n)};
 }
 
+/**
+ * @brief Specialization of `write<T>()` to send a `std::string` as a UDP datagram.
+ * @ingroup udp
+ *
+ * Sends the contents of a string as a datagram to the connected peer.
+ * This overload is intended for sending text-based or binary-safe string data.
+ *
+ * ---
+ *
+ * ### Constraints
+ * - The socket **must be connected** via `connect()`
+ * - The string will be sent **as-is**, with no null termination added
+ * - Strings containing embedded nulls (`'\0'`) are fully preserved
+ *
+ * ---
+ *
+ * ### Behavior
+ * - Calls `send()` to transmit the entire string buffer in one datagram
+ * - If the string exceeds the MTU, it may be fragmented or dropped depending on the network
+ * - No retries or buffering: failures throw immediately
+ *
+ * ---
+ *
+ * ### Example
+ * @code
+ * DatagramSocket sock(AF_INET);
+ * sock.connect("127.0.0.1", 9999);
+ *
+ * std::string message = "Hello, UDP!";
+ * sock.write(message); // sends 11-byte datagram
+ * @endcode
+ *
+ * ---
+ *
+ * @param[in] value The string to send. Null characters are preserved.
+ *
+ * @throws SocketException If:
+ * - The socket is not open
+ * - The socket is not connected
+ * - `send()` fails (e.g., ECONNRESET, network unreachable)
+ * - A partial datagram is sent (less than string length)
+ *
+ * @warning This method does not add a trailing `'\0'`. If you need null-terminated data,
+ * append it manually.
+ *
+ * @see read<std::string>() For receiving a string datagram
+ * @see write<T>() For sending binary POD data
+ * @see sendTo() For unconnected datagram transmission
+ * @see connect() To establish remote peer before sending
+ */
+template <> inline void DatagramSocket::write<std::string>(const std::string& value)
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::write<std::string>(): socket is not open.");
+
+    if (!isConnected())
+        throw SocketException("DatagramSocket::write<std::string>(): socket is not connected. Use sendTo() instead.");
+
+    const auto sent = ::send(getSocketFd(),
+#ifdef _WIN32
+                             value.data(), static_cast<int>(value.size()),
+#else
+                             value.data(), value.size(),
+#endif
+                             0);
+
+    if (sent == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+    if (static_cast<std::size_t>(sent) != value.size())
+        throw SocketException("DatagramSocket::write<std::string>(): partial datagram was sent.");
+}
+
+/**
+ * @brief Specialization of `write<T>()` to send a `std::string_view` as a UDP datagram.
+ * @ingroup udp
+ *
+ * Sends the contents of a `std::string_view` to the connected peer without copying or
+ * modifying the underlying data. This method is ideal for zero-copy transmission of
+ * constant or non-owning string data, such as protocol commands or log lines.
+ *
+ * ---
+ *
+ * ### Constraints
+ * - The socket **must be connected** via `connect()`
+ * - The string view must reference valid memory that remains alive during the call
+ * - Embedded nulls (`'\0'`) are sent as-is
+ *
+ * ---
+ *
+ * ### Behavior
+ * - Calls `send()` with the raw buffer of the `string_view`
+ * - Sends the exact number of bytes as `view.size()`
+ * - Does not append null terminators or modify the view
+ * - If the view exceeds the MTU, fragmentation may occur or the datagram may be dropped
+ *
+ * ---
+ *
+ * ### Example
+ * @code
+ * DatagramSocket sock(AF_INET);
+ * sock.connect("localhost", 9000);
+ * sock.write(std::string_view("PING")); // sends 4 bytes
+ * @endcode
+ *
+ * ---
+ *
+ * @param[in] value The string view to send (raw bytes).
+ *
+ * @throws SocketException If:
+ * - The socket is not open
+ * - The socket is not connected
+ * - `send()` fails
+ * - A partial datagram is sent
+ *
+ * @warning The caller must ensure that the memory referenced by the `string_view` is valid
+ * for the duration of the call. Do not pass views to temporaries.
+ *
+ * @see write<std::string>(), read<std::string>(), sendTo()
+ */
+template <> inline void DatagramSocket::write<std::string_view>(const std::string_view& value)
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::write<std::string_view>(): socket is not open.");
+
+    if (!isConnected())
+        throw SocketException(
+            "DatagramSocket::write<std::string_view>(): socket is not connected. Use sendTo() instead.");
+
+    const auto sent = ::send(getSocketFd(),
+#ifdef _WIN32
+                             value.data(), static_cast<int>(value.size()),
+#else
+                             view.data(), view.size(),
+#endif
+                             0);
+
+    if (sent == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+    if (static_cast<std::size_t>(sent) != value.size())
+        throw SocketException("DatagramSocket::write<std::string_view>(): partial datagram was sent.");
+}
+
 } // namespace jsocketpp
