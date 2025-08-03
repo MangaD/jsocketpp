@@ -419,7 +419,7 @@ $(function(){initNavTree('DatagramSocket_8hpp_source.html','',''); });
 <div class="line"><a id="l01556" name="l01556"></a><span class="lineno"> 1556</span>    <span class="keywordflow">if</span> (received == 0)</div>
 <div class="line"><a id="l01557" name="l01557"></a><span class="lineno"> 1557</span>        <span class="keywordflow">throw</span> <a class="code hl_class" href="classjsocketpp_1_1SocketException.html">SocketException</a>(<span class="stringliteral">&quot;DatagramSocket::read&lt;std::string&gt;(): connection closed by remote host.&quot;</span>);</div>
 <div class="line"><a id="l01558" name="l01558"></a><span class="lineno"> 1558</span> </div>
-<div class="line"><a id="l01559" name="l01559"></a><span class="lineno"> 1559</span>    <span class="keywordflow">return</span> std::string(<span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(_buffer.data()), <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(received));</div>
+<div class="line"><a id="l01559" name="l01559"></a><span class="lineno"> 1559</span>    <span class="keywordflow">return</span> {<span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(_buffer.data()), <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(received)};</div>
 <div class="line"><a id="l01560" name="l01560"></a><span class="lineno"> 1560</span>}</div>
 </div>
 <div class="line"><a id="l01561" name="l01561"></a><span class="lineno"> 1561</span></div>
