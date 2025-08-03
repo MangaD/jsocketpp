@@ -269,7 +269,9 @@ void ServerSocket::listen(const int backlog /* = 128 */)
 
 Socket ServerSocket::accept(const std::optional<std::size_t> recvBufferSize,
                             const std::optional<std::size_t> sendBufferSize,
-                            const std::optional<std::size_t> internalBufferSize) const
+                            const std::optional<std::size_t> internalBufferSize, const int soRecvTimeoutMillis,
+                            const int soSendTimeoutMillis, const bool tcpNoDelay, const bool keepAlive,
+                            const bool nonBlocking) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
@@ -280,12 +282,15 @@ Socket ServerSocket::accept(const std::optional<std::size_t> recvBufferSize,
     if (!waitReady())
         throw SocketTimeoutException{};
 
-    return acceptBlocking(resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf);
+    return acceptBlocking(resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf, soRecvTimeoutMillis,
+                          soSendTimeoutMillis, tcpNoDelay, keepAlive, nonBlocking);
 }
 
 Socket ServerSocket::accept(int timeoutMillis, const std::optional<std::size_t> recvBufferSize,
                             const std::optional<std::size_t> sendBufferSize,
-                            const std::optional<std::size_t> internalBufferSize) const
+                            const std::optional<std::size_t> internalBufferSize, const int soRecvTimeoutMillis,
+                            const int soSendTimeoutMillis, const bool tcpNoDelay, const bool keepAlive,
+                            const bool nonBlocking) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
@@ -296,12 +301,15 @@ Socket ServerSocket::accept(int timeoutMillis, const std::optional<std::size_t> 
     if (!waitReady(timeoutMillis))
         throw SocketTimeoutException{};
 
-    return acceptBlocking(resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf);
+    return acceptBlocking(resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf, soRecvTimeoutMillis,
+                          soSendTimeoutMillis, tcpNoDelay, keepAlive, nonBlocking);
 }
 
 std::optional<Socket> ServerSocket::tryAccept(const std::optional<std::size_t> recvBufferSize,
                                               const std::optional<std::size_t> sendBufferSize,
-                                              const std::optional<std::size_t> internalBufferSize) const
+                                              const std::optional<std::size_t> internalBufferSize,
+                                              const int soRecvTimeoutMillis, const int soSendTimeoutMillis,
+                                              const bool tcpNoDelay, const bool keepAlive, const bool nonBlocking) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
@@ -312,12 +320,15 @@ std::optional<Socket> ServerSocket::tryAccept(const std::optional<std::size_t> r
     if (!waitReady())
         return std::nullopt;
 
-    return acceptBlocking(resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf);
+    return acceptBlocking(resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf, soRecvTimeoutMillis,
+                          soSendTimeoutMillis, tcpNoDelay, keepAlive, nonBlocking);
 }
 
 std::optional<Socket> ServerSocket::tryAccept(int timeoutMillis, const std::optional<std::size_t> recvBufferSize,
                                               const std::optional<std::size_t> sendBufferSize,
-                                              const std::optional<std::size_t> internalBufferSize) const
+                                              const std::optional<std::size_t> internalBufferSize,
+                                              const int soRecvTimeoutMillis, const int soSendTimeoutMillis,
+                                              const bool tcpNoDelay, const bool keepAlive, const bool nonBlocking) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
@@ -328,12 +339,14 @@ std::optional<Socket> ServerSocket::tryAccept(int timeoutMillis, const std::opti
     if (!waitReady(timeoutMillis))
         return std::nullopt;
 
-    return acceptBlocking(resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf);
+    return acceptBlocking(resolvedRecvBuf, resolvedSendBuf, resolvedInternalBuf, soRecvTimeoutMillis,
+                          soSendTimeoutMillis, tcpNoDelay, keepAlive, nonBlocking);
 }
 
 Socket ServerSocket::acceptBlocking(const std::optional<std::size_t> recvBufferSize,
                                     const std::optional<std::size_t> sendBufferSize,
-                                    const std::optional<std::size_t> internalBufferSize) const
+                                    const std::optional<std::size_t> internalBufferSize, int soRecvTimeoutMillis,
+                                    int soSendTimeoutMillis, bool tcpNoDelay, bool keepAlive, bool nonBlocking) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
@@ -343,16 +356,21 @@ Socket ServerSocket::acceptBlocking(const std::optional<std::size_t> recvBufferS
 
     const SOCKET clientSocket = ::accept(getSocketFd(), reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrLen);
     if (clientSocket == INVALID_SOCKET)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
 
     const auto [recvResolved, sendResolved, internalResolved] =
         resolveBuffers(recvBufferSize, sendBufferSize, internalBufferSize);
-    return {clientSocket, clientAddr, clientAddrLen, recvResolved, sendResolved, internalResolved};
+
+    return {clientSocket,        clientAddr,          clientAddrLen, recvResolved, sendResolved, internalResolved,
+            soRecvTimeoutMillis, soSendTimeoutMillis, tcpNoDelay,    keepAlive,    nonBlocking};
 }
 
 std::optional<Socket> ServerSocket::acceptNonBlocking(const std::optional<std::size_t> recvBufferSize,
                                                       const std::optional<std::size_t> sendBufferSize,
-                                                      const std::optional<std::size_t> internalBufferSize) const
+                                                      const std::optional<std::size_t> internalBufferSize,
+                                                      const int soRecvTimeoutMillis, const int soSendTimeoutMillis,
+                                                      const bool tcpNoDelay, const bool keepAlive,
+                                                      const bool nonBlocking) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Server socket is not initialized or already closed.");
@@ -378,31 +396,44 @@ std::optional<Socket> ServerSocket::acceptNonBlocking(const std::optional<std::s
 
     const auto [recvResolved, sendResolved, internalResolved] =
         resolveBuffers(recvBufferSize, sendBufferSize, internalBufferSize);
-    return Socket(clientSocket, clientAddr, addrLen, recvResolved, sendResolved, internalResolved);
+
+    return Socket(clientSocket, clientAddr, addrLen, recvResolved, sendResolved, internalResolved, soRecvTimeoutMillis,
+                  soSendTimeoutMillis, tcpNoDelay, keepAlive, nonBlocking);
 }
 
 std::future<Socket> ServerSocket::acceptAsync(std::optional<std::size_t> recvBufferSize,
                                               std::optional<std::size_t> sendBufferSize,
-                                              const std::optional<std::size_t> internalBufferSize) const
+                                              const std::optional<std::size_t> internalBufferSize,
+                                              const int soRecvTimeoutMillis, const int soSendTimeoutMillis,
+                                              const bool tcpNoDelay, const bool keepAlive, const bool nonBlocking) const
 {
     // Note: capturing `this` is safe as long as the ServerSocket outlives the future.
     // Document this in your thread-safety notes!
-    return std::async(std::launch::async, [this, recvBufferSize, sendBufferSize, internalBufferSize]() -> Socket
-                      { return this->accept(recvBufferSize, sendBufferSize, internalBufferSize); });
+    return std::async(std::launch::async,
+                      [this, recvBufferSize, sendBufferSize, internalBufferSize, soRecvTimeoutMillis,
+                       soSendTimeoutMillis, tcpNoDelay, keepAlive, nonBlocking]() -> Socket
+                      {
+                          return this->accept(recvBufferSize, sendBufferSize, internalBufferSize, soRecvTimeoutMillis,
+                                              soSendTimeoutMillis, tcpNoDelay, keepAlive, nonBlocking);
+                      });
 }
 
 void ServerSocket::acceptAsync(std::function<void(std::optional<Socket>, std::exception_ptr)> callback,
                                std::optional<std::size_t> recvBufferSize, std::optional<std::size_t> sendBufferSize,
-                               const std::optional<std::size_t> internalBufferSize) const
+                               const std::optional<std::size_t> internalBufferSize, const int soRecvTimeoutMillis,
+                               const int soSendTimeoutMillis, const bool tcpNoDelay, const bool keepAlive,
+                               const bool nonBlocking) const
 {
     // Start a background thread to perform the blocking accept
     std::thread(
-        [this, callback = std::move(callback), recvBufferSize, sendBufferSize, internalBufferSize]()
+        [this, callback = std::move(callback), recvBufferSize, sendBufferSize, internalBufferSize, soRecvTimeoutMillis,
+         soSendTimeoutMillis, tcpNoDelay, keepAlive, nonBlocking]()
         {
             try
             {
                 // Try to accept a client (may throw on error)
-                Socket client = this->accept(recvBufferSize, sendBufferSize, internalBufferSize);
+                Socket client = this->accept(recvBufferSize, sendBufferSize, internalBufferSize, soRecvTimeoutMillis,
+                                             soSendTimeoutMillis, tcpNoDelay, keepAlive, nonBlocking);
                 callback(std::move(client), nullptr); // Success: call callback with client and null exception
             }
             catch (...)

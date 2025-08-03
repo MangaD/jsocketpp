@@ -108,36 +108,62 @@ class Socket : public SocketOptions
 
   protected:
     /**
-     * @brief Protected constructor used internally to create Socket objects for accepted client connections.
+     * @brief Wraps an accepted TCP client socket with optional tuning parameters.
      * @ingroup tcp
      *
-     * This constructor is specifically designed to be called by `ServerSocket::accept()` and related methods
-     * to create `Socket` instances representing established client connections. It initializes a `Socket`
-     * using an already-connected socket descriptor and the peer's address, and configures internal buffers
-     * and socket options for subsequent I/O.
+     * This constructor creates a `Socket` object by taking ownership of a socket descriptor
+     * returned by `accept()`, applying the given address, and configuring buffer sizes,
+     * timeouts, and TCP-specific options.
      *
-     * ### Usage Flow
-     * 1. `ServerSocket::accept()` receives a new client connection from the OS
-     * 2. This constructor is invoked to create a `Socket` representing that client
-     * 3. The `Socket` takes ownership of the connected socket descriptor and sets buffer sizes
-     * 4. The constructed `Socket` is returned to the caller of `accept()`
+     * ---
      *
-     * @param[in] client Socket descriptor obtained from a successful `accept()` call.
-     * @param[in] addr Remote peer address (`sockaddr_storage` for IPv4/IPv6 compatibility).
-     * @param[in] len Size of the peer address structure (`sockaddr_in`, `sockaddr_in6`, etc.).
-     * @param[in] recvBufferSize Size in bytes for the internal receive buffer and the socket's `SO_RCVBUF`.
-     * @param[in] sendBufferSize Size in bytes for the socket's `SO_SNDBUF` buffer.
-     * @param[in] internalBufferSize Size of the internal buffering layer used for string-based and stream reads.
+     * ### 🛠 Use Cases
+     * - Inside `ServerSocket::accept()` to wrap the raw socket handle into a high-level object
+     * - For servers that need to apply consistent socket-level behavior (timeouts, no-delay, etc.)
+     * - For applications using RAII and exception-safe socket wrappers
      *
-     * @throws SocketException If the socket options cannot be set or internal buffer allocation fails.
+     * ---
      *
-     * @note This constructor is `protected` and only accessible to `ServerSocket` to ensure encapsulated
-     *       and consistent initialization of accepted client connections.
+     * ### Configuration Parameters
+     * - `recvBufferSize`, `sendBufferSize`: OS-level socket buffers (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - `internalBufferSize`: Buffer used by `read<T>()` and `read<std::string>()`
+     * - `soRecvTimeoutMillis`: Read timeout in milliseconds (`SO_RCVTIMEO`)
+     * - `soSendTimeoutMillis`: Send timeout in milliseconds (`SO_SNDTIMEO`)
+     * - `tcpNoDelay`: Disables Nagle's algorithm (`TCP_NODELAY`) for low-latency use cases
+     * - `keepAlive`: Enables TCP keep-alive (`SO_KEEPALIVE`)
+     * - `nonBlocking`: Places the socket in non-blocking mode immediately after construction
      *
-     * @see ServerSocket::accept() Creates `Socket` instances using this constructor.
+     * ---
+     *
+     * ### 🧠 Example
+     * @code
+     * ServerSocket server(8080);
+     * Socket client = server.accept(DefaultBufferSize, DefaultBufferSize, DefaultBufferSize,
+     *                               3000, 1000, true, true, false);
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] client A connected socket descriptor returned by `accept()`
+     * @param[in] addr The client's address information (from `accept()`)
+     * @param[in] len Length of the address structure
+     * @param[in] recvBufferSize OS-level receive buffer size
+     * @param[in] sendBufferSize OS-level send buffer size
+     * @param[in] internalBufferSize Internal read buffer size
+     * @param[in] soRecvTimeoutMillis Timeout for `recv()`/`read()` in milliseconds; `-1` disables
+     * @param[in] soSendTimeoutMillis Timeout for `send()` in milliseconds; `-1` disables
+     * @param[in] tcpNoDelay Whether to disable Nagle's algorithm
+     * @param[in] keepAlive Whether to enable TCP keep-alive
+     * @param[in] nonBlocking Whether to set the socket to non-blocking mode
+     *
+     * @throws SocketException If any tuning operation fails after the socket is accepted
+     *
+     * @see ServerSocket::accept(), setSoRecvTimeout(), setSoSendTimeout(), setTcpNoDelay(), setNonBlocking()
      */
-    Socket(SOCKET client, const sockaddr_storage& addr, socklen_t len, std::size_t recvBufferSize,
-           std::size_t sendBufferSize, std::size_t internalBufferSize);
+    Socket(SOCKET client, const sockaddr_storage& addr, socklen_t len, std::size_t recvBufferSize = DefaultBufferSize,
+           std::size_t sendBufferSize = DefaultBufferSize, std::size_t internalBufferSize = DefaultBufferSize,
+           int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1, bool tcpNoDelay = true, bool keepAlive = false,
+           bool nonBlocking = false);
 
   public:
     /**
@@ -164,43 +190,68 @@ class Socket : public SocketOptions
     Socket() = delete;
 
     /**
-     * @brief Creates a new Socket object configured to connect to the specified host and port.
+     * @brief Constructs a TCP client socket, resolves the remote host and port, and optionally connects.
      * @ingroup tcp
      *
-     * This constructor initializes a `Socket` object for a TCP connection to a remote host. It performs
-     * hostname resolution using `getaddrinfo()` to support both IPv4 and IPv6 addresses, creates the socket,
-     * and configures internal and socket-level buffer sizes.
+     * This constructor creates a TCP socket intended for client-side connections. It resolves the specified
+     * remote `host` and `port`, applies optional socket parameters, and optionally performs a blocking
+     * `connect()` to the resolved peer. The socket supports IPv4, IPv6, and dual-stack operation.
      *
-     * **Note:** This constructor does **not** establish a network connection. You must explicitly call `connect()`
-     * after construction to initiate the TCP handshake.
+     * ---
      *
-     * ### Initialization Flow
-     * 1. Resolves the target host using `getaddrinfo()` (DNS or IP)
-     * 2. Creates the socket using the appropriate address family and protocol
-     * 3. Applies the provided buffer sizes (or defaults if omitted)
+     * ### 🔧 Configuration Parameters
+     * - `recvBufferSize`, `sendBufferSize`: Set the OS-level socket buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - `internalBufferSize`: Controls the internal buffer used by `read()` and `read<std::string>()`
+     * - `reuseAddress`: Enables `SO_REUSEADDR`, useful for NAT traversal and reconnect loops
+     * - `soRecvTimeoutMillis`: Sets the read timeout (`SO_RCVTIMEO`) in milliseconds; `-1` disables
+     * - `soSendTimeoutMillis`: Sets the send timeout (`SO_SNDTIMEO`) in milliseconds; `-1` disables
+     * - `dualStack`: Enables dual-stack fallback (IPv6 socket accepting both v6 and v4)
+     * - `tcpNoDelay`: Disables Nagle's algorithm (`TCP_NODELAY`) for low-latency protocols
+     * - `keepAlive`: Enables TCP keep-alive probes (`SO_KEEPALIVE`)
+     * - `nonBlocking`: Places the socket in non-blocking mode immediately after creation
+     * - `autoConnect`: If `true`, performs a blocking `connect()` immediately after socket creation
      *
-     * @param[in] host The remote hostname or IP address (e.g., "example.com", "127.0.0.1", "::1").
-     * @param[in] port The TCP port number to connect to (range: 1–65535).
-     * @param[in] recvBufferSize Socket-level receive buffer size (`SO_RCVBUF`). Defaults to @ref DefaultBufferSize
-     * (4096 bytes).
-     * @param[in] sendBufferSize Socket-level send buffer size (`SO_SNDBUF`). Defaults to @ref DefaultBufferSize (4096
-     * bytes).
-     * @param[in] internalBufferSize Size of the internal buffer used for high-level `read<T>()` operations. This is
-     * distinct from the kernel socket buffers. Defaults to @ref DefaultBufferSize (4096 bytes).
+     * ---
      *
-     * @throws SocketException If hostname resolution fails, socket creation fails, or buffer configuration fails.
+     * ### 🧠 Example
+     * @code
+     * Socket sock("api.example.com", 443,
+     *             8192, 8192, 8192,
+     *             true,           // reuseAddress
+     *             5000,           // soRecvTimeoutMillis
+     *             2000,           // soSendTimeoutMillis
+     *             true,           // dualStack
+     *             true,           // tcpNoDelay
+     *             true,           // keepAlive
+     *             false,          // nonBlocking
+     *             true);          // autoConnect
+     * @endcode
      *
-     * @note This constructor only prepares the socket. Use `connect()` to establish the actual connection.
+     * ---
      *
-     * @see connect()
-     * @see DefaultBufferSize
-     * @see setReceiveBufferSize()
-     * @see setSendBufferSize()
-     * @see setInternalBufferSize()
+     * @param[in] host Remote hostname or IP address to connect to
+     * @param[in] port Remote TCP port number
+     * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`)
+     * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`)
+     * @param[in] internalBufferSize Internal buffer used for high-level `read()` operations
+     * @param[in] reuseAddress Enables `SO_REUSEADDR` to allow rebinding to the same port
+     * @param[in] soRecvTimeoutMillis Timeout for receive operations in milliseconds (`SO_RCVTIMEO`)
+     * @param[in] soSendTimeoutMillis Timeout for send operations in milliseconds (`SO_SNDTIMEO`)
+     * @param[in] dualStack If `true`, uses `AF_UNSPEC` to allow IPv6+IPv4 fallback
+     * @param[in] tcpNoDelay If `true`, disables Nagle’s algorithm (`TCP_NODELAY`)
+     * @param[in] keepAlive If `true`, enables TCP keep-alive probes
+     * @param[in] nonBlocking If `true`, sets the socket to non-blocking mode after creation
+     * @param[in] autoConnect If `true`, immediately performs a blocking `connect()` to the peer
+     *
+     * @throws SocketException If resolution, socket creation, configuration, or connection fails
+     *
+     * @see connect(), setSoRecvTimeout(), setSoSendTimeout(), setTcpNoDelay(), setNonBlocking()
      */
     Socket(std::string_view host, Port port, std::optional<std::size_t> recvBufferSize = std::nullopt,
            std::optional<std::size_t> sendBufferSize = std::nullopt,
-           std::optional<std::size_t> internalBufferSize = std::nullopt);
+           std::optional<std::size_t> internalBufferSize = std::nullopt, bool reuseAddress = true,
+           int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1, bool dualStack = true, bool tcpNoDelay = true,
+           bool keepAlive = false, bool nonBlocking = false, bool autoConnect = true);
 
     /**
      * @brief Copy constructor (deleted) for Socket class.
@@ -2939,6 +2990,50 @@ class Socket : public SocketOptions
      * @ingroup tcp
      */
     void cleanupAndThrow(int errorCode);
+
+    /**
+     * @brief Closes the socket, resets internal state, and rethrows the currently handled exception.
+     * @ingroup tcp
+     *
+     * This method is intended to be called from within a `catch` block handling a `SocketException`
+     * during socket construction or configuration. It ensures that any partially initialized or
+     * invalid TCP socket is safely cleaned up before the original exception is rethrown.
+     *
+     * ---
+     *
+     * ### ⚙️ Behavior
+     * - If the socket is valid (`getSocketFd() != INVALID_SOCKET`), it is closed via `CloseSocket()`
+     * - Internal resolution state is reset:
+     *   - `_cliAddrInfo` is released
+     *   - `_selectedAddrInfo` is cleared
+     * - The original exception is rethrown using `throw;`
+     *
+     * ---
+     *
+     * ### ⚠️ Usage Notes
+     * - This method must only be called from inside a `catch` block. Invoking it outside a
+     *   valid exception context will cause undefined behavior or terminate the program.
+     * - Do **not** pass an exception object manually — `throw;` automatically rethrows the
+     *   active exception without slicing or losing context.
+     *
+     * ---
+     *
+     * ### 🧠 Example
+     * @code
+     * try {
+     *     // constructor or tuning logic
+     *     setReceiveBufferSize(...);
+     *     setTcpNoDelay(...);
+     * } catch (const SocketException&) {
+     *     cleanupAndRethrow(); // Close socket, reset state, and rethrow
+     * }
+     * @endcode
+     *
+     * @throws SocketException Always rethrows the currently handled exception
+     *
+     * @see cleanupAndThrow(), CloseSocket(), SocketException
+     */
+    void cleanupAndRethrow();
 
     /**
      * @brief Resets internal shutdown state flags to `false`.

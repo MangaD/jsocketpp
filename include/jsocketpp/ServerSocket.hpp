@@ -542,489 +542,714 @@ class ServerSocket : public SocketOptions
     [[nodiscard]] bool isListening() const noexcept { return _isListening; }
 
     /**
-     * @brief Accept an incoming client connection, respecting the configured socket timeout.
-     *
-     * @note This method is **not thread safe**. Simultaneous calls to `accept()` or `acceptNonBlocking()` from
-     * multiple threads (or processes) may result in race conditions or unexpected exceptions.
-     *
-     * Waits for an incoming client connection using the timeout value configured by `setSoTimeout()`.
-     * - If the timeout is **negative** (default), the method blocks indefinitely until a client connects.
-     * - If the timeout is **zero**, the method polls and returns immediately if no client is waiting.
-     * - If the timeout is **positive**, the method waits up to that many milliseconds for a connection, then throws a
-     *   `SocketTimeoutException` if none arrives.
-     *
-     * Internally, this method uses `waitReady()` (which internally uses `select()`) to wait for readiness and
-     * only then calls `accept()`. If the timeout expires with no client, a `SocketTimeoutException` is thrown.
-     *
-     * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking()`) does not affect the
-     * waiting behavior of this method, since `select()` is used for waiting.
-     *
-     * @note - Use `setSoTimeout()` and `getSoTimeout()` to configure the timeout.
-     *       For manual non-blocking accept in an event loop, see `acceptNonBlocking()` and `waitReady()`.
-     *
-     * @note - To safely use `accept()` in a multithreaded environment, protect access to the `ServerSocket`
-     *       with a mutex.
-     *
+     * @brief Accept an incoming client connection, respecting the configured socket timeout and applying tuning
+     * options.
      * @ingroup tcp
      *
-     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
-     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
-     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
-     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
+     * This method waits for an incoming connection using the timeout set via `setSoTimeout()` or `getSoTimeout()`.
+     * Once a connection is ready, it calls the underlying system `accept()` and returns a fully configured `Socket`
+     * object with the specified buffer sizes, timeouts, and TCP socket options.
      *
-     * @return A `Socket` object representing the connected client.
+     * ---
      *
-     * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
-     * @throws SocketTimeoutException if the timeout expires before a client connects.
+     * ### ⏱ Timeout Behavior
+     * - If the timeout is **negative** (default), the method blocks indefinitely.
+     * - If the timeout is **zero**, it polls once and returns immediately if no client is waiting.
+     * - If the timeout is **positive**, it waits for the given number of milliseconds before throwing
+     *   a `SocketTimeoutException` if no connection occurs.
      *
-     * @pre Server socket must be valid, bound, and listening.
-     * @post A new connected `Socket` is returned on success.
+     * Internally, this method uses `select()` via `waitReady()` to wait for readiness, then invokes `accept()`.
+     * The socket’s blocking mode (via `setNonBlocking()`) does **not** affect this method.
      *
-     * @see setSoTimeout(int)
-     * @see getSoTimeout()
-     * @see acceptBlocking()
-     * @see acceptNonBlocking()
-     * @see waitReady()
+     * ---
+     *
+     * ### ⚙️ Configuration of Accepted Socket
+     * The returned `Socket` is configured immediately using the provided tuning parameters:
+     * - `recvBufferSize`, `sendBufferSize`: OS-level socket buffers (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - `internalBufferSize`: Internal buffer used by `read<T>()` and `read<std::string>()`
+     * - `soRecvTimeoutMillis`: Read timeout in milliseconds (`SO_RCVTIMEO`); `-1` disables
+     * - `soSendTimeoutMillis`: Send timeout in milliseconds (`SO_SNDTIMEO`); `-1` disables
+     * - `tcpNoDelay`: Disables Nagle’s algorithm for low-latency communication (default: `true`)
+     * - `keepAlive`: Enables TCP keep-alive probes
+     * - `nonBlocking`: If `true`, the accepted socket is set to non-blocking mode
+     *
+     * ---
+     *
+     * ### ⚠️ Thread Safety
+     * This method is **not thread-safe**. Concurrent calls to `accept()` or `acceptNonBlocking()` from multiple threads
+     * or processes may cause race conditions or undefined behavior. Protect the `ServerSocket` instance with a mutex if
+     * needed.
+     *
+     * ---
+     *
+     * ### 🧠 Example
+     * @code
+     * ServerSocket server(8080);
+     * server.bind();
+     * server.listen();
+     * server.setSoTimeout(5000); // 5-second accept timeout
+     *
+     * try {
+     *     Socket client = server.accept(
+     *         8192, 8192, 8192,
+     *         3000, 1000,
+     *         true, true, false);
+     *     handleClient(client);
+     * } catch (const SocketTimeoutException&) {
+     *     // No client connected within 5 seconds
+     * }
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`)
+     * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`)
+     * @param[in] internalBufferSize Optional internal buffer size for high-level reads
+     * @param[in] soRecvTimeoutMillis Read timeout (`SO_RCVTIMEO`) in milliseconds; `-1` disables
+     * @param[in] soSendTimeoutMillis Send timeout (`SO_SNDTIMEO`) in milliseconds; `-1` disables
+     * @param[in] tcpNoDelay Whether to disable Nagle's algorithm (`TCP_NODELAY`); default: `true`
+     * @param[in] keepAlive Whether to enable TCP keep-alive probes (`SO_KEEPALIVE`)
+     * @param[in] nonBlocking Whether to set the accepted socket to non-blocking mode
+     *
+     * @return A fully configured `Socket` representing the connected client
+     *
+     * @throws SocketException If:
+     * - The server socket is invalid, closed, or in an incorrect state
+     * - `accept()` fails due to a system error
+     * - Socket configuration fails after acceptance
+     *
+     * @throws SocketTimeoutException If the timeout expires with no connection
+     *
+     * @pre The server socket must be valid, bound, and listening
+     * @post A connected and configured `Socket` is returned on success
+     *
+     * @see setSoTimeout(), getSoTimeout(), waitReady(), acceptBlocking(), acceptNonBlocking()
      */
     [[nodiscard]] Socket accept(std::optional<std::size_t> recvBufferSize = std::nullopt,
                                 std::optional<std::size_t> sendBufferSize = std::nullopt,
-                                std::optional<std::size_t> internalBufferSize = std::nullopt) const;
+                                std::optional<std::size_t> internalBufferSize = std::nullopt,
+                                int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1, bool tcpNoDelay = true,
+                                bool keepAlive = false, bool nonBlocking = false) const;
 
     /**
-     * @brief Accept an incoming client connection, waiting up to the specified timeout.
-     *
-     * @note This method is **not thread safe**. Simultaneous calls to `accept()` or `acceptNonBlocking()` from
-     * multiple threads (or processes) may result in race conditions or unexpected exceptions.
-     *
-     * Waits for an incoming client connection using the timeout specified by the `timeoutMillis` parameter:
-     * - If `timeoutMillis` is **negative**, the method blocks indefinitely until a client connects.
-     * - If `timeoutMillis` is **zero**, the method polls and returns immediately if no client is waiting.
-     * - If `timeoutMillis` is **positive**, the method waits up to that many milliseconds for a connection,
-     *   then throws a `SocketTimeoutException` if none arrives.
-     *
-     * Internally, this method uses `waitReady(timeoutMillis)` (which uses `select()`) to wait for readiness,
-     * then calls `acceptBlocking()` with the resolved buffer sizes. If the timeout expires with no client,
-     * a `SocketTimeoutException` is thrown.
-     *
-     * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking()`) does not affect the
-     * waiting behavior of this method, since `select()` is used for readiness detection.
-     *
-     * @note Use this method to specify a timeout **per call**. To configure a default for all accepts,
-     *       use `setSoTimeout()`. For non-blocking polling, use `tryAccept()` or `acceptNonBlocking()`.
-     *
-     * @param[in] timeoutMillis Timeout in milliseconds to wait for a client connection:
-     *   - Negative: block indefinitely
-     *   - Zero: poll once
-     *   - Positive: wait up to this many milliseconds
-     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
-     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
-     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
-     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
-     *
-     * @return A `Socket` object representing the connected client.
-     *
-     * @throws SocketException if the server socket is invalid or closed, or if an internal error occurs.
-     * @throws SocketTimeoutException if no client connects before the timeout expires.
-     *
-     * @pre Server socket must be valid, bound, and listening.
-     * @post A new connected `Socket` is returned on success.
-     *
-     * @see accept()
-     * @see tryAccept()
-     * @see acceptBlocking()
-     * @see setSoTimeout()
-     * @see waitReady()
-     *
+     * @brief Accept an incoming client connection, waiting up to the specified timeout and applying socket tuning
+     * options.
      * @ingroup tcp
      *
+     * This method waits for a client connection using the specified timeout (in milliseconds), then calls the
+     * underlying system `accept()` and returns a fully configured `Socket` object.
+     *
+     * ---
+     *
+     * ### ⏱ Timeout Behavior
+     * - If `timeoutMillis` is **negative**, the method blocks indefinitely.
+     * - If `timeoutMillis` is **zero**, the method polls once and returns immediately if no client is waiting.
+     * - If `timeoutMillis` is **positive**, the method waits up to that many milliseconds before throwing a
+     *   `SocketTimeoutException` if no connection is made.
+     *
+     * Internally, this method uses `waitReady(timeoutMillis)` (based on `select()`) to wait for readiness and
+     * then calls `acceptBlocking()` with the resolved parameters.
+     *
+     * ---
+     *
+     * ### ⚙️ Configuration of Accepted Socket
+     * The returned `Socket` will be configured with the following tuning options:
+     * - `recvBufferSize`, `sendBufferSize`: OS-level buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - `internalBufferSize`: Internal buffer for high-level `read()` operations
+     * - `soRecvTimeoutMillis`: Socket-level receive timeout (`SO_RCVTIMEO`) in milliseconds
+     * - `soSendTimeoutMillis`: Socket-level send timeout (`SO_SNDTIMEO`) in milliseconds
+     * - `tcpNoDelay`: Disables Nagle’s algorithm for latency-sensitive connections (default: `true`)
+     * - `keepAlive`: Enables TCP keep-alive (`SO_KEEPALIVE`)
+     * - `nonBlocking`: Immediately sets the accepted socket to non-blocking mode
+     *
+     * ---
+     *
+     * ### ⚠️ Thread Safety
+     * This method is **not thread-safe**. Concurrent calls to `accept()`, `acceptBlocking()`, or `acceptNonBlocking()`
+     * from multiple threads or processes may lead to race conditions. Synchronize access to the `ServerSocket` if
+     * needed.
+     *
+     * ---
+     *
+     * ### 🧠 Example
      * @code
-     * jsocketpp::ServerSocket server(8080);
+     * ServerSocket server(8080);
      * server.bind();
      * server.listen();
+     *
      * try {
-     *     jsocketpp::Socket client = server.accept(2000); // Wait up to 2 seconds
-     *     // Handle client...
-     * } catch (const jsocketpp::SocketTimeoutException&) {
+     *     Socket client = server.accept(2000,              // Wait up to 2 seconds
+     *                                    8192, 8192, 8192,  // Buffer sizes
+     *                                    3000, 1000,        // Timeouts
+     *                                    true, true, false  // TCP_NODELAY, keepAlive, nonBlocking
+     *     );
+     *     handleClient(client);
+     * } catch (const SocketTimeoutException&) {
      *     std::cout << "No client connected within timeout." << std::endl;
      * }
      * @endcode
+     *
+     * ---
+     *
+     * @param[in] timeoutMillis Timeout in milliseconds to wait for a connection:
+     * - Negative: block indefinitely
+     * - Zero: poll once and return immediately
+     * - Positive: wait up to this many milliseconds
+     *
+     * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`)
+     * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`)
+     * @param[in] internalBufferSize Internal buffer used by `read()` and `read<T>()`
+     * @param[in] soRecvTimeoutMillis Receive timeout in milliseconds (`SO_RCVTIMEO`); `-1` disables
+     * @param[in] soSendTimeoutMillis Send timeout in milliseconds (`SO_SNDTIMEO`); `-1` disables
+     * @param[in] tcpNoDelay Whether to disable Nagle’s algorithm (`TCP_NODELAY`); default: `true`
+     * @param[in] keepAlive Whether to enable TCP keep-alive (`SO_KEEPALIVE`)
+     * @param[in] nonBlocking Whether to set the accepted socket to non-blocking mode
+     *
+     * @return A configured `Socket` representing the connected client
+     *
+     * @throws SocketException If:
+     * - The server socket is invalid or closed
+     * - `waitReady()` or `accept()` fails
+     * - Socket configuration fails after acceptance
+     *
+     * @throws SocketTimeoutException If no client connects before the timeout expires
+     *
+     * @pre Server socket must be valid, bound, and listening
+     * @post Returns a connected `Socket` or throws an exception on failure
+     *
+     * @see accept(), tryAccept(), acceptBlocking(), setSoTimeout(), waitReady()
      */
     [[nodiscard]] Socket accept(int timeoutMillis, std::optional<std::size_t> recvBufferSize = std::nullopt,
                                 std::optional<std::size_t> sendBufferSize = std::nullopt,
-                                std::optional<std::size_t> internalBufferSize = std::nullopt) const;
+                                std::optional<std::size_t> internalBufferSize = std::nullopt,
+                                int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1, bool tcpNoDelay = true,
+                                bool keepAlive = false, bool nonBlocking = false) const;
 
     /**
-     * @brief Attempt to accept an incoming client connection, returning immediately or after the configured timeout.
-     *
-     * This method waits for an incoming client connection using the timeout set by `setSoTimeout()`. If no timeout
-     * is configured (i.e., negative value), the method blocks indefinitely until a client connects. If the timeout is
-     * zero, the method polls and returns immediately if no client is waiting.
-     *
-     * Unlike `accept()`, this method does **not** throw a `SocketTimeoutException` if no client is available.
-     * Instead, it returns `std::nullopt`. This makes it suitable for event loops or non-blocking server designs.
-     *
-     * Internally, this method uses `waitReady()` (which uses `select()`) to check for pending connections. If a client
-     * is ready, `acceptBlocking()` is called to retrieve the connection. If not, `std::nullopt` is returned.
-     *
-     * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking()`) does not affect the waiting
-     * behavior of this method, since `select()` is used for readiness. In rare cases, `accept()` may still fail with
-     * `EWOULDBLOCK` or `EAGAIN` if the connection is lost between readiness check and accept call, in which case a
-     * `SocketException` is thrown.
-     *
-     * @note This method is **not thread safe**. Simultaneous calls from multiple threads or processes may lead to race
-     * conditions. See `accept()` for a discussion of those edge cases.
-     *
-     * @note To specify a timeout for a single call, use `tryAccept(int timeoutMillis, ...)`.
-     *
-     * @note This method uses the logical timeout configured via `setSoTimeout()` and does not rely on
-     *       kernel-level socket timeouts. To control socket-level I/O timeout (for client sockets), see
-     *       `Socket::setSoTimeout()`.
-     *
-     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
-     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
-     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
-     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
-     *
-     * @return An `std::optional<Socket>` containing the accepted client socket, or `std::nullopt` if no client was
-     *         available before the timeout.
-     *
-     * @throws SocketException if the server socket is not initialized, closed, or if an internal error occurs.
-     *
-     * @pre Server socket must be valid, bound, and listening.
-     * @post Returns `std::nullopt` if timeout expires, or a connected `Socket` on success.
-     *
-     * @see setSoTimeout(int)
-     * @see getSoTimeout()
-     * @see accept()
-     * @see tryAccept(int, std::optional<std::size_t>, std::optional<std::size_t>)
-     * @see acceptBlocking()
-     * @see waitReady()
-     *
+     * @brief Attempt to accept an incoming client connection, returning `std::nullopt` on timeout instead of throwing.
      * @ingroup tcp
      *
+     * This method waits for an incoming client connection using the timeout configured via `setSoTimeout()`.
+     * If a client is available before the timeout expires, it returns a fully configured `Socket` object.
+     * If no client connects in time, it returns `std::nullopt` rather than throwing.
+     *
+     * ---
+     *
+     * ### ⏱ Timeout Behavior
+     * - If the socket timeout is **negative** (default), the method blocks indefinitely.
+     * - If the timeout is **zero**, it polls and returns immediately if no client is waiting.
+     * - If the timeout is **positive**, the method waits up to that many milliseconds using `select()`.
+     *   - If no connection arrives within that time, it returns `std::nullopt` (unlike `accept()` which throws).
+     *
+     * Internally, `waitReady()` is used for readiness detection, followed by `acceptBlocking()` for the actual accept.
+     *
+     * ---
+     *
+     * ### ⚙️ Configuration of Accepted Socket
+     * The returned `Socket` (if any) is configured using the following tuning options:
+     * - `recvBufferSize`, `sendBufferSize`: OS-level buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - `internalBufferSize`: Internal buffer used by `read<T>()` and `read<std::string>()`
+     * - `soRecvTimeoutMillis`: Receive timeout for the socket (`SO_RCVTIMEO`) in milliseconds
+     * - `soSendTimeoutMillis`: Send timeout for the socket (`SO_SNDTIMEO`) in milliseconds
+     * - `tcpNoDelay`: Disables Nagle’s algorithm for lower latency (default: `true`)
+     * - `keepAlive`: Enables TCP keep-alive probes
+     * - `nonBlocking`: Immediately sets the accepted socket into non-blocking mode
+     *
+     * ---
+     *
+     * ### ⚠️ Thread Safety
+     * This method is **not thread-safe**. Concurrent calls from multiple threads or processes may cause
+     * race conditions or spurious failures. Use a mutex to guard access to `accept()` methods if needed.
+     *
+     * ---
+     *
+     * ### 💡 Notes
+     * - This method is ideal for polling servers and event-driven architectures.
+     * - For per-call timeouts instead of using `setSoTimeout()`, use `tryAccept(int timeoutMillis, ...)`.
+     * - Unlike `accept()`, this method never throws `SocketTimeoutException`.
+     *
+     * ---
+     *
+     * ### 🧠 Example
      * @code
-     * jsocketpp::ServerSocket server(8080);
+     * ServerSocket server(8080);
      * server.bind();
      * server.listen();
-     * server.setSoTimeout(100); // Poll every 100 ms for new clients
+     * server.setSoTimeout(100); // Poll every 100 ms
+     *
      * while (true) {
-     *     if (auto client = server.tryAccept()) {
-     *         // Handle client...
+     *     if (auto client = server.tryAccept(
+     *             8192, 8192, 8192,
+     *             3000, 1000,
+     *             true, true, false)) {
+     *         handleClient(*client);
      *     } else {
-     *         // No client ready yet; perform other tasks or continue loop
+     *         // No client ready; do other work
      *     }
      * }
      * @endcode
+     *
+     * ---
+     *
+     * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`)
+     * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`)
+     * @param[in] internalBufferSize Optional internal buffer for high-level reads
+     * @param[in] soRecvTimeoutMillis Receive timeout (`SO_RCVTIMEO`) in milliseconds; `-1` disables
+     * @param[in] soSendTimeoutMillis Send timeout (`SO_SNDTIMEO`) in milliseconds; `-1` disables
+     * @param[in] tcpNoDelay Whether to disable Nagle’s algorithm (`TCP_NODELAY`); default: `true`
+     * @param[in] keepAlive Whether to enable TCP keep-alive (`SO_KEEPALIVE`)
+     * @param[in] nonBlocking Whether to set the accepted socket to non-blocking mode
+     *
+     * @return `std::optional<Socket>` — a connected and configured `Socket` on success, or `std::nullopt` on timeout
+     *
+     * @throws SocketException if the server socket is invalid or `accept()` fails for other reasons
+     *
+     * @pre Server socket must be valid, bound, and listening
+     * @post Returns `std::nullopt` if no client connects in time, or a valid `Socket` if one does
+     *
+     * @see setSoTimeout(), getSoTimeout(), tryAccept(int), accept(), acceptBlocking(), waitReady()
      */
     [[nodiscard]] std::optional<Socket> tryAccept(std::optional<std::size_t> recvBufferSize = std::nullopt,
                                                   std::optional<std::size_t> sendBufferSize = std::nullopt,
-                                                  std::optional<std::size_t> internalBufferSize = std::nullopt) const;
+                                                  std::optional<std::size_t> internalBufferSize = std::nullopt,
+                                                  int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1,
+                                                  bool tcpNoDelay = true, bool keepAlive = false,
+                                                  bool nonBlocking = false) const;
 
     /**
-     * @brief Attempt to accept an incoming client connection, waiting up to a specified timeout.
-     *
-     * This method waits for an incoming client connection using the provided `timeoutMillis` value, overriding any
-     * global timeout set with `setSoTimeout()`. If `timeoutMillis` is negative, the method blocks indefinitely until a
-     * client connects. If `timeoutMillis` is zero, the method polls and returns immediately if no client is waiting.
-     *
-     * Unlike `accept(int timeoutMillis, ...)`, which throws a `SocketTimeoutException` if the timeout expires,
-     * this method returns `std::nullopt` in that case. This makes it ideal for polling loops or event-driven servers.
-     *
-     * Internally, this method uses `waitReady(timeoutMillis)` (via `select()`) to check for connection readiness.
-     * If the socket is ready, `acceptBlocking(...)` is called to retrieve the connection. Otherwise, `std::nullopt` is
-     * returned.
-     *
-     * The **blocking or non-blocking mode** of the server socket (via `setNonBlocking(true)`) does **not** affect
-     * the behavior of this method. Readiness is determined exclusively via `select()`. However, due to inherent race
-     * conditions in all socket APIs, it’s still possible for `accept()` to fail with `EWOULDBLOCK` or `EAGAIN` after
-     * readiness has been reported. In such cases, a `SocketException` is thrown.
-     *
-     * @note This method is **not thread safe**. Protect server socket access externally if used from multiple threads.
-     *
-     * @param[in] timeoutMillis Timeout in milliseconds to wait for a client connection:
-     *   - Negative: block indefinitely
-     *   - Zero: poll once
-     *   - Positive: wait up to this many milliseconds
-     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
-     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
-     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
-     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
-     *
-     * @return `std::optional<Socket>` containing a client connection if accepted, or `std::nullopt` on timeout.
-     *
-     * @throws SocketException if the server socket is invalid, closed, or an internal error occurs.
-     *
-     * @pre Server socket must be valid, bound, and listening.
-     * @post Returns `std::nullopt` if timeout expires; otherwise a connected `Socket`.
-     *
-     * @see accept()
-     * @see tryAccept()
-     * @see acceptBlocking()
-     * @see acceptNonBlocking()
-     * @see waitReady()
-     *
+     * @brief Attempt to accept an incoming client connection, waiting up to a specified timeout and returning
+     * `std::nullopt` on timeout.
      * @ingroup tcp
      *
+     * This method waits for an incoming client connection using the explicitly provided `timeoutMillis` value,
+     * overriding any timeout configured via `setSoTimeout()`. If a client connects before the timeout expires,
+     * a fully configured `Socket` is returned. Otherwise, `std::nullopt` is returned instead of throwing.
+     *
+     * ---
+     *
+     * ### ⏱ Timeout Behavior
+     * - **Negative** `timeoutMillis`: Block indefinitely until a client connects
+     * - **Zero**: Poll immediately; return `std::nullopt` if no client is waiting
+     * - **Positive**: Wait up to `timeoutMillis` milliseconds; return `std::nullopt` if no client connects in time
+     *
+     * Readiness is detected using `select()` via `waitReady(timeoutMillis)`, followed by a call to
+     * `acceptBlocking(...)` if the socket is ready.
+     *
+     * ---
+     *
+     * ### ⚙️ Configuration of Accepted Socket
+     * If a client is accepted, the resulting `Socket` is configured using the following options:
+     * - `recvBufferSize`, `sendBufferSize`: OS-level socket buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - `internalBufferSize`: High-level internal buffer used by `read<T>()` and `read<std::string>()`
+     * - `soRecvTimeoutMillis`: Socket receive timeout (`SO_RCVTIMEO`) in milliseconds
+     * - `soSendTimeoutMillis`: Socket send timeout (`SO_SNDTIMEO`) in milliseconds
+     * - `tcpNoDelay`: Disables Nagle’s algorithm (`TCP_NODELAY`) for low-latency operation (default: `true`)
+     * - `keepAlive`: Enables TCP keep-alive probes (`SO_KEEPALIVE`)
+     * - `nonBlocking`: If `true`, sets the accepted socket to non-blocking mode
+     *
+     * ---
+     *
+     * ### ⚠️ Race Condition Warning
+     * Even after readiness is reported, `accept()` may still fail with `EWOULDBLOCK` or `EAGAIN` if the client
+     * disconnects in the small window before `accept()` is invoked. In that case, a `SocketException` is thrown.
+     *
+     * ---
+     *
+     * ### ⚠️ Thread Safety
+     * This method is **not thread-safe**. If used from multiple threads, you must externally synchronize access
+     * to the server socket to prevent race conditions.
+     *
+     * ---
+     *
+     * ### 🧠 Example
      * @code
-     * jsocketpp::ServerSocket server(8080);
+     * ServerSocket server(8080);
      * server.bind();
      * server.listen();
+     *
      * while (true) {
-     *     if (auto client = server.tryAccept(100)) {
-     *         // Handle client connection
+     *     auto client = server.tryAccept(100,            // Wait 100 ms per poll
+     *                                     8192, 8192, 8192, // Buffer sizes
+     *                                     3000, 1000,     // Timeouts
+     *                                     true, true, false); // Tuning flags
+     *
+     *     if (client) {
+     *         handleClient(*client);
      *     } else {
-     *         // No client yet; continue polling
+     *         // No client yet — continue polling
      *     }
      * }
      * @endcode
+     *
+     * ---
+     *
+     * @param[in] timeoutMillis Timeout in milliseconds for this call:
+     * - Negative: block indefinitely
+     * - Zero: poll once
+     * - Positive: wait up to `timeoutMillis` for a connection
+     *
+     * @param[in] recvBufferSize Optional receive buffer size (`SO_RCVBUF`)
+     * @param[in] sendBufferSize Optional send buffer size (`SO_SNDBUF`)
+     * @param[in] internalBufferSize Optional internal buffer for `read<T>()`-style calls
+     * @param[in] soRecvTimeoutMillis Receive timeout for the accepted socket (`SO_RCVTIMEO`); `-1` disables
+     * @param[in] soSendTimeoutMillis Send timeout for the accepted socket (`SO_SNDTIMEO`); `-1` disables
+     * @param[in] tcpNoDelay Whether to disable Nagle’s algorithm (`TCP_NODELAY`); default: `true`
+     * @param[in] keepAlive Whether to enable TCP keep-alive (`SO_KEEPALIVE`)
+     * @param[in] nonBlocking Whether to set the accepted socket to non-blocking mode
+     *
+     * @return `std::optional<Socket>` — configured client socket on success, or `std::nullopt` on timeout
+     *
+     * @throws SocketException If the server socket is invalid or `accept()` fails due to system error
+     *
+     * @pre The server socket must be open, bound, and listening
+     * @post Returns a valid `Socket` or `std::nullopt` if the timeout expires
+     *
+     * @see tryAccept(), accept(), acceptBlocking(), acceptNonBlocking(), waitReady(), setSoTimeout()
      */
     [[nodiscard]] std::optional<Socket> tryAccept(int timeoutMillis,
                                                   std::optional<std::size_t> recvBufferSize = std::nullopt,
                                                   std::optional<std::size_t> sendBufferSize = std::nullopt,
-                                                  std::optional<std::size_t> internalBufferSize = std::nullopt) const;
+                                                  std::optional<std::size_t> internalBufferSize = std::nullopt,
+                                                  int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1,
+                                                  bool tcpNoDelay = true, bool keepAlive = false,
+                                                  bool nonBlocking = false) const;
 
     /**
-     * @brief Accept an incoming client connection, always blocking until a client connects (unless the socket is set to
-     * non-blocking).
-     *
-     * This method directly invokes the underlying system `accept()` on the listening socket.
-     * - If the socket is in **blocking mode** (default), this method blocks until a client connects. It ignores any
-     * timeout set by `setSoTimeout()`.
-     * - If the socket is in **non-blocking mode**, the call returns immediately:
-     *   - If a client is pending, returns a connected `Socket`.
-     *   - If no client is waiting, throws `SocketException` with `EWOULDBLOCK` or `EAGAIN`.
-     *
-     * @par Comparison with acceptNonBlocking()
-     * - Both methods behave the same, based on the socket's blocking mode.
-     * - `acceptBlocking()` throws on *all* failures, and is idiomatic for classic server loops.
-     * - `acceptNonBlocking()` is used in polling/event-driven code where you want to return `std::nullopt` when no
-     * client is available.
-     *
-     * @note This method does not perform any timeout polling. Use `accept()` or `tryAccept()` if you need timeouts.
-     *
-     * @note This method is **not thread safe**. Simultaneous `accept` calls on the same socket from multiple threads or
-     * processes may result in race conditions or failures.
-     *
-     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
-     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
-     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
-     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
-     *
-     * @return A `Socket` object representing the connected client.
-     *
-     * @throws SocketException if the server socket is invalid or `accept()` fails (including with `EWOULDBLOCK` or
-     *         `EAGAIN` in non-blocking mode).
-     *
-     * @pre Server socket must be valid, bound, and listening.
-     * @post A new connected `Socket` is returned on success.
-     *
-     * @see accept()
-     * @see tryAccept()
-     * @see acceptNonBlocking()
-     * @see setNonBlocking()
-     * @see waitReady()
-     *
+     * @brief Accepts a TCP client connection, configures the socket, and returns a high-level `Socket` object.
      * @ingroup tcp
      *
+     * This method calls the underlying system `accept()` on the listening server socket.
+     * - If the socket is in **blocking mode** (default), this method blocks until a client connects.
+     * - If the socket is in **non-blocking mode**, it returns immediately:
+     *   - If a client is pending, it returns a configured `Socket`.
+     *   - If no client is waiting, it throws `SocketException` with `EWOULDBLOCK` or `EAGAIN`.
+     *
+     * ---
+     *
+     * ### ⚙️ Behavior
+     * - Applies OS-level buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`) to the accepted socket
+     * - Applies high-level `internalBufferSize` for `read<T>()`
+     * - Configures optional timeouts for send and receive operations
+     * - Enables/disables TCP features like Nagle’s algorithm and keep-alive
+     * - Sets blocking mode immediately after accept if requested
+     *
+     * ---
+     *
+     * ### 🧪 Comparison with `acceptNonBlocking()`
+     * - Both methods rely on the socket’s current blocking mode
+     * - `acceptBlocking()` always throws on failure, including `EWOULDBLOCK`
+     * - `acceptNonBlocking()` is used in polling loops where no connection is not an error
+     *
+     * ---
+     *
+     * ### ⚠️ Thread Safety
+     * This method is **not thread-safe**. Simultaneous `accept()` calls on the same `ServerSocket`
+     * from multiple threads may result in race conditions or inconsistent results.
+     *
+     * ---
+     *
+     * ### 🧠 Example
      * @code
-     * jsocketpp::ServerSocket server(8080);
+     * ServerSocket server(8080);
      * server.bind();
      * server.listen();
      *
-     * // Blocking example
-     * jsocketpp::Socket client = server.acceptBlocking();
+     * // Blocking pattern
+     * Socket client = server.acceptBlocking(8192, 8192, 8192,
+     *                                       3000, 1000, // timeouts
+     *                                       true, true, false);
      *
      * // Non-blocking pattern
      * server.setNonBlocking(true);
      * try {
-     *     jsocketpp::Socket client = server.acceptBlocking();
-     *     // Handle client
-     * } catch (const jsocketpp::SocketException& e) {
-     *     if (e.code() == EWOULDBLOCK) {
-     *         // No client yet
+     *     Socket client = server.acceptBlocking(); // may throw EWOULDBLOCK
+     *     // handle client
+     * } catch (const SocketException& ex) {
+     *     if (ex.code() == EWOULDBLOCK) {
+     *         // no connection available yet
      *     } else {
      *         throw;
      *     }
      * }
      * @endcode
+     *
+     * ---
+     *
+     * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`)
+     * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`)
+     * @param[in] internalBufferSize Internal buffer used by `read<T>()` and `read<std::string>()`
+     * @param[in] soRecvTimeoutMillis Receive timeout (`SO_RCVTIMEO`) in milliseconds; `-1` disables
+     * @param[in] soSendTimeoutMillis Send timeout (`SO_SNDTIMEO`) in milliseconds; `-1` disables
+     * @param[in] tcpNoDelay Whether to disable Nagle’s algorithm (`TCP_NODELAY`)
+     * @param[in] keepAlive Whether to enable TCP keep-alive (`SO_KEEPALIVE`)
+     * @param[in] nonBlocking Whether to immediately make the accepted socket non-blocking
+     *
+     * @return A configured `Socket` object representing the connected client
+     *
+     * @throws SocketException If:
+     * - The server socket is not bound or listening
+     * - `accept()` fails
+     * - No client is waiting in non-blocking mode (`EWOULDBLOCK`, `EAGAIN`)
+     * - Socket configuration (timeouts, buffers, etc.) fails after `accept()`
+     *
+     * @pre Server socket must be open, bound, and in listening state.
+     * @post A new `Socket` is returned on success, or an exception is thrown on failure.
+     *
+     * @see acceptNonBlocking(), tryAccept(), setNonBlocking(), setSoRecvTimeout(), setSoSendTimeout()
      */
     [[nodiscard]] Socket acceptBlocking(std::optional<std::size_t> recvBufferSize = std::nullopt,
                                         std::optional<std::size_t> sendBufferSize = std::nullopt,
-                                        std::optional<std::size_t> internalBufferSize = std::nullopt) const;
+                                        std::optional<std::size_t> internalBufferSize = std::nullopt,
+                                        int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1,
+                                        bool tcpNoDelay = true, bool keepAlive = false, bool nonBlocking = false) const;
 
     /**
-     * @brief Attempt to accept a client connection in non-blocking fashion.
-     *
-     * This method attempts to accept an incoming client connection using the system `accept()` call:
-     * - If the server socket is in **blocking mode** (default), the call will block until a client connects.
-     * - If the socket is in **non-blocking mode** (`setNonBlocking(true)`), the call will return immediately:
-     *   - If a client is ready, returns a `Socket` object.
-     *   - If no client is waiting, returns `std::nullopt`.
-     *
-     * This method does **not** use `select()`, `poll()`, or any timeout logic. It is ideal for event loops and
-     * polling-based architectures where you explicitly check for readiness before accepting.
-     *
-     * @note The blocking behavior depends entirely on the socket mode, which is controlled by `setNonBlocking(bool)`.
-     * @note For timeout-aware or readiness-checked accept patterns, use `accept()`, `tryAccept()`, or
-     * `acceptBlocking()`.
-     *
-     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
-     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
-     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
-     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
-     *
-     * @return A `Socket` object if a client is connected, or `std::nullopt` if no connection was ready.
-     *
-     * @throws SocketException if the socket is invalid or `accept()` fails due to a system error
-     *         (excluding `EWOULDBLOCK` / `EAGAIN` on non-blocking sockets).
-     *
-     * @pre Server socket must be valid, bound, and listening.
-     * @post Returns a connected `Socket` or `std::nullopt` if no client is pending.
-     *
-     * @see accept()
-     * @see tryAccept()
-     * @see acceptBlocking()
-     * @see setNonBlocking()
-     * @see waitReady()
-     *
+     * @brief Attempts to accept a client connection in non-blocking mode and returns a fully configured `Socket`.
      * @ingroup tcp
      *
+     * This method calls the system `accept()` in non-blocking mode to check for pending client connections:
+     *
+     * - If a client is ready, it wraps the accepted connection into a configured `Socket` object.
+     * - If no client is waiting, it returns `std::nullopt` without throwing.
+     *
+     * ---
+     *
+     * ### 🔁 Blocking Behavior
+     * - If the server socket is in **blocking mode** (default), this call **blocks** until a client connects.
+     * - If the socket is in **non-blocking mode** (`setNonBlocking(true)`), it returns immediately:
+     *   - If a client is ready, returns a configured `Socket`.
+     *   - If no client is pending, returns `std::nullopt`.
+     *
+     * ---
+     *
+     * ### ⚙️ Configuration
+     * If a client is accepted, the returned `Socket` will be configured using the following options:
+     *
+     * - `recvBufferSize` / `sendBufferSize`: OS-level socket buffers (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - `internalBufferSize`: Internal buffer used by `read()` and `read<T>()`
+     * - `soRecvTimeoutMillis`: Read timeout in milliseconds (`SO_RCVTIMEO`)
+     * - `soSendTimeoutMillis`: Send timeout in milliseconds (`SO_SNDTIMEO`)
+     * - `tcpNoDelay`: Disables Nagle’s algorithm for lower latency (`TCP_NODELAY`)
+     * - `keepAlive`: Enables TCP keep-alive probes (`SO_KEEPALIVE`)
+     * - `nonBlocking`: If `true`, the accepted socket is made non-blocking immediately
+     *
+     * ---
+     *
+     * ### ⚠️ Notes
+     * - This method does **not** use `select()`, `poll()`, or `epoll()` internally.
+     * - It is ideal for event-loop and polling-based architectures where you explicitly check for readiness.
+     * - Socket behavior is determined entirely by whether `setNonBlocking(true)` was called on the server socket.
+     *
+     * ---
+     *
+     * ### 🧠 Example
      * @code
-     * jsocketpp::ServerSocket server(8080);
+     * ServerSocket server(8080);
      * server.bind();
      * server.listen();
      * server.setNonBlocking(true);
      *
      * while (true) {
-     *     auto client = server.acceptNonBlocking();
+     *     auto client = server.acceptNonBlocking(
+     *         8192, 8192, 8192,
+     *         5000, 1000,
+     *         true, true, true);
+     *
      *     if (client) {
-     *         // Handle client...
+     *         handleClient(*client);
      *     } else {
-     *         // No client yet; do other work
+     *         // No connection yet; do other work
      *     }
      * }
      * @endcode
+     *
+     * ---
+     *
+     * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`)
+     * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`)
+     * @param[in] internalBufferSize Internal buffer size for `read<T>()`
+     * @param[in] soRecvTimeoutMillis Read timeout in milliseconds (`SO_RCVTIMEO`); `-1` disables
+     * @param[in] soSendTimeoutMillis Send timeout in milliseconds (`SO_SNDTIMEO`); `-1` disables
+     * @param[in] tcpNoDelay Disables Nagle's algorithm (`TCP_NODELAY`) if `true` (default: true)
+     * @param[in] keepAlive Enables TCP keep-alive probes (`SO_KEEPALIVE`) if `true`
+     * @param[in] nonBlocking Sets the accepted socket to non-blocking mode if `true`
+     *
+     * @return A configured `Socket` if a client is pending, or `std::nullopt` if no connection is ready
+     *
+     * @throws SocketException if:
+     * - The server socket is invalid or closed
+     * - `accept()` fails due to a system error (excluding `EWOULDBLOCK` or `EAGAIN`)
+     *
+     * @pre The server socket must be bound and listening
+     * @post Returns a connected `Socket` or `std::nullopt` if no client is available
+     *
+     * @see accept(), acceptBlocking(), tryAccept(), setNonBlocking(), setSoRecvTimeout(), setTcpNoDelay()
      */
-    [[nodiscard]] std::optional<Socket>
-    acceptNonBlocking(std::optional<std::size_t> recvBufferSize = std::nullopt,
-                      std::optional<std::size_t> sendBufferSize = std::nullopt,
-                      std::optional<std::size_t> internalBufferSize = std::nullopt) const;
+    [[nodiscard]] std::optional<Socket> acceptNonBlocking(std::optional<std::size_t> recvBufferSize = std::nullopt,
+                                                          std::optional<std::size_t> sendBufferSize = std::nullopt,
+                                                          std::optional<std::size_t> internalBufferSize = std::nullopt,
+                                                          int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1,
+                                                          bool tcpNoDelay = true, bool keepAlive = false,
+                                                          bool nonBlocking = false) const;
 
     /**
-     * @brief Asynchronously accept an incoming client connection, returning a future.
-     *
-     * This method launches an asynchronous accept operation on the server socket,
-     * returning a `std::future<Socket>` that resolves once a client connects or an error occurs.
-     *
-     * Internally, this uses `std::async(std::launch::async, ...)` to spawn a background thread
-     * that calls `accept(...)`. The calling thread is never blocked.
-     *
-     * When a client is accepted, the future becomes ready and yields a fully constructed `Socket` object.
-     * If an error or timeout occurs, the exception is rethrown when `.get()` is called on the future.
-     *
-     * @note This is **not thread safe**: do not call `acceptAsync()`, `accept()`, or related methods
-     * concurrently on the same `ServerSocket` instance unless externally synchronized.
-     *
-     * @note The `ServerSocket` object must outlive the returned future. Use caution when capturing `this`.
-     *
-     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
-     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
-     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
-     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
-     *
-     * @return A `std::future<Socket>` that resolves to a connected client socket or throws on error.
-     *
-     * @throws SocketException if a fatal socket error occurs.
-     * @throws SocketTimeoutException if a timeout is configured and no client connects.
-     *
-     * @pre Server socket must be valid, bound, and listening.
-     * @post Future resolves to a connected `Socket`, or throws from `.get()`.
-     *
-     * @see accept()
-     * @see tryAccept()
-     * @see acceptBlocking()
-     * @see std::future, std::async
-     *
+     * @brief Asynchronously accept an incoming client connection, returning a `std::future` that resolves to a
+     * configured `Socket`.
      * @ingroup tcp
      *
-     * @code
-     * jsocketpp::ServerSocket server(8080);
-     * auto future = server.acceptAsync();
+     * This method initiates an asynchronous accept operation on the server socket using
+     * `std::async(std::launch::async, ...)`. It returns a `std::future<Socket>` that will
+     * become ready once a client is accepted or an error/timeout occurs.
      *
-     * // Do other work while waiting...
+     * ---
+     *
+     * ### ⚙️ Behavior
+     * - The calling thread is **never blocked**
+     * - A background thread calls `accept(...)` with the specified tuning options
+     * - When `.get()` is called on the future:
+     *   - If successful, a fully configured `Socket` is returned
+     *   - If an error occurred, the exception is rethrown (`SocketException`, `SocketTimeoutException`, etc.)
+     *
+     * This function is ideal for use in thread-based architectures where the server must
+     * continue operating while waiting for new clients in parallel.
+     *
+     * ---
+     *
+     * ### ⚠️ Thread Safety
+     * This method is **not thread-safe**.
+     * You must externally synchronize calls to `acceptAsync()`, `accept()`, `tryAccept()`, and related methods
+     * on the same `ServerSocket` instance.
+     *
+     * ---
+     *
+     * ### ⚠️ Lifetime Warning
+     * The `ServerSocket` object must remain valid and alive **at least until** the returned `std::future` has resolved
+     * and `.get()` has been called. Using this method in contexts where the `ServerSocket` may be destroyed early
+     * can lead to undefined behavior or dangling references.
+     *
+     * ---
+     *
+     * ### ⚙️ Configuration of Accepted Socket
+     * The returned `Socket` (from `.get()`) will be initialized with:
+     * - `recvBufferSize`, `sendBufferSize`: OS-level buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - `internalBufferSize`: High-level internal buffer used for `read()` / `read<T>()`
+     * - `soRecvTimeoutMillis`: Socket read timeout in milliseconds (`SO_RCVTIMEO`)
+     * - `soSendTimeoutMillis`: Socket send timeout in milliseconds (`SO_SNDTIMEO`)
+     * - `tcpNoDelay`: Disables Nagle’s algorithm for lower latency (default: `true`)
+     * - `keepAlive`: Enables TCP keep-alive (`SO_KEEPALIVE`)
+     * - `nonBlocking`: If `true`, sets the accepted socket to non-blocking mode
+     *
+     * ---
+     *
+     * ### 🧠 Example
+     * @code
+     * ServerSocket server(8080);
+     * server.bind();
+     * server.listen();
+     *
+     * std::future<Socket> future = server.acceptAsync(
+     *     8192, 8192, 8192,     // buffer sizes
+     *     3000, 1000,           // socket timeouts
+     *     true, true, false     // TCP_NODELAY, keep-alive, non-blocking
+     * );
+     *
+     * // Do other work...
      * if (future.wait_for(std::chrono::seconds(5)) == std::future_status::ready) {
-     *     jsocketpp::Socket client = future.get();
-     *     // Handle client...
+     *     Socket client = future.get(); // May throw
+     *     handleClient(client);
      * } else {
-     *     // Timeout or still waiting
+     *     std::cout << "Still waiting or timed out." << std::endl;
      * }
      * @endcode
+     *
+     * ---
+     *
+     * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`)
+     * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`)
+     * @param[in] internalBufferSize Optional internal buffer size for `read<T>()` operations
+     * @param[in] soRecvTimeoutMillis Socket receive timeout (`SO_RCVTIMEO`) in milliseconds; `-1` disables
+     * @param[in] soSendTimeoutMillis Socket send timeout (`SO_SNDTIMEO`) in milliseconds; `-1` disables
+     * @param[in] tcpNoDelay Whether to disable Nagle’s algorithm (`TCP_NODELAY`); default: `true`
+     * @param[in] keepAlive Whether to enable TCP keep-alive (`SO_KEEPALIVE`)
+     * @param[in] nonBlocking Whether to immediately set the accepted socket to non-blocking mode
+     *
+     * @return A `std::future<Socket>` that resolves to a connected and configured client socket, or throws on error
+     *
+     * @throws SocketException If a fatal socket error occurs during background accept
+     * @throws SocketTimeoutException If no client connects and the configured timeout expires
+     *
+     * @pre Server socket must be valid, bound, and listening
+     * @post Future resolves to a connected `Socket`, or throws from `.get()`
+     *
+     * @see accept(), acceptBlocking(), tryAccept(), acceptNonBlocking(), acceptAsync(callback), std::future, std::async
      */
     [[nodiscard]] std::future<Socket> acceptAsync(std::optional<std::size_t> recvBufferSize = std::nullopt,
                                                   std::optional<std::size_t> sendBufferSize = std::nullopt,
-                                                  std::optional<std::size_t> internalBufferSize = std::nullopt) const;
+                                                  std::optional<std::size_t> internalBufferSize = std::nullopt,
+                                                  int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1,
+                                                  bool tcpNoDelay = true, bool keepAlive = false,
+                                                  bool nonBlocking = false) const;
 
     /**
-     * @brief Asynchronously accept a client connection and invoke a callback upon completion.
-     *
-     * Launches a background thread to perform an `accept()` operation and calls the user-provided callback
-     * when a client connects or an error occurs. This is useful for event-driven servers that require
-     * non-blocking, callback-based acceptance of new clients.
-     *
-     * The callback is invoked exactly once with:
-     * - a valid `Socket` and `nullptr` exception on success, or
-     * - an empty `std::optional<Socket>` and a non-null `std::exception_ptr` on error.
-     *
-     * Internally, this uses a detached `std::thread` that invokes `accept(...)`, wrapped in a try-catch block.
-     * If the server socket is not valid or an error occurs (including timeouts), the exception is captured
-     * and passed to the callback for inspection or rethrowing via `std::rethrow_exception()`.
-     *
-     * @note This method is **not thread safe**. Avoid concurrent calls to `accept`, `acceptAsync`, or related
-     * methods from multiple threads unless externally synchronized.
-     *
-     * @note The `ServerSocket` object must remain alive until the callback is invoked. Destroying the object
-     * before the background thread finishes is undefined behavior.
-     *
-     * @param[in] callback Completion handler with signature:
-     *   `void callback(std::optional<Socket>, std::exception_ptr)`
-     * @param[in] recvBufferSize The receive buffer size (`SO_RCVBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultReceiveBufferSize()`.
-     * @param[in] sendBufferSize The send buffer size (`SO_SNDBUF`) to apply to the accepted socket. Defaults to
-     * `DefaultBufferSize`. Can also be set via `setDefaultSendBufferSize()`.
-     * @param[in] internalBufferSize The internal buffer size used by the accepted socket for `read<T>()` operations.
-     * Defaults to `DefaultBufferSize`. Can also be set via `setDefaultInternalBufferSize()`.
-     *
-     * @pre Server socket must be valid, bound, and listening.
-     * @post Callback is invoked exactly once with either a valid `Socket` or an exception.
-     *
-     * @see accept()
-     * @see tryAccept()
-     * @see acceptAsync(std::future)
-     * @see std::optional
-     * @see std::exception_ptr, std::rethrow_exception
-     *
+     * @brief Asynchronously accept a client connection and invoke a callback upon completion or error.
      * @ingroup tcp
      *
+     * This method starts a detached background thread that performs a socket `accept()` and
+     * invokes a user-provided callback upon completion. It is designed for event-driven or
+     * callback-oriented architectures where blocking or polling is not desirable.
+     *
+     * ---
+     *
+     * ### ⚙️ Behavior
+     * - Accepts one client connection in a background thread
+     * - Applies the same tuning options available to synchronous `accept()` methods
+     * - If a client connects, the callback receives a fully constructed `Socket` and `nullptr` exception
+     * - If an error occurs, the callback receives `std::nullopt` and a `std::exception_ptr`
+     * - You may rethrow the exception in the callback using `std::rethrow_exception()`
+     *
+     * ---
+     *
+     * ### 🔁 Callback Signature
+     * ```cpp
+     * void callback(std::optional<Socket>, std::exception_ptr);
+     * ```
+     * - On success: the `Socket` contains a valid connection, and the `exception_ptr` is `nullptr`
+     * - On error: the `Socket` is empty, and the `exception_ptr` holds a `SocketException`, `SocketTimeoutException`,
+     * etc.
+     *
+     * ---
+     *
+     * ### ⚠️ Thread Safety
+     * This method is **not thread-safe**. Do not call `accept()`, `acceptAsync()`, or related methods
+     * concurrently on the same `ServerSocket` unless access is externally synchronized.
+     *
+     * ---
+     *
+     * ### ⚠️ Lifetime Warning
+     * The `ServerSocket` must outlive the background thread and callback execution.
+     * Destroying the `ServerSocket` before the callback is invoked results in **undefined behavior**.
+     *
+     * ---
+     *
+     * ### ⚙️ Configuration of Accepted Socket
+     * The `Socket` passed to the callback (if any) will be configured using:
+     * - `recvBufferSize`, `sendBufferSize`: OS-level buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - `internalBufferSize`: Internal buffer used by `read<T>()` and `read<std::string>()`
+     * - `soRecvTimeoutMillis`: Socket receive timeout (`SO_RCVTIMEO`) in milliseconds
+     * - `soSendTimeoutMillis`: Socket send timeout (`SO_SNDTIMEO`) in milliseconds
+     * - `tcpNoDelay`: Disables Nagle’s algorithm (`TCP_NODELAY`) (default: `true`)
+     * - `keepAlive`: Enables TCP keep-alive (`SO_KEEPALIVE`)
+     * - `nonBlocking`: Immediately sets the accepted socket to non-blocking mode
+     *
+     * ---
+     *
+     * ### 🧠 Example
      * @code
      * server.acceptAsync(
-     *     [](std::optional<jsocketpp::Socket> clientOpt, std::exception_ptr eptr) {
+     *     [](std::optional<Socket> clientOpt, std::exception_ptr eptr) {
      *         if (eptr) {
      *             try { std::rethrow_exception(eptr); }
-     *             catch (const jsocketpp::SocketException& ex) {
+     *             catch (const SocketException& ex) {
      *                 std::cerr << "Accept failed: " << ex.what() << std::endl;
      *             }
      *         } else if (clientOpt) {
@@ -1033,15 +1258,34 @@ class ServerSocket : public SocketOptions
      *             // Handle client...
      *         }
      *     },
-     *     8192, // receive buffer size
-     *     4096  // send buffer size
+     *     8192, 4096, 8192, 3000, 1000, true, true, false
      * );
      * @endcode
+     *
+     * ---
+     *
+     * @param[in] callback Completion handler that receives the accepted socket or an exception
+     * @param[in] recvBufferSize Optional receive buffer size (`SO_RCVBUF`)
+     * @param[in] sendBufferSize Optional send buffer size (`SO_SNDBUF`)
+     * @param[in] internalBufferSize Optional internal buffer for `read<T>()`
+     * @param[in] soRecvTimeoutMillis Receive timeout (`SO_RCVTIMEO`) in milliseconds; `-1` disables
+     * @param[in] soSendTimeoutMillis Send timeout (`SO_SNDTIMEO`) in milliseconds; `-1` disables
+     * @param[in] tcpNoDelay Whether to disable Nagle’s algorithm (`TCP_NODELAY`); default: `true`
+     * @param[in] keepAlive Whether to enable TCP keep-alive (`SO_KEEPALIVE`)
+     * @param[in] nonBlocking Whether to immediately make the accepted socket non-blocking
+     *
+     * @pre The server socket must be valid, bound, and listening
+     * @post The callback is invoked exactly once, either with a valid `Socket` or an error
+     *
+     * @see accept(), tryAccept(), acceptBlocking(), acceptAsync(std::future)
+     * @see std::optional, std::exception_ptr, std::rethrow_exception
      */
     void acceptAsync(std::function<void(std::optional<Socket>, std::exception_ptr)> callback,
                      std::optional<std::size_t> recvBufferSize = std::nullopt,
                      std::optional<std::size_t> sendBufferSize = std::nullopt,
-                     std::optional<std::size_t> internalBufferSize = std::nullopt) const;
+                     std::optional<std::size_t> internalBufferSize = std::nullopt, int soRecvTimeoutMillis = -1,
+                     int soSendTimeoutMillis = -1, bool tcpNoDelay = true, bool keepAlive = false,
+                     bool nonBlocking = false) const;
 
     /**
      * @brief Closes the server socket and releases its associated system resources.

@@ -9,61 +9,97 @@
 using namespace jsocketpp;
 
 Socket::Socket(const SOCKET client, const sockaddr_storage& addr, const socklen_t len, const std::size_t recvBufferSize,
-               const std::size_t sendBufferSize, const std::size_t internalBufferSize)
+               const std::size_t sendBufferSize, const std::size_t internalBufferSize, const int soRecvTimeoutMillis,
+               const int soSendTimeoutMillis, const bool tcpNoDelay, const bool keepAlive, const bool nonBlocking)
     : SocketOptions(client), _remoteAddr(addr), _remoteAddrLen(len), _internalBuffer(internalBufferSize)
 {
-    // setInternalBufferSize(internalBufferSize); // redundant, is in initializer list already
-    setReceiveBufferSize(recvBufferSize);
-    setSendBufferSize(sendBufferSize);
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("Socket(SOCKET): invalid socket descriptor.");
+
+    try
+    {
+        setReceiveBufferSize(recvBufferSize);
+        setSendBufferSize(sendBufferSize);
+        setInternalBufferSize(internalBufferSize);
+        setTcpNoDelay(tcpNoDelay);
+        setKeepAlive(keepAlive);
+        setNonBlocking(nonBlocking);
+
+        if (soRecvTimeoutMillis >= 0)
+            setSoRecvTimeout(soRecvTimeoutMillis);
+        if (soSendTimeoutMillis >= 0)
+            setSoSendTimeout(soSendTimeoutMillis);
+    }
+    catch (const SocketException&)
+    {
+        cleanupAndRethrow();
+    }
 }
 
 Socket::Socket(const std::string_view host, const Port port, const std::optional<std::size_t> recvBufferSize,
-               const std::optional<std::size_t> sendBufferSize, const std::optional<std::size_t> internalBufferSize)
-    : SocketOptions(INVALID_SOCKET), _remoteAddr{}, _internalBuffer(internalBufferSize.value_or(DefaultBufferSize))
+               const std::optional<std::size_t> sendBufferSize, const std::optional<std::size_t> internalBufferSize,
+               const bool reuseAddress, const int soRecvTimeoutMillis, const int soSendTimeoutMillis,
+               const bool dualStack, const bool tcpNoDelay, const bool keepAlive, const bool nonBlocking,
+               const bool autoConnect)
+    : SocketOptions(INVALID_SOCKET), _remoteAddr{}, _remoteAddrLen(0),
+      _internalBuffer(internalBufferSize.value_or(DefaultBufferSize))
 {
     addrinfo hints{};
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = dualStack ? AF_UNSPEC : AF_INET;
     hints.ai_socktype = SOCK_STREAM;
 
     // Explicitly specify TCP to avoid ambiguity on platforms where SOCK_STREAM alone may resolve to multiple protocols.
     // This ensures only TCP (IPPROTO_TCP) is selected, especially useful on dual-stack or non-standard systems.
     hints.ai_protocol = IPPROTO_TCP;
 
-    // Resolve the local address and port to be used by the server
     const std::string portStr = std::to_string(port);
-
     addrinfo* rawCliAddrInfo = nullptr;
-    if (const auto ret = ::getaddrinfo(host.data(), portStr.c_str(), &hints, &rawCliAddrInfo); ret != 0)
+
+    if (const int ret = ::getaddrinfo(host.data(), portStr.c_str(), &hints, &rawCliAddrInfo); ret != 0)
     {
-        throw SocketException(
 #ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
 #else
-            ret, SocketErrorMessageWrap(ret, true));
+        throw SocketException(ret, SocketErrorMessageWrap(ret, true));
 #endif
     }
-    _cliAddrInfo.reset(rawCliAddrInfo); // transfer ownership
 
-    // Try all available addresses (IPv6/IPv4) to create a SOCKET for
+    _cliAddrInfo.reset(rawCliAddrInfo); // managed ownership
+
+    // Try each candidate until socket creation succeeds
     for (addrinfo* p = _cliAddrInfo.get(); p != nullptr; p = p->ai_next)
     {
-        setSocketFd(socket(p->ai_family, p->ai_socktype, p->ai_protocol));
+        setSocketFd(::socket(p->ai_family, p->ai_socktype, p->ai_protocol));
         if (getSocketFd() != INVALID_SOCKET)
         {
-            // Store the address that worked
             _selectedAddrInfo = p;
             break;
         }
     }
-    if (getSocketFd() == INVALID_SOCKET)
-    {
-        cleanupAndThrow(GetSocketError());
-    }
 
-    // Apply all buffer size configurations
-    setInternalBufferSize(internalBufferSize.value_or(DefaultBufferSize));
+    if (getSocketFd() == INVALID_SOCKET)
+        cleanupAndThrow(GetSocketError());
+
+    // --- Configure socket options before connect ---
+    setReuseAddress(reuseAddress);
+    setInternalBufferSize(_internalBuffer.size());
     setReceiveBufferSize(recvBufferSize.value_or(DefaultBufferSize));
     setSendBufferSize(sendBufferSize.value_or(DefaultBufferSize));
+    setTcpNoDelay(tcpNoDelay);
+    setKeepAlive(keepAlive);
+    setNonBlocking(nonBlocking);
+
+    if (soRecvTimeoutMillis >= 0)
+        setSoRecvTimeout(soRecvTimeoutMillis);
+
+    if (soSendTimeoutMillis >= 0)
+        setSoSendTimeout(soSendTimeoutMillis);
+
+    if (autoConnect)
+    {
+        // Blocking connect; user may later call non-blocking connect with timeout explicitly
+        connect();
+    }
 }
 
 void Socket::cleanupAndThrow(const int errorCode)
@@ -80,6 +116,18 @@ void Socket::cleanupAndThrow(const int errorCode)
     _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
+}
+
+void Socket::cleanupAndRethrow()
+{
+    if (getSocketFd() != INVALID_SOCKET)
+    {
+        CloseSocket(getSocketFd());
+        setSocketFd(INVALID_SOCKET);
+    }
+    _cliAddrInfo.reset();
+    _selectedAddrInfo = nullptr;
+    throw; // Rethrows the current exception
 }
 
 void Socket::bind(const std::string_view localHost, const Port port)
