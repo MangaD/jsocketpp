@@ -169,9 +169,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga5d219ae0c5ace0c42fad1b8295a7c2a1" id="r_ga5d219ae0c5ace0c42fad1b8295a7c2a1"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga5d219ae0c5ace0c42fad1b8295a7c2a1 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5d219ae0c5ace0c42fad1b8295a7c2a1">jsocketpp::DatagramSocket::write&lt; std::string &gt;</a> (const std::string &amp;value)</td></tr>
 <tr class="memdesc:ga5d219ae0c5ace0c42fad1b8295a7c2a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">write&lt;T&gt;()</span> to send a <span class="tt">std::string</span> as a UDP datagram.  <br /></td></tr>
-<tr class="memitem:gaad2b30f329aeab7a2468575261ec4fea" id="r_gaad2b30f329aeab7a2468575261ec4fea"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:gaad2b30f329aeab7a2468575261ec4fea template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaad2b30f329aeab7a2468575261ec4fea">jsocketpp::DatagramSocket::write&lt; std::string_view &gt;</a> (std::string_view view)</td></tr>
-<tr class="memdesc:gaad2b30f329aeab7a2468575261ec4fea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">write&lt;T&gt;()</span> to send a <span class="tt">std::string_view</span> as a UDP datagram.  <br /></td></tr>
+<tr class="memitem:gaca86a9f7b311fd106801b9e49d01fb27" id="r_gaca86a9f7b311fd106801b9e49d01fb27"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:gaca86a9f7b311fd106801b9e49d01fb27 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaca86a9f7b311fd106801b9e49d01fb27">jsocketpp::DatagramSocket::write&lt; std::string_view &gt;</a> (const std::string_view &amp;value)</td></tr>
+<tr class="memdesc:gaca86a9f7b311fd106801b9e49d01fb27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">write&lt;T&gt;()</span> to send a <span class="tt">std::string_view</span> as a UDP datagram.  <br /></td></tr>
 <tr class="memitem:ga379ff0e20d62b5f0c815d48614597005" id="r_ga379ff0e20d62b5f0c815d48614597005"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga379ff0e20d62b5f0c815d48614597005">jsocketpp::MulticastSocket::MulticastSocket</a> ()=delete</td></tr>
 <tr class="memdesc:ga379ff0e20d62b5f0c815d48614597005"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a> class.  <br /></td></tr>
 </table>
@@ -1056,8 +1056,8 @@ connect() To establish remote peer before sending </dd></dl>
 
 </div>
 </div>
-<a id="gaad2b30f329aeab7a2468575261ec4fea" name="gaad2b30f329aeab7a2468575261ec4fea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaad2b30f329aeab7a2468575261ec4fea">&#9670;&#160;</a></span>DatagramSocket::write&lt; std::string_view &gt;()</h2>
+<a id="gaca86a9f7b311fd106801b9e49d01fb27" name="gaca86a9f7b311fd106801b9e49d01fb27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaca86a9f7b311fd106801b9e49d01fb27">&#9670;&#160;</a></span>DatagramSocket::write&lt; std::string_view &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1070,7 +1070,7 @@ template&lt;&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="#ga87c837cd891ddd8b4daeacc61e1326df">jsocketpp::DatagramSocket::write</a>&lt; std::string_view &gt; </td>
           <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>view</em></span></td><td>)</td>
+          <td class="paramtype">const std::string_view &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1109,7 +1109,7 @@ Example</h3>
 </div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">view</td><td>The string view to send (raw bytes).</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>The string view to send (raw bytes).</td></tr>
   </table>
   </dd>
 </dl>

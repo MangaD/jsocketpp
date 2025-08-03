@@ -15,7 +15,7 @@ var searchData=
   ['datagramsocket_3a_3aread_3c_20std_3a_3astring_20_3e_12',['read&lt; std::string &gt;',['../group__udp.html#ga30deb297e9c8fae8da50947d4a29c95f',1,'jsocketpp']]],
   ['datagramsocket_3a_3arecvfrom_3c_20std_3a_3astring_20_3e_13',['recvFrom&lt; std::string &gt;',['../namespacejsocketpp.html#aa5ff7535f7cd1c89724bcfd6715e55ba',1,'jsocketpp']]],
   ['datagramsocket_3a_3awrite_3c_20std_3a_3astring_20_3e_14',['write&lt; std::string &gt;',['../group__udp.html#ga5d219ae0c5ace0c42fad1b8295a7c2a1',1,'jsocketpp']]],
-  ['datagramsocket_3a_3awrite_3c_20std_3a_3astring_5fview_20_3e_15',['write&lt; std::string_view &gt;',['../group__udp.html#gaad2b30f329aeab7a2468575261ec4fea',1,'jsocketpp']]],
+  ['datagramsocket_3a_3awrite_3c_20std_3a_3astring_5fview_20_3e_15',['write&lt; std::string_view &gt;',['../group__udp.html#gaca86a9f7b311fd106801b9e49d01fb27',1,'jsocketpp']]],
   ['dedicated_20methods_20vs_20generic_20methods_16',['Dedicated Methods vs. Generic Methods',['../group__socket-options.html#autotoc_md219',1,'']]],
   ['default_20buffer_20size_17',['What is the default buffer size?',['../index.html#autotoc_md422',1,'']]],
   ['default_20in_20jsocketpp_20_3a_18',['&lt;b&gt;With &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt; (default in jsocketpp)&lt;/b&gt;:',['../group__address__reuse.html#autotoc_md82',1,'']]],
