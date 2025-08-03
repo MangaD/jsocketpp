@@ -930,6 +930,182 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] std::string getRemoteSocketAddress(bool convertIPv4Mapped = true) const;
 
     /**
+     * @brief Writes a trivially copyable object of type `T` to the connected remote peer.
+     * @ingroup udp
+     *
+     * This method serializes a fixed-size object of type `T` into raw binary form and sends it
+     * as a datagram to the socket's connected peer. It is intended for use with POD structures,
+     * protocol headers, or compact binary messages.
+     *
+     * ---
+     *
+     * ### Constraints
+     * - The socket **must be connected** via `connect()`.
+     * - The type `T` must be:
+     *   - `std::is_trivially_copyable_v<T> == true`
+     *   - `std::is_standard_layout_v<T> == true`
+     *
+     * ---
+     *
+     * ### Behavior
+     * - Performs a `bit_cast` of the object into a raw byte array
+     * - Sends exactly `sizeof(T)` bytes in a single datagram
+     * - No padding removal, field conversion, or alignment adjustment is performed
+     * - No retries: failure to send will throw
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * struct Packet {
+     *     uint32_t type;
+     *     uint16_t length;
+     * };
+     *
+     * DatagramSocket sock(AF_INET);
+     * sock.connect("192.168.1.100", 9000);
+     *
+     * Packet p{1, 64};
+     * sock.write(p); // sends binary packet
+     * @endcode
+     *
+     * ---
+     *
+     * @tparam T A trivially copyable type with standard layout
+     * @param[in] value The object to send. Copied by value.
+     *
+     * @throws SocketException If:
+     * - The socket is not open
+     * - The socket is not connected
+     * - `send()` fails (e.g. unreachable, interrupted, closed)
+     *
+     * @warning Byte Order:
+     * No endianness normalization is applied. You must convert fields manually.
+     * Use the provided `jsocketpp::net::fromNetwork()` and `toNetwork()` helpers
+     * for safe and portable conversion of integers between host and network byte order.
+     * These replace platform-specific calls like `ntohl()` or `htons()`.
+     *
+     * @warning Padding bytes will be included in transmission. Avoid structs with padding unless explicitly managed.
+     * @warning This method does not fragment — objects larger than the MTU may be dropped by the network.
+     *
+     * @see read<T>() For receiving structured objects
+     * @see writeTo() For unconnected datagram transmission
+     * @see connect() To establish peer before writing
+     */
+    template <typename T> void write(const T& value)
+    {
+        static_assert(std::is_trivially_copyable_v<T>, "DatagramSocket::write<T>() requires trivially copyable type");
+        static_assert(std::is_standard_layout_v<T>, "DatagramSocket::write<T>() requires standard layout type");
+
+        if (getSocketFd() == INVALID_SOCKET)
+            throw SocketException("write<T>() failed: socket is not open.");
+
+        std::array<std::byte, sizeof(T)> buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
+
+        const auto sent = ::send(getSocketFd(),
+#ifdef _WIN32
+                                 reinterpret_cast<const char*>(buffer.data()), static_cast<int>(buffer.size()),
+#else
+                                 buffer.data(), buffer.size(),
+#endif
+                                 0);
+
+        if (sent == SOCKET_ERROR)
+            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+        if (static_cast<std::size_t>(sent) != sizeof(T))
+            throw SocketException("write<T>() failed: partial datagram was sent.");
+    }
+
+    /**
+     * @brief Sends a trivially copyable object of type `T` to the specified destination address.
+     * @ingroup udp
+     *
+     * This overload is intended for use with **unconnected** datagram sockets. It allows you to send
+     * a fixed-size, binary-safe object to an arbitrary target address, without requiring a prior `connect()`.
+     *
+     * ---
+     *
+     * ### Requirements
+     * - The socket must be open and bound (or let the OS assign a port).
+     * - The type `T` must be:
+     *   - `std::is_trivially_copyable_v<T> == true`
+     *   - `std::is_standard_layout_v<T> == true`
+     *
+     * ---
+     *
+     * ### Behavior
+     * - Performs a `std::bit_cast` of the object to a `std::array<std::byte, sizeof(T)>`
+     * - Sends the entire array in a single `sendto()` call
+     * - No endianness normalization, padding adjustment, or framing is applied
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * struct Payload {
+     *     int32_t opcode;
+     *     char tag[8];
+     * };
+     *
+     * Payload p{42, "HELLO"};
+     *
+     * sockaddr_in dest{};
+     * dest.sin_family = AF_INET;
+     * dest.sin_port = htons(9000);
+     * inet_pton(AF_INET, "192.168.1.20", &dest.sin_addr);
+     *
+     * DatagramSocket sock(AF_INET);
+     * sock.bind(0); // Use ephemeral port
+     * sock.writeTo(p, reinterpret_cast<sockaddr*>(&dest), sizeof(dest));
+     * @endcode
+     *
+     * ---
+     *
+     * @tparam T A trivially copyable and standard layout type.
+     * @param[in] value     The object to send.
+     * @param[in] addr      Pointer to the destination address.
+     * @param[in] addrLen   Length of the destination address structure.
+     *
+     * @throws SocketException If:
+     * - The socket is not open
+     * - The address is invalid
+     * - `sendto()` fails (e.g., network error, unsupported family)
+     *
+     * @warning No internal fragmentation handling is done. Objects larger than the MTU may be dropped.
+     * @warning Padding is preserved. Avoid sending layout-sensitive or non-portable types.
+     * @warning You must manage endianness conversion manually if the target system differs.
+     *
+     * @see readFrom() For receiving from arbitrary peers
+     * @see write() For writing to a connected peer
+     * @see bind() To bind a local port
+     */
+    template <typename T> void writeTo(const T& value, const sockaddr* addr, socklen_t addrLen)
+    {
+        static_assert(std::is_trivially_copyable_v<T>, "DatagramSocket::writeTo<T>() requires trivially copyable type");
+        static_assert(std::is_standard_layout_v<T>, "DatagramSocket::writeTo<T>() requires standard layout type");
+
+        if (getSocketFd() == INVALID_SOCKET)
+            throw SocketException("writeTo<T>() failed: socket is not open.");
+
+        std::array<std::byte, sizeof(T)> buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
+
+        const auto sent = ::sendto(getSocketFd(),
+#ifdef _WIN32
+                                   reinterpret_cast<const char*>(buffer.data()), static_cast<int>(buffer.size()),
+#else
+                                   buffer.data(), buffer.size(),
+#endif
+                                   0, addr, addrLen);
+
+        if (sent == SOCKET_ERROR)
+            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+        if (static_cast<std::size_t>(sent) != sizeof(T))
+            throw SocketException("writeTo<T>() failed: partial datagram was sent.");
+    }
+
+    /**
      * @brief Write data to a remote host using a DatagramPacket.
      *
      * Sends the data contained in the packet's buffer to the address and port
@@ -1033,7 +1209,11 @@ class DatagramSocket : public SocketOptions
      * - A network or system error occurs (`ECONNRESET`, `EINVAL`, etc.)
      * - The received datagram is shorter than `sizeof(T)`
      *
-     * @warning No endianness normalization is applied. Fields must be converted manually if needed.
+     * @warning Byte Order:
+     * No endianness normalization is applied. You must convert fields manually.
+     * Use the provided `jsocketpp::net::fromNetwork()` and `toNetwork()` helpers
+     * for safe and portable conversion of integers between host and network byte order.
+     * These replace platform-specific calls like `ntohl()` or `htons()`.
      *
      * @warning Do not use this with types containing pointers, virtual methods, padding, or platform-specific layouts.
      *
@@ -1284,28 +1464,99 @@ class DatagramSocket : public SocketOptions
 };
 
 /**
- * @brief Read a string from the socket (connected UDP).
- * @return The received string.
- * @throws SocketException on error.
+ * @brief Specialization of `read<T>()` for receiving string messages.
+ * @ingroup udp
+ *
+ * Reads a single UDP datagram and returns its contents as a `std::string`.
+ * Works in both connected and unconnected modes:
+ *
+ * ---
+ *
+ * ### 🔁 Connection Modes
+ * - If the socket is **connected**: Uses `recv()` to receive a datagram from the fixed peer.
+ * - If the socket is **unconnected**: Uses `recvfrom()` and updates internal peer tracking.
+ *
+ * ---
+ *
+ * ### Behavior & Characteristics
+ * - Uses the internal `_buffer` to store the received datagram (sized via constructor).
+ * - Reads a **single full datagram** in one call (up to `_buffer.size()` bytes).
+ * - Captures sender’s address in unconnected mode, making it available via `getRemoteIp()` etc.
+ * - Returns all received bytes (including nulls, if any).
+ *
+ * ---
+ *
+ * ### Example
+ * @code
+ * jsocketpp::DatagramSocket sock(12345); // Bound socket
+ * std::string msg = sock.read<std::string>();
+ * std::cout << "Received: " << msg << "\n";
+ * @endcode
+ *
+ * ---
+ *
+ * @return String containing the raw contents of the received datagram (may include nulls).
+ *
+ * @throws SocketException If:
+ * - The socket is not open
+ * - `recv` or `recvfrom` fails
+ * - The buffer is empty or not initialized
+ *
+ * @note Unlike `read<T>()`, this version accepts datagrams of **any size up to the internal buffer limit**.
+ * @note Truncation may occur if the sender transmits more bytes than the internal buffer can hold.
+ *
+ * @see write(std::string_view)
+ * @see read<T>()
+ * @see receiveFrom(DatagramPacket&)
+ * @see getRemoteIp(), getRemotePort()
  */
 template <> inline std::string DatagramSocket::read<std::string>()
 {
-    if (!_isConnected)
-        throw SocketException("DatagramSocket is not connected.");
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::read<std::string>(): socket is not open.");
 
-    _buffer.resize(_buffer.size()); // Ensure buffer is sized
-    const auto n = ::recv(getSocketFd(), _buffer.data(),
+    if (_buffer.empty())
+        throw SocketException("DatagramSocket::read<std::string>(): internal buffer is empty.");
+
+    int received = 0;
+
+    if (isConnected())
+    {
+        received = ::recv(getSocketFd(), reinterpret_cast<char*>(_buffer.data()),
 #ifdef _WIN32
                           static_cast<int>(_buffer.size()),
 #else
                           _buffer.size(),
 #endif
                           0);
-    if (n == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    if (n == 0)
-        throw SocketException("Connection closed by remote host.");
-    return {_buffer.data(), static_cast<size_t>(n)};
+    }
+    else
+    {
+        sockaddr_storage srcAddr{};
+        socklen_t srcLen = sizeof(srcAddr);
+
+        received = ::recvfrom(getSocketFd(), reinterpret_cast<char*>(_buffer.data()),
+#ifdef _WIN32
+                              static_cast<int>(_buffer.size()),
+#else
+                              _buffer.size(),
+#endif
+                              0, reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
+
+        if (received >= 0)
+        {
+            _remoteAddr = srcAddr;
+            _remoteAddrLen = srcLen;
+        }
+    }
+
+    if (received == SOCKET_ERROR)
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+
+    if (received == 0)
+        throw SocketException("DatagramSocket::read<std::string>(): connection closed by remote host.");
+
+    return {reinterpret_cast<const char*>(_buffer.data()), static_cast<std::size_t>(received)};
 }
 
 /**
