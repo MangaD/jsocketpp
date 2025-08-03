@@ -695,7 +695,7 @@ class DatagramSocket : public SocketOptions
      * @see getLocalSocketAddress()
      * @see https://man7.org/linux/man-pages/man2/getsockname.2.html
      */
-    [[nodiscard]] std::string DatagramSocket::getLocalIp(bool convertIPv4Mapped = true) const;
+    [[nodiscard]] std::string getLocalIp(bool convertIPv4Mapped = true) const;
 
     /**
      * @brief Retrieves the local port number this datagram socket is bound to.
@@ -732,7 +732,7 @@ class DatagramSocket : public SocketOptions
      * @see getLocalSocketAddress() For a formatted "IP:port" string
      * @see https://man7.org/linux/man-pages/man2/getsockname.2.html
      */
-    [[nodiscard]] Port DatagramSocket::getLocalPort() const;
+    [[nodiscard]] Port getLocalPort() const;
 
     /**
      * @brief Retrieves the local socket address as a formatted string in the form `"IP:port"`.
@@ -1225,7 +1225,7 @@ class DatagramSocket : public SocketOptions
      * @see isConnected()     To check connection mode
      * @see getRemoteIp(), getRemotePort()
      */
-    template <typename T> [[nodiscard]] T DatagramSocket::read()
+    template <typename T> [[nodiscard]] T read()
     {
         static_assert(std::is_trivially_copyable_v<T>, "DatagramSocket::read<T>() requires a trivially copyable type");
         static_assert(std::is_standard_layout_v<T>, "DatagramSocket::read<T>() requires a standard layout type");
@@ -1517,8 +1517,12 @@ template <> inline std::string DatagramSocket::read<std::string>()
 
     if (_buffer.empty())
         throw SocketException("DatagramSocket::read<std::string>(): internal buffer is empty.");
-
-    int received = 0;
+#ifdef _WIN32
+    int
+#else
+    ssize_t
+#endif
+        received = 0;
 
     if (isConnected())
     {
@@ -1735,7 +1739,7 @@ template <> inline void DatagramSocket::write<std::string_view>(const std::strin
 #ifdef _WIN32
                              value.data(), static_cast<int>(value.size()),
 #else
-                             view.data(), view.size(),
+                             value.data(), value.size(),
 #endif
                              0);
 
