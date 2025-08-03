@@ -29,7 +29,7 @@ var namespacejsocketpp =
     [ "CleanupSockets", "namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c", null ],
     [ "CloseSocket", "namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931", null ],
     [ "convertIPv4MappedIPv6ToIPv4", "group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d", null ],
-    [ "DatagramSocket::read< std::string >", "namespacejsocketpp.html#a30deb297e9c8fae8da50947d4a29c95f", null ],
+    [ "DatagramSocket::read< std::string >", "group__udp.html#ga30deb297e9c8fae8da50947d4a29c95f", null ],
     [ "DatagramSocket::recvFrom< std::string >", "namespacejsocketpp.html#aa5ff7535f7cd1c89724bcfd6715e55ba", null ],
     [ "getHostAddr", "namespacejsocketpp.html#a09423d4d9f10bd09813732010662ee43", null ],
     [ "GetSocketError", "namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad", null ],

@@ -168,9 +168,9 @@ Functions</h2></td></tr>
 <tr class="memdesc:a18428d088b7f3b2e55efe9adc49e10a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts a human-readable IP address from a socket address structure.  <br /></td></tr>
 <tr class="memitem:a71637861db9b297572bc1de3df56a59a" id="r_a71637861db9b297572bc1de3df56a59a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71637861db9b297572bc1de3df56a59a">portFromSockaddr</a> (const sockaddr *addr)</td></tr>
 <tr class="memdesc:a71637861db9b297572bc1de3df56a59a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the port number from a socket address structure.  <br /></td></tr>
-<tr class="memitem:a30deb297e9c8fae8da50947d4a29c95f" id="r_a30deb297e9c8fae8da50947d4a29c95f"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:a30deb297e9c8fae8da50947d4a29c95f template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30deb297e9c8fae8da50947d4a29c95f">DatagramSocket::read&lt; std::string &gt;</a> ()</td></tr>
-<tr class="memdesc:a30deb297e9c8fae8da50947d4a29c95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a string from the socket (connected UDP).  <br /></td></tr>
+<tr class="memitem:ga30deb297e9c8fae8da50947d4a29c95f" id="r_ga30deb297e9c8fae8da50947d4a29c95f"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ga30deb297e9c8fae8da50947d4a29c95f template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga30deb297e9c8fae8da50947d4a29c95f">DatagramSocket::read&lt; std::string &gt;</a> ()</td></tr>
+<tr class="memdesc:ga30deb297e9c8fae8da50947d4a29c95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">read&lt;T&gt;()</span> for receiving string messages.  <br /></td></tr>
 <tr class="memitem:aa5ff7535f7cd1c89724bcfd6715e55ba" id="r_aa5ff7535f7cd1c89724bcfd6715e55ba"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:aa5ff7535f7cd1c89724bcfd6715e55ba template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5ff7535f7cd1c89724bcfd6715e55ba">DatagramSocket::recvFrom&lt; std::string &gt;</a> (std::string *senderAddr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort)</td></tr>
 <tr class="memdesc:aa5ff7535f7cd1c89724bcfd6715e55ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a datagram as a string (connectionless).  <br /></td></tr>
@@ -318,42 +318,6 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a30deb297e9c8fae8da50947d4a29c95f" name="a30deb297e9c8fae8da50947d4a29c95f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30deb297e9c8fae8da50947d4a29c95f">&#9670;&#160;</a></span>DatagramSocket::read&lt; std::string &gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string <a class="el" href="classjsocketpp_1_1DatagramSocket.html#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket::read</a>&lt; std::string &gt; </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Read a string from the socket (connected UDP). </p>
-<dl class="section return"><dt>Returns</dt><dd>The received string. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>on error. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>

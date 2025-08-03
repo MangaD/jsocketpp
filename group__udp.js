@@ -45,8 +45,10 @@ var group__udp =
       [ "read", "classjsocketpp_1_1DatagramSocket.html#a58152e567e2d41ee6d612355ac0eb548", null ],
       [ "recvFrom", "classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06", null ],
       [ "write", "classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0", null ],
+      [ "write", "group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df", null ],
       [ "write", "classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29", null ],
       [ "write", "classjsocketpp_1_1DatagramSocket.html#a7e2b02ba6e9a630fdbde52b88863ec99", null ],
+      [ "writeTo", "group__udp.html#ga1a38d9c8cd23e8842ef1f59dde08e845", null ],
       [ "_addrInfoPtr", "classjsocketpp_1_1DatagramSocket.html#a69d32acc4bd03ebb19fed330d7ff612a", null ],
       [ "_buffer", "classjsocketpp_1_1DatagramSocket.html#ae157621acf76031b55ce263898d18aa7", null ],
       [ "_isBound", "classjsocketpp_1_1DatagramSocket.html#a8c77f16fcae1c86b679a0567de055b7d", null ],
@@ -87,6 +89,7 @@ var group__udp =
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga692dfa79c5dca805435249ec2da27497", null ],
     [ "jsocketpp::DatagramSocket::getLocalPort", "group__udp.html#ga108098c3eb5682c553e3f5433ed0e132", null ],
     [ "jsocketpp::DatagramSocket::read", "group__udp.html#ga916c70c6333b0efe028695eaa159cdab", null ],
+    [ "jsocketpp::read< std::string >", "group__udp.html#ga30deb297e9c8fae8da50947d4a29c95f", null ],
     [ "jsocketpp::DatagramSocket::disconnect", "group__udp.html#ga02b08c333a2f109a3b19ec7b3c0cecf9", null ],
     [ "jsocketpp::DatagramSocket::getLocalSocketAddress", "group__udp.html#ga9a7f8475868acca97f90dcd66df7f943", null ],
     [ "jsocketpp::DatagramSocket::getRemoteIp", "group__udp.html#ga204770d3dea411d09d5f0efd8bac5725", null ],
@@ -98,5 +101,7 @@ var group__udp =
     [ "jsocketpp::MulticastSocket::MulticastSocket", "group__udp.html#ga379ff0e20d62b5f0c815d48614597005", null ],
     [ "jsocketpp::DatagramSocket::operator=", "group__udp.html#gab67aad3e2d477982f19d17ab80607417", null ],
     [ "jsocketpp::DatagramSocket::operator=", "group__udp.html#ga38397874bcb62f889cb6fefa20b45ba6", null ],
+    [ "jsocketpp::DatagramSocket::write", "group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df", null ],
+    [ "jsocketpp::DatagramSocket::writeTo", "group__udp.html#ga1a38d9c8cd23e8842ef1f59dde08e845", null ],
     [ "jsocketpp::DatagramSocket::~DatagramSocket", "group__udp.html#gaf2be0b146f197d55cc55a5ba8b619166", null ]
 ];

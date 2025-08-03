@@ -141,7 +141,7 @@ Public Attributes</h2></td></tr>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Data: &quot;</span> &lt;&lt; std::string(receivedPacket.buffer.begin(), receivedPacket.buffer.end()) &lt;&lt; std::endl;</div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramPacket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramPacket.html">jsocketpp::DatagramPacket</a></div><div class="ttdoc">Represents a UDP datagram packet, encapsulating both payload and addressing information.</div><div class="ttdef"><b>Definition</b> DatagramPacket.hpp:48</div></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><ul>
-<li>For sending: set the buffer, address, and port before passing to <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#af34dc33d47f23ca13e9a63d4b1fcdee0" title="Write data to a remote host using a DatagramPacket.">DatagramSocket::write</a></span>.</li>
+<li>For sending: set the buffer, address, and port before passing to <span class="tt"><a class="el" href="group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df" title="Writes a trivially copyable object of type T to the connected remote peer.">DatagramSocket::write</a></span>.</li>
 <li>For receiving: use an empty <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a></span> with a pre-sized buffer; after <span class="tt">read</span>, the address/port will be filled in.</li>
 </ul>
 </dd></dl>

@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"namespacejsocketpp_1_1net.html#acca9e860a0a33d2508bfa9986049db8c":[4,0,0,1,1],
+"namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37":[4,0,0,1,0],
 "namespacemembers.html":[4,1,0],
 "namespacemembers_enum.html":[4,1,4],
 "namespacemembers_func.html":[4,1,1],
