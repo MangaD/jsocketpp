@@ -225,7 +225,7 @@ Functions</h2></td></tr>
 <p>Checks whether the socket is currently allowed to send broadcast messages. </p>
 <p>This method retrieves the <span class="tt">SO_BROADCAST</span> option using <span class="tt">getsockopt()</span> to determine whether the socket can send datagrams to broadcast addresses like <span class="tt">255.255.255.255</span>.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md890"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md924"></a>
 Applicability</h3>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>: ✅ Primary use case</li>
@@ -233,7 +233,7 @@ Applicability</h3>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md892"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md926"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (datagramSocket.getBroadcast()) {</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Broadcast is enabled.\n&quot;</span>;</div>
@@ -286,7 +286,7 @@ Example</h3>
 <p>This method checks whether the socket is currently restricted to IPv6-only traffic, or whether it allows dual-stack operation (accepting both IPv6 and IPv4-mapped addresses).</p>
 <p>The <span class="tt">IPV6_V6ONLY</span> flag is primarily relevant to sockets using the <span class="tt">AF_INET6</span> address family.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md904"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md938"></a>
 🌍 Applicability by Socket Type</h3>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Affects accept() behavior for IPv6 listeners</li>
@@ -295,7 +295,7 @@ Example</h3>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable; throws if called</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md906"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md940"></a>
 ⚠️ Platform Behavior</h3>
 <ul>
 <li><b>Linux</b>: Defaults to <span class="tt">false</span> (dual-stack), but configurable</li>
@@ -303,7 +303,7 @@ Example</h3>
 <li><b>macOS/BSD</b>: May disallow toggling at runtime or enforce <span class="tt">true</span></li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md908"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md942"></a>
 Example: Check if socket is IPv6-only</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (socket.getIPv6Only()) {</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;This socket is IPv6-only.\n&quot;</span>;</div>
@@ -356,7 +356,7 @@ Example: Check if socket is IPv6-only</h3>
 <p>Checks whether TCP-level keepalive (<span class="tt">SO_KEEPALIVE</span>) is currently enabled. </p>
 <p>This method queries the socket's current <span class="tt">SO_KEEPALIVE</span> setting, which determines whether the operating system sends periodic keepalive probes to verify that idle, stream-oriented connections are still alive.</p>
 <p>Keepalive is especially useful for detecting silent disconnects in long-lived connections (e.g., crash, power loss, cable pull) where no TCP FIN/RST is received.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md825"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md859"></a>
 🔁 Applicability</h3>
 <ul>
 <li>✅ <b>TCP sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Fully supported. Returns the current setting.</li>
@@ -364,13 +364,13 @@ Example: Check if socket is IPv6-only</h3>
 <li>✅ <b>Accepted sockets in <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span></b>: Each accepted socket can be queried individually.</li>
 <li>⚠️ <b>UDP / datagram sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>)</b>: Most systems ignore this option; querying may return <span class="tt">false</span> or raise an error depending on platform behavior.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md826"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md860"></a>
 Platform Behavior</h3>
 <ul>
 <li><b>Linux/macOS/BSD</b>: Returns <span class="tt">true</span> if <span class="tt">SO_KEEPALIVE</span> is enabled at the socket level. Probe intervals and behavior are system-controlled unless overridden via additional options.</li>
 <li><b>Windows</b>: Returns <span class="tt">true</span> if enabled. Advanced tuning requires use of <span class="tt">WSAIoctl</span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md827"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md861"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (!socket.getKeepAlive()) {</div>
 <div class="line">    socket.setKeepAlive(<span class="keyword">true</span>);</div>
@@ -488,21 +488,21 @@ Example</h3>
 <p>Queries whether the socket is currently in non-blocking mode. </p>
 <p>This method inspects the I/O mode of the socket and returns <span class="tt">true</span> if it is configured for non-blocking operations. In non-blocking mode, I/O system calls return immediately if they cannot complete, rather than blocking the calling thread.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md860"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md894"></a>
 🔀 Platform Behavior</h3>
 <ul>
 <li><b>POSIX</b>: Checks the <span class="tt">O_NONBLOCK</span> flag using <span class="tt">fcntl(F_GETFL)</span>.</li>
 <li><b>Windows</b>: No direct API exists to query non-blocking state. This function will conservatively return <span class="tt">false</span> and emit a warning if queried.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md862"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md896"></a>
 Use Cases</h3>
 <ul>
 <li>Debugging or inspecting socket configuration</li>
 <li>Adaptive I/O logic based on runtime state</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md864"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md898"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (!socket.getNonBlocking()) {</div>
 <div class="line">    socket.setNonBlocking(<span class="keyword">true</span>);</div>
@@ -561,7 +561,7 @@ Example</h3>
 </ul>
 <p>It supports standard protocol levels such as <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>, and <span class="tt">IPPROTO_UDP</span>.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md776"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md810"></a>
 🔧 Use Cases</h3>
 <ul>
 <li>Verify receive/send buffer sizes (<span class="tt">SO_RCVBUF</span>, <span class="tt">SO_SNDBUF</span>)</li>
@@ -569,11 +569,11 @@ Example</h3>
 <li>Inspect linger state (<span class="tt">SO_LINGER</span>) via the structured overload</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md778"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md812"></a>
 Example: Read configured receive buffer size</h3>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> rcvBuf = socket.getOption(SOL_SOCKET, SO_RCVBUF);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md780"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md814"></a>
 ⚠️ ServerSocket-specific Notes</h3>
 <ul>
 <li>Applies only to the listening socket.</li>
@@ -585,7 +585,7 @@ Example: Read configured receive buffer size</h3>
 </ul>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> reuse = serverSocket.getOption(SOL_SOCKET, SO_REUSEADDR);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md782"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md816"></a>
 📡 DatagramSocket-specific Notes</h3>
 <ul>
 <li>Useful for checking <span class="tt">SO_BROADCAST</span>, <span class="tt">SO_RCVTIMEO</span>, <span class="tt">SO_SNDTIMEO</span>, and buffer sizes.</li>
@@ -593,7 +593,7 @@ Example: Read configured receive buffer size</h3>
 </ul>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> timeout = datagramSocket.getOption(SOL_SOCKET, SO_RCVTIMEO);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md784"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md818"></a>
 🧿 UnixSocket-specific Notes</h3>
 <ul>
 <li><span class="tt">SO_RCVBUF</span>, <span class="tt">SO_SNDBUF</span>, <span class="tt">SO_PASSCRED</span>, and timeout options are supported.</li>
@@ -667,7 +667,7 @@ getOption(int, int, void*, socklen_t*) For retrieving structured options </dd>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span> (local IPC)</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md787"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md821"></a>
 🔧 Use Cases</h3>
 <ul>
 <li>Query <span class="tt">SO_LINGER</span> using <span class="tt">struct linger</span></li>
@@ -676,7 +676,7 @@ getOption(int, int, void*, socklen_t*) For retrieving structured options </dd>
 <li>Use with low-level protocol options that return binary data</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md789"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md823"></a>
 Example: Read <span class="tt">SO_LINGER</span> setting</h3>
 <div class="fragment"><div class="line">linger lin{};</div>
 <div class="line">socklen_t len = <span class="keyword">sizeof</span>(lin);</div>
@@ -687,21 +687,21 @@ Example: Read <span class="tt">SO_LINGER</span> setting</h3>
 <div class="line"><span class="keywordflow">else</span></div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Linger is disabled.\n&quot;</span>;</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md791"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md825"></a>
 ⚠️ ServerSocket-specific Notes</h3>
 <ul>
 <li>Applies to the listening socket only (not accepted clients).</li>
 <li>Common for querying <span class="tt">SO_LINGER</span>, <span class="tt">SO_RCVBUF</span>, etc.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md793"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md827"></a>
 📡 DatagramSocket-specific Notes</h3>
 <ul>
 <li>Use to inspect structured timeouts (<span class="tt">SO_RCVTIMEO</span>) or multicast settings.</li>
 <li>Valid on both connected and unconnected sockets.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md795"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md829"></a>
 🧿 UnixSocket-specific Notes</h3>
 <ul>
 <li>Retrieve <span class="tt">SO_PASSCRED</span>, buffer sizes, and timeouts using appropriate structures.</li>
@@ -762,7 +762,7 @@ Example: Read <span class="tt">SO_LINGER</span> setting</h3>
 
 <p>Retrieves the current receive buffer size (SO_RCVBUF) of the socket. </p>
 <p>Queries the operating system for the size of the receive buffer allocated to this socket. This buffer temporarily holds incoming data before it is read by the application. The size is determined by system policy, user configuration, and the value set via <span class="tt"><a class="el" href="#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a></span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md806"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md840"></a>
 Applicability</h3>
 <p>This method works for:</p><ul>
 <li><b>TCP sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Indicates how much inbound data can be queued before blocking or drop.</li>
@@ -770,14 +770,14 @@ Applicability</h3>
 <li><b>UNIX domain sockets</b>: Supported on most platforms.</li>
 <li><b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></b>: Reflects configuration of the passive socket itself (not accepted sockets).</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md807"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md841"></a>
 Platform Notes</h3>
 <ul>
 <li><b>Linux</b>: Returned value is typically <em>twice</em> the requested size due to internal accounting.</li>
 <li><b>Windows</b>: Rounded to alignment boundaries; value reflects what was granted, not requested.</li>
 <li><b>BSD/macOS</b>: Exact behavior may vary, but returned size reflects the OS’s accepted setting.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md808"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md842"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> size = socket.getReceiveBufferSize();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current OS receive buffer: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
@@ -832,20 +832,20 @@ setInternalBufferSize() </dd></dl>
 <li>UDP or multicast receivers sharing the same port</li>
 <li>Clients using fixed local ports across reconnects</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md800"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md834"></a>
 Platform Behavior</h3>
 <ul>
 <li><b>POSIX:</b> Multiple sockets can bind the same local address/port if all use <span class="tt">SO_REUSEADDR</span>.</li>
 <li><b>Windows:</b> <span class="tt">SO_REUSEADDR</span> allows rebinding to a port in <span class="tt">TIME_WAIT</span>, but does <b>not</b> allow simultaneous binds. Additionally, <span class="tt">SO_EXCLUSIVEADDRUSE</span> is enabled by default and disables reuse — this method reflects the effective state of <span class="tt">SO_REUSEADDR</span>, not <span class="tt">SO_EXCLUSIVEADDRUSE</span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md801"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md835"></a>
 Protocol Applicability</h3>
 <ul>
 <li><b>TCP:</b> Useful for both client and server sockets.</li>
 <li><b>UDP:</b> Required for multicast and shared-port scenarios.</li>
 <li><b>Unix domain sockets:</b> <span class="tt">SO_REUSEADDR</span> may be supported but is typically a no-op; Unix path conflicts are governed by the file system.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md802"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md836"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (!socket.getReuseAddress()) {</div>
 <div class="line">    socket.setReuseAddress(<span class="keyword">true</span>);</div>
@@ -890,7 +890,7 @@ Example</h3>
 <p>Checks whether the <span class="tt">SO_REUSEPORT</span> option is currently enabled on the socket. </p>
 <p>This method queries the <span class="tt">SO_REUSEPORT</span> setting via <span class="tt">getsockopt()</span> to determine whether the socket is configured to allow multiple bindings to the same address/port.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md918"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md952"></a>
 🌍 Applicability</h3>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Used to verify shared accept-mode configuration</li>
@@ -899,14 +899,14 @@ Example</h3>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable — method excluded at compile time</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md920"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md954"></a>
 🔀 Platform Support</h3>
 <ul>
 <li>✅ <b>Linux (≥ 3.9)</b>, FreeBSD, macOS (some BSDs require extra sysctls)</li>
 <li>❌ <b>Windows</b>: Not supported — this method is not compiled</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md922"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md956"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#if defined(SO_REUSEPORT)</span></div>
 <div class="line"><span class="keywordflow">if</span> (socket.getReusePort()) {</div>
@@ -959,7 +959,7 @@ Example</h3>
 
 <p>Retrieves the current send buffer size (SO_SNDBUF) of the socket. </p>
 <p>Queries the operating system for the size of the send buffer allocated to this socket. This buffer holds outgoing data that has been written by the application but not yet transmitted over the network or IPC channel. A larger send buffer allows the socket to tolerate bursts of data or temporary network slowdowns without blocking the writer.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md812"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md846"></a>
 Applicability</h3>
 <p>This method is supported for:</p><ul>
 <li><b>TCP sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Improves write throughput and non-blocking behavior.</li>
@@ -967,7 +967,7 @@ Applicability</h3>
 <li><b>UNIX domain sockets</b>: Applies to stream or datagram sockets on most platforms.</li>
 <li><b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></b>: Returns the buffer size of the passive socket, but has no effect on accepted sockets.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md813"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md847"></a>
 Platform Notes</h3>
 <ul>
 <li><b>Linux</b>: May return a value twice the requested size due to kernel bookkeeping.</li>
@@ -975,7 +975,7 @@ Platform Notes</h3>
 <li><b>BSD/macOS</b>: Behavior follows BSD socket semantics.</li>
 <li>System-wide limits may apply, and the kernel may clamp, align, or ignore extreme values.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md814"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md848"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> size = socket.getSendBufferSize();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Send buffer size: &quot;</span> &lt;&lt; size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
@@ -1034,7 +1034,7 @@ Example</h3>
 <li>Monitoring socket state or readiness using system primitives</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md752"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md786"></a>
 ⚠️ HANDLE WITH EXTREME CARE</h3>
 <p>This method exposes the raw handle <b>without ownership transfer</b>. Misuse may lead to:</p><ul>
 <li>Resource leaks (if manually closed)</li>
@@ -1044,7 +1044,7 @@ Example</h3>
 <li>Broken invariants inside the jsocketpp abstraction</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md754"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md788"></a>
 ✅ Safe Usage Guidelines</h3>
 <ul>
 <li><b>DO</b> use this handle for non-destructive introspection (e.g., <span class="tt">poll()</span>, <span class="tt">select()</span>)</li>
@@ -1053,7 +1053,7 @@ Example</h3>
 <li><b>DO NOT</b> share across threads without synchronization</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md756"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md790"></a>
 Example: Use with <span class="tt">select()</span></h3>
 <div class="fragment"><div class="line">fd_set readSet;</div>
 <div class="line">FD_ZERO(&amp;readSet);</div>
@@ -1096,7 +1096,7 @@ waitReady(), <a class="el" href="#ga5f2dffc2949b06b1d945e590bce7f05b" title="Ena
 
 <p>Retrieves the current <span class="tt">SO_LINGER</span> configuration of the socket. </p>
 <p>Queries the operating system for the current linger behavior configured on this socket. Linger settings determine whether the socket blocks on <span class="tt">close()</span> to allow unsent data to be transmitted, or terminates the connection immediately (potentially discarding unsent data).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md818"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md852"></a>
 🔁 Applicability</h3>
 <ul>
 <li>✅ <b>TCP sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Fully supported; reflects actual linger settings.</li>
@@ -1104,13 +1104,13 @@ waitReady(), <a class="el" href="#ga5f2dffc2949b06b1d945e590bce7f05b" title="Ena
 <li>⚠️ <b>UDP / datagram sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>)</b>: <span class="tt">SO_LINGER</span> is silently ignored by most systems.</li>
 <li>⚠️ <b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></b>: Applies only to the passive (listening) socket. To inspect accepted clients, query each returned <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> individually.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md819"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md853"></a>
 Return Value</h3>
 <p>Returns a pair <span class="tt">{enabled, timeout}</span>:</p><ul>
 <li><span class="tt">first</span> (<span class="tt">bool</span>): Whether <span class="tt">SO_LINGER</span> is currently enabled.</li>
 <li><span class="tt">second</span> (<span class="tt">int</span>): Timeout value in seconds (typically <span class="tt">0</span> if disabled).</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md820"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md854"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> [enabled, timeout] = socket.getSoLinger();</div>
 <div class="line"><span class="keywordflow">if</span> (enabled)</div>
@@ -1163,14 +1163,14 @@ close()</dd></dl>
 <p>Retrieves the socket receive timeout (<span class="tt">SO_RCVTIMEO</span>) in milliseconds. </p>
 <p>This method queries the configured timeout for blocking read operations, such as <span class="tt">read()</span>, <span class="tt">readExact()</span>, <span class="tt">receiveFrom()</span>, etc. The value returned represents the number of milliseconds a read will block before failing with a timeout.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md839"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md873"></a>
 🔀 Platform Behavior</h3>
 <ul>
 <li><b>Windows</b>: Returns the timeout directly as an <span class="tt">int</span> in milliseconds.</li>
 <li><b>POSIX</b>: Retrieves a <span class="tt">struct timeval</span> and converts it to milliseconds.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md841"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md875"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> timeout = socket.getSoRecvTimeout();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Read timeout is &quot;</span> &lt;&lt; timeout &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
@@ -1219,14 +1219,14 @@ Example</h3>
 <p>Retrieves the socket send timeout (<span class="tt">SO_SNDTIMEO</span>) in milliseconds. </p>
 <p>This method queries the configured timeout for blocking send operations, such as <span class="tt">write()</span>, <span class="tt">writeAll()</span>, or <span class="tt">sendTo()</span>. The returned value represents how long a send operation will block before timing out.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md844"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md878"></a>
 🔀 Platform Behavior</h3>
 <ul>
 <li><b>Windows</b>: Timeout is retrieved as a plain <span class="tt">int</span> (milliseconds).</li>
 <li><b>POSIX</b>: The timeout is stored in a <span class="tt">struct timeval</span> and converted back.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md846"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md880"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> timeout = socket.getSoSendTimeout();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Send timeout is &quot;</span> &lt;&lt; timeout &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
@@ -1310,7 +1310,7 @@ Example</h3>
 <p>Queries whether Nagle's algorithm (<span class="tt">TCP_NODELAY</span>) is currently disabled. </p>
 <p>This method checks if <span class="tt">TCP_NODELAY</span> is set on the socket, which controls the behavior of <b>Nagle's algorithm</b> for TCP connections. When <span class="tt">TCP_NODELAY</span> is enabled (<span class="tt">true</span>), small writes are sent immediately without waiting to coalesce packets. When disabled (<span class="tt">false</span>), the system may buffer small packets to improve network efficiency.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md874"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md908"></a>
 🔍 Applicability</h3>
 <p>This option applies only to:</p><ul>
 <li>TCP stream sockets (<span class="tt">SOCK_STREAM</span> with <span class="tt">AF_INET</span> or <span class="tt">AF_INET6</span>)</li>
@@ -1321,7 +1321,7 @@ Example</h3>
 <li>Listening sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>) — check accepted <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> objects instead</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md876"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md910"></a>
 Use Cases</h3>
 <ul>
 <li>Determine latency behavior at runtime</li>
@@ -1329,7 +1329,7 @@ Use Cases</h3>
 <li>Debug unexpected TCP buffering issues</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md878"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md912"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (!socket.getTcpNoDelay()) {</div>
 <div class="line">    socket.setTcpNoDelay(<span class="keyword">true</span>);  <span class="comment">// Reduce latency</span></div>
@@ -1381,7 +1381,7 @@ Example</h3>
 <p>Identifies this socket as a passive (listening) socket. </p>
 <p>Overrides the base <span class="tt"><a class="el" href="#gaace6c3364b4016979537571b36c58727" title="Indicates whether the socket behaves as a passive (listening) socket.">SocketOptions::isPassiveSocket()</a></span> to return <span class="tt">true</span>, indicating that this <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> instance is intended to accept incoming connections rather than initiate outbound ones.</p>
 <p>This designation is important for platform-specific behaviors — particularly on Windows, where passive sockets use <span class="tt">SO_EXCLUSIVEADDRUSE</span> instead of <span class="tt">SO_REUSEADDR</span> to control address reuse semantics. The <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> interface uses this signal to select the correct option and logic in <span class="tt"><a class="el" href="#gab358ea7ed49e95717b1e9438251b3d9a" title="Enables or disables the SO_REUSEADDR socket option.">setReuseAddress()</a></span> and <span class="tt"><a class="el" href="#ga8e8783ada3142cd6c3b275e01b7b12f2" title="Queries whether the socket is currently configured to allow address reuse.">getReuseAddress()</a></span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md607"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md625"></a>
 When <span class="tt">true</span> matters</h3>
 <ul>
 <li>Enables use of <span class="tt">SO_EXCLUSIVEADDRUSE</span> on Windows</li>
@@ -1428,7 +1428,7 @@ When <span class="tt">true</span> matters</h3>
 <li>On Windows, <span class="tt">SO_EXCLUSIVEADDRUSE</span> is used for passive sockets to control port reuse semantics.</li>
 <li>On POSIX systems, all sockets use <span class="tt">SO_REUSEADDR</span>, but server sockets may still follow different best practices.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md926"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md960"></a>
 Usage</h3>
 <ul>
 <li>Override this method in subclasses like <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span> to return <span class="tt">true</span>.</li>
@@ -1512,7 +1512,7 @@ Usage</h3>
 <p>Move assignment operator for <a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a>. </p>
 <p>Transfers the socket handle (<span class="tt">_sockFd</span>) and internal state from another <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> instance to this one. Any existing state in the current object is overwritten. The moved-from object is left in a valid but unspecified state (usually with <span class="tt">_sockFd == INVALID_SOCKET</span>).</p>
 <p>This operator supports efficient reassignment of socket resources in derived classes while preserving RAII guarantees and preventing resource leaks.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md750"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md784"></a>
 Rationale</h3>
 <ul>
 <li>Allows efficient reassignment of socket wrappers</li>
@@ -1545,7 +1545,7 @@ Rationale</h3>
 <p>Enables or disables the ability to send UDP broadcast messages. </p>
 <p>This method sets the <span class="tt">SO_BROADCAST</span> socket option, which allows the socket to send datagrams to broadcast addresses (e.g., <span class="tt">255.255.255.255</span> or <span class="tt">192.168.1.255</span>).</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md881"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md915"></a>
 🌍 Applicability</h3>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>: ✅ Required for broadcasting over UDP</li>
@@ -1554,14 +1554,14 @@ Rationale</h3>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md883"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md917"></a>
 🔐 Platform Behavior</h3>
 <ul>
 <li>Most OSes require <span class="tt">SO_BROADCAST = 1</span> before sending to broadcast addresses</li>
 <li>Without it, <span class="tt">sendto()</span> to a broadcast address may fail with <span class="tt">EACCES</span> or <span class="tt">Permission denied</span></li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md885"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md919"></a>
 Use Cases</h3>
 <ul>
 <li>UDP service discovery (e.g., mDNS, SSDP)</li>
@@ -1569,7 +1569,7 @@ Use Cases</h3>
 <li>Peer-to-peer local communication</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md887"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md921"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> sock(AF_INET);</div>
 <div class="line">sock.setBroadcast(<span class="keyword">true</span>);</div>
@@ -1624,7 +1624,7 @@ Example</h3>
 <p>Enables or disables <span class="tt">IPV6_V6ONLY</span> mode for IPv6-capable sockets. </p>
 <p>This method configures the <span class="tt">IPV6_V6ONLY</span> socket option, which determines whether an IPv6 socket can accept <b>only</b> IPv6 connections or <b>both</b> IPv6 and IPv4-mapped addresses (e.g., <span class="tt">::ffff:a.b.c.d</span>).</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md895"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md929"></a>
 🌍 Applicability by Socket Type</h3>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Common — determines which protocols are accepted via <span class="tt">bind()</span></li>
@@ -1633,7 +1633,7 @@ Example</h3>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not applicable — local domain sockets do not use IP protocols</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md897"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md931"></a>
 🔀 Platform Behavior</h3>
 <ul>
 <li><b>Linux</b>: <span class="tt">IPV6_V6ONLY</span> defaults to <span class="tt">0</span> (dual-stack enabled)</li>
@@ -1642,7 +1642,7 @@ Example</h3>
 </ul>
 <p>⚠️ On all platforms, this option <b>must be set before <span class="tt">bind()</span></b>. Changing it afterward is undefined or ignored.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md899"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md933"></a>
 💡 Use Cases</h3>
 <ul>
 <li>Enforce strict IPv6-only policy (security or protocol compliance)</li>
@@ -1650,7 +1650,7 @@ Example</h3>
 <li>Configure UDP or multicast receivers to receive from both protocol families</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md901"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md935"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1ServerSocket.html">ServerSocket</a> server(AF_INET6);</div>
 <div class="line">server.setIPv6Only(<span class="keyword">true</span>);      <span class="comment">// Only allow IPv6 clients</span></div>
@@ -1701,7 +1701,7 @@ Example</h3>
 
 <p>Enables or disables TCP-level keepalive behavior on the socket (<span class="tt">SO_KEEPALIVE</span>). </p>
 <p>Configures the <span class="tt">SO_KEEPALIVE</span> socket option, which instructs the operating system to periodically send keepalive probes on otherwise idle <b>stream-oriented sockets</b>. This helps detect half-open connections where the remote peer has silently disconnected, crashed, or become unreachable without sending a FIN or RST.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md821"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md855"></a>
 🔁 Applicability</h3>
 <ul>
 <li>✅ <b>TCP sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Fully supported and commonly used.</li>
@@ -1709,20 +1709,20 @@ Example</h3>
 <li>✅ <b>Accepted client sockets in <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span></b>: Enable per-socket after <span class="tt">accept()</span>.</li>
 <li>⚠️ <b>UDP or datagram sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>)</b>: Not applicable. Most systems ignore this flag.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md822"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md856"></a>
 Platform Behavior</h3>
 <ul>
 <li><b>Linux</b>: Keepalive timing is controlled by <span class="tt">/proc/sys/net/ipv4/tcp_keepalive_*</span> parameters. Per-socket tuning (e.g., idle, interval, probes) is available using advanced options (not exposed here).</li>
 <li><b>Windows</b>: Default timeout is ~2 hours. Fine-tuning requires <span class="tt">WSAIoctl</span> with <span class="tt">SIO_KEEPALIVE_VALS</span>.</li>
 <li><b>macOS/BSD</b>: Controlled by system-level TCP settings; per-socket control is limited.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md823"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md857"></a>
 Effects</h3>
 <ul>
 <li>If enabled (<span class="tt">on == true</span>), the OS sends periodic probes on idle connections. If the peer does not respond after several attempts, the connection is forcefully closed.</li>
 <li>If disabled (<span class="tt">on == false</span>), no keepalive probes are sent. The socket may remain open indefinitely.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md824"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md858"></a>
 Example</h3>
 <div class="fragment"><div class="line">socket.setKeepAlive(<span class="keyword">true</span>);  <span class="comment">// Enable periodic liveness checks on TCP</span></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
@@ -1770,7 +1770,7 @@ Example</h3>
 <p>This method configures the I/O blocking behavior of the socket. In <b>non-blocking mode</b>, system calls such as <span class="tt">read()</span>, <span class="tt">write()</span>, <span class="tt">connect()</span>, and <span class="tt">accept()</span> return immediately if they cannot proceed, rather than blocking the calling thread. This enables asynchronous or event-driven designs where the application explicitly manages readiness.</p>
 <p>In <b>blocking mode</b> (the default), these calls block the thread until they complete, time out (if configured), or fail.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md849"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md883"></a>
 🔀 Platform Behavior</h3>
 <ul>
 <li><b>POSIX</b>: Uses <span class="tt">fcntl()</span> to set or clear the <span class="tt">O_NONBLOCK</span> flag.</li>
@@ -1778,7 +1778,7 @@ Example</h3>
 <li><b>Effect</b>: Changes apply immediately and persist for the life of the socket.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md851"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md885"></a>
 📦 Applicable Socket Types</h3>
 <p>This operation is available on all socket types in this library:</p><ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> (TCP client)</li>
@@ -1787,7 +1787,7 @@ Example</h3>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span> (UNIX domain stream/datagram)</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md853"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md887"></a>
 ⏱️ Behavior Summary by Operation</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -1804,7 +1804,7 @@ Example</h3>
 <td class="markdownTableBodyNone"><span class="tt">recvfrom()</span>  </td><td class="markdownTableBodyNone">Waits for incoming datagram  </td><td class="markdownTableBodyNone">Returns <span class="tt">-1</span> if no datagram received  </td></tr>
 </table>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md855"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md889"></a>
 ✅ Use Cases</h3>
 <ul>
 <li>Event-driven I/O (with <span class="tt">select</span>, <span class="tt">poll</span>, <span class="tt">epoll</span>, or <span class="tt">kqueue</span>)</li>
@@ -1813,7 +1813,7 @@ Example</h3>
 <li>Real-time systems with custom scheduling and retry logic</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md857"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md891"></a>
 Example: Enable non-blocking mode on a client socket</h3>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1Socket.html">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 80);</div>
 <div class="line">sock.setNonBlocking(<span class="keyword">true</span>);</div>
@@ -1893,7 +1893,7 @@ waitReady() To wait for readiness in non-blocking mode </dd>
 <li><span class="tt">IPPROTO_UDP</span>, <span class="tt">IPPROTO_IP</span>, etc.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md767"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md801"></a>
 🧩 Use Cases</h3>
 <ul>
 <li>Configure linger behavior with <span class="tt">SO_LINGER</span> using <span class="tt">struct linger</span></li>
@@ -1901,26 +1901,26 @@ waitReady() To wait for readiness in non-blocking mode </dd>
 <li>Set multicast interface (<span class="tt">IP_MULTICAST_IF</span>) or IPv6 options</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md769"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md803"></a>
 Example: Set <span class="tt">SO_LINGER</span> to linger for 5 seconds on close</h3>
 <div class="fragment"><div class="line">linger lin;</div>
 <div class="line">lin.l_onoff = 1;</div>
 <div class="line">lin.l_linger = 5;</div>
 <div class="line">socket.setOption(SOL_SOCKET, SO_LINGER, &amp;lin, <span class="keyword">sizeof</span>(linger));</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md771"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md805"></a>
 ⚠️ ServerSocket-specific Notes</h3>
 <ul>
 <li>Only affects the passive/listening socket itself.</li>
 <li>Accepted sockets must be configured separately.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md772"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md806"></a>
 📡 DatagramSocket-specific Notes</h3>
 <ul>
 <li>Can be used for multicast, broadcast, timeouts, etc.</li>
 <li>Accepts raw buffers for protocol-level socket options.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md773"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md807"></a>
 🧿 UnixSocket-specific Notes</h3>
 <ul>
 <li>Common options include <span class="tt">SO_PASSCRED</span>, <span class="tt">SO_RCVBUF</span>, <span class="tt">SO_SNDTIMEO</span></li>
@@ -1989,7 +1989,7 @@ getOption(int, int, void*, socklen_t*) </dd>
 </ul>
 <p>It supports options at multiple protocol levels, such as <span class="tt">SOL_SOCKET</span>, <span class="tt">IPPROTO_TCP</span>, and <span class="tt">IPPROTO_UDP</span>.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md758"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md792"></a>
 🔧 Common Use Cases</h3>
 <ul>
 <li>Enable address reuse (<span class="tt">SO_REUSEADDR</span>) for TCP/UDP servers</li>
@@ -1999,7 +1999,7 @@ getOption(int, int, void*, socklen_t*) </dd>
 <li>Enable broadcast mode (<span class="tt">SO_BROADCAST</span>) on UDP sockets</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md760"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md794"></a>
 ⚠️ ServerSocket-specific Notes</h3>
 <ul>
 <li>Setting options on a <b>listening socket</b> only affects the acceptor socket.</li>
@@ -2008,7 +2008,7 @@ getOption(int, int, void*, socklen_t*) </dd>
 </ul>
 <div class="fragment"><div class="line">serverSocket.setOption(SOL_SOCKET, SO_REUSEADDR, 1);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md762"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md796"></a>
 📡 DatagramSocket-specific Notes</h3>
 <ul>
 <li>Useful for enabling <span class="tt">SO_BROADCAST</span>, tuning buffer sizes, or applying timeouts (<span class="tt">SO_RCVTIMEO</span>, <span class="tt">SO_SNDTIMEO</span>)</li>
@@ -2017,7 +2017,7 @@ getOption(int, int, void*, socklen_t*) </dd>
 </ul>
 <div class="fragment"><div class="line">datagramSocket.setOption(SOL_SOCKET, SO_BROADCAST, 1);</div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md764"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md798"></a>
 🧿 UnixSocket-specific Notes</h3>
 <ul>
 <li>Although not TCP/IP-based, many <span class="tt">SOL_SOCKET</span> options apply:<ul>
@@ -2073,7 +2073,7 @@ getOption(int, int, void*, socklen_t*) </dd>
 
 <p>Sets the socket's receive buffer size (SO_RCVBUF). </p>
 <p>Configures the size of the kernel-level receive buffer for the underlying socket. This buffer controls how much data the operating system can queue before the application reads from the socket. Increasing this value can reduce packet loss and improve throughput under high load or network delay.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md803"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md837"></a>
 Applicability</h3>
 <p>This method is valid for all supported socket types:</p><ul>
 <li><b>TCP (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Recommended for high-latency or high-throughput connections.</li>
@@ -2081,7 +2081,7 @@ Applicability</h3>
 <li><b>UNIX domain sockets</b>: Supported on most platforms.</li>
 <li><b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></b>: Affects the passive socket itself, not accepted clients.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md804"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md838"></a>
 Platform Behavior</h3>
 <ul>
 <li><b>Linux</b>: The kernel typically doubles the requested size to account for internal overhead.</li>
@@ -2089,7 +2089,7 @@ Platform Behavior</h3>
 <li><b>macOS/BSD</b>: Follows BSD semantics; may enforce stricter limits.</li>
 <li>In all cases, system-wide limits apply (e.g., <span class="tt">/proc/sys/net/core/rmem_max</span> on Linux).</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md805"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md839"></a>
 Example</h3>
 <div class="fragment"><div class="line">datagramSocket.setReceiveBufferSize(256 * 1024); <span class="comment">// Set 256 KB buffer</span></div>
 <div class="line"><span class="keywordtype">int</span> actual = datagramSocket.getReceiveBufferSize();</div>
@@ -2139,7 +2139,7 @@ setInternalBufferSize() </dd></dl>
 <p>Enables or disables the <span class="tt">SO_REUSEADDR</span> socket option. </p>
 <p>This option controls whether the socket is permitted to bind to a local address and port that is already in use or in the <span class="tt">TIME_WAIT</span> state. It is commonly used in both server and client contexts, and is applicable to TCP, UDP, and Unix domain sockets.</p>
 <p>Internally, this method invokes: </p><div class="fragment"><div class="line">setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, ...)</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md797"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md831"></a>
 Platform Behavior</h3>
 <ul>
 <li><b>POSIX (Linux, BSD, macOS):</b><ul>
@@ -2153,7 +2153,7 @@ Platform Behavior</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md798"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md832"></a>
 Protocol Use Cases</h3>
 <ul>
 <li><b>TCP Server Sockets</b>: Enables re-binding to a port immediately after shutdown.</li>
@@ -2168,7 +2168,7 @@ Protocol Use Cases</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md799"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md833"></a>
 Example</h3>
 <div class="fragment"><div class="line">socket.setReuseAddress(<span class="keyword">true</span>); <span class="comment">// Enable port/path reuse before calling bind()</span></div>
 </div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>This method must be called <b>after socket creation</b> and <b>before bind()</b>. Improper use can lead to security issues or interference between applications.</dd></dl>
@@ -2210,7 +2210,7 @@ bind() </dd>
 <p>Enables or disables the <span class="tt">SO_REUSEPORT</span> socket option. </p>
 <p>This method configures the <span class="tt">SO_REUSEPORT</span> option, which allows multiple sockets to bind to the <b>same IP address and port combination</b>, enabling parallelism in multi-threaded or multi-process applications. Unlike <span class="tt">SO_REUSEADDR</span>, which allows re-binding during <span class="tt">TIME_WAIT</span>, <span class="tt">SO_REUSEPORT</span> permits <b>simultaneous binding</b> by multiple sockets.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md911"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md945"></a>
 🌍 Applicability</h3>
 <ul>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>: ✅ Enables load-balanced accept loops across threads or processes</li>
@@ -2219,7 +2219,7 @@ bind() </dd>
 <li><span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span>: ❌ Not supported; this method is not compiled on unsupported platforms</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md913"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md947"></a>
 🔀 Platform Support</h3>
 <ul>
 <li>✅ Linux (kernel ≥ 3.9)</li>
@@ -2227,7 +2227,7 @@ bind() </dd>
 <li>❌ Windows: Not available — this method is excluded at compile time</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md915"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md949"></a>
 Example: Enable shared port binding</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#if defined(SO_REUSEPORT)</span></div>
 <div class="line">    serverSocket.setReusePort(<span class="keyword">true</span>);</div>
@@ -2278,7 +2278,7 @@ Example: Enable shared port binding</h3>
 
 <p>Sets the socket's send buffer size (SO_SNDBUF). </p>
 <p>Configures the size of the kernel-level send buffer for this socket. This buffer controls how much data the operating system can queue for transmission before blocking the sender or returning a partial write. Larger buffers help improve throughput, especially in high-bandwidth or high-latency network environments.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md809"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md843"></a>
 Applicability</h3>
 <p>This method is valid for all socket types:</p><ul>
 <li><b>TCP (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Helps reduce application-level blocking and improves write throughput.</li>
@@ -2286,7 +2286,7 @@ Applicability</h3>
 <li><b>UNIX domain sockets</b>: Supported for local IPC buffering on most systems.</li>
 <li><b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></b>: Setting this has no meaningful effect on passive sockets.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md810"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md844"></a>
 Platform Behavior</h3>
 <ul>
 <li><b>Linux</b>: Kernel may double the size for internal overhead; limited by <span class="tt">/proc/sys/net/core/wmem_max</span>.</li>
@@ -2294,7 +2294,7 @@ Platform Behavior</h3>
 <li><b>BSD/macOS</b>: Honors the request up to system-imposed limits.</li>
 <li>All platforms may silently apply a different size than requested — verify with <span class="tt"><a class="el" href="#gaeb5f9d1ae3f1b7b9fdb94335b10723f6" title="Retrieves the current send buffer size (SO_SNDBUF) of the socket.">getSendBufferSize()</a></span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md811"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md845"></a>
 Example</h3>
 <div class="fragment"><div class="line">socket.setSendBufferSize(128 * 1024); <span class="comment">// 128 KB buffer</span></div>
 <div class="line"><span class="keywordtype">int</span> actual = socket.getSendBufferSize();</div>
@@ -2352,14 +2352,14 @@ setInternalBufferSize() </dd></dl>
 <p>Updates the socket descriptor used by this object. </p>
 <p>This method sets the internal socket file descriptor used by the <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> interface. It is typically called by derived classes after the socket has been moved, reassigned, or otherwise changed during the object's lifetime.</p>
 <p>This does <b>not</b> open, close, or validate the socket descriptor. It simply updates the internal <span class="tt">_sockFd</span> used by methods such as <span class="tt"><a class="el" href="#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a></span> and <span class="tt"><a class="el" href="#ga6a5264b995eb2a1143f45c5de6ad92c3" title="Retrieves the current value of a low-level socket option.">getOption()</a></span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md924"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md958"></a>
 When to Use</h3>
 <ul>
 <li>After a move constructor or move assignment updates the underlying socket</li>
 <li>After explicitly re-binding or re-creating a socket file descriptor</li>
 <li>When adapting an externally provided descriptor (e.g., from <span class="tt">accept()</span> or <span class="tt">socketpair()</span>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md925"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md959"></a>
 Example: Move assignment</h3>
 <div class="fragment"><div class="line"><a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a> = rhs._sockFd;</div>
 <div class="line"><a class="code hl_function" href="#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a>(<a class="code hl_variable" href="classjsocketpp_1_1SocketOptions.html#a44b54c91017594a7695bf315778fb131">_sockFd</a>); <span class="comment">// keeps SocketOptions base class in sync</span></div>
@@ -2401,7 +2401,7 @@ Example: Move assignment</h3>
 
 <p>Configures the socket's linger behavior (<span class="tt">SO_LINGER</span>) during close. </p>
 <p>This method sets the <span class="tt">SO_LINGER</span> socket option, which controls how the socket behaves when it is closed and unsent data remains in the transmission buffer. It determines whether <span class="tt">close()</span> will return immediately (discarding unsent data), or block until the data is transmitted or a timeout expires.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md815"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md849"></a>
 🔁 Applicability</h3>
 <ul>
 <li>✅ <b>TCP (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>)</b>: Fully supported; governs graceful vs. abortive close behavior.</li>
@@ -2409,7 +2409,7 @@ Example: Move assignment</h3>
 <li>⚠️ <b>UDP or UNIX datagram sockets (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>)</b>: Technically accepted by some systems, but <span class="tt">SO_LINGER</span> has <b>no effect</b> (ignored by the kernel).</li>
 <li>⚠️ <b><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> (listening)</b>: Affects only the listening socket itself; accepted sockets must be configured separately.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md816"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md850"></a>
 Behavior</h3>
 <ul>
 <li><b>Linger enabled (<span class="tt">enable == true</span>)</b>:<ul>
@@ -2424,7 +2424,7 @@ Behavior</h3>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md817"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md851"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="comment">// Wait up to 5 seconds for graceful shutdown</span></div>
 <div class="line">socket.setSoLinger(<span class="keyword">true</span>, 5);</div>
@@ -2487,14 +2487,14 @@ close()</dd></dl>
 </ul>
 <p>A timeout of <span class="tt">0</span> disables the timeout entirely, causing read operations to block indefinitely until data is available, the connection is closed, or an error occurs. A negative timeout is invalid and will result in an exception.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md829"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md863"></a>
 🔀 Platform Behavior</h3>
 <ul>
 <li><b>Windows</b>: The timeout is passed as an <span class="tt">int</span> in milliseconds.</li>
 <li><b>POSIX</b>: The timeout is passed as a <span class="tt">struct timeval</span> (<span class="tt">seconds</span> + <span class="tt">microseconds</span>).</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md831"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md865"></a>
 Example: Set a 3-second receive timeout</h3>
 <div class="fragment"><div class="line">socket.setSoRecvTimeout(3000);  <span class="comment">// Timeout after 3000 ms if no data arrives</span></div>
 <div class="line">std::string line = socket.readUntil(<span class="charliteral">&#39;\n&#39;</span>);</div>
@@ -2547,14 +2547,14 @@ Example: Set a 3-second receive timeout</h3>
 </ul>
 <p>A timeout of <span class="tt">0</span> disables the timeout entirely, allowing send operations to block indefinitely until buffer space is available. A negative timeout is invalid and will result in an exception.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md834"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md868"></a>
 🔀 Platform Behavior</h3>
 <ul>
 <li><b>Windows</b>: Timeout is set as a plain <span class="tt">int</span> in milliseconds.</li>
 <li><b>POSIX</b>: Timeout is specified via a <span class="tt">struct timeval</span> with second/microsecond precision.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md836"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md870"></a>
 Example: Set a 5-second send timeout</h3>
 <div class="fragment"><div class="line">socket.setSoSendTimeout(5000);  <span class="comment">// Timeout if write blocks for more than 5 seconds</span></div>
 <div class="line">socket.writeAll(request);</div>
@@ -2651,7 +2651,7 @@ Example: Set a 5-second send timeout</h3>
 <p>This method configures the <span class="tt">TCP_NODELAY</span> option, which controls the behavior of <b>Nagle's algorithm</b> for stream-oriented TCP sockets (<span class="tt">SOCK_STREAM</span>). Nagle's algorithm aims to reduce network congestion by delaying small outgoing packets until previous ones are acknowledged — effectively "coalescing" writes.</p>
 <p>Disabling Nagle’s algorithm (i.e., setting <span class="tt">TCP_NODELAY = 1</span>) allows small packets to be sent immediately, which is ideal for latency-sensitive applications. Enabling it (i.e., setting <span class="tt">TCP_NODELAY = 0</span>) improves throughput by batching writes, but introduces potential delays.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md867"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md901"></a>
 💡 Use Cases</h3>
 <ul>
 <li><b>Latency-sensitive applications</b>:<ul>
@@ -2665,7 +2665,7 @@ Example: Set a 5-second send timeout</h3>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md869"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md903"></a>
 🔀 Platform Behavior</h3>
 <ul>
 <li>Universally available on TCP/IP sockets (<span class="tt">AF_INET</span>, <span class="tt">AF_INET6</span> with <span class="tt">SOCK_STREAM</span>)</li>
@@ -2679,7 +2679,7 @@ Example: Set a 5-second send timeout</h3>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md871"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md905"></a>
 Example: Disable Nagle’s algorithm to reduce latency</h3>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1Socket.html">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
 <div class="line">sock.connect();</div>
@@ -2738,7 +2738,7 @@ Example: Disable Nagle’s algorithm to reduce latency</h3>
 
 <p>Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a> base class. </p>
 <p>This constructor is explicitly deleted to prevent the creation of uninitialized <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> objects. Subclasses like <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, or <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> must initialize the socket handle explicitly via constructor arguments or system calls.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md748"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md782"></a>
 Rationale</h3>
 <ul>
 <li>Prevents misuse of base class in isolation</li>
@@ -2852,7 +2852,7 @@ close(), <a class="el" href="#ga97706ddf21aab33a18db00bd0b8eb65d" title="Updates
 <p>Move constructor for <a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a>. </p>
 <p>Transfers the socket handle (<span class="tt">_sockFd</span>) and internal state from another <span class="tt"><a class="el" href="classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt().">SocketOptions</a></span> instance. After the move, the source object is left in a valid but unspecified state (typically with <span class="tt">_sockFd</span> set to <span class="tt">INVALID_SOCKET</span>).</p>
 <p>This enables safe and efficient transfer of socket ownership in derived classes, such as <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>, or <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, without invoking unnecessary system calls or duplicating file descriptors.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md749"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md783"></a>
 Rationale</h3>
 <ul>
 <li>Enables move semantics for socket objects</li>

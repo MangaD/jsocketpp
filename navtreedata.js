@@ -80,7 +80,7 @@ var NAVTREEINDEX =
 [
 "BufferView_8hpp.html",
 "group__socketopts.html#ga1193748a866e07a7f25e97a0640ad8dd",
-"namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5"
+"namespacejsocketpp_1_1net.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

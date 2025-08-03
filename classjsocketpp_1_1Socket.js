@@ -1,8 +1,8 @@
 var classjsocketpp_1_1Socket =
 [
-    [ "Socket", "group__tcp.html#ga94a43fdd77f92eb63104dfd4168ba587", null ],
+    [ "Socket", "group__tcp.html#ga6da94c322a3ed5f85efd26a7fbadbe0a", null ],
     [ "Socket", "group__tcp.html#gabc4e14475484e596ac62509e627a9baf", null ],
-    [ "Socket", "group__tcp.html#ga339f6a8d4a101e496e668416eebd2769", null ],
+    [ "Socket", "group__tcp.html#ga8b1fe2f85a88935e53d830e68faae9cf", null ],
     [ "Socket", "group__tcp.html#gaf5a4ddebfbca7bfe6c9a88462cc9ada8", null ],
     [ "Socket", "group__tcp.html#gad0612bda82c378dbaf99e0839f5aa815", null ],
     [ "~Socket", "group__tcp.html#gafa933f0914d99522c857b30f64c9ce32", null ],
@@ -10,6 +10,7 @@ var classjsocketpp_1_1Socket =
     [ "bind", "group__tcp.html#gace1da4f860ac0af46d702cb5fc875a51", null ],
     [ "bind", "group__tcp.html#ga477422f8e69c0114cc539926b7f6bc68", null ],
     [ "bind", "group__tcp.html#gae9a523509c0b63f91a801613dec85b39", null ],
+    [ "cleanupAndRethrow", "group__tcp.html#ga8bc150c503e051c12165680e74b5ae48", null ],
     [ "cleanupAndThrow", "group__tcp.html#gaf80aa30f2806a17b930878841dfab7ad", null ],
     [ "close", "group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8", null ],
     [ "connect", "group__tcp.html#ga93cc325113abb7433288338ca3facde1", null ],

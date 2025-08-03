@@ -44,6 +44,6 @@ var searchData=
   ['guarantees_41',['RAII Guarantees',['../group__udp.html#autotoc_md493',1,'']]],
   ['guide_42',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
   ['guide_20to_20the_20socket_20api_43',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['guidelines_44',['Guidelines',['../group__socketopts.html#autotoc_md754',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md433',1,'3. Code Style Guidelines']]],
+  ['guidelines_44',['Guidelines',['../group__socketopts.html#autotoc_md788',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md433',1,'3. Code Style Guidelines']]],
   ['guides_45',['User Guides',['../group__docs.html',1,'']]]
 ];
