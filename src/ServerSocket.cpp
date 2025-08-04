@@ -9,63 +9,40 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
                            const bool reuseAddress, const int soTimeoutMillis, const bool dualStack)
     : SocketOptions(INVALID_SOCKET), _port(port)
 {
-    // Prepare the hints structure for getaddrinfo to specify the desired socket type and protocol.
-    addrinfo hints{}; // Initialize the hints structure to zero
-
-    // Specifies the address family: AF_UNSPEC allows both IPv4 (AF_INET) and IPv6 (AF_INET6)
-    // addresses to be returned by getaddrinfo, enabling the server to support dual-stack networking
-    // (accepting connections over both protocols). This makes the code portable and future-proof,
-    // as it can handle whichever protocol is available on the system or preferred by clients.
-    hints.ai_family = AF_UNSPEC;
-
-    // Specifies the desired socket type. Setting it to `SOCK_STREAM` requests a stream socket (TCP),
-    // which provides reliable, connection-oriented, byte-stream communication—this is the standard
-    // socket type for TCP. By specifying `SOCK_STREAM`, the code ensures that only address results suitable
-    // for TCP (as opposed to datagram-based protocols like UDP, which use `SOCK_DGRAM`) are returned by `getaddrinfo`.
-    // This guarantees that the created socket will support the semantics required for TCP server operation, such as
-    // connection establishment, reliable data transfer, and orderly connection termination.
-    hints.ai_socktype = SOCK_STREAM;
-
-    // This field ensures that only address results suitable for TCP sockets are returned by
-    // `getaddrinfo`. While `SOCK_STREAM` already implies TCP in most cases, explicitly setting
-    // `ai_protocol` to `IPPROTO_TCP` eliminates ambiguity and guarantees that the created socket
-    // will use the TCP protocol. This is particularly important on platforms where multiple
-    // protocols may be available for a given socket type, or where protocol selection is not
-    // implicit. By specifying `IPPROTO_TCP`, the code ensures that the socket will provide
-    // reliable, connection-oriented, byte-stream communication as required for a TCP server.
-    hints.ai_protocol = IPPROTO_TCP;
-
-    // Setting `hints.ai_flags = AI_PASSIVE` indicates that the returned socket addresses
-    // should be suitable for binding a server socket that will accept incoming connections.
-    // When `AI_PASSIVE` is set and the `node` parameter to `getaddrinfo` is `nullptr`,
-    // the resolved address will be a "wildcard address" (INADDR_ANY for IPv4 or IN6ADDR_ANY_INIT for IPv6),
-    // allowing the server to accept connections on any local network interface.
-    //
-    // This is essential for server applications, as it enables them to listen for client
-    // connections regardless of which network interface the client uses to connect.
-    // If `AI_PASSIVE` were not set, the resolved address would be suitable for a client
-    // socket (i.e., for connecting to a specific remote host), not for a server socket.
-    // If the `node` parameter to `getaddrinfo` is not NULL, then the AI_PASSIVE flag is ignored.
-    hints.ai_flags = AI_PASSIVE;
-
-    // Resolve the local address and port to be used by the server
-    const std::string portStr = std::to_string(_port);
-    addrinfo* rawSrvAddrInfo = nullptr;
-    const auto ret = getaddrinfo(
-        localAddress.empty() ? nullptr : localAddress.data(), // Node (hostname or IP address); nullptr means local host
-        portStr.c_str(),                                      // Service (port number or service name) as a C-string
-        &hints,         // Pointer to struct addrinfo with hints about the type of socket
-        &rawSrvAddrInfo // Output: pointer to a linked list of results (set by getaddrinfo)
-    );
-    if (ret != 0)
-    {
-#ifdef _WIN32
-        cleanupAndThrow(GetSocketError());
-#else
-        cleanupAndThrow(ret);
-#endif
-    }
-    _srvAddrInfo.reset(rawSrvAddrInfo); // transfer ownership
+    _srvAddrInfo = internal::resolveAddress(
+        localAddress, _port,
+        // Specifies the address family: AF_UNSPEC allows both IPv4 (AF_INET) and IPv6 (AF_INET6)
+        // addresses to be returned by getaddrinfo, enabling the server to support dual-stack networking
+        // (accepting connections over both protocols). This makes the code portable and future-proof,
+        // as it can handle whichever protocol is available on the system or preferred by clients.
+        AF_UNSPEC,
+        // Specifies the desired socket type. Setting it to `SOCK_STREAM` requests a stream socket (TCP),
+        // which provides reliable, connection-oriented, byte-stream communication—this is the standard
+        // socket type for TCP. By specifying `SOCK_STREAM`, the code ensures that only address results suitable
+        // for TCP (as opposed to datagram-based protocols like UDP, which use `SOCK_DGRAM`) are returned by
+        // `getaddrinfo`. This guarantees that the created socket will support the semantics required for TCP server
+        // operation, such as connection establishment, reliable data transfer, and orderly connection termination.
+        SOCK_STREAM,
+        // This field ensures that only address results suitable for TCP sockets are returned by
+        // `getaddrinfo`. While `SOCK_STREAM` already implies TCP in most cases, explicitly setting
+        // `ai_protocol` to `IPPROTO_TCP` eliminates ambiguity and guarantees that the created socket
+        // will use the TCP protocol. This is particularly important on platforms where multiple
+        // protocols may be available for a given socket type, or where protocol selection is not
+        // implicit. By specifying `IPPROTO_TCP`, the code ensures that the socket will provide
+        // reliable, connection-oriented, byte-stream communication as required for a TCP server.
+        IPPROTO_TCP,
+        // Setting `hints.ai_flags = AI_PASSIVE` indicates that the returned socket addresses
+        // should be suitable for binding a server socket that will accept incoming connections.
+        // When `AI_PASSIVE` is set and the `node` parameter to `getaddrinfo` is `nullptr`,
+        // the resolved address will be a "wildcard address" (INADDR_ANY for IPv4 or IN6ADDR_ANY_INIT for IPv6),
+        // allowing the server to accept connections on any local network interface.
+        //
+        // This is essential for server applications, as it enables them to listen for client
+        // connections regardless of which network interface the client uses to connect.
+        // If `AI_PASSIVE` were not set, the resolved address would be suitable for a client
+        // socket (i.e., for connecting to a specific remote host), not for a server socket.
+        // If the `node` parameter to `getaddrinfo` is not NULL, then the AI_PASSIVE flag is ignored.
+        AI_PASSIVE);
 
     // First, try to create a socket with IPv6 (prioritized)
     for (addrinfo* p = _srvAddrInfo.get(); p != nullptr; p = p->ai_next)
@@ -85,7 +62,7 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
             {
                 setIPv6Only(!dualStack);
             }
-            catch (const SocketException& se)
+            catch (const SocketException&)
             {
                 cleanupAndRethrow();
             }

@@ -40,31 +40,11 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
                const std::optional<std::size_t> sendBufferSize, const std::optional<std::size_t> internalBufferSize,
                const bool reuseAddress, const int soRecvTimeoutMillis, const int soSendTimeoutMillis,
                const bool dualStack, const bool tcpNoDelay, const bool keepAlive, const bool nonBlocking,
-               const bool autoConnect)
+               const bool autoConnect, const bool autoBind, const std::string_view localAddress, const Port localPort)
     : SocketOptions(INVALID_SOCKET), _remoteAddr{}, _remoteAddrLen(0),
       _internalBuffer(internalBufferSize.value_or(DefaultBufferSize))
 {
-    addrinfo hints{};
-    hints.ai_family = dualStack ? AF_UNSPEC : AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
-
-    // Explicitly specify TCP to avoid ambiguity on platforms where SOCK_STREAM alone may resolve to multiple protocols.
-    // This ensures only TCP (IPPROTO_TCP) is selected, especially useful on dual-stack or non-standard systems.
-    hints.ai_protocol = IPPROTO_TCP;
-
-    const std::string portStr = std::to_string(port);
-    addrinfo* rawCliAddrInfo = nullptr;
-
-    if (const int ret = ::getaddrinfo(host.data(), portStr.c_str(), &hints, &rawCliAddrInfo); ret != 0)
-    {
-#ifdef _WIN32
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
-#else
-        throw SocketException(ret, SocketErrorMessageWrap(ret, true));
-#endif
-    }
-
-    _cliAddrInfo.reset(rawCliAddrInfo); // managed ownership
+    _cliAddrInfo = internal::resolveAddress(host, port, dualStack ? AF_UNSPEC : AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     // Try each candidate until socket creation succeeds
     for (addrinfo* p = _cliAddrInfo.get(); p != nullptr; p = p->ai_next)
@@ -94,6 +74,18 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
 
     if (soSendTimeoutMillis >= 0)
         setSoSendTimeout(soSendTimeoutMillis);
+
+    if (autoBind)
+    {
+        try
+        {
+            bind(localAddress, localPort);
+        }
+        catch (const SocketException&)
+        {
+            cleanupAndRethrow();
+        }
+    }
 
     if (autoConnect)
     {
@@ -144,27 +136,8 @@ void Socket::bind(const std::string_view localHost, const Port port)
         throw SocketException("Socket::bind(): socket is already bound");
     }
 
-    addrinfo hints{};
-    hints.ai_family = AF_UNSPEC;     // IPv4 or IPv6
-    hints.ai_socktype = SOCK_STREAM; // TCP socket
-    hints.ai_protocol = IPPROTO_TCP; // TCP protocol
-    hints.ai_flags = AI_PASSIVE;     // Accept wildcard address (e.g. "0.0.0.0")
-
-    const std::string portStr = std::to_string(port);
-    addrinfo* rawResult = nullptr;
-
-    if (auto ret = ::getaddrinfo(localHost.data(), portStr.c_str(), &hints, &rawResult);
-        ret != 0 || rawResult == nullptr)
-    {
-        throw SocketException(
-#ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
-#else
-            ret, SocketErrorMessageWrap(ret, true));
-#endif
-    }
-
-    const internal::AddrinfoPtr result{rawResult};
+    const internal::AddrinfoPtr result =
+        internal::resolveAddress(localHost, port, AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP, AI_PASSIVE);
 
     for (const addrinfo* p = result.get(); p != nullptr; p = p->ai_next)
     {
@@ -573,26 +546,12 @@ void Socket::stringToAddress(const std::string& str, sockaddr_storage& addr)
         throw SocketException("Invalid address format: " + str);
 
     const std::string host = str.substr(0, pos);
-    const std::string port = str.substr(pos + 1);
+    const Port port = static_cast<Port>(std::stoi(str.substr(pos + 1)));
 
-    addrinfo hints = {};
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_NUMERICHOST | AI_NUMERICSERV;
-
-    addrinfo* res = nullptr;
-    if (const auto ret = getaddrinfo(host.c_str(), port.c_str(), &hints, &res); ret != 0)
-    {
-        throw SocketException(
-#ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
-#else
-            ret, SocketErrorMessageWrap(ret, true));
-#endif
-    }
+    const internal::AddrinfoPtr res =
+        internal::resolveAddress(host, port, AF_UNSPEC, SOCK_STREAM, 0, AI_NUMERICHOST | AI_NUMERICSERV);
 
     std::memcpy(&addr, res->ai_addr, res->ai_addrlen);
-    freeaddrinfo(res); // ignore errors from freeaddrinfo
 }
 
 std::string Socket::readExact(const std::size_t n) const

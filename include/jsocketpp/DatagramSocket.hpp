@@ -1163,14 +1163,47 @@ class DatagramSocket : public SocketOptions
     }
 
     /**
-     * @brief Write data to a remote host using a DatagramPacket.
+     * @brief Sends a UDP datagram using the provided DatagramPacket.
+     * @ingroup udp
      *
-     * Sends the data contained in the packet's buffer to the address and port
-     * specified in the packet. Can be used in both connected and connectionless modes.
+     * This method sends the contents of a `DatagramPacket` to a specified destination.
+     * It supports both connectionless and connected UDP sockets:
      *
-     * @param packet DatagramPacket containing the data to send and destination info.
-     * @return Number of bytes sent.
-     * @throws SocketException on error.
+     * - **Connectionless Mode:** If `packet.address` is non-empty and `packet.port` is valid,
+     *   the packet is sent to the resolved destination using `sendto()`.
+     * - **Connected Mode:** If the socket is connected (via `connect()`), and the packet does
+     *   not specify a destination, the message is sent using `send()` to the connected peer.
+     *
+     * ### Connectionless Behavior
+     * - Resolves `packet.address` and `packet.port` via `getaddrinfo()`
+     * - Sends the buffer to the resolved `sockaddr` using `sendto()`
+     * - Uses `MSG_NOSIGNAL` on POSIX to suppress `SIGPIPE`
+     *
+     * ### Connected Behavior
+     * - Uses `send()` to deliver the buffer to the connected peer
+     * - Fails if the socket is not connected and no destination is provided
+     *
+     * ### Error Conditions
+     * - Throws if `packet.address` is empty and socket is not connected
+     * - Throws if address resolution fails (e.g., invalid hostname)
+     * - Throws if `send()` or `sendto()` fails (e.g., network unreachable)
+     * - Throws if socket descriptor is invalid
+     *
+     * @param[in] packet [in] The packet containing destination and payload.
+     *                   If `packet.address` is non-empty and `packet.port` is non-zero,
+     *                   the destination will override any connected peer.
+     *
+     * @return Number of bytes successfully sent (may be less than buffer size on rare systems).
+     *
+     * @throws SocketException on:
+     *         - address resolution failure
+     *         - socket I/O failure
+     *         - missing destination on unconnected socket
+     *
+     * @note UDP datagrams are sent atomically. If the packet exceeds the system MTU, it may be dropped.
+     * @note This method does **not** fragment or retransmit. Use application-level framing for large data.
+     *
+     * @see connect(), isConnected(), write(std::string_view, std::string_view, Port), DatagramPacket
      */
     [[nodiscard]] size_t write(const DatagramPacket& packet) const;
 

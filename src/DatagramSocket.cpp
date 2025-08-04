@@ -15,72 +15,40 @@ DatagramSocket::DatagramSocket(const Port port, const std::string_view localAddr
                                const bool dualStack, const bool autoBind)
     : SocketOptions(INVALID_SOCKET), _internalBuffer(internalBufferSize.value_or(DefaultBufferSize)), _port(port)
 {
-    // Prepare the hints structure for getaddrinfo to specify the desired socket type and protocol.
-    addrinfo hints{}; // Initialize the hints structure to zero
-
-    // Specifies the address family: AF_UNSPEC allows both IPv4 (AF_INET) and IPv6 (AF_INET6)
-    // addresses to be returned by getaddrinfo, enabling the server to support dual-stack networking
-    // (accepting connections over both protocols). This makes the code portable and future-proof,
-    // as it can handle whichever protocol is available on the system or preferred by clients.
-    hints.ai_family = AF_UNSPEC;
-
-    // Specifies the desired socket type. Setting it to `SOCK_DGRAM` requests a datagram socket (UDP),
-    // which provides connectionless, unreliable, message-oriented communication—this is the standard
-    // socket type for UDP. By specifying `SOCK_DGRAM`, the code ensures that only address results suitable
-    // for UDP (as opposed to stream-based protocols like TCP, which use `SOCK_STREAM`) are returned by `getaddrinfo`.
-    // This guarantees that the created socket will support the semantics required for UDP operation, such as
-    // message delivery without connection establishment and no guarantee of delivery order or reliability.
-    hints.ai_socktype = SOCK_DGRAM;
-
-    // This field ensures that only address results suitable for UDP sockets are returned by
-    // `getaddrinfo`. While `SOCK_DGRAM` already implies UDP in most cases, explicitly setting
-    // `ai_protocol` to `IPPROTO_UDP` eliminates ambiguity and guarantees that the created socket
-    // will use the UDP protocol. This is particularly important on platforms where multiple
-    // protocols may be available for a given socket type, or where protocol selection is not
-    // implicit. By specifying `IPPROTO_UDP`, the code ensures that the socket will provide
-    // connectionless, unreliable, message-oriented communication as required for a UDP socket.
-    hints.ai_protocol = IPPROTO_UDP;
-
-    // This flag indicates that the returned socket addresses are intended for use in bind operations.
-    // When `ai_flags` includes `AI_PASSIVE`, and the `node` argument to `getaddrinfo()` is `nullptr`,
-    // the resulting address will be a "wildcard" address:
-    // - For IPv4: INADDR_ANY
-    // - For IPv6: in6addr_any
-    //
-    // This allows the socket to accept datagrams on **any local interface**, which is ideal for
-    // server-side or bound sockets. If a specific `localAddress` is provided, `AI_PASSIVE` is ignored.
-    //
-    // Without this flag, `getaddrinfo()` would return addresses suitable for connecting to a peer,
-    // not for binding a local endpoint.
-    hints.ai_flags = AI_PASSIVE;
-
-    // Convert the port number to a string, as required by getaddrinfo
-    const std::string portStr = std::to_string(_port);
-
-    // Resolve the local address and port using the hints defined above.
-    // If localAddress is empty, we pass nullptr to getaddrinfo, which results in a wildcard bind.
-    // This allows the socket to listen on all available interfaces (e.g., 0.0.0.0 or ::).
-    addrinfo* rawAddrInfo = nullptr;
-
-    const int ret = ::getaddrinfo(localAddress.empty() ? nullptr : localAddress.data(), // node (IP address or hostname)
-                                  portStr.c_str(),                                      // service (port as string)
-                                  &hints,      // socket type and protocol constraints
-                                  &rawAddrInfo // result: linked list of addrinfo structs
-    );
-
-    // If address resolution failed, throw a platform-specific SocketException
-    if (ret != 0)
-    {
-        throw SocketException(
-#ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
-#else
-            ret, SocketErrorMessageWrap(ret, true));
-#endif
-    }
-
-    // Transfer ownership of the addrinfo result to a smart pointer for RAII cleanup
-    _addrInfoPtr.reset(rawAddrInfo);
+    _addrInfoPtr = internal::resolveAddress(
+        localAddress, _port,
+        // Specifies the address family: AF_UNSPEC allows both IPv4 (AF_INET) and IPv6 (AF_INET6)
+        // addresses to be returned by getaddrinfo, enabling the server to support dual-stack networking
+        // (accepting connections over both protocols). This makes the code portable and future-proof,
+        // as it can handle whichever protocol is available on the system or preferred by clients.
+        AF_UNSPEC,
+        // Specifies the desired socket type. Setting it to `SOCK_DGRAM` requests a datagram socket (UDP),
+        // which provides connectionless, unreliable, message-oriented communication—this is the standard
+        // socket type for UDP. By specifying `SOCK_DGRAM`, the code ensures that only address results suitable
+        // for UDP (as opposed to stream-based protocols like TCP, which use `SOCK_STREAM`) are returned by
+        // `getaddrinfo`. This guarantees that the created socket will support the semantics required for UDP operation,
+        // such as message delivery without connection establishment and no guarantee of delivery order or reliability.
+        SOCK_DGRAM,
+        // This field ensures that only address results suitable for UDP sockets are returned by
+        // `getaddrinfo`. While `SOCK_DGRAM` already implies UDP in most cases, explicitly setting
+        // `ai_protocol` to `IPPROTO_UDP` eliminates ambiguity and guarantees that the created socket
+        // will use the UDP protocol. This is particularly important on platforms where multiple
+        // protocols may be available for a given socket type, or where protocol selection is not
+        // implicit. By specifying `IPPROTO_UDP`, the code ensures that the socket will provide
+        // connectionless, unreliable, message-oriented communication as required for a UDP socket.
+        IPPROTO_UDP,
+        // This flag indicates that the returned socket addresses are intended for use in bind operations.
+        // When `ai_flags` includes `AI_PASSIVE`, and the `node` argument to `getaddrinfo()` is `nullptr`,
+        // the resulting address will be a "wildcard" address:
+        // - For IPv4: INADDR_ANY
+        // - For IPv6: in6addr_any
+        //
+        // This allows the socket to accept datagrams on **any local interface**, which is ideal for
+        // server-side or bound sockets. If a specific `localAddress` is provided, `AI_PASSIVE` is ignored.
+        //
+        // Without this flag, `getaddrinfo()` would return addresses suitable for connecting to a peer,
+        // not for binding a local endpoint.
+        AI_PASSIVE);
 
     // Sort address candidates: prioritize IPv6 if dualStack is enabled, then IPv4 fallback
     std::vector<addrinfo*> sorted;
@@ -230,27 +198,7 @@ void DatagramSocket::bind(const std::string_view host, const Port port)
         throw SocketException("DatagramSocket::bind(): socket is already bound");
     }
 
-    addrinfo hints{};
-    hints.ai_family = AF_UNSPEC;     // IPv4 or IPv6
-    hints.ai_socktype = SOCK_DGRAM;  // Datagram socket
-    hints.ai_protocol = IPPROTO_UDP; // UDP
-    hints.ai_flags = AI_PASSIVE;     // Allow wildcard addresses (e.g., 0.0.0.0)
-
-    const std::string portStr = std::to_string(port);
-    addrinfo* rawResult = nullptr;
-
-    if (const int ret = ::getaddrinfo(host.empty() ? nullptr : host.data(), portStr.c_str(), &hints, &rawResult);
-        ret != 0 || rawResult == nullptr)
-    {
-        throw SocketException(
-#ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
-#else
-            ret, SocketErrorMessageWrap(ret, true));
-#endif
-    }
-
-    const internal::AddrinfoPtr result{rawResult};
+    const auto result = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP, AI_PASSIVE);
 
     for (const addrinfo* p = result.get(); p != nullptr; p = p->ai_next)
     {
@@ -419,66 +367,53 @@ size_t DatagramSocket::write(std::string_view message) const
     return static_cast<size_t>(sent);
 }
 
-size_t DatagramSocket::write(const DatagramPacket& packet) const
+std::size_t DatagramSocket::write(const DatagramPacket& packet) const
 {
     if (packet.buffer.empty())
-        return 0; // Nothing to send
+        return 0;
 
     int flags = 0;
 #ifndef _WIN32
-    flags = MSG_NOSIGNAL; // Don't send SIGPIPE on broken pipe
+    flags = MSG_NOSIGNAL;
 #endif
 
     if (!packet.address.empty() && packet.port != 0)
     {
-        // Connectionless send
-        addrinfo hints{};
-        hints.ai_family = AF_UNSPEC;
-        hints.ai_socktype = SOCK_DGRAM;
-        hints.ai_protocol = IPPROTO_UDP;
+        const auto result = internal::resolveAddress(packet.address, packet.port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
 
-        const std::string portStr = std::to_string(packet.port);
-        addrinfo* res = nullptr;
-        if (const auto ret = getaddrinfo(packet.address.c_str(), portStr.c_str(), &hints, &res); ret != 0)
-        {
-            throw SocketException(
+        const int sent = sendto(getSocketFd(), packet.buffer.data(),
 #ifdef _WIN32
-                GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+                                static_cast<int>(packet.buffer.size()),
 #else
-                ret, SocketErrorMessageWrap(ret, true));
+                                packet.buffer.size(),
 #endif
-        }
-        const auto sent = sendto(getSocketFd(), packet.buffer.data(),
+                                flags, result->ai_addr,
 #ifdef _WIN32
-                                 static_cast<int>(packet.buffer.size()), // Windows: cast to int
+                                static_cast<int>(result->ai_addrlen));
 #else
-                                 packet.buffer.size(), // Linux/Unix: use size_t directly
-#endif
-                                 flags, res->ai_addr,
-#ifdef _WIN32
-                                 static_cast<int>(res->ai_addrlen)); // Windows: cast to int
-#else
-                                 res->ai_addrlen); // Linux/Unix: use socklen_t directly
+                                result->ai_addrlen);
 #endif
 
-        const int error = GetSocketError(); // capture immediately after syscall
-        freeaddrinfo(res);
+        const int error = GetSocketError();
         if (sent < 0)
             throw SocketException(error, SocketErrorMessage(error));
-        return static_cast<size_t>(sent);
+        return static_cast<std::size_t>(sent);
     }
 
-    // Connected send
-    const auto sent = send(getSocketFd(), packet.buffer.data(),
+    if (!_isConnected)
+        throw SocketException("write(packet): no destination specified and socket is not connected");
+
+    const int sent = send(getSocketFd(), packet.buffer.data(),
 #ifdef _WIN32
-                           static_cast<int>(packet.buffer.size()), // Windows: cast to int
+                          static_cast<int>(packet.buffer.size()),
 #else
-                           packet.buffer.size(), // Linux/Unix: use size_t directly
+                          packet.buffer.size(),
 #endif
-                           flags);
+                          flags);
+    const int error = GetSocketError();
     if (sent < 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-    return static_cast<size_t>(sent);
+        throw SocketException(error, SocketErrorMessage(error));
+    return static_cast<std::size_t>(sent);
 }
 
 size_t DatagramSocket::write(std::string_view message, const std::string_view host, const Port port) const

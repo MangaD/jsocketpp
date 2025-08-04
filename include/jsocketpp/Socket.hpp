@@ -190,26 +190,38 @@ class Socket : public SocketOptions
     Socket() = delete;
 
     /**
-     * @brief Constructs a TCP client socket, resolves the remote host and port, and optionally connects.
+     * @brief Constructs a TCP client socket, resolves the remote host and port, and optionally binds or connects.
      * @ingroup tcp
      *
      * This constructor creates a TCP socket intended for client-side connections. It resolves the specified
-     * remote `host` and `port`, applies optional socket parameters, and optionally performs a blocking
-     * `connect()` to the resolved peer. The socket supports IPv4, IPv6, and dual-stack operation.
+     * remote `host` and `port`, applies socket-level configuration, and optionally:
+     * - Binds the socket to a specified local address and/or port (`autoBind`)
+     * - Connects to the resolved peer (`autoConnect`)
+     *
+     * The socket supports both IPv4 and IPv6, dual-stack operation, and high-level configuration of timeouts,
+     * buffer sizes, and TCP flags like `TCP_NODELAY` and `SO_KEEPALIVE`.
      *
      * ---
      *
      * ### 🔧 Configuration Parameters
-     * - `recvBufferSize`, `sendBufferSize`: Set the OS-level socket buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`)
-     * - `internalBufferSize`: Controls the internal buffer used by `read()` and `read<std::string>()`
+     * - `recvBufferSize`, `sendBufferSize`: Set OS-level buffer sizes (`SO_RCVBUF`, `SO_SNDBUF`)
+     * - `internalBufferSize`: Controls the internal buffer used by high-level read methods
      * - `reuseAddress`: Enables `SO_REUSEADDR`, useful for NAT traversal and reconnect loops
-     * - `soRecvTimeoutMillis`: Sets the read timeout (`SO_RCVTIMEO`) in milliseconds; `-1` disables
-     * - `soSendTimeoutMillis`: Sets the send timeout (`SO_SNDTIMEO`) in milliseconds; `-1` disables
-     * - `dualStack`: Enables dual-stack fallback (IPv6 socket accepting both v6 and v4)
+     * - `soRecvTimeoutMillis`: Sets read timeout in milliseconds (`SO_RCVTIMEO`); `-1` disables
+     * - `soSendTimeoutMillis`: Sets send timeout in milliseconds (`SO_SNDTIMEO`); `-1` disables
+     * - `dualStack`: Enables dual-stack fallback via `AF_UNSPEC` (IPv6 socket accepts IPv4-mapped traffic)
      * - `tcpNoDelay`: Disables Nagle's algorithm (`TCP_NODELAY`) for low-latency protocols
      * - `keepAlive`: Enables TCP keep-alive probes (`SO_KEEPALIVE`)
-     * - `nonBlocking`: Places the socket in non-blocking mode immediately after creation
-     * - `autoConnect`: If `true`, performs a blocking `connect()` immediately after socket creation
+     * - `nonBlocking`: Sets the socket to non-blocking mode immediately after creation
+     * - `autoBind`: If `true`, binds to the specified local address and/or port before connecting
+     * - `autoConnect`: If `true`, performs a blocking `connect()` immediately after creation
+     *
+     * ---
+     *
+     * ### 🌐 Local Binding Parameters (used only if `autoBind == true`)
+     * - `localAddress`: IP address to bind from (e.g., `"192.168.0.100"` or `"::1"`).
+     *   Use empty string to bind to all local interfaces.
+     * - `localPort`: Port to bind from. Use `0` to let the OS assign an ephemeral port.
      *
      * ---
      *
@@ -224,7 +236,10 @@ class Socket : public SocketOptions
      *             true,           // tcpNoDelay
      *             true,           // keepAlive
      *             false,          // nonBlocking
-     *             true);          // autoConnect
+     *             true,           // autoConnect
+     *             true,           // autoBind
+     *             "192.168.1.10", // localAddress
+     *             0);             // localPort
      * @endcode
      *
      * ---
@@ -233,7 +248,7 @@ class Socket : public SocketOptions
      * @param[in] port Remote TCP port number
      * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`)
      * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`)
-     * @param[in] internalBufferSize Internal buffer used for high-level `read()` operations
+     * @param[in] internalBufferSize Optional internal read buffer size for high-level operations
      * @param[in] reuseAddress Enables `SO_REUSEADDR` to allow rebinding to the same port
      * @param[in] soRecvTimeoutMillis Timeout for receive operations in milliseconds (`SO_RCVTIMEO`)
      * @param[in] soSendTimeoutMillis Timeout for send operations in milliseconds (`SO_SNDTIMEO`)
@@ -242,16 +257,20 @@ class Socket : public SocketOptions
      * @param[in] keepAlive If `true`, enables TCP keep-alive probes
      * @param[in] nonBlocking If `true`, sets the socket to non-blocking mode after creation
      * @param[in] autoConnect If `true`, immediately performs a blocking `connect()` to the peer
+     * @param[in] autoBind If `true`, performs a `bind()` before connecting
+     * @param[in] localAddress Local IP to bind to (if `autoBind == true`)
+     * @param[in] localPort Local port to bind to (if `autoBind == true`)
      *
-     * @throws SocketException If resolution, socket creation, configuration, or connection fails
+     * @throws SocketException If resolution, socket creation, binding, configuration, or connection fails
      *
-     * @see connect(), setSoRecvTimeout(), setSoSendTimeout(), setTcpNoDelay(), setNonBlocking()
+     * @see connect(), bind(), setSoRecvTimeout(), setSoSendTimeout(), setTcpNoDelay(), setNonBlocking()
      */
     Socket(std::string_view host, Port port, std::optional<std::size_t> recvBufferSize = std::nullopt,
            std::optional<std::size_t> sendBufferSize = std::nullopt,
            std::optional<std::size_t> internalBufferSize = std::nullopt, bool reuseAddress = true,
            int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1, bool dualStack = true, bool tcpNoDelay = true,
-           bool keepAlive = false, bool nonBlocking = false, bool autoConnect = true);
+           bool keepAlive = false, bool nonBlocking = false, bool autoConnect = true, bool autoBind = false,
+           std::string_view localAddress = "", Port localPort = 0);
 
     /**
      * @brief Copy constructor (deleted) for Socket class.

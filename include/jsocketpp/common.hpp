@@ -585,4 +585,156 @@ struct AddrinfoDeleter
  * @see freeaddrinfo()
  */
 using AddrinfoPtr = std::unique_ptr<addrinfo, AddrinfoDeleter>;
+
+/**
+ * @brief Resolves a hostname and port into a list of usable socket address structures.
+ * @ingroup internal
+ *
+ * This internal helper wraps the standard `::getaddrinfo()` system call to resolve a hostname and port
+ * into a linked list of `addrinfo` structures, which are used to create, bind, or connect sockets.
+ * It provides explicit control over resolution parameters, supports both client and server use cases,
+ * and ensures consistent error handling and memory cleanup across platforms.
+ *
+ * ---
+ *
+ * ### Overview
+ *
+ * Unlike direct `getaddrinfo()` usage, this helper:
+ * - Accepts all key resolution parameters (`family`, `socktype`, `protocol`, `flags`)
+ * - Returns a RAII-managed `AddrinfoPtr` (automatically frees memory via `freeaddrinfo()`)
+ * - Throws a `SocketException` with detailed context if resolution fails
+ * - Supports dual-stack fallback, wildcard binding, strict numeric resolution, and more
+ *
+ * ---
+ *
+ * ### Hints Structure Behavior
+ *
+ * This function populates the `hints` structure for `getaddrinfo()` with the following fields:
+ *
+ * - **ai_family**: Address family to return:
+ *     - `AF_INET` — IPv4 only
+ *     - `AF_INET6` — IPv6 only
+ *     - `AF_UNSPEC` — Return both (default for dual-stack logic)
+ *
+ * - **ai_socktype**: Type of socket:
+ *     - `SOCK_STREAM` — TCP
+ *     - `SOCK_DGRAM` — UDP
+ *     - `SOCK_RAW` — Raw IP (less common)
+ *
+ * - **ai_protocol**: Transport-layer protocol:
+ *     - `IPPROTO_TCP` — for TCP sockets
+ *     - `IPPROTO_UDP` — for UDP sockets
+ *     - `0` — auto-detect based on `socktype`
+ *
+ * - **ai_flags**: Bitmask of resolution modifiers. Includes:
+ *     - `AI_PASSIVE` — Use wildcard address (0.0.0.0 / ::) if `host` is empty (for server binding)
+ *     - `AI_NUMERICHOST` — Require `host` to be a numeric IP; skip DNS
+ *     - `AI_NUMERICSERV` — Require `port` to be numeric; skip service name lookup
+ *     - `AI_CANONNAME` — Populate `ai_canonname` with canonical FQDN
+ *     - `AI_ADDRCONFIG` — Only return families configured on the local machine
+ *     - `AI_V4MAPPED` — Allow IPv4-mapped IPv6 addresses if `AF_INET6` is requested
+ *
+ * Flags may be combined using bitwise OR (e.g., `AI_PASSIVE | AI_ADDRCONFIG`).
+ *
+ * ---
+ *
+ * ### Parameters
+ *
+ * @param[in] host
+ *     Hostname, domain, or IP address to resolve.
+ *     - Use empty string if `AI_PASSIVE` is set to bind to all interfaces.
+ *     - Must be numeric if `AI_NUMERICHOST` is specified.
+ *
+ * @param[in] port
+ *     Port number to resolve, passed as an integer. Must be in the range `[0, 65535]`.
+ *     Internally converted to a string before calling `getaddrinfo()`.
+ *
+ * @param[in] family
+ *     Address family to restrict the result:
+ *     - `AF_INET` for IPv4
+ *     - `AF_INET6` for IPv6
+ *     - `AF_UNSPEC` for both (default in most client cases)
+ *
+ * @param[in] socktype
+ *     Desired socket type (e.g., `SOCK_STREAM`, `SOCK_DGRAM`)
+ *
+ * @param[in] protocol
+ *     Desired protocol (e.g., `IPPROTO_TCP`, `IPPROTO_UDP`, or `0`)
+ *
+ * @param[in] flags
+ *     Bitmask of `AI_*` flags. See the list above for all supported options.
+ *
+ * ---
+ *
+ * ### Return Value
+ *
+ * @return A smart pointer of type `AddrinfoPtr` holding a linked list of `addrinfo` structures.
+ *         The returned list can be iterated to attempt socket creation or connection.
+ *         Memory is released automatically via `freeaddrinfo()` when the pointer is destroyed.
+ *
+ * ---
+ *
+ * ### Throws
+ *
+ * @throws SocketException if `getaddrinfo()` fails.
+ *     - On Windows: error code from `GetSocketError()`, with message from `gai_strerror()`
+ *     - On POSIX: return code from `getaddrinfo()`, also with `gai_strerror()` message
+ *     - The error message will include whether the failure occurred on the host or service name
+ *
+ * ---
+ *
+ * ### Example Usage
+ *
+ * @code
+ * using namespace jsocketpp::internal;
+ *
+ * // Resolve a remote TCP address (client-side)
+ * auto addrList = resolveAddress("example.com", 443, AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP);
+ *
+ * // Iterate candidates and attempt connection
+ * for (addrinfo* p = addrList.get(); p != nullptr; p = p->ai_next)
+ * {
+ *     int sockfd = ::socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+ *     if (sockfd != INVALID_SOCKET && ::connect(sockfd, p->ai_addr, p->ai_addrlen) == 0)
+ *         break; // success
+ *     // try next if socket or connect failed
+ * }
+ * @endcode
+ *
+ * ---
+ *
+ * ### Notes
+ *
+ * - This function is intended for internal use by `Socket`, `ServerSocket`, and `DatagramSocket`.
+ * - It supports both binding (server-side) and connecting (client-side) resolution logic.
+ * - Always use `AF_UNSPEC` and let `getaddrinfo()` return both IPv4 and IPv6 for best cross-platform support.
+ *
+ * @see getaddrinfo(), freeaddrinfo(), AddrinfoPtr, SocketException
+ */
+[[nodiscard]] inline AddrinfoPtr resolveAddress(const std::string_view host, const Port port, const int family,
+                                                const int socktype, const int protocol, const int flags = 0)
+{
+    addrinfo hints{};
+    hints.ai_family = family;
+    hints.ai_socktype = socktype;
+    hints.ai_protocol = protocol;
+    hints.ai_flags = flags;
+
+    const std::string portStr = std::to_string(port);
+    addrinfo* raw = nullptr;
+
+    if (const int ret = ::getaddrinfo(host.empty() ? nullptr : host.data(), portStr.c_str(), &hints, &raw); ret != 0)
+    {
+        throw SocketException(
+#ifdef _WIN32
+            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true)
+#else
+            ret, SocketErrorMessageWrap(ret, true)
+#endif
+        );
+    }
+
+    return AddrinfoPtr{raw};
+}
+
 } // namespace jsocketpp::internal
