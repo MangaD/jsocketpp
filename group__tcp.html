@@ -310,10 +310,12 @@ Functions</h2></td></tr>
 <tr class="memdesc:gad2b2992b358d3656a2e0d3e854c897bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the socket's output stream has been shutdown.  <br /></td></tr>
 <tr class="memitem:ga756c4e2148cfe7974fe191099341fccf" id="r_ga756c4e2148cfe7974fe191099341fccf"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga756c4e2148cfe7974fe191099341fccf">jsocketpp::Socket::readIntoInternal</a> (void *buffer, std::size_t len, bool exact=false) const</td></tr>
 <tr class="memdesc:ga756c4e2148cfe7974fe191099341fccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the socket into a user-supplied buffer.  <br /></td></tr>
+<tr class="memitem:ga744a91706b9510d266b7c07e31f3e028" id="r_ga744a91706b9510d266b7c07e31f3e028"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga744a91706b9510d266b7c07e31f3e028">jsocketpp::Socket::cleanup</a> ()</td></tr>
+<tr class="memdesc:ga744a91706b9510d266b7c07e31f3e028"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal helper that closes the socket and clears address resolution state.  <br /></td></tr>
 <tr class="memitem:gaf80aa30f2806a17b930878841dfab7ad" id="r_gaf80aa30f2806a17b930878841dfab7ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf80aa30f2806a17b930878841dfab7ad">jsocketpp::Socket::cleanupAndThrow</a> (int errorCode)</td></tr>
-<tr class="memdesc:gaf80aa30f2806a17b930878841dfab7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up client socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.  <br /></td></tr>
+<tr class="memdesc:gaf80aa30f2806a17b930878841dfab7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the socket, resets internal state, and throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.  <br /></td></tr>
 <tr class="memitem:ga8bc150c503e051c12165680e74b5ae48" id="r_ga8bc150c503e051c12165680e74b5ae48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8bc150c503e051c12165680e74b5ae48">jsocketpp::Socket::cleanupAndRethrow</a> ()</td></tr>
-<tr class="memdesc:ga8bc150c503e051c12165680e74b5ae48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the socket, resets internal state, and rethrows the currently handled exception.  <br /></td></tr>
+<tr class="memdesc:ga8bc150c503e051c12165680e74b5ae48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up socket resources and rethrows the currently active exception.  <br /></td></tr>
 <tr class="memitem:ga41e5ecdf97be51a3a354429be87b12d0" id="r_ga41e5ecdf97be51a3a354429be87b12d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga41e5ecdf97be51a3a354429be87b12d0">jsocketpp::Socket::resetShutdownFlags</a> () noexcept</td></tr>
 <tr class="memdesc:ga41e5ecdf97be51a3a354429be87b12d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets internal shutdown state flags to <span class="tt">false</span>.  <br /></td></tr>
 <tr class="memitem:ga634bfa30476b72bfa4cca63a93c558a9" id="r_ga634bfa30476b72bfa4cca63a93c558a9"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
@@ -1334,6 +1336,58 @@ Common Use Cases:</h3>
 
 </div>
 </div>
+<a id="ga744a91706b9510d266b7c07e31f3e028" name="ga744a91706b9510d266b7c07e31f3e028"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga744a91706b9510d266b7c07e31f3e028">&#9670;&#160;</a></span>cleanup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Socket::cleanup </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Internal helper that closes the socket and clears address resolution state. </p>
+<p>This method performs safe resource cleanup for the client socket. It is intended to be reused across error-handling paths to ensure that partially initialized socket state is properly discarded, avoiding leaks or undefined behavior.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md849"></a>
+⚙️ Behavior</h3>
+<ul>
+<li>If the socket is valid (<span class="tt"><a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a> != INVALID_SOCKET</span>), it is closed via <span class="tt"><a class="el" href="namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931">CloseSocket()</a></span></li>
+<li>The socket handle is reset to <span class="tt">INVALID_SOCKET</span></li>
+<li>Address resolution state is cleared:<ul>
+<li><span class="tt">_cliAddrInfo</span> (client-side addrinfo list) is released</li>
+<li><span class="tt">_selectedAddrInfo</span> is reset to <span class="tt">nullptr</span></li>
+</ul>
+</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md851"></a>
+🔒 Safety</h3>
+<ul>
+<li>It is safe to call this method multiple times; redundant socket closes are prevented</li>
+<li>Designed to be noexcept and side-effect free beyond its resource cleanup</li>
+<li>Intended for use within exception paths only (never throws)</li>
+</ul>
+<hr  />
+<dl class="section note"><dt>Note</dt><dd>This method is used internally by <span class="tt"><a class="el" href="#gaf80aa30f2806a17b930878841dfab7ad" title="Closes the socket, resets internal state, and throws a SocketException.">cleanupAndThrow()</a></span> and <span class="tt"><a class="el" href="#ga8bc150c503e051c12165680e74b5ae48" title="Cleans up socket resources and rethrows the currently active exception.">cleanupAndRethrow()</a></span> to centralize socket cleanup logic during construction or reconfiguration failures.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This method does not throw. Use <span class="tt"><a class="el" href="#gaf80aa30f2806a17b930878841dfab7ad" title="Closes the socket, resets internal state, and throws a SocketException.">cleanupAndThrow()</a></span> or <span class="tt"><a class="el" href="#ga8bc150c503e051c12165680e74b5ae48" title="Cleans up socket resources and rethrows the currently active exception.">cleanupAndRethrow()</a></span> when control flow needs to propagate an error after cleanup.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaf80aa30f2806a17b930878841dfab7ad" title="Closes the socket, resets internal state, and throws a SocketException.">cleanupAndThrow()</a>, <a class="el" href="#ga8bc150c503e051c12165680e74b5ae48" title="Cleans up socket resources and rethrows the currently active exception.">cleanupAndRethrow()</a>, <a class="el" href="namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931">CloseSocket()</a>, <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga8bc150c503e051c12165680e74b5ae48" name="ga8bc150c503e051c12165680e74b5ae48"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga8bc150c503e051c12165680e74b5ae48">&#9670;&#160;</a></span>cleanupAndRethrow()</h2>
 
@@ -1357,47 +1411,48 @@ Common Use Cases:</h3>
 </table>
 </div><div class="memdoc">
 
-<p>Closes the socket, resets internal state, and rethrows the currently handled exception. </p>
-<p>This method is intended to be called from within a <span class="tt">catch</span> block handling a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> during socket construction or configuration. It ensures that any partially initialized or invalid TCP socket is safely cleaned up before the original exception is rethrown.</p>
+<p>Cleans up socket resources and rethrows the currently active exception. </p>
+<p>This method is intended for use within a <span class="tt">catch</span> block to safely clean up a partially initialized or failed <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> before rethrowing the active exception. It ensures that all client-side socket resources are properly released, including the socket descriptor and any resolved address info, before propagating the error.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md849"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md859"></a>
 ⚙️ Behavior</h3>
-<ul>
-<li>If the socket is valid (<span class="tt"><a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a> != INVALID_SOCKET</span>), it is closed via <span class="tt"><a class="el" href="namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931">CloseSocket()</a></span></li>
-<li>Internal resolution state is reset:<ul>
-<li><span class="tt">_cliAddrInfo</span> is released</li>
-<li><span class="tt">_selectedAddrInfo</span> is cleared</li>
+<p>Internally delegates to <span class="tt"><a class="el" href="#ga744a91706b9510d266b7c07e31f3e028" title="Internal helper that closes the socket and clears address resolution state.">cleanup()</a></span> to:</p><ul>
+<li>Close the socket if valid (<span class="tt"><a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a> != INVALID_SOCKET</span>)</li>
+<li>Reset the socket handle to <span class="tt">INVALID_SOCKET</span></li>
+<li>Release client address info (<span class="tt">_cliAddrInfo</span>)</li>
+<li>Clear <span class="tt">_selectedAddrInfo</span></li>
 </ul>
-</li>
-<li>The original exception is rethrown using <span class="tt">throw;</span></li>
-</ul>
+<p>Then immediately rethrows the current exception using <span class="tt">throw;</span>.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md851"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md861"></a>
 ⚠️ Usage Notes</h3>
 <ul>
-<li>This method must only be called from inside a <span class="tt">catch</span> block. Invoking it outside a valid exception context will cause undefined behavior or terminate the program.</li>
-<li>Do <b>not</b> pass an exception object manually — <span class="tt">throw;</span> automatically rethrows the active exception without slicing or losing context.</li>
+<li>This method <b>must</b> be called from within a <span class="tt">catch</span> block. If no active exception is present, calling <span class="tt">throw;</span> results in undefined behavior.</li>
+<li>Do <b>not</b> pass an exception object manually. <span class="tt">throw;</span> preserves the full exception context, including type, stack trace, and nested information.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md853"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md863"></a>
 🧠 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">try</span> {</div>
-<div class="line">    <span class="comment">// constructor or tuning logic</span></div>
 <div class="line">    <a class="code hl_function" href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d">setReceiveBufferSize</a>(...);</div>
 <div class="line">    <a class="code hl_function" href="group__socketopts.html#ga9839dd8837c7519a627f28b3a4c7a513">setTcpNoDelay</a>(...);</div>
 <div class="line">} <span class="keywordflow">catch</span> (<span class="keyword">const</span> <a class="code hl_class" href="classjsocketpp_1_1SocketException.html">SocketException</a>&amp;) {</div>
-<div class="line">    <a class="code hl_function" href="#ga8bc150c503e051c12165680e74b5ae48">cleanupAndRethrow</a>(); <span class="comment">// Close socket, reset state, and rethrow</span></div>
+<div class="line">    <a class="code hl_function" href="#ga8bc150c503e051c12165680e74b5ae48">cleanupAndRethrow</a>(); <span class="comment">// Ensure resources are freed, then rethrow</span></div>
 <div class="line">}</div>
 <div class="ttc" id="agroup__socketopts_html_ga69fdecc0aaaef4bbd2826c448a8bbe1d"><div class="ttname"><a href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d">jsocketpp::SocketOptions::setReceiveBufferSize</a></div><div class="ttdeci">void setReceiveBufferSize(std::size_t size)</div><div class="ttdoc">Sets the socket&#39;s receive buffer size (SO_RCVBUF).</div><div class="ttdef"><b>Definition</b> SocketOptions.cpp:110</div></div>
 <div class="ttc" id="agroup__socketopts_html_ga9839dd8837c7519a627f28b3a4c7a513"><div class="ttname"><a href="group__socketopts.html#ga9839dd8837c7519a627f28b3a4c7a513">jsocketpp::SocketOptions::setTcpNoDelay</a></div><div class="ttdeci">void setTcpNoDelay(bool on)</div><div class="ttdoc">Enables or disables Nagle’s algorithm (TCP_NODELAY) on TCP sockets.</div><div class="ttdef"><b>Definition</b> SocketOptions.cpp:264</div></div>
-<div class="ttc" id="agroup__tcp_html_ga8bc150c503e051c12165680e74b5ae48"><div class="ttname"><a href="#ga8bc150c503e051c12165680e74b5ae48">jsocketpp::Socket::cleanupAndRethrow</a></div><div class="ttdeci">void cleanupAndRethrow()</div><div class="ttdoc">Closes the socket, resets internal state, and rethrows the currently handled exception.</div><div class="ttdef"><b>Definition</b> Socket.cpp:121</div></div>
+<div class="ttc" id="agroup__tcp_html_ga8bc150c503e051c12165680e74b5ae48"><div class="ttname"><a href="#ga8bc150c503e051c12165680e74b5ae48">jsocketpp::Socket::cleanupAndRethrow</a></div><div class="ttdeci">void cleanupAndRethrow()</div><div class="ttdoc">Cleans up socket resources and rethrows the currently active exception.</div><div class="ttdef"><b>Definition</b> Socket.cpp:129</div></div>
 </div><!-- fragment --><dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>Always rethrows the currently handled exception</td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>Always rethrows the currently active exception</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaf80aa30f2806a17b930878841dfab7ad" title="Cleans up client socket resources and throws a SocketException.">cleanupAndThrow()</a>, <a class="el" href="namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931">CloseSocket()</a>, <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga744a91706b9510d266b7c07e31f3e028" title="Internal helper that closes the socket and clears address resolution state.">cleanup()</a>, <a class="el" href="#gaf80aa30f2806a17b930878841dfab7ad" title="Closes the socket, resets internal state, and throws a SocketException.">cleanupAndThrow()</a> </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a> </dd>
+<dd>
+<a class="el" href="namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931">CloseSocket()</a> </dd></dl>
 
 </div>
 </div>
@@ -1465,26 +1520,53 @@ Common Use Cases:</h3>
 </table>
 </div><div class="memdoc">
 
-<p>Cleans up client socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>. </p>
-<p>This method performs internal cleanup of the client socket's resources, including:</p><ul>
-<li>Closing the socket if it is open (<span class="tt"><a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a></span>)</li>
-<li>Releasing any allocated address resolution data (<span class="tt">_cliAddrInfo</span>)</li>
-<li>Resetting <span class="tt">_selectedAddrInfo</span> to null</li>
+<p>Closes the socket, resets internal state, and throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>. </p>
+<p>This method performs safe cleanup of all internal socket resources and throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> with the specified error code and human-readable message. It is used to centralize error handling during socket creation or connection setup, ensuring that no resources are leaked if initialization fails.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md854"></a>
+⚙️ Behavior</h3>
+<p>Internally, this method delegates to <span class="tt"><a class="el" href="#ga744a91706b9510d266b7c07e31f3e028" title="Internal helper that closes the socket and clears address resolution state.">cleanup()</a></span> to:</p><ul>
+<li>Close the socket if it's open (<span class="tt"><a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a></span>)</li>
+<li>Reset the socket handle to <span class="tt">INVALID_SOCKET</span></li>
+<li>Release address resolution results (<span class="tt">_cliAddrInfo</span>)</li>
+<li>Clear the active address pointer (<span class="tt">_selectedAddrInfo</span>)</li>
 </ul>
-<p>It is used to centralize error recovery during construction or connection setup, ensuring that all partially initialized resources are properly released before rethrowing an exception.</p>
+<p>It then throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> with:</p><ul>
+<li>The provided <span class="tt">errorCode</span></li>
+<li>The result of <span class="tt">SocketErrorMessage(errorCode)</span></li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md856"></a>
+🧠 Example</h3>
+<div class="fragment"><div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="#ga93cc325113abb7433288338ca3facde1">::connect</a>(<a class="code hl_function" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794">getSocketFd</a>(), ...) == <a class="code hl_variable" href="namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2">SOCKET_ERROR</a>)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code hl_function" href="#gaf80aa30f2806a17b930878841dfab7ad">cleanupAndThrow</a>(<a class="code hl_function" href="namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad">GetSocketError</a>());</div>
+<div class="line">}</div>
+<div class="ttc" id="agroup__socketopts_html_gaced4c6dc799564ece9ce4e6766b1d794"><div class="ttname"><a href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794">jsocketpp::SocketOptions::getSocketFd</a></div><div class="ttdeci">SOCKET getSocketFd() const noexcept</div><div class="ttdoc">Retrieves the native socket handle (file descriptor or OS-level handle).</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:275</div></div>
+<div class="ttc" id="agroup__tcp_html_ga93cc325113abb7433288338ca3facde1"><div class="ttname"><a href="#ga93cc325113abb7433288338ca3facde1">jsocketpp::Socket::connect</a></div><div class="ttdeci">void connect(int timeoutMillis=-1)</div><div class="ttdoc">Establishes a TCP connection to the remote host with optional timeout control.</div><div class="ttdef"><b>Definition</b> Socket.cpp:197</div></div>
+<div class="ttc" id="agroup__tcp_html_gaf80aa30f2806a17b930878841dfab7ad"><div class="ttname"><a href="#gaf80aa30f2806a17b930878841dfab7ad">jsocketpp::Socket::cleanupAndThrow</a></div><div class="ttdeci">void cleanupAndThrow(int errorCode)</div><div class="ttdoc">Closes the socket, resets internal state, and throws a SocketException.</div><div class="ttdef"><b>Definition</b> Socket.cpp:123</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_aac009a479ad7c6c77530e5e270cb25ad"><div class="ttname"><a href="namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad">jsocketpp::GetSocketError</a></div><div class="ttdeci">int GetSocketError()</div><div class="ttdef"><b>Definition</b> common.hpp:221</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_adc2dd9860dec2a3c3189e756288d5ba2"><div class="ttname"><a href="namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2">jsocketpp::SOCKET_ERROR</a></div><div class="ttdeci">constexpr SOCKET SOCKET_ERROR</div><div class="ttdef"><b>Definition</b> common.hpp:240</div></div>
+</div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">errorCode</td><td>The error code to report in the thrown exception.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">errorCode</td><td>The error code to report in the thrown <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span></td></tr>
   </table>
   </dd>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>Always throws, containing the error code and the corresponding human-readable error message obtained via <span class="tt">SocketErrorMessage(errorCode)</span>.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>Always throws after cleanup</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>This function is typically called when socket creation, address resolution, or connection setup fails during client socket initialization. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga744a91706b9510d266b7c07e31f3e028" title="Internal helper that closes the socket and clears address resolution state.">cleanup()</a> </dd>
+<dd>
+<a class="el" href="#ga8bc150c503e051c12165680e74b5ae48" title="Cleans up socket resources and rethrows the currently active exception.">cleanupAndRethrow()</a> </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a> </dd>
+<dd>
+<a class="el" href="namespacejsocketpp.html#a1d0357025eb782be52907801696556ca" title="Returns a human-readable error message for a socket error code.">SocketErrorMessage()</a> </dd></dl>
 
 </div>
 </div>
@@ -2273,7 +2355,7 @@ Use Cases</h3>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga6da94c322a3ed5f85efd26a7fbadbe0a">Socket</a> client = serverSocket.accept();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Client IP: &quot;</span> &lt;&lt; client.<a class="code hl_function" href="#ga273e2d4847b5407bb8eef56d9e88996e">getRemoteIp</a>() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="ttc" id="agroup__tcp_html_ga273e2d4847b5407bb8eef56d9e88996e"><div class="ttname"><a href="#ga273e2d4847b5407bb8eef56d9e88996e">jsocketpp::Socket::getRemoteIp</a></div><div class="ttdeci">std::string getRemoteIp(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Retrieves the IP address of the remote peer this TCP socket is connected to.</div><div class="ttdef"><b>Definition</b> Socket.cpp:406</div></div>
+<div class="ttc" id="agroup__tcp_html_ga273e2d4847b5407bb8eef56d9e88996e"><div class="ttname"><a href="#ga273e2d4847b5407bb8eef56d9e88996e">jsocketpp::Socket::getRemoteIp</a></div><div class="ttdeci">std::string getRemoteIp(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Retrieves the IP address of the remote peer this TCP socket is connected to.</div><div class="ttdef"><b>Definition</b> Socket.cpp:410</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>Whether to normalize IPv4-mapped IPv6 addresses (default = true) </td></tr>
@@ -2333,7 +2415,7 @@ Use Cases</h3>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga6da94c322a3ed5f85efd26a7fbadbe0a">Socket</a> client = serverSocket.accept();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Client is connected on port: &quot;</span> &lt;&lt; client.<a class="code hl_function" href="#ga2840142258bae9535c6421d6cd3dce1c">getRemotePort</a>() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="ttc" id="agroup__tcp_html_ga2840142258bae9535c6421d6cd3dce1c"><div class="ttname"><a href="#ga2840142258bae9535c6421d6cd3dce1c">jsocketpp::Socket::getRemotePort</a></div><div class="ttdeci">Port getRemotePort() const</div><div class="ttdoc">Retrieves the port number of the remote peer this TCP socket is connected to.</div><div class="ttdef"><b>Definition</b> Socket.cpp:420</div></div>
+<div class="ttc" id="agroup__tcp_html_ga2840142258bae9535c6421d6cd3dce1c"><div class="ttname"><a href="#ga2840142258bae9535c6421d6cd3dce1c">jsocketpp::Socket::getRemotePort</a></div><div class="ttdeci">Port getRemotePort() const</div><div class="ttdoc">Retrieves the port number of the remote peer this TCP socket is connected to.</div><div class="ttdef"><b>Definition</b> Socket.cpp:424</div></div>
 </div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>The port number of the connected peer (host byte order).</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
@@ -2394,7 +2476,7 @@ Use Cases</h3>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga6da94c322a3ed5f85efd26a7fbadbe0a">Socket</a> client = serverSocket.accept();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Client connected from: &quot;</span> &lt;&lt; client.<a class="code hl_function" href="#ga92c62bf727779c6d7395809084f9e4dc">getRemoteSocketAddress</a>() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="ttc" id="agroup__tcp_html_ga92c62bf727779c6d7395809084f9e4dc"><div class="ttname"><a href="#ga92c62bf727779c6d7395809084f9e4dc">jsocketpp::Socket::getRemoteSocketAddress</a></div><div class="ttdeci">std::string getRemoteSocketAddress(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Get the connected peer&#39;s socket address as a formatted string.</div><div class="ttdef"><b>Definition</b> Socket.cpp:434</div></div>
+<div class="ttc" id="agroup__tcp_html_ga92c62bf727779c6d7395809084f9e4dc"><div class="ttname"><a href="#ga92c62bf727779c6d7395809084f9e4dc">jsocketpp::Socket::getRemoteSocketAddress</a></div><div class="ttdeci">std::string getRemoteSocketAddress(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Get the connected peer&#39;s socket address as a formatted string.</div><div class="ttdef"><b>Definition</b> Socket.cpp:438</div></div>
 </div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
