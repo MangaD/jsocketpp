@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['cleanup_0',['cleanup',['../group__tcp.html#ga744a91706b9510d266b7c07e31f3e028',1,'jsocketpp::Socket']]],
-  ['cleanupandrethrow_1',['cleanupAndRethrow',['../group__tcp.html#ga8bc150c503e051c12165680e74b5ae48',1,'jsocketpp::Socket']]],
-  ['cleanupandthrow_2',['cleanupAndThrow',['../classjsocketpp_1_1DatagramSocket.html#a1973415ece2f77f191b250b9e9690733',1,'jsocketpp::DatagramSocket::cleanupAndThrow()'],['../group__tcp.html#gab5572cb795d9b45ee50a0ddf9cb9c075',1,'jsocketpp::ServerSocket::cleanupAndThrow()'],['../group__tcp.html#gaf80aa30f2806a17b930878841dfab7ad',1,'jsocketpp::Socket::cleanupAndThrow()']]],
+  ['cleanup_0',['cleanup',['../group__udp.html#gaa0727094596347aa858629f6e5c7febf',1,'jsocketpp::DatagramSocket::cleanup()'],['../group__tcp.html#ga2a630f28a613224176ff17f7ee0c6a4c',1,'jsocketpp::ServerSocket::cleanup()'],['../group__tcp.html#ga744a91706b9510d266b7c07e31f3e028',1,'jsocketpp::Socket::cleanup()']]],
+  ['cleanupandrethrow_1',['cleanupAndRethrow',['../group__udp.html#ga6608c56d08ccdb2807bd47cc862af24a',1,'jsocketpp::DatagramSocket::cleanupAndRethrow()'],['../group__tcp.html#ga33183210cdc2a1e281006e325cc2a173',1,'jsocketpp::ServerSocket::cleanupAndRethrow()'],['../group__tcp.html#ga8bc150c503e051c12165680e74b5ae48',1,'jsocketpp::Socket::cleanupAndRethrow()']]],
+  ['cleanupandthrow_2',['cleanupAndThrow',['../group__udp.html#ga1973415ece2f77f191b250b9e9690733',1,'jsocketpp::DatagramSocket::cleanupAndThrow()'],['../group__tcp.html#gab5572cb795d9b45ee50a0ddf9cb9c075',1,'jsocketpp::ServerSocket::cleanupAndThrow()'],['../group__tcp.html#gaf80aa30f2806a17b930878841dfab7ad',1,'jsocketpp::Socket::cleanupAndThrow()']]],
   ['cleanupsockets_3',['CleanupSockets',['../namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c',1,'jsocketpp']]],
   ['clear_4',['clear',['../classjsocketpp_1_1DatagramPacket.html#a7853459de9f4e83363ed341bb465930a',1,'jsocketpp::DatagramPacket']]],
   ['close_5',['close',['../group__udp.html#ga9d0a9582b3a2a72bf62f182dbc33c352',1,'jsocketpp::DatagramSocket::close()'],['../group__tcp.html#ga0245d40096ca089255c67303eebf17e6',1,'jsocketpp::ServerSocket::close()'],['../group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8',1,'jsocketpp::Socket::close()'],['../classjsocketpp_1_1UnixSocket.html#a3f87192fe9d9c81a3d78e007bfc40179',1,'jsocketpp::UnixSocket::close()']]],

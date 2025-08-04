@@ -12,6 +12,8 @@ var classjsocketpp_1_1ServerSocket =
     [ "acceptBlocking", "group__tcp.html#ga4cc6cc771e29a9d1964cb8b351262318", null ],
     [ "acceptNonBlocking", "group__tcp.html#gaa825d267c5cba8febdd2824282869ac1", null ],
     [ "bind", "group__tcp.html#ga1ca989ba16d32862dd4fa9bbb2b165b5", null ],
+    [ "cleanup", "group__tcp.html#ga2a630f28a613224176ff17f7ee0c6a4c", null ],
+    [ "cleanupAndRethrow", "group__tcp.html#ga33183210cdc2a1e281006e325cc2a173", null ],
     [ "cleanupAndThrow", "group__tcp.html#gab5572cb795d9b45ee50a0ddf9cb9c075", null ],
     [ "close", "group__tcp.html#ga0245d40096ca089255c67303eebf17e6", null ],
     [ "getDefaultInternalBufferSize", "group__tcp.html#gac1f9d646223bb7c733216b484f517d46", null ],

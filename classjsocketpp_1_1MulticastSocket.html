@@ -292,8 +292,12 @@ Private Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_methods_classjsocketpp_1_1DatagramSocket"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classjsocketpp_1_1DatagramSocket')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a></td></tr>
-<tr class="memitem:a1973415ece2f77f191b250b9e9690733 inherit pro_methods_classjsocketpp_1_1DatagramSocket" id="r_a1973415ece2f77f191b250b9e9690733"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a1973415ece2f77f191b250b9e9690733">cleanupAndThrow</a> (int errorCode)</td></tr>
-<tr class="memdesc:a1973415ece2f77f191b250b9e9690733 inherit pro_methods_classjsocketpp_1_1DatagramSocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up datagram socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.  <br /></td></tr>
+<tr class="memitem:gaa0727094596347aa858629f6e5c7febf inherit pro_methods_classjsocketpp_1_1DatagramSocket" id="r_gaa0727094596347aa858629f6e5c7febf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gaa0727094596347aa858629f6e5c7febf">cleanup</a> ()</td></tr>
+<tr class="memdesc:gaa0727094596347aa858629f6e5c7febf inherit pro_methods_classjsocketpp_1_1DatagramSocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal helper that releases socket resources and resets all internal state.  <br /></td></tr>
+<tr class="memitem:ga1973415ece2f77f191b250b9e9690733 inherit pro_methods_classjsocketpp_1_1DatagramSocket" id="r_ga1973415ece2f77f191b250b9e9690733"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga1973415ece2f77f191b250b9e9690733">cleanupAndThrow</a> (int errorCode)</td></tr>
+<tr class="memdesc:ga1973415ece2f77f191b250b9e9690733 inherit pro_methods_classjsocketpp_1_1DatagramSocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Releases all socket resources and throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> with the given error code.  <br /></td></tr>
+<tr class="memitem:ga6608c56d08ccdb2807bd47cc862af24a inherit pro_methods_classjsocketpp_1_1DatagramSocket" id="r_ga6608c56d08ccdb2807bd47cc862af24a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga6608c56d08ccdb2807bd47cc862af24a">cleanupAndRethrow</a> ()</td></tr>
+<tr class="memdesc:ga6608c56d08ccdb2807bd47cc862af24a inherit pro_methods_classjsocketpp_1_1DatagramSocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up the datagram socket and rethrows the currently active exception.  <br /></td></tr>
 <tr class="inherit_header pro_methods_classjsocketpp_1_1SocketOptions"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classjsocketpp_1_1SocketOptions')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classjsocketpp_1_1SocketOptions.html">jsocketpp::SocketOptions</a></td></tr>
 <tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d inherit pro_methods_classjsocketpp_1_1SocketOptions" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
 <tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d inherit pro_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the socket descriptor used by this object.  <br /></td></tr>
@@ -308,14 +312,14 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Cross-platform multicast UDP socket class (IPv4/IPv6). </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a></span> class extends <a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> to provide high-level, Java-inspired support for multicast networking. It works on both Windows and Linux, and supports both IPv4 and IPv6 multicast groups.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md604"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md622"></a>
 What is Multicast?</h3>
 <ul>
 <li><b>Multicast</b> allows you to send a single UDP packet to multiple hosts subscribed to a multicast group address.</li>
 <li>It is useful for applications such as real-time data feeds, streaming media, and network discovery protocols.</li>
 <li>Each group is identified by a special IP address (224.0.0.0–239.255.255.255 for IPv4, <span class="tt">ff00::/8</span> for IPv6).</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md605"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md623"></a>
 Usage Example (Receiving)</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
 <div class="line">* <span class="comment">// Create a multicast socket bound to port 5000</span></div>
@@ -333,7 +337,7 @@ Usage Example (Receiving)</h3>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramPacket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramPacket.html">jsocketpp::DatagramPacket</a></div><div class="ttdoc">Represents a UDP datagram packet, encapsulating both payload and addressing information.</div><div class="ttdef"><b>Definition</b> DatagramPacket.hpp:48</div></div>
 <div class="ttc" id="agroup__udp_html_ga379ff0e20d62b5f0c815d48614597005"><div class="ttname"><a href="group__udp.html#ga379ff0e20d62b5f0c815d48614597005">jsocketpp::MulticastSocket::MulticastSocket</a></div><div class="ttdeci">MulticastSocket()=delete</div><div class="ttdoc">Default constructor (deleted) for MulticastSocket class.</div></div>
 <div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md606"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md624"></a>
 Usage Example (Sending)</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
 <div class="line"> </div>
@@ -343,7 +347,7 @@ Usage Example (Sending)</h3>
 <div class="line">socket.<a class="code hl_function" href="group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df">write</a>(packet);</div>
 <div class="ttc" id="aclassjsocketpp_1_1MulticastSocket_html_a72172a10bc5ba13a908f31c791c90ec5"><div class="ttname"><a href="#a72172a10bc5ba13a908f31c791c90ec5">jsocketpp::MulticastSocket::setTimeToLive</a></div><div class="ttdeci">void setTimeToLive(int ttl)</div><div class="ttdoc">Set the time-to-live (TTL) for outgoing multicast packets.</div><div class="ttdef"><b>Definition</b> MulticastSocket.cpp:385</div></div>
 <div class="ttc" id="agroup__udp_html_ga87c837cd891ddd8b4daeacc61e1326df"><div class="ttname"><a href="group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">void write(const T &amp;value)</div><div class="ttdoc">Writes a trivially copyable object of type T to the connected remote peer.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:1022</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md607"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md625"></a>
 Features</h3>
 <ul>
 <li>Join/leave multicast groups on a specific interface or all interfaces.</li>

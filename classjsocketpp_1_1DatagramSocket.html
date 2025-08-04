@@ -257,8 +257,12 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a1973415ece2f77f191b250b9e9690733" id="r_a1973415ece2f77f191b250b9e9690733"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1973415ece2f77f191b250b9e9690733">cleanupAndThrow</a> (int errorCode)</td></tr>
-<tr class="memdesc:a1973415ece2f77f191b250b9e9690733"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up datagram socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>.  <br /></td></tr>
+<tr class="memitem:gaa0727094596347aa858629f6e5c7febf" id="r_gaa0727094596347aa858629f6e5c7febf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gaa0727094596347aa858629f6e5c7febf">cleanup</a> ()</td></tr>
+<tr class="memdesc:gaa0727094596347aa858629f6e5c7febf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal helper that releases socket resources and resets all internal state.  <br /></td></tr>
+<tr class="memitem:ga1973415ece2f77f191b250b9e9690733" id="r_ga1973415ece2f77f191b250b9e9690733"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga1973415ece2f77f191b250b9e9690733">cleanupAndThrow</a> (int errorCode)</td></tr>
+<tr class="memdesc:ga1973415ece2f77f191b250b9e9690733"><td class="mdescLeft">&#160;</td><td class="mdescRight">Releases all socket resources and throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> with the given error code.  <br /></td></tr>
+<tr class="memitem:ga6608c56d08ccdb2807bd47cc862af24a" id="r_ga6608c56d08ccdb2807bd47cc862af24a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga6608c56d08ccdb2807bd47cc862af24a">cleanupAndRethrow</a> ()</td></tr>
+<tr class="memdesc:ga6608c56d08ccdb2807bd47cc862af24a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up the datagram socket and rethrows the currently active exception.  <br /></td></tr>
 <tr class="inherit_header pro_methods_classjsocketpp_1_1SocketOptions"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classjsocketpp_1_1SocketOptions')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classjsocketpp_1_1SocketOptions.html">jsocketpp::SocketOptions</a></td></tr>
 <tr class="memitem:ga97706ddf21aab33a18db00bd0b8eb65d inherit pro_methods_classjsocketpp_1_1SocketOptions" id="r_ga97706ddf21aab33a18db00bd0b8eb65d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga97706ddf21aab33a18db00bd0b8eb65d">setSocketFd</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock) noexcept</td></tr>
 <tr class="memdesc:ga97706ddf21aab33a18db00bd0b8eb65d inherit pro_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the socket descriptor used by this object.  <br /></td></tr>
@@ -339,7 +343,7 @@ Example: Simple UDP Echo Server and Client</h2>
 <div class="line">    client.<a class="code hl_function" href="#a58152e567e2d41ee6d612355ac0eb548">read</a>(response);</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Server replied: &quot;</span> &lt;&lt; std::string(response.buffer.begin(), response.buffer.end()) &lt;&lt; std::endl;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_a58152e567e2d41ee6d612355ac0eb548"><div class="ttname"><a href="#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket::read</a></div><div class="ttdeci">size_t read(DatagramPacket &amp;packet, bool resizeBuffer=true) const</div><div class="ttdoc">Receives a UDP datagram and fills the provided DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:520</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_a58152e567e2d41ee6d612355ac0eb548"><div class="ttname"><a href="#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket::read</a></div><div class="ttdeci">size_t read(DatagramPacket &amp;packet, bool resizeBuffer=true) const</div><div class="ttdoc">Receives a UDP datagram and fills the provided DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:533</div></div>
 <div class="ttc" id="agroup__udp_html_ga87c837cd891ddd8b4daeacc61e1326df"><div class="ttname"><a href="group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">void write(const T &amp;value)</div><div class="ttdoc">Writes a trivially copyable object of type T to the connected remote peer.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:1022</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md467"></a>
 Notes</h2>
@@ -352,46 +356,6 @@ Notes</h2>
 <dd>
 <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">jsocketpp::SocketException</a> </dd></dl>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a1973415ece2f77f191b250b9e9690733" name="a1973415ece2f77f191b250b9e9690733"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1973415ece2f77f191b250b9e9690733">&#9670;&#160;</a></span>cleanupAndThrow()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void DatagramSocket::cleanupAndThrow </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>errorCode</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Cleans up datagram socket resources and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a>. </p>
-<p>This method performs cleanup of the address information structures (_addrInfoPtr) and throws a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a> with the provided error code. It's typically called when an error occurs during socket initialization or configuration.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">errorCode</td><td>The error code to include in the thrown exception </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>Always throws with the provided error code and corresponding message </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a58152e567e2d41ee6d612355ac0eb548" name="a58152e567e2d41ee6d612355ac0eb548"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a58152e567e2d41ee6d612355ac0eb548">&#9670;&#160;</a></span>read()</h2>
 
