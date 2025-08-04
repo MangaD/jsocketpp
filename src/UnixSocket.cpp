@@ -6,7 +6,7 @@ using namespace jsocketpp;
 #if defined(_WIN32) && defined(AF_UNIX) || defined(__unix__) || defined(__APPLE__)
 
 UnixSocket::UnixSocket(const std::string_view path, const std::size_t bufferSize)
-    : SocketOptions(INVALID_SOCKET), _socketPath(path), _buffer(bufferSize)
+    : SocketOptions(INVALID_SOCKET), _socketPath(path), _internalBuffer(bufferSize)
 {
     if (path.length() >= sizeof(_addr.sun_path))
     {
@@ -45,7 +45,7 @@ UnixSocket::~UnixSocket() noexcept
 
 UnixSocket::UnixSocket(UnixSocket&& rhs) noexcept
     : SocketOptions(rhs.getSocketFd()), _isListening(rhs._isListening), _socketPath(std::move(rhs._socketPath)),
-      _addr(rhs._addr), _buffer(std::move(rhs._buffer))
+      _addr(rhs._addr), _internalBuffer(std::move(rhs._internalBuffer))
 {
     rhs.setSocketFd(INVALID_SOCKET);
     rhs._socketPath.clear();
@@ -61,7 +61,7 @@ UnixSocket& UnixSocket::operator=(UnixSocket&& rhs) noexcept
 
         setSocketFd(rhs.getSocketFd());
         _socketPath = std::move(rhs._socketPath);
-        _buffer = std::move(rhs._buffer);
+        _internalBuffer = std::move(rhs._internalBuffer);
         _addr = rhs._addr;
         _isListening = rhs._isListening;
 

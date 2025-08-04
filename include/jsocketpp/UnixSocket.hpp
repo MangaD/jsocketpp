@@ -244,13 +244,13 @@ class UnixSocket : SocketOptions
     /**
      * @brief Default constructor for internal use (e.g., accept()).
      */
-    UnixSocket() : SocketOptions(INVALID_SOCKET), _buffer(512) {}
+    UnixSocket() : SocketOptions(INVALID_SOCKET), _internalBuffer(512) {}
 
   private:
-    bool _isListening = false; ///< True if the socket is listening for connections.
-    std::string _socketPath{}; ///< Path for the Unix domain socket.
-    SOCKADDR_UN _addr{};       ///< Address structure for Unix domain sockets.
-    std::vector<char> _buffer; ///< Internal buffer for read operations.
+    bool _isListening = false;         ///< True if the socket is listening for connections.
+    std::string _socketPath{};         ///< Path for the Unix domain socket.
+    SOCKADDR_UN _addr{};               ///< Address structure for Unix domain sockets.
+    std::vector<char> _internalBuffer; ///< Internal buffer for read operations.
 };
 
 /**
@@ -266,18 +266,18 @@ class UnixSocket : SocketOptions
  */
 template <> inline std::string UnixSocket::read()
 {
-    const auto len = static_cast<int>(recv(getSocketFd(), _buffer.data(),
+    const auto len = static_cast<int>(recv(getSocketFd(), _internalBuffer.data(),
 #ifdef _WIN32
-                                           static_cast<int>(_buffer.size()),
+                                           static_cast<int>(_internalBuffer.size()),
 #else
-                                           _buffer.size(),
+                                           _internalBuffer.size(),
 #endif
                                            0));
     if (len == SOCKET_ERROR)
         throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
     if (len == 0)
         throw SocketException("Connection closed by remote socket.");
-    return {_buffer.data(), static_cast<size_t>(len)};
+    return {_internalBuffer.data(), static_cast<size_t>(len)};
 }
 
 #endif

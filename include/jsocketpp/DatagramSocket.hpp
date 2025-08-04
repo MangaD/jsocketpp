@@ -13,6 +13,7 @@
 #include "SocketOptions.hpp"
 
 #include <bit>
+#include <optional>
 #include <string>
 
 namespace jsocketpp
@@ -109,80 +110,95 @@ class DatagramSocket : public SocketOptions
     DatagramSocket() = delete;
 
     /**
-     * @brief Constructs a UDP socket, optionally bound to the specified local port.
+     * @brief Constructs a UDP datagram socket with full configuration and optional binding.
      * @ingroup udp
      *
-     * Initializes a new `DatagramSocket` and binds it to the given local port. If `port` is set to `0`,
-     * the system will assign an ephemeral port automatically. The internal receive buffer is sized
-     * according to the provided `bufferSize` parameter.
+     * This constructor creates a UDP socket and allows full control over socket behavior and tuning:
+     * buffer sizes, timeouts, blocking mode, dual-stack IPv6 behavior, and whether to auto-bind to a local port.
      *
-     * This constructor is commonly used for both client and server scenarios:
-     * - **Server mode**: Bind to a fixed port (e.g., `8888`) so clients know where to send packets.
-     * - **Client mode**: Use port `0` to auto-select an available ephemeral port.
+     * ---
      *
-     * ### Buffer Size Notes
-     * The `bufferSize` parameter defines the size of the internal receive buffer. Choose a size
-     * appropriate to your application's expected datagram payload size:
+     * ### ⚙️ Behavior
+     * - Resolves the local address using `getaddrinfo()`
+     * - Prioritizes IPv6 addresses (if `dualStack` is `true`) and disables `IPV6_V6ONLY` to allow IPv4-mapped datagrams
+     * - Falls back to IPv4 if IPv6 creation fails or `dualStack` is `false`
+     * - Applies system-level socket options (e.g. `SO_REUSEADDR`, `SO_RCVBUF`, `SO_SNDBUF`, timeouts)
+     * - Applies internal buffer configuration for `read<std::string>()`
+     * - Binds the socket to the specified local address/port if `autoBind == true`
      *
-     * - **Maximum UDP payloads**:
-     *   - IPv4: up to 65,507 bytes
-     *   - IPv6: up to 65,527 bytes
-     * - **Typical practical values**: 1024, 2048, 4096, 8192
+     * ---
      *
-     * Exceeding the maximum payload size will cause packet truncation.
+     * ### 🔁 Buffer Configuration
+     * - `recvBufferSize`: OS-level receive buffer size (`SO_RCVBUF`)
+     * - `sendBufferSize`: OS-level send buffer size (`SO_SNDBUF`)
+     * - `internalBufferSize`: Internal buffer used for `read<std::string>()`
+     * - If omitted, each size defaults to `DefaultBufferSize`
      *
-     * @param[in] port The local UDP port to bind to. Use `0` to auto-select a port.
-     * @param[in] bufferSize Size (in bytes) of the receive buffer. Defaults to `DefaultBufferSize` (4096 bytes).
+     * ---
      *
-     * @throws SocketException if socket creation or binding fails.
+     * ### 🌐 Dual-Stack and IPv6 Behavior
+     * - If `dualStack == true`, tries IPv6 first and disables `IPV6_V6ONLY` to accept both IPv6 and IPv4 traffic
+     * - If `dualStack == false`, only IPv4 addresses are attempted
      *
-     * @code{.cpp}
-     * DatagramSocket server(12345);       // ✅ Server socket on port 12345
-     * DatagramSocket client(0, 4096);     // ✅ Client socket with auto-assigned port
+     * ---
+     *
+     * ### ⚠️ Exception Safety
+     * If any operation fails (resolution, socket creation, configuration, or binding), the socket is closed
+     * and a `SocketException` is thrown. All resources are properly cleaned up.
+     *
+     * ---
+     *
+     * ### 🧪 Example
+     * @code
+     * using namespace jsocketpp;
+     *
+     * DatagramSocket udp(
+     *     12345,              // port
+     *     "",                 // bind to all interfaces
+     *     8192,               // receive buffer
+     *     4096,               // send buffer
+     *     8192,               // internal buffer for string reads
+     *     true,               // reuse address
+     *     3000,               // receive timeout (ms)
+     *     1000,               // send timeout (ms)
+     *     true,               // non-blocking
+     *     true,               // dual-stack IPv6+IPv4
+     *     true                // auto-bind
+     * );
      * @endcode
      *
-     * @see DefaultBufferSize for tuning guidelines and rationale
-     * @see read(), write(), bind() for usage
+     * ---
+     *
+     * @param[in] port The local port number to bind to (e.g., 12345)
+     * @param[in] localAddress The local IP address to bind to (e.g., "127.0.0.1", "::", or empty for all interfaces)
+     * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`) in bytes
+     * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`) in bytes
+     * @param[in] internalBufferSize Optional internal buffer size for `read<std::string>()` operations
+     * @param[in] reuseAddress Whether to enable `SO_REUSEADDR` before binding
+     * @param[in] soRecvTimeoutMillis Socket receive timeout in milliseconds (`SO_RCVTIMEO`). `-1` disables
+     * @param[in] soSendTimeoutMillis Socket send timeout in milliseconds (`SO_SNDTIMEO`). `-1` disables
+     * @param[in] nonBlocking If `true`, the socket is set to non-blocking mode immediately after creation
+     * @param[in] dualStack If `true`, enables IPv6+IPv4 support (via mapped IPv4 addresses)
+     * @param[in] autoBind If `true`, automatically binds the socket to the resolved address and port
+     *
+     * @throws SocketException If address resolution, socket creation, configuration, or binding fails
+     *
+     * @see setInternalBufferSize()
+     * @see setReceiveBufferSize()
+     * @see setSendBufferSize()
+     * @see setSoRecvTimeout()
+     * @see setSoSendTimeout()
+     * @see setNonBlocking()
+     * @see setReuseAddress()
+     * @see bind()
+     * @see isDualStack()
      */
-    explicit DatagramSocket(Port port, std::size_t bufferSize = DefaultBufferSize);
-
-    /**
-     * @brief Constructs a datagram socket and resolves the given remote host and port.
-     * @ingroup udp
-     *
-     * This constructor initializes a UDP `DatagramSocket` and resolves the provided remote
-     * `host` and `port`, preparing the socket for a later connection via `connect()` or
-     * for direct use in connectionless communication (e.g., `write(message, host, port)`).
-     *
-     * @note This constructor does **not** automatically call `connect()`.
-     *       The socket remains unconnected until `connect()` is explicitly invoked.
-     *       This allows greater flexibility for connectionless communication or deferred setup.
-     *
-     * ### Usage Patterns
-     * - Call `connect()` manually if you want to establish a default remote peer.
-     * - Or use the `write(message, host, port)` overload for connectionless sends.
-     * - Or call `bind()` to use it as a UDP server or receiver.
-     *
-     * ### Buffering
-     * The internal read buffer is sized according to `bufferSize`. This buffer is used for
-     * reading fixed-size or string messages when the socket is in connected mode.
-     *
-     * @param[in] host Hostname or IP address of the intended remote peer (IPv4 or IPv6).
-     *             Leave empty for local binding or unconnected use.
-     * @param[in] port UDP port number of the peer or target address.
-     * @param[in] bufferSize Size of the internal receive buffer in bytes. Defaults to `DefaultBufferSize`.
-     *
-     * @throws SocketException if socket creation or address resolution fails.
-     *
-     * @code{.cpp}
-     * DatagramSocket client("example.com", 9999); // Prepare for later connect()
-     * client.connect();                           // ✅ Explicitly connect when ready
-     * client.write("Hello");                      // Send to connected peer
-     * @endcode
-     *
-     * @see connect(), bind(), write(), DefaultBufferSize
-     */
-    DatagramSocket(std::string_view host, Port port, std::size_t bufferSize = DefaultBufferSize);
+    explicit DatagramSocket(Port port, std::string_view localAddress = "",
+                            std::optional<std::size_t> recvBufferSize = std::nullopt,
+                            std::optional<std::size_t> sendBufferSize = std::nullopt,
+                            std::optional<std::size_t> internalBufferSize = std::nullopt, bool reuseAddress = true,
+                            int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1, bool nonBlocking = false,
+                            bool dualStack = true, bool autoBind = true);
 
     /**
      * @brief Destructor. Closes the socket and releases all associated resources.
@@ -297,13 +313,17 @@ class DatagramSocket : public SocketOptions
      */
     DatagramSocket(DatagramSocket&& rhs) noexcept
         : SocketOptions(rhs.getSocketFd()), _addrInfoPtr(std::move(rhs._addrInfoPtr)),
-          _selectedAddrInfo(rhs._selectedAddrInfo), _localAddr(rhs._localAddr), _localAddrLen(rhs._localAddrLen),
-          _buffer(std::move(rhs._buffer)), _port(rhs._port)
+          _selectedAddrInfo(rhs._selectedAddrInfo), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
+          _localAddr(rhs._localAddr), _localAddrLen(rhs._localAddrLen), _internalBuffer(std::move(rhs._internalBuffer)),
+          _port(rhs._port), _isBound(rhs._isBound), _isConnected(rhs._isConnected)
     {
         rhs.setSocketFd(INVALID_SOCKET);
         rhs._selectedAddrInfo = nullptr;
+        rhs._remoteAddrLen = 0;
         rhs._localAddrLen = 0;
         rhs._port = 0;
+        rhs._isBound = false;
+        rhs._isConnected = false;
     }
 
     /**
@@ -360,19 +380,26 @@ class DatagramSocket : public SocketOptions
 
             // Transfer ownership
             setSocketFd(rhs.getSocketFd());
+            _remoteAddr = rhs._remoteAddr;
+            _remoteAddrLen = rhs._remoteAddrLen;
             _localAddr = rhs._localAddr;
             _localAddrLen = rhs._localAddrLen;
             _addrInfoPtr = std::move(rhs._addrInfoPtr);
             _selectedAddrInfo = rhs._selectedAddrInfo;
-            _buffer = std::move(rhs._buffer);
+            _internalBuffer = std::move(rhs._internalBuffer);
             _port = rhs._port;
+            _isBound = rhs._isBound;
+            _isConnected = rhs._isConnected;
 
             // Reset source
             rhs.setSocketFd(INVALID_SOCKET);
             rhs._addrInfoPtr = nullptr;
             rhs._selectedAddrInfo = nullptr;
+            rhs._remoteAddrLen = 0;
             rhs._localAddrLen = 0;
             rhs._port = 0;
+            rhs._isBound = false;
+            rhs._isConnected = false;
         }
         return *this;
     }
@@ -1018,91 +1045,93 @@ class DatagramSocket : public SocketOptions
     }
 
     /**
-     * @brief Sends a trivially copyable object of type `T` to the specified destination address.
+     * @brief Sends a trivially copyable object of type `T` as a UDP datagram to the specified destination.
      * @ingroup udp
      *
-     * This overload is intended for use with **unconnected** datagram sockets. It allows you to send
-     * a fixed-size, binary-safe object to an arbitrary target address, without requiring a prior `connect()`.
+     * This method serializes the given object into raw binary form and sends it using `sendto()`
+     * to the specified IP address and port. It works regardless of whether the socket is connected.
      *
      * ---
      *
-     * ### Requirements
-     * - The socket must be open and bound (or let the OS assign a port).
+     * ### Constraints
+     * - The socket must be open
      * - The type `T` must be:
      *   - `std::is_trivially_copyable_v<T> == true`
      *   - `std::is_standard_layout_v<T> == true`
+     * - The destination host must be a valid resolvable IP/hostname
      *
      * ---
      *
      * ### Behavior
-     * - Performs a `std::bit_cast` of the object to a `std::array<std::byte, sizeof(T)>`
-     * - Sends the entire array in a single `sendto()` call
-     * - No endianness normalization, padding adjustment, or framing is applied
+     * - Resolves the remote endpoint using `getaddrinfo()`, using the socket's address family (`_family`)
+     * - Serializes `value` using `std::bit_cast` into a raw byte buffer
+     * - Sends the buffer via `sendto()` to the resolved address
+     * - Only the first successful destination is used
      *
      * ---
      *
-     * ### Example
-     * @code
-     * struct Payload {
-     *     int32_t opcode;
-     *     char tag[8];
-     * };
-     *
-     * Payload p{42, "HELLO"};
-     *
-     * sockaddr_in dest{};
-     * dest.sin_family = AF_INET;
-     * dest.sin_port = htons(9000);
-     * inet_pton(AF_INET, "192.168.1.20", &dest.sin_addr);
-     *
-     * DatagramSocket sock(AF_INET);
-     * sock.bind(0); // Use ephemeral port
-     * sock.writeTo(p, reinterpret_cast<sockaddr*>(&dest), sizeof(dest));
-     * @endcode
-     *
-     * ---
-     *
-     * @tparam T A trivially copyable and standard layout type.
-     * @param[in] value     The object to send.
-     * @param[in] addr      Pointer to the destination address.
-     * @param[in] addrLen   Length of the destination address structure.
+     * @tparam T A trivially copyable, standard layout POD type
+     * @param[in] host Hostname or IP address of the recipient
+     * @param[in] port UDP port of the recipient
+     * @param[in] value The object to send
      *
      * @throws SocketException If:
      * - The socket is not open
-     * - The address is invalid
-     * - `sendto()` fails (e.g., network error, unsupported family)
+     * - Address resolution fails
+     * - `sendto()` fails
+     * - A partial datagram is sent
      *
-     * @warning No internal fragmentation handling is done. Objects larger than the MTU may be dropped.
-     * @warning Padding is preserved. Avoid sending layout-sensitive or non-portable types.
-     * @warning You must manage endianness conversion manually if the target system differs.
-     *
-     * @see readFrom() For receiving from arbitrary peers
-     * @see write() For writing to a connected peer
-     * @see bind() To bind a local port
+     * @see write<T>(), connect(), read<T>(), sendTo()
      */
-    template <typename T> void writeTo(const T& value, const sockaddr* addr, socklen_t addrLen)
+    template <typename T> void writeTo(const std::string_view host, const Port port, const T& value)
     {
         static_assert(std::is_trivially_copyable_v<T>, "DatagramSocket::writeTo<T>() requires trivially copyable type");
         static_assert(std::is_standard_layout_v<T>, "DatagramSocket::writeTo<T>() requires standard layout type");
 
         if (getSocketFd() == INVALID_SOCKET)
-            throw SocketException("writeTo<T>() failed: socket is not open.");
+            throw SocketException("DatagramSocket::writeTo<T>(): socket is not open.");
 
-        std::array<std::byte, sizeof(T)> buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
+        addrinfo hints{};
+        hints.ai_family = _selectedAddrInfo ? _selectedAddrInfo->ai_family : AF_UNSPEC;
+        hints.ai_socktype = SOCK_DGRAM;
+        hints.ai_protocol = IPPROTO_UDP;
 
-        const auto sent = ::sendto(getSocketFd(),
+        addrinfo* rawAddrInfo = nullptr;
+        const std::string portStr = std::to_string(port);
+
+        if (const int ret = ::getaddrinfo(host.data(), portStr.c_str(), &hints, &rawAddrInfo); ret != 0)
+        {
+            throw SocketException(
 #ifdef _WIN32
-                                   reinterpret_cast<const char*>(buffer.data()), static_cast<int>(buffer.size()),
+                GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
 #else
-                                   buffer.data(), buffer.size(),
+                ret, SocketErrorMessageWrap(ret, true));
 #endif
-                                   0, addr, addrLen);
+        }
 
-        if (sent == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        const internal::AddrinfoPtr addrInfo(rawAddrInfo);
 
-        if (static_cast<std::size_t>(sent) != sizeof(T))
-            throw SocketException("writeTo<T>() failed: partial datagram was sent.");
+        // Bit-cast value into raw byte buffer
+        const std::array<std::byte, sizeof(T)> buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
+
+        int lastError = 0;
+        for (const addrinfo* addr = addrInfo.get(); addr != nullptr; addr = addr->ai_next)
+        {
+            const int sent = ::sendto(getSocketFd(),
+#ifdef _WIN32
+                                      reinterpret_cast<const char*>(buffer.data()), static_cast<int>(buffer.size()),
+#else
+                                      buffer.data(), buffer.size(),
+#endif
+                                      0, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
+
+            if (sent == static_cast<int>(sizeof(T)))
+                return; // success
+
+            lastError = GetSocketError(); // save the error for reporting if none succeed
+        }
+
+        throw SocketException(lastError, SocketErrorMessageWrap(lastError));
     }
 
     /**
@@ -1317,6 +1346,53 @@ class DatagramSocket : public SocketOptions
     }
 
     /**
+     * @brief Sets the size of the internal buffer used for string-based UDP receive operations.
+     * @ingroup udp
+     *
+     * This method controls the size of the internal buffer used internally by
+     * `read<std::string>()`. It does **not** affect the operating system's socket-level
+     * receive buffer (`SO_RCVBUF`), nor does it apply to fixed-size `read<T>()` calls.
+     *
+     * ---
+     *
+     * ### 🧠 Purpose
+     * - Limits the maximum number of bytes `read<std::string>()` can receive in a single call
+     * - Controls the size of the internally managed `std::vector<char>` buffer
+     * - Affects only high-level string reads from **connected** UDP sockets
+     *
+     * ---
+     *
+     * ### ⚙️ Implementation Details
+     * - Resizes an internal `std::vector<char>` used exclusively by `read<std::string>()`
+     * - **Does not** impact `read<T>()` or `receiveFrom()` which use their own fixed-size buffers
+     * - Thread-safe with respect to other `DatagramSocket` instances
+     * - Safe to call at any time after construction
+     *
+     * ---
+     *
+     * ### 🧪 Example
+     * @code
+     * DatagramSocket udp(12345);
+     * udp.setInternalBufferSize(8192); // set 8 KB for string reads
+     *
+     * udp.connect("192.168.1.100", 12345);
+     * std::string message = udp.read<std::string>();
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] newLen New size (in bytes) for the internal buffer
+     *
+     * @throws std::bad_alloc If resizing the buffer fails due to memory allocation
+     *
+     * @see read<std::string>() Uses this buffer for connected-mode string reads
+     * @see receiveFrom() Uses its own internal buffer, not affected by this setting
+     * @see setReceiveBufferSize() Sets the OS-level socket buffer
+     * @see setSendBufferSize() For tuning datagram send capacity
+     */
+    void setInternalBufferSize(std::size_t newLen);
+
+    /**
      * @brief Closes the datagram socket and releases its underlying system resources.
      * @ingroup udp
      *
@@ -1457,7 +1533,7 @@ class DatagramSocket : public SocketOptions
     socklen_t _remoteAddrLen = 0;   ///< Length of the valid address data in `_remoteAddr` (0 if none received yet).
     sockaddr_storage _localAddr{};  ///< Local address structure.
     mutable socklen_t _localAddrLen = 0; ///< Length of local address.
-    std::vector<char> _buffer;           ///< Internal buffer for read operations.
+    std::vector<char> _internalBuffer;   ///< Internal buffer for read operations.
     Port _port;                          ///< Port number the socket is bound to (if applicable).
     bool _isBound = false;               ///< True if the socket is bound to an address
     bool _isConnected = false;           ///< True if the socket is connected to a remote host.
@@ -1515,7 +1591,7 @@ template <> inline std::string DatagramSocket::read<std::string>()
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("DatagramSocket::read<std::string>(): socket is not open.");
 
-    if (_buffer.empty())
+    if (_internalBuffer.empty())
         throw SocketException("DatagramSocket::read<std::string>(): internal buffer is empty.");
 #ifdef _WIN32
     int
@@ -1526,11 +1602,11 @@ template <> inline std::string DatagramSocket::read<std::string>()
 
     if (isConnected())
     {
-        received = ::recv(getSocketFd(), reinterpret_cast<char*>(_buffer.data()),
+        received = ::recv(getSocketFd(), reinterpret_cast<char*>(_internalBuffer.data()),
 #ifdef _WIN32
-                          static_cast<int>(_buffer.size()),
+                          static_cast<int>(_internalBuffer.size()),
 #else
-                          _buffer.size(),
+                          _internalBuffer.size(),
 #endif
                           0);
     }
@@ -1539,11 +1615,11 @@ template <> inline std::string DatagramSocket::read<std::string>()
         sockaddr_storage srcAddr{};
         socklen_t srcLen = sizeof(srcAddr);
 
-        received = ::recvfrom(getSocketFd(), reinterpret_cast<char*>(_buffer.data()),
+        received = ::recvfrom(getSocketFd(), reinterpret_cast<char*>(_internalBuffer.data()),
 #ifdef _WIN32
-                              static_cast<int>(_buffer.size()),
+                              static_cast<int>(_internalBuffer.size()),
 #else
-                              _buffer.size(),
+                              _internalBuffer.size(),
 #endif
                               0, reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
 
@@ -1560,7 +1636,7 @@ template <> inline std::string DatagramSocket::read<std::string>()
     if (received == 0)
         throw SocketException("DatagramSocket::read<std::string>(): connection closed by remote host.");
 
-    return {reinterpret_cast<const char*>(_buffer.data()), static_cast<std::size_t>(received)};
+    return {reinterpret_cast<const char*>(_internalBuffer.data()), static_cast<std::size_t>(received)};
 }
 
 /**
@@ -1574,11 +1650,11 @@ template <> inline std::string DatagramSocket::recvFrom<std::string>(std::string
 {
     sockaddr_storage srcAddr{};
     socklen_t srcLen = sizeof(srcAddr);
-    const auto n = ::recvfrom(getSocketFd(), _buffer.data(),
+    const auto n = ::recvfrom(getSocketFd(), _internalBuffer.data(),
 #ifdef _WIN32
-                              static_cast<int>(_buffer.size()),
+                              static_cast<int>(_internalBuffer.size()),
 #else
-                              _buffer.size(),
+                              _internalBuffer.size(),
 #endif
                               0, reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
     if (n == SOCKET_ERROR)
@@ -1603,7 +1679,7 @@ template <> inline std::string DatagramSocket::recvFrom<std::string>(std::string
         if (senderPort)
             *senderPort = 0;
     }
-    return {_buffer.data(), static_cast<size_t>(n)};
+    return {_internalBuffer.data(), static_cast<size_t>(n)};
 }
 
 /**

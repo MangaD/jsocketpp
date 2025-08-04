@@ -1650,7 +1650,7 @@ class ServerSocket : public SocketOptions
      *
      * @ingroup tcp
      */
-    [[nodiscard]] std::size_t getEffectiveInternalBufferSize(std::optional<std::size_t> internalBufferSize) const
+    [[nodiscard]] std::size_t getEffectiveInternalBufferSize(const std::optional<std::size_t> internalBufferSize) const
     {
         return internalBufferSize.value_or(_defaultInternalBufferSize);
     }

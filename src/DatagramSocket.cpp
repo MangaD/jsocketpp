@@ -7,13 +7,13 @@
 
 using namespace jsocketpp;
 
-DatagramSocket::DatagramSocket(const Port port, const std::size_t bufferSize)
-    : DatagramSocket("", port, bufferSize) // Use nullptr for host to bind to all interfaces
-{
-}
-
-DatagramSocket::DatagramSocket(const std::string_view host, const Port port, const std::size_t bufferSize)
-    : SocketOptions(INVALID_SOCKET), _buffer(bufferSize), _port(port)
+DatagramSocket::DatagramSocket(const Port port, const std::string_view localAddress,
+                               const std::optional<std::size_t> recvBufferSize,
+                               const std::optional<std::size_t> sendBufferSize,
+                               const std::optional<std::size_t> internalBufferSize, const bool reuseAddress,
+                               const int soRecvTimeoutMillis, const int soSendTimeoutMillis, const bool nonBlocking,
+                               const bool dualStack, const bool autoBind)
+    : SocketOptions(INVALID_SOCKET), _internalBuffer(internalBufferSize.value_or(DefaultBufferSize)), _port(port)
 {
     // Prepare the hints structure for getaddrinfo to specify the desired socket type and protocol.
     addrinfo hints{}; // Initialize the hints structure to zero
@@ -41,16 +41,34 @@ DatagramSocket::DatagramSocket(const std::string_view host, const Port port, con
     // connectionless, unreliable, message-oriented communication as required for a UDP socket.
     hints.ai_protocol = IPPROTO_UDP;
 
-    // Resolve the local address and port to be used by the server
-    const std::string portStr = std::to_string(_port);
-    addrinfo* rawAddrInfo = nullptr;
-    const auto ret =
-        ::getaddrinfo((host.empty() ? nullptr : host.data()), // Node (hostname or IP address); nullptr means local host
-                      portStr.c_str(),                        // Service (port number or service name) as a C-string
-                      &hints,      // Pointer to struct addrinfo with hints about the type of socket
-                      &rawAddrInfo // Output: pointer to a linked list of results (set by getaddrinfo)
-        );
+    // This flag indicates that the returned socket addresses are intended for use in bind operations.
+    // When `ai_flags` includes `AI_PASSIVE`, and the `node` argument to `getaddrinfo()` is `nullptr`,
+    // the resulting address will be a "wildcard" address:
+    // - For IPv4: INADDR_ANY
+    // - For IPv6: in6addr_any
+    //
+    // This allows the socket to accept datagrams on **any local interface**, which is ideal for
+    // server-side or bound sockets. If a specific `localAddress` is provided, `AI_PASSIVE` is ignored.
+    //
+    // Without this flag, `getaddrinfo()` would return addresses suitable for connecting to a peer,
+    // not for binding a local endpoint.
+    hints.ai_flags = AI_PASSIVE;
 
+    // Convert the port number to a string, as required by getaddrinfo
+    const std::string portStr = std::to_string(_port);
+
+    // Resolve the local address and port using the hints defined above.
+    // If localAddress is empty, we pass nullptr to getaddrinfo, which results in a wildcard bind.
+    // This allows the socket to listen on all available interfaces (e.g., 0.0.0.0 or ::).
+    addrinfo* rawAddrInfo = nullptr;
+
+    const int ret = ::getaddrinfo(localAddress.empty() ? nullptr : localAddress.data(), // node (IP address or hostname)
+                                  portStr.c_str(),                                      // service (port as string)
+                                  &hints,      // socket type and protocol constraints
+                                  &rawAddrInfo // result: linked list of addrinfo structs
+    );
+
+    // If address resolution failed, throw a platform-specific SocketException
     if (ret != 0)
     {
         throw SocketException(
@@ -61,23 +79,85 @@ DatagramSocket::DatagramSocket(const std::string_view host, const Port port, con
 #endif
     }
 
-    _addrInfoPtr.reset(rawAddrInfo); // transfer ownership
+    // Transfer ownership of the addrinfo result to a smart pointer for RAII cleanup
+    _addrInfoPtr.reset(rawAddrInfo);
 
-    // Try all available addresses (IPv6/IPv4) to create a SOCKET for
-    for (addrinfo* p = _addrInfoPtr.get(); p != nullptr; p = p->ai_next)
+    // Sort address candidates: prioritize IPv6 if dualStack is enabled, then IPv4 fallback
+    std::vector<addrinfo*> sorted;
+    for (addrinfo* p = _addrInfoPtr.get(); p; p = p->ai_next)
+        if (dualStack && p->ai_family == AF_INET6)
+            sorted.push_back(p);
+    for (addrinfo* p = _addrInfoPtr.get(); p; p = p->ai_next)
+        if (p->ai_family == AF_INET || !dualStack)
+            sorted.push_back(p);
+
+    // Attempt to create a socket using the sorted list of preferred addresses
+    for (auto* p : sorted)
     {
-        setSocketFd(socket(p->ai_family, p->ai_socktype, p->ai_protocol));
+        setSocketFd(::socket(p->ai_family, p->ai_socktype, p->ai_protocol));
         if (getSocketFd() != INVALID_SOCKET)
         {
-            // Store the address that worked
             _selectedAddrInfo = p;
-            break;
+
+            // If this is an IPv6 socket and dualStack is requested,
+            // disable the IPV6_V6ONLY flag to allow it to receive IPv4-mapped datagrams as well.
+            if (p->ai_family == AF_INET6)
+            {
+                try
+                {
+                    setIPv6Only(!dualStack); // false = allow dual-stack
+                }
+                catch (const SocketException& se)
+                {
+                    cleanupAndThrow(se.getErrorCode());
+                }
+            }
+
+            break; // success
         }
     }
+
+    // If no socket could be created, throw an error
     if (getSocketFd() == INVALID_SOCKET)
-    {
         cleanupAndThrow(GetSocketError());
+
+    const auto recvResolved = recvBufferSize.value_or(DefaultBufferSize);
+    const auto sendResolved = sendBufferSize.value_or(DefaultBufferSize);
+    const auto internalResolved = internalBufferSize.value_or(DefaultBufferSize);
+
+    // Apply socket-level configuration
+    try
+    {
+        // Enable or disable SO_REUSEADDR before binding
+        setReuseAddress(reuseAddress);
+
+        // Apply the internal buffer size for high-level read<T>()/read<string>() usage
+        setInternalBufferSize(internalResolved);
+
+        // Apply OS-level buffer size to the receive buffer (SO_RCVBUF)
+        setReceiveBufferSize(recvResolved);
+
+        // Apply OS-level buffer size to the send buffer (SO_SNDBUF)
+        setSendBufferSize(sendResolved);
+
+        // Set optional socket timeouts
+        if (soRecvTimeoutMillis >= 0)
+            setSoRecvTimeout(soRecvTimeoutMillis);
+        if (soSendTimeoutMillis >= 0)
+            setSoSendTimeout(soSendTimeoutMillis);
+
+        // Set the socket to non-blocking mode if requested
+        if (nonBlocking)
+            setNonBlocking(true);
     }
+    catch (const SocketException& se)
+    {
+        cleanupAndThrow(se.getErrorCode());
+    }
+
+    // If requested, bind immediately to the resolved address and port
+    if (autoBind)
+        bind();
 }
 
 void DatagramSocket::cleanupAndThrow(const int errorCode)
@@ -570,4 +650,10 @@ Port DatagramSocket::getRemotePort() const
 std::string DatagramSocket::getRemoteSocketAddress(const bool convertIPv4Mapped) const
 {
     return getRemoteIp(convertIPv4Mapped) + ":" + std::to_string(getRemotePort());
+}
+
+void DatagramSocket::setInternalBufferSize(const std::size_t newLen)
+{
+    _internalBuffer.resize(newLen);
+    _internalBuffer.shrink_to_fit();
 }
