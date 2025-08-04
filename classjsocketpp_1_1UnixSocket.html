@@ -171,8 +171,8 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a324077c9d23ae6de38014520beca8c24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path for the Unix domain socket.  <br /></td></tr>
 <tr class="memitem:a0437bf95925bca4cf13dd0fb0a9ad44d" id="r_a0437bf95925bca4cf13dd0fb0a9ad44d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejsocketpp.html#a981f7d65e550398e8ab29db83092f119">SOCKADDR_UN</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0437bf95925bca4cf13dd0fb0a9ad44d">_addr</a> {}</td></tr>
 <tr class="memdesc:a0437bf95925bca4cf13dd0fb0a9ad44d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address structure for Unix domain sockets.  <br /></td></tr>
-<tr class="memitem:ad8f0d70297d20ce4d25fc12a28ffd657" id="r_ad8f0d70297d20ce4d25fc12a28ffd657"><td class="memItemLeft" align="right" valign="top">std::vector&lt; char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8f0d70297d20ce4d25fc12a28ffd657">_buffer</a></td></tr>
-<tr class="memdesc:ad8f0d70297d20ce4d25fc12a28ffd657"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal buffer for read operations.  <br /></td></tr>
+<tr class="memitem:ab2c2c6e80d78f5c85dc55919557aa7b0" id="r_ab2c2c6e80d78f5c85dc55919557aa7b0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab2c2c6e80d78f5c85dc55919557aa7b0">_internalBuffer</a></td></tr>
+<tr class="memdesc:ab2c2c6e80d78f5c85dc55919557aa7b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal buffer for read operations.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -258,7 +258,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p>Cross-platform abstraction for Unix domain sockets. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span> class provides a convenient, modern C++20-style interface for using Unix domain sockets, also known as AF_UNIX sockets. Unix sockets are used for fast inter-process communication (IPC) on the same host, and use a file path on the local file system for addressing.</p>
 <p>On POSIX platforms (Linux, macOS), AF_UNIX sockets are widely supported. On Windows, support is available in Windows 10 (1803+, build 17134) and newer.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1026"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1039"></a>
 Main Features</h2>
 <ul>
 <li><b>Bind</b>: Create and bind a socket to a filesystem path for listening/accepting connections.</li>
@@ -271,7 +271,7 @@ Main Features</h2>
 <dl class="section note"><dt>Note</dt><dd>Not thread-safe. Each <span class="tt"><a class="el" href="classjsocketpp_1_1UnixSocket.html" title="Cross-platform abstraction for Unix domain sockets.">UnixSocket</a></span> should only be used from one thread at a time. </dd>
 <dd>
 On Windows, AF_UNIX is supported on Windows 10 1803 and later only. On unsupported platforms, attempting to use this class will result in a compilation error.</dd></dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1027"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1040"></a>
 Example: Simple Echo Server</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="UnixSocket_8hpp.html">jsocketpp/UnixSocket.hpp</a>&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
@@ -293,7 +293,7 @@ Example: Simple Echo Server</h2>
 <div class="ttc" id="aclassjsocketpp_1_1UnixSocket_html_abecab540df2b16e50b09de7b8d38c43e"><div class="ttname"><a href="#abecab540df2b16e50b09de7b8d38c43e">jsocketpp::UnixSocket::write</a></div><div class="ttdeci">size_t write(std::string_view data) const</div><div class="ttdoc">Writes data to the socket.</div><div class="ttdef"><b>Definition</b> UnixSocket.cpp:136</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
 <div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1028"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1041"></a>
 Example: Simple Client</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="UnixSocket_8hpp.html">jsocketpp/UnixSocket.hpp</a>&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
@@ -304,7 +304,7 @@ Example: Simple Client</h2>
 <div class="line">    sock.write(<span class="stringliteral">&quot;Hello, Unix domain socket!&quot;</span>);</div>
 <div class="line">    std::string response = sock.read&lt;std::string&gt;();</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1029"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1042"></a>
 Limitations</h2>
 <ul>
 <li>Not suitable for remote (network) connections; only for IPC on the same host.</li>
@@ -985,8 +985,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="ad8f0d70297d20ce4d25fc12a28ffd657" name="ad8f0d70297d20ce4d25fc12a28ffd657"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad8f0d70297d20ce4d25fc12a28ffd657">&#9670;&#160;</a></span>_buffer</h2>
+<a id="ab2c2c6e80d78f5c85dc55919557aa7b0" name="ab2c2c6e80d78f5c85dc55919557aa7b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2c2c6e80d78f5c85dc55919557aa7b0">&#9670;&#160;</a></span>_internalBuffer</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -995,7 +995,7 @@ template&lt;&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;char&gt; jsocketpp::UnixSocket::_buffer</td>
+          <td class="memname">std::vector&lt;char&gt; jsocketpp::UnixSocket::_internalBuffer</td>
         </tr>
       </table>
   </td>

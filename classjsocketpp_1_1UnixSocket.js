@@ -22,7 +22,7 @@ var classjsocketpp_1_1UnixSocket =
     [ "setTimeout", "classjsocketpp_1_1UnixSocket.html#a4b599e3ea9497908dbf3d7a2cc79f1c8", null ],
     [ "write", "classjsocketpp_1_1UnixSocket.html#abecab540df2b16e50b09de7b8d38c43e", null ],
     [ "_addr", "classjsocketpp_1_1UnixSocket.html#a0437bf95925bca4cf13dd0fb0a9ad44d", null ],
-    [ "_buffer", "classjsocketpp_1_1UnixSocket.html#ad8f0d70297d20ce4d25fc12a28ffd657", null ],
+    [ "_internalBuffer", "classjsocketpp_1_1UnixSocket.html#ab2c2c6e80d78f5c85dc55919557aa7b0", null ],
     [ "_isListening", "classjsocketpp_1_1UnixSocket.html#a6e53399010d864381f42f5e1f1fd91ed", null ],
     [ "_socketPath", "classjsocketpp_1_1UnixSocket.html#a324077c9d23ae6de38014520beca8c24", null ]
 ];

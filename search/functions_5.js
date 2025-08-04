@@ -5,7 +5,7 @@ var searchData=
   ['getdefaultinternalbuffersize_2',['getDefaultInternalBufferSize',['../group__tcp.html#gac1f9d646223bb7c733216b484f517d46',1,'jsocketpp::ServerSocket']]],
   ['getdefaultreceivebuffersize_3',['getDefaultReceiveBufferSize',['../group__tcp.html#ga29de003fbad91f7302115d26b89ac888',1,'jsocketpp::ServerSocket']]],
   ['getdefaultsendbuffersize_4',['getDefaultSendBufferSize',['../group__tcp.html#ga80d2d5fc59fa2b10e586287d6ffd84f7',1,'jsocketpp::ServerSocket']]],
-  ['geteffectiveinternalbuffersize_5',['getEffectiveInternalBufferSize',['../group__tcp.html#gaecfe7c73148ce4d9727405ed70517993',1,'jsocketpp::ServerSocket']]],
+  ['geteffectiveinternalbuffersize_5',['getEffectiveInternalBufferSize',['../group__tcp.html#ga474741cb104a36bab217ea478608439c',1,'jsocketpp::ServerSocket']]],
   ['geteffectivereceivebuffersize_6',['getEffectiveReceiveBufferSize',['../group__tcp.html#gae01e7a531be7a5addb83ff6b9bb111e8',1,'jsocketpp::ServerSocket']]],
   ['geteffectivesendbuffersize_7',['getEffectiveSendBufferSize',['../group__tcp.html#ga1308a8d172508999834853ccb35607e8',1,'jsocketpp::ServerSocket']]],
   ['geterrorcode_8',['getErrorCode',['../classjsocketpp_1_1SocketException.html#a05b11ce845a5ea121e331dda3039993d',1,'jsocketpp::SocketException']]],
