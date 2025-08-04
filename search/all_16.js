@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['latency_0',['Example: Disable Nagle’s algorithm to reduce latency',['../group__socketopts.html#autotoc_md1013',1,'']]],
+  ['latency_0',['Example: Disable Nagle’s algorithm to reduce latency',['../group__socketopts.html#autotoc_md1032',1,'']]],
   ['leavegroup_1',['leaveGroup',['../classjsocketpp_1_1MulticastSocket.html#af7317567ceae9b90967ec5a29d003af3',1,'jsocketpp::MulticastSocket']]],
   ['level_20timeouts_2',['OS-Level Timeouts',['../group__async__io.html#autotoc_md119',1,'']]],
   ['libraries_3',['Comparison: &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; vs Other C++ Socket Libraries',['../group__socket__library__comparison.html',1,'']]],
@@ -12,10 +12,10 @@ var searchData=
   ['license_9',['LICENSE',['../LICENSE.html',1,'']]],
   ['license_10',['License',['../index.html#autotoc_md409',1,'⚖️ License'],['../group__BUILD__AND__USAGE.html#autotoc_md24',1,'License']]],
   ['lifecycle_11',['Lifecycle',['../group__sockets__theory.html#autotoc_md282',1,'4. How Sockets Work: The Lifecycle'],['../group__socket__states.html#autotoc_md246',1,'TCP Socket Lifecycle']]],
-  ['lifetime_20warning_12',['Lifetime Warning',['../group__tcp.html#autotoc_md698',1,'⚠️ Lifetime Warning'],['../group__tcp.html#autotoc_md711',1,'⚠️ Lifetime Warning']]],
-  ['limitations_13',['Limitations',['../group__address__reuse.html#autotoc_md86',1,'⚠️ Java’s Approach and Its Limitations'],['../index.html#autotoc_md380',1,'⚠️ Limitations'],['../group__tcp.html#autotoc_md791',1,'Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md1073',1,'Limitations']]],
+  ['lifetime_20warning_12',['Lifetime Warning',['../group__tcp.html#autotoc_md715',1,'⚠️ Lifetime Warning'],['../group__tcp.html#autotoc_md728',1,'⚠️ Lifetime Warning']]],
+  ['limitations_13',['Limitations',['../group__address__reuse.html#autotoc_md86',1,'⚠️ Java’s Approach and Its Limitations'],['../index.html#autotoc_md380',1,'⚠️ Limitations'],['../group__tcp.html#autotoc_md810',1,'Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md1092',1,'Limitations']]],
   ['limitations_3a_14',['Limitations:',['../group__async__io.html#autotoc_md144',1,'']]],
-  ['linger_20for_205_20seconds_20on_20close_15',['Example: Set &lt;span class=&quot;tt&quot;&gt;SO_LINGER&lt;/span&gt; to linger for 5 seconds on close',['../group__socketopts.html#autotoc_md911',1,'']]],
+  ['linger_20for_205_20seconds_20on_20close_15',['Example: Set &lt;span class=&quot;tt&quot;&gt;SO_LINGER&lt;/span&gt; to linger for 5 seconds on close',['../group__socketopts.html#autotoc_md930',1,'']]],
   ['linking_20the_20library_16',['Linking the Library',['../group__BUILD__AND__USAGE.html#autotoc_md14',1,'']]],
   ['linux_17',['Unix/Linux',['../group__address__reuse.html#autotoc_md76',1,'']]],
   ['linux_20macos_20unix_18',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md289',1,'']]],
@@ -24,6 +24,7 @@ var searchData=
   ['listen_21',['listen',['../group__tcp.html#ga4780ea0cf2fb98d0081ed91d8dbecfa3',1,'jsocketpp::ServerSocket::listen()'],['../classjsocketpp_1_1UnixSocket.html#a9905fe17ae505295cac11707cef48371',1,'jsocketpp::UnixSocket::listen()']]],
   ['listen_20explicit_22',['3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit',['../group__ServerSocket__Lifecycle.html#autotoc_md31',1,'']]],
   ['listening_3a_20design_20patterns_20and_20best_20practices_23',['ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices',['../group__ServerSocket__Lifecycle.html',1,'']]],
-  ['local_20ipc_24',['2.4. Unix Domain Sockets (Local IPC)',['../group__sockets__theory.html#autotoc_md268',1,'']]],
-  ['locally_25',['Locally',['../group__vcpkg__publish__guide.html#autotoc_md355',1,'4. Test the Port Locally'],['../group__conan__publish__guide.html#autotoc_md168',1,'4. Test the Recipe Locally']]]
+  ['local_20binding_20parameters_20used_20only_20if_20autobind_20true_24',['🌐 Local Binding Parameters (used only if &lt;span class=&quot;tt&quot;&gt;autoBind == true&lt;/span&gt;)',['../group__tcp.html#autotoc_md763',1,'']]],
+  ['local_20ipc_25',['2.4. Unix Domain Sockets (Local IPC)',['../group__sockets__theory.html#autotoc_md268',1,'']]],
+  ['locally_26',['Locally',['../group__vcpkg__publish__guide.html#autotoc_md355',1,'4. Test the Port Locally'],['../group__conan__publish__guide.html#autotoc_md168',1,'4. Test the Recipe Locally']]]
 ];

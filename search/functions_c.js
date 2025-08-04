@@ -19,5 +19,6 @@ var searchData=
   ['recvfrom_16',['recvFrom',['../classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06',1,'jsocketpp::DatagramSocket']]],
   ['resetshutdownflags_17',['resetShutdownFlags',['../group__tcp.html#ga41e5ecdf97be51a3a354429be87b12d0',1,'jsocketpp::Socket']]],
   ['resize_18',['resize',['../classjsocketpp_1_1DatagramPacket.html#a2c99540d2136dae10a56f781c1b20c5f',1,'jsocketpp::DatagramPacket']]],
-  ['resolvebuffers_19',['resolveBuffers',['../group__tcp.html#ga069d29c3ff8b80ee9a7cb9e1e39f930a',1,'jsocketpp::ServerSocket']]]
+  ['resolveaddress_19',['resolveAddress',['../group__internal.html#gab7cbd90f4b6d2e5f506de1b7fd5c6331',1,'jsocketpp::internal']]],
+  ['resolvebuffers_20',['resolveBuffers',['../group__tcp.html#ga069d29c3ff8b80ee9a7cb9e1e39f930a',1,'jsocketpp::ServerSocket']]]
 ];

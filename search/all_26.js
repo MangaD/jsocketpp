@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['⏱️_20behavior_20summary_20by_20operation_0',['⏱️ Behavior Summary by Operation',['../group__socketopts.html#autotoc_md995',1,'']]],
+  ['⏱️_20behavior_20summary_20by_20operation_0',['⏱️ Behavior Summary by Operation',['../group__socketopts.html#autotoc_md1014',1,'']]],
   ['⏱_20how_20jsocketpp_20handles_20blocking_20and_20timeouts_1',['⏱ How jsocketpp Handles Blocking and Timeouts',['../group__async__io.html#autotoc_md122',1,'']]],
-  ['⏱_20timeout_20behavior_2',['⏱ Timeout Behavior',['../group__tcp.html#autotoc_md636',1,'⏱ Timeout Behavior'],['../group__tcp.html#autotoc_md645',1,'⏱ Timeout Behavior'],['../group__tcp.html#autotoc_md654',1,'⏱ Timeout Behavior'],['../group__tcp.html#autotoc_md665',1,'⏱ Timeout Behavior']]]
+  ['⏱_20timeout_20behavior_2',['⏱ Timeout Behavior',['../group__tcp.html#autotoc_md653',1,'⏱ Timeout Behavior'],['../group__tcp.html#autotoc_md662',1,'⏱ Timeout Behavior'],['../group__tcp.html#autotoc_md671',1,'⏱ Timeout Behavior'],['../group__tcp.html#autotoc_md682',1,'⏱ Timeout Behavior']]]
 ];

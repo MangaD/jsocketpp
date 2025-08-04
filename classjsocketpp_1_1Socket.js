@@ -2,7 +2,7 @@ var classjsocketpp_1_1Socket =
 [
     [ "Socket", "group__tcp.html#ga6da94c322a3ed5f85efd26a7fbadbe0a", null ],
     [ "Socket", "group__tcp.html#gabc4e14475484e596ac62509e627a9baf", null ],
-    [ "Socket", "group__tcp.html#ga8b1fe2f85a88935e53d830e68faae9cf", null ],
+    [ "Socket", "group__tcp.html#ga201308e71110af1410e39920f02adf89", null ],
     [ "Socket", "group__tcp.html#gaf5a4ddebfbca7bfe6c9a88462cc9ada8", null ],
     [ "Socket", "group__tcp.html#gad0612bda82c378dbaf99e0839f5aa815", null ],
     [ "~Socket", "group__tcp.html#gafa933f0914d99522c857b30f64c9ce32", null ],

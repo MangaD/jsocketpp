@@ -22,6 +22,7 @@ var common_8hpp =
     [ "jsocketpp::ipFromSockaddr", "namespacejsocketpp.html#a18428d088b7f3b2e55efe9adc49e10a9", null ],
     [ "jsocketpp::isIPv4MappedIPv6", "group__core.html#gab0ac1b9850480abafeb047a4f96792a0", null ],
     [ "jsocketpp::portFromSockaddr", "namespacejsocketpp.html#a71637861db9b297572bc1de3df56a59a", null ],
+    [ "jsocketpp::internal::resolveAddress", "group__internal.html#gab7cbd90f4b6d2e5f506de1b7fd5c6331", null ],
     [ "jsocketpp::SocketErrorMessage", "namespacejsocketpp.html#a1d0357025eb782be52907801696556ca", null ],
     [ "jsocketpp::SocketErrorMessageWrap", "namespacejsocketpp.html#a2eae999aa2ba7973dc6c3acc40e51e5a", null ],
     [ "jsocketpp::net::toNetwork", "namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5", null ],

@@ -11,6 +11,7 @@ var group__internal =
       [ "_wasBlocking", "classjsocketpp_1_1internal_1_1ScopedBlockingMode.html#a58ebaaf8ebaf3a5add20e838663a3dff", null ]
     ] ],
     [ "jsocketpp::internal::AddrinfoPtr", "group__internal.html#ga62d9b0682386f85cca0aadbdfbb76646", null ],
+    [ "jsocketpp::internal::resolveAddress", "group__internal.html#gab7cbd90f4b6d2e5f506de1b7fd5c6331", null ],
     [ "jsocketpp::internal::ScopedBlockingMode::ScopedBlockingMode", "group__internal.html#ga606aec57de9374b5b0fc69f37504fedd", null ],
     [ "jsocketpp::internal::toIOVec", "group__internal.html#ga7701a273337a71485ba1583df464b178", null ],
     [ "jsocketpp::internal::toIOVec", "group__internal.html#gacdd48d04c87ec69aff97c5d29dbfe1a1", null ],

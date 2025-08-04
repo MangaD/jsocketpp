@@ -126,6 +126,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga7701a273337a71485ba1583df464b178"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a raw array of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> elements into an iovec array for POSIX <span class="tt">readv</span>/<span class="tt">writev</span>.  <br /></td></tr>
 <tr class="memitem:gacdd48d04c87ec69aff97c5d29dbfe1a1" id="r_gacdd48d04c87ec69aff97c5d29dbfe1a1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; iovec &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacdd48d04c87ec69aff97c5d29dbfe1a1">jsocketpp::internal::toIOVec</a> (const std::span&lt; const <a class="el" href="structjsocketpp_1_1BufferView.html">BufferView</a> &gt; buffers)</td></tr>
 <tr class="memdesc:gacdd48d04c87ec69aff97c5d29dbfe1a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a span of <a class="el" href="structjsocketpp_1_1BufferView.html" title="Represents a raw writable memory region for scatter/gather I/O.">BufferView</a> elements into an iovec array for POSIX vectorized I/O.  <br /></td></tr>
+<tr class="memitem:gab7cbd90f4b6d2e5f506de1b7fd5c6331" id="r_gab7cbd90f4b6d2e5f506de1b7fd5c6331"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ga62d9b0682386f85cca0aadbdfbb76646">AddrinfoPtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab7cbd90f4b6d2e5f506de1b7fd5c6331">jsocketpp::internal::resolveAddress</a> (const std::string_view host, const <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, const int family, const int socktype, const int protocol, const int flags=0)</td></tr>
+<tr class="memdesc:gab7cbd90f4b6d2e5f506de1b7fd5c6331"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolves a hostname and port into a list of usable socket address structures.  <br /></td></tr>
 <tr class="memitem:ga606aec57de9374b5b0fc69f37504fedd" id="r_ga606aec57de9374b5b0fc69f37504fedd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga606aec57de9374b5b0fc69f37504fedd">jsocketpp::internal::ScopedBlockingMode::ScopedBlockingMode</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock, bool temporaryNonBlocking)</td></tr>
 <tr class="memdesc:ga606aec57de9374b5b0fc69f37504fedd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <span class="tt"><a class="el" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html" title="RAII helper for temporarily overriding a socket&#39;s blocking mode.">ScopedBlockingMode</a></span> that temporarily overrides the socket's blocking mode.  <br /></td></tr>
 <tr class="memitem:ga413d5e88aaee47a98645a9760884bec0" id="r_ga413d5e88aaee47a98645a9760884bec0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga413d5e88aaee47a98645a9760884bec0">jsocketpp::internal::ScopedBlockingMode::~ScopedBlockingMode</a> ()</td></tr>
@@ -167,6 +169,170 @@ freeaddrinfo() </dd></dl>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="gab7cbd90f4b6d2e5f506de1b7fd5c6331" name="gab7cbd90f4b6d2e5f506de1b7fd5c6331"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab7cbd90f4b6d2e5f506de1b7fd5c6331">&#9670;&#160;</a></span>resolveAddress()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#ga62d9b0682386f85cca0aadbdfbb76646">AddrinfoPtr</a> jsocketpp::internal::resolveAddress </td>
+          <td>(</td>
+          <td class="paramtype">const std::string_view</td>          <td class="paramname"><span class="paramname"><em>host</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>family</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>socktype</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>protocol</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>flags</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Resolves a hostname and port into a list of usable socket address structures. </p>
+<p>This internal helper wraps the standard <span class="tt">::getaddrinfo()</span> system call to resolve a hostname and port into a linked list of <span class="tt">addrinfo</span> structures, which are used to create, bind, or connect sockets. It provides explicit control over resolution parameters, supports both client and server use cases, and ensures consistent error handling and memory cleanup across platforms.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md465"></a>
+Overview</h3>
+<p>Unlike direct <span class="tt">getaddrinfo()</span> usage, this helper:</p><ul>
+<li>Accepts all key resolution parameters (<span class="tt">family</span>, <span class="tt">socktype</span>, <span class="tt">protocol</span>, <span class="tt">flags</span>)</li>
+<li>Returns a RAII-managed <span class="tt"><a class="el" href="#ga62d9b0682386f85cca0aadbdfbb76646" title="Smart pointer that manages addrinfo* resources using AddrinfoDeleter.">AddrinfoPtr</a></span> (automatically frees memory via <span class="tt">freeaddrinfo()</span>)</li>
+<li>Throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> with detailed context if resolution fails</li>
+<li>Supports dual-stack fallback, wildcard binding, strict numeric resolution, and more</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md467"></a>
+Hints Structure Behavior</h3>
+<p>This function populates the <span class="tt">hints</span> structure for <span class="tt">getaddrinfo()</span> with the following fields:</p>
+<ul>
+<li><b>ai_family</b>: Address family to return:<ul>
+<li><span class="tt">AF_INET</span> — IPv4 only</li>
+<li><span class="tt">AF_INET6</span> — IPv6 only</li>
+<li><span class="tt">AF_UNSPEC</span> — Return both (default for dual-stack logic)</li>
+</ul>
+</li>
+<li><b>ai_socktype</b>: Type of socket:<ul>
+<li><span class="tt">SOCK_STREAM</span> — TCP</li>
+<li><span class="tt">SOCK_DGRAM</span> — UDP</li>
+<li><span class="tt">SOCK_RAW</span> — Raw IP (less common)</li>
+</ul>
+</li>
+<li><b>ai_protocol</b>: Transport-layer protocol:<ul>
+<li><span class="tt">IPPROTO_TCP</span> — for TCP sockets</li>
+<li><span class="tt">IPPROTO_UDP</span> — for UDP sockets</li>
+<li><span class="tt">0</span> — auto-detect based on <span class="tt">socktype</span></li>
+</ul>
+</li>
+<li><b>ai_flags</b>: Bitmask of resolution modifiers. Includes:<ul>
+<li><span class="tt">AI_PASSIVE</span> — Use wildcard address (0.0.0.0 / ::) if <span class="tt">host</span> is empty (for server binding)</li>
+<li><span class="tt">AI_NUMERICHOST</span> — Require <span class="tt">host</span> to be a numeric IP; skip DNS</li>
+<li><span class="tt">AI_NUMERICSERV</span> — Require <span class="tt">port</span> to be numeric; skip service name lookup</li>
+<li><span class="tt">AI_CANONNAME</span> — Populate <span class="tt">ai_canonname</span> with canonical FQDN</li>
+<li><span class="tt">AI_ADDRCONFIG</span> — Only return families configured on the local machine</li>
+<li><span class="tt">AI_V4MAPPED</span> — Allow IPv4-mapped IPv6 addresses if <span class="tt">AF_INET6</span> is requested</li>
+</ul>
+</li>
+</ul>
+<p>Flags may be combined using bitwise OR (e.g., <span class="tt">AI_PASSIVE | AI_ADDRCONFIG</span>).</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md469"></a>
+Parameters</h3>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">host</td><td>Hostname, domain, or IP address to resolve.<ul>
+<li>Use empty string if <span class="tt">AI_PASSIVE</span> is set to bind to all interfaces.</li>
+<li>Must be numeric if <span class="tt">AI_NUMERICHOST</span> is specified.</li>
+</ul>
+</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">port</td><td><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number to resolve, passed as an integer. Must be in the range <span class="tt">[0, 65535]</span>. Internally converted to a string before calling <span class="tt">getaddrinfo()</span>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">family</td><td>Address family to restrict the result:<ul>
+<li><span class="tt">AF_INET</span> for IPv4</li>
+<li><span class="tt">AF_INET6</span> for IPv6</li>
+<li><span class="tt">AF_UNSPEC</span> for both (default in most client cases)</li>
+</ul>
+</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">socktype</td><td>Desired socket type (e.g., <span class="tt">SOCK_STREAM</span>, <span class="tt">SOCK_DGRAM</span>)</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">protocol</td><td>Desired protocol (e.g., <span class="tt">IPPROTO_TCP</span>, <span class="tt">IPPROTO_UDP</span>, or <span class="tt">0</span>)</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">flags</td><td>Bitmask of <span class="tt">AI_*</span> flags. See the list above for all supported options.</td></tr>
+  </table>
+  </dd>
+</dl>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md471"></a>
+Return Value</h3>
+<dl class="section return"><dt>Returns</dt><dd>A smart pointer of type <span class="tt"><a class="el" href="#ga62d9b0682386f85cca0aadbdfbb76646" title="Smart pointer that manages addrinfo* resources using AddrinfoDeleter.">AddrinfoPtr</a></span> holding a linked list of <span class="tt">addrinfo</span> structures. The returned list can be iterated to attempt socket creation or connection. Memory is released automatically via <span class="tt">freeaddrinfo()</span> when the pointer is destroyed.</dd></dl>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md473"></a>
+Throws</h3>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if <span class="tt">getaddrinfo()</span> fails.<ul>
+<li>On Windows: error code from <span class="tt"><a class="el" href="namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad">GetSocketError()</a></span>, with message from <span class="tt">gai_strerror()</span></li>
+<li>On POSIX: return code from <span class="tt">getaddrinfo()</span>, also with <span class="tt">gai_strerror()</span> message</li>
+<li>The error message will include whether the failure occurred on the host or service name</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md475"></a>
+Example Usage</h3>
+<div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp_1_1internal.html">jsocketpp::internal</a>;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Resolve a remote TCP address (client-side)</span></div>
+<div class="line"><span class="keyword">auto</span> addrList = <a class="code hl_function" href="#gab7cbd90f4b6d2e5f506de1b7fd5c6331">resolveAddress</a>(<span class="stringliteral">&quot;example.com&quot;</span>, 443, AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Iterate candidates and attempt connection</span></div>
+<div class="line"><span class="keywordflow">for</span> (addrinfo* p = addrList.get(); p != <span class="keyword">nullptr</span>; p = p-&gt;ai_next)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">int</span> sockfd = ::socket(p-&gt;ai_family, p-&gt;ai_socktype, p-&gt;ai_protocol);</div>
+<div class="line">    <span class="keywordflow">if</span> (sockfd != <a class="code hl_variable" href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">INVALID_SOCKET</a> &amp;&amp; ::connect(sockfd, p-&gt;ai_addr, p-&gt;ai_addrlen) == 0)</div>
+<div class="line">        <span class="keywordflow">break</span>; <span class="comment">// success</span></div>
+<div class="line">    <span class="comment">// try next if socket or connect failed</span></div>
+<div class="line">}</div>
+<div class="ttc" id="agroup__internal_html_gab7cbd90f4b6d2e5f506de1b7fd5c6331"><div class="ttname"><a href="#gab7cbd90f4b6d2e5f506de1b7fd5c6331">jsocketpp::internal::resolveAddress</a></div><div class="ttdeci">AddrinfoPtr resolveAddress(const std::string_view host, const Port port, const int family, const int socktype, const int protocol, const int flags=0)</div><div class="ttdoc">Resolves a hostname and port into a list of usable socket address structures.</div><div class="ttdef"><b>Definition</b> common.hpp:714</div></div>
+<div class="ttc" id="anamespacejsocketpp_1_1internal_html"><div class="ttname"><a href="namespacejsocketpp_1_1internal.html">jsocketpp::internal</a></div><div class="ttdoc">Implementation-only utilities and platform abstractions for jsocketpp.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:52</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_a3ddf4938a63ed33a5e2f7d2625cb4405"><div class="ttname"><a href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">jsocketpp::INVALID_SOCKET</a></div><div class="ttdeci">constexpr SOCKET INVALID_SOCKET</div><div class="ttdef"><b>Definition</b> common.hpp:239</div></div>
+</div><!-- fragment --><hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md477"></a>
+Notes</h3>
+<ul>
+<li>This function is intended for internal use by <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, and <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>.</li>
+<li>It supports both binding (server-side) and connecting (client-side) resolution logic.</li>
+<li>Always use <span class="tt">AF_UNSPEC</span> and let <span class="tt">getaddrinfo()</span> return both IPv4 and IPv6 for best cross-platform support.</li>
+</ul>
+<dl class="section see"><dt>See also</dt><dd>getaddrinfo(), freeaddrinfo(), <a class="el" href="#ga62d9b0682386f85cca0aadbdfbb76646" title="Smart pointer that manages addrinfo* resources using AddrinfoDeleter.">AddrinfoPtr</a>, <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga606aec57de9374b5b0fc69f37504fedd" name="ga606aec57de9374b5b0fc69f37504fedd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga606aec57de9374b5b0fc69f37504fedd">&#9670;&#160;</a></span>ScopedBlockingMode()</h2>
 
