@@ -102,32 +102,34 @@ Socket::Socket(const std::string_view host, const Port port, const std::optional
     }
 }
 
-void Socket::cleanupAndThrow(const int errorCode)
+void Socket::cleanup()
 {
     if (getSocketFd() != INVALID_SOCKET)
     {
         CloseSocket(getSocketFd());
         setSocketFd(INVALID_SOCKET);
-
         // CloseSocket error is ignored.
         // TODO: Consider adding an internal flag, nested exception, or user-configurable error handler
         //       to report errors in future versions.
     }
+
     _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
+    _isBound = false;
+    _isConnected = false;
+    resetShutdownFlags();
+}
+
+void Socket::cleanupAndThrow(const int errorCode)
+{
+    cleanup();
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
 }
 
 void Socket::cleanupAndRethrow()
 {
-    if (getSocketFd() != INVALID_SOCKET)
-    {
-        CloseSocket(getSocketFd());
-        setSocketFd(INVALID_SOCKET);
-    }
-    _cliAddrInfo.reset();
-    _selectedAddrInfo = nullptr;
-    throw; // Rethrows the current exception
+    cleanup();
+    throw; // Preserve original exception
 }
 
 void Socket::bind(const std::string_view localHost, const Port port)
@@ -317,6 +319,8 @@ void Socket::close()
     }
     _cliAddrInfo.reset();
     _selectedAddrInfo = nullptr;
+    _isBound = false;
+    _isConnected = false;
     resetShutdownFlags();
 }
 

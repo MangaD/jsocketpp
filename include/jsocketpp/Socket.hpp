@@ -2968,70 +2968,130 @@ class Socket : public SocketOptions
     std::size_t readIntoInternal(void* buffer, std::size_t len, bool exact = false) const;
 
     /**
-     * @brief Cleans up client socket resources and throws a SocketException.
-     *
-     * This method performs internal cleanup of the client socket's resources, including:
-     * - Closing the socket if it is open (`getSocketFd()`)
-     * - Releasing any allocated address resolution data (`_cliAddrInfo`)
-     * - Resetting `_selectedAddrInfo` to null
-     *
-     * It is used to centralize error recovery during construction or connection setup,
-     * ensuring that all partially initialized resources are properly released before
-     * rethrowing an exception.
-     *
-     * @param[in] errorCode The error code to report in the thrown exception.
-     *
-     * @throws SocketException Always throws, containing the error code and the corresponding
-     * human-readable error message obtained via `SocketErrorMessage(errorCode)`.
-     *
-     * @note This function is typically called when socket creation, address resolution,
-     * or connection setup fails during client socket initialization.
-     *
-     * @ingroup tcp
-     */
-    void cleanupAndThrow(int errorCode);
-
-    /**
-     * @brief Closes the socket, resets internal state, and rethrows the currently handled exception.
+     * @brief Internal helper that closes the socket and clears address resolution state.
      * @ingroup tcp
      *
-     * This method is intended to be called from within a `catch` block handling a `SocketException`
-     * during socket construction or configuration. It ensures that any partially initialized or
-     * invalid TCP socket is safely cleaned up before the original exception is rethrown.
+     * This method performs safe resource cleanup for the client socket. It is intended to be
+     * reused across error-handling paths to ensure that partially initialized socket state
+     * is properly discarded, avoiding leaks or undefined behavior.
      *
      * ---
      *
      * ### ⚙️ Behavior
      * - If the socket is valid (`getSocketFd() != INVALID_SOCKET`), it is closed via `CloseSocket()`
-     * - Internal resolution state is reset:
-     *   - `_cliAddrInfo` is released
-     *   - `_selectedAddrInfo` is cleared
-     * - The original exception is rethrown using `throw;`
+     * - The socket handle is reset to `INVALID_SOCKET`
+     * - Address resolution state is cleared:
+     *   - `_cliAddrInfo` (client-side addrinfo list) is released
+     *   - `_selectedAddrInfo` is reset to `nullptr`
+     *
+     * ---
+     *
+     * ### 🔒 Safety
+     * - It is safe to call this method multiple times; redundant socket closes are prevented
+     * - Designed to be noexcept and side-effect free beyond its resource cleanup
+     * - Intended for use within exception paths only (never throws)
+     *
+     * ---
+     *
+     * @note This method is used internally by `cleanupAndThrow()` and `cleanupAndRethrow()`
+     * to centralize socket cleanup logic during construction or reconfiguration failures.
+     *
+     * @warning This method does not throw. Use `cleanupAndThrow()` or `cleanupAndRethrow()`
+     * when control flow needs to propagate an error after cleanup.
+     *
+     * @see cleanupAndThrow(), cleanupAndRethrow(), CloseSocket(), SocketException
+     */
+    void cleanup();
+
+    /**
+     * @brief Closes the socket, resets internal state, and throws a `SocketException`.
+     * @ingroup tcp
+     *
+     * This method performs safe cleanup of all internal socket resources and throws a `SocketException`
+     * with the specified error code and human-readable message. It is used to centralize error handling
+     * during socket creation or connection setup, ensuring that no resources are leaked if initialization fails.
+     *
+     * ---
+     *
+     * ### ⚙️ Behavior
+     * Internally, this method delegates to `cleanup()` to:
+     * - Close the socket if it's open (`getSocketFd()`)
+     * - Reset the socket handle to `INVALID_SOCKET`
+     * - Release address resolution results (`_cliAddrInfo`)
+     * - Clear the active address pointer (`_selectedAddrInfo`)
+     *
+     * It then throws a `SocketException` with:
+     * - The provided `errorCode`
+     * - The result of `SocketErrorMessage(errorCode)`
+     *
+     * ---
+     *
+     * ### 🧠 Example
+     * @code
+     * if (::connect(getSocketFd(), ...) == SOCKET_ERROR)
+     * {
+     *     cleanupAndThrow(GetSocketError());
+     * }
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] errorCode The error code to report in the thrown `SocketException`
+     *
+     * @throws SocketException Always throws after cleanup
+     *
+     * @see cleanup()
+     * @see cleanupAndRethrow()
+     * @see SocketException
+     * @see SocketErrorMessage()
+     */
+    void cleanupAndThrow(int errorCode);
+
+    /**
+     * @brief Cleans up socket resources and rethrows the currently active exception.
+     * @ingroup tcp
+     *
+     * This method is intended for use within a `catch` block to safely clean up a partially
+     * initialized or failed `Socket` before rethrowing the active exception. It ensures that all
+     * client-side socket resources are properly released, including the socket descriptor and
+     * any resolved address info, before propagating the error.
+     *
+     * ---
+     *
+     * ### ⚙️ Behavior
+     * Internally delegates to `cleanup()` to:
+     * - Close the socket if valid (`getSocketFd() != INVALID_SOCKET`)
+     * - Reset the socket handle to `INVALID_SOCKET`
+     * - Release client address info (`_cliAddrInfo`)
+     * - Clear `_selectedAddrInfo`
+     *
+     * Then immediately rethrows the current exception using `throw;`.
      *
      * ---
      *
      * ### ⚠️ Usage Notes
-     * - This method must only be called from inside a `catch` block. Invoking it outside a
-     *   valid exception context will cause undefined behavior or terminate the program.
-     * - Do **not** pass an exception object manually — `throw;` automatically rethrows the
-     *   active exception without slicing or losing context.
+     * - This method **must** be called from within a `catch` block. If no active exception is present,
+     *   calling `throw;` results in undefined behavior.
+     * - Do **not** pass an exception object manually. `throw;` preserves the full exception context,
+     *   including type, stack trace, and nested information.
      *
      * ---
      *
      * ### 🧠 Example
      * @code
      * try {
-     *     // constructor or tuning logic
      *     setReceiveBufferSize(...);
      *     setTcpNoDelay(...);
      * } catch (const SocketException&) {
-     *     cleanupAndRethrow(); // Close socket, reset state, and rethrow
+     *     cleanupAndRethrow(); // Ensure resources are freed, then rethrow
      * }
      * @endcode
      *
-     * @throws SocketException Always rethrows the currently handled exception
+     * @throws SocketException Always rethrows the currently active exception
      *
-     * @see cleanupAndThrow(), CloseSocket(), SocketException
+     * @see cleanup(), cleanupAndThrow()
+     * @see SocketException
+     * @see CloseSocket()
      */
     void cleanupAndRethrow();
 
