@@ -1546,19 +1546,94 @@ class ServerSocket : public SocketOptions
 
   protected:
     /**
-     * @brief Cleans up server socket resources and throws a SocketException.
-     *
-     * This method performs cleanup of the address information structures (_srvAddrInfo)
-
-     * and throws a SocketException with the provided error code. It's typically called
-     * when an error occurs during socket initialization or configuration.
-     *
-     * @param[in] errorCode The error code to include in the thrown exception
-     * @throws SocketException Always throws with the provided error code and corresponding message
-     *
+     * @brief Cleans up internal resources and resets the server socket state.
      * @ingroup tcp
+     *
+     * This internal method ensures proper teardown of socket-related resources
+     * without throwing exceptions. It is used by destructors and error-handling
+     * code to guarantee that:
+     *
+     * - The socket file descriptor is closed (if valid)
+     * - Address resolution memory is released (`_srvAddrInfo`)
+     * - Internal state flags (`_isBound`, `_isListening`) are reset
+     *
+     * ### Behavior
+     * - If the socket is open, it is closed using `CloseSocket()`
+     * - Socket descriptor is invalidated by setting it to `INVALID_SOCKET`
+     * - Address info pointers are reset to null
+     * - Internal state flags are cleared
+     *
+     * This method is **noexcept-safe** and must never throw. It is typically
+     * used in destructors, move operations, and failure paths to ensure
+     * consistent and exception-safe resource management.
+     *
+     * @note Errors during socket closure are silently ignored.
+     * @note This method does **not** throw; use `cleanupAndThrow()` if you need exception propagation.
+     *
+     * @see close(), cleanupAndThrow(), cleanupAndRethrow()
+     */
+    void cleanup();
+
+    /**
+     * @brief Cleans up internal resources and throws a `SocketException`.
+     * @ingroup tcp
+     *
+     * This method is used when a fatal socket error occurs during construction or setup.
+     * It ensures that:
+     * - The socket descriptor is closed if still valid
+     * - All allocated resources (e.g., `addrinfo`) are released
+     * - Internal state is reset
+     *
+     * After cleanup, a `SocketException` is thrown with the provided error code.
+     * This ensures RAII-compliant error handling and prevents resource leaks in failure paths.
+     *
+     * ### Behavior
+     * - Invokes `CloseSocket()` on the socket descriptor if open
+     * - Resets `_srvAddrInfo`, `_selectedAddrInfo`, `_isBound`, and `_isListening`
+     * - Throws a `SocketException` with the specified `errorCode`
+     *
+     * @param[in] errorCode The error code to propagate via `SocketException`
+     *
+     * @throws SocketException Always throws after cleaning up internal state
+     *
+     * @note This method is typically used in constructors or setup functions like `bind()`
+     *       when a system error occurs and recovery is not possible.
+     *
+     * @see cleanup(), cleanupAndRethrow(), SocketException
      */
     void cleanupAndThrow(int errorCode);
+
+    /**
+     * @brief Cleans up internal resources and rethrows the current exception.
+     * @ingroup tcp
+     *
+     * This method is used in exception-handling blocks to perform safe cleanup
+     * of the `ServerSocket`'s internal state and then rethrow the original exception.
+     * It ensures that:
+     * - The socket descriptor is closed if still open
+     * - Address resolution memory (`_srvAddrInfo`) is freed
+     * - All internal state flags are reset
+     *
+     * This guarantees consistent resource teardown in exception paths,
+     * and supports strong exception safety.
+     *
+     * ### Usage Example
+     * @code
+     * try {
+     *     // some operation that may throw
+     * } catch (...) {
+     *     cleanupAndRethrow();
+     * }
+     * @endcode
+     *
+     * @throws Rethrows the currently active exception.
+     *
+     * @note This method must be called only from inside a `catch` block.
+     * @note It preserves the original exception type and message.
+     *
+     * @see cleanup(), cleanupAndThrow()
+     */
+    void cleanupAndRethrow();
 
     /**
      * @brief Identifies this socket as a passive (listening) socket.

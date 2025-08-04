@@ -87,7 +87,7 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
             }
             catch (const SocketException& se)
             {
-                cleanupAndThrow(se.getErrorCode());
+                cleanupAndRethrow();
             }
 
             break; // Exit after successfully creating the IPv6 socket
@@ -126,7 +126,7 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
     }
     catch (const SocketException&)
     {
-        cleanupAndThrow(GetSocketError());
+        cleanupAndRethrow();
     }
 
     // Set accept timeout as requested
@@ -139,7 +139,7 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
     }
 }
 
-void ServerSocket::cleanupAndThrow(const int errorCode)
+void ServerSocket::cleanup()
 {
     if (getSocketFd() != INVALID_SOCKET)
     {
@@ -150,9 +150,23 @@ void ServerSocket::cleanupAndThrow(const int errorCode)
         // TODO: Consider adding an internal flag, nested exception, or user-configurable error handler
         //       to report errors in future versions.
     }
+
     _srvAddrInfo.reset();
     _selectedAddrInfo = nullptr;
+    _isBound = false;
+    _isListening = false;
+}
+
+void ServerSocket::cleanupAndThrow(const int errorCode)
+{
+    cleanup();
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
+}
+
+void ServerSocket::cleanupAndRethrow()
+{
+    cleanup();
+    throw;
 }
 
 std::string ServerSocket::getLocalIp(const bool convertIPv4Mapped) const

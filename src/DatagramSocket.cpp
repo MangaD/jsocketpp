@@ -150,9 +150,9 @@ DatagramSocket::DatagramSocket(const Port port, const std::string_view localAddr
         if (nonBlocking)
             setNonBlocking(true);
     }
-    catch (const SocketException& se)
+    catch (const SocketException&)
     {
-        cleanupAndThrow(se.getErrorCode());
+        cleanupAndRethrow();
     }
 
     // If requested, bind immediately to the resolved address and port
@@ -160,7 +160,7 @@ DatagramSocket::DatagramSocket(const Port port, const std::string_view localAddr
         bind();
 }
 
-void DatagramSocket::cleanupAndThrow(const int errorCode)
+void DatagramSocket::cleanup()
 {
     if (getSocketFd() != INVALID_SOCKET)
     {
@@ -173,7 +173,20 @@ void DatagramSocket::cleanupAndThrow(const int errorCode)
     }
     _addrInfoPtr.reset();
     _selectedAddrInfo = nullptr;
+    _isBound = false;
+    _isConnected = false;
+}
+
+void DatagramSocket::cleanupAndThrow(const int errorCode)
+{
+    cleanup();
     throw SocketException(errorCode, SocketErrorMessage(errorCode));
+}
+
+void DatagramSocket::cleanupAndRethrow()
+{
+    cleanup();
+    throw;
 }
 
 DatagramSocket::~DatagramSocket() noexcept

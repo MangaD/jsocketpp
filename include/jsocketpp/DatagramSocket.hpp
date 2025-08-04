@@ -1048,40 +1048,68 @@ class DatagramSocket : public SocketOptions
      * @brief Sends a trivially copyable object of type `T` as a UDP datagram to the specified destination.
      * @ingroup udp
      *
-     * This method serializes the given object into raw binary form and sends it using `sendto()`
-     * to the specified IP address and port. It works regardless of whether the socket is connected.
+     * This method serializes a POD object into raw binary form and transmits it using `sendto()` to a
+     * remote IP address and port. It works independently of whether the socket is connected and
+     * performs its own address resolution per call.
      *
      * ---
      *
-     * ### Constraints
-     * - The socket must be open
+     * ### 📦 Serialization Constraints
      * - The type `T` must be:
      *   - `std::is_trivially_copyable_v<T> == true`
      *   - `std::is_standard_layout_v<T> == true`
-     * - The destination host must be a valid resolvable IP/hostname
+     * - Padding bytes in `T` (if any) are preserved and transmitted as-is
+     * - No endianness conversion is performed — you must normalize fields manually
      *
      * ---
      *
-     * ### Behavior
-     * - Resolves the remote endpoint using `getaddrinfo()`, using the socket's address family (`_family`)
-     * - Serializes `value` using `std::bit_cast` into a raw byte buffer
-     * - Sends the buffer via `sendto()` to the resolved address
-     * - Only the first successful destination is used
+     * ### 🌐 Address Resolution
+     * - Performs per-call resolution of the `host` and `port` using `getaddrinfo()`
+     * - Uses the socket’s resolved address family (IPv4 or IPv6) if available
+     * - Tries all resolved addresses until one `sendto()` succeeds
+     *
+     * ---
+     *
+     * ### ⚙️ Behavior
+     * - `value` is bit-cast into a `std::array<std::byte, sizeof(T)>`
+     * - The buffer is transmitted via `sendto()` to the first address that accepts the full datagram
+     * - No retries or fragmentation — UDP datagrams exceeding MTU may be dropped
+     * - The internal socket state is not modified (does not change connection status)
+     *
+     * ---
+     *
+     * ### 🧪 Example
+     * @code
+     * struct Packet {
+     *     std::uint32_t seq;
+     *     std::uint16_t flags;
+     * };
+     *
+     * jsocketpp::DatagramSocket udp(0); // unbound UDP socket
+     * Packet p{42, 0x01};
+     * udp.writeTo("192.168.1.10", 5555, p); // Send to peer
+     * @endcode
      *
      * ---
      *
      * @tparam T A trivially copyable, standard layout POD type
-     * @param[in] host Hostname or IP address of the recipient
-     * @param[in] port UDP port of the recipient
-     * @param[in] value The object to send
+     * @param[in] host Remote hostname or IP address to send to
+     * @param[in] port Remote UDP port number
+     * @param[in] value Object of type `T` to be serialized and transmitted
      *
      * @throws SocketException If:
      * - The socket is not open
      * - Address resolution fails
-     * - `sendto()` fails
-     * - A partial datagram is sent
+     * - No destination accepts the datagram
+     * - `sendto()` fails with a system error
      *
-     * @see write<T>(), connect(), read<T>(), sendTo()
+     * @warning This method does not perform fragmentation or retries. Large objects may exceed MTU.
+     * @warning No byte-order normalization is performed. Use `jsocketpp::net::toNetwork()` helpers for integers.
+     *
+     * @see write<T>() For connected send
+     * @see connect() To establish a default peer
+     * @see read<T>() For receiving structured objects
+     * @see receiveFrom() For receiving from arbitrary peers
      */
     template <typename T> void writeTo(const std::string_view host, const Port port, const T& value)
     {
@@ -1513,16 +1541,130 @@ class DatagramSocket : public SocketOptions
 
   protected:
     /**
-     * @brief Cleans up datagram socket resources and throws a SocketException.
+     * @brief Internal helper that releases socket resources and resets all internal state.
+     * @ingroup udp
      *
-     * This method performs cleanup of the address information structures (_addrInfoPtr)
-     * and throws a SocketException with the provided error code. It's typically called
-     * when an error occurs during socket initialization or configuration.
+     * This method safely resets the `DatagramSocket` to an uninitialized state. It is used
+     * during error recovery to release partially constructed socket state, and ensures the object
+     * no longer appears bound or connected after failure.
      *
-     * @param errorCode The error code to include in the thrown exception
-     * @throws SocketException Always throws with the provided error code and corresponding message
+     * ---
+     *
+     * ### ⚙️ Behavior
+     * - Closes the socket if it is valid (`getSocketFd() != INVALID_SOCKET`)
+     * - Sets the socket descriptor to `INVALID_SOCKET`
+     * - Releases resolved address information (`_addrInfoPtr`)
+     * - Clears `_selectedAddrInfo`
+     * - Resets internal flags:
+     *   - `_isBound = false`
+     *   - `_isConnected = false`
+     *
+     * ---
+     *
+     * ### 🔒 Safety
+     * - Safe to call multiple times
+     * - Never throws
+     * - Used internally by `cleanupAndThrow()` and `cleanupAndRethrow()` for consistent recovery
+     *
+     * @note This method is private and should not be exposed to users directly. It is designed
+     *       for internal lifecycle management and exception-safe cleanup.
+     *
+     * @see cleanupAndThrow(), cleanupAndRethrow(), CloseSocket()
+     */
+    void cleanup();
+
+    /**
+     * @brief Releases all socket resources and throws a `SocketException` with the given error code.
+     * @ingroup udp
+     *
+     * This method performs complete internal cleanup of the datagram socket and then throws
+     * a `SocketException`. It is typically invoked when construction, binding, or configuration
+     * of the socket fails, ensuring the object is left in a safe, uninitialized state.
+     *
+     * ---
+     *
+     * ### ⚙️ Behavior
+     * Internally delegates to `cleanup()`, which:
+     * - Closes the socket if open
+     * - Resets the socket descriptor to `INVALID_SOCKET`
+     * - Releases address resolution results (`_addrInfoPtr`)
+     * - Clears `_selectedAddrInfo`
+     * - Resets internal state flags:
+     *   - `_isBound = false`
+     *   - `_isConnected = false`
+     *
+     * After cleanup, throws a `SocketException` with:
+     * - The provided `errorCode`
+     * - A descriptive message from `SocketErrorMessage(errorCode)`
+     *
+     * ---
+     *
+     * ### 🧠 Example
+     * @code
+     * if (::bind(getSocketFd(), ...) == SOCKET_ERROR)
+     * {
+     *     cleanupAndThrow(GetSocketError());
+     * }
+     * @endcode
+     *
+     * @param[in] errorCode The system or application-level error code to report.
+     *
+     * @throws SocketException Always throws after cleanup.
+     *
+     * @see cleanup()
+     * @see cleanupAndRethrow()
+     * @see SocketException, SocketErrorMessage()
      */
     void cleanupAndThrow(int errorCode);
+
+    /**
+     * @brief Cleans up the datagram socket and rethrows the currently active exception.
+     * @ingroup udp
+     *
+     * This method is intended to be used inside a `catch` block when an exception occurs
+     * during socket construction or setup. It ensures all internal resources are safely
+     * released before rethrowing the original exception, leaving the socket in an
+     * uninitialized and safe state.
+     *
+     * ---
+     *
+     * ### ⚙️ Behavior
+     * Internally calls `cleanup()`, which:
+     * - Closes the socket if it is open
+     * - Sets the socket descriptor to `INVALID_SOCKET`
+     * - Frees any resolved address information (`_addrInfoPtr`)
+     * - Clears `_selectedAddrInfo`
+     * - Resets connection state flags:
+     *   - `_isBound = false`
+     *   - `_isConnected = false`
+     *
+     * Then rethrows the active exception using `throw;`.
+     *
+     * ---
+     *
+     * ### ⚠️ Usage Notes
+     * - Must be invoked only from within a valid `catch` block
+     * - If no exception is currently being handled, calling this method causes undefined behavior
+     * - Never accepts an exception object — `throw;` preserves full type and context
+     *
+     * ---
+     *
+     * ### 🧠 Example
+     * @code
+     * try {
+     *     setNonBlocking(true);
+     *     setSoRecvTimeout(2000);
+     * } catch (...) {
+     *     cleanupAndRethrow(); // Fully resets state and rethrows original exception
+     * }
+     * @endcode
+     *
+     * @throws SocketException or the original active exception
+     *
+     * @see cleanup(), cleanupAndThrow()
+     * @see SocketException
+     */
+    void cleanupAndRethrow();
 
     // Also required for MulticastSocket, hence protected.
     internal::AddrinfoPtr _addrInfoPtr = nullptr; ///< Address info pointer for bind/connect.
