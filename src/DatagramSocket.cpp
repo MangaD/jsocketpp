@@ -206,7 +206,7 @@ void DatagramSocket::close()
     _isConnected = false;
 }
 
-void DatagramSocket::bind(const std::string_view host, const Port port)
+void DatagramSocket::bind(const std::string_view localAddress, const Port localPort)
 {
     if (_isConnected)
     {
@@ -218,7 +218,8 @@ void DatagramSocket::bind(const std::string_view host, const Port port)
         throw SocketException("DatagramSocket::bind(): socket is already bound");
     }
 
-    const auto result = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP, AI_PASSIVE);
+    const auto result =
+        internal::resolveAddress(localAddress, localPort, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP, AI_PASSIVE);
 
     for (const addrinfo* p = result.get(); p != nullptr; p = p->ai_next)
     {
@@ -239,9 +240,9 @@ void DatagramSocket::bind(const std::string_view host, const Port port)
     throw SocketException(error, SocketErrorMessageWrap(error));
 }
 
-void DatagramSocket::bind(const Port port)
+void DatagramSocket::bind(const Port localPort)
 {
-    bind("0.0.0.0", port);
+    bind("0.0.0.0", localPort);
 }
 
 void DatagramSocket::bind()
