@@ -21,7 +21,8 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
     addrinfo* res = nullptr;
     if (const int ret = getaddrinfo(groupAddr.c_str(), nullptr, &hints, &res); ret != 0 || !res)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error, true));
     }
 
     if (res->ai_family == AF_INET)
@@ -312,22 +313,34 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
         auto addr = INADDR_ANY;
         if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char*>(&addr), sizeof(addr)) <
             0)
-            throw SocketException(GetSocketError(), "Failed to clear IPv4 multicast interface");
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
         // IPv6: set to 0
         DWORD idx = 0;
         if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, reinterpret_cast<const char*>(&idx),
                        sizeof(idx)) < 0)
-            throw SocketException(GetSocketError(), "Failed to clear IPv6 multicast interface");
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
 #else
         // IPv4: set to INADDR_ANY
         in_addr addr{};
         addr.s_addr = htonl(INADDR_ANY);
         if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, &addr, sizeof(addr)) < 0)
-            throw SocketException(GetSocketError(), "Failed to clear IPv4 multicast interface");
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
         // IPv6: set to 0
         unsigned int idx = 0;
         if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
-            throw SocketException(GetSocketError(), "Failed to clear IPv6 multicast interface");
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
 #endif
         _currentInterface.clear();
         return;
@@ -342,10 +355,16 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
         DWORD addr = v4addr.s_addr;
         if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char*>(&addr), sizeof(addr)) <
             0)
-            throw SocketException(GetSocketError(), "Failed to set IPv4 multicast interface to " + iface);
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
 #else
         if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, &v4addr, sizeof(v4addr)) < 0)
-            throw SocketException(GetSocketError(), "Failed to set IPv4 multicast interface to " + iface);
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
 #endif
         _currentInterface = iface;
         return;
@@ -360,7 +379,10 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
         // Numeric index specified as string
         if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, reinterpret_cast<const char*>(&idx),
                        sizeof(idx)) < 0)
-            throw SocketException(GetSocketError(), "Failed to set IPv6 multicast interface to index " + iface);
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
         _currentInterface = iface;
         return;
     }
@@ -377,7 +399,10 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
             throw SocketException("Invalid IPv6 interface: " + iface);
     }
     if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
-        throw SocketException(GetSocketError(), "Failed to set IPv6 multicast interface to " + iface);
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
     _currentInterface = iface;
 #endif
 }
@@ -396,11 +421,17 @@ void MulticastSocket::setTimeToLive(int ttl)
     auto v4ttl = static_cast<DWORD>(ttl);
     if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_TTL, reinterpret_cast<const char*>(&v4ttl), sizeof(v4ttl)) <
         0)
-        throw SocketException(GetSocketError(), "Failed to set IPv4 multicast TTL");
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #else
     int v4ttl = ttl;
     if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_TTL, &v4ttl, sizeof(v4ttl)) < 0)
-        throw SocketException(GetSocketError(), "Failed to set IPv4 multicast TTL");
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #endif
 
     // Set hop limit for IPv6 multicast
@@ -408,11 +439,17 @@ void MulticastSocket::setTimeToLive(int ttl)
     auto v6hops = static_cast<DWORD>(ttl);
     if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_HOPS, reinterpret_cast<const char*>(&v6hops),
                    sizeof(v6hops)) < 0)
-        throw SocketException(GetSocketError(), "Failed to set IPv6 multicast hop limit");
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #else
     int v6hops = ttl;
     if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_HOPS, &v6hops, sizeof(v6hops)) < 0)
-        throw SocketException(GetSocketError(), "Failed to set IPv6 multicast hop limit");
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #endif
 
     _ttl = ttl;
@@ -455,7 +492,8 @@ void MulticastSocket::setLoopbackMode(const bool enable)
     }
     if (result == SOCKET_ERROR)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
     }
     _loopbackEnabled = enable; // (Optional: if you want to store it as a private member)
 }

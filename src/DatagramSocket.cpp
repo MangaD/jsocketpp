@@ -195,7 +195,10 @@ void DatagramSocket::close()
     if (getSocketFd() != INVALID_SOCKET)
     {
         if (CloseSocket(getSocketFd()))
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
 
         setSocketFd(INVALID_SOCKET);
     }
@@ -232,7 +235,8 @@ void DatagramSocket::bind(const std::string_view host, const Port port)
         }
     }
 
-    throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    const int error = GetSocketError();
+    throw SocketException(error, SocketErrorMessageWrap(error));
 }
 
 void DatagramSocket::bind(const Port port)
@@ -326,7 +330,10 @@ void DatagramSocket::connect(const std::string_view host, const Port port, const
             throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
                                          "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
         if (selectResult < 0)
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
 
         // Even if select() reports writable, we must check if the connection actually succeeded
         int so_error = 0;
@@ -355,7 +362,8 @@ void DatagramSocket::disconnect()
     if (const int res = ::connect(getSocketFd(), reinterpret_cast<sockaddr*>(&nullAddr), sizeof(nullAddr));
         res == SOCKET_ERROR)
     {
-        throw SocketException(GetSocketError(), "DatagramSocket::disconnect(): disconnect failed");
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     _isConnected = false;
@@ -381,12 +389,15 @@ size_t DatagramSocket::write(std::string_view message) const
 #endif
                              flags);
     if (sent == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     return static_cast<size_t>(sent);
 }
 
-std::size_t DatagramSocket::write(const DatagramPacket& packet) const
+std::size_t DatagramSocket::write(const DatagramPacket& packet)
 {
     if (packet.buffer.empty())
         return 0;
@@ -415,12 +426,21 @@ std::size_t DatagramSocket::write(const DatagramPacket& packet) const
 
         const int error = GetSocketError();
         if (sent < 0)
-            throw SocketException(error, SocketErrorMessage(error));
+            throw SocketException(error, SocketErrorMessageWrap(error));
+
+        // 🔁 Update _remoteAddr/_remoteAddrLen for consistency with read()
+        if (!_isConnected)
+        {
+            _remoteAddr = *reinterpret_cast<const sockaddr_storage*>(result->ai_addr);
+            _remoteAddrLen = static_cast<socklen_t>(result->ai_addrlen);
+        }
+
         return static_cast<std::size_t>(sent);
     }
 
     if (!_isConnected)
-        throw SocketException("write(packet): no destination specified and socket is not connected");
+        throw SocketException(
+            "DatagramSocket::write(DatagramPacket): no destination specified and socket is not connected.");
 
     const int sent = send(getSocketFd(), packet.buffer.data(),
 #ifdef _WIN32
@@ -429,9 +449,11 @@ std::size_t DatagramSocket::write(const DatagramPacket& packet) const
                           packet.buffer.size(),
 #endif
                           flags);
+
     const int error = GetSocketError();
     if (sent < 0)
-        throw SocketException(error, SocketErrorMessage(error));
+        throw SocketException(error, SocketErrorMessageWrap(error));
+
     return static_cast<std::size_t>(sent);
 }
 
@@ -479,7 +501,10 @@ size_t DatagramSocket::write(std::string_view message, const std::string_view ho
     );
     freeaddrinfo(destInfo); // ignore errors from freeaddrinfo
     if (sent == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     return static_cast<size_t>(sent);
 }
@@ -502,7 +527,10 @@ size_t DatagramSocket::read(DatagramPacket& packet, const bool resizeBuffer) con
                                    0, reinterpret_cast<sockaddr*>(&srcAddr), &addrLen);
 
     if (received == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
     if (received == 0)
         throw SocketException("Connection closed by remote host.");
 
@@ -540,7 +568,10 @@ std::string DatagramSocket::getLocalIp(const bool convertIPv4Mapped) const
     socklen_t addrLen = sizeof(localAddr);
 
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&localAddr), &addrLen) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
 
     return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&localAddr), convertIPv4Mapped);
 }
@@ -554,7 +585,10 @@ Port DatagramSocket::getLocalPort() const
     socklen_t addrLen = sizeof(addr);
 
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
 
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
 }
@@ -575,7 +609,10 @@ std::string DatagramSocket::getRemoteIp(const bool convertIPv4Mapped) const
     if (isConnected())
     {
         if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
     }
     else
     {
@@ -600,7 +637,10 @@ Port DatagramSocket::getRemotePort() const
     if (isConnected())
     {
         if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
     }
     else
     {

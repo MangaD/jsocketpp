@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <cstring> // std::memcpy
+#include <span>
 
 using namespace jsocketpp;
 
@@ -154,7 +155,8 @@ void Socket::bind(const std::string_view localHost, const Port port)
         }
     }
 
-    throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    const int error = GetSocketError();
+    throw SocketException(error, SocketErrorMessageWrap(error));
 }
 
 void Socket::bind(const Port port)
@@ -246,7 +248,10 @@ void Socket::connect(const int timeoutMillis)
             throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
                                          "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
         if (selectResult < 0)
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
 
         // Even if select() reports writable, we must check if the connection actually succeeded
         int so_error = 0;
@@ -286,7 +291,10 @@ void Socket::close()
     if (getSocketFd() != INVALID_SOCKET)
     {
         if (CloseSocket(getSocketFd()))
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
 
         setSocketFd(INVALID_SOCKET);
     }
@@ -338,7 +346,8 @@ void Socket::shutdown(ShutdownMode how) const
     {
         if (::shutdown(getSocketFd(), shutdownType))
         {
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
         }
     }
 }
@@ -353,7 +362,8 @@ std::string Socket::getLocalIp(const bool convertIPv4Mapped) const
 
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
     }
 
     return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
@@ -369,7 +379,8 @@ Port Socket::getLocalPort() const
 
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
     }
 
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
@@ -389,7 +400,10 @@ std::string Socket::getRemoteIp(const bool convertIPv4Mapped) const
     socklen_t addrLen = sizeof(remoteAddr);
 
     if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&remoteAddr), &addrLen) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
 
     return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr), convertIPv4Mapped);
 }
@@ -403,7 +417,10 @@ Port Socket::getRemotePort() const
     socklen_t addrLen = sizeof(remoteAddr);
 
     if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&remoteAddr), &addrLen) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
 
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr));
 }
@@ -427,7 +444,10 @@ size_t Socket::write(std::string_view message) const
 #endif
                           flags);
     if (len == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
     // send() may send fewer bytes than requested (partial write), especially on non-blocking sockets.
     // It is the caller's responsibility to check the return value and handle partial sends if needed.
     return static_cast<size_t>(len);
@@ -490,7 +510,10 @@ bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
 #endif
 
     if (result < 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     return result > 0;
 }
@@ -576,7 +599,10 @@ std::string Socket::readExact(const std::size_t n) const
                               0);
 
         if (len == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
 
         if (len == 0)
             throw SocketException("Connection closed before reading all data.");
@@ -611,7 +637,10 @@ std::string Socket::readUntil(const char delimiter, const std::size_t maxLen, co
                               0);
 
         if (len == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
 
         if (len == 0)
             throw SocketException("readUntil: connection closed before delimiter was found.");
@@ -661,7 +690,8 @@ std::string Socket::readAtMost(std::size_t n) const
 
     if (len == SOCKET_ERROR)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     if (len == 0)
@@ -692,7 +722,10 @@ std::size_t Socket::readIntoInternal(void* buffer, std::size_t len, const bool e
                                     0);
 
         if (bytesRead == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
 
         if (bytesRead == 0)
         {
@@ -728,7 +761,10 @@ std::string Socket::readAtMostWithTimeout(std::size_t n, const int timeoutMillis
                           0);
 
     if (len == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     if (len == 0)
         throw SocketException("Connection closed before data could be read.");
@@ -745,11 +781,17 @@ std::string Socket::readAvailable() const
 #ifdef _WIN32
     u_long bytesAvailable = 0;
     if (ioctlsocket(getSocketFd(), FIONREAD, &bytesAvailable) != 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #else
     int bytesAvailable = 0;
     if (ioctl(getSocketFd(), FIONREAD, &bytesAvailable) < 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #endif
 
     if (bytesAvailable <= 0)
@@ -767,7 +809,10 @@ std::string Socket::readAvailable() const
                           0);
 
     if (len == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     if (len == 0)
         throw SocketException("Connection closed while attempting to read available data.");
@@ -787,11 +832,17 @@ std::size_t Socket::readIntoAvailable(void* buffer, const std::size_t bufferSize
 #ifdef _WIN32
     u_long bytesAvailable = 0;
     if (ioctlsocket(getSocketFd(), FIONREAD, &bytesAvailable) != 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #else
     int bytesAvailable = 0;
     if (ioctl(getSocketFd(), FIONREAD, &bytesAvailable) < 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #endif
 
     if (bytesAvailable <= 0)
@@ -808,7 +859,10 @@ std::size_t Socket::readIntoAvailable(void* buffer, const std::size_t bufferSize
                           0);
 
     if (len == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     if (len == 0)
         throw SocketException("Connection closed while attempting to read available data.");
@@ -836,7 +890,10 @@ std::string Socket::peek(std::size_t n) const
                           MSG_PEEK);
 
     if (len == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     if (len == 0)
         throw SocketException("Connection closed during peek operation.");
@@ -873,7 +930,8 @@ void Socket::discard(const std::size_t n, const std::size_t chunkSize /* = 1024 
 
         if (len == SOCKET_ERROR)
         {
-            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
         }
 
         if (len == 0)
@@ -907,7 +965,10 @@ std::size_t Socket::writev(std::span<const std::string_view> buffers) const
     if (const int result =
             WSASend(getSocketFd(), wsabufs.data(), static_cast<DWORD>(wsabufs.size()), &bytesSent, 0, nullptr, nullptr);
         result == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     return static_cast<std::size_t>(bytesSent);
 
@@ -926,7 +987,10 @@ std::size_t Socket::writev(std::span<const std::string_view> buffers) const
 
     ssize_t bytesSent = ::writev(getSocketFd(), iovecs.data(), static_cast<int>(iovecs.size()));
     if (bytesSent == -1)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     return static_cast<std::size_t>(bytesSent);
 #endif
@@ -995,8 +1059,10 @@ std::size_t Socket::writeAtMostWithTimeout(std::string_view data, const int time
                           0);
 
     if (len == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
     if (len == 0)
         throw SocketException("Connection closed while writing.");
 
@@ -1022,7 +1088,10 @@ std::size_t Socket::writeFrom(const void* data, std::size_t len) const
                            0);
 
     if (sent == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     if (sent == 0)
         throw SocketException("Connection closed while writing to socket.");
@@ -1054,8 +1123,10 @@ std::size_t Socket::writeFromAll(const void* data, const std::size_t len) const
                                0);
 
         if (sent == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
         if (sent == 0)
             throw SocketException("Connection closed during writeFromAll().");
 
@@ -1100,8 +1171,10 @@ std::size_t Socket::writeWithTotalTimeout(const std::string_view data, const int
                                0);
 
         if (sent == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
         if (sent == 0)
             throw SocketException("Connection closed during timed write.");
 
@@ -1184,8 +1257,10 @@ std::size_t Socket::readv(std::span<BufferView> buffers) const
     const int result = WSARecv(getSocketFd(), wsaBufs.data(), static_cast<DWORD>(wsaBufs.size()), &bytesReceived,
                                &flags, nullptr, nullptr);
     if (result == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
-
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
     if (bytesReceived == 0)
         throw SocketException("Connection closed during readv().");
 
@@ -1195,7 +1270,10 @@ std::size_t Socket::readv(std::span<BufferView> buffers) const
     const auto ioVecs = internal::toIOVec(buffers);
     const ssize_t bytes = ::readv(getSocketFd(), ioVecs.data(), static_cast<int>(ioVecs.size()));
     if (bytes < 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     if (bytes == 0)
         throw SocketException("Connection closed during readv().");
@@ -1335,7 +1413,10 @@ std::size_t Socket::writevFrom(std::span<const BufferView> buffers) const
     if (const int result =
             WSASend(getSocketFd(), wsaBufs.data(), static_cast<DWORD>(wsaBufs.size()), &bytesSent, 0, nullptr, nullptr);
         result == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     return static_cast<std::size_t>(bytesSent);
 
@@ -1344,7 +1425,10 @@ std::size_t Socket::writevFrom(std::span<const BufferView> buffers) const
 
     const ssize_t written = ::writev(getSocketFd(), ioVecs.data(), static_cast<int>(ioVecs.size()));
     if (written < 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     return static_cast<std::size_t>(written);
 #endif

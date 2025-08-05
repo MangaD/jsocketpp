@@ -156,7 +156,8 @@ std::string ServerSocket::getLocalIp(const bool convertIPv4Mapped) const
 
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
     }
 
     return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
@@ -172,7 +173,8 @@ Port ServerSocket::getLocalPort() const
 
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
     }
 
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
@@ -186,7 +188,10 @@ std::string ServerSocket::getLocalSocketAddress() const
     sockaddr_storage addr{};
     socklen_t len = sizeof(addr);
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     char host[INET6_ADDRSTRLEN]{};
     char serv[6]{};
@@ -216,7 +221,10 @@ void ServerSocket::close()
     if (getSocketFd() != INVALID_SOCKET)
     {
         if (CloseSocket(getSocketFd()))
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
 
         setSocketFd(INVALID_SOCKET);
     }
@@ -244,7 +252,8 @@ void ServerSocket::bind()
 
     if (res == SOCKET_ERROR)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     _isBound = true;
@@ -253,7 +262,10 @@ void ServerSocket::bind()
 void ServerSocket::listen(const int backlog /* = 128 */)
 {
     if (::listen(getSocketFd(), backlog) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     _isListening = true;
 }
@@ -347,7 +359,10 @@ Socket ServerSocket::acceptBlocking(const std::optional<std::size_t> recvBufferS
 
     const SOCKET clientSocket = ::accept(getSocketFd(), reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrLen);
     if (clientSocket == INVALID_SOCKET)
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
 
     const auto [recvResolved, sendResolved, internalResolved] =
         resolveBuffers(recvBufferSize, sendBufferSize, internalBufferSize);
@@ -458,7 +473,8 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     int result = poll(&pfd, 1, timeout);
     if (result < 0)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
     }
     // poll() returns the number of fds with events. Check for POLLIN.
     return result > 0 && (pfd.revents & POLLIN);
@@ -499,7 +515,8 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     int result = select(static_cast<int>(getSocketFd()) + 1, &readFds, nullptr, nullptr, tvPtr);
     if (result < 0)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
     }
     // select() returns the number of sockets that are ready.
     // If it's greater than 0, our server socket is ready to accept a connection.

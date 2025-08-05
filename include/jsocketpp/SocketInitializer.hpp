@@ -26,7 +26,10 @@ class SocketInitializer
     SocketInitializer()
     {
         if (InitSockets() != 0)
-            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
     }
 
     /**

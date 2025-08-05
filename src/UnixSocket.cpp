@@ -19,7 +19,10 @@ UnixSocket::UnixSocket(const std::string_view path, const std::size_t bufferSize
 
     setSocketFd(socket(AF_UNIX, SOCK_STREAM, 0));
     if (getSocketFd() == INVALID_SOCKET)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 }
 
 UnixSocket::~UnixSocket() noexcept
@@ -87,7 +90,8 @@ void UnixSocket::bind()
     if (::bind(getSocketFd(), reinterpret_cast<sockaddr*>(&_addr), sizeof(_addr)) == SOCKET_ERROR)
     {
         CloseSocket(getSocketFd());
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
     }
     _isListening = true;
 }
@@ -97,7 +101,8 @@ void UnixSocket::listen(int backlog) const
     if (::listen(getSocketFd(), backlog) == SOCKET_ERROR)
     {
         CloseSocket(getSocketFd());
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
     }
 }
 
@@ -106,7 +111,8 @@ void UnixSocket::connect()
     if (::connect(getSocketFd(), reinterpret_cast<sockaddr*>(&_addr), sizeof(_addr)) == SOCKET_ERROR)
     {
         CloseSocket(getSocketFd());
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
     }
 }
 
@@ -125,7 +131,10 @@ UnixSocket UnixSocket::accept() const
     socklen_t len = sizeof(client_addr);
     const auto client_fd = ::accept(getSocketFd(), reinterpret_cast<sockaddr*>(&client_addr), &len);
     if (client_fd == INVALID_SOCKET)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
     UnixSocket client;
     client.setSocketFd(client_fd);
     client._addr = client_addr;
@@ -143,7 +152,10 @@ size_t UnixSocket::write(std::string_view data) const
 #endif
                             0);
     if (ret < 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     return static_cast<size_t>(ret);
 }
@@ -158,7 +170,10 @@ size_t UnixSocket::read(char* buffer, std::size_t len) const
 #endif
                             0);
     if (ret == -1)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     return static_cast<size_t>(ret);
 }
@@ -168,17 +183,26 @@ void UnixSocket::setNonBlocking(bool nonBlocking) const
 #ifdef _WIN32
     u_long mode = nonBlocking ? 1 : 0;
     if (ioctlsocket(getSocketFd(), FIONBIO, &mode) != 0)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #else
     int flags = fcntl(getSocketFd(), F_GETFL, 0);
     if (flags == -1)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
     if (nonBlocking)
         flags |= O_NONBLOCK;
     else
         flags &= ~O_NONBLOCK;
     if (fcntl(getSocketFd(), F_SETFL, flags) == -1)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #endif
 }
 
@@ -190,12 +214,18 @@ void UnixSocket::setTimeout(int millis) const
             SOCKET_ERROR ||
         setsockopt(getSocketFd(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&timeout), sizeof(timeout)) ==
             SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #else
     const timeval tv{millis / 1000, (millis % 1000) * 1000};
     if (setsockopt(getSocketFd(), SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR ||
         setsockopt(getSocketFd(), SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #endif
 }
 

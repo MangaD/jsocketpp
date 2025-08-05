@@ -229,7 +229,8 @@ std::vector<std::string> jsocketpp::getHostAddr()
 
     if (getifaddrs(&ifAddrStruct))
     {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     for (ifa = ifAddrStruct; ifa != nullptr; ifa = ifa->ifa_next)
@@ -271,7 +272,10 @@ std::string jsocketpp::ipFromSockaddr(const sockaddr* addr, const bool convertIP
     {
         const auto* sa = reinterpret_cast<const sockaddr_in*>(addr);
         if (!inet_ntop(AF_INET, &sa->sin_addr, buf, sizeof(buf)))
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
     }
     else if (addr->sa_family == AF_INET6)
     {
@@ -285,7 +289,10 @@ std::string jsocketpp::ipFromSockaddr(const sockaddr* addr, const bool convertIP
         }
 
         if (!inet_ntop(AF_INET6, &sa6->sin6_addr, buf, sizeof(buf)))
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
     }
     else
     {

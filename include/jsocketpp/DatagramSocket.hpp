@@ -1031,7 +1031,10 @@ class DatagramSocket : public SocketOptions
                                  0);
 
         if (sent == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
 
         if (static_cast<std::size_t>(sent) != sizeof(T))
             throw SocketException("write<T>() failed: partial datagram was sent.");
@@ -1148,7 +1151,9 @@ class DatagramSocket : public SocketOptions
      * It supports both connectionless and connected UDP sockets:
      *
      * - **Connectionless Mode:** If `packet.address` is non-empty and `packet.port` is valid,
-     *   the packet is sent to the resolved destination using `sendto()`.
+     *   the packet is sent to the resolved destination using `sendto()`. The destination address
+     *   is also stored internally, allowing follow-up calls to `getRemoteIp()` and `getRemotePort()`.
+     *
      * - **Connected Mode:** If the socket is connected (via `connect()`), and the packet does
      *   not specify a destination, the message is sent using `send()` to the connected peer.
      *
@@ -1156,6 +1161,8 @@ class DatagramSocket : public SocketOptions
      * - Resolves `packet.address` and `packet.port` via `getaddrinfo()`
      * - Sends the buffer to the resolved `sockaddr` using `sendto()`
      * - Uses `MSG_NOSIGNAL` on POSIX to suppress `SIGPIPE`
+     * - Updates the internal remote address fields (`_remoteAddr`, `_remoteAddrLen`)
+     *   for use in `getRemoteIp()` and `getRemotePort()`
      *
      * ### Connected Behavior
      * - Uses `send()` to deliver the buffer to the connected peer
@@ -1178,12 +1185,14 @@ class DatagramSocket : public SocketOptions
      *         - socket I/O failure
      *         - missing destination on unconnected socket
      *
+     * @note This method updates the socket’s internal remote address metadata if used in connectionless mode.
      * @note UDP datagrams are sent atomically. If the packet exceeds the system MTU, it may be dropped.
      * @note This method does **not** fragment or retransmit. Use application-level framing for large data.
      *
-     * @see connect(), isConnected(), write(std::string_view, std::string_view, Port), DatagramPacket
+     * @see connect(), isConnected(), write(std::string_view, std::string_view, Port), DatagramPacket,
+     *      getRemoteIp(), getRemotePort()
      */
-    [[nodiscard]] size_t write(const DatagramPacket& packet) const;
+    [[nodiscard]] size_t write(const DatagramPacket& packet);
 
     /**
      * @brief Write data to the socket (connected UDP) from a string_view.
@@ -1333,7 +1342,10 @@ class DatagramSocket : public SocketOptions
         }
 
         if (bytesReceived == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
 
         if (bytesReceived < static_cast<int>(sizeof(T)))
             throw SocketException("Datagram too short for fixed-size read<T>(); expected full object.");
@@ -1359,7 +1371,10 @@ class DatagramSocket : public SocketOptions
         const auto n = ::recvfrom(getSocketFd(), reinterpret_cast<char*>(&value), sizeof(T), 0,
                                   reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
         if (n == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessageWrap(error));
+        }
         if (n == 0)
             throw SocketException("Connection closed by remote host.");
 
@@ -1780,7 +1795,10 @@ template <> inline std::string DatagramSocket::read<std::string>()
     }
 
     if (received == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
 
     if (received == 0)
         throw SocketException("DatagramSocket::read<std::string>(): connection closed by remote host.");
@@ -1807,7 +1825,10 @@ template <> inline std::string DatagramSocket::recvFrom<std::string>(std::string
 #endif
                               0, reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
     if (n == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
     if (n == 0)
         throw SocketException("Connection closed by remote host.");
 
@@ -1898,7 +1919,10 @@ template <> inline void DatagramSocket::write<std::string>(const std::string& va
                              0);
 
     if (sent == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
 
     if (static_cast<std::size_t>(sent) != value.size())
         throw SocketException("DatagramSocket::write<std::string>(): partial datagram was sent.");
@@ -1969,7 +1993,10 @@ template <> inline void DatagramSocket::write<std::string_view>(const std::strin
                              0);
 
     if (sent == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
 
     if (static_cast<std::size_t>(sent) != value.size())
         throw SocketException("DatagramSocket::write<std::string_view>(): partial datagram was sent.");

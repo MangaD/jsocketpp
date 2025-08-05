@@ -964,7 +964,10 @@ class Socket : public SocketOptions
                                     0);
 
             if (len == SOCKET_ERROR)
-                throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+            {
+                const int error = GetSocketError();
+                throw SocketException(error, SocketErrorMessageWrap(error));
+            }
 
             if (len == 0)
                 throw SocketException("Connection closed by remote host before full object was received.");
@@ -3222,7 +3225,11 @@ template <> inline std::string Socket::read()
 #endif
                           0);
     if (len == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
+
     if (len == 0)
         throw SocketException("Connection closed by remote host.");
     return {_internalBuffer.data(), static_cast<size_t>(len)};

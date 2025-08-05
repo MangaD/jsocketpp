@@ -188,7 +188,10 @@ class UnixSocket : SocketOptions
 #endif
                                0);
         if (len == SOCKET_ERROR)
-            throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        {
+            const int error = GetSocketError();
+            throw SocketException(error, SocketErrorMessage(error));
+        }
         if (len == 0)
             throw SocketException("Connection closed by remote socket.");
         return value;
@@ -274,7 +277,10 @@ template <> inline std::string UnixSocket::read()
 #endif
                                            0));
     if (len == SOCKET_ERROR)
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
     if (len == 0)
         throw SocketException("Connection closed by remote socket.");
     return {_internalBuffer.data(), static_cast<size_t>(len)};

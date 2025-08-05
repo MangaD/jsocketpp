@@ -40,7 +40,8 @@ void SocketOptions::setOption(const int level, const int optName, const void* va
 #endif
                      len) < 0)
     {
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError()));
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
     }
 }
 
@@ -69,7 +70,8 @@ void SocketOptions::getOption(const int level, const int optName, void* result, 
 #endif
                      len) < 0)
     {
-        throw SocketException(GetSocketError(), "getsockopt() failed");
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
     }
 }
 
@@ -231,7 +233,10 @@ void SocketOptions::setNonBlocking(bool nonBlocking)
 #ifdef _WIN32
     u_long mode = nonBlocking ? 1 : 0;
     if (::ioctlsocket(_sockFd, FIONBIO, &mode) != 0)
-        throw SocketException(GetSocketError(), "ioctlsocket(FIONBIO) failed");
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 #else
     int flags = ::fcntl(_sockFd, F_GETFL, 0);
     if (flags < 0)
@@ -291,7 +296,10 @@ void SocketOptions::setIPv6Only(const bool enable)
     sockaddr_storage ss{};
     socklen_t len = sizeof(ss);
     if (::getsockname(_sockFd, reinterpret_cast<sockaddr*>(&ss), &len) != 0)
-        throw SocketException(GetSocketError(), "setIPv6Only() failed: getsockname() failed");
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     if (ss.ss_family != AF_INET6)
         throw SocketException("setIPv6Only() failed: socket is not IPv6");
@@ -307,7 +315,10 @@ bool SocketOptions::getIPv6Only() const
     sockaddr_storage ss{};
     socklen_t len = sizeof(ss);
     if (::getsockname(_sockFd, reinterpret_cast<sockaddr*>(&ss), &len) != 0)
-        throw SocketException(GetSocketError(), "getIPv6Only() failed: getsockname() failed");
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
 
     if (ss.ss_family != AF_INET6)
         throw SocketException("getIPv6Only() failed: socket is not IPv6");
