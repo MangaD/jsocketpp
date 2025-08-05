@@ -1,7 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"group__socketopts.html#ga15ba6d555b0f3b7809c746f827398c5e":[3,1,6,13],
-"group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b":[3,1,6,27],
 "group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0":[3,1,6,15],
 "group__socketopts.html#ga1d44e7f23739c1ef4a9ad550b4a1ff1d":[3,1,6,2],
 "group__socketopts.html#ga2087f337f22de16821132208b94b1441":[3,1,6,36],
@@ -155,8 +153,9 @@ var NAVTREEINDEX1 =
 "group__udp.html#ga379ff0e20d62b5f0c815d48614597005":[3,1,3,27],
 "group__udp.html#ga38397874bcb62f889cb6fefa20b45ba6":[3,1,3,29],
 "group__udp.html#ga3d08597b24d9c7a3fe43dd291ee85148":[3,1,3,12],
-"group__udp.html#ga3fa731104100275903b074ba2b65b839":[3,1,3,10],
+"group__udp.html#ga4b4c631816f82eea0b6048a16682079e":[3,1,3,14],
 "group__udp.html#ga550b67d7ad08c5cb068bb2b66d2c2c49":[3,1,3,3],
+"group__udp.html#ga5b12269efa5bc3a56ec53ea1fed9e468":[3,1,3,10],
 "group__udp.html#ga5d219ae0c5ace0c42fad1b8295a7c2a1":[3,1,3,16],
 "group__udp.html#ga61dfe82025f17e3041c5b5acca2369eb":[3,1,3,30],
 "group__udp.html#ga6608c56d08ccdb2807bd47cc862af24a":[3,1,3,7],
@@ -176,7 +175,6 @@ var NAVTREEINDEX1 =
 "group__udp.html#gacb3c554671141c0370445b2b7e9a6061":[3,1,3,23],
 "group__udp.html#gadd6a72af69e4e8e1e8701c60a7e728f1":[3,1,3,24],
 "group__udp.html#gae61e0fd22b7a69d6b5f706141fff8934":[3,1,3,34],
-"group__udp.html#gae79dab4a4d087fa02484e4b7806183f5":[3,1,3,14],
 "group__udp.html#gaf2be0b146f197d55cc55a5ba8b619166":[3,1,3,35],
 "group__udp.html#gaff03e4ff5f58f0440dec821c02355185":[3,1,3,5],
 "group__underlying__socket__api.html":[3,0,11],
@@ -249,5 +247,7 @@ var NAVTREEINDEX1 =
 "namespacejsocketpp.html#a403588c277f89591897408faed72a910":[4,0,0,26],
 "namespacejsocketpp.html#a71637861db9b297572bc1de3df56a59a":[4,0,0,31],
 "namespacejsocketpp.html#a771a44f3967222b2e3221ed3120220af":[4,0,0,28],
-"namespacejsocketpp.html#a981f7d65e550398e8ab29db83092f119":[4,0,0,14]
+"namespacejsocketpp.html#a981f7d65e550398e8ab29db83092f119":[4,0,0,14],
+"namespacejsocketpp.html#aa5ff7535f7cd1c89724bcfd6715e55ba":[4,0,0,21],
+"namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad":[4,0,0,25]
 };

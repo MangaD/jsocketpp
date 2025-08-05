@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['handle_20with_20extreme_20care_0',['⚠️ HANDLE WITH EXTREME CARE',['../group__socketopts.html#autotoc_md913',1,'']]],
+  ['handle_20with_20extreme_20care_0',['⚠️ HANDLE WITH EXTREME CARE',['../group__socketopts.html#autotoc_md915',1,'']]],
   ['handles_20blocking_20and_20timeouts_1',['⏱ How jsocketpp Handles Blocking and Timeouts',['../group__async__io.html#autotoc_md122',1,'']]],
-  ['handling_2',['Handling',['../classjsocketpp_1_1Socket.html#autotoc_md744',1,'Error Handling'],['../group__udp.html#autotoc_md549',1,'IPv6 Handling'],['../group__udp.html#autotoc_md555',1,'IPv6 Handling'],['../group__udp.html#autotoc_md569',1,'IPv6 Handling']]],
+  ['handling_2',['Handling',['../group__udp.html#autotoc_md531',1,'⏱ Timeout Handling'],['../classjsocketpp_1_1Socket.html#autotoc_md746',1,'Error Handling'],['../group__udp.html#autotoc_md551',1,'IPv6 Handling'],['../group__udp.html#autotoc_md557',1,'IPv6 Handling'],['../group__udp.html#autotoc_md571',1,'IPv6 Handling']]],
   ['handling_3',['🧪 Socket state handling',['../group__address__reuse.html#autotoc_md60',1,'']]],
-  ['handling_20socket_20exceptions_4',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md905',1,'']]],
+  ['handling_20socket_20exceptions_4',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md907',1,'']]],
   ['handling_20work_5',['How does error handling work?',['../index.html#autotoc_md416',1,'']]],
   ['happens_20when_20multiple_20sockets_20bind_20to_20the_20same_20port_6',['🧪 What Happens When Multiple Sockets Bind to the Same Port?',['../group__address__reuse.html#autotoc_md74',1,'']]],
   ['hints_20structure_20behavior_7',['Hints Structure Behavior',['../group__internal.html#autotoc_md467',1,'']]],

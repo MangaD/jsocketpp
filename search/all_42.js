@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['🔧_20common_20use_20cases_0',['🔧 Common Use Cases',['../group__socketopts.html#autotoc_md919',1,'']]],
-  ['🔧_20configuration_20parameters_1',['🔧 Configuration Parameters',['../group__tcp.html#autotoc_md761',1,'']]],
+  ['🔧_20common_20use_20cases_0',['🔧 Common Use Cases',['../group__socketopts.html#autotoc_md921',1,'']]],
+  ['🔧_20configuration_20parameters_1',['🔧 Configuration Parameters',['../group__tcp.html#autotoc_md763',1,'']]],
   ['🔧_20manual_20integration_2',['🔧 Manual Integration',['../index.html#autotoc_md387',1,'']]],
   ['🔧_20platform_20toolchain_20support_3',['🔧 Platform &amp;amp; Toolchain Support',['../index.html#autotoc_md374',1,'']]],
-  ['🔧_20use_20cases_4',['🔧 Use Cases',['../group__socketopts.html#autotoc_md937',1,'🔧 Use Cases'],['../group__socketopts.html#autotoc_md948',1,'🔧 Use Cases']]]
+  ['🔧_20use_20cases_4',['🔧 Use Cases',['../group__socketopts.html#autotoc_md939',1,'🔧 Use Cases'],['../group__socketopts.html#autotoc_md950',1,'🔧 Use Cases']]]
 ];
