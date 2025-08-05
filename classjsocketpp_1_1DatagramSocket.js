@@ -30,7 +30,7 @@ var classjsocketpp_1_1DatagramSocket =
     [ "read", "classjsocketpp_1_1DatagramSocket.html#a58152e567e2d41ee6d612355ac0eb548", null ],
     [ "recvFrom", "classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06", null ],
     [ "setInternalBufferSize", "group__udp.html#ga1b017c1366655d32a2ec5d19deef9d37", null ],
-    [ "write", "group__udp.html#gaa581b44f7664874547bab9bbb1de875d", null ],
+    [ "write", "group__udp.html#ga608cd2b00ddc598768bbd33e74b5ce0e", null ],
     [ "write", "group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df", null ],
     [ "write", "classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29", null ],
     [ "write", "classjsocketpp_1_1DatagramSocket.html#a7e2b02ba6e9a630fdbde52b88863ec99", null ],
