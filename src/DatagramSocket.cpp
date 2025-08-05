@@ -7,15 +7,17 @@
 
 using namespace jsocketpp;
 
-DatagramSocket::DatagramSocket(const Port port, const std::string_view localAddress,
+DatagramSocket::DatagramSocket(const Port localPort, const std::string_view localAddress,
                                const std::optional<std::size_t> recvBufferSize,
                                const std::optional<std::size_t> sendBufferSize,
                                const std::optional<std::size_t> internalBufferSize, const bool reuseAddress,
                                const int soRecvTimeoutMillis, const int soSendTimeoutMillis, const bool nonBlocking,
-                               const bool dualStack, const bool autoBind)
-    : SocketOptions(INVALID_SOCKET), _internalBuffer(internalBufferSize.value_or(DefaultBufferSize)), _port(port)
+                               const bool dualStack, const bool autoBind, const bool autoConnect,
+                               const std::string_view remoteAddress, const Port remotePort,
+                               const int connectTimeoutMillis)
+    : SocketOptions(INVALID_SOCKET), _internalBuffer(internalBufferSize.value_or(DefaultBufferSize)), _port(localPort)
 {
-    _addrInfoPtr = internal::resolveAddress(
+    const auto localAddrInfoPtr = internal::resolveAddress(
         localAddress, _port,
         // Specifies the address family: AF_UNSPEC allows both IPv4 (AF_INET) and IPv6 (AF_INET6)
         // addresses to be returned by getaddrinfo, enabling the server to support dual-stack networking
@@ -52,10 +54,10 @@ DatagramSocket::DatagramSocket(const Port port, const std::string_view localAddr
 
     // Sort address candidates: prioritize IPv6 if dualStack is enabled, then IPv4 fallback
     std::vector<addrinfo*> sorted;
-    for (addrinfo* p = _addrInfoPtr.get(); p; p = p->ai_next)
+    for (addrinfo* p = localAddrInfoPtr.get(); p; p = p->ai_next)
         if (dualStack && p->ai_family == AF_INET6)
             sorted.push_back(p);
-    for (addrinfo* p = _addrInfoPtr.get(); p; p = p->ai_next)
+    for (addrinfo* p = localAddrInfoPtr.get(); p; p = p->ai_next)
         if (p->ai_family == AF_INET || !dualStack)
             sorted.push_back(p);
 
@@ -65,8 +67,6 @@ DatagramSocket::DatagramSocket(const Port port, const std::string_view localAddr
         setSocketFd(::socket(p->ai_family, p->ai_socktype, p->ai_protocol));
         if (getSocketFd() != INVALID_SOCKET)
         {
-            _selectedAddrInfo = p;
-
             // If this is an IPv6 socket and dualStack is requested,
             // disable the IPV6_V6ONLY flag to allow it to receive IPv4-mapped datagrams as well.
             if (p->ai_family == AF_INET6)
@@ -75,9 +75,9 @@ DatagramSocket::DatagramSocket(const Port port, const std::string_view localAddr
                 {
                     setIPv6Only(!dualStack); // false = allow dual-stack
                 }
-                catch (const SocketException& se)
+                catch (const SocketException&)
                 {
-                    cleanupAndThrow(se.getErrorCode());
+                    cleanupAndRethrow();
                 }
             }
 
@@ -123,9 +123,30 @@ DatagramSocket::DatagramSocket(const Port port, const std::string_view localAddr
         cleanupAndRethrow();
     }
 
-    // If requested, bind immediately to the resolved address and port
+    // If requested, bind immediately to the given address and port
     if (autoBind)
-        bind();
+    {
+        try
+        {
+            bind(localAddress, localPort);
+        }
+        catch (const SocketException&)
+        {
+            cleanupAndRethrow();
+        }
+    }
+
+    if (autoConnect && !remoteAddress.empty() && remotePort != 0)
+    {
+        try
+        {
+            connect(remoteAddress, remotePort, connectTimeoutMillis);
+        }
+        catch (const SocketException&)
+        {
+            cleanupAndRethrow();
+        }
+    }
 }
 
 void DatagramSocket::cleanup()
@@ -139,8 +160,6 @@ void DatagramSocket::cleanup()
         // TODO: Consider adding an internal flag, nested exception, or user-configurable error handler
         //       to report errors in future versions.
     }
-    _addrInfoPtr.reset();
-    _selectedAddrInfo = nullptr;
     _isBound = false;
     _isConnected = false;
 }
@@ -180,8 +199,6 @@ void DatagramSocket::close()
 
         setSocketFd(INVALID_SOCKET);
     }
-    _addrInfoPtr.reset();
-    _selectedAddrInfo = nullptr;
     _isBound = false;
     _isConnected = false;
 }
@@ -228,17 +245,19 @@ void DatagramSocket::bind()
     bind("0.0.0.0", 0);
 }
 
-void DatagramSocket::connect(const int timeoutMillis)
+void DatagramSocket::connect(const std::string_view host, const Port port, const int timeoutMillis)
 {
     if (_isConnected)
     {
         throw SocketException("connect() called on an already-connected socket");
     }
 
-    // Ensure that we have already selected an address during construction
-    if (_selectedAddrInfo == nullptr)
+    // Resolve the remote address
+    const auto remoteInfo = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
+    const addrinfo* target = remoteInfo.get();
+    if (!target)
     {
-        throw SocketException("connect() failed: no valid addrinfo found");
+        throw SocketException("connect() failed: could not resolve target address");
     }
 
     // Determine if we should use non-blocking connect logic
@@ -252,12 +271,12 @@ void DatagramSocket::connect(const int timeoutMillis)
         blockingGuard.emplace(getSocketFd(), true); // Set non-blocking temporarily
     }
 
-    // Attempt to connect to the remote host
-    const auto res = ::connect(getSocketFd(), _selectedAddrInfo->ai_addr,
+    // Attempt to connect
+    const int res = ::connect(getSocketFd(), target->ai_addr,
 #ifdef _WIN32
-                               static_cast<int>(_selectedAddrInfo->ai_addrlen) // Windows: cast to int
+                              static_cast<int>(target->ai_addrlen)
 #else
-                               _selectedAddrInfo->ai_addrlen // Linux/Unix: use socklen_t directly
+                              target->ai_addrlen
 #endif
     );
 

@@ -110,95 +110,81 @@ class DatagramSocket : public SocketOptions
     DatagramSocket() = delete;
 
     /**
-     * @brief Constructs a UDP datagram socket with full configuration and optional binding.
+     * @brief Creates a UDP socket, optionally binds to a local address, and optionally connects to a remote peer.
      * @ingroup udp
      *
-     * This constructor creates a UDP socket and allows full control over socket behavior and tuning:
-     * buffer sizes, timeouts, blocking mode, dual-stack IPv6 behavior, and whether to auto-bind to a local port.
+     * This constructor supports both server-style and client-style UDP sockets:
+     *
+     * - **Server mode**: Binds to a local address and receives datagrams from any source
+     * - **Client mode**: Optionally connects to a remote peer, enabling `send()`/`recv()` and automatic ICMP error
+     * handling
+     *
+     * The socket supports:
+     * - IPv4 and IPv6 (with optional dual-stack fallback)
+     * - Local binding (`bind()`), optionally done during construction
+     * - Connection to a remote host/port using `::connect()` semantics
+     * - OS-level socket configuration (`SO_RCVBUF`, `SO_SNDBUF`, timeouts, etc.)
+     * - Optional non-blocking mode
      *
      * ---
      *
-     * ### ⚙️ Behavior
-     * - Resolves the local address using `getaddrinfo()`
-     * - Prioritizes IPv6 addresses (if `dualStack` is `true`) and disables `IPV6_V6ONLY` to allow IPv4-mapped datagrams
-     * - Falls back to IPv4 if IPv6 creation fails or `dualStack` is `false`
-     * - Applies system-level socket options (e.g. `SO_REUSEADDR`, `SO_RCVBUF`, `SO_SNDBUF`, timeouts)
-     * - Applies internal buffer configuration for `read<std::string>()`
-     * - Binds the socket to the specified local address/port if `autoBind == true`
+     * ### Usage Modes
+     *
+     * - **Bound UDP Server**
+     *   Useful for listening on a specific port/interface for datagrams from any peer.
+     *
+     *   @code
+     *   DatagramSocket s(53, "0.0.0.0", ..., true, false); // bind only
+     *   @endcode
+     *
+     * - **Connected UDP Client**
+     *   Binds (optional) and then connects to a fixed remote peer.
+     *   Enables `write()` / `read()`, ICMP error propagation, and performance improvements.
+     *
+     *   @code
+     *   DatagramSocket s(0, "", ..., true, true, "1.2.3.4", 9000, 3000); // bind and connect with timeout
+     *   @endcode
      *
      * ---
      *
-     * ### 🔁 Buffer Configuration
-     * - `recvBufferSize`: OS-level receive buffer size (`SO_RCVBUF`)
-     * - `sendBufferSize`: OS-level send buffer size (`SO_SNDBUF`)
-     * - `internalBufferSize`: Internal buffer used for `read<std::string>()`
-     * - If omitted, each size defaults to `DefaultBufferSize`
+     * ### Configuration Parameters
+     *
+     * @param[in] localPort The local port to bind from. Use `0` for ephemeral.
+     * @param[in] localAddress The local IP to bind from (e.g., `"192.168.1.100"` or `"::"`). Empty for wildcard.
+     * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`)
+     * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`)
+     * @param[in] internalBufferSize Optional internal buffer size used by high-level read methods
+     * @param[in] reuseAddress If `true`, enables `SO_REUSEADDR` to allow rebinding the port
+     * @param[in] soRecvTimeoutMillis Timeout for receive operations in milliseconds (`-1` disables)
+     * @param[in] soSendTimeoutMillis Timeout for send operations in milliseconds (`-1` disables)
+     * @param[in] nonBlocking If `true`, sets the socket to non-blocking mode immediately
+     * @param[in] dualStack If `true`, enables IPv6 sockets to accept IPv4-mapped addresses
+     * @param[in] autoBind If `true`, performs a `bind()` using `localAddress` and `localPort` after construction
+     * @param[in] autoConnect If `true`, immediately connects to the remote peer using `remoteAddress` and `remotePort`
+     * @param[in] remoteAddress The remote host/IP to connect to (used only if `autoConnect == true`)
+     * @param[in] remotePort The remote UDP port to connect to (used only if `autoConnect == true`)
+     * @param[in] connectTimeoutMillis Timeout (in ms) for the connection attempt when `autoConnect == true`:
+     *                                 - `< 0` performs a traditional blocking `connect()`
+     *                                 - `>= 0` uses a timeout-aware non-blocking connect
      *
      * ---
      *
-     * ### 🌐 Dual-Stack and IPv6 Behavior
-     * - If `dualStack == true`, tries IPv6 first and disables `IPV6_V6ONLY` to accept both IPv6 and IPv4 traffic
-     * - If `dualStack == false`, only IPv4 addresses are attempted
+     * ### Throws
+     *
+     * @throws SocketException If any step of socket resolution, creation, binding, configuration, or connection fails
+     * @throws SocketTimeoutException If the `connect()` call exceeds the specified `connectTimeoutMillis` timeout
      *
      * ---
      *
-     * ### ⚠️ Exception Safety
-     * If any operation fails (resolution, socket creation, configuration, or binding), the socket is closed
-     * and a `SocketException` is thrown. All resources are properly cleaned up.
-     *
-     * ---
-     *
-     * ### 🧪 Example
-     * @code
-     * using namespace jsocketpp;
-     *
-     * DatagramSocket udp(
-     *     12345,              // port
-     *     "",                 // bind to all interfaces
-     *     8192,               // receive buffer
-     *     4096,               // send buffer
-     *     8192,               // internal buffer for string reads
-     *     true,               // reuse address
-     *     3000,               // receive timeout (ms)
-     *     1000,               // send timeout (ms)
-     *     true,               // non-blocking
-     *     true,               // dual-stack IPv6+IPv4
-     *     true                // auto-bind
-     * );
-     * @endcode
-     *
-     * ---
-     *
-     * @param[in] port The local port number to bind to (e.g., 12345)
-     * @param[in] localAddress The local IP address to bind to (e.g., "127.0.0.1", "::", or empty for all interfaces)
-     * @param[in] recvBufferSize Optional socket receive buffer size (`SO_RCVBUF`) in bytes
-     * @param[in] sendBufferSize Optional socket send buffer size (`SO_SNDBUF`) in bytes
-     * @param[in] internalBufferSize Optional internal buffer size for `read<std::string>()` operations
-     * @param[in] reuseAddress Whether to enable `SO_REUSEADDR` before binding
-     * @param[in] soRecvTimeoutMillis Socket receive timeout in milliseconds (`SO_RCVTIMEO`). `-1` disables
-     * @param[in] soSendTimeoutMillis Socket send timeout in milliseconds (`SO_SNDTIMEO`). `-1` disables
-     * @param[in] nonBlocking If `true`, the socket is set to non-blocking mode immediately after creation
-     * @param[in] dualStack If `true`, enables IPv6+IPv4 support (via mapped IPv4 addresses)
-     * @param[in] autoBind If `true`, automatically binds the socket to the resolved address and port
-     *
-     * @throws SocketException If address resolution, socket creation, configuration, or binding fails
-     *
-     * @see setInternalBufferSize()
-     * @see setReceiveBufferSize()
-     * @see setSendBufferSize()
-     * @see setSoRecvTimeout()
-     * @see setSoSendTimeout()
-     * @see setNonBlocking()
-     * @see setReuseAddress()
-     * @see bind()
-     * @see isDualStack()
+     * @see bind(), connect(), setSoRecvTimeout(), setSoSendTimeout(), isConnected(), write(), writeTo()
      */
-    explicit DatagramSocket(Port port, std::string_view localAddress = "",
+    explicit DatagramSocket(Port localPort = 0, std::string_view localAddress = "",
                             std::optional<std::size_t> recvBufferSize = std::nullopt,
                             std::optional<std::size_t> sendBufferSize = std::nullopt,
                             std::optional<std::size_t> internalBufferSize = std::nullopt, bool reuseAddress = true,
                             int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1, bool nonBlocking = false,
-                            bool dualStack = true, bool autoBind = true);
+                            bool dualStack = true, bool autoBind = true, bool autoConnect = false,
+                            std::string_view remoteAddress = "", Port remotePort = 0, int connectTimeoutMillis = -1);
 
     /**
      * @brief Destructor. Closes the socket and releases all associated resources.
@@ -312,13 +298,11 @@ class DatagramSocket : public SocketOptions
      * @see operator=(DatagramSocket&&) noexcept
      */
     DatagramSocket(DatagramSocket&& rhs) noexcept
-        : SocketOptions(rhs.getSocketFd()), _addrInfoPtr(std::move(rhs._addrInfoPtr)),
-          _selectedAddrInfo(rhs._selectedAddrInfo), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
+        : SocketOptions(rhs.getSocketFd()), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
           _localAddr(rhs._localAddr), _localAddrLen(rhs._localAddrLen), _internalBuffer(std::move(rhs._internalBuffer)),
           _port(rhs._port), _isBound(rhs._isBound), _isConnected(rhs._isConnected)
     {
         rhs.setSocketFd(INVALID_SOCKET);
-        rhs._selectedAddrInfo = nullptr;
         rhs._remoteAddrLen = 0;
         rhs._localAddrLen = 0;
         rhs._port = 0;
@@ -339,7 +323,6 @@ class DatagramSocket : public SocketOptions
      *
      * ### Ownership Transferred
      * - Native socket handle (`_sockFd`)
-     * - Resolved address pointers (`_addrInfoPtr`, `_selectedAddrInfo`)
      * - Local address metadata (`_localAddr`, `_localAddrLen`)
      * - Internal read buffer
      * - Port number (for tracking purposes)
@@ -384,8 +367,6 @@ class DatagramSocket : public SocketOptions
             _remoteAddrLen = rhs._remoteAddrLen;
             _localAddr = rhs._localAddr;
             _localAddrLen = rhs._localAddrLen;
-            _addrInfoPtr = std::move(rhs._addrInfoPtr);
-            _selectedAddrInfo = rhs._selectedAddrInfo;
             _internalBuffer = std::move(rhs._internalBuffer);
             _port = rhs._port;
             _isBound = rhs._isBound;
@@ -393,8 +374,6 @@ class DatagramSocket : public SocketOptions
 
             // Reset source
             rhs.setSocketFd(INVALID_SOCKET);
-            rhs._addrInfoPtr = nullptr;
-            rhs._selectedAddrInfo = nullptr;
             rhs._remoteAddrLen = 0;
             rhs._localAddrLen = 0;
             rhs._port = 0;
@@ -538,80 +517,94 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] bool isBound() const noexcept { return _isBound; }
 
     /**
-     * @brief Connects the datagram socket to a remote peer with optional timeout handling.
+     * @brief Resolves and connects the datagram socket to a remote UDP peer with optional timeout.
      * @ingroup udp
      *
-     * Although UDP is a connectionless protocol, calling `connect()` on a datagram socket binds it
-     * to a specific remote address and port. This simplifies socket usage by:
+     * Although UDP is a connectionless protocol, calling `connect()` on a datagram socket sets a default remote
+     * peer. This operation internally performs a `::connect()` syscall, which offers the following advantages:
      *
-     * - Filtering inbound datagrams to only accept packets from the connected peer
-     * - Allowing `write()`, `read()`, and `recv()` without needing to specify a destination
-     * - Enabling use of `send()`/`recv()` semantics while retaining the performance of UDP
+     * ---
      *
-     * This method supports both blocking and non-blocking connection attempts based on the
-     * `timeoutMillis` parameter. Internally, it uses `::connect()` and may wait for the socket
-     * to become writable via `::select()` if timeout-based non-blocking mode is used.
+     * ### 🔌 What Is Connected UDP?
      *
-     * ### Connection Modes
-     * - **Blocking Mode** (`timeoutMillis < 0`):
-     *   - Performs a traditional blocking `connect()` system call.
-     *   - Returns only after success or failure.
+     * A UDP socket normally uses `sendto()` to send data to any arbitrary destination and `recvfrom()` to receive
+     * from any source. When a socket is "connected" to a fixed peer:
      *
-     * - **Non-blocking Mode with Timeout** (`timeoutMillis >= 0`):
-     *   - Temporarily switches the socket to non-blocking mode (RAII-managed).
-     *   - Initiates the connection and waits for socket write readiness using `select()`.
-     *   - After readiness, confirms success using `getsockopt(SO_ERROR)`.
-     *   - Restores the original blocking mode automatically after completion.
+     * - It can use `send()` / `recv()` instead of `sendto()` / `recvfrom()`
+     * - Incoming datagrams are filtered to only accept those from the connected peer
+     * - Outgoing datagrams are always sent to the connected peer
+     * - ICMP errors (e.g., port unreachable) are reliably reported via `recv()` and `send()`
+     * - You may benefit from slightly faster I/O due to simplified kernel bookkeeping
      *
-     * ### Implementation Details
-     * - Uses `ScopedBlockingMode` to safely revert socket mode.
-     * - Retries `select()` on POSIX if interrupted by signals (`EINTR`).
-     * - Checks `FD_SETSIZE` to avoid platform limits on select()'able descriptors.
-     * - Properly verifies socket status using `getsockopt(SO_ERROR)` even after select success.
-     * - Updates `_isConnected` only after a successful connection.
+     * This mode is ideal for client-side UDP protocols like DNS, QUIC, RTP, STUN/TURN, or custom request/response
+     * protocols.
      *
-     * @note Unlike TCP, this method does **not establish a session** or guarantee delivery.
-     *       It simply associates the socket with a default remote endpoint.
+     * ---
      *
-     * @note This method throws if the socket is already connected or if no resolved address is available.
+     * ### 🧠 Example Use Cases
      *
-     * ### Platform Notes
-     * - On **POSIX**, `select()` only supports descriptors `< FD_SETSIZE` (typically 1024).
-     * - On **Windows**, `select()` accepts higher descriptors, but practical limits still apply.
+     * - **DNS client**:
+     *   - Connect to `"8.8.8.8:53"` and send queries using `write()`
      *
-     * ### Example Usage
-     * @code{.cpp}
-     * DatagramSocket client("example.com", 9999);
+     * - **UDP echo or ping client**:
+     *   - Use `write("ping")` / `read()` loop with a known server
      *
-     * // Blocking connect
-     * client.connect();
+     * - **QUIC or DTLS over UDP**:
+     *   - Secure transport over a connected datagram channel
      *
-     * // Non-blocking connect with 3-second timeout
-     * try {
-     *     client.connect(3000);
-     *     client.write("ping");
-     * } catch (const SocketTimeoutException& timeout) {
-     *     std::cerr << "Connection timed out\\n";
-     * } catch (const SocketException& ex) {
-     *     std::cerr << "Connect failed: " << ex.what() << std::endl;
-     * }
+     * - **Firewall/NAT diagnostics**:
+     *   - By connecting, ICMP errors are reliably propagated for unreachable peers
+     *
+     * ---
+     *
+     * ### ⚙️ Behavior
+     *
+     * This method resolves the target `host:port` using DNS (`getaddrinfo()`), selects the best available
+     * address, and performs a `::connect()` syscall. After success:
+     *
+     * - The socket is considered **connected**
+     * - Only datagrams from the connected peer are received
+     * - `write()` and `read()` may be used
+     * - Internal `_isConnected` is set to `true`
+     *
+     * ---
+     *
+     * ### ⏱ Timeout Handling
+     *
+     * This method supports both blocking and timeout-aware non-blocking connect:
+     *
+     * - `timeoutMillis < 0`: Performs a standard blocking `connect()`
+     * - `timeoutMillis >= 0`: Temporarily switches to non-blocking mode and uses `select()` to wait
+     *
+     * After timeout-based connect, the socket’s original blocking mode is restored automatically.
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * DatagramSocket sock(0, "", ..., true, false); // bind to ephemeral port, no connect yet
+     * sock.connect("8.8.8.8", 53);                  // blocking connect
+     * sock.write("dns query");                     // implicit sendto(8.8.8.8:53)
+     * auto response = sock.read();                 // only accepts from 8.8.8.8
      * @endcode
      *
-     * @param[in] timeoutMillis Timeout in milliseconds:
-     *                          - `< 0`: Blocking connect (default behavior)
-     *                          - `>= 0`: Non-blocking connect with timeout
+     * @param[in] host     Hostname or IP address of the remote UDP peer
+     * @param[in] port     Port number of the remote UDP peer
+     * @param[in] timeoutMillis Optional timeout for connect:
+     *                          - `< 0` performs a blocking `connect()`
+     *                          - `>= 0` uses non-blocking `connect()` with timeout
      *
-     * @throws SocketTimeoutException If the connection does not complete before the timeout.
-     * @throws SocketException If:
-     *         - The socket is already connected
-     *         - No address was resolved during construction
-     *         - The descriptor exceeds `select()` limits
-     *         - The connection fails or is refused
-     *         - Socket readiness check via `getsockopt(SO_ERROR)` fails
+     * @throws SocketTimeoutException If the connection times out before completion
+     * @throws SocketException If resolution, socket creation, or `connect()` fails
      *
-     * @see isConnected(), write(), read<T>(), disconnect(), setNonBlocking()
+     * @note This operation does not perform any UDP handshaking — it simply sets the default destination.
+     *       The UDP socket remains datagram-based and unreliable.
+     *
+     * @note Any existing connection will be overwritten.
+     *
+     * @see read(), write(), disconnect(), isConnected(), ScopedBlockingMode, resolveAddress()
      */
-    void connect(int timeoutMillis = -1);
+    void connect(std::string_view host, Port port, int timeoutMillis = -1);
 
     /**
      * @brief Disconnects the datagram socket from its currently connected peer.
@@ -1058,15 +1051,14 @@ class DatagramSocket : public SocketOptions
      * - The type `T` must be:
      *   - `std::is_trivially_copyable_v<T> == true`
      *   - `std::is_standard_layout_v<T> == true`
-     * - Padding bytes in `T` (if any) are preserved and transmitted as-is
+     * - Any internal padding in `T` is preserved and transmitted without modification
      * - No endianness conversion is performed — you must normalize fields manually
      *
      * ---
      *
      * ### 🌐 Address Resolution
      * - Performs per-call resolution of the `host` and `port` using `getaddrinfo()`
-     * - Uses the socket’s resolved address family (IPv4 or IPv6) if available
-     * - Tries all resolved addresses until one `sendto()` succeeds
+     * - Iterates through all resolved addresses until one `sendto()` call successfully transmits the full object
      *
      * ---
      *
@@ -1119,25 +1111,7 @@ class DatagramSocket : public SocketOptions
         if (getSocketFd() == INVALID_SOCKET)
             throw SocketException("DatagramSocket::writeTo<T>(): socket is not open.");
 
-        addrinfo hints{};
-        hints.ai_family = _selectedAddrInfo ? _selectedAddrInfo->ai_family : AF_UNSPEC;
-        hints.ai_socktype = SOCK_DGRAM;
-        hints.ai_protocol = IPPROTO_UDP;
-
-        addrinfo* rawAddrInfo = nullptr;
-        const std::string portStr = std::to_string(port);
-
-        if (const int ret = ::getaddrinfo(host.data(), portStr.c_str(), &hints, &rawAddrInfo); ret != 0)
-        {
-            throw SocketException(
-#ifdef _WIN32
-                GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
-#else
-                ret, SocketErrorMessageWrap(ret, true));
-#endif
-        }
-
-        const internal::AddrinfoPtr addrInfo(rawAddrInfo);
+        const auto addrInfo = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
 
         // Bit-cast value into raw byte buffer
         const std::array<std::byte, sizeof(T)> buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
@@ -1145,13 +1119,17 @@ class DatagramSocket : public SocketOptions
         int lastError = 0;
         for (const addrinfo* addr = addrInfo.get(); addr != nullptr; addr = addr->ai_next)
         {
+            int flags = 0;
+#ifndef _WIN32
+            flags = MSG_NOSIGNAL; // Don't send SIGPIPE on broken pipe
+#endif
             const int sent = ::sendto(getSocketFd(),
 #ifdef _WIN32
                                       reinterpret_cast<const char*>(buffer.data()), static_cast<int>(buffer.size()),
 #else
                                       buffer.data(), buffer.size(),
 #endif
-                                      0, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
+                                      0, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen), flags);
 
             if (sent == static_cast<int>(sizeof(T)))
                 return; // success
@@ -1698,10 +1676,6 @@ class DatagramSocket : public SocketOptions
      * @see SocketException
      */
     void cleanupAndRethrow();
-
-    // Also required for MulticastSocket, hence protected.
-    internal::AddrinfoPtr _addrInfoPtr = nullptr; ///< Address info pointer for bind/connect.
-    addrinfo* _selectedAddrInfo = nullptr;        ///< Selected address info for connection
 
   private:
     sockaddr_storage _remoteAddr{}; ///< Storage for the address of the most recent sender (used in unconnected mode).
