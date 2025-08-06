@@ -65,6 +65,6 @@ var searchData=
   ['reuse_20options_62',['🔍 In-Depth Overview of Address Reuse Options',['../group__address__reuse.html#autotoc_md65',1,'']]],
   ['right_63',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md119',1,'']]],
   ['roadmap_64',['🛣️ Roadmap',['../index.html#autotoc_md436',1,'']]],
-  ['role_20of_20the_20connect_20function_65',['The Role of the &lt;span class=&quot;tt&quot;&gt;connect()&lt;/span&gt; Function',['../md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md54',1,'']]],
+  ['role_20of_20the_20connect_20function_65',['The Role of the &lt;span class=&quot;tt&quot;&gt;connect()&lt;/span&gt; Function',['../group__socket__binding.html#autotoc_md54',1,'']]],
   ['running_20tests_66',['Building and Running Tests',['../group__BUILD__AND__USAGE.html#autotoc_md12',1,'']]]
 ];

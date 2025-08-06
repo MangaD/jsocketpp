@@ -25,7 +25,7 @@ var searchData=
   ['example_3a_20binding_20to_20all_20interfaces_22',['Example: Binding to All Interfaces',['../group__bind__interfaces.html#autotoc_md165',1,'']]],
   ['example_3a_20catching_20and_20handling_20socket_20exceptions_23',['Example: Catching and Handling Socket Exceptions',['../classjsocketpp_1_1SocketException.html#autotoc_md919',1,'']]],
   ['example_3a_20check_20if_20socket_20is_20ipv6_20only_24',['Example: Check if socket is IPv6-only',['../group__socketopts.html#autotoc_md1083',1,'']]],
-  ['example_3a_20demonstrating_20binding_20behavior_25',['Example: Demonstrating Binding Behavior',['../md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md62',1,'']]],
+  ['example_3a_20demonstrating_20binding_20behavior_25',['Example: Demonstrating Binding Behavior',['../group__socket__binding.html#autotoc_md62',1,'']]],
   ['example_3a_20disable_20nagle’s_20algorithm_20to_20reduce_20latency_26',['Example: Disable Nagle’s algorithm to reduce latency',['../group__socketopts.html#autotoc_md1046',1,'']]],
   ['example_3a_20enable_20non_20blocking_20mode_20on_20a_20client_20socket_27',['Example: Enable non-blocking mode on a client socket',['../group__socketopts.html#autotoc_md1032',1,'']]],
   ['example_3a_20enable_20shared_20port_20binding_28',['Example: Enable shared port binding',['../group__socketopts.html#autotoc_md1090',1,'']]],

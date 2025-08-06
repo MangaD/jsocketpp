@@ -12,7 +12,7 @@ var searchData=
   ['of_20poll_9',['3. &lt;b&gt;Advantages of &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt;&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md199',1,'']]],
   ['of_20select_10',['2. &lt;b&gt;Drawbacks of &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt;&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md197',1,'']]],
   ['of_20sockets_20in_20depth_11',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md276',1,'']]],
-  ['of_20the_20connect_20function_12',['The Role of the &lt;span class=&quot;tt&quot;&gt;connect()&lt;/span&gt; Function',['../md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md54',1,'']]],
+  ['of_20the_20connect_20function_12',['The Role of the &lt;span class=&quot;tt&quot;&gt;connect()&lt;/span&gt; Function',['../group__socket__binding.html#autotoc_md54',1,'']]],
   ['of_20the_20socket_20api_13',['2. Core Components of the Socket API',['../group__underlying__socket__api.html#autotoc_md312',1,'']]],
   ['off_14',['Summary of Java’s Design Trade-Off',['../group__address__reuse.html#autotoc_md102',1,'']]],
   ['on_20a_20client_20socket_15',['Example: Enable non-blocking mode on a client socket',['../group__socketopts.html#autotoc_md1032',1,'']]],

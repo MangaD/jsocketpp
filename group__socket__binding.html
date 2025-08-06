@@ -66,7 +66,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html','',''); });
+$(function(){initNavTree('group__socket__binding.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -91,11 +91,10 @@ $(function(){initNavTree('md_docs_2markdown_2Understanding_01Socket_01Binding_01
 </div>
 </div>
 
-<div><div class="header">
-  <div class="headertitle"><div class="title">Understanding Socket Binding in TCP and UDP Connections </div></div>
+<div class="header">
+  <div class="headertitle"><div class="title">Understanding Socket Binding in TCP and UDP Connections <div class="ingroups"><a class="el" href="group__docs.html">User Guides</a></div></div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md51"></a></p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
 Introduction</h1>
 <p>In network programming, sockets serve as the interface for communication between devices over a network. A fundamental aspect of socket programming is understanding how sockets are associated with local and remote addresses, particularly through functions like <span class="tt">bind()</span> and <span class="tt">connect()</span>. This article explores the role of the <span class="tt">connect()</span> function in binding sockets to local addresses, the concept of implicit and explicit binding, and the behavior of TCP and UDP sockets in maintaining their local address bindings throughout their lifetime. This comprehensive guide is designed for developers and students seeking a deeper understanding of socket behavior in network programming.</p>
@@ -128,14 +127,16 @@ Does <span class="tt">connect()</span> Bind to a Local Address?</h1>
 Implicit Binding in TCP and UDP</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
 TCP Sockets</h2>
-<p>For TCP sockets, implicit binding occurs when <span class="tt">connect()</span> is called without a prior <span class="tt">bind()</span>. The operating system selects:</p><ul>
+<p>For TCP sockets, implicit binding occurs when <span class="tt">connect()</span> is called without a prior <span class="tt">bind()</span>. The operating system selects:</p>
+<ul>
 <li>A local IP address, determined by the network interface used to route traffic to the remote server (based on the system's routing table).</li>
 <li>An ephemeral port, chosen from the available pool of temporary ports.</li>
 </ul>
 <p>Once the implicit bind occurs, the socket uses this local IP and port for the entire duration of the connection. For example, a TCP client connecting to a server at <span class="tt">192.168.1.100:8080</span> might be assigned a local address like <span class="tt">192.168.1.10:49152</span>.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
 UDP Sockets</h2>
-<p>For UDP sockets, implicit binding can occur in one of three scenarios:</p><ol type="1">
+<p>For UDP sockets, implicit binding can occur in one of three scenarios:</p>
+<ol type="1">
 <li><b>When <span class="tt">connect()</span> is called</b>: The OS assigns a local IP and ephemeral port, and the socket is associated with a default remote address. Subsequent sends and receives use this local binding.</li>
 <li><b>When <span class="tt">sendto()</span> is called</b>: If the socket is not yet bound, the first call to <span class="tt">sendto()</span> triggers an implicit bind, assigning a local IP and port.</li>
 <li><b>When <span class="tt">recvfrom()</span> is called</b>: If the socket is unbound, receiving data with <span class="tt">recvfrom()</span> causes the OS to assign a local IP and port.</li>
@@ -210,8 +211,7 @@ Example: Demonstrating Binding Behavior</h1>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
-</div><!-- fragment --> </div></div><!-- contents -->
-</div><!-- PageDoc -->
+</div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

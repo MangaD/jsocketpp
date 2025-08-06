@@ -9,7 +9,7 @@ var searchData=
   ['library_20for_20vcpkg_6',['2. Prepare Your Library for vcpkg',['../group__vcpkg__publish__guide.html#autotoc_md361',1,'']]],
   ['license_7',['License',['../index.html#autotoc_md421',1,'⚖️ License'],['../group__BUILD__AND__USAGE.html#autotoc_md24',1,'License']]],
   ['lifecycle_8',['Lifecycle',['../group__sockets__theory.html#autotoc_md294',1,'4. How Sockets Work: The Lifecycle'],['../group__socket__states.html#autotoc_md258',1,'TCP Socket Lifecycle']]],
-  ['lifetime_9',['Does the Local Binding Persist for the Socket’s Lifetime?',['../md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md61',1,'']]],
+  ['lifetime_9',['Does the Local Binding Persist for the Socket’s Lifetime?',['../group__socket__binding.html#autotoc_md61',1,'']]],
   ['lifetime_20warning_10',['Lifetime Warning',['../group__tcp.html#autotoc_md729',1,'⚠️ Lifetime Warning'],['../group__tcp.html#autotoc_md742',1,'⚠️ Lifetime Warning']]],
   ['limitations_11',['Limitations',['../group__address__reuse.html#autotoc_md98',1,'⚠️ Java’s Approach and Its Limitations'],['../index.html#autotoc_md392',1,'⚠️ Limitations'],['../group__tcp.html#autotoc_md824',1,'Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md1106',1,'Limitations']]],
   ['limitations_3a_12',['Limitations:',['../group__async__io.html#autotoc_md156',1,'']]],
@@ -20,9 +20,9 @@ var searchData=
   ['linux_20only_17',['&lt;span class=&quot;tt&quot;&gt;SO_REUSEPORT&lt;/span&gt; (Unix/Linux only)',['../group__address__reuse.html#autotoc_md84',1,'']]],
   ['linux_3a_18',['On Unix/Linux:',['../group__address__reuse.html#autotoc_md67',1,'']]],
   ['listen_20explicit_19',['3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit',['../group__ServerSocket__Lifecycle.html#autotoc_md31',1,'']]],
-  ['local_20address_20',['Does &lt;span class=&quot;tt&quot;&gt;connect()&lt;/span&gt; Bind to a Local Address?',['../md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md57',1,'']]],
+  ['local_20address_20',['Does &lt;span class=&quot;tt&quot;&gt;connect()&lt;/span&gt; Bind to a Local Address?',['../group__socket__binding.html#autotoc_md57',1,'']]],
   ['local_20binding_20parameters_20used_20only_20if_20autobind_20true_21',['🌐 Local Binding Parameters (used only if &lt;span class=&quot;tt&quot;&gt;autoBind == true&lt;/span&gt;)',['../group__tcp.html#autotoc_md777',1,'']]],
-  ['local_20binding_20persist_20for_20the_20socket’s_20lifetime_22',['Does the Local Binding Persist for the Socket’s Lifetime?',['../md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md61',1,'']]],
+  ['local_20binding_20persist_20for_20the_20socket’s_20lifetime_22',['Does the Local Binding Persist for the Socket’s Lifetime?',['../group__socket__binding.html#autotoc_md61',1,'']]],
   ['local_20ipc_23',['2.4. Unix Domain Sockets (Local IPC)',['../group__sockets__theory.html#autotoc_md280',1,'']]],
   ['locally_24',['Locally',['../group__vcpkg__publish__guide.html#autotoc_md367',1,'4. Test the Port Locally'],['../group__conan__publish__guide.html#autotoc_md180',1,'4. Test the Recipe Locally']]]
 ];

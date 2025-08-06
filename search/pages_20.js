@@ -12,7 +12,7 @@ var searchData=
   ['what_20is_20connected_20udp_9',['🔌 What Is Connected UDP?',['../group__udp.html#autotoc_md537',1,'']]],
   ['what_20is_20multicast_10',['What is Multicast?',['../classjsocketpp_1_1MulticastSocket.html#autotoc_md653',1,'']]],
   ['what_20is_20non_20blocking_11',['What is Non-Blocking?',['../group__async__io.html#autotoc_md128',1,'']]],
-  ['what_20is_20socket_20binding_12',['What is Socket Binding?',['../md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md53',1,'']]],
+  ['what_20is_20socket_20binding_12',['What is Socket Binding?',['../group__socket__binding.html#autotoc_md53',1,'']]],
   ['what_20is_20the_20default_20buffer_20size_13',['What is the default buffer size?',['../index.html#autotoc_md434',1,'']]],
   ['what_20is_20transferred_14',['What Is Transferred',['../group__udp.html#autotoc_md524',1,'']]],
   ['what_20is_20udp_15',['What is UDP?',['../classjsocketpp_1_1DatagramSocket.html#autotoc_md490',1,'']]],

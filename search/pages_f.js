@@ -18,14 +18,14 @@ var searchData=
   ['for_20multicast_3a_15',['For Multicast:',['../group__socket-options.html#autotoc_md225',1,'']]],
   ['for_20platform_20specific_20tests_3a_16',['3.1 &lt;b&gt;Using CMake for Platform-Specific Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md351',1,'']]],
   ['for_20readiness_17',['✅ Summary Table: Waiting for Readiness',['../group__async__io.html#autotoc_md153',1,'']]],
-  ['for_20the_20socket’s_20lifetime_18',['Does the Local Binding Persist for the Socket’s Lifetime?',['../md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md61',1,'']]],
+  ['for_20the_20socket’s_20lifetime_18',['Does the Local Binding Persist for the Socket’s Lifetime?',['../group__socket__binding.html#autotoc_md61',1,'']]],
   ['for_20unit_20testing_20in_20c_2020_3a_19',['Tools for Unit Testing in C++20:',['../group__unit__tests.html#autotoc_md343',1,'']]],
   ['for_20unit_20tests_3a_20',['4. &lt;b&gt;Mocking or Stubbing Socket API for Unit Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md352',1,'']]],
   ['for_20vcpkg_21',['2. Prepare Your Library for vcpkg',['../group__vcpkg__publish__guide.html#autotoc_md361',1,'']]],
   ['format_22',['Format',['../group__tcp.html#autotoc_md795',1,'Format'],['../group__tcp.html#autotoc_md811',1,'Format'],['../group__tcp.html#autotoc_md841',1,'Protocol Format'],['../group__tcp.html#autotoc_md844',1,'Protocol Format'],['../group__tcp.html#autotoc_md868',1,'Protocol Format'],['../group__tcp.html#autotoc_md871',1,'Protocol Format']]],
   ['friendly_23',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md178',1,'']]],
   ['fully_20step_20by_20step_20posix_20style_24',['&lt;b&gt;b) Fully Step-by-Step (POSIX Style)&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md41',1,'']]],
-  ['function_25',['The Role of the &lt;span class=&quot;tt&quot;&gt;connect()&lt;/span&gt; Function',['../md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md54',1,'']]],
+  ['function_25',['The Role of the &lt;span class=&quot;tt&quot;&gt;connect()&lt;/span&gt; Function',['../group__socket__binding.html#autotoc_md54',1,'']]],
   ['functions_26',['2.1 Key Functions',['../group__underlying__socket__api.html#autotoc_md313',1,'']]],
   ['further_20reading_27',['Further Reading',['../group__socket-options.html#autotoc_md237',1,'']]]
 ];

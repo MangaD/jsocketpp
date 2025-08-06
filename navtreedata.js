@@ -26,21 +26,6 @@ var NAVTREE =
 [
   [ "jsocketpp", "index.html", [
     [ "jsocketpp: Java-Style Cross-Platform Socket Library for Modern C++20", "index.html", "index" ],
-    [ "Understanding Socket Binding in TCP and UDP Connections", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html", [
-      [ "Introduction", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md52", null ],
-      [ "What is Socket Binding?", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md53", null ],
-      [ "The Role of the <span class=\"tt\">connect()</span> Function", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md54", [
-        [ "TCP Sockets", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md55", null ],
-        [ "UDP Sockets", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md56", null ]
-      ] ],
-      [ "Does <span class=\"tt\">connect()</span> Bind to a Local Address?", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md57", null ],
-      [ "Implicit Binding in TCP and UDP", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md58", [
-        [ "TCP Sockets", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md59", null ],
-        [ "UDP Sockets", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md60", null ]
-      ] ],
-      [ "Does the Local Binding Persist for the Socket’s Lifetime?", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md61", null ],
-      [ "Example: Demonstrating Binding Behavior", "md_docs_2markdown_2Understanding_01Socket_01Binding_01in_01TCP_01and_01UDP_01Connections.html#autotoc_md62", null ]
-    ] ],
     [ "Contributing to jsocketpp", "md_CONTRIBUTING.html", [
       [ "1. Reporting Issues", "md_CONTRIBUTING.html#autotoc_md441", null ],
       [ "2. Submitting Pull Requests", "md_CONTRIBUTING.html#autotoc_md443", null ],
@@ -94,8 +79,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BufferView_8hpp.html",
-"group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0",
-"namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a7a1a5f3e79fdc91edf2f5ead9d66abb4"
+"group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b",
+"namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
