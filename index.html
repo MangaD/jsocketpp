@@ -101,7 +101,7 @@ $(function(){initNavTree('index.html','',''); });
 <p><b>A modern, cross-platform socket library for C++20 — modeled after Java's networking API, but written with clean, idiomatic, exception-safe C++.</b> </p>
 </blockquote>
 <div align="center"> <img src="docs/doxygen/logo.png" alt="jsocketpp logo" width="180" class="inline"/> </div><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md367"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md379"></a>
 📘 Overview</h1>
 <p><b>jsocketpp</b> brings the simplicity of Java's <span class="tt">Socket</span>, <span class="tt">ServerSocket</span>, and <span class="tt">DatagramSocket</span> APIs to modern C++20 — with full support for TCP, UDP, multicast, and UNIX domain sockets, on both Windows and Unix-like systems.</p>
 <p>It abstracts away:</p>
@@ -112,7 +112,7 @@ $(function(){initNavTree('index.html','',''); });
 <li>raw buffer juggling</li>
 </ul>
 <p>... and replaces them with a safe, portable, <b>object-oriented</b> API that’s easy to use and hard to misuse.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md368"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md380"></a>
 🧰 Typical Use Cases</h2>
 <ul>
 <li>Minimalist web servers or microservices (HTTP/TCP)</li>
@@ -123,7 +123,7 @@ $(function(){initNavTree('index.html','',''); });
 <li>Socket wrappers for game servers or simulation engines</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md370"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md382"></a>
 💡 Why jsocketpp?</h1>
 <p>C++ networking is traditionally low-level and error-prone. <span class="tt">jsocketpp</span> is designed to:</p>
 <ul>
@@ -134,7 +134,7 @@ $(function(){initNavTree('index.html','',''); });
 <li>Let you write servers and clients in <b>under 10 lines</b></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md372"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md384"></a>
 ✨ Features at a Glance</h1>
 <ul>
 <li>📦 <b>TCP, UDP, Multicast, and UNIX socket support</b></li>
@@ -153,7 +153,7 @@ $(function(){initNavTree('index.html','',''); });
 <li>🪟🧬 <b>Cross-platform</b>: Windows, Linux, macOS</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md374"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md386"></a>
 🔧 Platform &amp; Toolchain Support</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -172,7 +172,7 @@ $(function(){initNavTree('index.html','',''); });
 <td class="markdownTableBodyNone">Documentation  </td><td class="markdownTableBodyNone">Doxygen + markdown  </td></tr>
 </table>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md376"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md388"></a>
 🔁 jsocketpp vs Boost.Asio</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -199,7 +199,7 @@ $(function(){initNavTree('index.html','',''); });
 <li>Great for CLI tools, daemons, test utilities, game servers, educational use</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md378"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md390"></a>
 🚀 Performance &amp; Footprint</h1>
 <ul>
 <li>No runtime overhead — it's just modern C++ around system calls</li>
@@ -209,7 +209,7 @@ $(function(){initNavTree('index.html','',''); });
 </ul>
 <p>For high-throughput async workloads, Boost.Asio or io_uring may outperform it. For most real-world usage, <b>jsocketpp is more than fast enough</b>.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md380"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md392"></a>
 ⚠️ Limitations</h1>
 <ul>
 <li><b>Not thread-safe</b>: Each socket instance must be used from a single thread</li>
@@ -220,20 +220,20 @@ $(function(){initNavTree('index.html','',''); });
 <li>Limited to host-native socket support (<span class="tt">AF_UNIX</span> on Win10+ only)</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md382"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md394"></a>
 📦 Installation</h1>
 <p>jsocketpp can be installed via <a href="https://vcpkg.io">vcpkg</a>, <a href="https://conan.io/center">Conan</a>, or manually as a CMake subproject.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md383"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md395"></a>
 ✅ vcpkg</h2>
 <div class="fragment"><div class="line">vcpkg install jsocketpp</div>
 </div><!-- fragment --><p>Then link via <span class="tt">find_package(jsocketpp CONFIG REQUIRED)</span> in CMake.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md385"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md397"></a>
 ✅ Conan</h2>
 <div class="fragment"><div class="line">conan install jsocketpp/[latest]@</div>
 </div><!-- fragment --><p>You may also add <span class="tt">jsocketpp</span> to your <span class="tt">conanfile.txt</span> or <span class="tt">conanfile.py</span>.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md387"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md399"></a>
 🔧 Manual Integration</h2>
 <div class="fragment"><div class="line">git clone https://github.com/MangaD/jsocketpp.git</div>
 <div class="line">cd jsocketpp</div>
@@ -245,9 +245,9 @@ $(function(){initNavTree('index.html','',''); });
 <div class="fragment"><div class="line">add_subdirectory(jsocketpp)</div>
 <div class="line">target_link_libraries(myapp PRIVATE jsocketpp)</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md389"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md401"></a>
 🚀 Quick Start Examples</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md390"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md402"></a>
 🧵 TCP Echo Server</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="ServerSocket_8hpp.html">jsocketpp/ServerSocket.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="Socket_8hpp.html">jsocketpp/Socket.hpp</a>&gt;</span></div>
@@ -266,7 +266,7 @@ $(function(){initNavTree('index.html','',''); });
 <div class="ttc" id="aclassjsocketpp_1_1ServerSocket_html"><div class="ttname"><a href="classjsocketpp_1_1ServerSocket.html">jsocketpp::ServerSocket</a></div><div class="ttdoc">TCP server socket abstraction for cross-platform C++ networking.</div><div class="ttdef"><b>Definition</b> ServerSocket.hpp:100</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
 </div><!-- fragment --><hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md392"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md404"></a>
 📡 UDP Echo Server</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="DatagramSocket_8hpp.html">jsocketpp/DatagramSocket.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="DatagramPacket_8hpp.html">jsocketpp/DatagramPacket.hpp</a>&gt;</span></div>
@@ -285,7 +285,7 @@ $(function(){initNavTree('index.html','',''); });
 <div class="ttc" id="aclassjsocketpp_1_1DatagramPacket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramPacket.html">jsocketpp::DatagramPacket</a></div><div class="ttdoc">Represents a UDP datagram packet, encapsulating both payload and addressing information.</div><div class="ttdef"><b>Definition</b> DatagramPacket.hpp:48</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a></div><div class="ttdoc">Cross-platform UDP socket class with Java-style interface.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:87</div></div>
 </div><!-- fragment --><hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md394"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md406"></a>
 🌐 Multicast Receiver</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="MulticastSocket_8hpp.html">jsocketpp/MulticastSocket.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -301,7 +301,7 @@ $(function(){initNavTree('index.html','',''); });
 <div class="ttc" id="aMulticastSocket_8hpp_html"><div class="ttname"><a href="MulticastSocket_8hpp.html">MulticastSocket.hpp</a></div><div class="ttdoc">Multicast UDP socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1MulticastSocket_html"><div class="ttname"><a href="classjsocketpp_1_1MulticastSocket.html">jsocketpp::MulticastSocket</a></div><div class="ttdoc">Cross-platform multicast UDP socket class (IPv4/IPv6).</div><div class="ttdef"><b>Definition</b> MulticastSocket.hpp:72</div></div>
 </div><!-- fragment --><hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md396"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md408"></a>
 🧷 UNIX Domain Socket (IPC)</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="UnixSocket_8hpp.html">jsocketpp/UnixSocket.hpp</a>&gt;</span></div>
 <div class="line"> </div>
@@ -320,7 +320,7 @@ $(function(){initNavTree('index.html','',''); });
 <p>On Windows, AF_UNIX requires Windows 10 build 1803 or later. </p>
 </blockquote>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md398"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md410"></a>
 🔄 Java ↔ jsocketpp Class Mapping</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -341,7 +341,7 @@ $(function(){initNavTree('index.html','',''); });
 <td class="markdownTableBodyNone"><span class="tt">SocketTimeoutException</span>  </td><td class="markdownTableBodyNone"><span class="tt">jsocketpp::SocketTimeoutException</span>  </td></tr>
 </table>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md400"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md412"></a>
 📚 Documentation</h1>
 <p>Full API documentation is available as Doxygen-generated HTML:</p>
 <p>👉 <a href="https://github.com/MangaD/jsocketpp/wiki">📖 jsocketpp API Reference (GitHub Pages)</a></p>
@@ -350,7 +350,7 @@ $(function(){initNavTree('index.html','',''); });
 <div class="line">cmake --build build --target docs</div>
 </div><!-- fragment --><p>The generated HTML will appear in <span class="tt">docs/doxygen/html/index.html</span>.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md402"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md414"></a>
 🧪 Building and Testing</h1>
 <p>The project uses <b>CMake presets</b> for consistent and cross-platform builds:</p>
 <div class="fragment"><div class="line">cmake --preset=gcc-debug-x64     # or clang-debug-x64 / msvc-x64-static</div>
@@ -367,9 +367,9 @@ $(function(){initNavTree('index.html','',''); });
 <p>Tests are written with <b>GoogleTest</b>. To run them:</p>
 <div class="fragment"><div class="line">ctest --preset=gcc-debug-x64</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md404"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md416"></a>
 🛠 Developer Tooling</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md405"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md417"></a>
 Pre-commit hooks</h2>
 <p>The repository supports pre-commit checks:</p>
 <ul>
@@ -381,7 +381,7 @@ Pre-commit hooks</h2>
 <div class="fragment"><div class="line">pip install -r requirements.txt</div>
 <div class="line">pre-commit install</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md407"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md419"></a>
 🤝 Contributing</h1>
 <p>We welcome PRs, issues, and ideas! Please read the following before contributing:</p>
 <ul>
@@ -398,11 +398,11 @@ Pre-commit hooks</h2>
 <div class="fragment"><div class="line">cmake --build . --target clang-format</div>
 </div><!-- fragment --><p>And write tests in <span class="tt">tests/</span>!</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md409"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md421"></a>
 ⚖️ License</h1>
 <p>This project is licensed under the MIT License. See <a href="./LICENSE">LICENSE</a> for details.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md411"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md423"></a>
 🙏 Acknowledgements</h1>
 <ul>
 <li>The Java Networking API — for its excellent abstractions</li>
@@ -411,9 +411,9 @@ Pre-commit hooks</h2>
 <li>Everyone who contributes, uses, or discusses jsocketpp ❤️</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md413"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md425"></a>
 ❓ FAQ</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md414"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md426"></a>
 Is jsocketpp async?</h2>
 <p>Yes — jsocketpp provides non-blocking and timeout-based I/O, including:</p>
 <ul>
@@ -425,7 +425,7 @@ Is jsocketpp async?</h2>
 <p>These are based on <span class="tt">select()</span> internally and return in bounded time.</p>
 <p><b>Coroutine support</b> is a potential future feature via <span class="tt">co_await</span> + platform-specific polling (e.g., <span class="tt">epoll</span>, <span class="tt">kqueue</span>, <span class="tt">IOCP</span>).</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md416"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md428"></a>
 How does error handling work?</h2>
 <p>All functions throw either:</p>
 <ul>
@@ -434,7 +434,7 @@ How does error handling work?</h2>
 </ul>
 <p>All errors include the native error code and message.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md418"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md430"></a>
 Can I use jsocketpp in production?</h2>
 <p>Yes — <span class="tt">jsocketpp</span> is robust, portable, and suitable for production use in many real-world scenarios:</p>
 <ul>
@@ -452,7 +452,7 @@ Can I use jsocketpp in production?</h2>
 <li>No high-performance event loop (e.g., epoll/io_uring)</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md420"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md432"></a>
 Does it work on Windows?</h2>
 <p>Yes. It fully supports Winsock, and even supports AF_UNIX on Windows 10+ (1803 or later).</p>
 <p>On Windows:</p>
@@ -461,11 +461,11 @@ Does it work on Windows?</h2>
 <li>Platform-specific errors are translated to readable messages</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md422"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md434"></a>
 What is the default buffer size?</h2>
 <p>Most read/write operations use a default internal buffer size of <b>4096 bytes</b>. You can override this in constructors for <span class="tt">Socket</span>, <span class="tt">DatagramSocket</span>, etc.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md424"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md436"></a>
 🛣️ Roadmap</h1>
 <ul class="check">
 <li class="checked">TCP (client + server)</li>
@@ -511,7 +511,7 @@ What is the default buffer size?</h2>
 <li class="unchecked">Proxy socket types (SOCKS5, HTTP CONNECT)</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md426"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md438"></a>
 🧭 See Also</h1>
 <ul>
 <li><a href="https://think-async.com/">Boost.Asio</a> — heavyweight async networking</li>
