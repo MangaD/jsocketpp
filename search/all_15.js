@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['key_20features_0',['Key Features',['../classjsocketpp_1_1DatagramSocket.html#autotoc_md502',1,'Key Features'],['../classjsocketpp_1_1ServerSocket.html#autotoc_md671',1,'Key Features'],['../classjsocketpp_1_1Socket.html#autotoc_md766',1,'Key Features'],['../group__tcp.html#autotoc_md774',1,'Key Features']]],
+  ['key_20features_0',['Key Features',['../classjsocketpp_1_1DatagramSocket.html#autotoc_md514',1,'Key Features'],['../classjsocketpp_1_1ServerSocket.html#autotoc_md700',1,'Key Features'],['../classjsocketpp_1_1Socket.html#autotoc_md795',1,'Key Features'],['../group__tcp.html#autotoc_md803',1,'Key Features']]],
   ['key_20functions_1',['2.1 Key Functions',['../group__underlying__socket__api.html#autotoc_md324',1,'']]]
 ];

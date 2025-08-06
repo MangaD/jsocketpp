@@ -141,10 +141,10 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p>Represents socket-related errors in the jsocketpp library. </p>
 <p><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a> is the standard exception type thrown by the jsocketpp socket library whenever a socket operation fails (e.g., connect, bind, send, or receive). It encapsulates both a platform-specific error code (e.g., errno or WSA error) and a descriptive error message.</p>
 <p>The class also supports optional exception chaining through a stored <span class="tt">std::exception_ptr</span>, allowing users to propagate and inspect nested causes of socket failures.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md929"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md958"></a>
 Exception Chaining</h3>
 <p>Nested exceptions can be attached explicitly via constructor or with <span class="tt">std::throw_with_nested()</span>, enabling structured error propagation and diagnostics across API boundaries.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md930"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md959"></a>
 Example: Catching and Handling Socket Exceptions</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="SocketException_8hpp.html">jsocketpp/SocketException.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="Socket_8hpp.html">jsocketpp/Socket.hpp</a>&gt;</span></div>
@@ -244,7 +244,7 @@ Nested exceptions are supported but optional. </dd></dl>
 <p>Constructs a <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a> with a message and a nested exception. </p>
 <p>This constructor is used to explicitly chain exceptions by attaching a previously caught exception (via <span class="tt">std::current_exception()</span> or <span class="tt">std::throw_with_nested()</span>), preserving the original cause.</p>
 <p>This enables users to propagate contextual errors while retaining the underlying source of failure. The nested exception can later be retrieved via <span class="tt"><a class="el" href="#a0a4733c45939c5ac9388e26ae463de91" title="Retrieves the nested exception captured at construction time, if any.">getNestedException()</a></span> and rethrown with <span class="tt">std::rethrow_if_nested()</span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md931"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md960"></a>
 Example: Manual nesting</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">try</span> {</div>
 <div class="line">    mayThrow();</div>

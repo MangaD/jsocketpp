@@ -14,7 +14,7 @@ var searchData=
   ['3_20poco_3a_3anet_11',['3. Poco::Net',['../group__socket__library__comparison.html#autotoc_md256',1,'']]],
   ['3_20raw_20socket_20communication_12',['3.3 Raw Socket Communication',['../group__underlying__socket__api.html#autotoc_md330',1,'']]],
   ['3_20raw_20sockets_13',['2.3. Raw Sockets',['../group__sockets__theory.html#autotoc_md290',1,'']]],
-  ['3_20second_20receive_20timeout_14',['Example: Set a 3-second receive timeout',['../group__socketopts.html#autotoc_md1017',1,'']]],
+  ['3_20second_20receive_20timeout_14',['Example: Set a 3-second receive timeout',['../group__socketopts.html#autotoc_md1046',1,'']]],
   ['3_20socket_20address_20families_15',['3. Socket Address Families',['../group__sockets__theory.html#autotoc_md303',1,'']]],
   ['3_20socket_20types_16',['2.3 Socket Types',['../group__underlying__socket__api.html#autotoc_md326',1,'']]],
   ['3_20test_20coverage_20for_20cross_20platform_3a_17',['3. &lt;b&gt;Test Coverage for Cross-Platform&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md361',1,'']]],

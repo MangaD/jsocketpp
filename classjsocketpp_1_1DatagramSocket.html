@@ -173,6 +173,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a227984f842fa768c2e7cc9a4b585bf06" id="r_a227984f842fa768c2e7cc9a4b585bf06"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a227984f842fa768c2e7cc9a4b585bf06 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a227984f842fa768c2e7cc9a4b585bf06">recvFrom</a> (std::string *senderAddr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort)</td></tr>
 <tr class="memdesc:a227984f842fa768c2e7cc9a4b585bf06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a datagram into a trivially copyable type.  <br /></td></tr>
+<tr class="memitem:ga7d75f33d62df3b393096e97600fee25f" id="r_ga7d75f33d62df3b393096e97600fee25f"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga7d75f33d62df3b393096e97600fee25f">peek</a> (<a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> &amp;packet, bool resizeBuffer=true) const</td></tr>
+<tr class="memdesc:ga7d75f33d62df3b393096e97600fee25f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peeks at the next available UDP datagram without removing it from the socket's receive queue.  <br /></td></tr>
+<tr class="memitem:gab844c09fb75f131bf6ba0bd004c63433" id="r_gab844c09fb75f131bf6ba0bd004c63433"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gab844c09fb75f131bf6ba0bd004c63433">hasPendingData</a> (int timeoutMillis=0) const</td></tr>
+<tr class="memdesc:gab844c09fb75f131bf6ba0bd004c63433"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether data is available to be read from the socket within a timeout window.  <br /></td></tr>
+<tr class="memitem:gabd73eb7df3c7871b1637ad03cc06b64c" id="r_gabd73eb7df3c7871b1637ad03cc06b64c"><td class="memItemLeft" align="right" valign="top">std::optional&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gabd73eb7df3c7871b1637ad03cc06b64c">getMTU</a> () const</td></tr>
+<tr class="memdesc:gabd73eb7df3c7871b1637ad03cc06b64c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the Maximum Transmission Unit (MTU) of the local interface associated with the socket.  <br /></td></tr>
+<tr class="memitem:ga0deb65a2e7c215e0e46ace579c702f6e" id="r_ga0deb65a2e7c215e0e46ace579c702f6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga0deb65a2e7c215e0e46ace579c702f6e">waitReady</a> (bool forWrite, int timeoutMillis=0) const</td></tr>
+<tr class="memdesc:ga0deb65a2e7c215e0e46ace579c702f6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for the socket to become ready for reading or writing.  <br /></td></tr>
 <tr class="memitem:ga1b017c1366655d32a2ec5d19deef9d37" id="r_ga1b017c1366655d32a2ec5d19deef9d37"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga1b017c1366655d32a2ec5d19deef9d37">setInternalBufferSize</a> (std::size_t newLen)</td></tr>
 <tr class="memdesc:ga1b017c1366655d32a2ec5d19deef9d37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the size of the internal buffer used for string-based UDP receive operations.  <br /></td></tr>
 <tr class="memitem:ga9d0a9582b3a2a72bf62f182dbc33c352" id="r_ga9d0a9582b3a2a72bf62f182dbc33c352"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga9d0a9582b3a2a72bf62f182dbc33c352">close</a> ()</td></tr>
@@ -291,10 +299,10 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Cross-platform UDP socket class with Java-style interface. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> class provides a convenient, cross-platform abstraction for sending and receiving UDP datagrams, inspired by the Java API. It supports both IPv4 and IPv6, and works on Windows and Linux.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md501"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md513"></a>
 What is UDP?</h2>
 <p>UDP (User Datagram Protocol) is a lightweight, connectionless protocol for sending packets over the network. Unlike TCP, UDP does <b>not</b> guarantee delivery, ordering, or duplicate protection—packets may be lost, arrive out of order, or duplicated. However, UDP is fast and simple, and widely used for real-time applications (such as online games, video streaming, and VoIP).</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md502"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md514"></a>
 Key Features</h2>
 <ul>
 <li><b>Connectionless and connected modes:</b> You can send datagrams to any address/port, or "connect" the socket to a default destination for simpler sending/receiving.</li>
@@ -303,7 +311,7 @@ Key Features</h2>
 <li><b>Timeouts and non-blocking mode:</b> Set timeouts and switch between blocking/non-blocking operations.</li>
 <li><b>Java-style interface:</b> Familiar to those who have used Java networking.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md503"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md515"></a>
 Example: Simple UDP Echo Server and Client</h2>
 <div class="fragment"><div class="line"><span class="comment">// --- Server ---</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="DatagramSocket_8hpp.html">jsocketpp/DatagramSocket.hpp</a>&gt;</span></div>
@@ -322,7 +330,7 @@ Example: Simple UDP Echo Server and Client</h2>
 <div class="line">}</div>
 <div class="ttc" id="aDatagramSocket_8hpp_html"><div class="ttname"><a href="DatagramSocket_8hpp.html">DatagramSocket.hpp</a></div><div class="ttdoc">UDP datagram socket abstraction for jsocketpp.</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramPacket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramPacket.html">jsocketpp::DatagramPacket</a></div><div class="ttdoc">Represents a UDP datagram packet, encapsulating both payload and addressing information.</div><div class="ttdef"><b>Definition</b> DatagramPacket.hpp:48</div></div>
-<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a></div><div class="ttdoc">Cross-platform UDP socket class with Java-style interface.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:87</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a></div><div class="ttdoc">Cross-platform UDP socket class with Java-style interface.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:88</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="comment">// --- Client ---</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="DatagramSocket_8hpp.html">jsocketpp/DatagramSocket.hpp</a>&gt;</span></div>
@@ -337,8 +345,8 @@ Example: Simple UDP Echo Server and Client</h2>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Server replied: &quot;</span> &lt;&lt; std::string(response.buffer.begin(), response.buffer.end()) &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_a58152e567e2d41ee6d612355ac0eb548"><div class="ttname"><a href="#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket::read</a></div><div class="ttdeci">size_t read(DatagramPacket &amp;packet, bool resizeBuffer=true) const</div><div class="ttdoc">Receives a UDP datagram and fills the provided DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:513</div></div>
-<div class="ttc" id="agroup__udp_html_ga87c837cd891ddd8b4daeacc61e1326df"><div class="ttname"><a href="group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">void write(const T &amp;value)</div><div class="ttdoc">Writes a trivially copyable object of type T to the connected remote peer.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:1016</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md504"></a>
+<div class="ttc" id="agroup__udp_html_ga87c837cd891ddd8b4daeacc61e1326df"><div class="ttname"><a href="group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">void write(const T &amp;value)</div><div class="ttdoc">Writes a trivially copyable object of type T to the connected remote peer.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:1043</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md516"></a>
 Notes</h2>
 <ul>
 <li>Not thread-safe. Use each <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> instance from only one thread at a time.</li>
