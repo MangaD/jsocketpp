@@ -97,7 +97,7 @@ $(function(){initNavTree('group__conan__publish__guide.html','',''); });
 <div class="contents">
 <p>This guide explains, step by step, how to prepare, test, and submit your C++ library <span class="tt">jsocketpp</span> to the Conan Center Index (CCI) so it can be easily consumed by the C++ community.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md174"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md185"></a>
 1. Prerequisites</h1>
 <ul>
 <li><b>Conan</b>: Install the latest Conan (2.x) from <a href="https://conan.io/downloads.html">https://conan.io/downloads.html</a></li>
@@ -106,7 +106,7 @@ $(function(){initNavTree('group__conan__publish__guide.html','',''); });
 <li><b>A public repository</b>: Your library must be hosted on a public VCS (e.g., GitHub).</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md176"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md187"></a>
 2. Conan Recipe (<span class="tt">conanfile.py</span>)</h1>
 <p>A Conan recipe describes how to build, package, and consume your library. Your <span class="tt">conanfile.py</span> should:</p>
 <ul>
@@ -148,7 +148,7 @@ $(function(){initNavTree('group__conan__publish__guide.html','',''); });
 <div class="line">    <span class="keyword">def </span>package_info(self):</div>
 <div class="line">        self.cpp_info.libs = [<span class="stringliteral">&quot;socket&quot;</span>]</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md178"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md189"></a>
 3. Make Your CMake Project Conan-Friendly</h1>
 <ul>
 <li>Ensure your <span class="tt">CMakeLists.txt</span> supports installation (<span class="tt">install(TARGETS ...)</span>, <span class="tt">install(FILES ...)</span>).</li>
@@ -156,7 +156,7 @@ $(function(){initNavTree('group__conan__publish__guide.html','',''); });
 <li>Optionally, add <span class="tt">find_package</span> support for consumers.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md180"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md191"></a>
 4. Test the Recipe Locally</h1>
 <ol type="1">
 <li>Open a terminal in your project root.</li>
@@ -164,7 +164,7 @@ $(function(){initNavTree('group__conan__publish__guide.html','',''); });
 </div><!-- fragment --> This will build and package your library using Conan. Fix any errors.</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md182"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md193"></a>
 5. Prepare for Conan Center Index (CCI) Submission</h1>
 <p>CCI requires a specific structure and additional files:</p>
 <ul>
@@ -185,14 +185,14 @@ $(function(){initNavTree('group__conan__publish__guide.html','',''); });
 <div class="line">        conanfile.py</div>
 <div class="line">        CMakeLists.txt</div>
 <div class="line">        test_package.cpp</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md183"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md194"></a>
 test_package</h2>
 <ul>
 <li>This is a minimal project that uses your library as a Conan dependency.</li>
 <li>It should build and run a simple test (e.g., create a socket, call a function).</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md185"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md196"></a>
 6. Submit a Pull Request to CCI</h1>
 <ol type="1">
 <li>Push your branch to your fork.</li>
@@ -205,7 +205,7 @@ test_package</h2>
 <li>Address any feedback from the CCI team and automated CI.</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md187"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md198"></a>
 7. After Acceptance</h1>
 <ul>
 <li>Your library will be available to all Conan users via: <div class="fragment"><div class="line">conan search jsocketpp -r=conancenter</div>
@@ -214,7 +214,7 @@ test_package</h2>
 <li>Keep your recipe up to date as you release new versions.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md189"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md200"></a>
 8. Tips and Best Practices</h1>
 <ul>
 <li>Use semantic versioning for your library.</li>
@@ -223,7 +223,7 @@ test_package</h2>
 <li>Respond promptly to CCI review comments.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md191"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md202"></a>
 References</h1>
 <ul>
 <li><a href="https://github.com/conan-io/conan-center-index/wiki">Conan Center Index Wiki</a></li>

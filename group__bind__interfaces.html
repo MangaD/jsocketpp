@@ -96,14 +96,14 @@ $(function(){initNavTree('group__bind__interfaces.html','',''); });
 </div><!--header-->
 <div class="contents">
 <p>Socket programming often involves choosing <b>which local addresses and interfaces</b> your server will listen on. This article explains what it means to “bind to all interfaces,” how it works under the hood, and how to select specific interfaces if needed.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md163"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md174"></a>
 What Does “Binding to All Interfaces” Mean?</h1>
 <p>When you create a listening socket (e.g., for a server) you must “bind” it to a local address and port. This address determines:</p>
 <ul>
 <li>Which incoming connections or datagrams will be delivered to your socket.</li>
 <li>Which network interfaces (e.g., Ethernet, Wi-Fi, loopback) will be monitored.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md164"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md175"></a>
 Wildcard Addresses</h2>
 <ul>
 <li><b>IPv4:</b> <span class="tt">0.0.0.0</span></li>
@@ -113,7 +113,7 @@ Wildcard Addresses</h2>
 <p>“Accept connections or datagrams on <em>any</em> address of this machine, on the specified port, for this protocol family.” </p>
 </blockquote>
 <p>When you bind your socket to a wildcard address, the OS will deliver to you any incoming traffic on that port, no matter which network interface it arrives on.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md165"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md176"></a>
 Example: Binding to All Interfaces</h2>
 <div class="fragment"><div class="line"><span class="comment">// Using getaddrinfo with node=nullptr and AI_PASSIVE hint</span></div>
 <div class="line">addrinfo hints{};</div>
@@ -196,7 +196,7 @@ Example: Binding to All Interfaces</h2>
 </div><!-- fragment --><p> cpp // Linux only: restrict socket to eth0 setsockopt(sockfd, SOL_SOCKET, SO_BINDTODEVICE, "eth0", strlen("eth0")); ```</p>
 <p><em>Note: Not portable!</em></p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md167"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md178"></a>
 Best Practices</h1>
 <ul>
 <li>For most servers, <b>binding to the wildcard address</b> (<span class="tt">0.0.0.0</span> or <span class="tt">::</span>) is best. This allows clients to connect regardless of which network they use to reach your server.</li>
@@ -204,7 +204,7 @@ Best Practices</h1>
 <li>Let jsocketpp’s default behavior handle this for you unless you have advanced requirements.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md169"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md180"></a>
 jsocketpp API Notes</h1>
 <ul>
 <li>By default, jsocketpp binds to all local addresses for the protocol family (one socket).</li>
@@ -212,7 +212,7 @@ jsocketpp API Notes</h1>
 <li>The library prefers dual-stack (IPv6) when possible for maximum reach.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md171"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md182"></a>
 Conclusion</h1>
 <blockquote class="doxtable">
 <p><b>Binding to all interfaces</b> is simple, robust, and sufficient for most server applications. Advanced use-cases (multi-homing, interface binding) are supported but rarely needed. </p>

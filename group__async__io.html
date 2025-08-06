@@ -98,9 +98,9 @@ $(function(){initNavTree('group__async__io.html','',''); });
 <p>Modern socket programming requires a solid understanding of how blocking, non-blocking, and asynchronous I/O work. These modes of operation directly impact performance, resource usage, and API design.</p>
 <p>This article provides a comprehensive guide on blocking vs non-blocking sockets, timeouts, their interaction with system calls (<span class="tt">connect</span>, <span class="tt">accept</span>, <span class="tt">recv</span>, <span class="tt">send</span>), and how <span class="tt">jsocketpp</span> implements these behaviors for safety and flexibility.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md126"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md137"></a>
 🚦 Blocking vs Non-Blocking Sockets</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md127"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md138"></a>
 What is Blocking?</h2>
 <p>In blocking mode (the default), a system call will pause the current thread until it completes:</p>
 <ul>
@@ -109,7 +109,7 @@ What is Blocking?</h2>
 <li><span class="tt">recv()</span> blocks until data arrives.</li>
 <li><span class="tt">send()</span> blocks until the data can be written to the socket buffer.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md128"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md139"></a>
 What is Non-Blocking?</h2>
 <p>In non-blocking mode, system calls <b>return immediately</b>:</p>
 <ul>
@@ -118,10 +118,10 @@ What is Non-Blocking?</h2>
 </ul>
 <p>Non-blocking mode is often used in event-driven programming, such as GUI applications, game servers, and high-performance web servers.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md130"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md141"></a>
 🕐 Socket Timeouts</h1>
 <p>Timeouts define how long a blocking operation will wait before aborting. There are two ways to apply timeouts:</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md131"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md142"></a>
 OS-Level Timeouts</h2>
 <ul>
 <li>Use <span class="tt">SO_RCVTIMEO</span> and <span class="tt">SO_SNDTIMEO</span> socket options.</li>
@@ -129,7 +129,7 @@ OS-Level Timeouts</h2>
 <li>They only affect system calls like <span class="tt">recv()</span>, <span class="tt">send()</span>, and <span class="tt">accept()</span>, but <b>do not apply to <span class="tt">select()</span>, <span class="tt">poll()</span>, or <span class="tt">epoll()</span></b>.</li>
 <li>Often less flexible compared to using <span class="tt">select()</span> explicitly.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md132"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md143"></a>
 Custom Timeouts via <span class="tt">select()</span></h2>
 <ul>
 <li>Preferred method in <span class="tt">jsocketpp</span>.</li>
@@ -138,7 +138,7 @@ Custom Timeouts via <span class="tt">select()</span></h2>
 <li>Enables better error reporting and control.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md134"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md145"></a>
 ⏱ How jsocketpp Handles Blocking and Timeouts</h1>
 <p><span class="tt">jsocketpp</span> offers:</p>
 <ul>
@@ -148,7 +148,7 @@ Custom Timeouts via <span class="tt">select()</span></h2>
 <li>Exceptions like <span class="tt">SocketTimeoutException</span> when timeouts occur.</li>
 <li>Dedicated methods (<span class="tt">acceptBlocking</span>, <span class="tt">accept(timeout)</span>, <span class="tt">tryAccept()</span>) for each strategy.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md135"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md146"></a>
 Design Rationale</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -165,73 +165,73 @@ Design Rationale</h2>
 <td class="markdownTableBodyNone">Event loop support  </td><td class="markdownTableBodyNone">Yes, with <span class="tt">waitReady()</span> and polling  </td></tr>
 </table>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md137"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md148"></a>
 🔄 Operation-Specific Behavior: <span class="tt">connect</span>, <span class="tt">accept</span>, <span class="tt">recv</span>, and <span class="tt">send</span></h1>
 <p>Each socket operation behaves differently under non-blocking mode or when paired with timeout mechanisms like <span class="tt">select()</span>. Understanding these distinctions is essential for designing reliable I/O logic.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md138"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md149"></a>
 🔌 <span class="tt">connect</span></h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md139"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md150"></a>
 Blocking mode:</h3>
 <ul>
 <li>Blocks until the connection is fully established or fails.</li>
 <li>Uses <span class="tt">SO_SNDTIMEO</span> if supported, but better to use <span class="tt">select()</span> with a timeout.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md140"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md151"></a>
 Non-blocking mode:</h3>
 <ul>
 <li>Returns immediately; if connection is in progress, <span class="tt">errno</span> = <span class="tt">EINPROGRESS</span>.</li>
 <li>Use <span class="tt">select()</span> to wait for <b>writability</b>, then check <span class="tt">SO_ERROR</span> with <span class="tt">getsockopt()</span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md141"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md152"></a>
 Java:</h3>
 <ul>
 <li>Uses a dedicated <span class="tt">connect(SocketAddress, timeout)</span> method.</li>
 <li>Internally sets the socket to non-blocking, uses <span class="tt">select()</span>, then reverts to blocking mode.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md142"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md153"></a>
 📞 <span class="tt">accept</span></h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md143"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md154"></a>
 Blocking mode:</h3>
 <ul>
 <li>Blocks until a new connection is ready.</li>
 <li>Timeout managed via <span class="tt">SO_RCVTIMEO</span> or <span class="tt">select()</span> before calling <span class="tt">accept()</span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md144"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md155"></a>
 Non-blocking mode:</h3>
 <ul>
 <li>Returns immediately.</li>
 <li>Use <span class="tt">select()</span> to wait for <b>readability</b> before calling <span class="tt">accept()</span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md145"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md156"></a>
 Java:</h3>
 <ul>
 <li>Uses <span class="tt">ServerSocket.setSoTimeout()</span>.</li>
 <li>Blocks with a timeout; exception thrown on timeout.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md146"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md157"></a>
 📥 <span class="tt">recv</span> / <span class="tt">read</span></h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md147"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md158"></a>
 Blocking mode:</h3>
 <ul>
 <li>Blocks until data is available or the connection closes.</li>
 <li>Timeout managed via <span class="tt">SO_RCVTIMEO</span> or <span class="tt">select()</span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md148"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md159"></a>
 Non-blocking mode:</h3>
 <ul>
 <li>Returns immediately.</li>
 <li>Returns <span class="tt">-1</span> with <span class="tt">EWOULDBLOCK</span> if no data.</li>
 <li>Use <span class="tt">select()</span> to wait for <b>readability</b>.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md149"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md160"></a>
 📤 <span class="tt">send</span> / <span class="tt">write</span></h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md150"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md161"></a>
 Blocking mode:</h3>
 <ul>
 <li>Blocks until data is sent or buffered.</li>
 <li>Controlled by <span class="tt">SO_SNDTIMEO</span> or <span class="tt">select()</span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md151"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md162"></a>
 Non-blocking mode:</h3>
 <ul>
 <li>Returns immediately.</li>
@@ -239,7 +239,7 @@ Non-blocking mode:</h3>
 <li>Use <span class="tt">select()</span> to wait for <b>writability</b>.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md153"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md164"></a>
 ✅ Summary Table: Waiting for Readiness</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -254,7 +254,7 @@ Non-blocking mode:</h3>
 <td class="markdownTableBodyNone"><span class="tt">send</span>  </td><td class="markdownTableBodyNone">Waits for buffer  </td><td class="markdownTableBodyNone">Wait for <b>writability</b>  </td><td class="markdownTableBodyNone">Buffer availability  </td></tr>
 </table>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md155"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md166"></a>
 📚 Java Comparison</h1>
 <p>Java socket classes wrap native sockets and hide non-blocking logic. Java uses:</p>
 <ul>
@@ -263,7 +263,7 @@ Non-blocking mode:</h3>
 <li>Internally uses non-blocking mode with <span class="tt">select()</span> then reverts to blocking.</li>
 <li>Does <b>not expose</b> non-blocking sockets directly.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md156"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md167"></a>
 Limitations:</h2>
 <ul>
 <li>Less flexibility.</li>
@@ -276,7 +276,7 @@ Limitations:</h2>
 <li>Supporting <span class="tt">waitReady()</span> for fine-grained control.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md158"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md169"></a>
 🧠 Final Thoughts and Best Practices</h1>
 <ul>
 <li>Use <b>blocking mode</b> by default unless you're building a custom event loop.</li>
@@ -285,7 +285,7 @@ Limitations:</h2>
 <li>Throw or handle timeout errors using exceptions (<span class="tt">SocketTimeoutException</span>).</li>
 <li>Prefer select-based timeouts even for blocking sockets.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md159"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md170"></a>
 Example Use:</h2>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (server.waitReady(5000)) {</div>
 <div class="line">    Socket client = server.acceptBlocking();</div>

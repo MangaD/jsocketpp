@@ -1,6 +1,7 @@
 var group__docs =
 [
     [ "jsocketpp: Build, Test, and Usage Guide", "group__BUILD__AND__USAGE.html", null ],
+    [ "Comprehensive List of Socket Programming Functions", "group__list__bsd__socket__functions.html", null ],
     [ "ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices", "group__ServerSocket__Lifecycle.html", null ],
     [ "Understanding Socket Binding in TCP and UDP Connections", "group__socket__binding.html", null ],
     [ "Address Reuse in Sockets: <span class=\"tt\">SO_REUSEADDR</span> vs <span class=\"tt\">SO_EXCLUSIVEADDRUSE</span>", "group__address__reuse.html", null ],

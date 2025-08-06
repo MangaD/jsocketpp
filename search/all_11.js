@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['generic_20methods_0',['Dedicated Methods vs. Generic Methods',['../group__socket-options.html#autotoc_md231',1,'']]],
+  ['generic_20methods_0',['Dedicated Methods vs. Generic Methods',['../group__socket-options.html#autotoc_md242',1,'']]],
   ['getbroadcast_1',['getBroadcast',['../group__socketopts.html#gab0df7d40f7d6b40737cbf3271be57f37',1,'jsocketpp::SocketOptions']]],
   ['getcurrentgroup_2',['getCurrentGroup',['../classjsocketpp_1_1MulticastSocket.html#a3fd7dbdf1bfffe953c6fa7a64dccdfad',1,'jsocketpp::MulticastSocket']]],
   ['getdefaultinternalbuffersize_3',['getDefaultInternalBufferSize',['../group__tcp.html#gac1f9d646223bb7c733216b484f517d46',1,'jsocketpp::ServerSocket']]],
@@ -27,7 +27,7 @@ var searchData=
   ['getremotesocketaddress_24',['getRemoteSocketAddress',['../group__udp.html#gacb3c554671141c0370445b2b7e9a6061',1,'jsocketpp::DatagramSocket::getRemoteSocketAddress()'],['../group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc',1,'jsocketpp::Socket::getRemoteSocketAddress()']]],
   ['getreuseaddress_25',['getReuseAddress',['../group__socketopts.html#ga8e8783ada3142cd6c3b275e01b7b12f2',1,'jsocketpp::SocketOptions']]],
   ['getreuseport_26',['getReusePort',['../group__socketopts.html#ga0472e21ad70ac9b778aac3d6177577ca',1,'jsocketpp::SocketOptions']]],
-  ['gets_20right_27',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md119',1,'']]],
+  ['gets_20right_27',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md130',1,'']]],
   ['getsendbuffersize_28',['getSendBufferSize',['../group__socketopts.html#gaeb5f9d1ae3f1b7b9fdb94335b10723f6',1,'jsocketpp::SocketOptions']]],
   ['getsocketerror_29',['GetSocketError',['../namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad',1,'jsocketpp']]],
   ['getsocketfd_30',['getSocketFd',['../group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794',1,'jsocketpp::SocketOptions']]],
@@ -38,12 +38,12 @@ var searchData=
   ['getsotimeout_35',['getSoTimeout',['../group__socketopts.html#ga7829c558cb7bf5e0a46d882df82acc19',1,'jsocketpp::ServerSocket']]],
   ['gettcpnodelay_36',['getTcpNoDelay',['../group__socketopts.html#ga05137fbdc55ab065739e220b7a4f41c0',1,'jsocketpp::SocketOptions']]],
   ['gettimetolive_37',['getTimeToLive',['../classjsocketpp_1_1MulticastSocket.html#ad11b9d3378834eab9c28e32e70fc249a',1,'jsocketpp::MulticastSocket']]],
-  ['glance_38',['✨ Features at a Glance',['../index.html#autotoc_md384',1,'']]],
-  ['google_20mock_20to_20mock_20recv_20and_20send_3a_39',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md345',1,'']]],
-  ['google_20mock_3a_40',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md353',1,'']]],
-  ['guarantees_41',['RAII Guarantees',['../group__udp.html#autotoc_md523',1,'']]],
+  ['glance_38',['✨ Features at a Glance',['../index.html#autotoc_md395',1,'']]],
+  ['google_20mock_20to_20mock_20recv_20and_20send_3a_39',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md356',1,'']]],
+  ['google_20mock_3a_40',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md364',1,'']]],
+  ['guarantees_41',['RAII Guarantees',['../group__udp.html#autotoc_md534',1,'']]],
   ['guide_42',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
   ['guide_20to_20the_20socket_20api_43',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['guidelines_44',['Guidelines',['../group__socketopts.html#autotoc_md929',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md445',1,'3. Code Style Guidelines']]],
+  ['guidelines_44',['Guidelines',['../group__socketopts.html#autotoc_md940',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md456',1,'3. Code Style Guidelines']]],
   ['guides_45',['User Guides',['../group__docs.html',1,'']]]
 ];

@@ -11,11 +11,12 @@ var searchData=
   ['socket_20library_8',['jsocketpp: C++20 cross-platform socket library',['../group__jsocketpp.html',1,'']]],
   ['socket_20options_9',['Socket Options',['../group__socketopts.html',1,'']]],
   ['socket_20options_20in_20jsocketpp_10',['Socket Options in jsocketpp',['../group__socket-options.html',1,'']]],
-  ['socket_20states_11',['Understanding Socket States',['../group__socket__states.html',1,'']]],
-  ['sockets_12',['Sockets',['../group__tcp.html',1,'TCP Sockets'],['../group__udp.html',1,'UDP Sockets'],['../group__unix.html',1,'Unix Domain Sockets']]],
-  ['sockets_20in_20jsocketpp_13',['Blocking vs Non-Blocking Sockets in jsocketpp',['../group__async__io.html',1,'']]],
-  ['sockets_3a_20so_5freuseaddr_20vs_20so_5fexclusiveaddruse_14',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],
-  ['sockets_3a_20theory_20types_20and_20platform_20apis_15',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
-  ['specific_20interfaces_16',['Understanding &lt;span class=&quot;tt&quot;&gt;bind()&lt;/span&gt;: Binding to All Interfaces vs Specific Interfaces',['../group__bind__interfaces.html',1,'']]],
-  ['states_17',['Understanding Socket States',['../group__socket__states.html',1,'']]]
+  ['socket_20programming_20functions_11',['Comprehensive List of Socket Programming Functions',['../group__list__bsd__socket__functions.html',1,'']]],
+  ['socket_20states_12',['Understanding Socket States',['../group__socket__states.html',1,'']]],
+  ['sockets_13',['Sockets',['../group__tcp.html',1,'TCP Sockets'],['../group__udp.html',1,'UDP Sockets'],['../group__unix.html',1,'Unix Domain Sockets']]],
+  ['sockets_20in_20jsocketpp_14',['Blocking vs Non-Blocking Sockets in jsocketpp',['../group__async__io.html',1,'']]],
+  ['sockets_3a_20so_5freuseaddr_20vs_20so_5fexclusiveaddruse_15',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],
+  ['sockets_3a_20theory_20types_20and_20platform_20apis_16',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
+  ['specific_20interfaces_17',['Understanding &lt;span class=&quot;tt&quot;&gt;bind()&lt;/span&gt;: Binding to All Interfaces vs Specific Interfaces',['../group__bind__interfaces.html',1,'']]],
+  ['states_18',['Understanding Socket States',['../group__socket__states.html',1,'']]]
 ];

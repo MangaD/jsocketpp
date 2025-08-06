@@ -96,19 +96,19 @@ $(function(){initNavTree('group__unit__tests.html','',''); });
 </div><!--header-->
 <div class="contents">
 <p>Unit and integration testing for a cross-platform C++20 socket library can be quite challenging, but with the right approach and tools, it can be done effectively. Here's a structured plan to guide you through setting up unit and integration tests for your library.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md342"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md353"></a>
 1. <b>Unit Tests</b>:</h2>
 <p>Unit tests for a socket library typically test individual components of the library in isolation. You will mock or simulate socket-related functionality in your unit tests to avoid real network activity.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md343"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md354"></a>
 Tools for Unit Testing in C++20:</h3>
 <ul>
 <li><b>Google Test (gtest)</b>: This is one of the most popular C++ testing frameworks, providing powerful features such as assertions, fixtures, and mock support. It works seamlessly on both <b>Windows</b> and <b>Linux</b> and integrates easily into CMake.</li>
 <li><b>Google Mock (gmock)</b>: This is an extension of Google Test that allows you to mock classes and methods. Useful for mocking socket behavior and testing edge cases where actual socket communication isn't needed.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md344"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md355"></a>
 1.1 <b>Mocking Socket Behavior</b>:</h3>
 <p>To unit test your socket library, you’ll need to mock socket-related functions like <span class="tt">socket()</span>, <span class="tt">recv()</span>, <span class="tt">send()</span>, etc. This allows you to test your socket code without actually opening real network connections.</p>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md345"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md356"></a>
 Example: Using Google Mock to Mock <span class="tt">recv</span> and <span class="tt">send</span>:</h4>
 <ol type="1">
 <li>Define a mock class for socket functions:</li>
@@ -142,13 +142,13 @@ Example: Using Google Mock to Mock <span class="tt">recv</span> and <span class=
 <div class="line"> </div>
 <div class="line">    ASSERT_EQ(result, 5);  <span class="comment">// Assert that the result is as expected</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md346"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md357"></a>
 1.2 <b>Testing Socket Initialization and Cleanup</b>:</h3>
 <p>You can test the initialization, error handling, and cleanup of sockets using mock or actual socket functions, but avoid creating real connections.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md347"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md358"></a>
 2. <b>Integration Tests</b>:</h2>
 <p>Integration tests test how components of the socket library interact with real resources (e.g., actual sockets, local servers, etc.). These tests typically involve starting up a real server and connecting with a client, or testing how the library handles real network connections in a controlled environment.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md348"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md359"></a>
 2.1 <b>Setting Up Real Server and Client</b>:</h3>
 <p>For integration testing, you'll want to set up a <b>TCP server</b> and <b>TCP client</b> that test the real communication.</p>
 <ol type="1">
@@ -156,7 +156,7 @@ Example: Using Google Mock to Mock <span class="tt">recv</span> and <span class=
 <li><b>Client Setup</b>: Implement a client that connects to the server and sends/receives data.</li>
 <li><b>Test Communication</b>: The integration tests will simulate actual network communication and ensure your library correctly handles socket connections, sends and receives data, and closes connections.</li>
 </ol>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md349"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md360"></a>
 Example of a Simple Server-Client Integration Test:</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;gtest/gtest.h&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;thread&gt;</span></div>
@@ -194,7 +194,7 @@ Example of a Simple Server-Client Integration Test:</h3>
 <div class="line">    <span class="comment">// Add assertions here, if necessary, to verify the data exchange</span></div>
 <div class="line">}</div>
 <div class="ttc" id="asocket__gtest_8cpp_html_af84a2f63791f9b4fd5ee14e6161ce2d9"><div class="ttname"><a href="socket__gtest_8cpp.html#af84a2f63791f9b4fd5ee14e6161ce2d9">TEST</a></div><div class="ttdeci">TEST(SocketTest, TcpConnectInvalid)</div><div class="ttdef"><b>Definition</b> socket_gtest.cpp:12</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md350"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md361"></a>
 3. <b>Test Coverage for Cross-Platform</b>:</h2>
 <p>Since your library is cross-platform, it's important to ensure that tests work on both <b>Windows</b> and <b>Linux</b> (or other platforms). Here are a few strategies to ensure cross-platform testing:</p>
 <ul>
@@ -203,7 +203,7 @@ Example of a Simple Server-Client Integration Test:</h3>
 <li><b>CI/CD Pipelines</b>: Set up continuous integration (CI) pipelines to automatically run your tests on both Windows and Linux environments.</li>
 </ul>
 <p>For example, use <b>GitHub Actions</b>, <b>Travis CI</b>, or <b>AppVeyor</b> to run your tests on multiple platforms.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md351"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md362"></a>
 3.1 <b>Using CMake for Platform-Specific Tests</b>:</h3>
 <p>You can specify platform-specific configurations in your CMakeLists.txt to manage platform-specific test setups.</p>
 <div class="fragment"><div class="line">if (WIN32)</div>
@@ -219,10 +219,10 @@ Example of a Simple Server-Client Integration Test:</h3>
 <div class="line">            COMPILE_DEFINITIONS &quot;PLATFORM_LINUX&quot;</div>
 <div class="line">    )</div>
 <div class="line">endif ()</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md352"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md363"></a>
 4. <b>Mocking or Stubbing Socket API for Unit Tests</b>:</h2>
 <p>For unit tests where you don't want to deal with actual network communication, you can mock socket calls like <span class="tt">socket()</span>, <span class="tt">recv()</span>, <span class="tt">send()</span>, and <span class="tt">close()</span> to simulate different network conditions.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md353"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md364"></a>
 Mock Example with Google Mock:</h3>
 <div class="fragment"><div class="line"><span class="keyword">class </span>MockSocketAPI {</div>
 <div class="line"><span class="keyword">public</span>:</div>
@@ -231,10 +231,10 @@ Mock Example with Google Mock:</h3>
 <div class="line">    MOCK_METHOD(<span class="keywordtype">int</span>, recv, (<span class="keywordtype">int</span> sockfd, <span class="keywordtype">void</span> *buf, <span class="keywordtype">size_t</span> len, <span class="keywordtype">int</span> flags), ());</div>
 <div class="line">    MOCK_METHOD(<span class="keywordtype">int</span>, close, (<span class="keywordtype">int</span> sockfd), ());</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md354"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md365"></a>
 4.1 <b>Integration Test with Mocking</b>:</h3>
 <p>You can mock system calls for a more controlled environment during unit tests. This way, you can simulate various network conditions without needing a live server or network connection.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md355"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md366"></a>
 5. <b>Test Cases to Consider</b>:</h2>
 <p>Here are some potential test cases for your socket library:</p>
 <ul>
@@ -259,7 +259,7 @@ Mock Example with Google Mock:</h3>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md356"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md367"></a>
 Conclusion:</h2>
 <ul>
 <li><b>Unit Tests</b>: Mock socket functions to test socket operations in isolation without actual network communication.</li>

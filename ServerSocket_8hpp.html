@@ -144,7 +144,7 @@ Variables</h2></td></tr>
 
 <p>Default internal buffer size (in bytes) for socket read operations. </p>
 <p>This constant defines the default size (4096 bytes / 4 KB) of the internal read buffer used across various socket classes in the library unless explicitly overridden.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md469"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md480"></a>
 Applies to</h3>
 <ul>
 <li><b>TCP client sockets</b> (<span class="tt">Socket</span>) when constructed without a custom <span class="tt">internalBufferSize</span></li>
@@ -152,21 +152,21 @@ Applies to</h3>
 <li><b>UDP sockets</b> (<span class="tt">DatagramSocket</span>) when no explicit <span class="tt">bufferSize</span> is passed</li>
 <li>May also serve as a guideline for other buffer sizes (e.g., send/receive buffers)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md470"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md481"></a>
 Rationale</h3>
 <ul>
 <li><b>Memory-efficient:</b> 4096 bytes aligns with the typical memory page size on most systems.</li>
 <li><b>Performance-optimized:</b> Large enough for common protocol messages (e.g., HTTP, DNS, WebSocket)</li>
 <li><b>Concurrency-friendly:</b> Balances throughput and memory usage across many simultaneous sockets.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md471"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md482"></a>
 Customization</h3>
 <p>Override this value by:</p><ul>
 <li>Passing a custom buffer size to socket constructors (e.g., <span class="tt">DatagramSocket(port, 8192)</span>)</li>
 <li>Calling <span class="tt">setInternalBufferSize()</span> after construction</li>
 <li>Tuning system-level buffers via <span class="tt">setReceiveBufferSize()</span> or <span class="tt">setSendBufferSize()</span></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md472"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md483"></a>
 When to Adjust</h3>
 <p>Increase if:</p><ul>
 <li>Your application transfers large datagrams or stream data (e.g., file uploads, media streams)</li>

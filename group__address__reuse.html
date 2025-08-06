@@ -98,19 +98,19 @@ $(function(){initNavTree('group__address__reuse.html','',''); });
 <p>Cross-platform socket programming requires careful handling of address reuse settings to avoid unexpected behavior, especially when dealing with server sockets that are frequently restarted.</p>
 <p>This article explains the behavior and usage of <span class="tt">SO_REUSEADDR</span>, <span class="tt">SO_EXCLUSIVEADDRUSE</span>, and <span class="tt">SO_REUSEPORT</span> on different operating systems, highlights the key differences, analyzes Java’s design decisions, and proposes a robust strategy for use in this cross-platform C++ socket library.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md65"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md76"></a>
 🔍 In-Depth Overview of Address Reuse Options</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md77"></a>
 <span class="tt">SO_REUSEADDR</span></h2>
 <ul>
 <li><b>Definition</b>: Allows a socket to bind to an address that is in the <span class="tt">TIME_WAIT</span> state or may still be lingering. See <a class="el" href="socket__states_8md.html">socket_states.md</a> to learn about socket states.</li>
 <li><b>Purpose</b>: Enables servers to restart and bind to the same port without waiting for previous connections to fully terminate.</li>
 <li><b>Platform-Specific Behavior</b>:</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md67"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md78"></a>
 On Unix/Linux:</h3>
 <p><span class="tt">SO_REUSEADDR</span> on Unix-like systems behaves differently than on Windows and is generally considered safe and useful — but only when its semantics are well understood.</p>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md68"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md79"></a>
 🔄 What it actually does</h4>
 <ul>
 <li><span class="tt">SO_REUSEADDR</span> allows a socket to <b>bind</b> to an address even if:<ul>
@@ -125,21 +125,21 @@ On Unix/Linux:</h3>
 </ul>
 </li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md69"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md80"></a>
 📦 Common use cases</h4>
 <ul>
 <li>Restarting a server (e.g., NGINX, HAProxy, Redis) that previously closed a socket still in <span class="tt">TIME_WAIT</span>.</li>
 <li>Rebinding to an ephemeral port after a client disconnects.</li>
 <li>Binding a socket that needs to share a port with another <b>non-conflicting</b> binding (e.g., a broadcast/multicast listener).</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md70"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md81"></a>
 ⚠️ Misconceptions and caveats</h4>
 <ul>
 <li>It does <b>not</b> permit multiple listeners on the exact same <span class="tt">(ip, port)</span> to receive traffic at the same time — that is the purpose of <span class="tt">SO_REUSEPORT</span>.</li>
 <li>If multiple sockets successfully bind with <span class="tt">SO_REUSEADDR</span>, only <b>one</b> of them will receive incoming connections. This is typically the last one to bind, but behavior is not guaranteed.</li>
 <li>When improperly used, it can lead to one process inadvertently "stealing" traffic from another.</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md71"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md82"></a>
 🧠 Practical implications</h4>
 <ul>
 <li>Without <span class="tt">SO_REUSEADDR</span>, restarting a server may fail with <span class="tt">EADDRINUSE</span> until the OS releases the port (typically after 60 seconds in <span class="tt">TIME_WAIT</span>).</li>
@@ -147,7 +147,7 @@ On Unix/Linux:</h3>
 <li>It does <b>not</b> override exclusive binds from other users (permissions apply).</li>
 <li>Used by almost every server daemon and framework on Unix.</li>
 </ul>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md72"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md83"></a>
 🧪 Socket state handling</h4>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -164,7 +164,7 @@ On Unix/Linux:</h3>
 <td class="markdownTableBodyNone">Unbound  </td><td class="markdownTableBodyNone">✅ N/A  </td></tr>
 </table>
 <p>In essence: <span class="tt">SO_REUSEADDR</span> <b>does not allow stealing a live port from another process.</b> It enables rebinding in <em>transitional</em> states (e.g., <span class="tt">TIME_WAIT</span>) and makes controlled reuse easier within cooperating processes.</p>
-<h4 class="doxsection"><a class="anchor" id="autotoc_md73"></a>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md84"></a>
 🚀 Combining with <span class="tt">SO_REUSEPORT</span></h4>
 <ul>
 <li>When <b>used together</b>, <span class="tt">SO_REUSEADDR</span> and <span class="tt">SO_REUSEPORT</span> allow multiple sockets (in the same or different processes) to listen concurrently on the <b>same IP\:port</b> and receive connections in parallel.</li>
@@ -179,14 +179,14 @@ On Unix/Linux:</h3>
 </li>
 <li>Without <span class="tt">SO_REUSEPORT</span>, <span class="tt">SO_REUSEADDR</span> is <em>not</em> sufficient for true concurrent binding or parallel connection handling.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md74"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md85"></a>
 On Windows:</h3>
 <ul>
 <li><span class="tt">SO_REUSEADDR</span> allows binding to a port <b>even if it is still actively bound by another socket</b>.</li>
 <li>This means two sockets in different processes could both bind to the same port and <b>both receive data</b>, leading to race conditions, data loss, or application errors.</li>
 <li>Hence, this is <b>not safe for use in server applications</b> on Windows.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md75"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md86"></a>
 On Windows:</h3>
 <pre class="fragment">The behavior of `SO_REUSEADDR` on Windows diverges significantly from its Unix counterpart — and **can be unsafe if misunderstood**.
 
@@ -248,12 +248,12 @@ To ensure a server has **exclusive access to its listening port**, Windows intro
 | Safer alternative                   | —                   | ✅ `SO_EXCLUSIVEADDRUSE` |
 
 &gt; 💡 Therefore, for **cross-platform server code**, it is essential to map `setReuseAddress(true)` to `SO_EXCLUSIVEADDRUSE` on Windows.
-</pre><h2 class="doxsection"><a class="anchor" id="autotoc_md76"></a>
+</pre><h2 class="doxsection"><a class="anchor" id="autotoc_md87"></a>
 <span class="tt">SO_EXCLUSIVEADDRUSE</span> (Windows only)</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md77"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md88"></a>
 🔐 Definition</h3>
 <p><span class="tt">SO_EXCLUSIVEADDRUSE</span> is a Windows-specific socket option that <b>guarantees exclusive access to a given IP and port</b>. When enabled, <b>no other socket</b> — in the same process or in other processes — can bind to the same address and port combination <b>until the socket is closed</b>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md78"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md89"></a>
 🎯 Purpose</h3>
 <p>Its goal is to prevent:</p>
 <ul>
@@ -262,7 +262,7 @@ To ensure a server has **exclusive access to its listening port**, Windows intro
 <li><b>Ambiguity</b> — where incoming data could be routed to any of multiple listeners.</li>
 </ul>
 <p>This option is especially important on Windows because its default behavior is much more permissive than on Unix-based systems.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md79"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md90"></a>
 ⚙️ Behavior</h3>
 <ul>
 <li>Must be set <b>before</b> calling <span class="tt">bind()</span>.</li>
@@ -273,7 +273,7 @@ To ensure a server has **exclusive access to its listening port**, Windows intro
 <blockquote class="doxtable">
 <p>🔄 Unlike Unix <span class="tt">SO_REUSEADDR</span>, it does <b>not</b> allow rebinding while in <span class="tt">TIME_WAIT</span>. You must wait for the OS to release the port or restart the process. If you close a socket and immediately try to bind a new one to the same port ( e.g., on server restart), it will fail if the previous socket was not properly closed or if Windows still holds it in <span class="tt">TIME_WAIT</span>. To ensure a smooth restart: Properly close sockets before shutdown; Avoid forcibly terminating the server process; Consider using <span class="tt">netsh int tcp set global MaxUserPort=...</span> and related commands to manage port exhaustion if relevant; You could provide a fallback mechanism: e.g., if <span class="tt">bind()</span> fails due to <span class="tt">WSAEADDRINUSE</span>, show a clear error or delay retry. </p>
 </blockquote>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md80"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md91"></a>
 ⚠️ Incompatibility</h3>
 <ul>
 <li><b>Cannot be combined meaningfully with <span class="tt">SO_REUSEADDR</span></b>.<ul>
@@ -282,7 +282,7 @@ To ensure a server has **exclusive access to its listening port**, Windows intro
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md81"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md92"></a>
 ✅ Use Case</h3>
 <p>This is the <b>recommended option</b> for <b>server applications on Windows</b>, especially those that:</p>
 <ul>
@@ -290,14 +290,14 @@ To ensure a server has **exclusive access to its listening port**, Windows intro
 <li>Expect to run only a single instance.</li>
 <li>Must avoid data races or contention between multiple sockets.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md82"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md93"></a>
 🛠️ How it works internally</h3>
 <ul>
 <li>The Windows kernel enforces a strict binding policy for sockets with <span class="tt">SO_EXCLUSIVEADDRUSE</span>.</li>
 <li>It denies subsequent bind attempts from <b>any</b> socket that doesn't own the port, regardless of <span class="tt">SO_REUSEADDR</span>.</li>
 <li>Once the socket is closed, the address is fully released.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md83"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md94"></a>
 🧠 Summary</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -316,7 +316,7 @@ To ensure a server has **exclusive access to its listening port**, Windows intro
 <blockquote class="doxtable">
 <p>💡 <span class="tt">jsocketpp</span> automatically enables <span class="tt">SO_EXCLUSIVEADDRUSE</span> on Windows when <span class="tt">setReuseAddress(true)</span> is called (which happens by default in <span class="tt">ServerSocket</span>). </p>
 </blockquote>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md84"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md95"></a>
 <span class="tt">SO_REUSEPORT</span> (Unix/Linux only)</h2>
 <ul>
 <li><b>Definition</b>: <span class="tt">SO_REUSEPORT</span> allows multiple sockets within the <b>same host</b> to bind to the <b>same port and IP address</b>, enabling <b>kernel-level load balancing</b> between them.</li>
@@ -392,13 +392,13 @@ To ensure a server has **exclusive access to its listening port**, Windows intro
 <p>🛑 <b>Not portable!</b> Avoid making it the default behavior in a cross-platform library. Instead, provide a way for advanced users to enable it via <span class="tt">setOption(...)</span>. </p>
 </blockquote>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md86"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md97"></a>
 🧪 What Happens When Multiple Sockets Bind to the Same Port?</h1>
 <p>This behavior depends heavily on which socket options are used and which operating system the code is running on. Here’s a breakdown of the possibilities:</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md88"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md99"></a>
 Unix/Linux</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md89"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md100"></a>
 <b>With <span class="tt">SO_REUSEADDR</span> only</b>:</h3>
 <ul>
 <li>Multiple sockets in the same process or in different processes can bind to the same port, <b>but only if all of them set <span class="tt">SO_REUSEADDR</span> before binding</b>.</li>
@@ -407,7 +407,7 @@ Unix/Linux</h2>
 <li>This behavior is often <b>misunderstood</b> and may lead to subtle bugs if used incorrectly.</li>
 <li>Example use case: Restarting a server that was listening on a port stuck in <span class="tt">TIME_WAIT</span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md90"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md101"></a>
 <b>With <span class="tt">SO_REUSEADDR</span> + <span class="tt">SO_REUSEPORT</span></b>:</h3>
 <ul>
 <li>All sockets that bind to the same port <b>and set both options</b> before binding can <b>receive connections concurrently **.</b></li>
@@ -418,9 +418,9 @@ Unix/Linux</h2>
 <p>⚠️ You must still ensure all sockets bind to the same address and port with matching options. Any inconsistency can lead to undefined behavior or silent failure. </p>
 </blockquote>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md92"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md103"></a>
 Windows</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md93"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md104"></a>
 <b>With <span class="tt">SO_REUSEADDR</span></b>:</h3>
 <ul>
 <li><b>Highly permissive</b>, and potentially dangerous.</li>
@@ -433,7 +433,7 @@ Windows</h2>
 </li>
 <li>This is <b>unsafe for server sockets</b> and is <b>not recommended</b>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md94"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md105"></a>
 <b>With <span class="tt">SO_EXCLUSIVEADDRUSE</span> (default in jsocketpp)</b>:</h3>
 <ul>
 <li>Prevents any other socket or process from binding to the same port <b>until the current socket is closed</b>.</li>
@@ -441,7 +441,7 @@ Windows</h2>
 <li>If another process tries to bind to the port, <span class="tt">bind()</span> fails with <span class="tt">WSAEADDRINUSE</span>.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md96"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md107"></a>
 Summary Table</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -456,17 +456,17 @@ Summary Table</h2>
 <td class="markdownTableBodyNone">Windows  </td><td class="markdownTableBodyNone"><span class="tt">SO_EXCLUSIVEADDRUSE</span>  </td><td class="markdownTableBodyNone">❌  </td><td class="markdownTableBodyNone">✅ One socket exclusively  </td><td class="markdownTableBodyNone">✅ Yes  </td></tr>
 </table>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md98"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md109"></a>
 ⚠️ Java’s Approach and Its Limitations</h1>
 <p>Java’s networking API attempts to simplify socket configuration across platforms, but this comes at a cost — particularly on Windows.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md99"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md110"></a>
 What Java Does</h2>
 <ul>
 <li>The <span class="tt">ServerSocket</span> class in Java <b>automatically enables <span class="tt">SO_REUSEADDR</span></b> by default.</li>
 <li>This allows quick server restarts without waiting for the previous socket to fully leave the <span class="tt">TIME_WAIT</span> state.</li>
 <li>This behavior matches Unix/Linux expectations but <b>does not distinguish between platforms</b>.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md100"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md111"></a>
 Why This is Problematic on Windows</h2>
 <p>On Windows, enabling <span class="tt">SO_REUSEADDR</span> <b>does not behave the same way</b>:</p>
 <ul>
@@ -480,7 +480,7 @@ Why This is Problematic on Windows</h2>
 </ul>
 <p>Java <b>does not use</b> <span class="tt">SO_EXCLUSIVEADDRUSE</span>, which would prevent this issue and is considered the safe default for Windows server sockets.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md102"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md113"></a>
 Summary of Java’s Design Trade-Off</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -495,7 +495,7 @@ Summary of Java’s Design Trade-Off</h2>
 <li>While convenient on Linux, it leads to <b>risky behavior on Windows</b>, especially for long-running or concurrent server applications.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md104"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md115"></a>
 A Better Alternative: What <span class="tt">jsocketpp</span> Does</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -519,9 +519,9 @@ A Better Alternative: What <span class="tt">jsocketpp</span> Does</h2>
 <p>✅ This strategy avoids the shortcomings of Java’s one-size-fits-all approach while preserving flexibility for advanced users. </p>
 </blockquote>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md106"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md117"></a>
 ✅ Smarter Strategy for jsocketpp</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md107"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md118"></a>
 Recommended Behavior</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -531,7 +531,7 @@ Recommended Behavior</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Unix  </td><td class="markdownTableBodyNone"><span class="tt">SO_REUSEADDR</span>  </td><td class="markdownTableBodyNone">Allows port reuse in <span class="tt">TIME_WAIT</span>, safe within a single process.  </td></tr>
 </table>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md108"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md119"></a>
 Constructor Defaults</h2>
 <ul>
 <li><span class="tt">ServerSocket</span> automatically enables safe defaults:<ul>
@@ -543,21 +543,21 @@ Constructor Defaults</h2>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md109"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md120"></a>
 Developer Control</h2>
 <ul>
 <li><span class="tt">setReuseAddress(bool)</span> remains available to developers.</li>
 <li>Must be called <b>before <span class="tt">bind()</span></b>.</li>
 <li>Does nothing once the socket is bound.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md110"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md121"></a>
 Why Not Expose Windows <span class="tt">SO_REUSEADDR</span>?</h2>
 <ul>
 <li>It’s simply unsafe and not aligned with best practices.</li>
 <li>Allowing it would cause undefined behavior that’s hard to debug.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md112"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md123"></a>
 💡 Summary Table</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -572,7 +572,7 @@ Why Not Expose Windows <span class="tt">SO_REUSEADDR</span>?</h2>
 <td class="markdownTableBodyNone"><span class="tt">SO_EXCLUSIVEADDRUSE</span>  </td><td class="markdownTableBodyNone">Windows  </td><td class="markdownTableBodyNone">✅ Yes  </td><td class="markdownTableBodyNone">❌ No  </td><td class="markdownTableBodyNone">❌ No  </td><td class="markdownTableBodyNone">Ensures exclusive use  </td></tr>
 </table>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md114"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md125"></a>
 📌 Notes for Library Authors</h1>
 <ul>
 <li>Always apply reuse settings <b>before</b> calling <span class="tt">bind()</span>.</li>
@@ -581,7 +581,7 @@ Why Not Expose Windows <span class="tt">SO_REUSEADDR</span>?</h2>
 <li>Optionally add warnings if unsafe options are requested.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md116"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md127"></a>
 🔗 References</h1>
 <ul>
 <li><a href="https://man7.org/linux/man-pages/man7/socket.7.html">socket(7) - Linux Man Pages</a></li>
@@ -590,11 +590,11 @@ Why Not Expose Windows <span class="tt">SO_REUSEADDR</span>?</h2>
 <li><a href="https://lwn.net/Articles/542629/">Linux <span class="tt">SO_REUSEPORT</span></a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md118"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md129"></a>
 ✅ Conclusion</h1>
 <p>Correct handling of socket address reuse options is essential for writing reliable and portable server applications, especially when targeting both Unix-like systems and Windows.</p>
 <p>By default, many programming environments (like Java) apply <span class="tt">SO_REUSEADDR</span> without considering the platform-specific nuances. While convenient on Unix, this can introduce serious issues on Windows due to how <span class="tt">SO_REUSEADDR</span> behaves there — enabling unintentional port sharing and data delivery ambiguity.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md119"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md130"></a>
 ✔ What jsocketpp Gets Right</h2>
 <p>The <span class="tt">jsocketpp</span> library provides <b>safe, OS-aware defaults</b> that follow best practices:</p>
 <ul>
@@ -603,14 +603,14 @@ Why Not Expose Windows <span class="tt">SO_REUSEADDR</span>?</h2>
 <li>The library <b>does not expose unsafe behavior</b> such as <span class="tt">SO_REUSEADDR</span> on Windows, avoiding security and stability risks.</li>
 <li>It provides clear, documented methods for advanced control (<span class="tt">setOption</span>, <span class="tt">getOption</span>), while giving safe defaults to newcomers.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md120"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md131"></a>
 🧠 Beyond the Basics</h2>
 <ul>
 <li>Developers working on high-performance, multi-threaded servers can use <span class="tt">SO_REUSEPORT</span> (on Unix/Linux) for concurrency and graceful reloads.</li>
 <li>With helper methods like <span class="tt">setReuseAddress()</span>, <span class="tt">isBound()</span>, and platform-adaptive behavior, <span class="tt">jsocketpp</span> strikes a thoughtful balance between <b>Java-style simplicity</b> and <b>system-level flexibility</b>.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md122"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md133"></a>
 ✅ Best Practices Recap</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">

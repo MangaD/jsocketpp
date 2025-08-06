@@ -95,10 +95,10 @@ $(function(){initNavTree('group__socket__binding.html','',''); });
   <div class="headertitle"><div class="title">Understanding Socket Binding in TCP and UDP Connections <div class="ingroups"><a class="el" href="group__docs.html">User Guides</a></div></div></div>
 </div><!--header-->
 <div class="contents">
-<h1 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md63"></a>
 Introduction</h1>
 <p>In network programming, sockets serve as the interface for communication between devices over a network. A fundamental aspect of socket programming is understanding how sockets are associated with local and remote addresses, particularly through functions like <span class="tt">bind()</span> and <span class="tt">connect()</span>. This article explores the role of the <span class="tt">connect()</span> function in binding sockets to local addresses, the concept of implicit and explicit binding, and the behavior of TCP and UDP sockets in maintaining their local address bindings throughout their lifetime. This comprehensive guide is designed for developers and students seeking a deeper understanding of socket behavior in network programming.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md64"></a>
 What is Socket Binding?</h1>
 <p>Socket binding refers to the process of associating a socket with a specific local IP address and port number. This local endpoint defines how the socket communicates with the network, allowing it to send and receive data. Binding is critical for both servers and clients in network communication:</p>
 <ul>
@@ -106,16 +106,16 @@ What is Socket Binding?</h1>
 <li><b>Clients</b>: Clients typically connect to a remote server, and their local address and port may be assigned automatically by the operating system if not explicitly specified.</li>
 </ul>
 <p>The two key functions related to binding in socket programming are <span class="tt">bind()</span> and <span class="tt">connect()</span>. While <span class="tt">bind()</span> explicitly assigns a local address to a socket, <span class="tt">connect()</span> plays a role in initiating connections and may trigger implicit binding under certain conditions.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md65"></a>
 The Role of the <span class="tt">connect()</span> Function</h1>
 <p>The <span class="tt">connect()</span> function is primarily used to establish a connection from a client socket to a remote server by specifying the remote address (IP and port). Its behavior differs slightly between TCP and UDP sockets due to their connection-oriented and connectionless natures, respectively.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
 TCP Sockets</h2>
 <p>For TCP, <span class="tt">connect()</span> initiates a connection to a remote server, establishing a reliable, stream-based communication channel. The client socket specifies the remote server's IP address and port, and the operating system handles the TCP handshake to establish the connection.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md67"></a>
 UDP Sockets</h2>
 <p>For UDP, which is connectionless, <span class="tt">connect()</span> is optional. When used, it sets a default remote address for the socket, allowing subsequent send and receive operations to use simplified functions like <span class="tt">send()</span> and <span class="tt">recv()</span> instead of <span class="tt">sendto()</span> and <span class="tt">recvfrom()</span>. Despite being connectionless, <span class="tt">connect()</span> still influences how the socket is bound locally.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md68"></a>
 Does <span class="tt">connect()</span> Bind to a Local Address?</h1>
 <p>A common question in socket programming is whether <span class="tt">connect()</span> binds a socket to a local address. The answer is nuanced:</p>
 <ul>
@@ -123,9 +123,9 @@ Does <span class="tt">connect()</span> Bind to a Local Address?</h1>
 <li><b>Implicit Binding</b>: If <span class="tt">bind()</span> is not called before <span class="tt">connect()</span>, the operating system performs an <b>implicit bind</b> when <span class="tt">connect()</span> is invoked. In this case, the OS automatically assigns a local IP address (based on the network interface used to reach the remote server) and an ephemeral port (a temporary port from a system-defined range, typically 49152–65535). This implicit binding ensures the socket has a valid local endpoint for communication.</li>
 </ul>
 <p>This behavior applies to both TCP and UDP sockets, with slight differences in how and when the implicit binding occurs.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md58"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md69"></a>
 Implicit Binding in TCP and UDP</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md70"></a>
 TCP Sockets</h2>
 <p>For TCP sockets, implicit binding occurs when <span class="tt">connect()</span> is called without a prior <span class="tt">bind()</span>. The operating system selects:</p>
 <ul>
@@ -133,7 +133,7 @@ TCP Sockets</h2>
 <li>An ephemeral port, chosen from the available pool of temporary ports.</li>
 </ul>
 <p>Once the implicit bind occurs, the socket uses this local IP and port for the entire duration of the connection. For example, a TCP client connecting to a server at <span class="tt">192.168.1.100:8080</span> might be assigned a local address like <span class="tt">192.168.1.10:49152</span>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md71"></a>
 UDP Sockets</h2>
 <p>For UDP sockets, implicit binding can occur in one of three scenarios:</p>
 <ol type="1">
@@ -142,7 +142,7 @@ UDP Sockets</h2>
 <li><b>When <span class="tt">recvfrom()</span> is called</b>: If the socket is unbound, receiving data with <span class="tt">recvfrom()</span> causes the OS to assign a local IP and port.</li>
 </ol>
 <p>Similar to TCP, once the UDP socket is bound (implicitly or explicitly), it retains the same local IP and port for all subsequent operations.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md61"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md72"></a>
 Does the Local Binding Persist for the Socket’s Lifetime?</h1>
 <p>A critical question for developers is whether a socket, once bound to a local IP and port, retains that binding throughout its lifetime. The answer is <b>yes</b>, for both TCP and UDP sockets, with the following details:</p>
 <ul>
@@ -154,7 +154,7 @@ Does the Local Binding Persist for the Socket’s Lifetime?</h1>
 </li>
 </ul>
 <p>The binding persists until the socket is closed or, in rare cases, explicitly rebound (though rebinding with <span class="tt">bind()</span> on an already-bound socket is not standard practice and may fail on some systems).</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md62"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md73"></a>
 Example: Demonstrating Binding Behavior</h1>
 <p>Below is a C program that demonstrates the binding behavior of a UDP socket, showing that the local IP and port remain consistent after <span class="tt">connect()</span> and subsequent operations.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;sys/socket.h&gt;</span></div>
