@@ -368,6 +368,7 @@ See [LICENSE](./LICENSE) for details.
 
 ## 🙏 Acknowledgements
 
+* [Berkeley Sockets API](https://en.wikipedia.org/wiki/Berkeley_sockets) — used in C/C++ for network programming
 * The Java Networking API — for its excellent abstractions
 * GoogleTest — for testing
 * CLion, VS Code, Ninja, and CMake — for development tooling
