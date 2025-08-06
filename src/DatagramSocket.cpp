@@ -194,7 +194,7 @@ void DatagramSocket::close()
 {
     if (getSocketFd() != INVALID_SOCKET)
     {
-        if (CloseSocket(getSocketFd()))
+        if (CloseSocket(getSocketFd()) != 0)
         {
             const int error = GetSocketError();
             throw SocketException(error, SocketErrorMessageWrap(error));
@@ -332,8 +332,8 @@ void DatagramSocket::connect(const std::string_view host, const Port port, const
                                          "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
         if (selectResult < 0)
         {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            const int errorSelect = GetSocketError();
+            throw SocketException(errorSelect, SocketErrorMessageWrap(errorSelect));
         }
 
         // Even if select() reports writable, we must check if the connection actually succeeded
@@ -664,4 +664,241 @@ void DatagramSocket::setInternalBufferSize(const std::size_t newLen)
 {
     _internalBuffer.resize(newLen);
     _internalBuffer.shrink_to_fit();
+}
+
+std::size_t DatagramSocket::peek(DatagramPacket& packet, const bool resizeBuffer) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::peek(): socket is not open.");
+
+    // Automatically resize if buffer is empty and resizing is enabled
+    if (packet.buffer.empty())
+    {
+        if (resizeBuffer)
+        {
+            packet.buffer.resize(_internalBuffer.size()); // mimic default receive buffer size
+        }
+        else
+        {
+            throw SocketException("DatagramSocket::peek(): packet buffer is empty and resizing is disabled.");
+        }
+    }
+
+    sockaddr_storage srcAddr{};
+    socklen_t addrLen = sizeof(srcAddr);
+
+    int flags = MSG_PEEK;
+#ifndef _WIN32
+    flags |= MSG_NOSIGNAL;
+#endif
+
+    const int received = recvfrom(getSocketFd(), packet.buffer.data(),
+#ifdef _WIN32
+                                  static_cast<int>(packet.buffer.size()),
+#else
+                                  packet.buffer.size(),
+#endif
+                                  flags, reinterpret_cast<sockaddr*>(&srcAddr), &addrLen);
+
+    const int error = GetSocketError();
+    if (received == SOCKET_ERROR)
+        throw SocketException(error, SocketErrorMessageWrap(error));
+
+    if (received == 0)
+        throw SocketException("DatagramSocket::peek(): connection closed by remote host.");
+
+    // Resolve sender's address info (this does NOT update _remoteAddr)
+    char hostBuf[NI_MAXHOST], portBuf[NI_MAXSERV];
+    const int ret = getnameinfo(reinterpret_cast<const sockaddr*>(&srcAddr), addrLen, hostBuf, sizeof(hostBuf), portBuf,
+                                sizeof(portBuf), NI_NUMERICHOST | NI_NUMERICSERV);
+    if (ret != 0)
+    {
+#ifdef _WIN32
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+#else
+        throw SocketException(ret, SocketErrorMessageWrap(ret, true));
+#endif
+    }
+
+    packet.address = std::string(hostBuf);
+    packet.port = static_cast<Port>(std::stoul(portBuf));
+
+    if (resizeBuffer)
+        packet.buffer.resize(static_cast<std::size_t>(received));
+
+    return static_cast<std::size_t>(received);
+}
+
+bool DatagramSocket::hasPendingData(const int timeoutMillis) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::hasPendingData(): socket is not open.");
+
+    fd_set readFds;
+    FD_ZERO(&readFds);
+    FD_SET(getSocketFd(), &readFds);
+
+    timeval tv{};
+    if (timeoutMillis >= 0)
+    {
+        tv.tv_sec = timeoutMillis / 1000;
+        tv.tv_usec = (timeoutMillis % 1000) * 1000;
+    }
+
+    const int result = select(
+#ifdef _WIN32
+        0, // unused on Windows
+#else
+        getSocketFd() + 1,
+#endif
+        &readFds, nullptr, nullptr, timeoutMillis >= 0 ? &tv : nullptr);
+
+    const int error = GetSocketError();
+    if (result == SOCKET_ERROR)
+        throw SocketException(error, SocketErrorMessageWrap(error));
+
+    return result > 0 && FD_ISSET(getSocketFd(), &readFds);
+}
+
+std::optional<int> DatagramSocket::getMTU() const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+    {
+        throw SocketException("DatagramSocket::getMTU(): socket is not open.");
+    }
+#ifdef _WIN32
+    const std::string localIp = internal::getBoundLocalIp(getSocketFd());
+
+    // Allocate space for adapter list
+    ULONG outBufLen = 15000;
+    std::vector<BYTE> buffer(outBufLen);
+    auto* adapterAddrs = reinterpret_cast<IP_ADAPTER_ADDRESSES*>(buffer.data());
+
+    constexpr ULONG flags = GAA_FLAG_INCLUDE_PREFIX;
+    constexpr ULONG family = AF_UNSPEC;
+
+    if (const DWORD ret = GetAdaptersAddresses(family, flags, nullptr, adapterAddrs, &outBufLen); ret != NO_ERROR)
+    {
+        return std::nullopt;
+    }
+
+    for (const IP_ADAPTER_ADDRESSES* adapter = adapterAddrs; adapter != nullptr; adapter = adapter->Next)
+    {
+        for (const IP_ADAPTER_UNICAST_ADDRESS* unicast = adapter->FirstUnicastAddress; unicast != nullptr;
+             unicast = unicast->Next)
+        {
+            char addrBuf[NI_MAXHOST];
+            const int result =
+                getnameinfo(unicast->Address.lpSockaddr, static_cast<socklen_t>(unicast->Address.iSockaddrLength),
+                            addrBuf, sizeof(addrBuf), nullptr, 0, NI_NUMERICHOST);
+            if (result != 0)
+            {
+                continue;
+            }
+
+            if (internal::ipAddressesEqual(addrBuf, localIp))
+            {
+                return static_cast<int>(adapter->Mtu);
+            }
+        }
+    }
+
+    return std::nullopt;
+#else
+    sockaddr_storage localAddr{};
+    socklen_t addrLen = sizeof(localAddr);
+    if (getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&localAddr), &addrLen) != 0)
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, SocketErrorMessageWrap(err));
+    }
+
+    // Convert IP to interface name via getnameinfo + getifaddrs
+    char host[NI_MAXHOST] = {};
+    if (getnameinfo(reinterpret_cast<sockaddr*>(&localAddr), addrLen, host, sizeof(host), nullptr, 0, NI_NUMERICHOST) !=
+        0)
+    {
+        return std::nullopt;
+    }
+
+    struct ifaddrs* ifaddr;
+    if (getifaddrs(&ifaddr) == -1)
+        return std::nullopt;
+
+    std::optional<std::string> interfaceName;
+    for (struct ifaddrs* ifa = ifaddr; ifa != nullptr; ifa = ifa->ifa_next)
+    {
+        if (!ifa->ifa_addr)
+            continue;
+
+        if (ifa->ifa_addr->sa_family == localAddr.ss_family)
+        {
+            char ifHost[NI_MAXHOST];
+            if (getnameinfo(ifa->ifa_addr, sizeof(sockaddr_storage), ifHost, sizeof(ifHost), nullptr, 0,
+                            NI_NUMERICHOST) == 0)
+            {
+                if (std::string(ifHost) == host)
+                {
+                    interfaceName = std::string(ifa->ifa_name);
+                    break;
+                }
+            }
+        }
+    }
+
+    freeifaddrs(ifaddr);
+
+    if (!interfaceName)
+        return std::nullopt;
+
+    int fd = getSocketFd();
+    struct ifreq ifr;
+    std::memset(&ifr, 0, sizeof(ifr));
+    std::strncpy(ifr.ifr_name, interfaceName->c_str(), IFNAMSIZ - 1);
+
+    if (ioctl(fd, SIOCGIFMTU, &ifr) < 0)
+        return std::nullopt;
+
+    return ifr.ifr_mtu;
+#endif
+}
+
+bool DatagramSocket::waitReady(const bool forWrite, const int timeoutMillis) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::waitReady(): socket is not open.");
+
+    if (getSocketFd() >= FD_SETSIZE)
+    {
+        throw SocketException("waitReady(): socket descriptor exceeds FD_SETSIZE (" + std::to_string(FD_SETSIZE) + ")");
+    }
+
+    fd_set fds;
+    FD_ZERO(&fds);
+    FD_SET(getSocketFd(), &fds);
+
+    timeval tv{0, 0};
+    if (timeoutMillis >= 0)
+    {
+        tv.tv_sec = timeoutMillis / 1000;
+        tv.tv_usec = (timeoutMillis % 1000) * 1000;
+    }
+
+#ifdef _WIN32
+    const int result = select(0, forWrite ? nullptr : &fds, forWrite ? &fds : nullptr, nullptr, &tv);
+#else
+    int result;
+    do
+    {
+        result = select(getSocketFd() + 1, forWrite ? nullptr : &fds, forWrite ? &fds : nullptr, nullptr, &tv);
+    } while (result < 0 && errno == EINTR);
+#endif
+
+    if (result < 0)
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
+
+    return result > 0;
 }

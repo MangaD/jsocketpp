@@ -6,7 +6,9 @@ std::string jsocketpp::SocketErrorMessage(int error, [[maybe_unused]] bool gaiSt
 {
 #ifdef _WIN32
     if (error == 0)
+    {
         return {};
+    }
 
     // Winsock error codes are in the range 10000-11999
     if (error >= 10000 && error <= 11999)
@@ -315,4 +317,61 @@ Port jsocketpp::portFromSockaddr(const sockaddr* addr)
         default:
             throw SocketException("Unsupported address family in portFromSockaddr");
     }
+}
+
+std::string internal::getBoundLocalIp(const SOCKET sockFd)
+{
+    sockaddr_storage addr{};
+    socklen_t addrLen = sizeof(addr);
+
+    if (getsockname(sockFd, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, SocketErrorMessageWrap(err));
+    }
+
+    char ipStr[NI_MAXHOST] = {};
+    const int ret = getnameinfo(reinterpret_cast<const sockaddr*>(&addr), addrLen, ipStr, sizeof(ipStr), nullptr, 0,
+                                NI_NUMERICHOST);
+    if (ret != 0)
+    {
+#ifdef _WIN32
+        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+#else
+        throw SocketException(ret, SocketErrorMessageWrap(ret, true));
+#endif
+    }
+
+    return {ipStr};
+}
+
+bool internal::ipAddressesEqual(const std::string& ip1, const std::string& ip2)
+{
+    in6_addr addr1{}, addr2{};
+
+    auto normalizeToIPv6 = [](const std::string& ip, in6_addr& out) -> bool
+    {
+        // Try IPv6 first
+        if (inet_pton(AF_INET6, ip.c_str(), &out) == 1)
+            return true;
+
+        // Try IPv4 → map to IPv4-mapped IPv6 (::ffff:a.b.c.d)
+        in_addr ipv4{};
+        if (inet_pton(AF_INET, ip.c_str(), &ipv4) != 1)
+            return false;
+
+        std::memset(&out, 0, sizeof(out));
+        std::memcpy(&out.s6_addr[12], &ipv4, sizeof(ipv4));
+        out.s6_addr[10] = 0xff;
+        out.s6_addr[11] = 0xff;
+        return true;
+    };
+
+    const bool ok1 = normalizeToIPv6(ip1, addr1);
+    const bool ok2 = normalizeToIPv6(ip2, addr2);
+
+    if (!ok1 || !ok2)
+        return false;
+
+    return std::memcmp(&addr1, &addr2, sizeof(in6_addr)) == 0;
 }

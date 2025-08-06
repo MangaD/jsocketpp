@@ -737,4 +737,92 @@ using AddrinfoPtr = std::unique_ptr<addrinfo, AddrinfoDeleter>;
     return AddrinfoPtr{raw};
 }
 
+/**
+ * @brief Retrieves the local IP address to which the socket is currently bound.
+ * @ingroup internal
+ *
+ * This function returns the **numeric IP address** of the socket's local endpoint,
+ * based on the actual binding or connection state. It supports both IPv4 and IPv6 sockets.
+ *
+ * ---
+ *
+ * ### 🔧 Internal Mechanism
+ * This method wraps two low-level system calls:
+ *
+ * - `getsockname()`:
+ *   Obtains the local address (IP and port) that the socket is bound to.
+ *   This works regardless of whether the socket was explicitly bound (`bind()`) or implicitly assigned
+ *   a source address via `connect()` or `sendto()` on unconnected sockets.
+ *
+ * - `getnameinfo()`:
+ *   Converts the raw `sockaddr` structure returned by `getsockname()` into a
+ *   **numeric IP string** (e.g., `"127.0.0.1"` or `"::1"`), independent of DNS.
+ *
+ * ---
+ *
+ * ### ✅ Use Cases
+ * - Discover which local interface the OS selected after `bind()` or `connect()`
+ * - Match the socket to a network adapter for MTU queries or interface statistics
+ * - Print the socket’s local IP address for diagnostics or logging
+ * - Support systems where multiple NICs or address families are in use
+ *
+ * ---
+ *
+ * ### ⚠️ Error Handling
+ * - Throws `SocketException` if the socket is not open, not yet bound, or if address resolution fails.
+ * - All errors include system-specific error codes and human-readable descriptions.
+ *
+ * ---
+ *
+ * @param[in] sockFd The socket descriptor (`SOCKET` on Windows, `int` on POSIX).
+ *
+ * @return A string containing the numeric IPv4 or IPv6 address the socket is bound to.
+ *
+ * @throws SocketException If:
+ * - The socket is invalid or unbound
+ * - `getsockname()` fails (e.g., bad descriptor)
+ * - `getnameinfo()` fails (e.g., unsupported address format)
+ *
+ * @note This function does not return the remote peer address — use `getpeername()` for that.
+ * @note This function does not include the port — only the IP address portion is returned.
+ *
+ * @see getLocalSocketAddress(), getpeername(), resolveAddress(), getMTU()
+ */
+[[nodiscard]] std::string getBoundLocalIp(SOCKET sockFd);
+
+/**
+ * @brief Compares two IP addresses for logical equality, accounting for IPv4-mapped IPv6 forms.
+ *
+ * This function compares two IP addresses represented as strings (e.g., `"192.168.1.1"` or `"::ffff:192.168.1.1"`)
+ * and returns true if they refer to the same underlying address, regardless of representation format.
+ *
+ * ---
+ *
+ * ### Why This Matters
+ * IPv4 addresses can be represented in IPv6 as *IPv4-mapped* addresses (e.g., `"::ffff:192.168.1.1"`),
+ * which are equivalent to their native IPv4 forms but will **not compare equal as strings**.
+ *
+ * This helper resolves both input strings using `inet_pton()` and normalizes any IPv4 addresses into
+ * the IPv6-mapped space for byte-wise comparison.
+ *
+ * ---
+ *
+ * ### Supported Inputs
+ * - IPv4 addresses (e.g., `"10.0.0.1"`)
+ * - IPv6 addresses (e.g., `"2001:db8::1"`)
+ * - IPv4-mapped IPv6 addresses (e.g., `"::ffff:10.0.0.1"`)
+ *
+ * ---
+ *
+ * @param[in] ip1 First IP address as a numeric string.
+ * @param[in] ip2 Second IP address as a numeric string.
+ * @return `true` if the addresses are equivalent (including cross-family matches), `false` otherwise.
+ *
+ * @note This function performs no DNS resolution. Only numeric addresses are supported.
+ * @note Both inputs must be valid IP addresses. Invalid strings return `false`.
+ *
+ * @see getBoundLocalIp(), getMTU(), inet_pton()
+ */
+[[nodiscard]] bool ipAddressesEqual(const std::string& ip1, const std::string& ip2);
+
 } // namespace jsocketpp::internal
