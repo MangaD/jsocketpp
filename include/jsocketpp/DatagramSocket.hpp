@@ -1754,6 +1754,70 @@ class DatagramSocket : public SocketOptions
      */
     [[nodiscard]] bool isClosed() const noexcept { return getSocketFd() == INVALID_SOCKET; }
 
+    /**
+     * @brief Retrieves the raw socket address of the last known remote peer.
+     * @ingroup udp
+     *
+     * This method exposes the internal low-level `sockaddr_storage` structure representing the
+     * last known remote peer that this socket communicated with. It is useful in advanced use
+     * cases where direct access to address structures is required — for example:
+     *
+     * - Custom routing or connection tracking
+     * - Creating new sockets targeting the same peer
+     * - Implementing security checks or access controls
+     * - Avoiding repeated DNS resolution
+     *
+     * ---
+     *
+     * ### 🔁 Behavior Based on Mode
+     *
+     * - **Connected Socket:**
+     *   - Reflects the peer specified via `connect()`.
+     *   - Remains constant until the socket is closed or reset.
+     *
+     * - **Unconnected Socket:**
+     *   - Reflects the peer involved in the most recent:
+     *     - `read()`
+     *     - `recvFrom()`
+     *     - `writeTo()`
+     *     - `write(DatagramPacket)`
+     *   - If no such operation has occurred, the result is empty.
+     *
+     * ---
+     *
+     * ### Example
+     * @code
+     * auto remote = sock.getLastPeerSockAddr();
+     * if (remote) {
+     *     const sockaddr* sa = reinterpret_cast<const sockaddr*>(&remote->first);
+     *     // Now you can use sendto(), bind(), connect(), etc.
+     * }
+     * @endcode
+     *
+     * ---
+     *
+     * @return
+     * - `std::optional<std::pair<sockaddr_storage, socklen_t>>`:
+     *     - `.first` contains the raw peer address
+     *     - `.second` is the valid length of the address
+     * - Returns `std::nullopt` if the socket has not communicated with any peer.
+     *
+     * @note This is a low-level method. Use `getRemoteIp()` or `getRemoteSocketAddress()` for string-formatted access.
+     * @note The returned structure is a **copy**; modifying it has no effect on socket state.
+     *
+     * @see getRemoteIp(), getRemotePort(), writeTo(), read(), isConnected(), connect()
+     */
+    [[nodiscard]] std::optional<std::pair<sockaddr_storage, socklen_t>> getLastPeerSockAddr() const
+    {
+        if (_remoteAddrLen == 0)
+        {
+            // No communication has occurred; no peer info available
+            return std::nullopt;
+        }
+
+        return std::make_pair(_remoteAddr, _remoteAddrLen);
+    }
+
   protected:
     /**
      * @brief Internal helper that releases socket resources and resets all internal state.
@@ -1946,12 +2010,8 @@ template <> inline std::string DatagramSocket::read<std::string>()
 
     if (_internalBuffer.empty())
         throw SocketException("DatagramSocket::read<std::string>(): internal buffer is empty.");
-#ifdef _WIN32
-    int
-#else
-    ssize_t
-#endif
-        received = 0;
+
+    ssize_t received = 0;
 
     if (isConnected())
     {

@@ -2820,26 +2820,6 @@ class Socket : public SocketOptions
     bool waitReady(bool forWrite, int timeoutMillis) const;
 
     /**
-     * @brief Convert an address and port to a string using getnameinfo.
-     *
-     * Uses getnameinfo to convert a sockaddr_storage structure to a human-readable string (ip:port).
-     * Handles both IPv4 and IPv6 addresses.
-     *
-     * @param[in] addr sockaddr_storage structure.
-     * @return String representation (ip:port).
-     * @throws SocketException if getnameinfo fails.
-     */
-    static std::string addressToString(const sockaddr_storage& addr);
-
-    /**
-     * @brief Convert a string (ip:port) to sockaddr_storage.
-     *
-     * @param[in] str Address string.
-     * @param[out] addr Output sockaddr_storage.
-     */
-    static void stringToAddress(const std::string& str, sockaddr_storage& addr);
-
-    /**
      * @brief Reports whether the socket has been closed or invalidated.
      * @ingroup tcp
      *

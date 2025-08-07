@@ -412,17 +412,17 @@ std::size_t DatagramSocket::write(const DatagramPacket& packet)
     {
         const auto result = internal::resolveAddress(packet.address, packet.port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
 
-        const int sent = sendto(getSocketFd(), packet.buffer.data(),
+        const ssize_t sent = sendto(getSocketFd(), packet.buffer.data(),
 #ifdef _WIN32
-                                static_cast<int>(packet.buffer.size()),
+                                    static_cast<int>(packet.buffer.size()),
 #else
-                                packet.buffer.size(),
+                                    packet.buffer.size(),
 #endif
-                                flags, result->ai_addr,
+                                    flags, result->ai_addr,
 #ifdef _WIN32
-                                static_cast<int>(result->ai_addrlen));
+                                    static_cast<int>(result->ai_addrlen));
 #else
-                                result->ai_addrlen);
+                                    result->ai_addrlen);
 #endif
 
         const int error = GetSocketError();
@@ -443,13 +443,13 @@ std::size_t DatagramSocket::write(const DatagramPacket& packet)
         throw SocketException(
             "DatagramSocket::write(DatagramPacket): no destination specified and socket is not connected.");
 
-    const int sent = send(getSocketFd(), packet.buffer.data(),
+    const ssize_t sent = send(getSocketFd(), packet.buffer.data(),
 #ifdef _WIN32
-                          static_cast<int>(packet.buffer.size()),
+                              static_cast<int>(packet.buffer.size()),
 #else
-                          packet.buffer.size(),
+                              packet.buffer.size(),
 #endif
-                          flags);
+                              flags);
 
     const int error = GetSocketError();
     if (sent < 0)
@@ -692,13 +692,13 @@ std::size_t DatagramSocket::peek(DatagramPacket& packet, const bool resizeBuffer
     flags |= MSG_NOSIGNAL;
 #endif
 
-    const int received = recvfrom(getSocketFd(), packet.buffer.data(),
+    const ssize_t received = recvfrom(getSocketFd(), packet.buffer.data(),
 #ifdef _WIN32
-                                  static_cast<int>(packet.buffer.size()),
+                                      static_cast<int>(packet.buffer.size()),
 #else
-                                  packet.buffer.size(),
+                                      packet.buffer.size(),
 #endif
-                                  flags, reinterpret_cast<sockaddr*>(&srcAddr), &addrLen);
+                                      flags, reinterpret_cast<sockaddr*>(&srcAddr), &addrLen);
 
     const int error = GetSocketError();
     if (received == SOCKET_ERROR)

@@ -95,15 +95,104 @@ class MulticastSocket : public DatagramSocket
     MulticastSocket() = delete;
 
     /**
-     * @brief Constructs a multicast socket optionally bound to a local port and buffer size.
-     * @param port The local UDP port to bind to (0 means any port). On a server, you typically
-     *            want to specify a fixed port that clients can connect to. On clients, using
-     *            port 0 lets the system assign any available port.
-     * @param bufferSize The size of the receive buffer (default: 2048 bytes). Larger values
-     *                   may be needed for high-volume data reception.
-     * @throws SocketException on failure.
+     * @brief Constructs a fully configurable multicast socket for receiving and sending datagrams.
+     * @ingroup udp
+     *
+     * This advanced constructor provides complete control over the configuration of a multicast
+     * UDP socket, including binding behavior, buffer sizes, timeouts, and dual-stack support.
+     * It is designed for power users who need fine-grained socket tuning prior to joining one
+     * or more multicast groups using @ref joinGroup().
+     *
+     * Unlike simpler constructors, this overload supports use cases such as:
+     * - Binding to a specific local interface (e.g., "192.168.1.5" or "::1")
+     * - Using system-assigned ephemeral ports (by passing `localPort = 0`)
+     * - Tuning performance and memory characteristics with custom buffer sizes
+     * - Enabling non-blocking mode for asynchronous usage
+     * - Configuring receive/send timeouts for socket operations
+     * - Enabling dual-stack mode for IPv4-mapped IPv6 support
+     *
+     * No multicast group is joined automatically — you must call @ref joinGroup() after construction.
+     *
+     * @param[in] localPort
+     *            The local port to bind to. Use `0` to request an ephemeral port assigned by the OS.
+     *
+     * @param[in] localAddress
+     *            Optional local interface or IP address to bind to. Common values:
+     *            - `"0.0.0.0"`: any IPv4 interface
+     *            - `"::"`: any IPv6 interface
+     *            - A specific interface address (e.g., `"192.168.1.10"`)
+     *
+     * @param[in] recvBufferSize
+     *            Optional size of the OS-level receive buffer, in bytes (e.g., 4096). If `std::nullopt`,
+     *            the default size is used.
+     *
+     * @param[in] sendBufferSize
+     *            Optional size of the OS-level send buffer, in bytes. If `std::nullopt`, the default is used.
+     *
+     * @param[in] internalBufferSize
+     *            Optional size of the internal user-space buffer used by `read()` and related methods.
+     *
+     * @param[in] reuseAddress
+     *            Whether to enable `SO_REUSEADDR` so multiple sockets can bind to the same port
+     *            (useful for multiple receivers on the same machine).
+     *
+     * @param[in] soRecvTimeoutMillis
+     *            Receive timeout in milliseconds. Use `-1` to disable.
+     *
+     * @param[in] soSendTimeoutMillis
+     *            Send timeout in milliseconds. Use `-1` to disable.
+     *
+     * @param[in] nonBlocking
+     *            If true, the socket is set to non-blocking mode after creation.
+     *
+     * @param[in] dualStack
+     *            Enables IPv4-mapped IPv6 support when using `"::"` bind addresses.
+     *            Has no effect for IPv4-only sockets.
+     *
+     * @param[in] autoBind
+     *            If true, the socket will automatically call `bind()` to the given address and port.
+     *            If false, you must call `bind()` manually before using the socket.
+     *
+     * @throws SocketException
+     *         If socket creation, binding, or option setting fails for any reason.
+     *
+     * @note
+     * This constructor does not automatically join a multicast group.
+     * Use @ref joinGroup() after construction to receive multicast traffic.
+     *
+     * ### Example
+     * @code
+     * using namespace jsocketpp;
+     *
+     * MulticastSocket sock(
+     *     4446,               // bind to port 4446
+     *     "::",               // bind to all interfaces (IPv6)
+     *     4096,               // OS receive buffer size
+     *     4096,               // OS send buffer size
+     *     8192,               // internal buffer size
+     *     true,               // reuse address (SO_REUSEADDR)
+     *     2000,               // receive timeout (ms)
+     *     2000,               // send timeout (ms)
+     *     false,              // blocking mode
+     *     true,               // dual stack enabled
+     *     true                // auto-bind
+     * );
+     *
+     * sock.joinGroup("ff12::1234"); // Join multicast group explicitly
+     * @endcode
+     *
+     * @see joinGroup()
+     * @see leaveGroup()
+     * @see setMulticastInterface()
+     * @see setTimeToLive()
+     * @see setLoopbackMode()
      */
-    explicit MulticastSocket(Port port = 0, std::size_t bufferSize = 2048);
+    MulticastSocket(Port localPort, std::string_view localAddress,
+                    std::optional<std::size_t> recvBufferSize = std::nullopt,
+                    std::optional<std::size_t> sendBufferSize = std::nullopt,
+                    std::optional<std::size_t> internalBufferSize = std::nullopt, bool reuseAddress = true,
+                    int soRecvTimeoutMillis = -1, int soSendTimeoutMillis = -1, bool nonBlocking = false,
+                    bool dualStack = true, bool autoBind = true);
 
     /**
      * @brief Joins a multicast group.

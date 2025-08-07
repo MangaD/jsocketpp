@@ -375,3 +375,62 @@ bool internal::ipAddressesEqual(const std::string& ip1, const std::string& ip2)
 
     return std::memcmp(&addr1, &addr2, sizeof(in6_addr)) == 0;
 }
+
+std::string jsocketpp::addressToString(const sockaddr_storage& addr)
+{
+    char ip[INET6_ADDRSTRLEN] = {0};
+    char port[6] = {0};
+
+    if (addr.ss_family == AF_INET)
+    {
+        const auto* addr4 = reinterpret_cast<const sockaddr_in*>(&addr);
+        if (const auto ret = getnameinfo(reinterpret_cast<const sockaddr*>(addr4), sizeof(sockaddr_in), ip, sizeof(ip),
+                                         port, sizeof(port), NI_NUMERICHOST | NI_NUMERICSERV);
+            ret != 0)
+        {
+            throw SocketException(
+#ifdef _WIN32
+                GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+#else
+                ret, SocketErrorMessageWrap(ret, true));
+#endif
+        }
+    }
+    else if (addr.ss_family == AF_INET6)
+    {
+        const auto* addr6 = reinterpret_cast<const sockaddr_in6*>(&addr);
+        const auto ret = getnameinfo(reinterpret_cast<const sockaddr*>(addr6), sizeof(sockaddr_in6), ip, sizeof(ip),
+                                     port, sizeof(port), NI_NUMERICHOST | NI_NUMERICSERV);
+        if (ret != 0)
+        {
+            throw SocketException(
+#ifdef _WIN32
+                GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+#else
+                ret, SocketErrorMessageWrap(ret, true));
+#endif
+        }
+    }
+    else
+    {
+        return "unknown";
+    }
+    return std::string(ip) + ":" + port;
+}
+
+void jsocketpp::stringToAddress(const std::string& str, sockaddr_storage& addr)
+{
+    std::memset(&addr, 0, sizeof(addr));
+    // Find last ':' (to allow IPv6 addresses with ':')
+    const auto pos = str.rfind(':');
+    if (pos == std::string::npos)
+        throw SocketException("Invalid address format: " + str);
+
+    const std::string host = str.substr(0, pos);
+    const Port port = static_cast<Port>(std::stoi(str.substr(pos + 1)));
+
+    const internal::AddrinfoPtr res =
+        internal::resolveAddress(host, port, AF_UNSPEC, SOCK_STREAM, 0, AI_NUMERICHOST | AI_NUMERICSERV);
+
+    std::memcpy(&addr, res->ai_addr, res->ai_addrlen);
+}

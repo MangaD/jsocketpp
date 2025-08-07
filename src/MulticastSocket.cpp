@@ -2,7 +2,18 @@
 
 using namespace jsocketpp;
 
-MulticastSocket::MulticastSocket(const Port port, const std::size_t bufferSize) : DatagramSocket(port, bufferSize)
+#include "jsocketpp/MulticastSocket.hpp"
+
+using namespace jsocketpp;
+
+MulticastSocket::MulticastSocket(const Port localPort, const std::string_view localAddress,
+                                 const std::optional<std::size_t> recvBufferSize,
+                                 const std::optional<std::size_t> sendBufferSize,
+                                 const std::optional<std::size_t> internalBufferSize, const bool reuseAddress,
+                                 const int soRecvTimeoutMillis, const int soSendTimeoutMillis, const bool nonBlocking,
+                                 const bool dualStack, const bool autoBind)
+    : DatagramSocket(localPort, localAddress, recvBufferSize, sendBufferSize, internalBufferSize, reuseAddress,
+                     soRecvTimeoutMillis, soSendTimeoutMillis, nonBlocking, dualStack, autoBind)
 {
     setTimeToLive(_ttl);
     setLoopbackMode(_loopbackEnabled);
@@ -93,7 +104,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
             // Windows: requires the numeric interface index
             // Try to parse iface as integer
             char* end = nullptr;
-            if (unsigned long idx = strtoul(iface.c_str(), &end, 10); end && *end == '\0' && idx > 0)
+            if (const unsigned long idx = strtoul(iface.c_str(), &end, 10); end && *end == '\0' && idx > 0)
             {
                 mReq6.ipv6mr_interface = static_cast<unsigned int>(idx);
             }
@@ -242,7 +253,7 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
 #ifdef _WIN32
             // Windows: requires the numeric interface index
             char* end = nullptr;
-            if (unsigned long idx = strtoul(iface.c_str(), &end, 10); end && *end == '\0' && idx > 0)
+            if (const unsigned long idx = strtoul(iface.c_str(), &end, 10); end && *end == '\0' && idx > 0)
             {
                 mReq6.ipv6mr_interface = static_cast<unsigned int>(idx);
             }
@@ -352,7 +363,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
     {
         // Set IPv4 outgoing interface
 #ifdef _WIN32
-        DWORD addr = v4addr.s_addr;
+        const DWORD addr = v4addr.s_addr;
         if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char*>(&addr), sizeof(addr)) <
             0)
         {
@@ -373,7 +384,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
     // IPv6: treat as interface name or index
 #ifdef _WIN32
     char* end = nullptr;
-    DWORD idx = strtoul(iface.c_str(), &end, 10);
+    const DWORD idx = strtoul(iface.c_str(), &end, 10);
     if (!iface.empty() && end && *end == '\0' && idx > 0)
     {
         // Numeric index specified as string
@@ -407,7 +418,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
 #endif
 }
 
-void MulticastSocket::setTimeToLive(int ttl)
+void MulticastSocket::setTimeToLive(const int ttl)
 {
     if (ttl < 0 || ttl > 255)
         throw SocketException("TTL value must be between 0 and 255");
@@ -457,20 +468,24 @@ void MulticastSocket::setTimeToLive(int ttl)
 
 void MulticastSocket::setLoopbackMode(const bool enable)
 {
-    // Determine address family
-    int family = AF_UNSPEC;
-    if (_selectedAddrInfo)
-        family = _selectedAddrInfo->ai_family;
-    else if (_addrInfoPtr)
-        family = _addrInfoPtr->ai_family;
-    // else: default to IPv4
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("setLoopbackMode() called on invalid socket");
 
+    sockaddr_storage addr{};
+    socklen_t addrLen = sizeof(addr);
+
+    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
+
+    const int family = addr.ss_family;
     const int flag = enable ? 1 : 0;
 
     int result = 0;
     if (family == AF_INET6)
     {
-        // IPv6 multicast loopback
         result = setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_LOOP,
 #ifdef _WIN32
                             reinterpret_cast<const char*>(&flag),
@@ -481,7 +496,6 @@ void MulticastSocket::setLoopbackMode(const bool enable)
     }
     else
     {
-        // IPv4 multicast loopback (default)
         result = setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_LOOP,
 #ifdef _WIN32
                             reinterpret_cast<const char*>(&flag),
@@ -490,12 +504,14 @@ void MulticastSocket::setLoopbackMode(const bool enable)
 #endif
                             sizeof(flag));
     }
+
     if (result == SOCKET_ERROR)
     {
         const int error = GetSocketError();
         throw SocketException(error, SocketErrorMessageWrap(error));
     }
-    _loopbackEnabled = enable; // (Optional: if you want to store it as a private member)
+
+    _loopbackEnabled = enable;
 }
 
 std::string MulticastSocket::getCurrentGroup() const

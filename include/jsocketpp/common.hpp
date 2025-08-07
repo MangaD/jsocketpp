@@ -173,6 +173,22 @@
  */
 
 /**
+ * @defgroup utils Utility Functions
+ * @ingroup jsocketpp
+ * @brief Public utility functions for working with socket addresses, conversions, and formatting.
+ *
+ * This module includes general-purpose helpers that simplify common socket-related tasks such as:
+ * - Converting socket addresses to strings
+ * - Parsing string representations into sockaddr structures
+ * - Formatting or inspecting address data across socket types
+ *
+ * These functions are protocol-agnostic and can be used with TCP, UDP, and Unix domain sockets.
+ *
+ * @see addressToString()
+ * @see stringToAddress()
+ */
+
+/**
  * @namespace jsocketpp
  * @brief A C++ socket library providing Java-style networking interfaces
  *
@@ -206,6 +222,8 @@
 namespace jsocketpp
 {
 #ifdef _WIN32
+
+typedef long ssize_t;
 
 inline int InitSockets()
 {
@@ -446,6 +464,72 @@ std::string ipFromSockaddr(const sockaddr* addr, bool convertIPv4Mapped = true);
  * @throws SocketException if the address family is unsupported.
  */
 Port portFromSockaddr(const sockaddr* addr);
+
+/**
+ * @brief Converts a socket address to a human-readable "IP:port" string.
+ * @ingroup utils
+ *
+ * This utility function transforms a `sockaddr_storage` structure into a
+ * string representation using `getnameinfo()`, suitable for logging,
+ * diagnostics, or display. It supports both IPv4 (`AF_INET`) and IPv6 (`AF_INET6`)
+ * addresses and outputs the address in the form:
+ *
+ * - `"192.168.1.10:8080"` for IPv4
+ * - `"[::1]:12345"` for IPv6 (note: bracket wrapping is *not* added automatically)
+ *
+ * For unknown or unsupported address families, the function returns `"unknown"`.
+ *
+ * @param[in] addr  A fully populated `sockaddr_storage` containing the IP address and port.
+ *
+ * @return A string in the format `"IP:port"` (e.g., `"127.0.0.1:8080"` or `"::1:53"`).
+ *
+ * @throws SocketException
+ *         If `getnameinfo()` fails to resolve the IP or port for the provided address.
+ *
+ * @note This function does not add square brackets around IPv6 addresses. If you need
+ *       bracketed formatting (e.g., for URL embedding), you must post-process the result.
+ *
+ * @code
+ * sockaddr_storage addr = ...;
+ * std::string str = addressToString(addr);
+ * std::cout << "Connected to " << str << "\n";
+ * @endcode
+ */
+std::string addressToString(const sockaddr_storage& addr);
+
+/**
+ * @brief Parses an "IP:port" string into a sockaddr_storage structure.
+ * @ingroup utils
+ *
+ * This utility function takes a string of the form `"host:port"` and resolves it
+ * into a platform-compatible `sockaddr_storage` structure using `getaddrinfo()`.
+ * It supports both IPv4 and IPv6 addresses, including:
+ *
+ * - `"127.0.0.1:8080"`
+ * - `"::1:1234"`
+ * - IPv6 addresses **without square brackets** (e.g., `"2001:db8::1:443"`)
+ *
+ * The resulting structure can be passed directly to socket functions like
+ * `connect()`, `bind()`, or `sendto()`.
+ *
+ * @param[in] str   The string to parse, in the format `"ip:port"`.
+ *                  Must not include brackets around IPv6 addresses.
+ * @param[out] addr The output `sockaddr_storage` structure to populate.
+ *
+ * @throws SocketException
+ *         - If the string is missing a `:` separator
+ *         - If the port cannot be parsed
+ *         - If `getaddrinfo()` fails to resolve the address
+ *
+ * @note This function assumes numeric host and port. No DNS resolution is performed.
+ *
+ * @code
+ * sockaddr_storage addr;
+ * stringToAddress("192.168.0.10:9000", addr);
+ * connect(sockFd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
+ * @endcode
+ */
+void stringToAddress(const std::string& str, sockaddr_storage& addr);
 
 } // namespace jsocketpp
 
