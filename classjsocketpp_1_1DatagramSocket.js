@@ -14,6 +14,7 @@ var classjsocketpp_1_1DatagramSocket =
     [ "close", "group__udp.html#ga9d0a9582b3a2a72bf62f182dbc33c352", null ],
     [ "connect", "group__udp.html#ga5b12269efa5bc3a56ec53ea1fed9e468", null ],
     [ "disconnect", "group__udp.html#ga02b08c333a2f109a3b19ec7b3c0cecf9", null ],
+    [ "getLastPeerSockAddr", "group__udp.html#gac19051ec24961addb059f01f1e7f28c7", null ],
     [ "getLocalIp", "group__socketopts.html#ga93a142cf918c58f939454b296baf0963", null ],
     [ "getLocalPort", "group__udp.html#gaacb1d9e513c65bd800769d5194a4559f", null ],
     [ "getLocalSocketAddress", "group__udp.html#ga9a7f8475868acca97f90dcd66df7f943", null ],

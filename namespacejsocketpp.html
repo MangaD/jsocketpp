@@ -133,6 +133,7 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:af86a15acff146a3ea52fb1c09a598575" id="r_af86a15acff146a3ea52fb1c09a598575"><td class="memItemLeft" align="right" valign="top">typedef long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af86a15acff146a3ea52fb1c09a598575">ssize_t</a></td></tr>
 <tr class="memitem:ac484f9eb8a74658aa491da1d1bc15eda" id="r_ac484f9eb8a74658aa491da1d1bc15eda"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a></td></tr>
 <tr class="memitem:a981f7d65e550398e8ab29db83092f119" id="r_a981f7d65e550398e8ab29db83092f119"><td class="memItemLeft" align="right" valign="top">typedef sockaddr_un&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a981f7d65e550398e8ab29db83092f119">SOCKADDR_UN</a></td></tr>
 <tr class="memitem:ga1a7be273748ae3d91bc5ebe6499788a7" id="r_ga1a7be273748ae3d91bc5ebe6499788a7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> = std::uint16_t</td></tr>
@@ -168,6 +169,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:a18428d088b7f3b2e55efe9adc49e10a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts a human-readable IP address from a socket address structure.  <br /></td></tr>
 <tr class="memitem:a71637861db9b297572bc1de3df56a59a" id="r_a71637861db9b297572bc1de3df56a59a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71637861db9b297572bc1de3df56a59a">portFromSockaddr</a> (const sockaddr *addr)</td></tr>
 <tr class="memdesc:a71637861db9b297572bc1de3df56a59a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the port number from a socket address structure.  <br /></td></tr>
+<tr class="memitem:ga8501a7d31710bd7b0ef862f97ee318da" id="r_ga8501a7d31710bd7b0ef862f97ee318da"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__utils.html#ga8501a7d31710bd7b0ef862f97ee318da">addressToString</a> (const sockaddr_storage &amp;addr)</td></tr>
+<tr class="memdesc:ga8501a7d31710bd7b0ef862f97ee318da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a socket address to a human-readable "IP:port" string.  <br /></td></tr>
+<tr class="memitem:ga784e6ca4a095b32beb18d2378179cf0b" id="r_ga784e6ca4a095b32beb18d2378179cf0b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__utils.html#ga784e6ca4a095b32beb18d2378179cf0b">stringToAddress</a> (const std::string &amp;str, sockaddr_storage &amp;addr)</td></tr>
+<tr class="memdesc:ga784e6ca4a095b32beb18d2378179cf0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an "IP:port" string into a sockaddr_storage structure.  <br /></td></tr>
 <tr class="memitem:ga30deb297e9c8fae8da50947d4a29c95f" id="r_ga30deb297e9c8fae8da50947d4a29c95f"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga30deb297e9c8fae8da50947d4a29c95f template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga30deb297e9c8fae8da50947d4a29c95f">DatagramSocket::read&lt; std::string &gt;</a> ()</td></tr>
 <tr class="memdesc:ga30deb297e9c8fae8da50947d4a29c95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">read&lt;T&gt;()</span> for receiving string messages.  <br /></td></tr>
@@ -236,6 +241,20 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">typedef int <a class="el" href="#ac484f9eb8a74658aa491da1d1bc15eda">jsocketpp::SOCKET</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af86a15acff146a3ea52fb1c09a598575" name="af86a15acff146a3ea52fb1c09a598575"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af86a15acff146a3ea52fb1c09a598575">&#9670;&#160;</a></span>ssize_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef long <a class="el" href="#af86a15acff146a3ea52fb1c09a598575">jsocketpp::ssize_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">

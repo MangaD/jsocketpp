@@ -173,6 +173,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga9d0a9582b3a2a72bf62f182dbc33c352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the datagram socket and releases its underlying system resources.  <br /></td></tr>
 <tr class="memitem:gab33da807656e2ab920707d60605844f5" id="r_gab33da807656e2ab920707d60605844f5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab33da807656e2ab920707d60605844f5">jsocketpp::DatagramSocket::isValid</a> () const noexcept</td></tr>
 <tr class="memdesc:gab33da807656e2ab920707d60605844f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the datagram socket is valid and ready for use.  <br /></td></tr>
+<tr class="memitem:gac19051ec24961addb059f01f1e7f28c7" id="r_gac19051ec24961addb059f01f1e7f28c7"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::pair&lt; sockaddr_storage, socklen_t &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac19051ec24961addb059f01f1e7f28c7">jsocketpp::DatagramSocket::getLastPeerSockAddr</a> () const</td></tr>
+<tr class="memdesc:gac19051ec24961addb059f01f1e7f28c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the raw socket address of the last known remote peer.  <br /></td></tr>
 <tr class="memitem:gaa0727094596347aa858629f6e5c7febf" id="r_gaa0727094596347aa858629f6e5c7febf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa0727094596347aa858629f6e5c7febf">jsocketpp::DatagramSocket::cleanup</a> ()</td></tr>
 <tr class="memdesc:gaa0727094596347aa858629f6e5c7febf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal helper that releases socket resources and resets all internal state.  <br /></td></tr>
 <tr class="memitem:ga1973415ece2f77f191b250b9e9690733" id="r_ga1973415ece2f77f191b250b9e9690733"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1973415ece2f77f191b250b9e9690733">jsocketpp::DatagramSocket::cleanupAndThrow</a> (int errorCode)</td></tr>
@@ -190,6 +192,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:gaca86a9f7b311fd106801b9e49d01fb27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">write&lt;T&gt;()</span> to send a <span class="tt">std::string_view</span> as a UDP datagram.  <br /></td></tr>
 <tr class="memitem:ga379ff0e20d62b5f0c815d48614597005" id="r_ga379ff0e20d62b5f0c815d48614597005"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga379ff0e20d62b5f0c815d48614597005">jsocketpp::MulticastSocket::MulticastSocket</a> ()=delete</td></tr>
 <tr class="memdesc:ga379ff0e20d62b5f0c815d48614597005"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a> class.  <br /></td></tr>
+<tr class="memitem:ga996b99882efa863b01e0fff4a9782a82" id="r_ga996b99882efa863b01e0fff4a9782a82"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga996b99882efa863b01e0fff4a9782a82">jsocketpp::MulticastSocket::MulticastSocket</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> localPort, std::string_view localAddress, std::optional&lt; std::size_t &gt; recvBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; sendBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; internalBufferSize=std::nullopt, bool reuseAddress=true, int soRecvTimeoutMillis=-1, int soSendTimeoutMillis=-1, bool nonBlocking=false, bool dualStack=true, bool autoBind=true)</td></tr>
+<tr class="memdesc:ga996b99882efa863b01e0fff4a9782a82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a fully configurable multicast socket for receiving and sending datagrams.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Classes and functions for UDP datagram networking. </p>
@@ -378,7 +382,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <p>Internal helper that releases socket resources and resets all internal state. </p>
 <p>This method safely resets the <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> to an uninitialized state. It is used during error recovery to release partially constructed socket state, and ensures the object no longer appears bound or connected after failure.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md674"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md679"></a>
 ⚙️ Behavior</h3>
 <ul>
 <li>Closes the socket if it is valid (<span class="tt"><a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a> != INVALID_SOCKET</span>)</li>
@@ -392,7 +396,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md676"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md681"></a>
 🔒 Safety</h3>
 <ul>
 <li>Safe to call multiple times</li>
@@ -430,7 +434,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <p>Cleans up the datagram socket and rethrows the currently active exception. </p>
 <p>This method is intended to be used inside a <span class="tt">catch</span> block when an exception occurs during socket construction or setup. It ensures all internal resources are safely released before rethrowing the original exception, leaving the socket in an uninitialized and safe state.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md682"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md687"></a>
 ⚙️ Behavior</h3>
 <p>Internally calls <span class="tt"><a class="el" href="#gaa0727094596347aa858629f6e5c7febf" title="Internal helper that releases socket resources and resets all internal state.">cleanup()</a></span>, which:</p><ul>
 <li>Closes the socket if it is open</li>
@@ -445,7 +449,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 </ul>
 <p>Then rethrows the active exception using <span class="tt">throw;</span>.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md684"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md689"></a>
 ⚠️ Usage Notes</h3>
 <ul>
 <li>Must be invoked only from within a valid <span class="tt">catch</span> block</li>
@@ -453,7 +457,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <li>Never accepts an exception object — <span class="tt">throw;</span> preserves full type and context</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md686"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md691"></a>
 🧠 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">try</span> {</div>
 <div class="line">    <a class="code hl_function" href="group__socketopts.html#ga5f2dffc2949b06b1d945e590bce7f05b">setNonBlocking</a>(<span class="keyword">true</span>);</div>
@@ -502,7 +506,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <p>Releases all socket resources and throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> with the given error code. </p>
 <p>This method performs complete internal cleanup of the datagram socket and then throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>. It is typically invoked when construction, binding, or configuration of the socket fails, ensuring the object is left in a safe, uninitialized state.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md678"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md683"></a>
 ⚙️ Behavior</h3>
 <p>Internally delegates to <span class="tt"><a class="el" href="#gaa0727094596347aa858629f6e5c7febf" title="Internal helper that releases socket resources and resets all internal state.">cleanup()</a></span>, which:</p><ul>
 <li>Closes the socket if open</li>
@@ -520,7 +524,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <li>A descriptive message from <span class="tt">SocketErrorMessage(errorCode)</span></li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md680"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md685"></a>
 🧠 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">::bind</a>(<a class="code hl_function" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794">getSocketFd</a>(), ...) == <a class="code hl_variable" href="namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2">SOCKET_ERROR</a>)</div>
 <div class="line">{</div>
@@ -528,8 +532,8 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <div class="line">}</div>
 <div class="ttc" id="agroup__socketopts_html_gaced4c6dc799564ece9ce4e6766b1d794"><div class="ttname"><a href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794">jsocketpp::SocketOptions::getSocketFd</a></div><div class="ttdeci">SOCKET getSocketFd() const noexcept</div><div class="ttdoc">Retrieves the native socket handle (file descriptor or OS-level handle).</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:275</div></div>
 <div class="ttc" id="agroup__udp_html_ga1973415ece2f77f191b250b9e9690733"><div class="ttname"><a href="#ga1973415ece2f77f191b250b9e9690733">jsocketpp::DatagramSocket::cleanupAndThrow</a></div><div class="ttdeci">void cleanupAndThrow(int errorCode)</div><div class="ttdoc">Releases all socket resources and throws a SocketException with the given error code.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:167</div></div>
-<div class="ttc" id="anamespacejsocketpp_html_aac009a479ad7c6c77530e5e270cb25ad"><div class="ttname"><a href="namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad">jsocketpp::GetSocketError</a></div><div class="ttdeci">int GetSocketError()</div><div class="ttdef"><b>Definition</b> common.hpp:221</div></div>
-<div class="ttc" id="anamespacejsocketpp_html_adc2dd9860dec2a3c3189e756288d5ba2"><div class="ttname"><a href="namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2">jsocketpp::SOCKET_ERROR</a></div><div class="ttdeci">constexpr SOCKET SOCKET_ERROR</div><div class="ttdef"><b>Definition</b> common.hpp:240</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_aac009a479ad7c6c77530e5e270cb25ad"><div class="ttname"><a href="namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad">jsocketpp::GetSocketError</a></div><div class="ttdeci">int GetSocketError()</div><div class="ttdef"><b>Definition</b> common.hpp:239</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_adc2dd9860dec2a3c3189e756288d5ba2"><div class="ttname"><a href="namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2">jsocketpp::SOCKET_ERROR</a></div><div class="ttdeci">constexpr SOCKET SOCKET_ERROR</div><div class="ttdef"><b>Definition</b> common.hpp:258</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">errorCode</td><td>The system or application-level error code to report.</td></tr>
@@ -1279,6 +1283,83 @@ Example</h3>
 
 </div>
 </div>
+<a id="gac19051ec24961addb059f01f1e7f28c7" name="gac19051ec24961addb059f01f1e7f28c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac19051ec24961addb059f01f1e7f28c7">&#9670;&#160;</a></span>getLastPeerSockAddr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::pair&lt; sockaddr_storage, socklen_t &gt; &gt; jsocketpp::DatagramSocket::getLastPeerSockAddr </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves the raw socket address of the last known remote peer. </p>
+<p>This method exposes the internal low-level <span class="tt">sockaddr_storage</span> structure representing the last known remote peer that this socket communicated with. It is useful in advanced use cases where direct access to address structures is required — for example:</p>
+<ul>
+<li>Custom routing or connection tracking</li>
+<li>Creating new sockets targeting the same peer</li>
+<li>Implementing security checks or access controls</li>
+<li>Avoiding repeated DNS resolution</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md674"></a>
+🔁 Behavior Based on Mode</h3>
+<ul>
+<li><b>Connected <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a>:</b><ul>
+<li>Reflects the peer specified via <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span>.</li>
+<li>Remains constant until the socket is closed or reset.</li>
+</ul>
+</li>
+<li><b>Unconnected <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a>:</b><ul>
+<li>Reflects the peer involved in the most recent:<ul>
+<li><span class="tt"><a class="el" href="#ga61dfe82025f17e3041c5b5acca2369eb" title="Reads a fixed-size, trivially copyable object of type T from the datagram socket.">read()</a></span></li>
+<li><span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06" title="Receive a datagram into a trivially copyable type.">recvFrom()</a></span></li>
+<li><span class="tt"><a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a></span></li>
+<li><span class="tt">write(DatagramPacket)</span></li>
+</ul>
+</li>
+<li>If no such operation has occurred, the result is empty.</li>
+</ul>
+</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md676"></a>
+Example</h3>
+<div class="fragment"><div class="line"><span class="keyword">auto</span> remote = sock.getLastPeerSockAddr();</div>
+<div class="line"><span class="keywordflow">if</span> (remote) {</div>
+<div class="line">    <span class="keyword">const</span> sockaddr* sa = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>sockaddr*<span class="keyword">&gt;</span>(&amp;remote-&gt;first);</div>
+<div class="line">    <span class="comment">// Now you can use sendto(), bind(), connect(), etc.</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><hr  />
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li><span class="tt">std::optional&lt;std::pair&lt;sockaddr_storage, socklen_t&gt;&gt;</span>:<ul>
+<li><span class="tt">.first</span> contains the raw peer address</li>
+<li><span class="tt">.second</span> is the valid length of the address</li>
+</ul>
+</li>
+<li>Returns <span class="tt">std::nullopt</span> if the socket has not communicated with any peer.</li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This is a low-level method. Use <span class="tt"><a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer for the most recent datagram exchange.">getRemoteIp()</a></span> or <span class="tt"><a class="el" href="#gacb3c554671141c0370445b2b7e9a6061" title="Retrieves the remote peer’s socket address in the form &quot;IP:port&quot;.">getRemoteSocketAddress()</a></span> for string-formatted access. </dd>
+<dd>
+The returned structure is a <b>copy</b>; modifying it has no effect on socket state.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer for the most recent datagram exchange.">getRemoteIp()</a>, <a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the port number of the remote peer for the most recent datagram exchange.">getRemotePort()</a>, <a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a>, <a class="el" href="#ga61dfe82025f17e3041c5b5acca2369eb" title="Reads a fixed-size, trivially copyable object of type T from the datagram socket.">read()</a>, <a class="el" href="#gac3b7c4a5fc5a21372c4a9cadb3e85efb" title="Indicates whether the datagram socket is connected to a specific remote peer.">isConnected()</a>, <a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a> </dd></dl>
+
+</div>
+</div>
 <a id="gaacb1d9e513c65bd800769d5194a4559f" name="gaacb1d9e513c65bd800769d5194a4559f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaacb1d9e513c65bd800769d5194a4559f">&#9670;&#160;</a></span>getLocalPort()</h2>
 
@@ -1320,7 +1401,7 @@ Example</h3>
 <div class="line"> </div>
 <div class="line"><a class="code hl_typedef" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port = sock.getLocalPort();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Dynamically bound to port: &quot;</span> &lt;&lt; port &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="ttc" id="agroup__core_html_ga1a7be273748ae3d91bc5ebe6499788a7"><div class="ttname"><a href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">jsocketpp::Port</a></div><div class="ttdeci">std::uint16_t Port</div><div class="ttdoc">Type alias representing a TCP or UDP port number (1–65535).</div><div class="ttdef"><b>Definition</b> common.hpp:334</div></div>
+<div class="ttc" id="agroup__core_html_ga1a7be273748ae3d91bc5ebe6499788a7"><div class="ttname"><a href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">jsocketpp::Port</a></div><div class="ttdeci">std::uint16_t Port</div><div class="ttdoc">Type alias representing a TCP or UDP port number (1–65535).</div><div class="ttdef"><b>Definition</b> common.hpp:352</div></div>
 </div><!-- fragment --><hr  />
 <dl class="section return"><dt>Returns</dt><dd>The local UDP port number (in host byte order).</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
@@ -1937,7 +2018,7 @@ Example</h3>
 </div>
 </div>
 <a id="ga379ff0e20d62b5f0c815d48614597005" name="ga379ff0e20d62b5f0c815d48614597005"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga379ff0e20d62b5f0c815d48614597005">&#9670;&#160;</a></span>MulticastSocket()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga379ff0e20d62b5f0c815d48614597005">&#9670;&#160;</a></span>MulticastSocket() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1961,7 +2042,7 @@ Example</h3>
 
 <p>Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a> class. </p>
 <p>The default constructor is explicitly deleted to prevent the creation of uninitialized <span class="tt"><a class="el" href="classjsocketpp_1_1MulticastSocket.html" title="Cross-platform multicast UDP socket class (IPv4/IPv6).">MulticastSocket</a></span> objects. A multicast socket must be constructed with a valid port and group membership configuration to function correctly.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md697"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md702"></a>
 Rationale</h3>
 <ul>
 <li>Prevents creation of sockets not joined to any multicast group</li>
@@ -1974,6 +2055,141 @@ Rationale</h3>
 </div><!-- fragment --><dl class="section see"><dt>See also</dt><dd>MulticastSocket(Port, std::string_view group, std::string_view iface) Constructor with group join </dd>
 <dd>
 <a class="el" href="classjsocketpp_1_1MulticastSocket.html#ad0efe916fe4a309dca8889112ddbdf3f" title="Joins a multicast group.">joinGroup()</a>, <a class="el" href="classjsocketpp_1_1MulticastSocket.html#af7317567ceae9b90967ec5a29d003af3" title="Leaves a multicast group.">leaveGroup()</a>, setMulticastLoopback() for multicast control </dd></dl>
+
+</div>
+</div>
+<a id="ga996b99882efa863b01e0fff4a9782a82" name="ga996b99882efa863b01e0fff4a9782a82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga996b99882efa863b01e0fff4a9782a82">&#9670;&#160;</a></span>MulticastSocket() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MulticastSocket::MulticastSocket </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>localPort</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>localAddress</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; std::size_t &gt;</td>          <td class="paramname"><span class="paramname"><em>recvBufferSize</em></span><span class="paramdefsep"> = </span><span class="paramdefval">std::nullopt</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; std::size_t &gt;</td>          <td class="paramname"><span class="paramname"><em>sendBufferSize</em></span><span class="paramdefsep"> = </span><span class="paramdefval">std::nullopt</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; std::size_t &gt;</td>          <td class="paramname"><span class="paramname"><em>internalBufferSize</em></span><span class="paramdefsep"> = </span><span class="paramdefval">std::nullopt</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>reuseAddress</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>soRecvTimeoutMillis</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>soSendTimeoutMillis</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>nonBlocking</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>dualStack</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>autoBind</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructs a fully configurable multicast socket for receiving and sending datagrams. </p>
+<p>This advanced constructor provides complete control over the configuration of a multicast UDP socket, including binding behavior, buffer sizes, timeouts, and dual-stack support. It is designed for power users who need fine-grained socket tuning prior to joining one or more multicast groups using <a class="el" href="classjsocketpp_1_1MulticastSocket.html#ad0efe916fe4a309dca8889112ddbdf3f">joinGroup()</a>.</p>
+<p>Unlike simpler constructors, this overload supports use cases such as:</p><ul>
+<li>Binding to a specific local interface (e.g., "192.168.1.5" or "::1")</li>
+<li>Using system-assigned ephemeral ports (by passing <span class="tt">localPort = 0</span>)</li>
+<li>Tuning performance and memory characteristics with custom buffer sizes</li>
+<li>Enabling non-blocking mode for asynchronous usage</li>
+<li>Configuring receive/send timeouts for socket operations</li>
+<li>Enabling dual-stack mode for IPv4-mapped IPv6 support</li>
+</ul>
+<p>No multicast group is joined automatically — you must call <a class="el" href="classjsocketpp_1_1MulticastSocket.html#ad0efe916fe4a309dca8889112ddbdf3f">joinGroup()</a> after construction.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">localPort</td><td>The local port to bind to. Use <span class="tt">0</span> to request an ephemeral port assigned by the OS.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">localAddress</td><td>Optional local interface or IP address to bind to. Common values:<ul>
+<li><span class="tt">"0.0.0.0"</span>: any IPv4 interface</li>
+<li><span class="tt">"::"</span>: any IPv6 interface</li>
+<li>A specific interface address (e.g., <span class="tt">"192.168.1.10"</span>)</li>
+</ul>
+</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recvBufferSize</td><td>Optional size of the OS-level receive buffer, in bytes (e.g., 4096). If <span class="tt">std::nullopt</span>, the default size is used.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sendBufferSize</td><td>Optional size of the OS-level send buffer, in bytes. If <span class="tt">std::nullopt</span>, the default is used.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">internalBufferSize</td><td>Optional size of the internal user-space buffer used by <span class="tt"><a class="el" href="#ga61dfe82025f17e3041c5b5acca2369eb" title="Reads a fixed-size, trivially copyable object of type T from the datagram socket.">read()</a></span> and related methods.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">reuseAddress</td><td>Whether to enable <span class="tt">SO_REUSEADDR</span> so multiple sockets can bind to the same port (useful for multiple receivers on the same machine).</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">soRecvTimeoutMillis</td><td>Receive timeout in milliseconds. Use <span class="tt">-1</span> to disable.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">soSendTimeoutMillis</td><td>Send timeout in milliseconds. Use <span class="tt">-1</span> to disable.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">nonBlocking</td><td>If true, the socket is set to non-blocking mode after creation.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">dualStack</td><td>Enables IPv4-mapped IPv6 support when using <span class="tt">"::"</span> bind addresses. Has no effect for IPv4-only sockets.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">autoBind</td><td>If true, the socket will automatically call <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> to the given address and port. If false, you must call <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> manually before using the socket.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If socket creation, binding, or option setting fails for any reason.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This constructor does not automatically join a multicast group. Use <a class="el" href="classjsocketpp_1_1MulticastSocket.html#ad0efe916fe4a309dca8889112ddbdf3f">joinGroup()</a> after construction to receive multicast traffic.</dd></dl>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md703"></a>
+Example</h3>
+<div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_function" href="#ga379ff0e20d62b5f0c815d48614597005">MulticastSocket</a> sock(</div>
+<div class="line">    4446,               <span class="comment">// bind to port 4446</span></div>
+<div class="line">    <span class="stringliteral">&quot;::&quot;</span>,               <span class="comment">// bind to all interfaces (IPv6)</span></div>
+<div class="line">    4096,               <span class="comment">// OS receive buffer size</span></div>
+<div class="line">    4096,               <span class="comment">// OS send buffer size</span></div>
+<div class="line">    8192,               <span class="comment">// internal buffer size</span></div>
+<div class="line">    <span class="keyword">true</span>,               <span class="comment">// reuse address (SO_REUSEADDR)</span></div>
+<div class="line">    2000,               <span class="comment">// receive timeout (ms)</span></div>
+<div class="line">    2000,               <span class="comment">// send timeout (ms)</span></div>
+<div class="line">    <span class="keyword">false</span>,              <span class="comment">// blocking mode</span></div>
+<div class="line">    <span class="keyword">true</span>,               <span class="comment">// dual stack enabled</span></div>
+<div class="line">    <span class="keyword">true</span>                <span class="comment">// auto-bind</span></div>
+<div class="line">);</div>
+<div class="line"> </div>
+<div class="line">sock.joinGroup(<span class="stringliteral">&quot;ff12::1234&quot;</span>); <span class="comment">// Join multicast group explicitly</span></div>
+<div class="ttc" id="anamespacejsocketpp_html"><div class="ttname"><a href="namespacejsocketpp.html">jsocketpp</a></div><div class="ttdoc">A C++ socket library providing Java-style networking interfaces.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:16</div></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="classjsocketpp_1_1MulticastSocket.html#ad0efe916fe4a309dca8889112ddbdf3f" title="Joins a multicast group.">joinGroup()</a> </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1MulticastSocket.html#af7317567ceae9b90967ec5a29d003af3" title="Leaves a multicast group.">leaveGroup()</a> </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1MulticastSocket.html#af0d5d684dcbfcf62907482ae3ac98948" title="Sets the default interface for outgoing multicast packets.">setMulticastInterface()</a> </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1MulticastSocket.html#a72172a10bc5ba13a908f31c791c90ec5" title="Set the time-to-live (TTL) for outgoing multicast packets.">setTimeToLive()</a> </dd>
+<dd>
+<a class="el" href="classjsocketpp_1_1MulticastSocket.html#ab6608be5d1aff24ad5077f6ea9a9168a" title="Enables or disables multicast loopback.">setLoopbackMode()</a> </dd></dl>
 
 </div>
 </div>

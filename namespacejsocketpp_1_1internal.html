@@ -131,14 +131,14 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation-only utilities and platform abstractions for jsocketpp. </p>
 <p>This namespace contains internal helper classes, platform-specific adapters, and low-level abstractions used by the jsocketpp library. These components are not part of the public API and may change at any time without notice.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md687"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md692"></a>
 Contents</h3>
 <ul>
 <li>RAII wrappers (e.g., <span class="tt"><a class="el" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html" title="RAII helper for temporarily overriding a socket&#39;s blocking mode.">ScopedBlockingMode</a></span>)</li>
 <li>Platform-specific buffer conversion tools (e.g., <span class="tt"><a class="el" href="group__internal.html#ga7701a273337a71485ba1583df464b178" title="Convert a raw array of BufferView elements into an iovec array for POSIX readv/writev.">toIOVec()</a></span>, <span class="tt"><a class="el" href="group__internal.html#gae140ce724d1cfc733f3c2dbccf0cf60b" title="Convert a raw array of BufferView elements into a WSABUF array for use with Windows socket APIs.">toWSABUF()</a></span>)</li>
 <li>Utility functions for socket state, error codes, and descriptor flags</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md688"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md693"></a>
 Usage</h3>
 <p>Developers using jsocketpp should not depend on symbols in this namespace unless they are contributing to the library itself or extending its internals.</p>
 <dl class="section warning"><dt>Warning</dt><dd>Not part of the public API. Subject to change or removal in future versions. </dd></dl>

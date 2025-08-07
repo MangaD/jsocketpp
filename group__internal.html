@@ -161,7 +161,7 @@ Example Usage</h3>
 <div class="line">    <a class="code hl_typedef" href="#ga62d9b0682386f85cca0aadbdfbb76646">AddrinfoPtr</a> info(raw); <span class="comment">// Automatically cleaned up on scope exit</span></div>
 <div class="line">    <span class="comment">// Use info.get() safely here</span></div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__internal_html_ga62d9b0682386f85cca0aadbdfbb76646"><div class="ttname"><a href="#ga62d9b0682386f85cca0aadbdfbb76646">jsocketpp::internal::AddrinfoPtr</a></div><div class="ttdeci">std::unique_ptr&lt; addrinfo, AddrinfoDeleter &gt; AddrinfoPtr</div><div class="ttdoc">Smart pointer that manages addrinfo* resources using AddrinfoDeleter.</div><div class="ttdef"><b>Definition</b> common.hpp:587</div></div>
+<div class="ttc" id="agroup__internal_html_ga62d9b0682386f85cca0aadbdfbb76646"><div class="ttname"><a href="#ga62d9b0682386f85cca0aadbdfbb76646">jsocketpp::internal::AddrinfoPtr</a></div><div class="ttdeci">std::unique_ptr&lt; addrinfo, AddrinfoDeleter &gt; AddrinfoPtr</div><div class="ttdoc">Smart pointer that manages addrinfo* resources using AddrinfoDeleter.</div><div class="ttdef"><b>Definition</b> common.hpp:671</div></div>
 </div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html" title="Custom deleter for addrinfo* pointers to support RAII-style cleanup.">AddrinfoDeleter</a> </dd>
 <dd>
 getaddrinfo() </dd>
@@ -395,9 +395,9 @@ Example Usage</h3>
 <div class="line">        <span class="keywordflow">break</span>; <span class="comment">// success</span></div>
 <div class="line">    <span class="comment">// try next if socket or connect failed</span></div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__internal_html_gab7cbd90f4b6d2e5f506de1b7fd5c6331"><div class="ttname"><a href="#gab7cbd90f4b6d2e5f506de1b7fd5c6331">jsocketpp::internal::resolveAddress</a></div><div class="ttdeci">AddrinfoPtr resolveAddress(const std::string_view host, const Port port, const int family, const int socktype, const int protocol, const int flags=0)</div><div class="ttdoc">Resolves a hostname and port into a list of usable socket address structures.</div><div class="ttdef"><b>Definition</b> common.hpp:714</div></div>
+<div class="ttc" id="agroup__internal_html_gab7cbd90f4b6d2e5f506de1b7fd5c6331"><div class="ttname"><a href="#gab7cbd90f4b6d2e5f506de1b7fd5c6331">jsocketpp::internal::resolveAddress</a></div><div class="ttdeci">AddrinfoPtr resolveAddress(const std::string_view host, const Port port, const int family, const int socktype, const int protocol, const int flags=0)</div><div class="ttdoc">Resolves a hostname and port into a list of usable socket address structures.</div><div class="ttdef"><b>Definition</b> common.hpp:798</div></div>
 <div class="ttc" id="anamespacejsocketpp_1_1internal_html"><div class="ttname"><a href="namespacejsocketpp_1_1internal.html">jsocketpp::internal</a></div><div class="ttdoc">Implementation-only utilities and platform abstractions for jsocketpp.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:52</div></div>
-<div class="ttc" id="anamespacejsocketpp_html_a3ddf4938a63ed33a5e2f7d2625cb4405"><div class="ttname"><a href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">jsocketpp::INVALID_SOCKET</a></div><div class="ttdeci">constexpr SOCKET INVALID_SOCKET</div><div class="ttdef"><b>Definition</b> common.hpp:239</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_a3ddf4938a63ed33a5e2f7d2625cb4405"><div class="ttname"><a href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">jsocketpp::INVALID_SOCKET</a></div><div class="ttdeci">constexpr SOCKET INVALID_SOCKET</div><div class="ttdef"><b>Definition</b> common.hpp:257</div></div>
 </div><!-- fragment --><hr  />
 <h3 class="doxsection"><a class="anchor" id="autotoc_md500"></a>
 Notes</h3>

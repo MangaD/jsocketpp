@@ -21,11 +21,13 @@ var namespacejsocketpp =
     [ "Port", "group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7", null ],
     [ "SOCKADDR_UN", "namespacejsocketpp.html#a981f7d65e550398e8ab29db83092f119", null ],
     [ "SOCKET", "namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda", null ],
+    [ "ssize_t", "namespacejsocketpp.html#af86a15acff146a3ea52fb1c09a598575", null ],
     [ "ShutdownMode", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174", [
       [ "Read", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a7a1a5f3e79fdc91edf2f5ead9d66abb4", null ],
       [ "Write", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6", null ],
       [ "Both", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e", null ]
     ] ],
+    [ "addressToString", "group__utils.html#ga8501a7d31710bd7b0ef862f97ee318da", null ],
     [ "CleanupSockets", "namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c", null ],
     [ "CloseSocket", "namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931", null ],
     [ "convertIPv4MappedIPv6ToIPv4", "group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d", null ],
@@ -43,6 +45,7 @@ var namespacejsocketpp =
     [ "portFromSockaddr", "namespacejsocketpp.html#a71637861db9b297572bc1de3df56a59a", null ],
     [ "SocketErrorMessage", "namespacejsocketpp.html#a1d0357025eb782be52907801696556ca", null ],
     [ "SocketErrorMessageWrap", "namespacejsocketpp.html#a2eae999aa2ba7973dc6c3acc40e51e5a", null ],
+    [ "stringToAddress", "group__utils.html#ga784e6ca4a095b32beb18d2378179cf0b", null ],
     [ "DefaultBufferSize", "group__core.html#gafa19c7cbeb622b106835021215b8d6b7", null ],
     [ "INVALID_SOCKET", "namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405", null ],
     [ "SOCKET_ERROR", "namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2", null ]

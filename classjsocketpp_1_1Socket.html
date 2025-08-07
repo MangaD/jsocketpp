@@ -313,13 +313,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ga0472e21ad70ac9b778aac3d6177577ca inherit pub_methods_classjsocketpp_1_1SocketOptions" id="r_ga0472e21ad70ac9b778aac3d6177577ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__socketopts.html#ga0472e21ad70ac9b778aac3d6177577ca">getReusePort</a> () const</td></tr>
 <tr class="memdesc:ga0472e21ad70ac9b778aac3d6177577ca inherit pub_methods_classjsocketpp_1_1SocketOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the <span class="tt">SO_REUSEPORT</span> option is currently enabled on the socket.  <br /></td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:af3b50f84b3c8e869b9f8ff64da0bd315" id="r_af3b50f84b3c8e869b9f8ff64da0bd315"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3b50f84b3c8e869b9f8ff64da0bd315">addressToString</a> (const sockaddr_storage &amp;addr)</td></tr>
-<tr class="memdesc:af3b50f84b3c8e869b9f8ff64da0bd315"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert an address and port to a string using getnameinfo.  <br /></td></tr>
-<tr class="memitem:a68f996973d1497cb476c44025aac401b" id="r_a68f996973d1497cb476c44025aac401b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68f996973d1497cb476c44025aac401b">stringToAddress</a> (const std::string &amp;str, sockaddr_storage &amp;addr)</td></tr>
-<tr class="memdesc:a68f996973d1497cb476c44025aac401b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a string (ip:port) to sockaddr_storage.  <br /></td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:ga6da94c322a3ed5f85efd26a7fbadbe0a" id="r_ga6da94c322a3ed5f85efd26a7fbadbe0a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tcp.html#ga6da94c322a3ed5f85efd26a7fbadbe0a">Socket</a> (<a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> client, const sockaddr_storage &amp;addr, socklen_t len, std::size_t recvBufferSize=<a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a>, std::size_t sendBufferSize=<a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a>, std::size_t internalBufferSize=<a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a>, int soRecvTimeoutMillis=-1, int soSendTimeoutMillis=-1, bool tcpNoDelay=true, bool keepAlive=false, bool nonBlocking=false)</td></tr>
@@ -369,7 +362,7 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TCP client connection abstraction (Java-like interface). </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> class represents a TCP connection between your application and a remote host. It provides a high-level, easy-to-use, and cross-platform API for creating, connecting, sending, and receiving data over TCP sockets. Its interface is inspired by Java's <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> class, but uses modern C++20 features.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md795"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md801"></a>
 Key Features</h3>
 <ul>
 <li><b>Connect to remote hosts</b> using hostnames or IP addresses (IPv4/IPv6).</li>
@@ -380,7 +373,7 @@ Key Features</h3>
 <li><b>Exception-based error handling</b> via <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</li>
 <li><b>Fine-grained control</b>: configure timeouts, non-blocking mode, TCP_NODELAY, SO_KEEPALIVE, etc.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md796"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md802"></a>
 Typical Usage Example</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="Socket_8hpp.html">jsocketpp/Socket.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -401,122 +394,42 @@ Typical Usage Example</h3>
 <div class="ttc" id="aclassjsocketpp_1_1SocketException_html"><div class="ttname"><a href="classjsocketpp_1_1SocketException.html">jsocketpp::SocketException</a></div><div class="ttdoc">Represents socket-related errors in the jsocketpp library.</div><div class="ttdef"><b>Definition</b> SocketException.hpp:63</div></div>
 <div class="ttc" id="aclassjsocketpp_1_1Socket_html"><div class="ttname"><a href="classjsocketpp_1_1Socket.html">jsocketpp::Socket</a></div><div class="ttdoc">TCP client connection abstraction (Java-like interface).</div><div class="ttdef"><b>Definition</b> Socket.hpp:93</div></div>
 <div class="ttc" id="aclient_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="client_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> client.cpp:89</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md797"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md803"></a>
 Internal Buffer</h3>
 <ul>
 <li>The socket maintains an internal read buffer (default: <a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a>).</li>
 <li>You can resize it with <span class="tt"><a class="el" href="group__tcp.html#ga3fb196157a1cde167c47a596c9235c91" title="Sets the size of the internal read buffer used for string operations.">setInternalBufferSize()</a></span> if you expect to receive larger or smaller messages.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md798"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md804"></a>
 Error Handling</h3>
 <ul>
 <li>Almost all methods throw <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">jsocketpp::SocketException</a></span> on error (e.g., connect failure, write error, etc).</li>
 <li>You should catch exceptions to handle network errors gracefully.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md799"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md805"></a>
 Thread Safety</h3>
 <ul>
 <li>Not thread-safe. Use a separate <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span> object per thread if needed.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md800"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md806"></a>
 Platform Support</h3>
 <ul>
 <li>Windows, Linux, macOS. Handles all necessary platform differences internally.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md801"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md807"></a>
 Advanced Usage</h3>
 <ul>
 <li>Set non-blocking mode with <span class="tt"><a class="el" href="group__socketopts.html#ga5f2dffc2949b06b1d945e590bce7f05b" title="Enables or disables non-blocking mode on the socket.">setNonBlocking()</a></span>.</li>
 <li>Tune socket options with <span class="tt"><a class="el" href="group__socketopts.html#ga9839dd8837c7519a627f28b3a4c7a513" title="Enables or disables Nagle’s algorithm (TCP_NODELAY) on TCP sockets.">setTcpNoDelay()</a></span>, <span class="tt"><a class="el" href="group__socketopts.html#gab3fbb8682b1313dc38abddd541ca4abf" title="Enables or disables TCP-level keepalive behavior on the socket (SO_KEEPALIVE).">setKeepAlive()</a></span>, and more.</li>
 <li>Check remote address with <span class="tt"><a class="el" href="group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc" title="Get the connected peer&#39;s socket address as a formatted string.">getRemoteSocketAddress()</a></span>.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md802"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md808"></a>
 See Also</h3>
 <ul>
 <li><a class="el" href="classjsocketpp_1_1ServerSocket.html">ServerSocket</a> - for listening to incoming connections</li>
 <li><a class="el" href="group__tcp.html">TCP Sockets</a> - TCP socket group </li>
 </ul>
-</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="af3b50f84b3c8e869b9f8ff64da0bd315" name="af3b50f84b3c8e869b9f8ff64da0bd315"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3b50f84b3c8e869b9f8ff64da0bd315">&#9670;&#160;</a></span>addressToString()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string Socket::addressToString </td>
-          <td>(</td>
-          <td class="paramtype">const sockaddr_storage &amp;</td>          <td class="paramname"><span class="paramname"><em>addr</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert an address and port to a string using getnameinfo. </p>
-<p>Uses getnameinfo to convert a sockaddr_storage structure to a human-readable string (ip:port). Handles both IPv4 and IPv6 addresses.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">addr</td><td>sockaddr_storage structure. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>String representation (ip:port). </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if getnameinfo fails. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a68f996973d1497cb476c44025aac401b" name="a68f996973d1497cb476c44025aac401b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68f996973d1497cb476c44025aac401b">&#9670;&#160;</a></span>stringToAddress()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Socket::stringToAddress </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>str</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">sockaddr_storage &amp;</td>          <td class="paramname"><span class="paramname"><em>addr</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert a string (ip:port) to sockaddr_storage. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">str</td><td>Address string. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">addr</td><td>Output sockaddr_storage. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+</div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
 <a id="a50a79dbf8d56379ae0bfbfa2a186a9f1" name="a50a79dbf8d56379ae0bfbfa2a186a9f1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a50a79dbf8d56379ae0bfbfa2a186a9f1">&#9670;&#160;</a></span>_cliAddrInfo</h2>
 

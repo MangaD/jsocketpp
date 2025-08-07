@@ -4,11 +4,13 @@ var common_8hpp =
     [ "jsocketpp::Port", "group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7", null ],
     [ "jsocketpp::SOCKADDR_UN", "namespacejsocketpp.html#a981f7d65e550398e8ab29db83092f119", null ],
     [ "jsocketpp::SOCKET", "namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda", null ],
+    [ "jsocketpp::ssize_t", "namespacejsocketpp.html#af86a15acff146a3ea52fb1c09a598575", null ],
     [ "jsocketpp::ShutdownMode", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174", [
       [ "jsocketpp::ShutdownMode::Read", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a7a1a5f3e79fdc91edf2f5ead9d66abb4", null ],
       [ "jsocketpp::ShutdownMode::Write", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6", null ],
       [ "jsocketpp::ShutdownMode::Both", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e", null ]
     ] ],
+    [ "jsocketpp::addressToString", "group__utils.html#ga8501a7d31710bd7b0ef862f97ee318da", null ],
     [ "jsocketpp::CleanupSockets", "namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c", null ],
     [ "jsocketpp::CloseSocket", "namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931", null ],
     [ "jsocketpp::convertIPv4MappedIPv6ToIPv4", "group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d", null ],
@@ -27,6 +29,7 @@ var common_8hpp =
     [ "jsocketpp::internal::resolveAddress", "group__internal.html#gab7cbd90f4b6d2e5f506de1b7fd5c6331", null ],
     [ "jsocketpp::SocketErrorMessage", "namespacejsocketpp.html#a1d0357025eb782be52907801696556ca", null ],
     [ "jsocketpp::SocketErrorMessageWrap", "namespacejsocketpp.html#a2eae999aa2ba7973dc6c3acc40e51e5a", null ],
+    [ "jsocketpp::stringToAddress", "group__utils.html#ga784e6ca4a095b32beb18d2378179cf0b", null ],
     [ "jsocketpp::net::toNetwork", "namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5", null ],
     [ "jsocketpp::net::toNetwork", "namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a", null ],
     [ "jsocketpp::DefaultBufferSize", "group__core.html#gafa19c7cbeb622b106835021215b8d6b7", null ],
