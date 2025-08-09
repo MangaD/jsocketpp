@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['💡_20notes_0',['💡 Notes',['../group__tcp.html#autotoc_md737',1,'']]],
-  ['💡_20platform_20notes_1',['💡 Platform Notes',['../group__udp.html#autotoc_md665',1,'']]],
+  ['💡_20notes_0',['💡 Notes',['../group__tcp.html#autotoc_md743',1,'']]],
+  ['💡_20platform_20notes_1',['💡 Platform Notes',['../group__udp.html#autotoc_md672',1,'']]],
   ['💡_20summary_20table_2',['💡 Summary Table',['../group__address__reuse.html#autotoc_md123',1,'']]],
-  ['💡_20use_20cases_3',['💡 Use Cases',['../group__socketopts.html#autotoc_md1088',1,'💡 Use Cases'],['../group__socketopts.html#autotoc_md1120',1,'💡 Use Cases']]],
+  ['💡_20use_20cases_3',['💡 Use Cases',['../group__socketopts.html#autotoc_md1094',1,'💡 Use Cases'],['../group__socketopts.html#autotoc_md1126',1,'💡 Use Cases']]],
   ['💡_20why_20jsocketpp_4',['💡 Why jsocketpp?',['../index.html#autotoc_md393',1,'']]]
 ];

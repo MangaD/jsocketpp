@@ -130,6 +130,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:gab7cbd90f4b6d2e5f506de1b7fd5c6331"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolves a hostname and port into a list of usable socket address structures.  <br /></td></tr>
 <tr class="memitem:ga19ca69ef83631dcf9e59205de179fbde" id="r_ga19ca69ef83631dcf9e59205de179fbde"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga19ca69ef83631dcf9e59205de179fbde">jsocketpp::internal::getBoundLocalIp</a> (<a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sockFd)</td></tr>
 <tr class="memdesc:ga19ca69ef83631dcf9e59205de179fbde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the local IP address to which the socket is currently bound.  <br /></td></tr>
+<tr class="memitem:ga8826c90e1bb9e0023b75940ff4cd72f8" id="r_ga8826c90e1bb9e0023b75940ff4cd72f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8826c90e1bb9e0023b75940ff4cd72f8">jsocketpp::internal::sendExact</a> (<a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> fd, const void *data, std::size_t size)</td></tr>
+<tr class="memdesc:ga8826c90e1bb9e0023b75940ff4cd72f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an entire datagram to a connected peer using <span class="tt">send()</span>.  <br /></td></tr>
+<tr class="memitem:ga434728a067f6d58ea22b6d9c53824cd3" id="r_ga434728a067f6d58ea22b6d9c53824cd3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga434728a067f6d58ea22b6d9c53824cd3">jsocketpp::internal::sendExactTo</a> (<a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> fd, const void *data, std::size_t size, const sockaddr *addr, socklen_t addrLen)</td></tr>
+<tr class="memdesc:ga434728a067f6d58ea22b6d9c53824cd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an entire datagram to a specific destination using <span class="tt">sendto()</span>.  <br /></td></tr>
 <tr class="memitem:ga606aec57de9374b5b0fc69f37504fedd" id="r_ga606aec57de9374b5b0fc69f37504fedd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga606aec57de9374b5b0fc69f37504fedd">jsocketpp::internal::ScopedBlockingMode::ScopedBlockingMode</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock, bool temporaryNonBlocking)</td></tr>
 <tr class="memdesc:ga606aec57de9374b5b0fc69f37504fedd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <span class="tt"><a class="el" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html" title="RAII helper for temporarily overriding a socket&#39;s blocking mode.">ScopedBlockingMode</a></span> that temporarily overrides the socket's blocking mode.  <br /></td></tr>
 <tr class="memitem:ga413d5e88aaee47a98645a9760884bec0" id="r_ga413d5e88aaee47a98645a9760884bec0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga413d5e88aaee47a98645a9760884bec0">jsocketpp::internal::ScopedBlockingMode::~ScopedBlockingMode</a> ()</td></tr>
@@ -459,6 +463,161 @@ If <span class="tt">setNonBlocking()</span> is called on the same socket while t
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga413d5e88aaee47a98645a9760884bec0" title="Restore the socket&#39;s original blocking mode on destruction.">~ScopedBlockingMode()</a> </dd>
 <dd>
 setNonBlocking() </dd></dl>
+
+</div>
+</div>
+<a id="ga8826c90e1bb9e0023b75940ff4cd72f8" name="ga8826c90e1bb9e0023b75940ff4cd72f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8826c90e1bb9e0023b75940ff4cd72f8">&#9670;&#160;</a></span>sendExact()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jsocketpp::internal::sendExact </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a></td>          <td class="paramname"><span class="paramname"><em>fd</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>size</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends an entire datagram to a connected peer using <span class="tt">send()</span>. </p>
+<p>This internal utility transmits exactly <code class="param">size</code> bytes from the given <code class="param">data</code> buffer over the specified socket <code class="param">fd</code>, using the system <span class="tt">send()</span> call. It is intended for use with connected UDP or TCP sockets where the destination address is already established via connect().</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md514"></a>
+⚙️ Behavior</h3>
+<ul>
+<li>Applies <span class="tt">MSG_NOSIGNAL</span> on POSIX systems to prevent <span class="tt">SIGPIPE</span> if the peer has closed the connection.</li>
+<li>Casts the buffer size appropriately for Windows (<span class="tt">int</span>) and POSIX (<span class="tt">size_t</span>) APIs.</li>
+<li>On success, guarantees that <b>all</b> <code class="param">size</code> bytes are sent in a single system call.</li>
+<li>Throws an exception if:<ul>
+<li>The socket is invalid (<span class="tt">INVALID_SOCKET</span>)</li>
+<li><span class="tt">send()</span> fails for any reason</li>
+<li>The number of bytes actually sent differs from <code class="param">size</code> (partial send)</li>
+</ul>
+</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md516"></a>
+🧪 Example</h3>
+<div class="fragment"><div class="line">std::string message = <span class="stringliteral">&quot;Hello, world!&quot;</span>;</div>
+<div class="line"><a class="code hl_function" href="#ga8826c90e1bb9e0023b75940ff4cd72f8">internal::sendExact</a>(socketFd, message.data(), message.size());</div>
+<div class="ttc" id="agroup__internal_html_ga8826c90e1bb9e0023b75940ff4cd72f8"><div class="ttname"><a href="#ga8826c90e1bb9e0023b75940ff4cd72f8">jsocketpp::internal::sendExact</a></div><div class="ttdeci">void sendExact(SOCKET fd, const void *data, std::size_t size)</div><div class="ttdoc">Sends an entire datagram to a connected peer using send().</div><div class="ttdef"><b>Definition</b> common.cpp:438</div></div>
+</div><!-- fragment --><hr  />
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">fd</td><td>The connected socket file descriptor to send data on. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to the raw buffer containing data to transmit. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>Number of bytes to send from <code class="param">data</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the socket is invalid, if <span class="tt">send()</span> returns an error, or if a partial datagram is sent.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function does not perform retries or fragmentation. For UDP, datagrams larger than the network MTU may be dropped. </dd>
+<dd>
+Intended for internal use — use higher-level <span class="tt">write()</span> APIs instead in application code.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga434728a067f6d58ea22b6d9c53824cd3" title="Sends an entire datagram to a specific destination using sendto().">sendExactTo()</a> For sending to an explicit address without connecting first. </dd>
+<dd>
+connect() To establish a connected peer before using this function. </dd></dl>
+
+</div>
+</div>
+<a id="ga434728a067f6d58ea22b6d9c53824cd3" name="ga434728a067f6d58ea22b6d9c53824cd3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga434728a067f6d58ea22b6d9c53824cd3">&#9670;&#160;</a></span>sendExactTo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jsocketpp::internal::sendExactTo </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a></td>          <td class="paramname"><span class="paramname"><em>fd</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>size</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const sockaddr *</td>          <td class="paramname"><span class="paramname"><em>addr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">socklen_t</td>          <td class="paramname"><span class="paramname"><em>addrLen</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends an entire datagram to a specific destination using <span class="tt">sendto()</span>. </p>
+<p>This internal utility transmits exactly <code class="param">size</code> bytes from the given <code class="param">data</code> buffer over the specified socket <code class="param">fd</code>, using the system <span class="tt">sendto()</span> call to send to an explicit destination address. It is intended for unconnected UDP sockets, where the destination may vary per call.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md519"></a>
+⚙️ Behavior</h3>
+<ul>
+<li>Applies <span class="tt">MSG_NOSIGNAL</span> on POSIX systems to prevent <span class="tt">SIGPIPE</span> if the destination is unreachable or the peer has closed the socket.</li>
+<li>Casts the buffer size and address length appropriately for Windows (<span class="tt">int</span>) and POSIX (<span class="tt">size_t</span>, <span class="tt">socklen_t</span>) APIs.</li>
+<li>On success, guarantees that <b>all</b> <code class="param">size</code> bytes are sent in a single system call.</li>
+<li>Throws an exception if:<ul>
+<li>The socket is invalid (<span class="tt">INVALID_SOCKET</span>)</li>
+<li><span class="tt">sendto()</span> fails for any reason</li>
+<li>The number of bytes actually sent differs from <code class="param">size</code> (partial send)</li>
+</ul>
+</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md521"></a>
+🧪 Example</h3>
+<div class="fragment"><div class="line">sockaddr_storage destAddr{};</div>
+<div class="line"><span class="comment">// populate destAddr with desired IPv4/IPv6 destination...</span></div>
+<div class="line"><a class="code hl_function" href="#ga434728a067f6d58ea22b6d9c53824cd3">internal::sendExactTo</a>(socketFd, message.data(), message.size(),</div>
+<div class="line">                      <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>sockaddr*<span class="keyword">&gt;</span>(&amp;destAddr),</div>
+<div class="line">                      <span class="keyword">sizeof</span>(sockaddr_in));</div>
+<div class="ttc" id="agroup__internal_html_ga434728a067f6d58ea22b6d9c53824cd3"><div class="ttname"><a href="#ga434728a067f6d58ea22b6d9c53824cd3">jsocketpp::internal::sendExactTo</a></div><div class="ttdeci">void sendExactTo(SOCKET fd, const void *data, std::size_t size, const sockaddr *addr, socklen_t addrLen)</div><div class="ttdoc">Sends an entire datagram to a specific destination using sendto().</div><div class="ttdef"><b>Definition</b> common.cpp:466</div></div>
+</div><!-- fragment --><hr  />
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">fd</td><td>The socket file descriptor to send data on. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to the raw buffer containing data to transmit. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>Number of bytes to send from <code class="param">data</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">addr</td><td>Pointer to the destination address structure (IPv4 or IPv6). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">addrLen</td><td>Length of the address structure in bytes.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the socket is invalid, if <span class="tt">sendto()</span> returns an error, or if a partial datagram is sent.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function does not perform retries or fragmentation. For UDP, datagrams larger than the network MTU may be dropped. </dd>
+<dd>
+Intended for internal use — use higher-level <span class="tt">writeTo()</span> or <span class="tt">write(<a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a>&amp;)</span> APIs instead in application code.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga8826c90e1bb9e0023b75940ff4cd72f8" title="Sends an entire datagram to a connected peer using send().">sendExact()</a> For sending to a connected peer without specifying an address. </dd>
+<dd>
+writeTo() For type-safe per-call destination sends. </dd></dl>
 
 </div>
 </div>

@@ -1,6 +1,5 @@
 var classjsocketpp_1_1DatagramSocket =
 [
-    [ "DatagramSocket", "group__udp.html#ga1573f70de77ed93d522f2f9273181469", null ],
     [ "DatagramSocket", "group__udp.html#ga4b4c631816f82eea0b6048a16682079e", null ],
     [ "~DatagramSocket", "group__udp.html#gaf2be0b146f197d55cc55a5ba8b619166", null ],
     [ "DatagramSocket", "group__udp.html#ga3d08597b24d9c7a3fe43dd291ee85148", null ],
@@ -35,10 +34,10 @@ var classjsocketpp_1_1DatagramSocket =
     [ "recvFrom", "classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06", null ],
     [ "setInternalBufferSize", "group__udp.html#ga1b017c1366655d32a2ec5d19deef9d37", null ],
     [ "waitReady", "group__udp.html#ga0deb65a2e7c215e0e46ace579c702f6e", null ],
-    [ "write", "group__udp.html#ga608cd2b00ddc598768bbd33e74b5ce0e", null ],
+    [ "write", "group__udp.html#gafb2439eddc4ce6db4915e02ed7946444", null ],
     [ "write", "group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df", null ],
-    [ "write", "classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29", null ],
-    [ "write", "classjsocketpp_1_1DatagramSocket.html#a7e2b02ba6e9a630fdbde52b88863ec99", null ],
+    [ "write", "group__udp.html#ga96bc239f42265d5c408c8f15046f24c8", null ],
+    [ "write", "group__udp.html#gab5aa2df14c7492cf16a165e6b4cd9426", null ],
     [ "writeTo", "group__udp.html#gae61e0fd22b7a69d6b5f706141fff8934", null ],
     [ "_internalBuffer", "classjsocketpp_1_1DatagramSocket.html#a03328f6602738b63c4a6c8a720ec1204", null ],
     [ "_isBound", "classjsocketpp_1_1DatagramSocket.html#a8c77f16fcae1c86b679a0567de055b7d", null ],

@@ -16,7 +16,6 @@ var group__udp =
       [ "port", "classjsocketpp_1_1DatagramPacket.html#a6619b7fcd476199e4a9c454d06f1bcd4", null ]
     ] ],
     [ "jsocketpp::DatagramSocket", "classjsocketpp_1_1DatagramSocket.html", [
-      [ "DatagramSocket", "group__udp.html#ga1573f70de77ed93d522f2f9273181469", null ],
       [ "DatagramSocket", "group__udp.html#ga4b4c631816f82eea0b6048a16682079e", null ],
       [ "~DatagramSocket", "group__udp.html#gaf2be0b146f197d55cc55a5ba8b619166", null ],
       [ "DatagramSocket", "group__udp.html#ga3d08597b24d9c7a3fe43dd291ee85148", null ],
@@ -51,10 +50,10 @@ var group__udp =
       [ "recvFrom", "classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06", null ],
       [ "setInternalBufferSize", "group__udp.html#ga1b017c1366655d32a2ec5d19deef9d37", null ],
       [ "waitReady", "group__udp.html#ga0deb65a2e7c215e0e46ace579c702f6e", null ],
-      [ "write", "group__udp.html#ga608cd2b00ddc598768bbd33e74b5ce0e", null ],
+      [ "write", "group__udp.html#gafb2439eddc4ce6db4915e02ed7946444", null ],
       [ "write", "group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df", null ],
-      [ "write", "classjsocketpp_1_1DatagramSocket.html#ab17c043006b0c35944a1809996b30c29", null ],
-      [ "write", "classjsocketpp_1_1DatagramSocket.html#a7e2b02ba6e9a630fdbde52b88863ec99", null ],
+      [ "write", "group__udp.html#ga96bc239f42265d5c408c8f15046f24c8", null ],
+      [ "write", "group__udp.html#gab5aa2df14c7492cf16a165e6b4cd9426", null ],
       [ "writeTo", "group__udp.html#gae61e0fd22b7a69d6b5f706141fff8934", null ],
       [ "_internalBuffer", "classjsocketpp_1_1DatagramSocket.html#a03328f6602738b63c4a6c8a720ec1204", null ],
       [ "_isBound", "classjsocketpp_1_1DatagramSocket.html#a8c77f16fcae1c86b679a0567de055b7d", null ],
@@ -66,7 +65,6 @@ var group__udp =
       [ "_remoteAddrLen", "classjsocketpp_1_1DatagramSocket.html#acc234405e43a22139930c6b2611927c8", null ]
     ] ],
     [ "jsocketpp::MulticastSocket", "classjsocketpp_1_1MulticastSocket.html", [
-      [ "MulticastSocket", "group__udp.html#ga379ff0e20d62b5f0c815d48614597005", null ],
       [ "MulticastSocket", "group__udp.html#ga996b99882efa863b01e0fff4a9782a82", null ],
       [ "getCurrentGroup", "classjsocketpp_1_1MulticastSocket.html#a3fd7dbdf1bfffe953c6fa7a64dccdfad", null ],
       [ "getLoopbackMode", "classjsocketpp_1_1MulticastSocket.html#aef04ca6c33896469f8be76b3f2f9da1c", null ],
@@ -90,7 +88,6 @@ var group__udp =
     [ "jsocketpp::DatagramSocket::cleanupAndThrow", "group__udp.html#ga1973415ece2f77f191b250b9e9690733", null ],
     [ "jsocketpp::DatagramSocket::close", "group__udp.html#ga9d0a9582b3a2a72bf62f182dbc33c352", null ],
     [ "jsocketpp::DatagramSocket::connect", "group__udp.html#ga5b12269efa5bc3a56ec53ea1fed9e468", null ],
-    [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga1573f70de77ed93d522f2f9273181469", null ],
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga3d08597b24d9c7a3fe43dd291ee85148", null ],
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#gab613123c8bf1aca6aec451b1140e2f82", null ],
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga4b4c631816f82eea0b6048a16682079e", null ],
@@ -109,7 +106,6 @@ var group__udp =
     [ "jsocketpp::DatagramSocket::isBound", "group__udp.html#gadd6a72af69e4e8e1e8701c60a7e728f1", null ],
     [ "jsocketpp::DatagramSocket::isConnected", "group__udp.html#gac3b7c4a5fc5a21372c4a9cadb3e85efb", null ],
     [ "jsocketpp::DatagramSocket::isValid", "group__udp.html#gab33da807656e2ab920707d60605844f5", null ],
-    [ "jsocketpp::MulticastSocket::MulticastSocket", "group__udp.html#ga379ff0e20d62b5f0c815d48614597005", null ],
     [ "jsocketpp::MulticastSocket::MulticastSocket", "group__udp.html#ga996b99882efa863b01e0fff4a9782a82", null ],
     [ "jsocketpp::DatagramSocket::operator=", "group__udp.html#gab67aad3e2d477982f19d17ab80607417", null ],
     [ "jsocketpp::DatagramSocket::operator=", "group__udp.html#ga38397874bcb62f889cb6fefa20b45ba6", null ],
@@ -117,8 +113,10 @@ var group__udp =
     [ "jsocketpp::DatagramSocket::read", "group__udp.html#ga61dfe82025f17e3041c5b5acca2369eb", null ],
     [ "jsocketpp::DatagramSocket::setInternalBufferSize", "group__udp.html#ga1b017c1366655d32a2ec5d19deef9d37", null ],
     [ "jsocketpp::DatagramSocket::waitReady", "group__udp.html#ga0deb65a2e7c215e0e46ace579c702f6e", null ],
-    [ "jsocketpp::DatagramSocket::write", "group__udp.html#ga608cd2b00ddc598768bbd33e74b5ce0e", null ],
+    [ "jsocketpp::DatagramSocket::write", "group__udp.html#gafb2439eddc4ce6db4915e02ed7946444", null ],
     [ "jsocketpp::DatagramSocket::write", "group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df", null ],
+    [ "jsocketpp::DatagramSocket::write", "group__udp.html#ga96bc239f42265d5c408c8f15046f24c8", null ],
+    [ "jsocketpp::DatagramSocket::write", "group__udp.html#gab5aa2df14c7492cf16a165e6b4cd9426", null ],
     [ "jsocketpp::DatagramSocket::writeTo", "group__udp.html#gae61e0fd22b7a69d6b5f706141fff8934", null ],
     [ "jsocketpp::DatagramSocket::~DatagramSocket", "group__udp.html#gaf2be0b146f197d55cc55a5ba8b619166", null ]
 ];

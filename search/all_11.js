@@ -44,9 +44,9 @@ var searchData=
   ['glance_41',['✨ Features at a Glance',['../index.html#autotoc_md395',1,'']]],
   ['google_20mock_20to_20mock_20recv_20and_20send_3a_42',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md356',1,'']]],
   ['google_20mock_3a_43',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md364',1,'']]],
-  ['guarantees_44',['RAII Guarantees',['../group__udp.html#autotoc_md546',1,'']]],
+  ['guarantees_44',['RAII Guarantees',['../group__udp.html#autotoc_md555',1,'']]],
   ['guide_45',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
   ['guide_20to_20the_20socket_20api_46',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['guidelines_47',['Guidelines',['../group__socketopts.html#autotoc_md975',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md456',1,'3. Code Style Guidelines']]],
+  ['guidelines_47',['Guidelines',['../group__socketopts.html#autotoc_md981',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md456',1,'3. Code Style Guidelines']]],
   ['guides_48',['User Guides',['../group__docs.html',1,'']]]
 ];

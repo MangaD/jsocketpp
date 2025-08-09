@@ -14,6 +14,8 @@ var group__internal =
     [ "jsocketpp::internal::getBoundLocalIp", "group__internal.html#ga19ca69ef83631dcf9e59205de179fbde", null ],
     [ "jsocketpp::internal::resolveAddress", "group__internal.html#gab7cbd90f4b6d2e5f506de1b7fd5c6331", null ],
     [ "jsocketpp::internal::ScopedBlockingMode::ScopedBlockingMode", "group__internal.html#ga606aec57de9374b5b0fc69f37504fedd", null ],
+    [ "jsocketpp::internal::sendExact", "group__internal.html#ga8826c90e1bb9e0023b75940ff4cd72f8", null ],
+    [ "jsocketpp::internal::sendExactTo", "group__internal.html#ga434728a067f6d58ea22b6d9c53824cd3", null ],
     [ "jsocketpp::internal::toIOVec", "group__internal.html#ga7701a273337a71485ba1583df464b178", null ],
     [ "jsocketpp::internal::toIOVec", "group__internal.html#gacdd48d04c87ec69aff97c5d29dbfe1a1", null ],
     [ "jsocketpp::internal::toWSABUF", "group__internal.html#gae140ce724d1cfc733f3c2dbccf0cf60b", null ],
