@@ -909,4 +909,106 @@ using AddrinfoPtr = std::unique_ptr<addrinfo, AddrinfoDeleter>;
  */
 [[nodiscard]] bool ipAddressesEqual(const std::string& ip1, const std::string& ip2);
 
+/**
+ * @brief Sends an entire datagram to a connected peer using `send()`.
+ * @ingroup internal
+ *
+ * This internal utility transmits exactly @p size bytes from the given @p data
+ * buffer over the specified socket @p fd, using the system `send()` call.
+ * It is intended for use with connected UDP or TCP sockets where the destination
+ * address is already established via @ref connect().
+ *
+ * ---
+ *
+ * ### ⚙️ Behavior
+ * - Applies `MSG_NOSIGNAL` on POSIX systems to prevent `SIGPIPE` if the peer has closed the connection.
+ * - Casts the buffer size appropriately for Windows (`int`) and POSIX (`size_t`) APIs.
+ * - On success, guarantees that **all** @p size bytes are sent in a single system call.
+ * - Throws an exception if:
+ *   - The socket is invalid (`INVALID_SOCKET`)
+ *   - `send()` fails for any reason
+ *   - The number of bytes actually sent differs from @p size (partial send)
+ *
+ * ---
+ *
+ * ### 🧪 Example
+ * @code
+ * std::string message = "Hello, world!";
+ * internal::sendExact(socketFd, message.data(), message.size());
+ * @endcode
+ *
+ * ---
+ *
+ * @param[in] fd    The connected socket file descriptor to send data on.
+ * @param[in] data  Pointer to the raw buffer containing data to transmit.
+ * @param[in] size  Number of bytes to send from @p data.
+ *
+ * @throws SocketException
+ *         If the socket is invalid, if `send()` returns an error,
+ *         or if a partial datagram is sent.
+ *
+ * @warning This function does not perform retries or fragmentation.
+ *          For UDP, datagrams larger than the network MTU may be dropped.
+ * @warning Intended for internal use — use higher-level `write()` APIs instead in application code.
+ *
+ * @see sendExactTo() For sending to an explicit address without connecting first.
+ * @see connect() To establish a connected peer before using this function.
+ */
+void sendExact(SOCKET fd, const void* data, std::size_t size);
+
+/**
+ * @brief Sends an entire datagram to a specific destination using `sendto()`.
+ * @ingroup internal
+ *
+ * This internal utility transmits exactly @p size bytes from the given @p data
+ * buffer over the specified socket @p fd, using the system `sendto()` call to
+ * send to an explicit destination address. It is intended for unconnected
+ * UDP sockets, where the destination may vary per call.
+ *
+ * ---
+ *
+ * ### ⚙️ Behavior
+ * - Applies `MSG_NOSIGNAL` on POSIX systems to prevent `SIGPIPE` if the destination
+ *   is unreachable or the peer has closed the socket.
+ * - Casts the buffer size and address length appropriately for Windows (`int`) and
+ *   POSIX (`size_t`, `socklen_t`) APIs.
+ * - On success, guarantees that **all** @p size bytes are sent in a single system call.
+ * - Throws an exception if:
+ *   - The socket is invalid (`INVALID_SOCKET`)
+ *   - `sendto()` fails for any reason
+ *   - The number of bytes actually sent differs from @p size (partial send)
+ *
+ * ---
+ *
+ * ### 🧪 Example
+ * @code
+ * sockaddr_storage destAddr{};
+ * // populate destAddr with desired IPv4/IPv6 destination...
+ * internal::sendExactTo(socketFd, message.data(), message.size(),
+ *                       reinterpret_cast<const sockaddr*>(&destAddr),
+ *                       sizeof(sockaddr_in));
+ * @endcode
+ *
+ * ---
+ *
+ * @param[in] fd       The socket file descriptor to send data on.
+ * @param[in] data     Pointer to the raw buffer containing data to transmit.
+ * @param[in] size     Number of bytes to send from @p data.
+ * @param[in] addr     Pointer to the destination address structure (IPv4 or IPv6).
+ * @param[in] addrLen  Length of the address structure in bytes.
+ *
+ * @throws SocketException
+ *         If the socket is invalid, if `sendto()` returns an error,
+ *         or if a partial datagram is sent.
+ *
+ * @warning This function does not perform retries or fragmentation.
+ *          For UDP, datagrams larger than the network MTU may be dropped.
+ * @warning Intended for internal use — use higher-level `writeTo()` or `write(DatagramPacket&)`
+ *          APIs instead in application code.
+ *
+ * @see sendExact() For sending to a connected peer without specifying an address.
+ * @see writeTo() For type-safe per-call destination sends.
+ */
+void sendExactTo(SOCKET fd, const void* data, std::size_t size, const sockaddr* addr, socklen_t addrLen);
+
 } // namespace jsocketpp::internal

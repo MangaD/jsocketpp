@@ -434,3 +434,60 @@ void jsocketpp::stringToAddress(const std::string& str, sockaddr_storage& addr)
 
     std::memcpy(&addr, res->ai_addr, res->ai_addrlen);
 }
+
+void internal::sendExact(const SOCKET fd, const void* data, std::size_t size)
+{
+    if (fd == INVALID_SOCKET)
+        throw SocketException("sendExact(): invalid socket");
+
+    int flags = 0;
+#ifndef _WIN32
+    flags = MSG_NOSIGNAL;
+#endif
+
+    const int sent = ::send(fd,
+#ifdef _WIN32
+                            static_cast<const char*>(data), static_cast<int>(size),
+#else
+                            data, size,
+#endif
+                            flags);
+
+    if (sent == SOCKET_ERROR)
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
+
+    if (static_cast<std::size_t>(sent) != size)
+        throw SocketException("sendExact(): partial datagram was sent.");
+}
+
+void internal::sendExactTo(const SOCKET fd, const void* data, std::size_t size, const sockaddr* addr,
+                           const socklen_t addrLen)
+{
+    if (fd == INVALID_SOCKET)
+        throw SocketException("sendExactTo(): invalid socket");
+
+    int flags = 0;
+#ifndef _WIN32
+    flags = MSG_NOSIGNAL;
+#endif
+
+    const int sent = ::sendto(fd,
+#ifdef _WIN32
+                              static_cast<const char*>(data), static_cast<int>(size),
+#else
+                              data, size,
+#endif
+                              flags, addr, addrLen);
+
+    if (sent == SOCKET_ERROR)
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
+
+    if (static_cast<std::size_t>(sent) != size)
+        throw SocketException("sendExactTo(): partial datagram was sent.");
+}

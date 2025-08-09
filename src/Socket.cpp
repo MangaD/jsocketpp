@@ -425,12 +425,12 @@ Port Socket::getRemotePort() const
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr));
 }
 
-std::string Socket::getRemoteSocketAddress(bool convertIPv4Mapped) const
+std::string Socket::getRemoteSocketAddress(const bool convertIPv4Mapped) const
 {
     return getRemoteIp(convertIPv4Mapped) + ":" + std::to_string(getRemotePort());
 }
 
-size_t Socket::write(std::string_view message) const
+size_t Socket::write(const std::string_view message) const
 {
     int flags = 0;
 #ifndef _WIN32

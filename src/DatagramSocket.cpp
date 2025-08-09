@@ -370,144 +370,91 @@ void DatagramSocket::disconnect()
     _isConnected = false;
 }
 
-size_t DatagramSocket::write(std::string_view message) const
+void DatagramSocket::write(const DatagramPacket& packet)
 {
-    if (!_isConnected)
-        throw SocketException("DatagramSocket is not connected.");
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::write(DatagramPacket): socket is not open.");
 
-    if (message.empty())
-        return 0; // Nothing to send
-
-    int flags = 0;
-#ifndef _WIN32
-    flags = MSG_NOSIGNAL; // Don't send SIGPIPE on broken pipe
-#endif
-    const auto sent = ::send(getSocketFd(), message.data(),
-#ifdef _WIN32
-                             static_cast<int>(message.size()),
-#else
-                             message.size(),
-#endif
-                             flags);
-    if (sent == SOCKET_ERROR)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
-    }
-
-    return static_cast<size_t>(sent);
-}
-
-std::size_t DatagramSocket::write(const DatagramPacket& packet)
-{
     if (packet.buffer.empty())
-        return 0;
+        return;
 
-    int flags = 0;
-#ifndef _WIN32
-    flags = MSG_NOSIGNAL;
-#endif
-
+    // Case 1: Explicit destination provided in the packet
     if (!packet.address.empty() && packet.port != 0)
     {
-        const auto result = internal::resolveAddress(packet.address, packet.port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
+        const auto ai = internal::resolveAddress(packet.address, packet.port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
 
-        const ssize_t sent = sendto(getSocketFd(), packet.buffer.data(),
+        internal::sendExactTo(getSocketFd(), packet.buffer.data(), packet.buffer.size(), ai->ai_addr,
 #ifdef _WIN32
-                                    static_cast<int>(packet.buffer.size()),
+                              static_cast<int>(ai->ai_addrlen)
 #else
-                                    packet.buffer.size(),
+                              ai->ai_addrlen
 #endif
-                                    flags, result->ai_addr,
-#ifdef _WIN32
-                                    static_cast<int>(result->ai_addrlen));
-#else
-                                    result->ai_addrlen);
-#endif
+        );
 
-        const int error = GetSocketError();
-        if (sent < 0)
-            throw SocketException(error, SocketErrorMessageWrap(error));
-
-        // 🔁 Update _remoteAddr/_remoteAddrLen for consistency with read()
         if (!_isConnected)
         {
-            _remoteAddr = *reinterpret_cast<const sockaddr_storage*>(result->ai_addr);
-            _remoteAddrLen = static_cast<socklen_t>(result->ai_addrlen);
+            _remoteAddr = *reinterpret_cast<const sockaddr_storage*>(ai->ai_addr);
+            _remoteAddrLen = static_cast<socklen_t>(ai->ai_addrlen);
         }
-
-        return static_cast<std::size_t>(sent);
+        return;
     }
 
+    // Case 2: No destination — must be connected
     if (!_isConnected)
         throw SocketException(
             "DatagramSocket::write(DatagramPacket): no destination specified and socket is not connected.");
 
-    const ssize_t sent = send(getSocketFd(), packet.buffer.data(),
-#ifdef _WIN32
-                              static_cast<int>(packet.buffer.size()),
-#else
-                              packet.buffer.size(),
-#endif
-                              flags);
-
-    const int error = GetSocketError();
-    if (sent < 0)
-        throw SocketException(error, SocketErrorMessageWrap(error));
-
-    return static_cast<std::size_t>(sent);
+    internal::sendExact(getSocketFd(), packet.buffer.data(), packet.buffer.size());
 }
 
-size_t DatagramSocket::write(std::string_view message, const std::string_view host, const Port port) const
+void DatagramSocket::write(const std::string_view message) const
 {
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::write(std::string_view): socket is not open.");
+
+    if (!_isConnected)
+        throw SocketException("DatagramSocket::write(std::string_view): socket is not connected.");
+
     if (message.empty())
-        return 0; // Nothing to send
+        return;
 
-    // Prepare destination address with getaddrinfo (supports IPv4 and IPv6)
-    addrinfo hints = {};
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_DGRAM;
-    hints.ai_protocol = IPPROTO_UDP;
+    internal::sendExact(getSocketFd(), message.data(), message.size());
+}
 
-    int flags = 0;
-#ifndef _WIN32
-    flags = MSG_NOSIGNAL; // Don't send SIGPIPE on broken pipe
-#endif
+void DatagramSocket::write(const std::string_view message, const std::string_view host, const Port port)
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::write(std::string_view, host, port): socket is not open.");
 
-    const std::string portStr = std::to_string(port);
-    addrinfo* destInfo = nullptr;
+    if (message.empty())
+        return;
 
-    if (const auto ret = getaddrinfo(host.data(), portStr.c_str(), &hints, &destInfo); ret != 0 || !destInfo)
+    const auto addrInfo = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
+
+    int lastError = 0;
+    for (const addrinfo* ai = addrInfo.get(); ai != nullptr; ai = ai->ai_next)
     {
-        throw SocketException(
-#ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
-#else
-            ret, SocketErrorMessageWrap(ret, true));
-#endif
+        try
+        {
+            internal::sendExactTo(getSocketFd(), message.data(), message.size(), ai->ai_addr,
+                                  static_cast<socklen_t>(ai->ai_addrlen));
+
+            // Mirror prior behavior: remember remote on success if not connected.
+            if (!_isConnected)
+            {
+                _remoteAddr = *reinterpret_cast<const sockaddr_storage*>(ai->ai_addr);
+                _remoteAddrLen = static_cast<socklen_t>(ai->ai_addrlen);
+            }
+            return; // success
+        }
+        catch (const SocketException&)
+        {
+            lastError = GetSocketError(); // keep last OS error; try next candidate
+        }
     }
 
-    const auto sent = sendto(getSocketFd(), message.data(),
-#ifdef _WIN32
-                             static_cast<int>(message.size()), // Windows: cast to int
-#else
-                             message.size(), // Linux/Unix: use size_t directly
-#endif
-                             flags, destInfo->ai_addr,
-#ifdef _WIN32
-                             static_cast<int>(destInfo->ai_addrlen) // Windows: cast to int
-#else
-                             destInfo->ai_addrlen // Linux/Unix: use socklen_t directly
-#endif
-    );
-    freeaddrinfo(destInfo); // ignore errors from freeaddrinfo
-    if (sent == SOCKET_ERROR)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
-    }
-
-    return static_cast<size_t>(sent);
+    // All candidates failed.
+    throw SocketException(lastError, SocketErrorMessageWrap(lastError));
 }
 
 size_t DatagramSocket::read(DatagramPacket& packet, const bool resizeBuffer) const

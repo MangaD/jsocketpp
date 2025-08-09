@@ -87,29 +87,6 @@ class DatagramSocket : public SocketOptions
 {
   public:
     /**
-     * @brief Default constructor (deleted) for DatagramSocket class.
-     * @ingroup udp
-     *
-     * The default constructor is explicitly deleted to prevent the creation of
-     * uninitialized `DatagramSocket` objects. Each datagram socket must be explicitly
-     * constructed with a valid port number (or socket descriptor) to participate in
-     * sending or receiving UDP packets.
-     *
-     * ### Rationale
-     * - Prevents the creation of sockets without binding context
-     * - Enforces correct construction for unicast, broadcast, or multicast use
-     * - Avoids silent failures from using an unbound or invalid socket
-     *
-     * @code{.cpp}
-     * DatagramSocket s;         // ❌ Compilation error (deleted constructor)
-     * DatagramSocket s(12345);  // ✅ Valid: binds to port 12345
-     * @endcode
-     *
-     * @see DatagramSocket(Port, std::size_t) Constructor for binding to port
-     */
-    DatagramSocket() = delete;
-
-    /**
      * @brief Creates a UDP socket, optionally binds to a local address, and optionally connects to a remote peer.
      * @ingroup udp
      *
@@ -1045,26 +1022,13 @@ class DatagramSocket : public SocketOptions
         static_assert(std::is_standard_layout_v<T>, "DatagramSocket::write<T>() requires standard layout type");
 
         if (getSocketFd() == INVALID_SOCKET)
-            throw SocketException("write<T>() failed: socket is not open.");
+            throw SocketException("DatagramSocket::write<T>(): socket is not open.");
 
-        std::array<std::byte, sizeof(T)> buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
+        if (!_isConnected)
+            throw SocketException("DatagramSocket::write<T>(): socket is not connected.");
 
-        const auto sent = ::send(getSocketFd(),
-#ifdef _WIN32
-                                 reinterpret_cast<const char*>(buffer.data()), static_cast<int>(buffer.size()),
-#else
-                                 buffer.data(), buffer.size(),
-#endif
-                                 0);
-
-        if (sent == SOCKET_ERROR)
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessage(error));
-        }
-
-        if (static_cast<std::size_t>(sent) != sizeof(T))
-            throw SocketException("write<T>() failed: partial datagram was sent.");
+        const auto buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
+        internal::sendExact(getSocketFd(), buffer.data(), buffer.size());
     }
 
     /**
@@ -1149,37 +1113,32 @@ class DatagramSocket : public SocketOptions
 
         const auto addrInfo = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
 
-        // Bit-cast value into raw byte buffer
-        const std::array<std::byte, sizeof(T)> buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
+        const auto buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
 
         int lastError = 0;
-        for (const addrinfo* addr = addrInfo.get(); addr != nullptr; addr = addr->ai_next)
+        for (const addrinfo* ai = addrInfo.get(); ai != nullptr; ai = ai->ai_next)
         {
-            int flags = 0;
-#ifndef _WIN32
-            flags = MSG_NOSIGNAL; // Don't send SIGPIPE on broken pipe
-#endif
-            const int sent = ::sendto(getSocketFd(),
-#ifdef _WIN32
-                                      reinterpret_cast<const char*>(buffer.data()), static_cast<int>(buffer.size()),
-#else
-                                      buffer.data(), buffer.size(),
-#endif
-                                      flags, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
-
-            if (sent == static_cast<int>(sizeof(T)))
+            try
             {
+                internal::sendExactTo(getSocketFd(), buffer.data(), buffer.size(), ai->ai_addr,
+                                      static_cast<socklen_t>(ai->ai_addrlen));
+
                 if (!_isConnected)
                 {
-                    _remoteAddr = *reinterpret_cast<const sockaddr_storage*>(addr->ai_addr);
-                    _remoteAddrLen = static_cast<socklen_t>(addr->ai_addrlen);
+                    _remoteAddr = *reinterpret_cast<const sockaddr_storage*>(ai->ai_addr);
+                    _remoteAddrLen = static_cast<socklen_t>(ai->ai_addrlen);
                 }
                 return; // success
             }
-
-            lastError = GetSocketError(); // save the error for reporting if none succeed
+            catch (const SocketException&)
+            {
+                // Preserve the last OS error to report if none of the candidates succeed.
+                lastError = GetSocketError();
+                // Try next addrinfo candidate.
+            }
         }
 
+        // If we got here, all candidates failed.
         throw SocketException(lastError, SocketErrorMessageWrap(lastError));
     }
 
@@ -1187,71 +1146,100 @@ class DatagramSocket : public SocketOptions
      * @brief Sends a UDP datagram using the provided DatagramPacket.
      * @ingroup udp
      *
-     * This method sends the contents of a `DatagramPacket` to a specified destination.
-     * It supports both connectionless and connected UDP sockets:
+     * Sends the contents of a `DatagramPacket` either to a specified destination or
+     * to the connected peer, depending on the packet's fields:
      *
-     * - **Connectionless Mode:** If `packet.address` is non-empty and `packet.port` is valid,
-     *   the packet is sent to the resolved destination using `sendto()`. The destination address
-     *   is also stored internally, allowing follow-up calls to `getRemoteIp()` and `getRemotePort()`.
+     * - **Explicit destination:** If `packet.address` is non-empty and `packet.port`
+     *   is non-zero, the address is resolved via @ref internal::resolveAddress and
+     *   the payload is sent using @ref internal::sendExactTo. If the socket is not
+     *   connected, the resolved destination is stored internally for future
+     *   `getRemoteIp()` and `getRemotePort()` calls.
      *
-     * - **Connected Mode:** If the socket is connected (via `connect()`), and the packet does
-     *   not specify a destination, the message is sent using `send()` to the connected peer.
+     * - **Connected mode:** If the packet has no destination, the socket must be
+     *   connected. The payload is sent to the connected peer using
+     *   @ref internal::sendExact.
      *
-     * ### Connectionless Behavior
-     * - Resolves `packet.address` and `packet.port` via `getaddrinfo()`
-     * - Sends the buffer to the resolved `sockaddr` using `sendto()`
-     * - Uses `MSG_NOSIGNAL` on POSIX to suppress `SIGPIPE`
-     * - Updates the internal remote address fields (`_remoteAddr`, `_remoteAddrLen`)
-     *   for use in `getRemoteIp()` and `getRemotePort()`
+     * ---
      *
-     * ### Connected Behavior
-     * - Uses `send()` to deliver the buffer to the connected peer
-     * - Fails if the socket is not connected and no destination is provided
+     * @param[in] packet The packet containing destination and payload. If the buffer
+     *                   is empty, this method does nothing.
      *
-     * ### Error Conditions
-     * - Throws if `packet.address` is empty and socket is not connected
-     * - Throws if address resolution fails (e.g., invalid hostname)
-     * - Throws if `send()` or `sendto()` fails (e.g., network unreachable)
-     * - Throws if socket descriptor is invalid
+     * @throws SocketException If:
+     * - The socket is not open
+     * - No destination is specified and the socket is not connected
+     * - Address resolution fails
+     * - The underlying send operation fails or reports a partial datagram
      *
-     * @param[in] packet [in] The packet containing destination and payload.
-     *                   If `packet.address` is non-empty and `packet.port` is non-zero,
-     *                   the destination will override any connected peer.
+     * @note UDP datagrams are sent atomically. If the payload exceeds the path MTU,
+     *       it may be dropped or truncated by the network.
+     * @note This method does not fragment or retransmit. Use application-level
+     *       framing for large data.
      *
-     * @return Number of bytes successfully sent (may be less than buffer size on rare systems).
-     *
-     * @throws SocketException on:
-     *         - address resolution failure
-     *         - socket I/O failure
-     *         - missing destination on unconnected socket
-     *
-     * @note This method updates the socket’s internal remote address metadata if used in connectionless mode.
-     * @note UDP datagrams are sent atomically. If the packet exceeds the system MTU, it may be dropped.
-     * @note This method does **not** fragment or retransmit. Use application-level framing for large data.
-     *
-     * @see connect(), isConnected(), write(std::string_view, std::string_view, Port), DatagramPacket,
+     * @see connect(), isConnected(), write(std::string_view), writeTo(), DatagramPacket,
      *      getRemoteIp(), getRemotePort()
      */
-    [[nodiscard]] size_t write(const DatagramPacket& packet);
+    void write(const DatagramPacket& packet);
 
     /**
-     * @brief Write data to the socket (connected UDP) from a string_view.
+     * @brief Sends a string message as a UDP datagram to the connected peer.
+     * @ingroup udp
      *
-     * @param message The data to send.
-     * @return Number of bytes sent.
-     * @throws SocketException on error.
+     * Transmits the given `std::string_view` as a single UDP datagram using the
+     * socket's connected peer, which must have been previously set via @ref connect().
+     * Guarantees that either the full message is sent or an exception is thrown.
+     *
+     * @param[in] message The message payload to send. May be empty (in which case this
+     *                    function does nothing).
+     *
+     * @throws SocketException If:
+     * - The socket is not open
+     * - The socket is not connected
+     * - A system-level `send()` error occurs
+     * - A partial datagram is sent (unexpected)
+     *
+     * @warning This method does not fragment large payloads. If `message.size() > MTU`,
+     * the datagram may be dropped or truncated by the network.
+     *
+     * @see connect(), writeTo(), write(DatagramPacket), write<T>(), write<std::string>()
      */
-    [[nodiscard]] size_t write(std::string_view message) const;
+    void write(std::string_view message) const;
 
     /**
-     * @brief Send a datagram to a specific host and port (connectionless UDP).
-     * @param message The message to send.
-     * @param host    The destination hostname or IP.
-     * @param port    The destination port.
-     * @return Number of bytes sent.
-     * @throws SocketException on error.
+     * @brief Sends a message as a UDP datagram to the specified destination address and port.
+     * @ingroup udp
+     *
+     * Transmits the given `std::string_view` as a single UDP datagram to a specific host and port,
+     * without requiring the socket to be connected.
+     *
+     * Internally, this method:
+     * - Resolves the destination via @ref internal::resolveAddress (IPv4, IPv6, DNS supported).
+     * - Iterates through all resolved addresses, attempting to send the full payload to each
+     *   using @ref internal::sendExactTo.
+     * - On the first successful send, updates the internal `_remoteAddr` and `_remoteAddrLen`
+     *   if the socket is unconnected, enabling later use of `getRemoteIp()` and `getRemotePort()`.
+     * - Throws if all address candidates fail.
+     *
+     * @param[in] message The UDP payload to send. If empty, this method is a no-op.
+     * @param[in] host    Destination hostname or IP address (IPv4, IPv6, or DNS).
+     * @param[in] port    Destination UDP port number.
+     *
+     * @throws SocketException If:
+     * - The socket is not open
+     * - Address resolution fails
+     * - All resolved destinations fail to accept the datagram
+     * - The underlying send operation fails or reports a partial datagram
+     *
+     * @note No fragmentation or retries are performed — the payload is sent as a single datagram.
+     *       If `message.size()` exceeds the path MTU, it may be dropped or truncated by the network.
+     *
+     * @warning No byte-order or encoding transformations are applied; the payload is transmitted as raw bytes.
+     *
+     * @see write(const DatagramPacket&) For sending a datagram object with buffer + destination
+     * @see writeTo() For sending binary POD data to a per-call destination
+     * @see connect() To establish a persistent default peer
+     * @see isConnected(), getRemoteIp(), getRemotePort(), getRemoteSocketAddress()
      */
-    [[nodiscard]] size_t write(std::string_view message, std::string_view host, Port port) const;
+    void write(std::string_view message, std::string_view host, Port port);
 
     /**
      * @brief Receives a UDP datagram and fills the provided DatagramPacket.
@@ -2157,24 +2145,12 @@ template <> inline void DatagramSocket::write<std::string>(const std::string& va
         throw SocketException("DatagramSocket::write<std::string>(): socket is not open.");
 
     if (!isConnected())
-        throw SocketException("DatagramSocket::write<std::string>(): socket is not connected. Use sendTo() instead.");
+        throw SocketException("DatagramSocket::write<std::string>(): socket is not connected. Use writeTo() instead.");
 
-    const auto sent = ::send(getSocketFd(),
-#ifdef _WIN32
-                             value.data(), static_cast<int>(value.size()),
-#else
-                             value.data(), value.size(),
-#endif
-                             0);
+    if (value.empty())
+        return; // or optionally throw or return 0
 
-    if (sent == SOCKET_ERROR)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
-    }
-
-    if (static_cast<std::size_t>(sent) != value.size())
-        throw SocketException("DatagramSocket::write<std::string>(): partial datagram was sent.");
+    internal::sendExact(getSocketFd(), value.data(), value.size());
 }
 
 /**
@@ -2231,24 +2207,12 @@ template <> inline void DatagramSocket::write<std::string_view>(const std::strin
 
     if (!isConnected())
         throw SocketException(
-            "DatagramSocket::write<std::string_view>(): socket is not connected. Use sendTo() instead.");
+            "DatagramSocket::write<std::string_view>(): socket is not connected. Use writeTo() instead.");
 
-    const auto sent = ::send(getSocketFd(),
-#ifdef _WIN32
-                             value.data(), static_cast<int>(value.size()),
-#else
-                             value.data(), value.size(),
-#endif
-                             0);
+    if (value.empty())
+        return; // Empty datagram is technically valid, but skip to avoid overhead (optional)
 
-    if (sent == SOCKET_ERROR)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
-    }
-
-    if (static_cast<std::size_t>(sent) != value.size())
-        throw SocketException("DatagramSocket::write<std::string_view>(): partial datagram was sent.");
+    internal::sendExact(getSocketFd(), value.data(), value.size());
 }
 
 } // namespace jsocketpp

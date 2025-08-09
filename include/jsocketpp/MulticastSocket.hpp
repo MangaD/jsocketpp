@@ -72,29 +72,6 @@ class MulticastSocket : public DatagramSocket
 {
   public:
     /**
-     * @brief Default constructor (deleted) for MulticastSocket class.
-     * @ingroup udp
-     *
-     * The default constructor is explicitly deleted to prevent the creation of
-     * uninitialized `MulticastSocket` objects. A multicast socket must be constructed
-     * with a valid port and group membership configuration to function correctly.
-     *
-     * ### Rationale
-     * - Prevents creation of sockets not joined to any multicast group
-     * - Enforces explicit binding and group setup for predictable behavior
-     * - Maintains integrity of RAII-based resource acquisition
-     *
-     * @code{.cpp}
-     * MulticastSocket s;               // ❌ Compilation error (deleted constructor)
-     * MulticastSocket s(4446, "239.0.0.1"); // ✅ Joins multicast group on port 4446
-     * @endcode
-     *
-     * @see MulticastSocket(Port, std::string_view group, std::string_view iface) Constructor with group join
-     * @see joinGroup(), leaveGroup(), setMulticastLoopback() for multicast control
-     */
-    MulticastSocket() = delete;
-
-    /**
      * @brief Constructs a fully configurable multicast socket for receiving and sending datagrams.
      * @ingroup udp
      *
