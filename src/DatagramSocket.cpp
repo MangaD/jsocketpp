@@ -242,6 +242,13 @@ void DatagramSocket::connect(const std::string_view host, const Port port, const
         throw SocketException("connect() called on an already-connected socket");
     }
 
+    // Check FD_SETSIZE limit up-front if using select()
+    if (timeoutMillis >= 0 && getSocketFd() >= FD_SETSIZE)
+    {
+        throw SocketException("connect(): socket descriptor exceeds FD_SETSIZE (" + std::to_string(FD_SETSIZE) +
+                              "), select() cannot be used");
+    }
+
     // Resolve the remote address
     const auto remoteInfo = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
     const addrinfo* target = remoteInfo.get();
@@ -284,13 +291,6 @@ void DatagramSocket::connect(const std::string_view host, const Port port, const
         if (!useNonBlocking || !wouldBlock)
         {
             throw SocketException(error, SocketErrorMessage(error));
-        }
-
-        // Check FD_SETSIZE limit before using select()
-        if (getSocketFd() >= FD_SETSIZE)
-        {
-            throw SocketException("connect(): socket descriptor exceeds FD_SETSIZE (" + std::to_string(FD_SETSIZE) +
-                                  "), select() cannot be used");
         }
 
         // Wait until socket becomes writable (connection ready or failed)

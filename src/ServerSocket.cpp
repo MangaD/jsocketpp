@@ -220,6 +220,11 @@ void ServerSocket::close()
 
 void ServerSocket::bind()
 {
+    if (_isBound)
+    {
+        throw SocketException("ServerSocket::bind(): socket is already bound");
+    }
+
     // Ensure that we have already selected an address during construction
     if (_selectedAddrInfo == nullptr)
         throw SocketException("bind() failed: no valid addrinfo found");

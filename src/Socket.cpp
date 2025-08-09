@@ -459,7 +459,7 @@ void Socket::setInternalBufferSize(const std::size_t newLen)
     _internalBuffer.shrink_to_fit();
 }
 
-bool Socket::waitReady(bool forWrite, const int timeoutMillis) const
+bool Socket::waitReady(const bool forWrite, const int timeoutMillis) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("Invalid socket");
