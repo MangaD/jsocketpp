@@ -1475,7 +1475,7 @@ Usage Example</h3>
 <div class="line">} <span class="keywordflow">catch</span> (...) {</div>
 <div class="line">    <a class="code hl_function" href="#ga33183210cdc2a1e281006e325cc2a173">cleanupAndRethrow</a>();</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__tcp_html_ga33183210cdc2a1e281006e325cc2a173"><div class="ttname"><a href="#ga33183210cdc2a1e281006e325cc2a173">jsocketpp::ServerSocket::cleanupAndRethrow</a></div><div class="ttdeci">void cleanupAndRethrow()</div><div class="ttdoc">Cleans up internal resources and rethrows the current exception.</div><div class="ttdef"><b>Definition</b> ServerSocket.cpp:143</div></div>
+<div class="ttc" id="agroup__tcp_html_ga33183210cdc2a1e281006e325cc2a173"><div class="ttname"><a href="#ga33183210cdc2a1e281006e325cc2a173">jsocketpp::ServerSocket::cleanupAndRethrow</a></div><div class="ttdeci">void cleanupAndRethrow()</div><div class="ttdoc">Cleans up internal resources and rethrows the current exception.</div><div class="ttdef"><b>Definition</b> ServerSocket.cpp:135</div></div>
 </div><!-- fragment --><dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname">Rethrows</td><td>the currently active exception.</td></tr>
@@ -1542,7 +1542,7 @@ It preserves the original exception type and message.</dd></dl>
 <div class="line">}</div>
 <div class="ttc" id="agroup__socketopts_html_ga69fdecc0aaaef4bbd2826c448a8bbe1d"><div class="ttname"><a href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d">jsocketpp::SocketOptions::setReceiveBufferSize</a></div><div class="ttdeci">void setReceiveBufferSize(std::size_t size)</div><div class="ttdoc">Sets the socket&#39;s receive buffer size (SO_RCVBUF).</div><div class="ttdef"><b>Definition</b> SocketOptions.cpp:112</div></div>
 <div class="ttc" id="agroup__socketopts_html_ga9839dd8837c7519a627f28b3a4c7a513"><div class="ttname"><a href="group__socketopts.html#ga9839dd8837c7519a627f28b3a4c7a513">jsocketpp::SocketOptions::setTcpNoDelay</a></div><div class="ttdeci">void setTcpNoDelay(bool on)</div><div class="ttdoc">Enables or disables Nagle’s algorithm (TCP_NODELAY) on TCP sockets.</div><div class="ttdef"><b>Definition</b> SocketOptions.cpp:269</div></div>
-<div class="ttc" id="agroup__tcp_html_ga8bc150c503e051c12165680e74b5ae48"><div class="ttname"><a href="#ga8bc150c503e051c12165680e74b5ae48">jsocketpp::Socket::cleanupAndRethrow</a></div><div class="ttdeci">void cleanupAndRethrow()</div><div class="ttdoc">Cleans up socket resources and rethrows the currently active exception.</div><div class="ttdef"><b>Definition</b> Socket.cpp:122</div></div>
+<div class="ttc" id="agroup__tcp_html_ga8bc150c503e051c12165680e74b5ae48"><div class="ttname"><a href="#ga8bc150c503e051c12165680e74b5ae48">jsocketpp::Socket::cleanupAndRethrow</a></div><div class="ttdeci">void cleanupAndRethrow()</div><div class="ttdoc">Cleans up socket resources and rethrows the currently active exception.</div><div class="ttdef"><b>Definition</b> Socket.cpp:115</div></div>
 </div><!-- fragment --><dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>Always rethrows the currently active exception</td></tr>
@@ -1657,8 +1657,8 @@ Behavior</h3>
 <div class="line">    <a class="code hl_function" href="#gaf80aa30f2806a17b930878841dfab7ad">cleanupAndThrow</a>(<a class="code hl_function" href="namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad">GetSocketError</a>());</div>
 <div class="line">}</div>
 <div class="ttc" id="agroup__socketopts_html_gaced4c6dc799564ece9ce4e6766b1d794"><div class="ttname"><a href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794">jsocketpp::SocketOptions::getSocketFd</a></div><div class="ttdeci">SOCKET getSocketFd() const noexcept</div><div class="ttdoc">Retrieves the native socket handle (file descriptor or OS-level handle).</div><div class="ttdef"><b>Definition</b> SocketOptions.hpp:275</div></div>
-<div class="ttc" id="agroup__tcp_html_ga93cc325113abb7433288338ca3facde1"><div class="ttname"><a href="#ga93cc325113abb7433288338ca3facde1">jsocketpp::Socket::connect</a></div><div class="ttdeci">void connect(int timeoutMillis=-1)</div><div class="ttdoc">Establishes a TCP connection to the remote host with optional timeout control.</div><div class="ttdef"><b>Definition</b> Socket.cpp:172</div></div>
-<div class="ttc" id="agroup__tcp_html_gaf80aa30f2806a17b930878841dfab7ad"><div class="ttname"><a href="#gaf80aa30f2806a17b930878841dfab7ad">jsocketpp::Socket::cleanupAndThrow</a></div><div class="ttdeci">void cleanupAndThrow(int errorCode)</div><div class="ttdoc">Closes the socket, resets internal state, and throws a SocketException.</div><div class="ttdef"><b>Definition</b> Socket.cpp:116</div></div>
+<div class="ttc" id="agroup__tcp_html_ga93cc325113abb7433288338ca3facde1"><div class="ttname"><a href="#ga93cc325113abb7433288338ca3facde1">jsocketpp::Socket::connect</a></div><div class="ttdeci">void connect(int timeoutMillis=-1)</div><div class="ttdoc">Establishes a TCP connection to the remote host with optional timeout control.</div><div class="ttdef"><b>Definition</b> Socket.cpp:165</div></div>
+<div class="ttc" id="agroup__tcp_html_gaf80aa30f2806a17b930878841dfab7ad"><div class="ttname"><a href="#gaf80aa30f2806a17b930878841dfab7ad">jsocketpp::Socket::cleanupAndThrow</a></div><div class="ttdeci">void cleanupAndThrow(int errorCode)</div><div class="ttdoc">Closes the socket, resets internal state, and throws a SocketException.</div><div class="ttdef"><b>Definition</b> Socket.cpp:109</div></div>
 <div class="ttc" id="anamespacejsocketpp_html_aac009a479ad7c6c77530e5e270cb25ad"><div class="ttname"><a href="namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad">jsocketpp::GetSocketError</a></div><div class="ttdeci">int GetSocketError()</div><div class="ttdef"><b>Definition</b> common.hpp:239</div></div>
 <div class="ttc" id="anamespacejsocketpp_html_adc2dd9860dec2a3c3189e756288d5ba2"><div class="ttname"><a href="namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2">jsocketpp::SOCKET_ERROR</a></div><div class="ttdeci">constexpr SOCKET SOCKET_ERROR</div><div class="ttdef"><b>Definition</b> common.hpp:258</div></div>
 </div><!-- fragment --><hr  />
@@ -2469,7 +2469,7 @@ Use Cases</h3>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga6da94c322a3ed5f85efd26a7fbadbe0a">Socket</a> client = serverSocket.accept();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Client IP: &quot;</span> &lt;&lt; client.<a class="code hl_function" href="#ga273e2d4847b5407bb8eef56d9e88996e">getRemoteIp</a>() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="ttc" id="agroup__tcp_html_ga273e2d4847b5407bb8eef56d9e88996e"><div class="ttname"><a href="#ga273e2d4847b5407bb8eef56d9e88996e">jsocketpp::Socket::getRemoteIp</a></div><div class="ttdeci">std::string getRemoteIp(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Retrieves the IP address of the remote peer this TCP socket is connected to.</div><div class="ttdef"><b>Definition</b> Socket.cpp:394</div></div>
+<div class="ttc" id="agroup__tcp_html_ga273e2d4847b5407bb8eef56d9e88996e"><div class="ttname"><a href="#ga273e2d4847b5407bb8eef56d9e88996e">jsocketpp::Socket::getRemoteIp</a></div><div class="ttdeci">std::string getRemoteIp(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Retrieves the IP address of the remote peer this TCP socket is connected to.</div><div class="ttdef"><b>Definition</b> Socket.cpp:379</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>Whether to normalize IPv4-mapped IPv6 addresses (default = true) </td></tr>
@@ -2529,7 +2529,7 @@ Use Cases</h3>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga6da94c322a3ed5f85efd26a7fbadbe0a">Socket</a> client = serverSocket.accept();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Client is connected on port: &quot;</span> &lt;&lt; client.<a class="code hl_function" href="#ga2840142258bae9535c6421d6cd3dce1c">getRemotePort</a>() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="ttc" id="agroup__tcp_html_ga2840142258bae9535c6421d6cd3dce1c"><div class="ttname"><a href="#ga2840142258bae9535c6421d6cd3dce1c">jsocketpp::Socket::getRemotePort</a></div><div class="ttdeci">Port getRemotePort() const</div><div class="ttdoc">Retrieves the port number of the remote peer this TCP socket is connected to.</div><div class="ttdef"><b>Definition</b> Socket.cpp:411</div></div>
+<div class="ttc" id="agroup__tcp_html_ga2840142258bae9535c6421d6cd3dce1c"><div class="ttname"><a href="#ga2840142258bae9535c6421d6cd3dce1c">jsocketpp::Socket::getRemotePort</a></div><div class="ttdeci">Port getRemotePort() const</div><div class="ttdoc">Retrieves the port number of the remote peer this TCP socket is connected to.</div><div class="ttdef"><b>Definition</b> Socket.cpp:396</div></div>
 </div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>The port number of the connected peer (host byte order).</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
@@ -2590,7 +2590,7 @@ Use Cases</h3>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga6da94c322a3ed5f85efd26a7fbadbe0a">Socket</a> client = serverSocket.accept();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Client connected from: &quot;</span> &lt;&lt; client.<a class="code hl_function" href="#ga92c62bf727779c6d7395809084f9e4dc">getRemoteSocketAddress</a>() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="ttc" id="agroup__tcp_html_ga92c62bf727779c6d7395809084f9e4dc"><div class="ttname"><a href="#ga92c62bf727779c6d7395809084f9e4dc">jsocketpp::Socket::getRemoteSocketAddress</a></div><div class="ttdeci">std::string getRemoteSocketAddress(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Get the connected peer&#39;s socket address as a formatted string.</div><div class="ttdef"><b>Definition</b> Socket.cpp:428</div></div>
+<div class="ttc" id="agroup__tcp_html_ga92c62bf727779c6d7395809084f9e4dc"><div class="ttname"><a href="#ga92c62bf727779c6d7395809084f9e4dc">jsocketpp::Socket::getRemoteSocketAddress</a></div><div class="ttdeci">std::string getRemoteSocketAddress(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Get the connected peer&#39;s socket address as a formatted string.</div><div class="ttdef"><b>Definition</b> Socket.cpp:413</div></div>
 </div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

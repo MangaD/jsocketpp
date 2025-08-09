@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e":[4,0,0,17,2],
+"namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a7a1a5f3e79fdc91edf2f5ead9d66abb4":[4,0,0,17,0],
 "namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931":[4,0,0,20],
 "namespacejsocketpp.html#a18428d088b7f3b2e55efe9adc49e10a9":[4,0,0,31],
 "namespacejsocketpp.html#a1d0357025eb782be52907801696556ca":[4,0,0,34],
@@ -16,7 +18,7 @@ var NAVTREEINDEX2 =
 "namespacejsocketpp.html#aef7428a3f4d80452442ecf3edfdbc89a":[4,0,0,29],
 "namespacejsocketpp.html#af86a15acff146a3ea52fb1c09a598575":[4,0,0,16],
 "namespacejsocketpp_1_1internal.html":[3,1,1,0],
-"namespacejsocketpp_1_1internal.html#a9ec0f69551a2510b87db8ea21042ea42":[4,0,0,0,4],
+"namespacejsocketpp_1_1internal.html#a9ec0f69551a2510b87db8ea21042ea42":[4,0,0,0,5],
 "namespacejsocketpp_1_1net.html":[3,1,0,0],
 "namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5":[4,0,0,1,2],
 "namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a":[4,0,0,1,3],

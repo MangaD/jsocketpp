@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"group__socketopts.html#ga05c3ae5067a7d83965249d00c5d564c3":[3,1,6,30],
+"group__socketopts.html#ga1193748a866e07a7f25e97a0640ad8dd":[3,1,6,3],
 "group__socketopts.html#ga15ba6d555b0f3b7809c746f827398c5e":[3,1,6,13],
 "group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b":[3,1,6,27],
 "group__socketopts.html#ga1bef2499ed5c13367dc73752484298c0":[3,1,6,15],
@@ -247,7 +249,5 @@ var NAVTREEINDEX1 =
 "namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c":[4,0,0,19],
 "namespacejsocketpp.html#a09423d4d9f10bd09813732010662ee43":[4,0,0,26],
 "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174":[4,0,0,17],
-"namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6":[4,0,0,17,1],
-"namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e":[4,0,0,17,2],
-"namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a7a1a5f3e79fdc91edf2f5ead9d66abb4":[4,0,0,17,0]
+"namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6":[4,0,0,17,1]
 };

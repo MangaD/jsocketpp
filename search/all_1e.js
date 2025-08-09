@@ -104,12 +104,13 @@ var searchData=
   ['true_101',['🌐 Local Binding Parameters (used only if &lt;span class=&quot;tt&quot;&gt;autoBind == true&lt;/span&gt;)',['../group__tcp.html#autotoc_md829',1,'']]],
   ['true_20matters_102',['When &lt;span class=&quot;tt&quot;&gt;true&lt;/span&gt; matters',['../group__socketopts.html#autotoc_md806',1,'']]],
   ['tryaccept_103',['tryAccept',['../group__tcp.html#ga6eff2e5c775318cfd2813ee72e716571',1,'jsocketpp::ServerSocket::tryAccept(std::optional&lt; std::size_t &gt; recvBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; sendBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; internalBufferSize=std::nullopt, int soRecvTimeoutMillis=-1, int soSendTimeoutMillis=-1, bool tcpNoDelay=true, bool keepAlive=false, bool nonBlocking=false) const'],['../group__tcp.html#ga93a186b3fcb925c3a6c30f1c5d5bf8a8',1,'jsocketpp::ServerSocket::tryAccept(int timeoutMillis, std::optional&lt; std::size_t &gt; recvBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; sendBufferSize=std::nullopt, std::optional&lt; std::size_t &gt; internalBufferSize=std::nullopt, int soRecvTimeoutMillis=-1, int soSendTimeoutMillis=-1, bool tcpNoDelay=true, bool keepAlive=false, bool nonBlocking=false) const']]],
-  ['type_104',['Type',['../group__socketopts.html#autotoc_md1122',1,'🌍 Applicability by Socket Type'],['../group__socketopts.html#autotoc_md1131',1,'🌍 Applicability by Socket Type'],['../group__socket-options.html#autotoc_md230',1,'Common Options by Socket Type']]],
-  ['types_105',['Types',['../group__socketopts.html#autotoc_md1078',1,'📦 Applicable Socket Types'],['../group__underlying__socket__api.html#autotoc_md326',1,'2.3 Socket Types'],['../group__sockets__theory.html#autotoc_md293',1,'2.5. Comparison Table: Socket Types'],['../group__core.html',1,'Core Utilities and Types'],['../group__tcp.html#autotoc_md875',1,'Supported Types']]],
-  ['types_20and_20platform_20apis_106',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
-  ['types_20of_20sockets_20in_20depth_107',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md287',1,'']]],
-  ['types_20work_108',['2.6. Under the Hood: How Socket Types Work',['../group__sockets__theory.html#autotoc_md295',1,'']]],
-  ['typical_20usage_109',['Typical Usage',['../classjsocketpp_1_1ServerSocket.html#autotoc_md711',1,'']]],
-  ['typical_20usage_20example_110',['Typical Usage Example',['../classjsocketpp_1_1Socket.html#autotoc_md808',1,'']]],
-  ['typical_20use_20cases_111',['🧰 Typical Use Cases',['../index.html#autotoc_md391',1,'']]]
+  ['tryclosenoexcept_104',['tryCloseNoexcept',['../group__internal.html#ga311f6b46f1941a20ab7e389787fc3bea',1,'jsocketpp::internal']]],
+  ['type_105',['Type',['../group__socketopts.html#autotoc_md1122',1,'🌍 Applicability by Socket Type'],['../group__socketopts.html#autotoc_md1131',1,'🌍 Applicability by Socket Type'],['../group__socket-options.html#autotoc_md230',1,'Common Options by Socket Type']]],
+  ['types_106',['Types',['../group__socketopts.html#autotoc_md1078',1,'📦 Applicable Socket Types'],['../group__underlying__socket__api.html#autotoc_md326',1,'2.3 Socket Types'],['../group__sockets__theory.html#autotoc_md293',1,'2.5. Comparison Table: Socket Types'],['../group__core.html',1,'Core Utilities and Types'],['../group__tcp.html#autotoc_md875',1,'Supported Types']]],
+  ['types_20and_20platform_20apis_107',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
+  ['types_20of_20sockets_20in_20depth_108',['2. Types of Sockets (In-Depth)',['../group__sockets__theory.html#autotoc_md287',1,'']]],
+  ['types_20work_109',['2.6. Under the Hood: How Socket Types Work',['../group__sockets__theory.html#autotoc_md295',1,'']]],
+  ['typical_20usage_110',['Typical Usage',['../classjsocketpp_1_1ServerSocket.html#autotoc_md711',1,'']]],
+  ['typical_20usage_20example_111',['Typical Usage Example',['../classjsocketpp_1_1Socket.html#autotoc_md808',1,'']]],
+  ['typical_20use_20cases_112',['🧰 Typical Use Cases',['../index.html#autotoc_md391',1,'']]]
 ];

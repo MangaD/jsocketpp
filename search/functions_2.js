@@ -6,7 +6,8 @@ var searchData=
   ['cleanupsockets_3',['CleanupSockets',['../namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c',1,'jsocketpp']]],
   ['clear_4',['clear',['../classjsocketpp_1_1DatagramPacket.html#a7853459de9f4e83363ed341bb465930a',1,'jsocketpp::DatagramPacket']]],
   ['close_5',['close',['../group__udp.html#ga9d0a9582b3a2a72bf62f182dbc33c352',1,'jsocketpp::DatagramSocket::close()'],['../group__tcp.html#ga0245d40096ca089255c67303eebf17e6',1,'jsocketpp::ServerSocket::close()'],['../group__tcp.html#ga75ee749264ccbcfc4dfbf5442e55dcb8',1,'jsocketpp::Socket::close()'],['../classjsocketpp_1_1UnixSocket.html#a3f87192fe9d9c81a3d78e007bfc40179',1,'jsocketpp::UnixSocket::close()']]],
-  ['closesocket_6',['CloseSocket',['../namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931',1,'jsocketpp']]],
-  ['connect_7',['connect',['../group__udp.html#ga5b12269efa5bc3a56ec53ea1fed9e468',1,'jsocketpp::DatagramSocket::connect()'],['../group__tcp.html#ga93cc325113abb7433288338ca3facde1',1,'jsocketpp::Socket::connect()'],['../classjsocketpp_1_1UnixSocket.html#a6a5359f3b15c37556b8e2cd558760603',1,'jsocketpp::UnixSocket::connect()']]],
-  ['convertipv4mappedipv6toipv4_8',['convertIPv4MappedIPv6ToIPv4',['../group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d',1,'jsocketpp']]]
+  ['closeorthrow_6',['closeOrThrow',['../group__internal.html#gab3b8ac088a7936657681c6de9a4400e1',1,'jsocketpp::internal']]],
+  ['closesocket_7',['CloseSocket',['../namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931',1,'jsocketpp']]],
+  ['connect_8',['connect',['../group__udp.html#ga5b12269efa5bc3a56ec53ea1fed9e468',1,'jsocketpp::DatagramSocket::connect()'],['../group__tcp.html#ga93cc325113abb7433288338ca3facde1',1,'jsocketpp::Socket::connect()'],['../classjsocketpp_1_1UnixSocket.html#a6a5359f3b15c37556b8e2cd558760603',1,'jsocketpp::UnixSocket::connect()']]],
+  ['convertipv4mappedipv6toipv4_9',['convertIPv4MappedIPv6ToIPv4',['../group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d',1,'jsocketpp']]]
 ];

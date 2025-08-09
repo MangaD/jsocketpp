@@ -134,6 +134,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga8826c90e1bb9e0023b75940ff4cd72f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an entire datagram to a connected peer using <span class="tt">send()</span>.  <br /></td></tr>
 <tr class="memitem:ga434728a067f6d58ea22b6d9c53824cd3" id="r_ga434728a067f6d58ea22b6d9c53824cd3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga434728a067f6d58ea22b6d9c53824cd3">jsocketpp::internal::sendExactTo</a> (<a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> fd, const void *data, std::size_t size, const sockaddr *addr, socklen_t addrLen)</td></tr>
 <tr class="memdesc:ga434728a067f6d58ea22b6d9c53824cd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an entire datagram to a specific destination using <span class="tt">sendto()</span>.  <br /></td></tr>
+<tr class="memitem:ga311f6b46f1941a20ab7e389787fc3bea" id="r_ga311f6b46f1941a20ab7e389787fc3bea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga311f6b46f1941a20ab7e389787fc3bea">jsocketpp::internal::tryCloseNoexcept</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> fd) noexcept</td></tr>
+<tr class="memdesc:ga311f6b46f1941a20ab7e389787fc3bea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to close a socket descriptor without throwing exceptions.  <br /></td></tr>
+<tr class="memitem:gab3b8ac088a7936657681c6de9a4400e1" id="r_gab3b8ac088a7936657681c6de9a4400e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab3b8ac088a7936657681c6de9a4400e1">jsocketpp::internal::closeOrThrow</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> fd)</td></tr>
+<tr class="memdesc:gab3b8ac088a7936657681c6de9a4400e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes a socket descriptor and throws on failure.  <br /></td></tr>
 <tr class="memitem:ga606aec57de9374b5b0fc69f37504fedd" id="r_ga606aec57de9374b5b0fc69f37504fedd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga606aec57de9374b5b0fc69f37504fedd">jsocketpp::internal::ScopedBlockingMode::ScopedBlockingMode</a> (const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a> sock, bool temporaryNonBlocking)</td></tr>
 <tr class="memdesc:ga606aec57de9374b5b0fc69f37504fedd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <span class="tt"><a class="el" href="classjsocketpp_1_1internal_1_1ScopedBlockingMode.html" title="RAII helper for temporarily overriding a socket&#39;s blocking mode.">ScopedBlockingMode</a></span> that temporarily overrides the socket's blocking mode.  <br /></td></tr>
 <tr class="memitem:ga413d5e88aaee47a98645a9760884bec0" id="r_ga413d5e88aaee47a98645a9760884bec0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga413d5e88aaee47a98645a9760884bec0">jsocketpp::internal::ScopedBlockingMode::~ScopedBlockingMode</a> ()</td></tr>
@@ -175,6 +179,56 @@ freeaddrinfo() </dd></dl>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="gab3b8ac088a7936657681c6de9a4400e1" name="gab3b8ac088a7936657681c6de9a4400e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab3b8ac088a7936657681c6de9a4400e1">&#9670;&#160;</a></span>closeOrThrow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jsocketpp::internal::closeOrThrow </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a></td>          <td class="paramname"><span class="paramname"><em>fd</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Closes a socket descriptor and throws on failure. </p>
+<p>This helper attempts to close the specified socket descriptor using the platform‐specific <span class="tt"><a class="el" href="namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931">CloseSocket()</a></span> function. If the descriptor is invalid (<span class="tt">INVALID_SOCKET</span>), the function returns immediately without error.</p>
+<p>If <span class="tt"><a class="el" href="namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931">CloseSocket()</a></span> fails, the function retrieves the platform error code via <span class="tt"><a class="el" href="namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad">GetSocketError()</a></span> and throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> containing both the numeric error and a descriptive message produced by <span class="tt">SocketErrorMessageWrap(error)</span>.</p>
+<p>This function is intended for use in public <span class="tt">close()</span> methods or other contexts where socket closure errors must be explicitly reported to the caller.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">fd</td><td>The platform‐specific socket descriptor to close. If set to <span class="tt">INVALID_SOCKET</span>, no action is taken.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If closing the socket fails, with the platform error code and message.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This function may throw. For destructors or cleanup routines where exceptions are not allowed, use <span class="tt"><a class="el" href="#ga311f6b46f1941a20ab7e389787fc3bea" title="Attempts to close a socket descriptor without throwing exceptions.">tryCloseNoexcept()</a></span> instead.</dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Example: throwing close in a public API</span></div>
+<div class="line"><span class="keywordtype">void</span> MySocket::close() {</div>
+<div class="line">    <a class="code hl_function" href="#gab3b8ac088a7936657681c6de9a4400e1">closeOrThrow</a>(_sockFd);</div>
+<div class="line">    _sockFd = <a class="code hl_variable" href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">INVALID_SOCKET</a>;</div>
+<div class="line">}</div>
+<div class="ttc" id="agroup__internal_html_gab3b8ac088a7936657681c6de9a4400e1"><div class="ttname"><a href="#gab3b8ac088a7936657681c6de9a4400e1">jsocketpp::internal::closeOrThrow</a></div><div class="ttdeci">void closeOrThrow(const SOCKET fd)</div><div class="ttdoc">Closes a socket descriptor and throws on failure.</div><div class="ttdef"><b>Definition</b> common.hpp:1095</div></div>
+<div class="ttc" id="anamespacejsocketpp_html_a3ddf4938a63ed33a5e2f7d2625cb4405"><div class="ttname"><a href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">jsocketpp::INVALID_SOCKET</a></div><div class="ttdeci">constexpr SOCKET INVALID_SOCKET</div><div class="ttdef"><b>Definition</b> common.hpp:257</div></div>
+</div><!-- fragment --> 
+</div>
+</div>
 <a id="ga19ca69ef83631dcf9e59205de179fbde" name="ga19ca69ef83631dcf9e59205de179fbde"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga19ca69ef83631dcf9e59205de179fbde">&#9670;&#160;</a></span>getBoundLocalIp()</h2>
 
@@ -401,7 +455,6 @@ Example Usage</h3>
 <div class="line">}</div>
 <div class="ttc" id="agroup__internal_html_gab7cbd90f4b6d2e5f506de1b7fd5c6331"><div class="ttname"><a href="#gab7cbd90f4b6d2e5f506de1b7fd5c6331">jsocketpp::internal::resolveAddress</a></div><div class="ttdeci">AddrinfoPtr resolveAddress(const std::string_view host, const Port port, const int family, const int socktype, const int protocol, const int flags=0)</div><div class="ttdoc">Resolves a hostname and port into a list of usable socket address structures.</div><div class="ttdef"><b>Definition</b> common.hpp:798</div></div>
 <div class="ttc" id="anamespacejsocketpp_1_1internal_html"><div class="ttname"><a href="namespacejsocketpp_1_1internal.html">jsocketpp::internal</a></div><div class="ttdoc">Implementation-only utilities and platform abstractions for jsocketpp.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:52</div></div>
-<div class="ttc" id="anamespacejsocketpp_html_a3ddf4938a63ed33a5e2f7d2625cb4405"><div class="ttname"><a href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">jsocketpp::INVALID_SOCKET</a></div><div class="ttdeci">constexpr SOCKET INVALID_SOCKET</div><div class="ttdef"><b>Definition</b> common.hpp:257</div></div>
 </div><!-- fragment --><hr  />
 <h3 class="doxsection"><a class="anchor" id="autotoc_md500"></a>
 Notes</h3>
@@ -809,6 +862,50 @@ WSABUF </dd>
 <dd>
 <a class="el" href="#gae140ce724d1cfc733f3c2dbccf0cf60b" title="Convert a raw array of BufferView elements into a WSABUF array for use with Windows socket APIs.">toWSABUF(const BufferView*, std::size_t)</a> </dd></dl>
 
+</div>
+</div>
+<a id="ga311f6b46f1941a20ab7e389787fc3bea" name="ga311f6b46f1941a20ab7e389787fc3bea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga311f6b46f1941a20ab7e389787fc3bea">&#9670;&#160;</a></span>tryCloseNoexcept()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jsocketpp::internal::tryCloseNoexcept </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a></td>          <td class="paramname"><span class="paramname"><em>fd</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Attempts to close a socket descriptor without throwing exceptions. </p>
+<p>This helper performs a best-effort close of the given socket descriptor. It is specifically intended for use in destructors and cleanup routines where exception safety is critical and socket closure failures must not propagate.</p>
+<p>If the descriptor is already invalid (<span class="tt">INVALID_SOCKET</span>), the function returns immediately with <span class="tt">true</span>.</p>
+<p>On a valid descriptor, the underlying platform‐specific <span class="tt"><a class="el" href="namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931">CloseSocket()</a></span> is called. If it succeeds, the function returns <span class="tt">true</span>. If it fails, the error is silently ignored (per project close policy) and <span class="tt">false</span> is returned. Optional logging or diagnostics may be added at the marked location in the implementation if desired.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">fd</td><td>The platform‐specific socket descriptor to close. If set to <span class="tt">INVALID_SOCKET</span>, no action is taken. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if the socket was already invalid or successfully closed; <span class="tt">false</span> if closing failed (error is ignored).</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function never throws. For public <span class="tt">close()</span> methods where errors must be reported, use a throwing variant such as <span class="tt"><a class="el" href="#gab3b8ac088a7936657681c6de9a4400e1" title="Closes a socket descriptor and throws on failure.">closeOrThrow()</a></span> instead.</dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Example: safely closing in a destructor</span></div>
+<div class="line">~SocketWrapper() noexcept {</div>
+<div class="line">    <a class="code hl_function" href="#ga311f6b46f1941a20ab7e389787fc3bea">tryCloseNoexcept</a>(_sockFd);</div>
+<div class="line">    _sockFd = <a class="code hl_variable" href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">INVALID_SOCKET</a>;</div>
+<div class="line">}</div>
+<div class="ttc" id="agroup__internal_html_ga311f6b46f1941a20ab7e389787fc3bea"><div class="ttname"><a href="#ga311f6b46f1941a20ab7e389787fc3bea">jsocketpp::internal::tryCloseNoexcept</a></div><div class="ttdeci">bool tryCloseNoexcept(const SOCKET fd) noexcept</div><div class="ttdoc">Attempts to close a socket descriptor without throwing exceptions.</div><div class="ttdef"><b>Definition</b> common.hpp:1049</div></div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="ga413d5e88aaee47a98645a9760884bec0" name="ga413d5e88aaee47a98645a9760884bec0"></a>

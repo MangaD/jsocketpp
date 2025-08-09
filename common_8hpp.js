@@ -12,6 +12,7 @@ var common_8hpp =
     ] ],
     [ "jsocketpp::addressToString", "group__utils.html#ga8501a7d31710bd7b0ef862f97ee318da", null ],
     [ "jsocketpp::CleanupSockets", "namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c", null ],
+    [ "jsocketpp::internal::closeOrThrow", "group__internal.html#gab3b8ac088a7936657681c6de9a4400e1", null ],
     [ "jsocketpp::CloseSocket", "namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931", null ],
     [ "jsocketpp::convertIPv4MappedIPv6ToIPv4", "group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d", null ],
     [ "jsocketpp::net::fromNetwork", "namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37", null ],
@@ -34,6 +35,7 @@ var common_8hpp =
     [ "jsocketpp::stringToAddress", "group__utils.html#ga784e6ca4a095b32beb18d2378179cf0b", null ],
     [ "jsocketpp::net::toNetwork", "namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5", null ],
     [ "jsocketpp::net::toNetwork", "namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a", null ],
+    [ "jsocketpp::internal::tryCloseNoexcept", "group__internal.html#ga311f6b46f1941a20ab7e389787fc3bea", null ],
     [ "jsocketpp::DefaultBufferSize", "group__core.html#gafa19c7cbeb622b106835021215b8d6b7", null ],
     [ "jsocketpp::INVALID_SOCKET", "namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405", null ],
     [ "jsocketpp::SOCKET_ERROR", "namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2", null ]
