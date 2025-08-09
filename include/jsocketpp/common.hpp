@@ -1011,4 +1011,96 @@ void sendExact(SOCKET fd, const void* data, std::size_t size);
  */
 void sendExactTo(SOCKET fd, const void* data, std::size_t size, const sockaddr* addr, socklen_t addrLen);
 
+/**
+ * @brief Attempts to close a socket descriptor without throwing exceptions.
+ * @ingroup internal
+ *
+ * This helper performs a best-effort close of the given socket descriptor.
+ * It is specifically intended for use in destructors and cleanup routines
+ * where exception safety is critical and socket closure failures must not
+ * propagate.
+ *
+ * If the descriptor is already invalid (`INVALID_SOCKET`), the function
+ * returns immediately with `true`.
+ *
+ * On a valid descriptor, the underlying platform‐specific `CloseSocket()`
+ * is called. If it succeeds, the function returns `true`. If it fails,
+ * the error is silently ignored (per project close policy) and `false`
+ * is returned. Optional logging or diagnostics may be added at the marked
+ * location in the implementation if desired.
+ *
+ * @param[in] fd The platform‐specific socket descriptor to close. If set
+ *               to `INVALID_SOCKET`, no action is taken.
+ * @return `true` if the socket was already invalid or successfully closed;
+ *         `false` if closing failed (error is ignored).
+ *
+ * @note This function never throws. For public `close()` methods where
+ *       errors must be reported, use a throwing variant such as
+ *       `closeOrThrow()` instead.
+ *
+ * @code
+ * // Example: safely closing in a destructor
+ * ~SocketWrapper() noexcept {
+ *     tryCloseNoexcept(_sockFd);
+ *     _sockFd = INVALID_SOCKET;
+ * }
+ * @endcode
+ */
+inline bool tryCloseNoexcept(const SOCKET fd) noexcept
+{
+    if (fd == INVALID_SOCKET)
+        return true;
+    if (CloseSocket(fd) != 0)
+    {
+        // Optional: hook for logging, left silent per policy
+        return false;
+    }
+    return true;
+}
+
+/**
+ * @brief Closes a socket descriptor and throws on failure.
+ * @ingroup internal
+ *
+ * This helper attempts to close the specified socket descriptor using the
+ * platform‐specific `CloseSocket()` function. If the descriptor is invalid
+ * (`INVALID_SOCKET`), the function returns immediately without error.
+ *
+ * If `CloseSocket()` fails, the function retrieves the platform error code
+ * via `GetSocketError()` and throws a `SocketException` containing both
+ * the numeric error and a descriptive message produced by
+ * `SocketErrorMessageWrap(error)`.
+ *
+ * This function is intended for use in public `close()` methods or other
+ * contexts where socket closure errors must be explicitly reported to the
+ * caller.
+ *
+ * @param[in] fd The platform‐specific socket descriptor to close.
+ *               If set to `INVALID_SOCKET`, no action is taken.
+ *
+ * @throws SocketException If closing the socket fails, with the platform
+ *         error code and message.
+ *
+ * @note This function may throw. For destructors or cleanup routines
+ *       where exceptions are not allowed, use `tryCloseNoexcept()` instead.
+ *
+ * @code
+ * // Example: throwing close in a public API
+ * void MySocket::close() {
+ *     closeOrThrow(_sockFd);
+ *     _sockFd = INVALID_SOCKET;
+ * }
+ * @endcode
+ */
+inline void closeOrThrow(const SOCKET fd)
+{
+    if (fd == INVALID_SOCKET)
+        return;
+    if (CloseSocket(fd) != 0)
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessageWrap(error));
+    }
+}
+
 } // namespace jsocketpp::internal

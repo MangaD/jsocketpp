@@ -118,16 +118,8 @@ ServerSocket::ServerSocket(const Port port, const std::string_view localAddress,
 
 void ServerSocket::cleanup()
 {
-    if (getSocketFd() != INVALID_SOCKET)
-    {
-        CloseSocket(getSocketFd());
-        setSocketFd(INVALID_SOCKET);
-
-        // CloseSocket error is ignored.
-        // TODO: Consider adding an internal flag, nested exception, or user-configurable error handler
-        //       to report errors in future versions.
-    }
-
+    internal::tryCloseNoexcept(getSocketFd());
+    setSocketFd(INVALID_SOCKET);
     _srvAddrInfo.reset();
     _selectedAddrInfo = nullptr;
     _isBound = false;
@@ -218,16 +210,8 @@ ServerSocket::~ServerSocket() noexcept
 
 void ServerSocket::close()
 {
-    if (getSocketFd() != INVALID_SOCKET)
-    {
-        if (CloseSocket(getSocketFd()))
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
-        }
-
-        setSocketFd(INVALID_SOCKET);
-    }
+    internal::closeOrThrow(getSocketFd());
+    setSocketFd(INVALID_SOCKET);
     _srvAddrInfo.reset();
     _selectedAddrInfo = nullptr;
     _isBound = false;

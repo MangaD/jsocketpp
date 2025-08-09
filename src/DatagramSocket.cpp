@@ -151,15 +151,8 @@ DatagramSocket::DatagramSocket(const Port localPort, const std::string_view loca
 
 void DatagramSocket::cleanup()
 {
-    if (getSocketFd() != INVALID_SOCKET)
-    {
-        CloseSocket(getSocketFd());
-        setSocketFd(INVALID_SOCKET);
-
-        // CloseSocket error is ignored.
-        // TODO: Consider adding an internal flag, nested exception, or user-configurable error handler
-        //       to report errors in future versions.
-    }
+    internal::tryCloseNoexcept(getSocketFd());
+    setSocketFd(INVALID_SOCKET);
     _isBound = false;
     _isConnected = false;
 }
@@ -192,16 +185,8 @@ DatagramSocket::~DatagramSocket() noexcept
 
 void DatagramSocket::close()
 {
-    if (getSocketFd() != INVALID_SOCKET)
-    {
-        if (CloseSocket(getSocketFd()) != 0)
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
-        }
-
-        setSocketFd(INVALID_SOCKET);
-    }
+    internal::closeOrThrow(getSocketFd());
+    setSocketFd(INVALID_SOCKET);
     _isBound = false;
     _isConnected = false;
 }
