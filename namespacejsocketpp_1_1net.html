@@ -113,14 +113,14 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Endianness utilities for network byte order conversion. </p>
 <p>The <span class="tt"><a class="el" href="namespacejsocketpp_1_1net.html" title="Endianness utilities for network byte order conversion.">jsocketpp::net</a></span> namespace provides a collection of lightweight, header-only functions for safely converting between host and network byte order for integral types.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md477"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md537"></a>
 Purpose</h3>
 <ul>
 <li>Ensures portable binary encoding across different CPU architectures</li>
 <li>Enables interoperability with other systems that use big-endian formats</li>
 <li>Matches standard socket API behavior (e.g., htons/ntohl)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md478"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md538"></a>
 Usage Example</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp_1_1net.html">jsocketpp::net</a>;</div>
 <div class="line"> </div>
@@ -134,7 +134,7 @@ Usage Example</h3>
 <li>Windows: <span class="tt">htons</span>, <span class="tt">ntohl</span>, etc. (from winsock2.h)</li>
 <li>POSIX: <span class="tt">htons</span>, <span class="tt">ntohl</span>, etc. (from arpa/inet.h)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md479"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md539"></a>
 Recommended Use</h3>
 <ul>
 <li>Apply to any integral header field before transmission over the wire</li>

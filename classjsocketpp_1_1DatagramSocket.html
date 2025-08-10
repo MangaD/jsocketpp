@@ -299,10 +299,10 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Cross-platform UDP socket class with Java-style interface. </p>
 <p>The <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> class provides a convenient, cross-platform abstraction for sending and receiving UDP datagrams, inspired by the Java API. It supports both IPv4 and IPv6, and works on Windows and Linux.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md523"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md583"></a>
 What is UDP?</h2>
 <p>UDP (User Datagram Protocol) is a lightweight, connectionless protocol for sending packets over the network. Unlike TCP, UDP does <b>not</b> guarantee delivery, ordering, or duplicate protection—packets may be lost, arrive out of order, or duplicated. However, UDP is fast and simple, and widely used for real-time applications (such as online games, video streaming, and VoIP).</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md524"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md584"></a>
 Key Features</h2>
 <ul>
 <li><b>Connectionless and connected modes:</b> You can send datagrams to any address/port, or "connect" the socket to a default destination for simpler sending/receiving.</li>
@@ -311,7 +311,7 @@ Key Features</h2>
 <li><b>Timeouts and non-blocking mode:</b> Set timeouts and switch between blocking/non-blocking operations.</li>
 <li><b>Java-style interface:</b> Familiar to those who have used Java networking.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md525"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md585"></a>
 Example: Simple UDP Echo Server and Client</h2>
 <div class="fragment"><div class="line"><span class="comment">// --- Server ---</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="DatagramSocket_8hpp.html">jsocketpp/DatagramSocket.hpp</a>&gt;</span></div>
@@ -346,7 +346,7 @@ Example: Simple UDP Echo Server and Client</h2>
 <div class="line">}</div>
 <div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html_a58152e567e2d41ee6d612355ac0eb548"><div class="ttname"><a href="#a58152e567e2d41ee6d612355ac0eb548">jsocketpp::DatagramSocket::read</a></div><div class="ttdeci">size_t read(DatagramPacket &amp;packet, bool resizeBuffer=true) const</div><div class="ttdoc">Receives a UDP datagram and fills the provided DatagramPacket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:445</div></div>
 <div class="ttc" id="agroup__udp_html_ga87c837cd891ddd8b4daeacc61e1326df"><div class="ttname"><a href="group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df">jsocketpp::DatagramSocket::write</a></div><div class="ttdeci">void write(const T &amp;value)</div><div class="ttdoc">Writes a trivially copyable object of type T to the connected remote peer.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:1019</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md526"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md586"></a>
 Notes</h2>
 <ul>
 <li>Not thread-safe. Use each <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> instance from only one thread at a time.</li>

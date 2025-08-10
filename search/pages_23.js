@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['↔_20jsocketpp_20class_20mapping_0',['🔄 Java ↔ jsocketpp Class Mapping',['../index.html#autotoc_md421',1,'']]]
+  ['↔_20jsocketpp_20class_20mapping_0',['🔄 Java ↔ jsocketpp Class Mapping',['../index.html#autotoc_md481',1,'']]]
 ];

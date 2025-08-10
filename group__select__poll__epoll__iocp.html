@@ -98,14 +98,14 @@ $(function(){initNavTree('group__select__poll__epoll__iocp.html','',''); });
 <p><a href="https://creativecommons.org/publicdomain/zero/1.0/"><img src="https://licensebuttons.net/p/zero/1.0/88x31.png" alt="CC0" class="inline"/></a></p>
 <p><em>Disclaimer: ChatGPT generated document</em>.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md206"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md266"></a>
 1. <b>Why <span class="tt">select</span> is Used</b></h2>
 <ul>
 <li><b>Portability:</b> <span class="tt">select</span> is available on both POSIX (Linux, macOS, BSD, etc.) and Windows (as <span class="tt">select()</span> in Winsock), making it the lowest common denominator for cross-platform socket libraries.</li>
 <li><b>Simple APIs:</b> Easy to use for a small number of sockets.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md208"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md268"></a>
 2. <b>Drawbacks of <span class="tt">select</span></b></h2>
 <ul>
 <li><b>Limited file descriptors:</b> On many systems, <span class="tt">select</span> is limited to 1024 file descriptors (FD_SETSIZE), which restricts scalability for servers handling many connections.</li>
@@ -113,7 +113,7 @@ $(function(){initNavTree('group__select__poll__epoll__iocp.html','',''); });
 <li><b>Inefficiency:</b> Rebuilding the FD sets on every call can be expensive for many descriptors.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md210"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md270"></a>
 3. <b>Advantages of <span class="tt">poll</span></b></h2>
 <ul>
 <li><b>No hard FD limit:</b> <span class="tt">poll</span> works with arbitrary file descriptor values and isn’t limited by FD_SETSIZE.</li>
@@ -121,7 +121,7 @@ $(function(){initNavTree('group__select__poll__epoll__iocp.html','',''); });
 <li><b>Availability:</b> Available on almost all POSIX systems (not native on Windows).</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md212"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md272"></a>
 4. <b>Advantages of <span class="tt">epoll</span></b></h2>
 <ul>
 <li><b>Scalability:</b> <span class="tt">epoll</span> (Linux only) is highly scalable, efficient for thousands of sockets (O(1) wakeups).</li>
@@ -129,13 +129,13 @@ $(function(){initNavTree('group__select__poll__epoll__iocp.html','',''); });
 <li><b>Event-driven servers:</b> The industry standard for high-performance Linux network servers.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md214"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md274"></a>
 5. <b>Windows Counterparts</b></h2>
 <ul>
 <li><b>WSAPoll:</b> Since Windows Vista, Winsock provides <span class="tt">WSAPoll</span> (similar to POSIX <span class="tt">poll</span>), but there is no native <span class="tt">epoll</span> equivalent. For high-performance on Windows, use I/O completion ports (IOCP).</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md216"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md276"></a>
 6. <b>Cross-Platform API Considerations</b></h2>
 <p>If your library’s goal is <b>simple, Java-like, cross-platform sockets</b>, here are the usual trade-offs:</p>
 <ul>
@@ -150,7 +150,7 @@ $(function(){initNavTree('group__select__poll__epoll__iocp.html','',''); });
 <li><b>Java NIO</b> does this via the <span class="tt">Selector</span> API, abstracting over the platform details.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md218"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md278"></a>
 7. <b>Practical Recommendations</b></h2>
 <ul>
 <li><b>For most applications:</b> Using <span class="tt">select</span> (as you do now) is fine and maximizes portability.</li>
@@ -162,7 +162,7 @@ $(function(){initNavTree('group__select__poll__epoll__iocp.html','',''); });
 </li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md220"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md280"></a>
 8. <b>Summary Table</b></h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -177,7 +177,7 @@ $(function(){initNavTree('group__select__poll__epoll__iocp.html','',''); });
 <td class="markdownTableBodyNone">Simplicity  </td><td class="markdownTableBodyNone">Simple  </td><td class="markdownTableBodyNone">OK  </td><td class="markdownTableBodyNone">Advanced  </td><td class="markdownTableBodyNone">OK  </td><td class="markdownTableBodyNone">Advanced  </td></tr>
 </table>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md222"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md282"></a>
 9. <b>Conclusion / Advice</b></h2>
 <ul>
 <li><b>Keep select</b> for basic API and portability.</li>

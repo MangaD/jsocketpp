@@ -18,5 +18,6 @@ var searchData=
   ['sockets_3a_20so_5freuseaddr_20vs_20so_5fexclusiveaddruse_15',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],
   ['sockets_3a_20theory_20types_20and_20platform_20apis_16',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
   ['specific_20interfaces_17',['Understanding &lt;span class=&quot;tt&quot;&gt;bind()&lt;/span&gt;: Binding to All Interfaces vs Specific Interfaces',['../group__bind__interfaces.html',1,'']]],
-  ['states_18',['Understanding Socket States',['../group__socket__states.html',1,'']]]
+  ['states_18',['Understanding Socket States',['../group__socket__states.html',1,'']]],
+  ['support_19',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;WSAIoctl&lt;/span&gt;, and Related Functions: Commands, Use Cases, and Windows Support',['../group__ioctl__fcntl__ioctlsocket__guide.html',1,'']]]
 ];

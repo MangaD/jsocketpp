@@ -8,11 +8,13 @@ var searchData=
   ['and_20integration_20guide_5',['Unit Testing and Integration Guide',['../group__unit__tests.html',1,'']]],
   ['and_20listening_3a_20design_20patterns_20and_20best_20practices_6',['ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices',['../group__ServerSocket__Lifecycle.html',1,'']]],
   ['and_20platform_20apis_7',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
-  ['and_20types_8',['Core Utilities and Types',['../group__core.html',1,'']]],
-  ['and_20udp_20connections_9',['Understanding Socket Binding in TCP and UDP Connections',['../group__socket__binding.html',1,'']]],
-  ['and_20usage_20guide_10',['jsocketpp: Build, Test, and Usage Guide',['../group__BUILD__AND__USAGE.html',1,'']]],
-  ['api_11',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['apis_12',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
-  ['as_20alternatives_13',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
-  ['asynchronous_20i_20o_20operations_20does_20it_20make_20sense_20to_20provide_20poll_20and_20epoll_20as_20alternatives_14',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]]
+  ['and_20related_20functions_3a_20commands_20use_20cases_20and_20windows_20support_8',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;WSAIoctl&lt;/span&gt;, and Related Functions: Commands, Use Cases, and Windows Support',['../group__ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
+  ['and_20types_9',['Core Utilities and Types',['../group__core.html',1,'']]],
+  ['and_20udp_20connections_10',['Understanding Socket Binding in TCP and UDP Connections',['../group__socket__binding.html',1,'']]],
+  ['and_20usage_20guide_11',['jsocketpp: Build, Test, and Usage Guide',['../group__BUILD__AND__USAGE.html',1,'']]],
+  ['and_20windows_20support_12',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;WSAIoctl&lt;/span&gt;, and Related Functions: Commands, Use Cases, and Windows Support',['../group__ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
+  ['api_13',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
+  ['apis_14',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
+  ['as_20alternatives_15',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
+  ['asynchronous_20i_20o_20operations_20does_20it_20make_20sense_20to_20provide_20poll_20and_20epoll_20as_20alternatives_16',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]]
 ];
