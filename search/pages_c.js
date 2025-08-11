@@ -69,7 +69,7 @@ var searchData=
   ['conan_20friendly_66',['3. Make Your CMake Project Conan-Friendly',['../group__conan__publish__guide.html#autotoc_md189',1,'']]],
   ['conan_20recipe_20conanfile_20py_67',['2. Conan Recipe (&lt;span class=&quot;tt&quot;&gt;conanfile.py&lt;/span&gt;)',['../group__conan__publish__guide.html#autotoc_md187',1,'']]],
   ['conanfile_20py_68',['2. Conan Recipe (&lt;span class=&quot;tt&quot;&gt;conanfile.py&lt;/span&gt;)',['../group__conan__publish__guide.html#autotoc_md187',1,'']]],
-  ['concepts_20you_20might_20not_20have_20mentioned_69',['Related Concepts You Might Not Have Mentioned',['../group__network__data__units.html#autotoc_md270',1,'']]],
+  ['concepts_69',['Related Concepts',['../group__network__data__units.html#autotoc_md270',1,'']]],
   ['conclusion_70',['Conclusion',['../group__address__reuse.html#autotoc_md129',1,'✅ Conclusion'],['../group__underlying__socket__api.html#autotoc_md413',1,'10. Conclusion'],['../group__underlying__socket__api.html#autotoc_md421',1,'8. Conclusion'],['../group__list__bsd__socket__functions.html#autotoc_md35',1,'Conclusion'],['../group__bind__interfaces.html#autotoc_md182',1,'Conclusion'],['../group__network__data__units.html#autotoc_md273',1,'Conclusion'],['../group__socket__library__comparison.html#autotoc_md334',1,'Conclusion']]],
   ['conclusion_20advice_71',['9. &lt;b&gt;Conclusion / Advice&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md292',1,'']]],
   ['conclusion_3a_72',['Conclusion:',['../group__unit__tests.html#autotoc_md437',1,'']]],

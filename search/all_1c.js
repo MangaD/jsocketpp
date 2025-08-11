@@ -46,7 +46,7 @@ var searchData=
   ['reduce_20latency_43',['Example: Disable Nagle’s algorithm to reduce latency',['../group__socketopts.html#autotoc_md1168',1,'']]],
   ['references_44',['References',['../group__address__reuse.html#autotoc_md127',1,'🔗 References'],['../group__sockets__theory.html#autotoc_md389',1,'9. References'],['../group__conan__publish__guide.html#autotoc_md202',1,'References'],['../group__vcpkg__publish__guide.html#autotoc_md456',1,'References']]],
   ['registry_45',['Registry',['../group__vcpkg__publish__guide.html#autotoc_md450',1,'5. Submit to the vcpkg Registry'],['../group__vcpkg__publish__guide.html',1,'Publishing &lt;tt&gt;jsocketpp&lt;/tt&gt; to the vcpkg Registry']]],
-  ['related_20concepts_20you_20might_20not_20have_20mentioned_46',['Related Concepts You Might Not Have Mentioned',['../group__network__data__units.html#autotoc_md270',1,'']]],
+  ['related_20concepts_46',['Related Concepts',['../group__network__data__units.html#autotoc_md270',1,'']]],
   ['related_20functions_47',['5. Related Functions',['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md254',1,'']]],
   ['related_20functions_3a_20commands_20use_20cases_20and_20windows_20support_48',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;WSAIoctl&lt;/span&gt;, and Related Functions: Commands, Use Cases, and Windows Support',['../group__ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
   ['relates_20to_20jsocketpp_49',['How This Relates to &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt;',['../group__socket__states.html#autotoc_md348',1,'']]],

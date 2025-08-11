@@ -28,7 +28,7 @@ var searchData=
   ['reduce_20latency_25',['Example: Disable Nagle’s algorithm to reduce latency',['../group__socketopts.html#autotoc_md1168',1,'']]],
   ['references_26',['References',['../group__address__reuse.html#autotoc_md127',1,'🔗 References'],['../group__sockets__theory.html#autotoc_md389',1,'9. References'],['../group__conan__publish__guide.html#autotoc_md202',1,'References'],['../group__vcpkg__publish__guide.html#autotoc_md456',1,'References']]],
   ['registry_27',['5. Submit to the vcpkg Registry',['../group__vcpkg__publish__guide.html#autotoc_md450',1,'']]],
-  ['related_20concepts_20you_20might_20not_20have_20mentioned_28',['Related Concepts You Might Not Have Mentioned',['../group__network__data__units.html#autotoc_md270',1,'']]],
+  ['related_20concepts_28',['Related Concepts',['../group__network__data__units.html#autotoc_md270',1,'']]],
   ['related_20functions_29',['5. Related Functions',['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md254',1,'']]],
   ['relates_20to_20jsocketpp_30',['How This Relates to &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt;',['../group__socket__states.html#autotoc_md348',1,'']]],
   ['reliable_20counterpart_20in_20tcp_31',['Segments: The Reliable Counterpart in TCP',['../group__network__data__units.html#autotoc_md268',1,'']]],
