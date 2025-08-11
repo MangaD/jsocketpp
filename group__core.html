@@ -130,7 +130,7 @@ Variables</h2></td></tr>
 <p>Internal types, platform abstractions, and utility functions used across the jsocketpp library. </p>
 <p>This group contains foundational components of the jsocketpp socket library, including common type aliases, byte-order conversion utilities, and cross-platform compatibility helpers.</p>
 <p>Components in this group are typically not used directly by application-level code, but are essential for internal implementation and protocol correctness.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md536"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md546"></a>
 Includes:</h3>
 <ul>
 <li><span class="tt"><a class="el" href="#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">jsocketpp::Port</a></span> – type alias for network ports</li>
@@ -190,7 +190,7 @@ Port </dd></dl>
 
 <p>Converts an IPv4-mapped IPv6 address to a pure IPv4 sockaddr_in. </p>
 <p>This function extracts the embedded IPv4 address from an IPv4-mapped IPv6 address. It preserves the port number and fills a fully valid <span class="tt">sockaddr_in</span>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md544"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md554"></a>
 Preconditions</h3>
 <ul>
 <li>The input must be an IPv4-mapped IPv6 address.</li>
@@ -266,7 +266,7 @@ Preconditions</h3>
 
 <p>Default internal buffer size (in bytes) for socket read operations. </p>
 <p>This constant defines the default size (4096 bytes / 4 KB) of the internal read buffer used across various socket classes in the library unless explicitly overridden.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md540"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md550"></a>
 Applies to</h3>
 <ul>
 <li><b>TCP client sockets</b> (<span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>) when constructed without a custom <span class="tt">internalBufferSize</span></li>
@@ -274,21 +274,21 @@ Applies to</h3>
 <li><b>UDP sockets</b> (<span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>) when no explicit <span class="tt">bufferSize</span> is passed</li>
 <li>May also serve as a guideline for other buffer sizes (e.g., send/receive buffers)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md541"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md551"></a>
 Rationale</h3>
 <ul>
 <li><b>Memory-efficient:</b> 4096 bytes aligns with the typical memory page size on most systems.</li>
 <li><b>Performance-optimized:</b> Large enough for common protocol messages (e.g., HTTP, DNS, WebSocket)</li>
 <li><b>Concurrency-friendly:</b> Balances throughput and memory usage across many simultaneous sockets.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md542"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md552"></a>
 Customization</h3>
 <p>Override this value by:</p><ul>
 <li>Passing a custom buffer size to socket constructors (e.g., <span class="tt">DatagramSocket(port, 8192)</span>)</li>
 <li>Calling <span class="tt">setInternalBufferSize()</span> after construction</li>
 <li>Tuning system-level buffers via <span class="tt">setReceiveBufferSize()</span> or <span class="tt">setSendBufferSize()</span></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md543"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md553"></a>
 When to Adjust</h3>
 <p>Increase if:</p><ul>
 <li>Your application transfers large datagrams or stream data (e.g., file uploads, media streams)</li>

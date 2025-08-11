@@ -97,14 +97,14 @@ $(function(){initNavTree('group__socket__states.html','',''); });
 <div class="contents">
 <p>Sockets are a fundamental building block of network programming. Whether you are writing a TCP server or client, understanding the various <b>states</b> a socket transitions through is essential for robust and efficient code. This guide explains the key socket states, why they matter, and their practical implications—particularly for developers using the <span class="tt">jsocketpp</span> library.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md327"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md337"></a>
 What is a Socket State?</h1>
 <p>A <b>socket state</b> describes the current lifecycle phase of a socket (network endpoint) as managed by the operating system. Each state reflects what operations the socket can perform and what system resources it is using.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md329"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md339"></a>
 TCP Socket Lifecycle</h1>
 <p>TCP is a connection-oriented protocol, so its sockets transition through well-defined states as they connect, communicate, and close. The states are defined by the <a href="https://tools.ietf.org/html/rfc793">TCP protocol specification (RFC 793)</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md330"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md340"></a>
 Main TCP Socket States</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -133,7 +133,7 @@ Main TCP Socket States</h2>
 <td class="markdownTableBodyNone"><b>TIME_WAIT</b>  </td><td class="markdownTableBodyNone">The socket is closed, but the OS waits before freeing resources to ensure all data is delivered.  </td><td class="markdownTableBodyNone">(Internal)  </td></tr>
 </table>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md332"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md342"></a>
 TCP State Transitions</h2>
 <p>Here’s a simplified diagram of the most common transitions:</p>
 <div class="fragment"><div class="line">Server:                   Client:</div>
@@ -156,7 +156,7 @@ TCP State Transitions</h2>
 <div class="line">   .</div>
 <div class="line">[CLOSED]</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md334"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md344"></a>
 What About UDP and UNIX Sockets?</h1>
 <p>UDP and UNIX domain sockets are connectionless, so they don’t follow the TCP state machine. Their states are simpler:</p>
 <ul>
@@ -166,7 +166,7 @@ What About UDP and UNIX Sockets?</h1>
 <li><b>CLOSED:</b> After <span class="tt">close()</span> is called or the object is destroyed.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md336"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md346"></a>
 Practical Implications</h1>
 <ul>
 <li><b>LISTEN state</b> is only for servers. Only after <span class="tt">listen()</span> can a socket accept clients.</li>
@@ -176,7 +176,7 @@ Practical Implications</h1>
 <li><b>UDP Sockets:</b> There’s no connection state, but the socket must be bound before receiving data. "Connecting" a UDP socket just sets a default destination for send/receive operations.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md338"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md348"></a>
 How This Relates to <span class="tt">jsocketpp</span></h1>
 <p>When using the <span class="tt">jsocketpp</span> library, you control these states via method calls:</p>
 <ul>
@@ -199,7 +199,7 @@ How This Relates to <span class="tt">jsocketpp</span></h1>
 </div><!-- fragment --></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md340"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md350"></a>
 More Resources</h1>
 <ul>
 <li><a href="https://beej.us/guide/bgnet/">Beej’s Guide to Network Programming</a></li>

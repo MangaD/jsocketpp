@@ -96,7 +96,7 @@ $(function(){initNavTree('group__socket-options.html','',''); });
 </div><!--header-->
 <div class="contents">
 <p>This document describes the various <b>socket options</b> supported by <span class="tt">jsocketpp</span>, how they relate to each socket type, and best practices for using them in your applications. It is intended as a practical reference for users and contributors.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md284"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md294"></a>
 Table of Contents</h1>
 <ul>
 <li>What Are Socket Options?</li>
@@ -115,17 +115,17 @@ Table of Contents</h1>
 <li>Further Reading</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md286"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md296"></a>
 What Are Socket Options?</h1>
 <p><b>Socket options</b> allow you to change the behavior of a socket at runtime, such as buffer sizes, address reuse, and special TCP or UDP features. They are configured using the <span class="tt">setsockopt()</span> and <span class="tt">getsockopt()</span> system calls, but <span class="tt">jsocketpp</span> provides convenient, type-safe, and well-documented wrappers.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md288"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md298"></a>
 Cross-Platform Support</h1>
 <p>jsocketpp aims to abstract away the differences between Linux, macOS, and Windows. Most options are available on all major platforms, but some are platform-specific. Where relevant, this is noted below.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md290"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md300"></a>
 Common Options by Socket Type</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md291"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md301"></a>
 1. Options for All Sockets</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -137,7 +137,7 @@ Common Options by Socket Type</h1>
 </table>
 <p>On some Unix systems, you may also find <span class="tt">SO_REUSEPORT</span> for advanced load balancing, but it is not universally available.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md293"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md303"></a>
 2. TCP Sockets (<span class="tt">Socket</span>, <span class="tt">ServerSocket</span>)</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -166,7 +166,7 @@ Common Options by Socket Type</h1>
 <td class="markdownTableBodyNone"><span class="tt">setTimeout(int)</span>  </td><td class="markdownTableBodyNone">Set socket timeouts (already in your API).  </td></tr>
 </table>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md295"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md305"></a>
 3. UDP Sockets (<span class="tt">DatagramSocket</span>, <span class="tt">MulticastSocket</span>)</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -188,7 +188,7 @@ Common Options by Socket Type</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">getReuseAddress() const</span>  </td><td class="markdownTableBodyNone">Query if address reuse is enabled.  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md296"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md306"></a>
 For Multicast:</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -207,7 +207,7 @@ For Multicast:</h3>
 <td class="markdownTableBodyNone"><span class="tt">getMulticastInterface() const</span>  </td><td class="markdownTableBodyNone">Query the multicast interface.  </td></tr>
 </table>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md298"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md308"></a>
 4. Unix Domain Sockets (<span class="tt">UnixSocket</span>)</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -228,7 +228,7 @@ For Multicast:</h3>
 <td class="markdownTableBodyNone"><span class="tt">setReuseAddress(bool)</span>  </td><td class="markdownTableBodyNone">Rarely used, but available.  </td></tr>
 </table>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md300"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md310"></a>
 5. Summary Table</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -259,7 +259,7 @@ For Multicast:</h3>
 <td class="markdownTableBodyNone">setPassCred  </td><td class="markdownTableBodyCenter"></td><td class="markdownTableBodyCenter"></td><td class="markdownTableBodyCenter"></td><td class="markdownTableBodyCenter"></td><td class="markdownTableBodyCenter">✓  </td></tr>
 </table>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md302"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md312"></a>
 Dedicated Methods vs. Generic Methods</h1>
 <p>While jsocketpp provides generic <span class="tt">setOption(int level, int optname, int value)</span> and <span class="tt">getOption(int level, int optname)</span> methods for full flexibility, <b>dedicated methods</b> offer:</p>
 <ul>
@@ -269,7 +269,7 @@ Dedicated Methods vs. Generic Methods</h1>
 <li>Protection against misuse (e.g., not all options are meaningful for all socket types)</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md304"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md314"></a>
 Examples</h1>
 <div class="fragment"><div class="line">Socket tcpSocket;</div>
 <div class="line">tcpSocket.setNoDelay(<span class="keyword">true</span>);</div>
@@ -286,7 +286,7 @@ Examples</h1>
 <div class="line">UnixSocket unixSock;</div>
 <div class="line">unixSock.setPassCred(<span class="keyword">true</span>);</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md306"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md316"></a>
 Design Recommendations</h1>
 <ul>
 <li>Use <b>dedicated option methods</b> for the most common and semantically important settings.</li>
@@ -295,7 +295,7 @@ Design Recommendations</h1>
 <li>When in doubt, consult <a href="https://man7.org/linux/man-pages/man7/socket.7.html">man 7 socket</a> and your platform’s documentation.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md308"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md318"></a>
 Further Reading</h1>
 <ul>
 <li><a href="https://beej.us/guide/bgnet/">Beej’s Guide to Network Programming: Using Internet Sockets</a></li>

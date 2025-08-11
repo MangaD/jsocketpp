@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"namespacejsocketpp.html#a09423d4d9f10bd09813732010662ee43":[5,0,0,26],
 "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174":[5,0,0,17],
 "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6":[5,0,0,17,1],
 "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e":[5,0,0,17,2],

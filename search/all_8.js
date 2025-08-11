@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['9_20conclusion_20advice_0',['9. &lt;b&gt;Conclusion / Advice&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md282',1,'']]],
-  ['9_20platform_20specific_20considerations_1',['9. Platform-Specific Considerations',['../group__underlying__socket__api.html#autotoc_md402',1,'']]],
-  ['9_20references_2',['9. References',['../group__sockets__theory.html#autotoc_md379',1,'']]],
+  ['9_20conclusion_20advice_0',['9. &lt;b&gt;Conclusion / Advice&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md292',1,'']]],
+  ['9_20platform_20specific_20considerations_1',['9. Platform-Specific Considerations',['../group__underlying__socket__api.html#autotoc_md412',1,'']]],
+  ['9_20references_2',['9. References',['../group__sockets__theory.html#autotoc_md389',1,'']]],
   ['9_20summary_3',['9. Summary',['../group__ServerSocket__Lifecycle.html#autotoc_md61',1,'']]]
 ];

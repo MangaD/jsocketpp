@@ -9,6 +9,7 @@ var group__docs =
     [ "Understanding <span class=\"tt\">bind()</span>: Binding to All Interfaces vs Specific Interfaces", "group__bind__interfaces.html", null ],
     [ "Publishing <span class=\"tt\">jsocketpp</span> to the Conan Center Index (CCI)", "group__conan__publish__guide.html", null ],
     [ "Comprehensive Guide to <span class=\"tt\">ioctl</span>, <span class=\"tt\">fcntl</span>, <span class=\"tt\">ioctlsocket</span>, <span class=\"tt\">WSAIoctl</span>, and Related Functions: Commands, Use Cases, and Windows Support", "group__ioctl__fcntl__ioctlsocket__guide.html", null ],
+    [ "Understanding Network Data Units: Packets, Datagrams, Segments, and Beyond", "group__network__data__units.html", null ],
     [ "We use <span class=\"tt\">select</span> for asynchronous I/O operations. Does it make sense to provide <span class=\"tt\">poll</span> and <span class=\"tt\">epoll</span> as alternatives?", "group__select__poll__epoll__iocp.html", null ],
     [ "Socket Options in jsocketpp", "group__socket-options.html", null ],
     [ "Comparison: <span class=\"tt\">jsocketpp</span> vs Other C++ Socket Libraries", "group__socket__library__comparison.html", null ],

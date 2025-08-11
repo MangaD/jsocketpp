@@ -162,7 +162,7 @@ Functions</h2></td></tr>
 
 <p>Smart pointer that manages <span class="tt">addrinfo*</span> resources using <span class="tt"><a class="el" href="structjsocketpp_1_1internal_1_1AddrinfoDeleter.html" title="Custom deleter for addrinfo* pointers to support RAII-style cleanup.">AddrinfoDeleter</a></span>. </p>
 <p><span class="tt"><a class="el" href="#ga62d9b0682386f85cca0aadbdfbb76646" title="Smart pointer that manages addrinfo* resources using AddrinfoDeleter.">AddrinfoPtr</a></span> wraps a raw <span class="tt">addrinfo*</span> (typically from <span class="tt">getaddrinfo()</span>) in a <span class="tt">std::unique_ptr</span> with a custom deleter to ensure safe, automatic cleanup using <span class="tt">freeaddrinfo()</span>. This eliminates manual memory management and guards against memory leaks in error-prone network code.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md546"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md556"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line">addrinfo* raw = <span class="keyword">nullptr</span>;</div>
 <div class="line"><span class="keywordflow">if</span> (getaddrinfo(<span class="stringliteral">&quot;example.com&quot;</span>, <span class="stringliteral">&quot;80&quot;</span>, &amp;hints, &amp;raw) == 0) {</div>
@@ -255,7 +255,7 @@ freeaddrinfo() </dd></dl>
 <p>Retrieves the local IP address to which the socket is currently bound. </p>
 <p>This function returns the <b>numeric IP address</b> of the socket's local endpoint, based on the actual binding or connection state. It supports both IPv4 and IPv6 sockets.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md562"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md572"></a>
 🔧 Internal Mechanism</h3>
 <p>This method wraps two low-level system calls:</p>
 <ul>
@@ -263,7 +263,7 @@ freeaddrinfo() </dd></dl>
 <li><span class="tt">getnameinfo()</span>: Converts the raw <span class="tt">sockaddr</span> structure returned by <span class="tt">getsockname()</span> into a <b>numeric IP string</b> (e.g., <span class="tt">"127.0.0.1"</span> or <span class="tt">"::1"</span>), independent of DNS.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md564"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md574"></a>
 ✅ Use Cases</h3>
 <ul>
 <li>Discover which local interface the OS selected after <span class="tt">bind()</span> or <span class="tt">connect()</span></li>
@@ -272,7 +272,7 @@ freeaddrinfo() </dd></dl>
 <li>Support systems where multiple NICs or address families are in use</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md566"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md576"></a>
 ⚠️ Error Handling</h3>
 <ul>
 <li>Throws <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> if the socket is not open, not yet bound, or if address resolution fails.</li>
@@ -354,7 +354,7 @@ This function does not include the port — only the IP address portion is retur
 <p>Resolves a hostname and port into a list of usable socket address structures. </p>
 <p>This internal helper wraps the standard <span class="tt">::getaddrinfo()</span> system call to resolve a hostname and port into a linked list of <span class="tt">addrinfo</span> structures, which are used to create, bind, or connect sockets. It provides explicit control over resolution parameters, supports both client and server use cases, and ensures consistent error handling and memory cleanup across platforms.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md548"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md558"></a>
 Overview</h3>
 <p>Unlike direct <span class="tt">getaddrinfo()</span> usage, this helper:</p><ul>
 <li>Accepts all key resolution parameters (<span class="tt">family</span>, <span class="tt">socktype</span>, <span class="tt">protocol</span>, <span class="tt">flags</span>)</li>
@@ -363,7 +363,7 @@ Overview</h3>
 <li>Supports dual-stack fallback, wildcard binding, strict numeric resolution, and more</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md550"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md560"></a>
 Hints Structure Behavior</h3>
 <p>This function populates the <span class="tt">hints</span> structure for <span class="tt">getaddrinfo()</span> with the following fields:</p>
 <ul>
@@ -397,7 +397,7 @@ Hints Structure Behavior</h3>
 </ul>
 <p>Flags may be combined using bitwise OR (e.g., <span class="tt">AI_PASSIVE | AI_ADDRCONFIG</span>).</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md552"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md562"></a>
 Parameters</h3>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -420,11 +420,11 @@ Parameters</h3>
   </dd>
 </dl>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md554"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md564"></a>
 Return Value</h3>
 <dl class="section return"><dt>Returns</dt><dd>A smart pointer of type <span class="tt"><a class="el" href="#ga62d9b0682386f85cca0aadbdfbb76646" title="Smart pointer that manages addrinfo* resources using AddrinfoDeleter.">AddrinfoPtr</a></span> holding a linked list of <span class="tt">addrinfo</span> structures. The returned list can be iterated to attempt socket creation or connection. Memory is released automatically via <span class="tt">freeaddrinfo()</span> when the pointer is destroyed.</dd></dl>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md556"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md566"></a>
 Throws</h3>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
@@ -438,7 +438,7 @@ Throws</h3>
   </dd>
 </dl>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md558"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md568"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp_1_1internal.html">jsocketpp::internal</a>;</div>
 <div class="line"> </div>
@@ -456,7 +456,7 @@ Example Usage</h3>
 <div class="ttc" id="agroup__internal_html_gab7cbd90f4b6d2e5f506de1b7fd5c6331"><div class="ttname"><a href="#gab7cbd90f4b6d2e5f506de1b7fd5c6331">jsocketpp::internal::resolveAddress</a></div><div class="ttdeci">AddrinfoPtr resolveAddress(const std::string_view host, const Port port, const int family, const int socktype, const int protocol, const int flags=0)</div><div class="ttdoc">Resolves a hostname and port into a list of usable socket address structures.</div><div class="ttdef"><b>Definition</b> common.hpp:798</div></div>
 <div class="ttc" id="anamespacejsocketpp_1_1internal_html"><div class="ttname"><a href="namespacejsocketpp_1_1internal.html">jsocketpp::internal</a></div><div class="ttdoc">Implementation-only utilities and platform abstractions for jsocketpp.</div><div class="ttdef"><b>Definition</b> BufferView.hpp:52</div></div>
 </div><!-- fragment --><hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md560"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md570"></a>
 Notes</h3>
 <ul>
 <li>This function is intended for internal use by <span class="tt"><a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a></span>, <span class="tt"><a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a></span>, and <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>.</li>
@@ -546,7 +546,7 @@ setNonBlocking() </dd></dl>
 <p>Sends an entire datagram to a connected peer using <span class="tt">send()</span>. </p>
 <p>This internal utility transmits exactly <code class="param">size</code> bytes from the given <code class="param">data</code> buffer over the specified socket <code class="param">fd</code>, using the system <span class="tt">send()</span> call. It is intended for use with connected UDP or TCP sockets where the destination address is already established via connect().</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md574"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md584"></a>
 ⚙️ Behavior</h3>
 <ul>
 <li>Applies <span class="tt">MSG_NOSIGNAL</span> on POSIX systems to prevent <span class="tt">SIGPIPE</span> if the peer has closed the connection.</li>
@@ -560,7 +560,7 @@ setNonBlocking() </dd></dl>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md576"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md586"></a>
 🧪 Example</h3>
 <div class="fragment"><div class="line">std::string message = <span class="stringliteral">&quot;Hello, world!&quot;</span>;</div>
 <div class="line"><a class="code hl_function" href="#ga8826c90e1bb9e0023b75940ff4cd72f8">internal::sendExact</a>(socketFd, message.data(), message.size());</div>
@@ -626,7 +626,7 @@ connect() To establish a connected peer before using this function. </dd></dl>
 <p>Sends an entire datagram to a specific destination using <span class="tt">sendto()</span>. </p>
 <p>This internal utility transmits exactly <code class="param">size</code> bytes from the given <code class="param">data</code> buffer over the specified socket <code class="param">fd</code>, using the system <span class="tt">sendto()</span> call to send to an explicit destination address. It is intended for unconnected UDP sockets, where the destination may vary per call.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md579"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md589"></a>
 ⚙️ Behavior</h3>
 <ul>
 <li>Applies <span class="tt">MSG_NOSIGNAL</span> on POSIX systems to prevent <span class="tt">SIGPIPE</span> if the destination is unreachable or the peer has closed the socket.</li>
@@ -640,7 +640,7 @@ connect() To establish a connected peer before using this function. </dd></dl>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md581"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md591"></a>
 🧪 Example</h3>
 <div class="fragment"><div class="line">sockaddr_storage destAddr{};</div>
 <div class="line"><span class="comment">// populate destAddr with desired IPv4/IPv6 destination...</span></div>
