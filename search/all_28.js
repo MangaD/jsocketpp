@@ -1,8 +1,4 @@
 var searchData=
 [
-  ['⚙️_20behavior_0',['⚙️ Behavior',['../group__address__reuse.html#autotoc_md90',1,'⚙️ Behavior'],['../group__internal.html#autotoc_md591',1,'⚙️ Behavior'],['../group__internal.html#autotoc_md596',1,'⚙️ Behavior'],['../group__udp.html#autotoc_md645',1,'⚙️ Behavior'],['../group__udp.html#autotoc_md703',1,'⚙️ Behavior'],['../group__udp.html#autotoc_md752',1,'⚙️ Behavior'],['../group__udp.html#autotoc_md756',1,'⚙️ Behavior'],['../group__udp.html#autotoc_md760',1,'⚙️ Behavior'],['../group__tcp.html#autotoc_md828',1,'⚙️ Behavior'],['../group__tcp.html#autotoc_md846',1,'⚙️ Behavior'],['../group__tcp.html#autotoc_md857',1,'⚙️ Behavior'],['../group__tcp.html#autotoc_md1024',1,'⚙️ Behavior'],['../group__tcp.html#autotoc_md1029',1,'⚙️ Behavior'],['../group__tcp.html#autotoc_md1034',1,'⚙️ Behavior']]],
-  ['⚙️_20configuration_1',['⚙️ Configuration',['../group__tcp.html#autotoc_md839',1,'']]],
-  ['⚙️_20configuration_20of_20accepted_20socket_2',['⚙️ Configuration of Accepted Socket',['../group__tcp.html#autotoc_md790',1,'⚙️ Configuration of Accepted Socket'],['../group__tcp.html#autotoc_md799',1,'⚙️ Configuration of Accepted Socket'],['../group__tcp.html#autotoc_md808',1,'⚙️ Configuration of Accepted Socket'],['../group__tcp.html#autotoc_md819',1,'⚙️ Configuration of Accepted Socket'],['../group__tcp.html#autotoc_md852',1,'⚙️ Configuration of Accepted Socket'],['../group__tcp.html#autotoc_md865',1,'⚙️ Configuration of Accepted Socket']]],
-  ['⚙️_20implementation_20details_3',['⚙️ Implementation Details',['../group__udp.html#autotoc_md731',1,'']]],
-  ['⚙️_20platform_20behavior_4',['⚙️ Platform Behavior',['../group__udp.html#autotoc_md722',1,'']]]
+  ['⚖️_20license_0',['⚖️ License',['../index.html#autotoc_md502',1,'']]]
 ];

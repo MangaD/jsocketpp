@@ -53,6 +53,7 @@ var NAVTREEINDEX0 =
 "classjsocketpp_1_1DatagramPacket.html#abd1c51c1ce6fcd7876053e25fdfdf1f3":[4,1,3,2,6],
 "classjsocketpp_1_1DatagramSocket.html":[4,1,3,3],
 "classjsocketpp_1_1DatagramSocket.html#a03328f6602738b63c4a6c8a720ec1204":[4,1,3,3,65],
+"classjsocketpp_1_1DatagramSocket.html#a24a48ca4f6711d89e0a89531b3b31807":[4,1,3,3,31],
 "classjsocketpp_1_1DatagramSocket.html#a471ce3677773b7fb9fb7766e247bc76f":[4,1,3,3,69],
 "classjsocketpp_1_1DatagramSocket.html#a87523b567e1963c683584ed19c1d6f84":[4,1,3,3,68],
 "classjsocketpp_1_1DatagramSocket.html#a8c77f16fcae1c86b679a0567de055b7d":[4,1,3,3,66],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "group__internal.html#gae140ce724d1cfc733f3c2dbccf0cf60b":[4,1,1,12],
 "group__ioctl__fcntl__ioctlsocket__guide.html":[4,0,8],
 "group__jsocketpp.html":[4,1],
-"group__list__bsd__socket__functions.html":[4,0,1],
-"group__network__data__units.html":[4,0,9]
+"group__list__bsd__socket__functions.html":[4,0,1]
 };

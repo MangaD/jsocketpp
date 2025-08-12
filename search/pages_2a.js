@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['✨_20features_20at_20a_20glance_0',['✨ Features at a Glance',['../index.html#autotoc_md465',1,'']]]
+  ['✔_20what_20jsocketpp_20gets_20right_0',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md130',1,'']]]
 ];

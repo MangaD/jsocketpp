@@ -31,7 +31,7 @@ var classjsocketpp_1_1DatagramSocket =
     [ "operator=", "group__udp.html#gab67aad3e2d477982f19d17ab80607417", null ],
     [ "operator=", "group__udp.html#ga38397874bcb62f889cb6fefa20b45ba6", null ],
     [ "peek", "group__udp.html#ga7d75f33d62df3b393096e97600fee25f", null ],
-    [ "read", "group__udp.html#ga24a48ca4f6711d89e0a89531b3b31807", null ],
+    [ "read", "classjsocketpp_1_1DatagramSocket.html#a24a48ca4f6711d89e0a89531b3b31807", null ],
     [ "read", "group__udp.html#ga9f9e08f58d50d29e0f3fa9ccf83c1c97", null ],
     [ "read", "group__udp.html#gaf32c08318404f8850dd539e1a4c637ce", null ],
     [ "readAtMost", "group__udp.html#ga275fcbd57095c32ff7009624fcb48679", null ],

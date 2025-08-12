@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['🔒_20safety_0',['🔒 Safety',['../group__udp.html#autotoc_md754',1,'🔒 Safety'],['../group__tcp.html#autotoc_md1026',1,'🔒 Safety']]]
+  ['🔐_20definition_0',['🔐 Definition',['../group__address__reuse.html#autotoc_md88',1,'']]],
+  ['🔐_20platform_20behavior_1',['🔐 Platform Behavior',['../group__socketopts.html#autotoc_md1178',1,'']]]
 ];

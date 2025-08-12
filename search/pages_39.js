@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['🔁_20applicability_0',['🔁 Applicability',['../group__socketopts.html#autotoc_md1111',1,'🔁 Applicability'],['../group__socketopts.html#autotoc_md1114',1,'🔁 Applicability'],['../group__socketopts.html#autotoc_md1117',1,'🔁 Applicability'],['../group__socketopts.html#autotoc_md1121',1,'🔁 Applicability']]],
-  ['🔁_20behavior_20based_20on_20connection_20mode_1',['🔁 Behavior Based on Connection Mode',['../group__udp.html#autotoc_md671',1,'🔁 Behavior Based on Connection Mode'],['../group__udp.html#autotoc_md685',1,'🔁 Behavior Based on Connection Mode']]],
-  ['🔁_20behavior_20based_20on_20mode_2',['🔁 Behavior Based on Mode',['../group__udp.html#autotoc_md678',1,'🔁 Behavior Based on Mode'],['../group__udp.html#autotoc_md747',1,'🔁 Behavior Based on Mode']]],
-  ['🔁_20blocking_20behavior_3',['🔁 Blocking Behavior',['../group__tcp.html#autotoc_md837',1,'']]],
-  ['🔁_20callback_20signature_4',['🔁 Callback Signature',['../group__tcp.html#autotoc_md859',1,'']]],
-  ['🔁_20jsocketpp_20vs_20boost_20asio_5',['🔁 jsocketpp vs Boost.Asio',['../index.html#autotoc_md469',1,'']]]
+  ['🔀_20platform_20behavior_0',['🔀 Platform Behavior',['../group__socketopts.html#autotoc_md1124',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md1129',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md1134',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md1139',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md1144',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md1155',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md1164',1,'🔀 Platform Behavior'],['../group__socketopts.html#autotoc_md1192',1,'🔀 Platform Behavior']]],
+  ['🔀_20platform_20support_1',['🔀 Platform Support',['../group__socketopts.html#autotoc_md1208',1,'🔀 Platform Support'],['../group__socketopts.html#autotoc_md1215',1,'🔀 Platform Support']]]
 ];

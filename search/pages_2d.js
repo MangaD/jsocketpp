@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['🌐_20address_20resolution_0',['🌐 Address Resolution',['../group__udp.html#autotoc_md701',1,'']]],
-  ['🌐_20local_20binding_20parameters_20used_20only_20if_20autobind_20true_1',['🌐 Local Binding Parameters (used only if &lt;span class=&quot;tt&quot;&gt;autoBind == true&lt;/span&gt;)',['../group__tcp.html#autotoc_md898',1,'']]],
-  ['🌐_20multicast_20receiver_2',['🌐 Multicast Receiver',['../index.html#autotoc_md487',1,'']]]
+  ['🌍_20applicability_0',['🌍 Applicability',['../group__socketopts.html#autotoc_md654',1,'🌍 Applicability'],['../group__udp.html#autotoc_md660',1,'🌍 Applicability'],['../group__socketopts.html#autotoc_md1176',1,'🌍 Applicability'],['../group__socketopts.html#autotoc_md1206',1,'🌍 Applicability'],['../group__socketopts.html#autotoc_md1213',1,'🌍 Applicability']]],
+  ['🌍_20applicability_20by_20socket_20type_1',['🌍 Applicability by Socket Type',['../group__socketopts.html#autotoc_md1190',1,'🌍 Applicability by Socket Type'],['../group__socketopts.html#autotoc_md1199',1,'🌍 Applicability by Socket Type']]],
+  ['🌍_20behavior_2',['🌍 Behavior',['../group__tcp.html#autotoc_md921',1,'']]]
 ];

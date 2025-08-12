@@ -9,5 +9,5 @@ var searchData=
   ['google_20mock_3a_6',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md434',1,'']]],
   ['guarantees_7',['RAII Guarantees',['../group__udp.html#autotoc_md627',1,'']]],
   ['guide_20to_20ioctl_20fcntl_20ioctlsocket_8',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;,',['../md_docs_2markdown_2ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
-  ['guidelines_9',['Guidelines',['../group__socketopts.html#autotoc_md1050',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md526',1,'3. Code Style Guidelines']]]
+  ['guidelines_9',['Guidelines',['../group__socketopts.html#autotoc_md1049',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md526',1,'3. Code Style Guidelines']]]
 ];

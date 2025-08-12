@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['↔_20jsocketpp_20class_20mapping_0',['🔄 Java ↔ jsocketpp Class Mapping',['../index.html#autotoc_md491',1,'']]]
+  ['“binding_20to_20all_20interfaces”_20mean_0',['What Does “Binding to All Interfaces” Mean?',['../group__bind__interfaces.html#autotoc_md174',1,'']]]
 ];

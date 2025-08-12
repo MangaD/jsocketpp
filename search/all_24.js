@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['“binding_20to_20all_20interfaces”_20mean_0',['What Does “Binding to All Interfaces” Mean?',['../group__bind__interfaces.html#autotoc_md174',1,'']]]
+  ['—_20dynamic_20container_20std_3a_3astring_0',['Example — dynamic container (&lt;span class=&quot;tt&quot;&gt;std::string&lt;/span&gt;)',['../group__udp.html#autotoc_md708',1,'']]],
+  ['—_20fixed_20size_20container_20std_3a_3aarray_1',['Example — fixed-size container (&lt;span class=&quot;tt&quot;&gt;std::array&amp;lt;char, 512&amp;gt;&lt;/span&gt;)',['../group__udp.html#autotoc_md709',1,'']]]
 ];
