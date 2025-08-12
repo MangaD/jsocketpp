@@ -355,7 +355,7 @@ void DatagramSocket::disconnect()
     _isConnected = false;
 }
 
-void DatagramSocket::write(const DatagramPacket& packet)
+void DatagramSocket::write(const DatagramPacket& packet) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("DatagramSocket::write(DatagramPacket): socket is not open.");
@@ -406,7 +406,7 @@ void DatagramSocket::write(const std::string_view message) const
     internal::sendExact(getSocketFd(), message.data(), message.size());
 }
 
-void DatagramSocket::write(const std::string_view message, const std::string_view host, const Port port)
+void DatagramSocket::write(const std::string_view message, const std::string_view host, const Port port) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("DatagramSocket::write(std::string_view, host, port): socket is not open.");
@@ -442,54 +442,255 @@ void DatagramSocket::write(const std::string_view message, const std::string_vie
     throw SocketException(lastError, SocketErrorMessageWrap(lastError));
 }
 
-size_t DatagramSocket::read(DatagramPacket& packet, const bool resizeBuffer) const
+std::size_t DatagramSocket::readIntoBuffer(char* buf, const std::size_t len, const DatagramReceiveMode mode,
+                                           const int recvFlags, sockaddr_storage* outSrc, socklen_t* outSrcLen,
+                                           std::size_t* outDatagramSz, bool* outTruncated) const
 {
-    if (packet.buffer.empty())
-        throw SocketException("DatagramPacket buffer is empty");
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::readIntoBuffer(): socket is not open."); // message-only OK
 
-    sockaddr_storage srcAddr{};
-    socklen_t addrLen = sizeof(srcAddr);
+    if ((buf == nullptr && len != 0) || (len == 0 && buf != nullptr))
+        throw SocketException("DatagramSocket::readIntoBuffer(): invalid buffer/length.");
 
-    // Receive the datagram
-    const auto received = recvfrom(getSocketFd(), packet.buffer.data(),
-#ifdef _WIN32
-                                   static_cast<int>(packet.buffer.size()),
-#else
-                                   packet.buffer.size(),
-#endif
-                                   0, reinterpret_cast<sockaddr*>(&srcAddr), &addrLen);
+    // Preflight (safe clamp only — never exceeds len or MaxDatagramPayloadSafe)
+    std::size_t request = len;
+    std::size_t probed = 0;
 
-    if (received == SOCKET_ERROR)
+    if (mode != DatagramReceiveMode::NoPreflight)
     {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
+        try
+        {
+            if (const std::size_t exact = internal::nextDatagramSize(getSocketFd()); exact > 0)
+            {
+                probed = exact;
+                request = (std::min) ((std::min) (probed, MaxDatagramPayloadSafe), request);
+            }
+        }
+        catch (const SocketException&)
+        {
+            // degrade to NoPreflight
+        }
     }
-    if (received == 0)
-        throw SocketException("Connection closed by remote host.");
 
-    // Fill in address and port fields
-    char hostBuf[NI_MAXHOST], portBuf[NI_MAXSERV];
-    if (const auto ret = getnameinfo(reinterpret_cast<const sockaddr*>(&srcAddr), addrLen, hostBuf, sizeof(hostBuf),
-                                     portBuf, sizeof(portBuf), NI_NUMERICHOST | NI_NUMERICSERV);
-        ret != 0)
+    if (outDatagramSz)
+        *outDatagramSz = (probed > 0 ? probed : 0);
+    if (outTruncated)
+        *outTruncated = false;
+
+    // Receive (EINTR-safe)
+    for (;;)
     {
+        const ssize_t n = internal::recvInto(getSocketFd(), std::span(reinterpret_cast<std::byte*>(buf), request),
+                                             recvFlags, outSrc, outSrcLen);
+
+        if (n != SOCKET_ERROR)
+        {
+            const auto received = static_cast<std::size_t>(n);
+
+            // Truncation signal
+            if (outTruncated)
+            {
+                if (probed > 0)
+                {
+                    *outTruncated = (probed > len);
+                }
+                else if (len > 0)
+                {
+                    // Heuristic when not probed: if we filled the buffer, assume possible truncation.
+                    *outTruncated = (received == len);
+                }
+            }
+
+            if (outDatagramSz && *outDatagramSz == 0)
+                *outDatagramSz = received;
+
+            return received;
+        }
+
+        // Error path
+        const int err = GetSocketError(); // platform-specific last error
+#ifndef _WIN32
+        if (err == EINTR)
+            continue; // retry
+        const bool wouldBlock = (err == EAGAIN || err == EWOULDBLOCK);
+        const bool timedOut = wouldBlock; // SO_RCVTIMEO maps here on POSIX
+#else
+        const bool wouldBlock = (err == WSAEWOULDBLOCK);
+        const bool timedOut = (err == WSAETIMEDOUT);
+#endif
+
+        // Map would-block and timeout to SocketTimeoutException, preserving the actual code when useful.
+        if (timedOut)
+        {
+            // True timeout → standardized code/message (ETIMEDOUT/WSAETIMEDOUT)
+            throw SocketTimeoutException();
+        }
+        if (wouldBlock)
+        {
+            // Non-blocking “no data yet” → still signal as a timeout-style condition, but keep real code.
+            throw SocketTimeoutException(err, SocketErrorMessageWrap(err));
+        }
+
+        // Everything else → canonical two-arg throw
+        throw SocketException(err, SocketErrorMessageWrap(err));
+    }
+}
+
+DatagramReadResult DatagramSocket::read(DatagramPacket& packet, const DatagramReadOptions& opts) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::read(DatagramPacket&,DatagramReadOptions): socket is not open.");
+
+    DatagramReadResult result{};
+    std::size_t capacity = packet.size();
+
+    // Ensure some capacity exists (provision if allowed)
+    if (capacity == 0)
+    {
+        if (opts.allowGrow)
+        {
+            constexpr std::size_t fallback = (std::min) (DefaultDatagramReceiveSize, MaxDatagramPayloadSafe);
+            packet.resize(fallback);
+            capacity = fallback;
+        }
+        else
+        {
+            throw SocketException("DatagramPacket buffer is empty; provide capacity or enable growth.");
+        }
+    }
+
+    // Optional preflight: only influences capacity and growth; the actual I/O goes through readIntoBuffer()
+    if (opts.mode == DatagramReceiveMode::PreflightSize || opts.mode == DatagramReceiveMode::PreflightMax)
+    {
+        try
+        {
+            if (const std::size_t exact = internal::nextDatagramSize(getSocketFd()); exact > 0)
+            {
+                const std::size_t probe = (std::min) (exact, MaxDatagramPayloadSafe);
+
+                if (opts.mode == DatagramReceiveMode::PreflightSize)
+                {
+                    if (opts.allowGrow && probe > capacity)
+                    {
+                        packet.resize(probe);
+                        capacity = probe;
+                    }
+                    else
+                    {
+                        capacity = (std::min) (capacity, probe);
+                    }
+                }
+                else // PreflightMax: never grow
+                {
+                    capacity = (std::min) (capacity, probe);
+                }
+            }
+        }
+        catch (const SocketException&)
+        {
+            // degrade gracefully
+        }
+    }
+
+    // Receive via backbone
+    sockaddr_storage src{};
+    auto srcLen = static_cast<socklen_t>(sizeof(src));
+    std::size_t datagramSize = 0;
+    bool truncated = false;
+
+    const std::size_t n = readIntoBuffer(packet.buffer.data(), capacity,
+                                         DatagramReceiveMode::NoPreflight, // capacity already chosen above
+                                         opts.recvFlags, &src, &srcLen, &datagramSize, &truncated);
+
+    result.bytes = n;
+    result.datagramSize = datagramSize ? datagramSize : n;
+    result.truncated = truncated;
+    result.src = src;
+    result.srcLen = srcLen;
+
+    // Side effects as requested
+    if (opts.updateLastRemote)
+        rememberRemote(src, srcLen);
+
+    if (opts.resolveNumeric)
+        internal::resolveNumericHostPort(reinterpret_cast<const sockaddr*>(&src), srcLen, packet.address, packet.port);
+
+    // Post-shrink (never shrink on truncation)
+    if (opts.allowShrink && !truncated && packet.size() != n)
+        packet.resize(n);
+
+    return result;
+}
+
+DatagramReadResult DatagramSocket::readInto(void* buffer, const std::size_t len, const DatagramReadOptions& opts) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::readInto(void*,size_t,DatagramReadOptions): socket is not open.");
+    if (buffer == nullptr || len == 0)
         throw SocketException(
-#ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
-#else
-            ret, SocketErrorMessageWrap(ret, true));
-#endif
-    }
+            "DatagramSocket::readInto(void*,size_t,DatagramReadOptions): destination buffer is empty.");
 
-    packet.address = std::string(hostBuf);
-    packet.port = static_cast<Port>(std::stoul(portBuf));
+    DatagramReadResult result{};
+    auto* buf = static_cast<char*>(buffer);
 
-    if (resizeBuffer)
+    // For raw buffers, there is no growth; preflight will only clamp the request.
+    sockaddr_storage src{};
+    auto srcLen = static_cast<socklen_t>(sizeof(src));
+    std::size_t datagramSize = 0;
+    bool truncated = false;
+
+    // If connected and caller won’t need source address, we can skip capturing it:
+    sockaddr_storage* outSrc = _isConnected ? nullptr : &src;
+    socklen_t* outLen = _isConnected ? nullptr : &srcLen;
+
+    const std::size_t n =
+        readIntoBuffer(buf, len, opts.mode, opts.recvFlags, outSrc, outLen, &datagramSize, &truncated);
+
+    result.bytes = n;
+    result.datagramSize = datagramSize ? datagramSize : n;
+    result.truncated = truncated;
+
+    if (!_isConnected)
     {
-        packet.buffer.resize(static_cast<size_t>(received));
+        result.src = src;
+        result.srcLen = srcLen;
+
+        if (opts.updateLastRemote)
+            rememberRemote(src, srcLen);
+        // Note: no packet here to populate address/port fields; caller can use result.src.
     }
 
-    return static_cast<size_t>(received);
+    return result;
+}
+
+std::string DatagramSocket::readExact(std::size_t n, const DatagramReceiveMode mode) const
+{
+    DatagramPacket packet(n);
+
+    if (const std::size_t bytesReceived = read(packet, false /* preserve size */, mode); bytesReceived != n)
+    {
+        throw SocketException("Datagram size mismatch in readExact(); expected exact length.");
+    }
+
+    return {packet.buffer.data(), n};
+}
+
+std::string DatagramSocket::readAtMost(const std::size_t n) const
+{
+    if (n == 0)
+        return {};
+
+    DatagramPacket pkt(n);
+    auto got = read(pkt, /*resizeBuffer=*/true, DatagramReceiveMode::NoPreflight);
+
+    return {pkt.buffer.data(), got};
+}
+
+std::string DatagramSocket::readAvailable() const
+{
+    DatagramPacket pkt;
+    read(pkt, /*resizeBuffer=*/true, DatagramReceiveMode::PreflightSize);
+    return {pkt.buffer.data(), pkt.buffer.size()};
 }
 
 std::string DatagramSocket::getLocalIp(const bool convertIPv4Mapped) const

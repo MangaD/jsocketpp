@@ -7,6 +7,12 @@
 
 #include "SocketException.hpp"
 
+#include <cstddef> // std::size_t
+#include <source_location>
+#include <span>
+#include <string>
+#include <utility> // std::pair
+
 #ifdef __GNUC__
 #define QUOTE(s) #s
 #define DIAGNOSTIC_PUSH() _Pragma("GCC diagnostic push")
@@ -392,6 +398,114 @@ using Port = std::uint16_t;
  * @see SocketOptions::setSendBufferSize()
  */
 inline constexpr std::size_t DefaultBufferSize = 4096;
+
+/**
+ * @brief Fallback receive size (in bytes) for UDP datagrams when the exact size is unknown.
+ * @ingroup core
+ *
+ * This constant defines the **default number of bytes** we ask the OS to deliver when
+ * receiving a UDP datagram **and** the platform cannot report the pending datagram's exact
+ * size (via `FIONREAD` or the POSIX `MSG_PEEK|MSG_TRUNC` probe) **and** the caller has not
+ * provisioned `_internalBuffer` (i.e., its size is 0).
+ *
+ * ### Applies to
+ * - **UDP sockets** (`DatagramSocket`) in `read()` overloads that construct a `std::string`
+ *   or otherwise need a temporary buffer when the exact size is unavailable and
+ *   `_internalBuffer` is unset.
+ * - May be used by other UDP-related helpers where a conservative per-call buffer is required.
+ *
+ * ### Semantics & policy
+ * - We **do not** resize `_internalBuffer` based on this value; it is a *one-shot* receive size
+ *   when the caller has not sized a reusable buffer.
+ * - If the incoming datagram is **larger** than this value and the OS cannot tell us the exact
+ *   size up-front, the payload may be **truncated** to this size (standard UDP behavior).
+ * - A safety cap of **65,507 bytes** (maximum safe UDP payload) is always honored, even if this
+ *   constant is set higher.
+ *
+ * ### Rationale (default: 8192 / 8 KiB)
+ * - **Practicality:** Big enough for common application messages while avoiding large, frequent
+ *   allocations when size probing is unavailable.
+ * - **Performance:** Reduces syscall overhead compared to very small defaults without bloating
+ *   per-receive memory.
+ *
+ * ### Customization
+ * - Increase if your application expects larger datagrams and you prefer to minimize truncation
+ *   when size probing is unavailable.
+ * - Decrease in memory-constrained environments if your datagrams are typically small.
+ *
+ * ### Examples
+ * @code
+ * // Typical path inside read<std::string>():
+ * // 1) Try exact size via nextDatagramSize(fd)
+ * // 2) If 0 and _internalBuffer.size() == 0, use DefaultDatagramReceiveSize
+ * // 3) Read up to std::min(DefaultDatagramReceiveSize, 65507)
+ * @endcode
+ *
+ * @note When `_internalBuffer` is already sized by the user, its capacity takes precedence
+ *       as the "caller-provided buffer" (Java-like semantics); this constant is not used then.
+ *
+ * @see jsocketpp::internal::nextDatagramSize()
+ * @see DatagramSocket
+ * @since 1.0
+ */
+inline constexpr std::size_t DefaultDatagramReceiveSize = 8192;
+
+/**
+ * @brief Maximum UDP payload size (in bytes) that is safely valid across common stacks.
+ * @ingroup core
+ *
+ * This constant represents a conservative upper bound for a single UDP payload that is
+ * widely supported across platforms and socket APIs. It equals the IPv4 maximum payload:
+ *
+ *   65,535 (IPv4 total length)
+ * −      20 (minimum IPv4 header)
+ * −       8 (UDP header)
+ * =  65,507 bytes
+ *
+ * ### Why a "safe" cap?
+ * - Many APIs and stacks historically enforce the IPv4 limit even for IPv6 sockets for
+ *   compatibility. Using this value avoids surprises (e.g., EMSGSIZE) and simplifies
+ *   buffer sizing when the address family is not known in advance.
+ *
+ * ### Usage
+ * - Clamp opportunistic receive sizes to @c MaxDatagramPayloadSafe to prevent oversizing.
+ * - When sending, avoid constructing payloads larger than this unless you *know* you are
+ *   on IPv6 and have validated larger limits (see @ref MaxUdpPayloadIPv6).
+ *
+ * @see MaxUdpPayloadIPv4
+ * @see MaxUdpPayloadIPv6
+ * @since 1.0
+ */
+inline constexpr std::size_t MaxDatagramPayloadSafe = 65507;
+
+/**
+ * @brief Maximum UDP payload size (in bytes) over IPv4.
+ * @ingroup core
+ *
+ * Computed as: 65,535 (IPv4 total length) − 20 (IPv4 header) − 8 (UDP header) = 65,507 bytes.
+ * Use this when you know the socket/address family is IPv4.
+ *
+ * @see MaxDatagramPayloadSafe
+ * @since 1.0
+ */
+inline constexpr std::size_t MaxUdpPayloadIPv4 = 65507;
+
+/**
+ * @brief Theoretical maximum UDP payload size (in bytes) over IPv6.
+ * @ingroup core
+ *
+ * Computed as: 65,535 (IPv6 *payload* length, excludes the 40-byte IPv6 header)
+ * −           8 (UDP header)
+ * =      65,527 bytes.
+ *
+ * @note Real-world effective limits can be smaller due to extension headers, PMTU, and stack
+ *       constraints. Many stacks still behave as if the IPv4 limit applies. Prefer
+ *       @ref MaxDatagramPayloadSafe unless you have verified larger datagrams are supported.
+ *
+ * @see MaxDatagramPayloadSafe
+ * @since 1.0
+ */
+inline constexpr std::size_t MaxUdpPayloadIPv6 = 65527;
 
 /**
  * @brief Checks if a given sockaddr_in6 represents an IPv4-mapped IPv6 address.
@@ -1101,6 +1215,198 @@ inline void closeOrThrow(const SOCKET fd)
         const int error = GetSocketError();
         throw SocketException(error, SocketErrorMessageWrap(error));
     }
+}
+
+/**
+ * @brief Query the exact size of the next UDP datagram, if the platform can provide it.
+ *
+ * @details
+ * On many platforms, @c FIONREAD returns the size of the next pending datagram in bytes.
+ * On POSIX systems where @c FIONREAD is not reliable, we fall back to a zero-length
+ * @c recvfrom() with @c MSG_PEEK|MSG_TRUNC, which returns the exact datagram size without
+ * consuming it. If neither path yields a size, returns 0 and the caller must choose a
+ * fallback (e.g., internal buffer size or a default).
+ *
+ * This function is stateless and does not modify socket state.
+ *
+ * @param[in] fd Socket descriptor/handle.
+ * @return Size in bytes of the next UDP datagram, or 0 if unknown.
+ *
+ * @par Example
+ * @code
+ * const std::size_t n = jsocketpp::internal::nextDatagramSize(sockFd);
+ * if (n == 0) {
+ *     // fall back to buffer/default
+ * }
+ * @endcode
+ *
+ * @since 1.0
+ */
+inline std::size_t nextDatagramSize(SOCKET fd) noexcept
+{
+#if defined(_WIN32)
+    u_long pending = 0;
+    return (ioctlsocket(fd, FIONREAD, &pending) == 0 && pending > 0) ? static_cast<std::size_t>(pending) : 0;
+#else
+    int pending = 0;
+    if (ioctl(fd, FIONREAD, &pending) == 0 && pending > 0)
+        return static_cast<std::size_t>(pending);
+
+    // POSIX: MSG_PEEK|MSG_TRUNC returns exact datagram length without consuming it.
+    sockaddr_storage tmp{};
+    socklen_t tmpLen = static_cast<socklen_t>(sizeof(tmp));
+    const ssize_t peekN = ::recvfrom(fd, nullptr, 0, MSG_PEEK | MSG_TRUNC, reinterpret_cast<sockaddr*>(&tmp), &tmpLen);
+    return (peekN > 0) ? static_cast<std::size_t>(peekN) : 0;
+#endif
+}
+
+/**
+ * @brief Receive into a caller-provided span, routing to @c recv() or @c recvfrom() as needed.
+ *
+ * @details
+ * If @p src and @p srcLen are non-null, this calls @c recvfrom() and fills the sender address;
+ * otherwise, it calls @c recv(). The function performs the platform-specific cast for the
+ * length parameter on Windows.
+ *
+ * @param[in]  fd      Socket descriptor/handle.
+ * @param[in,out] dst  Destination buffer span. The function attempts to fill up to @c dst.size() bytes.
+ * @param[in]  flags   Receive flags (e.g., 0, @c MSG_PEEK).
+ * @param[out] src     Optional sender address storage for unconnected sockets; may be null.
+ * @param[in,out] srcLen Length in/out of @p src; may be null if @p src is null.
+ *
+ * @retval >=0 The number of bytes received (may be 0 for zero-length UDP datagrams).
+ * @retval SOCKET_ERROR On error; call GetSocketError() for details.
+ *
+ * @note This function does not throw; it mirrors the system call semantics.
+ * @since 1.0
+ */
+inline ssize_t recvInto(const SOCKET fd, std::span<std::byte> dst, const int flags, sockaddr_storage* src,
+                        socklen_t* srcLen)
+{
+    if (src && srcLen)
+    {
+        return ::recvfrom(fd, reinterpret_cast<char*>(dst.data()),
+#if defined(_WIN32)
+                          static_cast<int>(dst.size()),
+#else
+                          dst.size(),
+#endif
+                          flags, reinterpret_cast<sockaddr*>(src), srcLen);
+    }
+
+    return ::recv(fd, reinterpret_cast<char*>(dst.data()),
+#if defined(_WIN32)
+                  static_cast<int>(dst.size()),
+#else
+                  dst.size(),
+#endif
+                  flags);
+}
+
+/**
+ * @brief Throw a SocketException for the last socket error, with optional source-location context.
+ *
+ * @details
+ * Captures the thread-local last socket error via `GetSocketError()` and throws using the
+ * project’s canonical two-argument pattern:
+ *
+ * @code
+ * throw SocketException(err, SocketErrorMessageWrap(err));
+ * @endcode
+ *
+ * When internal error-context is enabled (see build-time switch `JSOCKETPP_INCLUDE_ERROR_CONTEXT`),
+ * the human-readable message is augmented with call-site information derived from
+ * `std::source_location` (i.e., `file:line function`). This function is marked `[[noreturn]]`
+ * and always throws.
+ *
+ * @param[in] loc  Call-site source information. Defaults to `std::source_location::current()`.
+ *
+ * @throws SocketException Always thrown. The first argument is the integer error code returned
+ *         by `GetSocketError()`. The second argument is the human-readable message produced by
+ *         `SocketErrorMessageWrap(err)`, optionally suffixed with the source location when enabled.
+ *
+ * @note Requires C++20 (`<source_location>`).
+ * @note Thread-safe: reads a thread-local error code (`GetSocketError()` should return the error
+ *       for the calling thread).
+ *
+ * @par Example
+ * @code
+ * // Typical usage in an error branch:
+ * if (n == SOCKET_ERROR) {
+ *     jsocketpp::internal::throwLastSockError(); // source location captured automatically
+ * }
+ * @endcode
+ *
+ * @see GetSocketError(), SocketErrorMessageWrap(int), SocketException
+ * @since 1.0
+ */
+[[noreturn]] inline void throwLastSockError(const std::source_location& loc = std::source_location::current())
+{
+    const int err = GetSocketError();
+#if JSOCKETPP_INCLUDE_ERROR_CONTEXT
+    std::string msg = SocketErrorMessageWrap(err);
+    msg.append(" [at ")
+        .append(loc.file_name())
+        .append(":")
+        .append(std::to_string(loc.line()))
+        .append(" ")
+        .append(loc.function_name())
+        .append("]");
+    throw SocketException(err, std::move(msg));
+#else
+    (void) loc;
+    throw SocketException(err, SocketErrorMessageWrap(err));
+#endif
+}
+
+/**
+ * @brief Resolve numeric host and port from a socket address.
+ * @ingroup core
+ *
+ * @details
+ * Calls `getnameinfo()` with `NI_NUMERICHOST | NI_NUMERICSERV` (and `NI_NUMERICSCOPE` where
+ * available) to obtain the sender’s **numeric** IP and service strings without DNS lookups.
+ * Parses the service string to a `Port` and validates it fits the type’s range.
+ * On failure, throws using the library’s cross-platform `getnameinfo` error pattern.
+ *
+ * @param[in]  sa Pointer to a valid `sockaddr` (e.g., `sockaddr_in`/`sockaddr_in6`).
+ * @param[in]  len Size of the structure pointed to by @p sa.
+ * @param[out] host Receives the numeric host string (e.g., `"192.0.2.10"`, `"fe80::1%eth0"`).
+ * @param[out] port Receives the numeric service string (e.g., `"8080"`).
+ *
+ * @throws SocketException
+ *         If `getnameinfo()` fails.
+ *
+ * @note Uses purely numeric resolution to avoid blocking DNS queries.
+ * @since 1.0
+ */
+inline void resolveNumericHostPort(const sockaddr* sa, const socklen_t len, std::string& host, Port& port)
+{
+    char hostBuf[NI_MAXHOST]{};
+    char servBuf[NI_MAXSERV]{};
+
+    int flags = NI_NUMERICHOST | NI_NUMERICSERV;
+#ifdef NI_NUMERICSCOPE
+    flags |= NI_NUMERICSCOPE; // ensure scope id stays numeric on IPv6 link-local
+#endif
+
+    if (const int ret = ::getnameinfo(sa, len, hostBuf, sizeof(hostBuf), servBuf, sizeof(servBuf), flags); ret != 0)
+    {
+        throw SocketException(
+#ifdef _WIN32
+            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+#else
+            ret, SocketErrorMessageWrap(ret, true));
+#endif
+    }
+
+    // service is numeric due to NI_NUMERICSERV; parse without locale.
+    const auto raw = std::strtoul(servBuf, nullptr, 10);
+    if (raw > static_cast<unsigned long>((std::numeric_limits<Port>::max)()))
+        throw SocketException("Port out of range for Port type.");
+
+    host.assign(hostBuf);
+    port = static_cast<Port>(raw);
 }
 
 } // namespace jsocketpp::internal

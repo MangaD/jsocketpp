@@ -8,16 +8,271 @@
 
 #pragma once
 
+#include "BufferView.hpp"
 #include "common.hpp"
 #include "DatagramPacket.hpp"
+#include "detail/buffer_traits.hpp"
 #include "SocketOptions.hpp"
 
 #include <bit>
 #include <optional>
+#include <span>
 #include <string>
 
 namespace jsocketpp
 {
+
+/**
+ * @brief Receive-time sizing policy for UDP datagrams.
+ * @ingroup udp
+ *
+ * @details
+ * Controls how `DatagramSocket::read(...)` chooses the number of bytes
+ * to request from the OS for the **next** UDP datagram. This affects both
+ * the likelihood of truncation and the number of syscalls performed per receive.
+ *
+ * **General behavior**
+ * - In all modes, exactly **one** datagram is consumed per call.
+ * - The OS may truncate the payload if the destination buffer is smaller than the datagram.
+ * - For `DatagramPacket&` variants, the `resizeBuffer` parameter still applies and determines
+ *   whether the packet’s buffer may be **grown/shrunk** by the call (see individual modes).
+ * - For raw-buffer variants (e.g., `readInto()`), the buffer size is fixed by the caller;
+ *   no resizing is possible, but truncation may occur.
+ *
+ * **Performance note**
+ * - Modes that preflight the exact datagram size typically issue an **extra syscall**
+ *   (e.g., `FIONREAD` or `MSG_PEEK|MSG_TRUNC`) before the actual receive. This improves
+ *   sizing accuracy at a small cost in throughput.
+ *
+ * @code
+ * DatagramPacket pkt;
+ * pkt.resize(4096); // provision capacity
+ *
+ * // Default (no preflight): fastest path; may truncate if a datagram > 4096 arrives
+ * std::size_t n = sock.read(pkt, true, jsocketpp::DatagramReceiveMode::NoPreflight);
+ *
+ * // Preflight: probe exact size and (if allowed) grow pkt before receiving to avoid truncation
+ * n = sock.read(pkt, true, jsocketpp::DatagramReceiveMode::PreflightSize);
+ *
+ * // PreflightMax: probe size but never request more than current capacity (or provided length)
+ * n = sock.read(pkt, false, jsocketpp::DatagramReceiveMode::PreflightMax);
+ * @endcode
+ *
+ * @since 1.0
+ */
+enum class DatagramReceiveMode : std::uint8_t
+{
+    /**
+     * @brief Do not probe the datagram size; call `recvfrom()` directly.
+     *
+     * @details
+     * - **Syscalls:** 1 (fast path).
+     * - **Resizing:** If `resizeBuffer == true`, the packet may be **shrunk** *after* the receive
+     *   to match the actual byte count; it is **not** grown beforehand.
+     * - **Truncation:** If the incoming datagram exceeds the current buffer size, the OS returns
+     *   only the first `buffer.size()` bytes and discards the rest (standard UDP behavior).
+     *
+     * Use this for fixed-size protocols or hot paths where every syscall counts.
+     */
+    NoPreflight = 0,
+
+    /**
+     * @brief Probe the exact size of the next datagram and size the receive accordingly.
+     *
+     * @details
+     * - **Syscalls:** up to 2 (probe, then receive).
+     * - **Resizing (DatagramPacket):** If `resizeBuffer == true` and the probed size is greater
+     *   than `packet.size()`, the implementation may **grow** the packet (clamped to
+     *   `MaxDatagramPayloadSafe`) to avoid truncation. If `resizeBuffer == false`, the packet is
+     *   **not grown** and truncation may still occur.
+     * - **Raw buffer:** Reads exactly the probed size if it fits in `len`, otherwise truncates to `len`.
+     * - **Accuracy:** Uses platform facilities such as `FIONREAD` or a POSIX `MSG_PEEK|MSG_TRUNC`
+     *   probe via `nextDatagramSize()`. On platforms where the probe is unavailable or unreliable,
+     *   behavior gracefully degrades to `NoPreflight`.
+     *
+     * Choose this when datagram sizes vary widely and avoiding truncation is more important
+     * than minimizing syscalls.
+     */
+    PreflightSize = 1,
+
+    /**
+     * @brief Probe the size of the next datagram but cap it at the current buffer length.
+     *
+     * @details
+     * - **Syscalls:** up to 2 (probe, then receive).
+     * - **Resizing (DatagramPacket):** If `resizeBuffer == true` and the probed size is less than
+     *   or equal to `packet.size()`, the packet may be shrunk to the exact size after the receive.
+     *   If the probed size is greater than `packet.size()`, truncation occurs; the packet is never grown.
+     * - **Raw buffer:** Reads exactly `min(probedSize, len)`.
+     * - **Accuracy:** Same probe mechanism as `PreflightSize`.
+     *
+     * Use this to avoid oversizing reads while still skipping unnecessary extra bytes for
+     * smaller datagrams.
+     */
+    PreflightMax = 2
+};
+
+/**
+ * @brief Options controlling a single UDP receive operation.
+ * @ingroup udp
+ *
+ * This structure encapsulates the configurable parameters that control how a UDP datagram
+ * is received and processed by the DatagramSocket class. It provides fine-grained control
+ * over buffer management, system flags, and post-receive behavior.
+ *
+ * ### Key Features:
+ * - Controls datagram sizing policy
+ * - Manages buffer resizing behavior
+ * - Sets system receive flags
+ * - Controls remote peer tracking
+ * - Configures address resolution
+ *
+ * @see DatagramSocket::read()
+ * @see DatagramReceiveMode
+ * @since 1.0
+ */
+struct DatagramReadOptions
+{
+    /**
+     * @brief Datagram sizing policy to use during receive.
+     *
+     * Controls whether to probe the datagram size before receiving (preflight) or
+     * directly read into the provided buffer. See @ref DatagramReceiveMode for details.
+     */
+    DatagramReceiveMode mode = DatagramReceiveMode::NoPreflight;
+
+    /**
+     * @brief Whether the packet buffer may grow before receive (applies to DatagramPacket).
+     *
+     * When true and using PreflightSize mode, allows the implementation to grow the
+     * packet buffer if the probed datagram size exceeds current capacity. This can
+     * prevent truncation at the cost of potential allocation.
+     */
+    bool allowGrow = true;
+
+    /**
+     * @brief Whether the packet buffer may shrink after receive (applies to DatagramPacket).
+     *
+     * When true, allows the implementation to shrink the packet buffer to exactly match
+     * the received datagram size after a successful receive. This can reduce memory usage
+     * but may trigger reallocation on subsequent receives.
+     */
+    bool allowShrink = true;
+
+    /**
+     * @brief Extra flags passed to recv/recvfrom (e.g., MSG_PEEK).
+     *
+     * Platform-specific flags that modify the behavior of the underlying receive operation.
+     * Common values include:
+     * - MSG_PEEK: Look at data without removing it from the receive queue
+     * - MSG_WAITALL: Block until the full request can be satisfied
+     * - MSG_DONTWAIT: Non-blocking operation
+     */
+    int recvFlags = 0;
+
+    /**
+     * @brief Whether to persist sender into the socket's "last remote" (unconnected sockets).
+     *
+     * When true on an unconnected socket, updates the internal state tracking the most
+     * recent peer address. This enables getRemoteIp() and getRemotePort() to return
+     * information about the last datagram sender.
+     */
+    bool updateLastRemote = true;
+
+    /**
+     * @brief Whether to resolve numeric host/port into DatagramPacket after receive.
+     *
+     * When true, attempts to convert the sender's address into a human-readable IP string
+     * and port number. This may incur additional syscalls but provides convenient access
+     * to peer information via DatagramPacket::address and DatagramPacket::port.
+     */
+    bool resolveNumeric = true;
+};
+
+/**
+ * @brief Telemetry data about a single UDP datagram receive operation.
+ * @ingroup udp
+ *
+ * The `DatagramReadResult` structure encapsulates comprehensive details about the result of a UDP datagram receive
+ * operation, including payload size, truncation status, and sender information. It enables monitoring and control of
+ * datagram handling behavior.
+ *
+ * Key features:
+ * - Tracks actual bytes received and copied to the destination buffer
+ * - Reports full size of the original datagram when available via preflight
+ * - Indicates truncation status for datagrams exceeding buffer capacity
+ * - Captures raw sender address information for unconnected sockets in a platform-independent format
+ *
+ * ### Use Cases:
+ * - Monitoring datagram sizes and truncation
+ * - Tracking sender information without DNS resolution
+ * - Implementing custom routing or filtering logic
+ * - Performance profiling and diagnostics
+ *
+ * @see DatagramSocket::read()
+ * @see DatagramReceiveMode
+ * @see DatagramReadOptions
+ * @since 1.0
+ */
+struct DatagramReadResult
+{
+    /**
+     * @brief Number of bytes successfully copied into the destination buffer.
+     *
+     * This field indicates how many bytes were actually stored in the caller's buffer during the receive
+     * operation. If the datagram was larger than the provided buffer capacity and truncation occurred,
+     * this value will be less than `datagramSize`.
+     *
+     * @note For zero-length datagrams, this will be 0 even though the receive was successful.
+     */
+    std::size_t bytes = 0;
+
+    /**
+     * @brief Full size of the original datagram when it can be determined.
+     *
+     * This field represents the complete size of the received datagram before any truncation,
+     * when it can be determined through:
+     * - Preflight size probing (`DatagramReceiveMode::PreflightSize`)
+     * - Platform-specific mechanisms (e.g., MSG_TRUNC on Linux)
+     *
+     * @note A value of 0 indicates the size could not be determined (no preflight or platform support).
+     */
+    std::size_t datagramSize = 0;
+
+    /**
+     * @brief Indicates whether datagram truncation occurred.
+     *
+     * Set to true if the incoming datagram was larger than the provided destination buffer's capacity,
+     * causing the excess bytes to be discarded. This is a common occurrence in UDP when:
+     * - The sender's message exceeds the receiver's buffer size
+     * - Buffer sizing policy (`DatagramReceiveMode`) doesn't match actual datagram sizes
+     * - Platform MTU or fragmentation limits are exceeded
+     */
+    bool truncated = false;
+
+    /**
+     * @brief Raw storage for the sender's address information.
+     *
+     * This field contains the platform-independent sockaddr_storage structure holding
+     * the complete address information of the datagram sender. This is only valid for:
+     * - Unconnected sockets accepting datagrams from any source
+     * - When srcLen > 0 indicates valid sender info was captured
+     *
+     * @note For connected sockets or when sender info isn't needed, this may be empty.
+     */
+    sockaddr_storage src{};
+
+    /**
+     * @brief Length in bytes of the valid address data in src.
+     *
+     * This field indicates how many bytes in the src structure contain valid sender
+     * address information. A value of 0 means either:
+     * - The socket is in connected mode (sender info not captured)
+     * - The receive operation didn't capture sender details
+     * - No sender information was available
+     */
+    socklen_t srcLen = 0;
+};
 
 /**
  * @class DatagramSocket
@@ -1178,7 +1433,7 @@ class DatagramSocket : public SocketOptions
      * @see connect(), isConnected(), write(std::string_view), writeTo(), DatagramPacket,
      *      getRemoteIp(), getRemotePort()
      */
-    void write(const DatagramPacket& packet);
+    void write(const DatagramPacket& packet) const;
 
     /**
      * @brief Sends a string message as a UDP datagram to the connected peer.
@@ -1239,193 +1494,670 @@ class DatagramSocket : public SocketOptions
      * @see connect() To establish a persistent default peer
      * @see isConnected(), getRemoteIp(), getRemotePort(), getRemoteSocketAddress()
      */
-    void write(std::string_view message, std::string_view host, Port port);
+    void write(std::string_view message, std::string_view host, Port port) const;
 
     /**
-     * @brief Receives a UDP datagram and fills the provided DatagramPacket.
-     *
-     * Receives a datagram into the packet's buffer, and sets the sender's address and port fields.
-     * The buffer should be preallocated to the maximum expected datagram size.
-     *
-     * @param packet DatagramPacket object to receive into (buffer should be pre-sized).
-     * @param resizeBuffer If true (default), resizes packet.buffer to the number of bytes received.
-     *        If false, leaves buffer size unchanged (only the initial part of the buffer is valid)
-     * @return Number of bytes received.
-     * @throws SocketException on error.
-     */
-    [[nodiscard]] size_t read(DatagramPacket& packet, bool resizeBuffer = true) const;
-
-    /**
-     * @brief Reads a fixed-size, trivially copyable object of type `T` from the datagram socket.
+     * @brief Receive a single UDP datagram into a @ref DatagramPacket with full control and telemetry.
      * @ingroup udp
      *
-     * This method receives a full UDP datagram and deserializes it into a binary-safe
-     * object of type `T`. It works seamlessly in both connected and unconnected modes:
+     * @details
+     * This high-level method wraps the low-level @ref readIntoBuffer() backbone to provide
+     * an easy yet powerful interface for receiving datagrams into a @ref DatagramPacket.
+     * It applies the caller-specified policy in @p opts to determine preflight behavior,
+     * buffer growth/shrink decisions, additional `recv()` flags, and side effects such as
+     * persisting the sender as the "last remote" or resolving numeric host/port fields.
      *
-     * ---
+     * **Core behavior**
+     * - Always consumes exactly one UDP datagram from the socket's receive queue.
+     * - Honors the capacity of @p packet.buffer but may grow/shrink it according to @p opts.
+     * - Uses @ref DatagramReceiveMode from @p opts.mode to control whether and how the
+     *   next datagram's size is probed before the receive call.
+     * - If the socket is unconnected, captures the sender address, optionally persists it
+     *   in the socket, and resolves numeric host/port fields in @p packet.
+     * - Detects truncation when the datagram is larger than the available capacity.
+     * - Returns a @ref DatagramReadResult with full telemetry: actual bytes received,
+     *   probed full datagram size (if known), truncation flag, and source address info.
      *
-     * ### 🔁 Connection Modes
-     * - If the socket is **connected** (via `connect()`), this method uses `recv()` and only accepts
-     *   datagrams from the fixed peer.
-     * - If the socket is **unconnected**, it uses `recvfrom()` and captures the sender's address.
-     *   The sender’s address will be stored internally and can be accessed using `getRemoteIp()` and `getRemotePort()`.
+     * **Thread safety:** This method is not inherently thread-safe. External synchronization
+     * is required if multiple threads may access the same @ref DatagramSocket concurrently.
      *
-     * ---
+     * **Performance note:** Modes that preflight the datagram size may incur an additional
+     * syscall compared to `NoPreflight`, trading throughput for accuracy in buffer sizing.
      *
-     * ### Implementation Details
-     * - Performs a single `recv()` or `recvfrom()` call (no looping)
-     * - Requires the received datagram to be at least `sizeof(T)` bytes
-     * - Excess bytes (if any) are silently discarded
-     * - Enforces type constraints: `std::is_trivially_copyable` and `std::is_standard_layout`
-     * - Performs **no** endianness conversion or decoding logic
+     * @param[in,out] packet Destination datagram container. Its @c buffer provides capacity;
+     *        on return, its @c address and @c port fields are updated if requested in @p opts.
+     * @param[in] opts Options controlling receive policy, buffer management, and side effects.
+     *        Defaults to all-safe behavior with no preflight, growth allowed, and sender
+     *        persistence enabled.
      *
-     * ---
+     * @return A @ref DatagramReadResult struct containing:
+     *         - @c bytes: actual bytes copied into @p packet.buffer
+     *         - @c datagramSize: probed full datagram size (0 if unknown)
+     *         - @c truncated: true if payload was cut off due to limited capacity
+     *         - @c src / @c srcLen: sender address and length (when captured)
      *
-     * ### Use Cases
-     * - Receiving fixed-size protocol packets (e.g., headers, commands, binary structs)
-     * - Message-based IoT or telemetry systems
-     * - High-performance UDP applications requiring raw data deserialization
+     * @throws SocketException
+     *         If the socket is not open, @p packet has zero capacity with growth disallowed,
+     *         or a non-timeout socket error occurs during the receive.
+     * @throws SocketTimeoutException
+     *         If the receive times out (SO_RCVTIMEO) or in non-blocking mode when no data is available.
      *
-     * ---
+     * @since 1.0
+     */
+    DatagramReadResult read(DatagramPacket& packet, const DatagramReadOptions& opts = {}) const;
+
+    /**
+     * @brief Receive a single UDP datagram into a fixed-size caller-provided buffer with full control and telemetry.
+     * @ingroup udp
      *
-     * ### Example
+     * @details
+     * This method is the raw-buffer counterpart to @ref read(DatagramPacket&, const DatagramReadOptions&).
+     * It reads exactly one UDP datagram from the socket into a memory region provided by the caller,
+     * never allocating or resizing storage. All sizing and truncation control is handled by the
+     * parameters in @p opts, but unlike @ref DatagramPacket, raw buffers cannot be grown automatically.
+     *
+     * **Core behavior**
+     * - Always consumes exactly one datagram from the socket's receive queue.
+     * - Honors @p len as a strict capacity limit; never writes beyond @p buffer.
+     * - Uses the preflight policy in @p opts.mode to optionally probe the next datagram's size
+     *   before the receive call, clamping the request to `min(probedSize, MaxDatagramPayloadSafe, len)`.
+     * - If the socket is unconnected, can capture the sender address, optionally update it as
+     *   the socket's "last remote", and return it in the result.
+     * - Detects when the datagram payload is larger than @p len and reports truncation in the result.
+     * - Returns a @ref DatagramReadResult with telemetry including actual bytes received, probed size,
+     *   truncation flag, and sender address (if captured).
+     *
+     * **Thread safety:** This method is not inherently thread-safe. Use external synchronization
+     * if multiple threads access the same @ref DatagramSocket concurrently.
+     *
+     * **Performance note:** When @ref DatagramReceiveMode in @p opts requests preflight sizing,
+     * an extra syscall (e.g., `FIONREAD` or `MSG_PEEK|MSG_TRUNC`) may occur before the actual receive.
+     *
+     * @param[out] buffer Pointer to writable memory with at least @p len bytes capacity. Must be non-null
+     *        if @p len > 0.
+     * @param[in] len Capacity of @p buffer in bytes. Acts as a hard cap on how many bytes can be written.
+     * @param[in] opts Receive options controlling preflight behavior, recv() flags, and whether to persist
+     *        or resolve the sender address. Defaults to no preflight, no extra recv flags, and last-remote updates
+     *        enabled.
+     *
+     * @return A @ref DatagramReadResult struct containing:
+     *         - @c bytes: actual bytes copied into @p buffer
+     *         - @c datagramSize: probed full datagram size (0 if unknown)
+     *         - @c truncated: true if datagram exceeded @p len
+     *         - @c src / @c srcLen: sender address and length (when captured for unconnected sockets)
+     *
+     * @throws SocketException
+     *         If the socket is not open, arguments are invalid, or a non-timeout socket error occurs.
+     * @throws SocketTimeoutException
+     *         If the receive times out (SO_RCVTIMEO) or, in non-blocking mode, no data is available.
+     *
+     * @note This method never resizes memory; truncation is possible if @p len is smaller than the incoming datagram.
+     *
+     * @since 1.0
+     */
+    DatagramReadResult readInto(void* buffer, std::size_t len, const DatagramReadOptions& opts = {}) const;
+
+    /**
+     * @brief Receive a single UDP datagram into a caller-provided container type.
+     * @ingroup udp
+     *
+     * @tparam T The container type to receive into.
+     *           - **Dynamic containers** (e.g., `std::string`, `std::vector<char>`,
+     *             `std::vector<std::byte>`): must satisfy `detail::is_dynamic_buffer_v<T>`.
+     *           - **Fixed-size containers** (e.g., `std::array<char, N>`,
+     *             `std::array<std::byte, N>`): must satisfy `detail::is_fixed_buffer_v<T>`.
+     *
+     * @param[in] opts
+     *        [in] Datagram read options controlling preflight sizing, timeouts, source
+     *        address capture, and low-level receive flags.
+     * @param[in] minCapacity
+     *        [in] (Dynamic containers only) Minimum initial capacity to reserve before reading.
+     *        Defaults to `DefaultDatagramReceiveSize`.
+     *        - If zero, defaults to `1` to allow reception of zero-length datagrams.
+     *        - The capacity is clamped to `MaxDatagramPayloadSafe` and may be increased
+     *          by a preflight probe when `opts.mode` requests it.
+     *
+     * @return
+     * - For **dynamic containers**: a fully-sized container of type `T` containing exactly
+     *   the bytes received. The container is resized down to match the actual datagram length
+     *   and is binary-safe (no null terminator is added to `std::string`).
+     * - For **fixed-size containers**: a value-initialized container of type `T` containing
+     *   up to `T::size()` bytes. Remaining bytes are zero-initialized if the datagram is smaller.
+     *
+     * @throws SocketException
+     *         If the socket is not open or a non-timeout receive error occurs.
+     * @throws SocketTimeoutException
+     *         If the receive times out (SO_RCVTIMEO) or, in non-blocking mode, no data is available.
+     *
+     * @details
+     * This method is a generic, type-safe wrapper over @ref readInto(void*,size_t,const DatagramReadOptions&),
+     * ensuring unified behavior for all receive operations:
+     * - All I/O, error handling, timeouts, and truncation detection are handled by the same
+     *   underlying backbone, `readIntoBuffer()`.
+     * - For dynamic containers, the capacity is chosen from `minCapacity` and optionally
+     *   refined using `internal::nextDatagramSize()` when preflight is requested.
+     * - For fixed-size containers, the compile-time size is respected; no resizing occurs.
+     * - Truncation detection is available through @ref readInto when you need telemetry
+     *   such as full datagram size and sender address.
+     *
+     * ### Example — dynamic container (`std::string`)
      * @code
-     * struct Packet {
-     *     std::uint32_t id;
-     *     std::uint16_t flags;
-     *     char payload[64];
-     * };
+     * jsocketpp::DatagramSocket sock(12345);
+     * sock.bind();
      *
-     * DatagramSocket sock(AF_INET);
-     * sock.bind(12345);
+     * std::string msg = sock.read<std::string>(
+     *     { .mode = jsocketpp::DatagramReceiveMode::PreflightSize }
+     * );
      *
-     * // Wait for one UDP packet of exactly sizeof(Packet)
-     * Packet p = sock.read<Packet>();
-     * std::cout << "Received packet with ID: " << p.id << "\n";
+     * std::cout << "Received " << msg.size() << " bytes\n";
      * @endcode
      *
-     * ---
+     * ### Example — fixed-size container (`std::array<char, 512>`)
+     * @code
+     * auto buf = sock.read<std::array<char, 512>>(
+     *     { .mode = jsocketpp::DatagramReceiveMode::PreflightMax }
+     * );
+     * @endcode
      *
-     * @tparam T A trivially copyable POD type to deserialize
-     * @return Fully constructed object of type `T` from the received message
+     * @note
+     * - This overload discards sender address/port information; use
+     *   @ref read(DatagramPacket&,const DatagramReadOptions&) or
+     *   @ref readInto(void*,size_t,const DatagramReadOptions&) if you need it.
+     * - For large datagrams, ensure your container capacity is sufficient to avoid truncation.
      *
-     * @throws SocketException If:
-     * - The socket is not open or bound
-     * - A network or system error occurs (`ECONNRESET`, `EINVAL`, etc.)
-     * - The received datagram is shorter than `sizeof(T)`
-     *
-     * @warning Byte Order:
-     * No endianness normalization is applied. You must convert fields manually.
-     * Use the provided `jsocketpp::net::fromNetwork()` and `toNetwork()` helpers
-     * for safe and portable conversion of integers between host and network byte order.
-     * These replace platform-specific calls like `ntohl()` or `htons()`.
-     *
-     * @warning Do not use this with types containing pointers, virtual methods, padding, or platform-specific layouts.
-     *
-     * @note If the socket is unconnected, this method also updates the remote peer address
-     *       for use with `getRemoteIp()` and `getRemotePort()`.
-     *
-     * @see write()           For sending POD messages
-     * @see receiveFrom()     For full message + peer address access
-     * @see isConnected()     To check connection mode
-     * @see getRemoteIp(), getRemotePort()
+     * @since 1.0
      */
-    template <typename T> [[nodiscard]] T read()
+    template <typename T, std::enable_if_t<detail::is_dynamic_buffer_v<T>, int> = 0>
+    [[nodiscard]] T read(const DatagramReadOptions& opts = {},
+                         std::size_t minCapacity = DefaultDatagramReceiveSize) const
     {
-        static_assert(std::is_trivially_copyable_v<T>, "DatagramSocket::read<T>() requires a trivially copyable type");
-        static_assert(std::is_standard_layout_v<T>, "DatagramSocket::read<T>() requires a standard layout type");
+        if (minCapacity == 0)
+            minCapacity = 1; // ensure we can receive zero-length datagrams cleanly
 
-        std::array<std::byte, sizeof(T)> buffer{};
+        std::size_t capacity = (std::min) (minCapacity, MaxDatagramPayloadSafe);
 
-        int bytesReceived = 0;
-
-        if (isConnected())
+        // Optional preflight probe to choose a better starting capacity
+        if (opts.mode != DatagramReceiveMode::NoPreflight)
         {
-            bytesReceived = ::recv(getSocketFd(), reinterpret_cast<char*>(buffer.data()),
-#ifdef _WIN32
-                                   static_cast<int>(buffer.size()),
-#else
-                                   buffer.size(),
-#endif
-                                   0);
-        }
-        else
-        {
-            sockaddr_storage srcAddr{};
-            socklen_t srcLen = sizeof(srcAddr);
-
-            bytesReceived = ::recvfrom(getSocketFd(), reinterpret_cast<char*>(buffer.data()),
-#ifdef _WIN32
-                                       static_cast<int>(buffer.size()),
-#else
-                                       buffer.size(),
-#endif
-                                       0, reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
-
-            if (bytesReceived >= 0)
+            try
             {
-                _remoteAddr = srcAddr;
-                _remoteAddrLen = srcLen;
+                if (const std::size_t exact = internal::nextDatagramSize(getSocketFd()); exact > 0)
+                {
+                    const std::size_t clamped = (std::min) (exact, MaxDatagramPayloadSafe);
+                    capacity = (std::max) (capacity, clamped);
+                }
+            }
+            catch (const SocketException&)
+            {
+                // Graceful degradation: keep current capacity
             }
         }
 
-        if (bytesReceived == SOCKET_ERROR)
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
-        }
+        T out;
+        out.resize(capacity);
 
-        if (bytesReceived < static_cast<int>(sizeof(T)))
-            throw SocketException("Datagram too short for fixed-size read<T>(); expected full object.");
+        // Delegate to the backbone — ensures consistent error/timeout/truncation handling
+        // Shrink to actual bytes received (never null-terminate automatically)
+        if (auto res = readInto(static_cast<void*>(out.data()), out.size(), opts); res.bytes < out.size())
+            out.resize(res.bytes);
 
-        return std::bit_cast<T>(buffer);
+        return out;
     }
 
     /**
-     * @brief Receive a datagram into a trivially copyable type.
-     * @tparam T The type to receive.
-     * @param senderAddr [out] String to store sender's address.
-     * @param senderPort [out] Variable to store sender's port.
-     * @return The received value of type T.
-     * @throws SocketException on error.
+     * @copydoc read(const DatagramReadOptions&,std::size_t) const
      */
-    template <typename T> T recvFrom(std::string* senderAddr, Port* senderPort)
+    template <typename T, std::enable_if_t<detail::is_fixed_buffer_v<T>, int> = 0>
+    [[nodiscard]] T read(const DatagramReadOptions& opts = {}) const
+    {
+        T out{}; // value-init to ensure predictable padding if datagram is shorter
+        (void) readInto(static_cast<void*>(out.data()), out.size(), opts);
+        return out;
+    }
+
+    /**
+     * @brief Receive one UDP datagram directly into a trivially copyable type.
+     * @ingroup udp
+     *
+     * @tparam T Trivially copyable type to receive (e.g. POD structs, fixed-size arrays).
+     * @param[out] senderAddr Optional pointer to store sender's numeric address.
+     * @param[out] senderPort Optional pointer to store sender's numeric port.
+     * @param[in]  mode       Sizing policy for the receive (default = NoPreflight).
+     *
+     * @return The received value of type T. If the datagram is smaller than sizeof(T),
+     *         the remainder of the value is zero-initialized. If larger, the excess
+     *         is discarded (standard UDP truncation).
+     *
+     * @throws SocketException
+     *         - If the socket is not open.
+     *         - On receive error; thrown via `internal::throwLastSockError()`.
+     *         - On numeric host/port resolution failure (if supported by platform).
+     *
+     * @note This is a convenience wrapper over `DatagramSocket::read()` that enforces type safety
+     *       and uses the same sender resolution logic.
+     * @see DatagramReceiveMode
+     * @since 1.0
+     */
+    template <typename T>
+    T recvFrom(std::string* senderAddr = nullptr, Port* senderPort = nullptr,
+               const DatagramReceiveMode mode = DatagramReceiveMode::NoPreflight) const
     {
         static_assert(std::is_trivially_copyable_v<T>, "recvFrom<T>() only supports trivially copyable types");
 
-        sockaddr_storage srcAddr{};
-        socklen_t srcLen = sizeof(srcAddr);
-        T value;
-        const auto n = ::recvfrom(getSocketFd(), reinterpret_cast<char*>(&value), sizeof(T), 0,
-                                  reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
-        if (n == SOCKET_ERROR)
+        if (getSocketFd() == INVALID_SOCKET)
         {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException("DatagramSocket::recvFrom<T>(): socket is not open.");
         }
-        if (n == 0)
-            throw SocketException("Connection closed by remote host.");
 
-        // Get sender's IP:port
-        char hostBuf[NI_MAXHOST], portBuf[NI_MAXSERV];
-        if (getnameinfo(reinterpret_cast<sockaddr*>(&srcAddr), srcLen, hostBuf, sizeof(hostBuf), portBuf,
-                        sizeof(portBuf), NI_NUMERICHOST | NI_NUMERICSERV) == 0)
-        {
-            if (senderAddr)
-                *senderAddr = hostBuf;
-            if (senderPort)
-                *senderPort = static_cast<Port>(std::stoul(portBuf));
-        }
-        else
-        {
-            if (senderAddr)
-                senderAddr->clear();
-            if (senderPort)
-                *senderPort = 0;
-        }
+        // Prepare a DatagramPacket of the exact type size
+        DatagramPacket packet(sizeof(T));
+
+        // Perform the receive using the unified read() implementation
+        read(packet, false /* resizeBuffer */, mode);
+
+        // Copy into the return value, zero-fill if short
+        T value{};
+        const std::size_t toCopy = (std::min) (packet.size(), sizeof(T));
+        std::memcpy(&value, packet.buffer.data(), toCopy);
+
+        // Fill sender info if requested
+        if (senderAddr)
+            *senderAddr = packet.address;
+        if (senderPort)
+            *senderPort = packet.port;
 
         return value;
     }
+
+    /**
+     * @brief Read a UDP datagram of exactly `n` bytes into a std::string.
+     * @ingroup udp
+     *
+     * @details
+     * Performs exactly **one** receive and enforces that the datagram payload length
+     * matches `n` exactly. If the datagram is smaller or larger, a `SocketException`
+     * is thrown. This method is a strict fixed-size variant of
+     * `read(DatagramPacket&, bool, DatagramReceiveMode)`.
+     *
+     * **Semantics**
+     * - Consumes exactly one datagram (no looping).
+     * - Zero-length datagrams are only valid if `n == 0`.
+     * - Works in both connected and unconnected modes; for unconnected sockets, the
+     *   sender is remembered so `getRemoteIp()` / `getRemotePort()` reflect the most
+     *   recent peer.
+     * - No endianness conversion or decoding is performed.
+     *
+     * @param[in] n    Exact number of bytes to receive.
+     * @param[in] mode Receive-time sizing policy (default = `DatagramReceiveMode::NoPreflight`).
+     *
+     * @return Payload as a `std::string` containing exactly `n` bytes.
+     *
+     * @throws SocketException
+     *         - If the socket is not open.
+     *         - If the datagram is not exactly `n` bytes in length.
+     *         - On receive failure; thrown via `internal::throwLastSockError()`.
+     *
+     * @since 1.0
+     */
+    [[nodiscard]] std::string readExact(std::size_t n,
+                                        DatagramReceiveMode mode = DatagramReceiveMode::NoPreflight) const;
+
+    /**
+     * @brief Receive up to the specified number of bytes from the socket.
+     * @ingroup udp
+     *
+     * Reads at most \p n bytes from the socket into an internal buffer and returns
+     * them as a `std::string`. This method will return immediately once a single
+     * datagram is received—possibly containing fewer than \p n bytes if the datagram
+     * is smaller, or exactly \p n bytes if it is larger (truncating the excess).
+     *
+     * @details
+     * - Works in both connected and unconnected modes:
+     *   - **Connected:** Data is read from the connected peer only.
+     *   - **Unconnected:** Data is read from any sender; the sender's address and port
+     *     are stored internally and can be retrieved via `getRemoteIp()` / `getRemotePort()`.
+     * - Unlike `readExact()`, this method does not throw if fewer than \p n bytes are received.
+     * - If \p n is zero, an empty string is returned immediately.
+     *
+     * @param[in] n The maximum number of bytes to read from a single datagram.
+     *
+     * @return A `std::string` containing the received bytes (length ≤ \p n).
+     *
+     * @throw SocketException If the socket is not open or if a receive error occurs.
+     *
+     * @note
+     * - This method internally calls `read(DatagramPacket&, bool, DatagramReceiveMode)`
+     *   with `resizeBuffer=true` and `DatagramReceiveMode::NoPreflight`.
+     * - For large datagrams, consider using `MaxDatagramPayloadSafe` as a safe upper bound.
+     *
+     * @code
+     * jsocketpp::DatagramSocket socket;
+     * socket.bind(12345);
+     * auto data = socket.readAtMost(512);
+     * std::cout << "Received: " << data << std::endl;
+     * @endcode
+     */
+    [[nodiscard]] std::string readAtMost(std::size_t n) const;
+
+    /**
+     * @brief Receive the next available datagram in its entirety.
+     * @ingroup udp
+     *
+     * Reads the next datagram from the socket and returns it as a `std::string`,
+     * automatically sizing the buffer to exactly fit the datagram's payload.
+     *
+     * @details
+     * - Works in both connected and unconnected modes:
+     *   - **Connected:** Data is read from the connected peer only.
+     *   - **Unconnected:** Data is read from any sender; the sender's address and port
+     *     are stored internally and can be retrieved via `getRemoteIp()` / `getRemotePort()`.
+     * - This method uses a preflight size check (`DatagramReceiveMode::PreflightSize`)
+     *   to determine the exact payload size before performing the actual receive.
+     * - If the datagram size exceeds `MaxDatagramPayloadSafe`, the buffer will be
+     *   capped at that value.
+     *
+     * @return A `std::string` containing the full datagram payload.
+     *
+     * @throw SocketException If the socket is not open or if a receive error occurs.
+     *
+     * @note
+     * - This method is equivalent to calling `read(DatagramPacket&, true, DatagramReceiveMode::PreflightSize)`
+     *   followed by constructing a string from the packet's buffer.
+     * - For datagrams where the size is not known in advance, this method ensures that
+     *   no truncation occurs unless the message exceeds `MaxDatagramPayloadSafe`.
+     *
+     * @code
+     * jsocketpp::DatagramSocket socket;
+     * socket.bind(12345);
+     * auto data = socket.readAvailable();
+     * std::cout << "Received " << data.size() << " bytes" << std::endl;
+     * @endcode
+     */
+    [[nodiscard]] std::string readAvailable() const;
+
+    /**
+     * @brief Reads exactly @p len bytes from the next datagram into @p buffer.
+     * @ingroup udp
+     *
+     * Connected-only. Throws unless the datagram payload size is exactly @p len.
+     *
+     * @param[out] buffer Destination buffer (must hold @p len bytes).
+     * @param[in]  len    Required datagram size.
+     * @return Number of bytes copied (== len on success).
+     *
+     * @throws SocketException If not connected, on recv error, or if datagram size != len.
+     *
+     * @see readExact() String-returning variant
+     */
+    std::size_t readIntoExact(void* buffer, std::size_t len) const;
+
+    /**
+     * @brief Attempts a best-effort single datagram read with a timeout.
+     * @ingroup udp
+     *
+     * Waits up to @p timeoutMillis for readability, then performs one recv() that returns
+     * up to @p n bytes (truncating if datagram is larger). Connected-only.
+     *
+     * @param[in] n             Maximum payload bytes to return (> 0).
+     * @param[in] timeoutMillis Time to wait for readability:
+     *                          - > 0: wait up to this many ms
+     *                          - 0:  poll (non-blocking)
+     *                          - < 0: throws SocketException
+     *
+     * @return 0..n bytes from the datagram (empty only for zero-length datagram).
+     *
+     * @throws SocketTimeoutException If unreadable within the timeout.
+     * @throws SocketException On invalid socket, not connected, or recv error.
+     */
+    [[nodiscard]] std::string readAtMostWithTimeout(std::size_t n, int timeoutMillis) const;
+
+    /**
+     * @brief Reads a length-prefixed payload where the prefix type is @p T (connected-only).
+     * @ingroup udp
+     *
+     * First receives a datagram containing a @p T-sized length prefix followed by the payload.
+     * The prefix is interpreted in **network byte order**. If the datagram does not contain
+     * exactly sizeof(T) + length bytes, this method throws.
+     *
+     * @tparam T Unsigned, trivially copyable integral prefix type (e.g., uint16_t/uint32_t).
+     * @return The payload bytes as a string (excluding the prefix).
+     *
+     * @throws SocketException If not connected, on recv error, if size is inconsistent,
+     *                         or if prefix decoding fails.
+     *
+     * @see readPrefixed<T>(std::size_t) Bounded variant
+     * @see writePrefixed<T>() Matching sender
+     */
+    template <typename T> [[nodiscard]] std::string readPrefixed();
+
+    /**
+     * @brief Length-prefixed read with a maximum payload bound.
+     * @ingroup udp
+     *
+     * Same as readPrefixed<T>(), but validates that decoded payload length does not
+     * exceed @p maxPayloadLen.
+     *
+     * @tparam T Unsigned integral prefix type (network byte order).
+     * @param[in] maxPayloadLen Maximum allowed payload length in bytes.
+     * @return The payload as a string.
+     *
+     * @throws SocketException If size is inconsistent or exceeds @p maxPayloadLen.
+     */
+    template <typename T> [[nodiscard]] std::string readPrefixed(std::size_t maxPayloadLen);
+
+    /**
+     * @brief Discards exactly @p n bytes from the next datagram.
+     * @ingroup udp
+     *
+     * Connected-only. Receives one datagram and throws unless its payload size equals @p n.
+     * Useful for skipping fixed-size messages without copying them out.
+     *
+     * @param[in] n Required datagram size to discard (> 0).
+     *
+     * @throws SocketException If not connected, on recv error, or if size mismatch.
+     */
+    void discard(std::size_t n) const;
+
+    /**
+     * @brief Vectorized single-datagram read into multiple buffers (scatter read).
+     * @ingroup udp
+     *
+     * Connected-only. Performs a single recv/readv/WSARecv and fills the span of BufferView
+     * objects in order with bytes from **one** datagram. Returns total bytes copied (which may
+     * be less than the datagram size if buffers are smaller; trailing datagram bytes are dropped).
+     *
+     * @param[out] buffers Span of writable BufferView regions.
+     * @return Total bytes written across buffers.
+     *
+     * @throws SocketException If invalid socket, not connected, or system I/O fails.
+     */
+    std::size_t readv(std::span<BufferView> buffers) const;
+
+    /**
+     * @brief Guarantees the next datagram fully fits into @p buffers; throws otherwise.
+     * @ingroup udp
+     *
+     * Connected-only. Receives one datagram and requires that its payload fits exactly the
+     * total capacity of @p buffers. Throws on size mismatch.
+     *
+     * @param[out] buffers Span of writable BufferView regions (total size must equal datagram size).
+     * @return Total bytes read (sum of buffer sizes).
+     *
+     * @throws SocketException On mismatch, invalid socket, or recv error.
+     */
+    std::size_t readvAll(std::span<BufferView> buffers) const;
+
+    /**
+     * @brief Single vectorized read with a timeout (connected-only).
+     * @ingroup udp
+     *
+     * Waits for readability for up to @p timeoutMillis, then performs one vectorized recv.
+     * Returns whatever fits into @p buffers from one datagram; may be 0..capacity bytes.
+     *
+     * @param[out] buffers Span of BufferView regions.
+     * @param[in]  timeoutMillis >0 wait; 0 poll; <0 throws.
+     * @return Bytes copied (may be 0 if zero-length datagram).
+     *
+     * @throws SocketTimeoutException On timeout.
+     * @throws SocketException On socket/I/O errors.
+     */
+    std::size_t readvAtMostWithTimeout(std::span<BufferView> buffers, int timeoutMillis) const;
+
+    /**
+     * @brief Requires the entire datagram be delivered into @p buffers within the timeout.
+     * @ingroup udp
+     *
+     * Connected-only. Waits up to @p timeoutMillis for readiness, then receives exactly one
+     * datagram whose size must match the total capacity of @p buffers. Throws on mismatch or timeout.
+     *
+     * @param[out] buffers Span of BufferView regions (total size == datagram size).
+     * @param[in]  timeoutMillis Total deadline in ms.
+     * @return Total bytes read.
+     *
+     * @throws SocketTimeoutException On timeout.
+     * @throws SocketException On size mismatch or I/O errors.
+     */
+    std::size_t readvAllWithTotalTimeout(std::span<BufferView> buffers, int timeoutMillis) const;
+
+    /**
+     * @brief Writes the entire message to the connected peer as a single datagram.
+     * @ingroup udp
+     *
+     * Connected-only. Ensures the whole @p message is sent in one send(); throws on partial
+     * datagram or error. (Note: the OS may drop/fragment; this only guarantees local send().)
+     *
+     * @param[in] message Payload to send (may be empty to send a zero-length datagram).
+     * @return Number of bytes sent (== message.size() on success).
+     *
+     * @throws SocketException If not connected or send() fails.
+     *
+     * @see write(std::string_view) Best-effort single send
+     */
+    std::size_t writeAll(std::string_view message) const;
+
+    /**
+     * @brief Sends a length-prefixed datagram using an integral prefix type @p T.
+     * @ingroup udp
+     *
+     * Builds a datagram as [prefix(T, network byte order)] + [payload], then sends it to
+     * the connected peer. Throws if payload size does not fit in @p T.
+     *
+     * @tparam T Unsigned, trivially copyable integral type (e.g., uint32_t).
+     * @param[in] payload The payload bytes to send.
+     * @return Total bytes sent (sizeof(T) + payload.size()).
+     *
+     * @throws SocketException On size overflow, not connected, or send failure.
+     *
+     * @see readPrefixed<T>() Matching receiver
+     */
+    template <typename T> std::size_t writePrefixed(std::string_view payload);
+
+    /**
+     * @brief Sends a length-prefixed datagram from a raw buffer using prefix type @p T.
+     * @ingroup udp
+     *
+     * @tparam T Unsigned integral type for the prefix (network byte order).
+     * @param[in] data Pointer to payload (may be null iff len == 0).
+     * @param[in] len  Number of bytes to send from @p data.
+     * @return Total bytes sent (sizeof(T) + len).
+     *
+     * @throws SocketException If len exceeds T max, not connected, or send fails.
+     */
+    template <typename T> std::size_t writePrefixed(const void* data, std::size_t len) const;
+
+    /**
+     * @brief Vectorized single-datagram send (scatter/gather) to the connected peer.
+     * @ingroup udp
+     *
+     * Performs one WSASend()/sendmsg() over the provided buffer views. May send fewer bytes
+     * if the platform reports partial datagram (treated as error and throws).
+     *
+     * @param[in] buffers Span of string views forming one logical datagram.
+     * @return Total bytes sent.
+     *
+     * @throws SocketException If not connected or send fails/partial.
+     */
+    std::size_t writev(std::span<const std::string_view> buffers) const;
+
+    /**
+     * @brief Guarantees full transmission of all buffers as a single datagram.
+     * @ingroup udp
+     *
+     * Connected-only. Retries as needed until the full datagram is accepted by the kernel
+     * or throws on error.
+     *
+     * @param[in] buffers Span of fragments composing the datagram.
+     * @return Total bytes sent (sum of sizes).
+     *
+     * @throws SocketException On send error.
+     */
+    std::size_t writevAll(std::span<const std::string_view> buffers) const;
+
+    /**
+     * @brief Best-effort single send with a timeout (connected-only).
+     * @ingroup udp
+     *
+     * Waits up to @p timeoutMillis for writability, then performs one send() of @p data.
+     * Returns the number of bytes the kernel accepted (throws on error). No retries.
+     *
+     * @param[in] data           Payload to send.
+     * @param[in] timeoutMillis  >0 wait; 0 poll; <0 throws.
+     * @return Bytes sent (may be 0).
+     *
+     * @throws SocketTimeoutException On timeout.
+     * @throws SocketException On invalid socket or send error.
+     *
+     * @see writeWithTotalTimeout() Full-delivery under deadline
+     */
+    std::size_t writeAtMostWithTimeout(std::string_view data, int timeoutMillis) const;
+
+    /**
+     * @brief Sends up to @p len bytes from a raw buffer (single send).
+     * @ingroup udp
+     *
+     * Connected-only. Best-effort; returns bytes accepted by the kernel in one call.
+     *
+     * @param[in] data Pointer to payload (nullable iff len==0).
+     * @param[in] len  Number of bytes to send.
+     * @return Bytes sent (<= len).
+     *
+     * @throws SocketException If not connected or send fails.
+     *
+     * @see writeFromAll() Retry-until-full variant
+     */
+    std::size_t writeFrom(const void* data, std::size_t len) const;
+
+    /**
+     * @brief Sends exactly @p len bytes from a raw buffer in one datagram, retrying as needed.
+     * @ingroup udp
+     *
+     * Connected-only. Ensures kernel accepts the full datagram (throws otherwise).
+     *
+     * @param[in] data Pointer to payload (nullable iff len==0).
+     * @param[in] len  Payload size.
+     * @return Bytes sent (== len on success).
+     *
+     * @throws SocketException On send failure.
+     */
+    std::size_t writeFromAll(const void* data, std::size_t len) const;
+
+    /**
+     * @brief Sends the full @p data as one datagram within a total timeout.
+     * @ingroup udp
+     *
+     * Connected-only. Repeatedly waits for writability and sends until the entire datagram
+     * is accepted or the deadline expires.
+     *
+     * @param[in] data          Payload to send.
+     * @param[in] timeoutMillis Total time budget in milliseconds.
+     * @return Total bytes sent (== data.size() on success).
+     *
+     * @throws SocketTimeoutException If not fully sent before the deadline.
+     * @throws SocketException On socket/send errors.
+     *
+     * @see writeAll() Unbounded full-delivery
+     */
+    std::size_t writeWithTotalTimeout(std::string_view data, int timeoutMillis) const;
 
     /**
      * @brief Peeks at the next available UDP datagram without removing it from the socket's receive queue.
@@ -1808,6 +2540,76 @@ class DatagramSocket : public SocketOptions
 
   protected:
     /**
+     * @brief Low-level UDP receive helper for single-datagram reads into caller-provided memory.
+     * @ingroup udp
+     *
+     * @details
+     * This method is the internal backbone for higher-level `read()` and `readInto()` calls.
+     * It performs exactly one datagram receive from the socket into a fixed-size caller buffer,
+     * with optional preflight sizing, truncation detection, EINTR handling, and optional
+     * capture of the sender's address.
+     *
+     * **Key features**
+     * - Supports all @ref DatagramReceiveMode policies:
+     *   - `NoPreflight`: Fastest path; reads directly into @p buf with no size probing.
+     *   - `PreflightSize`: Probes the exact pending datagram size (via platform-dependent
+     *     mechanisms such as `FIONREAD` or `MSG_PEEK|MSG_TRUNC`) and clamps the request to
+     *     `min(probed, MaxDatagramPayloadSafe, len)`.
+     *   - `PreflightMax`: Behaves like `PreflightSize` but never requests more than the
+     *     caller's provided length; avoids oversizing the read.
+     * - Honors @p len as a hard cap; never allocates or grows memory.
+     * - Optionally captures the source address for unconnected sockets via @p outSrc/@p outSrcLen.
+     * - EINTR-safe: transparently retries the receive if interrupted.
+     * - Distinguishes between timeouts, would-block conditions, and other socket errors:
+     *   - Throws `SocketTimeoutException` for SO_RCVTIMEO expirations or non-blocking timeouts.
+     *   - Throws `SocketException` with full error code and message for other failures.
+     * - Can report the probed datagram size and whether truncation occurred via @p outDatagramSz and @p outTruncated.
+     *
+     * **Thread safety:** This method is not inherently thread-safe; callers must provide their
+     * own synchronization if multiple threads may access the same `DatagramSocket`.
+     *
+     * @param[out] buf
+     *        [in,out] Pointer to a writable buffer with at least @p len bytes capacity.
+     *        Must be non-null if @p len > 0.
+     * @param[in] len
+     *        [in] Capacity of @p buf in bytes. Zero is allowed for zero-length datagrams but
+     *        still requires a valid pointer on some platforms.
+     * @param[in] mode
+     *        [in] Datagram receive mode policy controlling preflight behavior.
+     * @param[in] recvFlags
+     *        [in] Additional flags passed to `recv()`/`recvfrom()` (e.g., `MSG_PEEK`).
+     *        Typically `0` for normal reads.
+     * @param[out] outSrc
+     *        [out] Optional pointer to a `sockaddr_storage` to receive the sender's address
+     *        (only used in unconnected mode). If `nullptr`, uses `recv()`.
+     * @param[in,out] outSrcLen
+     *        [in,out] On input, size of @p outSrc in bytes; on output, size actually written.
+     *        Ignored if @p outSrc is `nullptr`.
+     * @param[out] outDatagramSz
+     *        [out] Optional pointer to receive the total datagram size (from preflight or
+     *        actual receive). Set to `0` if unknown.
+     * @param[out] outTruncated
+     *        [out] Optional pointer set to `true` if the datagram was larger than @p len and
+     *        was truncated by the OS; otherwise set to `false`.
+     *
+     * @return Number of bytes actually stored in @p buf. May be less than @p len if the datagram
+     *         is smaller or if truncation occurred.
+     *
+     * @throws SocketException
+     *         If the socket is not open, arguments are invalid, or a non-timeout socket error occurs.
+     * @throws SocketTimeoutException
+     *         If a receive timeout expires or the socket is non-blocking and no data is available.
+     *
+     * @note This method does not update `rememberRemote()`; higher-level callers must do so
+     *       if they want to persist the last-remote address for subsequent sends.
+     *
+     * @since 1.0
+     */
+    std::size_t readIntoBuffer(char* buf, std::size_t len, DatagramReceiveMode mode, int recvFlags,
+                               sockaddr_storage* outSrc, socklen_t* outSrcLen, std::size_t* outDatagramSz,
+                               bool* outTruncated) const;
+
+    /**
      * @brief Internal helper that releases socket resources and resets all internal state.
      * @ingroup udp
      *
@@ -1933,10 +2735,73 @@ class DatagramSocket : public SocketOptions
      */
     void cleanupAndRethrow();
 
+    /**
+     * @brief Decide how many bytes to attempt to receive for the next UDP datagram.
+     * @ingroup udp
+     *
+     * @details
+     * This method centralizes the library’s **Java-like sizing policy** so all UDP `read()` variants
+     * behave consistently while keeping `_internalBuffer` as reusable storage only (never resized here).
+     *
+     * **Policy order:**
+     *  1. **Prefer exact size** from `jsocketpp::internal::nextDatagramSize(getSocketFd())`.
+     *     If the platform reports the pending datagram length, use that value.
+     *  2. **Otherwise, use caller capacity**: if `_internalBuffer.size() > 0`, treat it as the
+     *     caller-provided maximum (Java semantics).
+     *  3. If the internal buffer is **unset/empty**, fall back to `DefaultDatagramReceiveSize`.
+     *  4. **Clamp** the chosen value to `MaxDatagramPayloadSafe` (65,507 bytes) to avoid oversizing.
+     *
+     * **Semantics:**
+     *  - This method performs **no I/O** and **never resizes** `_internalBuffer`.
+     *  - The returned value is a **target** receive size; the actual bytes read may be less
+     *    (e.g., zero-length datagrams, short reads, or errors).
+     *
+     * @return Proposed byte count to pass to `recv()` / `recvfrom()` for the next datagram.
+     *
+     * @pre `getSocketFd()` is valid if the result will be used immediately for I/O.
+     * @note If the OS cannot report exact size and the sender’s datagram exceeds both the chosen
+     *       value and available destination storage, the payload may be truncated (standard UDP behavior).
+     * @see jsocketpp::internal::nextDatagramSize()
+     * @see DefaultDatagramReceiveSize
+     * @see MaxDatagramPayloadSafe
+     * @since 1.0
+     */
+    std::size_t chooseReceiveSize() const
+    {
+        if (const std::size_t exact = internal::nextDatagramSize(getSocketFd()); exact > 0)
+            return (exact > MaxDatagramPayloadSafe) ? MaxDatagramPayloadSafe : exact;
+
+        const std::size_t fallback = _internalBuffer.empty() ? DefaultDatagramReceiveSize : _internalBuffer.size();
+
+        return (fallback > MaxDatagramPayloadSafe) ? MaxDatagramPayloadSafe : fallback;
+    }
+
+    /**
+     * @brief Remember the last remote peer after an unconnected receive.
+     *
+     * @details
+     * Copies @p src into @_remoteAddr and sets @_remoteAddrLen to @p len. This updates the values
+     * returned by @c getRemoteIp(), @c getRemotePort(), and @c getRemoteSocketAddress() to reflect
+     * the most recent sender on unconnected sockets.
+     *
+     * @param[in] src [in] Sender address as returned by @c recvfrom().
+     * @param[in] len [in] Length of @p src.
+     *
+     * @note Callers should only invoke this after a successful receive with @c recvfrom().
+     * @since 1.0
+     */
+    void rememberRemote(const sockaddr_storage& src, const socklen_t len) const noexcept
+    {
+        _remoteAddr = src;
+        _remoteAddrLen = len;
+    }
+
   private:
-    sockaddr_storage _remoteAddr{}; ///< Storage for the address of the most recent sender (used in unconnected mode).
-    socklen_t _remoteAddrLen = 0;   ///< Length of the valid address data in `_remoteAddr` (0 if none received yet).
-    sockaddr_storage _localAddr{};  ///< Local address structure.
+    mutable sockaddr_storage
+        _remoteAddr{}; ///< Storage for the address of the most recent sender (used in unconnected mode).
+    mutable socklen_t _remoteAddrLen =
+        0;                         ///< Length of the valid address data in `_remoteAddr` (0 if none received yet).
+    sockaddr_storage _localAddr{}; ///< Local address structure.
     mutable socklen_t _localAddrLen = 0; ///< Length of local address.
     std::vector<char> _internalBuffer;   ///< Internal buffer for read operations.
     Port _port;                          ///< Port number the socket is bound to (if applicable).
@@ -1945,148 +2810,41 @@ class DatagramSocket : public SocketOptions
 };
 
 /**
- * @brief Specialization of `read<T>()` for receiving string messages.
+ * @brief Receive a UDP datagram into a std::string.
  * @ingroup udp
  *
- * Reads a single UDP datagram and returns its contents as a `std::string`.
- * Works in both connected and unconnected modes:
+ * @param[out] senderAddr Optional pointer to store sender's numeric address.
+ * @param[out] senderPort Optional pointer to store sender's numeric port.
+ * @param[in]  mode       Sizing policy for the receive (default = NoPreflight).
  *
- * ---
+ * @return The received message as a std::string (may be empty for zero-length datagrams).
  *
- * ### 🔁 Connection Modes
- * - If the socket is **connected**: Uses `recv()` to receive a datagram from the fixed peer.
- * - If the socket is **unconnected**: Uses `recvfrom()` and updates internal peer tracking.
+ * @throws SocketException
+ *         - If the socket is not open.
+ *         - On receive error; thrown via `internal::throwLastSockError()`.
+ *         - On numeric host/port resolution failure (if supported by platform).
  *
- * ---
- *
- * ### Behavior & Characteristics
- * - Uses the internal `_buffer` to store the received datagram (sized via constructor).
- * - Reads a **single full datagram** in one call (up to `_buffer.size()` bytes).
- * - Captures sender’s address in unconnected mode, making it available via `getRemoteIp()` etc.
- * - Returns all received bytes (including nulls, if any).
- *
- * ---
- *
- * ### Example
- * @code
- * jsocketpp::DatagramSocket sock(12345); // Bound socket
- * std::string msg = sock.read<std::string>();
- * std::cout << "Received: " << msg << "\n";
- * @endcode
- *
- * ---
- *
- * @return String containing the raw contents of the received datagram (may include nulls).
- *
- * @throws SocketException If:
- * - The socket is not open
- * - `recv` or `recvfrom` fails
- * - The buffer is empty or not initialized
- *
- * @note Unlike `read<T>()`, this version accepts datagrams of **any size up to the internal buffer limit**.
- * @note Truncation may occur if the sender transmits more bytes than the internal buffer can hold.
- *
- * @see write(std::string_view)
- * @see read<T>()
- * @see receiveFrom(DatagramPacket&)
- * @see getRemoteIp(), getRemotePort()
+ * @see DatagramReceiveMode
+ * @since 1.0
  */
-template <> inline std::string DatagramSocket::read<std::string>()
+template <>
+inline std::string DatagramSocket::recvFrom<std::string>(std::string* senderAddr, Port* senderPort,
+                                                         const DatagramReceiveMode mode) const
 {
-    if (getSocketFd() == INVALID_SOCKET)
-        throw SocketException("DatagramSocket::read<std::string>(): socket is not open.");
+    // Start with internal buffer capacity; resizing handled by read()
+    DatagramPacket packet(_internalBuffer.size());
 
-    if (_internalBuffer.empty())
-        throw SocketException("DatagramSocket::read<std::string>(): internal buffer is empty.");
+    // Perform the receive using the unified read() implementation
+    read(packet, true /* resizeBuffer */, mode);
 
-    ssize_t received = 0;
+    // Fill sender info if requested
+    if (senderAddr)
+        *senderAddr = packet.address;
+    if (senderPort)
+        *senderPort = packet.port;
 
-    if (isConnected())
-    {
-        received = ::recv(getSocketFd(), reinterpret_cast<char*>(_internalBuffer.data()),
-#ifdef _WIN32
-                          static_cast<int>(_internalBuffer.size()),
-#else
-                          _internalBuffer.size(),
-#endif
-                          0);
-    }
-    else
-    {
-        sockaddr_storage srcAddr{};
-        socklen_t srcLen = sizeof(srcAddr);
-
-        received = ::recvfrom(getSocketFd(), reinterpret_cast<char*>(_internalBuffer.data()),
-#ifdef _WIN32
-                              static_cast<int>(_internalBuffer.size()),
-#else
-                              _internalBuffer.size(),
-#endif
-                              0, reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
-
-        if (received >= 0)
-        {
-            _remoteAddr = srcAddr;
-            _remoteAddrLen = srcLen;
-        }
-    }
-
-    if (received == SOCKET_ERROR)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
-    }
-
-    if (received == 0)
-        throw SocketException("DatagramSocket::read<std::string>(): connection closed by remote host.");
-
-    return {reinterpret_cast<const char*>(_internalBuffer.data()), static_cast<std::size_t>(received)};
-}
-
-/**
- * @brief Receive a datagram as a string (connectionless).
- * @param senderAddr [out] String to store sender's address.
- * @param senderPort [out] Variable to store sender's port.
- * @return The received message as a std::string.
- * @throws SocketException on error.
- */
-template <> inline std::string DatagramSocket::recvFrom<std::string>(std::string* senderAddr, Port* senderPort)
-{
-    sockaddr_storage srcAddr{};
-    socklen_t srcLen = sizeof(srcAddr);
-    const auto n = ::recvfrom(getSocketFd(), _internalBuffer.data(),
-#ifdef _WIN32
-                              static_cast<int>(_internalBuffer.size()),
-#else
-                              _internalBuffer.size(),
-#endif
-                              0, reinterpret_cast<sockaddr*>(&srcAddr), &srcLen);
-    if (n == SOCKET_ERROR)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
-    }
-    if (n == 0)
-        throw SocketException("Connection closed by remote host.");
-
-    // Get sender's IP:port
-    char hostBuf[NI_MAXHOST], portBuf[NI_MAXSERV];
-    if (getnameinfo(reinterpret_cast<sockaddr*>(&srcAddr), srcLen, hostBuf, sizeof(hostBuf), portBuf, sizeof(portBuf),
-                    NI_NUMERICHOST | NI_NUMERICSERV) == 0)
-    {
-        if (senderAddr != nullptr)
-            *senderAddr = hostBuf;
-        if (senderPort != nullptr)
-            *senderPort = static_cast<Port>(std::stoul(portBuf));
-    }
-    else
-    {
-        if (senderAddr != nullptr)
-            senderAddr->clear();
-        if (senderPort != nullptr)
-            *senderPort = 0;
-    }
-    return {_internalBuffer.data(), static_cast<size_t>(n)};
+    // Return the payload as a string
+    return {packet.buffer.data(), packet.size()};
 }
 
 /**
