@@ -101,6 +101,8 @@ $(function(){initNavTree('namespacejsocketpp.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
+<tr class="memitem:detail" id="r_detail"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejsocketpp_1_1detail.html">detail</a></td></tr>
+<tr class="memdesc:namespacejsocketpp_1_1detail"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation details and type traits for jsocketpp buffer management. <br /></td></tr>
 <tr class="memitem:internal" id="r_internal"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejsocketpp_1_1internal.html">internal</a></td></tr>
 <tr class="memdesc:namespacejsocketpp_1_1internal"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation-only utilities and platform abstractions for jsocketpp. <br /></td></tr>
 <tr class="memitem:net" id="r_net"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejsocketpp_1_1net.html">net</a></td></tr>
@@ -112,6 +114,10 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a raw writable memory region for scatter/gather I/O.  <a href="structjsocketpp_1_1BufferView.html#details">More...</a><br /></td></tr>
 <tr class="memitem:DatagramPacket" id="r_DatagramPacket"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a UDP datagram packet, encapsulating both payload and addressing information.  <a href="classjsocketpp_1_1DatagramPacket.html#details">More...</a><br /></td></tr>
+<tr class="memitem:DatagramReadOptions" id="r_DatagramReadOptions"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjsocketpp_1_1DatagramReadOptions.html">DatagramReadOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options controlling a single UDP receive operation.  <a href="structjsocketpp_1_1DatagramReadOptions.html#details">More...</a><br /></td></tr>
+<tr class="memitem:DatagramReadResult" id="r_DatagramReadResult"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Telemetry data about a single UDP datagram receive operation.  <a href="structjsocketpp_1_1DatagramReadResult.html#details">More...</a><br /></td></tr>
 <tr class="memitem:DatagramSocket" id="r_DatagramSocket"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cross-platform UDP socket class with Java-style interface.  <a href="classjsocketpp_1_1DatagramSocket.html#details">More...</a><br /></td></tr>
 <tr class="memitem:MulticastSocket" id="r_MulticastSocket"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1MulticastSocket.html">MulticastSocket</a></td></tr>
@@ -146,6 +152,11 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e">Both</a>
  }</td></tr>
 <tr class="memdesc:a0d2868e06cd95730d5088336f8c3c174"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum for socket shutdown modes.  <a href="#a0d2868e06cd95730d5088336f8c3c174">More...</a><br /></td></tr>
+<tr class="memitem:ga2124eae8cec6709a67be265f14da3bdd" id="r_ga2124eae8cec6709a67be265f14da3bdd"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> : std::uint8_t { <a class="el" href="group__udp.html#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f">DatagramReceiveMode::NoPreflight</a> = 0
+, <a class="el" href="group__udp.html#gga2124eae8cec6709a67be265f14da3bdda0882ede215c2d76da1b71837ab80e9bd">DatagramReceiveMode::PreflightSize</a> = 1
+, <a class="el" href="group__udp.html#gga2124eae8cec6709a67be265f14da3bddac9a017cf1d4a5f3aff960a3f7e8bffd5">DatagramReceiveMode::PreflightMax</a> = 2
+ }</td></tr>
+<tr class="memdesc:ga2124eae8cec6709a67be265f14da3bdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive-time sizing policy for UDP datagrams.  <a href="group__udp.html#ga2124eae8cec6709a67be265f14da3bdd">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -173,12 +184,12 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga8501a7d31710bd7b0ef862f97ee318da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a socket address to a human-readable "IP:port" string.  <br /></td></tr>
 <tr class="memitem:ga784e6ca4a095b32beb18d2378179cf0b" id="r_ga784e6ca4a095b32beb18d2378179cf0b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__utils.html#ga784e6ca4a095b32beb18d2378179cf0b">stringToAddress</a> (const std::string &amp;str, sockaddr_storage &amp;addr)</td></tr>
 <tr class="memdesc:ga784e6ca4a095b32beb18d2378179cf0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an "IP:port" string into a sockaddr_storage structure.  <br /></td></tr>
-<tr class="memitem:ga30deb297e9c8fae8da50947d4a29c95f" id="r_ga30deb297e9c8fae8da50947d4a29c95f"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:ga30deb297e9c8fae8da50947d4a29c95f template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga30deb297e9c8fae8da50947d4a29c95f">DatagramSocket::read&lt; std::string &gt;</a> ()</td></tr>
-<tr class="memdesc:ga30deb297e9c8fae8da50947d4a29c95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">read&lt;T&gt;()</span> for receiving string messages.  <br /></td></tr>
-<tr class="memitem:aa5ff7535f7cd1c89724bcfd6715e55ba" id="r_aa5ff7535f7cd1c89724bcfd6715e55ba"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:aa5ff7535f7cd1c89724bcfd6715e55ba template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5ff7535f7cd1c89724bcfd6715e55ba">DatagramSocket::recvFrom&lt; std::string &gt;</a> (std::string *senderAddr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort)</td></tr>
-<tr class="memdesc:aa5ff7535f7cd1c89724bcfd6715e55ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a datagram as a string (connectionless).  <br /></td></tr>
+<tr class="memitem:ga491a9037fb6b7079521adcc57f42e9a5" id="r_ga491a9037fb6b7079521adcc57f42e9a5"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ga491a9037fb6b7079521adcc57f42e9a5 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga491a9037fb6b7079521adcc57f42e9a5">DatagramSocket::read&lt; std::string &gt;</a> (const <a class="el" href="group__udp.html#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> mode) const</td></tr>
+<tr class="memdesc:ga491a9037fb6b7079521adcc57f42e9a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one UDP datagram into a std::string.  <br /></td></tr>
+<tr class="memitem:ga0f789073f7aed835bc701c359e33a391" id="r_ga0f789073f7aed835bc701c359e33a391"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ga0f789073f7aed835bc701c359e33a391 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga0f789073f7aed835bc701c359e33a391">DatagramSocket::recvFrom&lt; std::string &gt;</a> (std::string *senderAddr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort, const <a class="el" href="group__udp.html#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> mode) const</td></tr>
+<tr class="memdesc:ga0f789073f7aed835bc701c359e33a391"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a UDP datagram into a std::string.  <br /></td></tr>
 <tr class="memitem:ga5d219ae0c5ace0c42fad1b8295a7c2a1" id="r_ga5d219ae0c5ace0c42fad1b8295a7c2a1"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga5d219ae0c5ace0c42fad1b8295a7c2a1 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#ga5d219ae0c5ace0c42fad1b8295a7c2a1">DatagramSocket::write&lt; std::string &gt;</a> (const std::string &amp;value)</td></tr>
 <tr class="memdesc:ga5d219ae0c5ace0c42fad1b8295a7c2a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">write&lt;T&gt;()</span> to send a <span class="tt">std::string</span> as a UDP datagram.  <br /></td></tr>
@@ -192,6 +203,14 @@ Variables</h2></td></tr>
 <tr class="memitem:adc2dd9860dec2a3c3189e756288d5ba2" id="r_adc2dd9860dec2a3c3189e756288d5ba2"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="#ac484f9eb8a74658aa491da1d1bc15eda">SOCKET</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc2dd9860dec2a3c3189e756288d5ba2">SOCKET_ERROR</a> = -1</td></tr>
 <tr class="memitem:gafa19c7cbeb622b106835021215b8d6b7" id="r_gafa19c7cbeb622b106835021215b8d6b7"><td class="memItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__core.html#gafa19c7cbeb622b106835021215b8d6b7">DefaultBufferSize</a> = 4096</td></tr>
 <tr class="memdesc:gafa19c7cbeb622b106835021215b8d6b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default internal buffer size (in bytes) for socket read operations.  <br /></td></tr>
+<tr class="memitem:ga2fb9d73742801c62e90aeb505c618c43" id="r_ga2fb9d73742801c62e90aeb505c618c43"><td class="memItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__core.html#ga2fb9d73742801c62e90aeb505c618c43">DefaultDatagramReceiveSize</a> = 8192</td></tr>
+<tr class="memdesc:ga2fb9d73742801c62e90aeb505c618c43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fallback receive size (in bytes) for UDP datagrams when the exact size is unknown.  <br /></td></tr>
+<tr class="memitem:ga25eb16703a608853bca500682345bb89" id="r_ga25eb16703a608853bca500682345bb89"><td class="memItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__core.html#ga25eb16703a608853bca500682345bb89">MaxDatagramPayloadSafe</a> = 65507</td></tr>
+<tr class="memdesc:ga25eb16703a608853bca500682345bb89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum UDP payload size (in bytes) that is safely valid across common stacks.  <br /></td></tr>
+<tr class="memitem:ga63ed4637719268844616341e0f8908cb" id="r_ga63ed4637719268844616341e0f8908cb"><td class="memItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__core.html#ga63ed4637719268844616341e0f8908cb">MaxUdpPayloadIPv4</a> = 65507</td></tr>
+<tr class="memdesc:ga63ed4637719268844616341e0f8908cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum UDP payload size (in bytes) over IPv4.  <br /></td></tr>
+<tr class="memitem:ga041bcd9d09d1d8e134c7b8af72523d66" id="r_ga041bcd9d09d1d8e134c7b8af72523d66"><td class="memItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__core.html#ga041bcd9d09d1d8e134c7b8af72523d66">MaxUdpPayloadIPv6</a> = 65527</td></tr>
+<tr class="memdesc:ga041bcd9d09d1d8e134c7b8af72523d66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Theoretical maximum UDP payload size (in bytes) over IPv6.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A C++ socket library providing Java-style networking interfaces. </p>
@@ -343,53 +362,6 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa5ff7535f7cd1c89724bcfd6715e55ba" name="aa5ff7535f7cd1c89724bcfd6715e55ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5ff7535f7cd1c89724bcfd6715e55ba">&#9670;&#160;</a></span>DatagramSocket::recvFrom&lt; std::string &gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string <a class="el" href="classjsocketpp_1_1DatagramSocket.html#a227984f842fa768c2e7cc9a4b585bf06">jsocketpp::DatagramSocket::recvFrom</a>&lt; std::string &gt; </td>
-          <td>(</td>
-          <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>senderAddr</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *</td>          <td class="paramname"><span class="paramname"><em>senderPort</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Receive a datagram as a string (connectionless). </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">senderAddr</td><td>[out] String to store sender's address. </td></tr>
-    <tr><td class="paramname">senderPort</td><td>[out] Variable to store sender's port. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The received message as a std::string. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>on error. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>

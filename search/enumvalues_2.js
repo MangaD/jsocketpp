@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['write_0',['Write',['../namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6',1,'jsocketpp']]]
+  ['preflightmax_0',['PreflightMax',['../group__udp.html#gga2124eae8cec6709a67be265f14da3bddac9a017cf1d4a5f3aff960a3f7e8bffd5',1,'jsocketpp']]],
+  ['preflightsize_1',['PreflightSize',['../group__udp.html#gga2124eae8cec6709a67be265f14da3bdda0882ede215c2d76da1b71837ab80e9bd',1,'jsocketpp']]]
 ];

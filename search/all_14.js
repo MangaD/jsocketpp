@@ -29,7 +29,8 @@ var searchData=
   ['jsocketpp_3a_20build_20test_20and_20usage_20guide_26',['jsocketpp: Build, Test, and Usage Guide',['../group__BUILD__AND__USAGE.html',1,'']]],
   ['jsocketpp_3a_20c_2020_20cross_20platform_20socket_20library_27',['jsocketpp: C++20 cross-platform socket library',['../group__jsocketpp.html',1,'']]],
   ['jsocketpp_3a_20java_20style_20cross_20platform_20socket_20library_20for_20modern_20c_2020_28',['jsocketpp: Java-Style Cross-Platform Socket Library for Modern C++20',['../index.html',1,'']]],
-  ['jsocketpp_3a_3ainternal_29',['internal',['../namespacejsocketpp_1_1internal.html',1,'jsocketpp']]],
-  ['jsocketpp_3a_3anet_30',['net',['../namespacejsocketpp_1_1net.html',1,'jsocketpp']]],
-  ['json_31',['Example &lt;span class=&quot;tt&quot;&gt;vcpkg.json&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md445',1,'']]]
+  ['jsocketpp_3a_3adetail_29',['detail',['../namespacejsocketpp_1_1detail.html',1,'jsocketpp']]],
+  ['jsocketpp_3a_3ainternal_30',['internal',['../namespacejsocketpp_1_1internal.html',1,'jsocketpp']]],
+  ['jsocketpp_3a_3anet_31',['net',['../namespacejsocketpp_1_1net.html',1,'jsocketpp']]],
+  ['json_32',['Example &lt;span class=&quot;tt&quot;&gt;vcpkg.json&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md445',1,'']]]
 ];

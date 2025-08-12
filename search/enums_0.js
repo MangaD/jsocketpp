@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['shutdownmode_0',['ShutdownMode',['../namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174',1,'jsocketpp']]]
+  ['datagramreceivemode_0',['DatagramReceiveMode',['../group__udp.html#ga2124eae8cec6709a67be265f14da3bdd',1,'jsocketpp']]]
 ];

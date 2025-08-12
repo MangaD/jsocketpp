@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['unixsocket_0',['UnixSocket',['../classjsocketpp_1_1UnixSocket.html',1,'jsocketpp']]]
+  ['multicastsocket_0',['MulticastSocket',['../classjsocketpp_1_1MulticastSocket.html',1,'jsocketpp']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['size_0',['size',['../structjsocketpp_1_1BufferView.html#ab394f54c74a9af0ca509add49c6aa229',1,'jsocketpp::BufferView']]],
-  ['socket_5ferror_1',['SOCKET_ERROR',['../namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2',1,'jsocketpp']]]
+  ['port_0',['port',['../classjsocketpp_1_1DatagramPacket.html#a6619b7fcd476199e4a9c454d06f1bcd4',1,'jsocketpp::DatagramPacket']]]
 ];

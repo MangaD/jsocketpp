@@ -1,5 +1,6 @@
 var dir_e94b15c7ff9417df3f606cd4c674cf2e =
 [
+    [ "detail", "dir_7351cac5ac34edbf13dd2eb482777ee0.html", "dir_7351cac5ac34edbf13dd2eb482777ee0" ],
     [ "internal", "dir_fde922b328d1941ef73cc90345ecd0be.html", "dir_fde922b328d1941ef73cc90345ecd0be" ],
     [ "BufferView.hpp", "BufferView_8hpp.html", "BufferView_8hpp" ],
     [ "common.hpp", "common_8hpp.html", "common_8hpp" ],
