@@ -172,6 +172,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga9f9e08f58d50d29e0f3fa9ccf83c1c97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a single UDP datagram into a caller-provided container type.  <br /></td></tr>
 <tr class="memitem:a24a48ca4f6711d89e0a89531b3b31807" id="r_a24a48ca4f6711d89e0a89531b3b31807"><td class="memTemplParams" colspan="2">template&lt;typename T, std::enable_if_t&lt; <a class="el" href="namespacejsocketpp_1_1detail.html#a18306b136e94e5aaf18c6dd6d5f06f33">detail::is_fixed_buffer_v</a>&lt; T &gt;, int &gt; = 0&gt; </td></tr>
 <tr class="memitem:a24a48ca4f6711d89e0a89531b3b31807 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24a48ca4f6711d89e0a89531b3b31807">read</a> (const <a class="el" href="structjsocketpp_1_1DatagramReadOptions.html">DatagramReadOptions</a> &amp;opts={}) const</td></tr>
+<tr class="memdesc:a24a48ca4f6711d89e0a89531b3b31807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a single UDP datagram into a <a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> with full control and telemetry.     <br /></td></tr>
 <tr class="memitem:gaca78d1a91c373c1f7a14f7954f306a06" id="r_gaca78d1a91c373c1f7a14f7954f306a06"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:gaca78d1a91c373c1f7a14f7954f306a06 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gaca78d1a91c373c1f7a14f7954f306a06">recvFrom</a> (std::string *senderAddr=nullptr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort=nullptr, const <a class="el" href="group__udp.html#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> mode=<a class="el" href="group__udp.html#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f">DatagramReceiveMode::NoPreflight</a>) const</td></tr>
 <tr class="memdesc:gaca78d1a91c373c1f7a14f7954f306a06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive one UDP datagram directly into a trivially copyable type.  <br /></td></tr>
@@ -437,7 +438,41 @@ template&lt;typename T, std::enable_if_t&lt; <a class="el" href="namespacejsocke
   </tr>
 </table>
 </div><div class="memdoc">
-<p>blabslabal</p>
+
+<p>Receive a single UDP datagram into a <a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> with full control and telemetry.    </p>
+<p>This high-level method wraps the low-level <a class="el" href="group__udp.html#ga30912969f0808f064aaeee9a79025f41">readIntoBuffer()</a> backbone to provide an easy yet powerful interface for receiving datagrams into a <a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a>. It applies the caller-specified policy in <code class="param">opts</code> to determine preflight behavior, buffer growth/shrink decisions, additional <span class="tt">recv()</span> flags, and side effects such as persisting the sender as the "last remote" or resolving numeric host/port fields.</p>
+<p><b>Core behavior</b></p><ul>
+<li>Always consumes exactly one UDP datagram from the socket's receive queue.</li>
+<li>Honors the capacity of <code class="param">packet.buffer</code> but may grow/shrink it according to <code class="param">opts</code>.</li>
+<li>Uses <a class="el" href="group__udp.html#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> from <code class="param">opts.mode</code> to control whether and how the next datagram's size is probed before the receive call.</li>
+<li>If the socket is unconnected, captures the sender address, optionally persists it in the socket, and resolves numeric host/port fields in <code class="param">packet</code>.</li>
+<li>Detects truncation when the datagram is larger than the available capacity.</li>
+<li>Returns a <a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a> with full telemetry: actual bytes received, probed full datagram size (if known), truncation flag, and source address info.</li>
+</ul>
+<p><b>Thread safety:</b> This method is not inherently thread-safe. External synchronization is required if multiple threads may access the same <a class="el" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> concurrently.</p>
+<p><b>Performance note:</b> Modes that preflight the datagram size may incur an additional syscall compared to <span class="tt">NoPreflight</span>, trading throughput for accuracy in buffer sizing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">packet</td><td>Destination datagram container. Its <code>buffer</code> provides capacity; on return, its <code>address</code> and <code>port</code> fields are updated if requested in <code class="param">opts</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">opts</td><td>Options controlling receive policy, buffer management, and side effects. Defaults to all-safe behavior with no preflight, growth allowed, and sender persistence enabled.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a> struct containing:<ul>
+<li><code>bytes:</code> actual bytes copied into <code class="param">packet.buffer</code> </li>
+<li><code>datagramSize:</code> probed full datagram size (0 if unknown)</li>
+<li><code>truncated:</code> true if payload was cut off due to limited capacity</li>
+<li><code>src</code> / <code>srcLen:</code> sender address and length (when captured)</li>
+</ul>
+</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the socket is not open, <code class="param">packet</code> has zero capacity with growth disallowed, or a non-timeout socket error occurs during the receive. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a></td><td>If the receive times out (SO_RCVTIMEO) or in non-blocking mode when no data is available.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>1.0    </dd></dl>
 
 </div>
 </div>
