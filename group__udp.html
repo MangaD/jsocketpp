@@ -252,9 +252,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga6608c56d08ccdb2807bd47cc862af24a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up the datagram socket and rethrows the currently active exception.  <br /></td></tr>
 <tr class="memitem:ga1ff1dc3fb9ed36e31bc62941edf1d44c" id="r_ga1ff1dc3fb9ed36e31bc62941edf1d44c"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1ff1dc3fb9ed36e31bc62941edf1d44c">jsocketpp::DatagramSocket::chooseReceiveSize</a> () const</td></tr>
 <tr class="memdesc:ga1ff1dc3fb9ed36e31bc62941edf1d44c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decide how many bytes to attempt to receive for the next UDP datagram.  <br /></td></tr>
-<tr class="memitem:ga491a9037fb6b7079521adcc57f42e9a5" id="r_ga491a9037fb6b7079521adcc57f42e9a5"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:ga491a9037fb6b7079521adcc57f42e9a5 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga491a9037fb6b7079521adcc57f42e9a5">jsocketpp::DatagramSocket::read&lt; std::string &gt;</a> (const <a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> mode) const</td></tr>
-<tr class="memdesc:ga491a9037fb6b7079521adcc57f42e9a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one UDP datagram into a std::string.  <br /></td></tr>
 <tr class="memitem:ga0f789073f7aed835bc701c359e33a391" id="r_ga0f789073f7aed835bc701c359e33a391"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga0f789073f7aed835bc701c359e33a391 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0f789073f7aed835bc701c359e33a391">jsocketpp::DatagramSocket::recvFrom&lt; std::string &gt;</a> (std::string *senderAddr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort, const <a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> mode) const</td></tr>
 <tr class="memdesc:ga0f789073f7aed835bc701c359e33a391"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a UDP datagram into a std::string.  <br /></td></tr>
@@ -1163,68 +1160,6 @@ Throws</h3>
 
 </div>
 </div>
-<a id="ga491a9037fb6b7079521adcc57f42e9a5" name="ga491a9037fb6b7079521adcc57f42e9a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga491a9037fb6b7079521adcc57f42e9a5">&#9670;&#160;</a></span>DatagramSocket::read&lt; std::string &gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string <a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce">jsocketpp::DatagramSocket::read</a>&lt; std::string &gt; </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Read one UDP datagram into a std::string. </p>
-<p>Consumes exactly <b>one</b> datagram and writes its payload into a <span class="tt">std::string</span>. The operation is performed via the unified <span class="tt">read(<a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a>&amp;, bool, <a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd" title="Receive-time sizing policy for UDP datagrams.">DatagramReceiveMode</a>)</span> API, so it inherits its sizing policy, preflight behavior, and error handling.</p>
-<p><b>Sizing policy (<span class="tt">mode</span>)</b></p><ul>
-<li><span class="tt"><a class="el" href="#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f" title="Do not probe the datagram size; call recvfrom() directly.">DatagramReceiveMode::NoPreflight</a></span> (default): Calls <span class="tt">recvfrom()</span> directly, may truncate if datagram exceeds initial internal buffer size.</li>
-<li><span class="tt"><a class="el" href="#gga2124eae8cec6709a67be265f14da3bdda0882ede215c2d76da1b71837ab80e9bd" title="Probe the exact size of the next datagram and size the receive accordingly.">DatagramReceiveMode::PreflightSize</a></span>: Probes the next datagram’s size before receiving and may grow the buffer to avoid truncation.</li>
-</ul>
-<p><b>Semantics</b></p><ul>
-<li>Works in both connection modes:<ul>
-<li><b>Connected:</b> Only datagrams from the fixed peer are delivered.</li>
-<li><b>Unconnected:</b> Sender address is remembered so <span class="tt">getRemoteIp()</span> / <span class="tt">getRemotePort()</span> reflect the most recent peer.</li>
-</ul>
-</li>
-<li>Zero-length datagrams are valid and result in an empty string.</li>
-<li>No protocol parsing, encoding conversion, or endianness conversion is performed; bytes are returned exactly as received.</li>
-</ul>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>Receive-time sizing policy (default = <span class="tt"><a class="el" href="#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f" title="Do not probe the datagram size; call recvfrom() directly.">DatagramReceiveMode::NoPreflight</a></span>). </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Payload of the received datagram as a <span class="tt">std::string</span>.</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td><ul>
-<li>If the socket is not open.</li>
-<li>On receive failure; thrown via <span class="tt"><a class="el" href="namespacejsocketpp_1_1internal.html#a8a49e143a6246874f572bde7254e09b6" title="Throw a SocketException for the last socket error, with optional source-location context.">internal::throwLastSockError()</a></span>.</li>
-<li>On numeric host/port resolution failure (if supported by platform).</li>
-</ul>
-</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section since"><dt>Since</dt><dd>1.0 </dd></dl>
-
-</div>
-</div>
 <a id="ga0f789073f7aed835bc701c359e33a391" name="ga0f789073f7aed835bc701c359e33a391"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga0f789073f7aed835bc701c359e33a391">&#9670;&#160;</a></span>DatagramSocket::recvFrom&lt; std::string &gt;()</h2>
 
@@ -1357,7 +1292,7 @@ Example</h3>
   </dd>
 </dl>
 <dl class="section warning"><dt>Warning</dt><dd>This method does not add a trailing &lsquo;&rsquo;\0'`. If you need null-terminated data, append it manually.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga491a9037fb6b7079521adcc57f42e9a5" title="Read one UDP datagram into a std::string.">read&lt;std::string&gt;()</a> For receiving a string datagram </dd>
+<dl class="section see"><dt>See also</dt><dd>read&lt;std::string&gt;() For receiving a string datagram </dd>
 <dd>
 write&lt;T&gt;() For sending binary POD data </dd>
 <dd>
@@ -1437,7 +1372,7 @@ Example</h3>
   </dd>
 </dl>
 <dl class="section warning"><dt>Warning</dt><dd>The caller must ensure that the memory referenced by the <span class="tt">string_view</span> is valid for the duration of the call. Do not pass views to temporaries.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga5d219ae0c5ace0c42fad1b8295a7c2a1" title="Specialization of write&lt;T&gt;() to send a std::string as a UDP datagram.">write&lt;std::string&gt;()</a>, <a class="el" href="#ga491a9037fb6b7079521adcc57f42e9a5" title="Read one UDP datagram into a std::string.">read&lt;std::string&gt;()</a>, sendTo() </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga5d219ae0c5ace0c42fad1b8295a7c2a1" title="Specialization of write&lt;T&gt;() to send a std::string as a UDP datagram.">write&lt;std::string&gt;()</a>, read&lt;std::string&gt;(), sendTo() </dd></dl>
 
 </div>
 </div>
@@ -2483,7 +2418,7 @@ Example</h3>
 <div class="line">b = std::move(a); <span class="comment">// b now owns the socket previously held by a</span></div>
 <div class="line">assert(!a.isValid());</div>
 <div class="line">assert(b.<a class="code hl_function" href="#gab33da807656e2ab920707d60605844f5">isValid</a>());</div>
-<div class="ttc" id="agroup__udp_html_gab33da807656e2ab920707d60605844f5"><div class="ttname"><a href="#gab33da807656e2ab920707d60605844f5">jsocketpp::DatagramSocket::isValid</a></div><div class="ttdeci">bool isValid() const noexcept</div><div class="ttdoc">Checks whether the datagram socket is valid and ready for use.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:2440</div></div>
+<div class="ttc" id="agroup__udp_html_gab33da807656e2ab920707d60605844f5"><div class="ttname"><a href="#gab33da807656e2ab920707d60605844f5">jsocketpp::DatagramSocket::isValid</a></div><div class="ttdeci">bool isValid() const noexcept</div><div class="ttdoc">Checks whether the datagram socket is valid and ready for use.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:2441</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">rhs</td><td>The source <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> to move from. </td></tr>
@@ -3510,7 +3445,7 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga491a9037fb6b7079521adcc57f42e9a5" title="Read one UDP datagram into a std::string.">read&lt;std::string&gt;()</a> Uses this buffer for connected-mode string reads </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read&lt;std::string&gt;()</a> Uses this buffer for connected-mode string reads </dd>
 <dd>
 receiveFrom() Uses its own <a class="el" href="namespacejsocketpp_1_1internal.html" title="Implementation-only utilities and platform abstractions for jsocketpp.">internal</a> buffer, not affected by this setting </dd>
 <dd>

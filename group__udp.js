@@ -138,7 +138,6 @@ var group__udp =
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga3d08597b24d9c7a3fe43dd291ee85148", null ],
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#gab613123c8bf1aca6aec451b1140e2f82", null ],
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga4b4c631816f82eea0b6048a16682079e", null ],
-    [ "jsocketpp::read< std::string >", "group__udp.html#ga491a9037fb6b7079521adcc57f42e9a5", null ],
     [ "jsocketpp::recvFrom< std::string >", "group__udp.html#ga0f789073f7aed835bc701c359e33a391", null ],
     [ "jsocketpp::write< std::string >", "group__udp.html#ga5d219ae0c5ace0c42fad1b8295a7c2a1", null ],
     [ "jsocketpp::write< std::string_view >", "group__udp.html#gaca86a9f7b311fd106801b9e49d01fb27", null ],

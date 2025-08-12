@@ -3802,7 +3802,7 @@ Example Usage</h3>
 <dl class="section note"><dt>Note</dt><dd>This method blocks until all <span class="tt">n</span> bytes are read or an error occurs. It is not suitable for variable-length or streaming reads. </dd>
 <dd>
 This method returns an empty string if n == 0.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__udp.html#ga491a9037fb6b7079521adcc57f42e9a5" title="Read one UDP datagram into a std::string.">read&lt;std::string&gt;()</a> For best-effort, buffered reads </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read&lt;std::string&gt;()</a> For best-effort, buffered reads </dd>
 <dd>
 <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read&lt;T&gt;()</a> For fixed-size reads of trivially copyable types </dd>
 <dd>
@@ -5190,11 +5190,11 @@ This constructor is not thread safe. Do not share a <a class="el" href="classjso
 </div><div class="memdoc">
 
 <p>Sets the size of the internal read buffer used for string operations. </p>
-<p>This method controls the size of the internal buffer used by <a class="el" href="group__udp.html#ga491a9037fb6b7079521adcc57f42e9a5" title="Read one UDP datagram into a std::string.">read&lt;std::string&gt;()</a> operations. This is distinct from <a class="el" href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a>, which controls the operating system's socket buffer (SO_RCVBUF).</p>
+<p>This method controls the size of the internal buffer used by <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read&lt;std::string&gt;()</a> operations. This is distinct from <a class="el" href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a>, which controls the operating system's socket buffer (SO_RCVBUF).</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md1008"></a>
 Purpose</h3>
 <ul>
-<li>Controls maximum size of data readable in one <a class="el" href="group__udp.html#ga491a9037fb6b7079521adcc57f42e9a5" title="Read one UDP datagram into a std::string.">read&lt;std::string&gt;()</a> call</li>
+<li>Controls maximum size of data readable in one <a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read&lt;std::string&gt;()</a> call</li>
 <li>Affects memory usage of the <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a> object</li>
 <li>Does not affect system socket buffers or network behavior</li>
 </ul>
@@ -5230,7 +5230,7 @@ Example Usage</h3>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="group__socketopts.html#ga69fdecc0aaaef4bbd2826c448a8bbe1d" title="Sets the socket&#39;s receive buffer size (SO_RCVBUF).">setReceiveBufferSize()</a> For setting the OS socket receive buffer </dd>
 <dd>
-<a class="el" href="group__udp.html#ga491a9037fb6b7079521adcc57f42e9a5" title="Read one UDP datagram into a std::string.">read&lt;std::string&gt;()</a> Uses this buffer for string operations </dd>
+<a class="el" href="#gaa7498d51b547b52699055bdb16b9d68b" title="Reads a fixed-size, trivially copyable object of type T from the socket.">read&lt;std::string&gt;()</a> Uses this buffer for string operations </dd>
 <dd>
 <a class="el" href="group__socketopts.html#ga8279b0c70f6a0fddf73d84aac691422b" title="Sets the socket&#39;s send buffer size (SO_SNDBUF).">setSendBufferSize()</a> For setting the OS socket send buffer </dd></dl>
 
