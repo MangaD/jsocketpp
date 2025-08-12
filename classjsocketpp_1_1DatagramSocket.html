@@ -172,7 +172,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga9f9e08f58d50d29e0f3fa9ccf83c1c97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a single UDP datagram into a caller-provided container type.  <br /></td></tr>
 <tr class="memitem:a24a48ca4f6711d89e0a89531b3b31807" id="r_a24a48ca4f6711d89e0a89531b3b31807"><td class="memTemplParams" colspan="2">template&lt;typename T, std::enable_if_t&lt; <a class="el" href="namespacejsocketpp_1_1detail.html#a18306b136e94e5aaf18c6dd6d5f06f33">detail::is_fixed_buffer_v</a>&lt; T &gt;, int &gt; = 0&gt; </td></tr>
 <tr class="memitem:a24a48ca4f6711d89e0a89531b3b31807 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24a48ca4f6711d89e0a89531b3b31807">read</a> (const <a class="el" href="structjsocketpp_1_1DatagramReadOptions.html">DatagramReadOptions</a> &amp;opts={}) const</td></tr>
-<tr class="memdesc:a24a48ca4f6711d89e0a89531b3b31807"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt;typename T, std::enable_if_t&lt;<a class="el" href="namespacejsocketpp_1_1detail.html#aa46a9243f021ef54b04645f354feea30" title="Type trait for dynamic buffer types.">detail::is_dynamic_buffer_v&lt;T&gt;</a>, int&gt; = 0&gt; [[nodiscard]] T  <br /></td></tr>
+<tr class="memdesc:a24a48ca4f6711d89e0a89531b3b31807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a single UDP datagram into a caller-provided container type.     <br /></td></tr>
 <tr class="memitem:gaca78d1a91c373c1f7a14f7954f306a06" id="r_gaca78d1a91c373c1f7a14f7954f306a06"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:gaca78d1a91c373c1f7a14f7954f306a06 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__udp.html#gaca78d1a91c373c1f7a14f7954f306a06">recvFrom</a> (std::string *senderAddr=nullptr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort=nullptr, const <a class="el" href="group__udp.html#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> mode=<a class="el" href="group__udp.html#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f">DatagramReceiveMode::NoPreflight</a>) const</td></tr>
 <tr class="memdesc:gaca78d1a91c373c1f7a14f7954f306a06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive one UDP datagram directly into a trivially copyable type.  <br /></td></tr>
@@ -439,8 +439,69 @@ template&lt;typename T, std::enable_if_t&lt; <a class="el" href="namespacejsocke
 </table>
 </div><div class="memdoc">
 
-<p>&lt;typename T, std::enable_if_t&lt;<a class="el" href="namespacejsocketpp_1_1detail.html#aa46a9243f021ef54b04645f354feea30" title="Type trait for dynamic buffer types.">detail::is_dynamic_buffer_v&lt;T&gt;</a>, int&gt; = 0&gt; [[nodiscard]] T </p>
-<p>&lt;typename T, std::enable_if_t&lt;<a class="el" href="namespacejsocketpp_1_1detail.html#aa46a9243f021ef54b04645f354feea30" title="Type trait for dynamic buffer types.">detail::is_dynamic_buffer_v&lt;T&gt;</a>, int&gt; = 0&gt; [[nodiscard]] T read(const <a class="el" href="structjsocketpp_1_1DatagramReadOptions.html" title="Options controlling a single UDP receive operation.">DatagramReadOptions</a>&amp; opts = {}, std::size_t minCapacity = DefaultDatagramReceiveSize) const </p>
+<p>Receive a single UDP datagram into a caller-provided container type.    </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The container type to receive into.<ul>
+<li><b>Dynamic containers</b> (e.g., <span class="tt">std::string</span>, <span class="tt">std::vector&lt;char&gt;</span>, <span class="tt">std::vector&lt;std::byte&gt;</span>): must satisfy <span class="tt"><a class="el" href="namespacejsocketpp_1_1detail.html#aa46a9243f021ef54b04645f354feea30" title="Type trait for dynamic buffer types.">detail::is_dynamic_buffer_v</a>&lt;T&gt;</span>.</li>
+<li><b>Fixed-size containers</b> (e.g., <span class="tt">std::array&lt;char, N&gt;</span>, <span class="tt">std::array&lt;std::byte, N&gt;</span>): must satisfy <span class="tt"><a class="el" href="namespacejsocketpp_1_1detail.html#a18306b136e94e5aaf18c6dd6d5f06f33" title="Type trait for fixed-size buffer types.">detail::is_fixed_buffer_v</a>&lt;T&gt;</span>.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">opts</td><td>[in] Datagram read options controlling preflight sizing, timeouts, source address capture, and low-level receive flags. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">minCapacity</td><td>[in] (Dynamic containers only) Minimum initial capacity to reserve before reading. Defaults to <span class="tt">DefaultDatagramReceiveSize</span>.<ul>
+<li>If zero, defaults to <span class="tt">1</span> to allow reception of zero-length datagrams.</li>
+<li>The capacity is clamped to <span class="tt">MaxDatagramPayloadSafe</span> and may be increased by a preflight probe when <span class="tt">opts.mode</span> requests it.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>For <b>dynamic containers</b>: a fully-sized container of type <span class="tt">T</span> containing exactly the bytes received. The container is resized down to match the actual datagram length and is binary-safe (no null terminator is added to <span class="tt">std::string</span>).</li>
+<li>For <b>fixed-size containers</b>: a value-initialized container of type <span class="tt">T</span> containing up to <span class="tt">T::size()</span> bytes. Remaining bytes are zero-initialized if the datagram is smaller.</li>
+</ul>
+</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the socket is not open or a non-timeout receive error occurs. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a></td><td>If the receive times out (SO_RCVTIMEO) or, in non-blocking mode, no data is available.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This method is a generic, type-safe wrapper over readInto(void*,size_t,const DatagramReadOptions&amp;), ensuring unified behavior for all receive operations:</p><ul>
+<li>All I/O, error handling, timeouts, and truncation detection are handled by the same underlying backbone, <span class="tt"><a class="el" href="group__udp.html#ga30912969f0808f064aaeee9a79025f41" title="Low-level UDP receive helper for single-datagram reads into caller-provided memory.">readIntoBuffer()</a></span>.</li>
+<li>For dynamic containers, the capacity is chosen from <span class="tt">minCapacity</span> and optionally refined using <span class="tt"><a class="el" href="namespacejsocketpp_1_1internal.html#a592175a5a77f541b400879a5a4ca8978" title="Query the exact size of the next UDP datagram, if the platform can provide it.">internal::nextDatagramSize()</a></span> when preflight is requested.</li>
+<li>For fixed-size containers, the compile-time size is respected; no resizing occurs.</li>
+<li>Truncation detection is available through <a class="el" href="group__udp.html#gada22ab72b367e5123600bb3276422940">readInto</a> when you need telemetry such as full datagram size and sender address.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md708"></a>
+Example — dynamic container (<span class="tt">std::string</span>)</h3>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a> sock(12345);</div>
+<div class="line">sock.bind();</div>
+<div class="line"> </div>
+<div class="line">std::string msg = sock.read&lt;std::string&gt;(</div>
+<div class="line">    { .mode = <a class="code hl_enumvalue" href="group__udp.html#gga2124eae8cec6709a67be265f14da3bdda0882ede215c2d76da1b71837ab80e9bd">jsocketpp::DatagramReceiveMode::PreflightSize</a> }</div>
+<div class="line">);</div>
+<div class="line"> </div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Received &quot;</span> &lt;&lt; msg.size() &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+<div class="ttc" id="agroup__udp_html_gga2124eae8cec6709a67be265f14da3bdda0882ede215c2d76da1b71837ab80e9bd"><div class="ttname"><a href="group__udp.html#gga2124eae8cec6709a67be265f14da3bdda0882ede215c2d76da1b71837ab80e9bd">jsocketpp::DatagramReceiveMode::PreflightSize</a></div><div class="ttdeci">@ PreflightSize</div><div class="ttdoc">Probe the exact size of the next datagram and size the receive accordingly.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:96</div></div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md709"></a>
+Example — fixed-size container (<span class="tt">std::array&lt;char, 512&gt;</span>)</h3>
+<div class="fragment"><div class="line"><span class="keyword">auto</span> buf = sock.read&lt;std::array&lt;char, 512&gt;&gt;(</div>
+<div class="line">    { .mode = <a class="code hl_enumvalue" href="group__udp.html#gga2124eae8cec6709a67be265f14da3bddac9a017cf1d4a5f3aff960a3f7e8bffd5">jsocketpp::DatagramReceiveMode::PreflightMax</a> }</div>
+<div class="line">);</div>
+<div class="ttc" id="agroup__udp_html_gga2124eae8cec6709a67be265f14da3bddac9a017cf1d4a5f3aff960a3f7e8bffd5"><div class="ttname"><a href="group__udp.html#gga2124eae8cec6709a67be265f14da3bddac9a017cf1d4a5f3aff960a3f7e8bffd5">jsocketpp::DatagramReceiveMode::PreflightMax</a></div><div class="ttdeci">@ PreflightMax</div><div class="ttdoc">Probe the size of the next datagram but cap it at the current buffer length.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:112</div></div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><ul>
+<li>This overload discards sender address/port information; use read(DatagramPacket&amp;,const DatagramReadOptions&amp;) or readInto(void*,size_t,const DatagramReadOptions&amp;) if you need it.</li>
+<li>For large datagrams, ensure your container capacity is sufficient to avoid truncation.</li>
+</ul>
+</dd></dl>
+<dl class="section since"><dt>Since</dt><dd>1.0    </dd></dl>
 
 </div>
 </div>
