@@ -1510,6 +1510,57 @@ class DatagramSocket : public SocketOptions
     void write(std::string_view message) const;
 
     /**
+     * @brief Sends a contiguous buffer of bytes as a UDP datagram to the connected peer.
+     * @ingroup udp
+     *
+     * This method transmits the contents of a caller-provided buffer (as a `std::span<const std::byte>`)
+     * as a single UDP datagram to the socket's connected peer. It guarantees that either the entire
+     * buffer is sent or an exception is thrown if the operation fails.
+     *
+     * ---
+     *
+     * ### ⚙️ Core Behavior
+     * - Requires the socket to be connected via `connect()`
+     * - Sends exactly `data.size()` bytes in one datagram using the underlying system call
+     * - Throws on partial sends or system-level errors
+     * - Does not fragment or retry; the payload is sent as a single atomic datagram
+     *
+     * ---
+     *
+     * ### 📋 Requirements
+     * - The socket must be open and connected
+     * - The buffer must remain valid for the duration of the call
+     *
+     * ---
+     *
+     * ### 🧪 Example
+     * @code
+     * std::vector<std::byte> payload = ...;
+     * jsocketpp::DatagramSocket sock("192.168.1.100", 9000);
+     * sock.connect();
+     * sock.write(std::span<const std::byte>(payload));
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] data Read-only span of bytes to send as the datagram payload.
+     *
+     * @throws SocketException If:
+     * - The socket is not open
+     * - The socket is not connected
+     * - The underlying send operation fails or reports a partial datagram
+     *
+     * @warning No delivery, ordering, or reliability guarantees are provided by UDP.
+     * @warning If `data.size()` exceeds the path MTU, the datagram may be dropped or fragmented by the network.
+     *
+     * @see write(std::string_view) For string payloads
+     * @see writeTo() For sending to arbitrary destinations
+     * @see connect() To establish a default peer
+     * @since 1.0
+     */
+    void write(std::span<const std::byte> data) const;
+
+    /**
      * @brief Sends a message as a UDP datagram to the specified destination address and port.
      * @ingroup udp
      *

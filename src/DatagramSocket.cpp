@@ -406,6 +406,20 @@ void DatagramSocket::write(const std::string_view message) const
     internal::sendExact(getSocketFd(), message.data(), message.size());
 }
 
+void DatagramSocket::write(const std::span<const std::byte> data) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::write(std::span<const std::byte>): socket is not open.");
+
+    if (!_isConnected)
+        throw SocketException("DatagramSocket::write(std::span<const std::byte>): socket is not connected.");
+
+    if (data.empty())
+        return;
+
+    internal::sendExact(getSocketFd(), reinterpret_cast<const char*>(data.data()), data.size());
+}
+
 void DatagramSocket::write(const std::string_view message, const std::string_view host, const Port port) const
 {
     if (getSocketFd() == INVALID_SOCKET)
