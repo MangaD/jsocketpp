@@ -669,41 +669,8 @@ $(function(){initNavTree('DatagramSocket_8hpp_source.html','',''); });
 <div class="line"><a id="l03153" name="l03153"></a><span class="lineno"><a class="line" href="classjsocketpp_1_1DatagramSocket.html#acc0850711b172f6c6c8bf0649c530ea0"> 3153</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="classjsocketpp_1_1DatagramSocket.html#acc0850711b172f6c6c8bf0649c530ea0">_isConnected</a> = <span class="keyword">false</span>;           </div>
 <div class="line"><a id="l03154" name="l03154"></a><span class="lineno"> 3154</span>};</div>
 </div>
-<div class="line"><a id="l03155" name="l03155"></a><span class="lineno"> 3155</span></div>
-<div class="foldopen" id="foldopen03206" data-start="{" data-end="}">
-<div class="line"><a id="l03206" name="l03206"></a><span class="lineno"><a class="line" href="group__udp.html#ga5d219ae0c5ace0c42fad1b8295a7c2a1"> 3206</a></span><span class="keyword">template</span> &lt;&gt; <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df">DatagramSocket::write&lt;std::string&gt;</a>(<span class="keyword">const</span> std::string&amp; value)</div>
-<div class="line"><a id="l03207" name="l03207"></a><span class="lineno"> 3207</span>{</div>
-<div class="line"><a id="l03208" name="l03208"></a><span class="lineno"> 3208</span>    <span class="keywordflow">if</span> (getSocketFd() == <a class="code hl_variable" href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">INVALID_SOCKET</a>)</div>
-<div class="line"><a id="l03209" name="l03209"></a><span class="lineno"> 3209</span>        <span class="keywordflow">throw</span> <a class="code hl_class" href="classjsocketpp_1_1SocketException.html">SocketException</a>(<span class="stringliteral">&quot;DatagramSocket::write&lt;std::string&gt;(): socket is not open.&quot;</span>);</div>
-<div class="line"><a id="l03210" name="l03210"></a><span class="lineno"> 3210</span> </div>
-<div class="line"><a id="l03211" name="l03211"></a><span class="lineno"> 3211</span>    <span class="keywordflow">if</span> (!isConnected())</div>
-<div class="line"><a id="l03212" name="l03212"></a><span class="lineno"> 3212</span>        <span class="keywordflow">throw</span> <a class="code hl_class" href="classjsocketpp_1_1SocketException.html">SocketException</a>(<span class="stringliteral">&quot;DatagramSocket::write&lt;std::string&gt;(): socket is not connected. Use writeTo() instead.&quot;</span>);</div>
-<div class="line"><a id="l03213" name="l03213"></a><span class="lineno"> 3213</span> </div>
-<div class="line"><a id="l03214" name="l03214"></a><span class="lineno"> 3214</span>    <span class="keywordflow">if</span> (value.empty())</div>
-<div class="line"><a id="l03215" name="l03215"></a><span class="lineno"> 3215</span>        <span class="keywordflow">return</span>; <span class="comment">// or optionally throw or return 0</span></div>
-<div class="line"><a id="l03216" name="l03216"></a><span class="lineno"> 3216</span> </div>
-<div class="line"><a id="l03217" name="l03217"></a><span class="lineno"> 3217</span>    <a class="code hl_function" href="group__internal.html#ga8826c90e1bb9e0023b75940ff4cd72f8">internal::sendExact</a>(getSocketFd(), value.data(), value.size());</div>
-<div class="line"><a id="l03218" name="l03218"></a><span class="lineno"> 3218</span>}</div>
-</div>
-<div class="line"><a id="l03219" name="l03219"></a><span class="lineno"> 3219</span></div>
-<div class="foldopen" id="foldopen03273" data-start="{" data-end="}">
-<div class="line"><a id="l03273" name="l03273"></a><span class="lineno"><a class="line" href="group__udp.html#gaca86a9f7b311fd106801b9e49d01fb27"> 3273</a></span><span class="keyword">template</span> &lt;&gt; <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df">DatagramSocket::write&lt;std::string_view&gt;</a>(<span class="keyword">const</span> std::string_view&amp; value)</div>
-<div class="line"><a id="l03274" name="l03274"></a><span class="lineno"> 3274</span>{</div>
-<div class="line"><a id="l03275" name="l03275"></a><span class="lineno"> 3275</span>    <span class="keywordflow">if</span> (getSocketFd() == <a class="code hl_variable" href="namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405">INVALID_SOCKET</a>)</div>
-<div class="line"><a id="l03276" name="l03276"></a><span class="lineno"> 3276</span>        <span class="keywordflow">throw</span> <a class="code hl_class" href="classjsocketpp_1_1SocketException.html">SocketException</a>(<span class="stringliteral">&quot;DatagramSocket::write&lt;std::string_view&gt;(): socket is not open.&quot;</span>);</div>
-<div class="line"><a id="l03277" name="l03277"></a><span class="lineno"> 3277</span> </div>
-<div class="line"><a id="l03278" name="l03278"></a><span class="lineno"> 3278</span>    <span class="keywordflow">if</span> (!isConnected())</div>
-<div class="line"><a id="l03279" name="l03279"></a><span class="lineno"> 3279</span>        <span class="keywordflow">throw</span> <a class="code hl_class" href="classjsocketpp_1_1SocketException.html">SocketException</a>(</div>
-<div class="line"><a id="l03280" name="l03280"></a><span class="lineno"> 3280</span>            <span class="stringliteral">&quot;DatagramSocket::write&lt;std::string_view&gt;(): socket is not connected. Use writeTo() instead.&quot;</span>);</div>
-<div class="line"><a id="l03281" name="l03281"></a><span class="lineno"> 3281</span> </div>
-<div class="line"><a id="l03282" name="l03282"></a><span class="lineno"> 3282</span>    <span class="keywordflow">if</span> (value.empty())</div>
-<div class="line"><a id="l03283" name="l03283"></a><span class="lineno"> 3283</span>        <span class="keywordflow">return</span>; <span class="comment">// Empty datagram is technically valid, but skip to avoid overhead (optional)</span></div>
-<div class="line"><a id="l03284" name="l03284"></a><span class="lineno"> 3284</span> </div>
-<div class="line"><a id="l03285" name="l03285"></a><span class="lineno"> 3285</span>    <a class="code hl_function" href="group__internal.html#ga8826c90e1bb9e0023b75940ff4cd72f8">internal::sendExact</a>(getSocketFd(), value.data(), value.size());</div>
-<div class="line"><a id="l03286" name="l03286"></a><span class="lineno"> 3286</span>}</div>
-</div>
-<div class="line"><a id="l03287" name="l03287"></a><span class="lineno"> 3287</span> </div>
-<div class="line"><a id="l03288" name="l03288"></a><span class="lineno"> 3288</span>} <span class="comment">// namespace jsocketpp</span></div>
+<div class="line"><a id="l03155" name="l03155"></a><span class="lineno"> 3155</span> </div>
+<div class="line"><a id="l03156" name="l03156"></a><span class="lineno"> 3156</span>} <span class="comment">// namespace jsocketpp</span></div>
 <div class="ttc" id="aBufferView_8hpp_html"><div class="ttname"><a href="BufferView_8hpp.html">BufferView.hpp</a></div><div class="ttdoc">Represents a raw writable memory region for scatter/gather I/O.</div></div>
 <div class="ttc" id="aDatagramPacket_8hpp_html"><div class="ttname"><a href="DatagramPacket_8hpp.html">DatagramPacket.hpp</a></div><div class="ttdoc">UDP datagram packet class for jsocketpp.</div></div>
 <div class="ttc" id="aSocketOptions_8hpp_html"><div class="ttname"><a href="SocketOptions_8hpp.html">SocketOptions.hpp</a></div><div class="ttdoc">Defines the SocketOptions base class for cross-platform socket option access.</div></div>

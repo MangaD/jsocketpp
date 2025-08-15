@@ -486,7 +486,7 @@ template&lt;typename T, std::enable_if_t&lt; <a class="el" href="namespacejsocke
 <li>For fixed-size containers, the compile-time size is respected; no resizing occurs.</li>
 <li>Truncation detection is available through <a class="el" href="group__udp.html#gada22ab72b367e5123600bb3276422940">readInto</a> when you need telemetry such as full datagram size and sender address.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md695"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md683"></a>
 Example — dynamic container (<span class="tt">std::string</span>)</h3>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a> sock(12345);</div>
 <div class="line">sock.bind();</div>
@@ -497,7 +497,7 @@ Example — dynamic container (<span class="tt">std::string</span>)</h3>
 <div class="line"> </div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Received &quot;</span> &lt;&lt; msg.size() &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
 <div class="ttc" id="agroup__udp_html_gga2124eae8cec6709a67be265f14da3bdda0882ede215c2d76da1b71837ab80e9bd"><div class="ttname"><a href="group__udp.html#gga2124eae8cec6709a67be265f14da3bdda0882ede215c2d76da1b71837ab80e9bd">jsocketpp::DatagramReceiveMode::PreflightSize</a></div><div class="ttdeci">@ PreflightSize</div><div class="ttdoc">Probe the exact size of the next datagram and size the receive accordingly.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:96</div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md696"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md684"></a>
 Example — fixed-size container (<span class="tt">std::array&lt;char, 512&gt;</span>)</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> buf = sock.read&lt;std::array&lt;char, 512&gt;&gt;(</div>
 <div class="line">    { .mode = <a class="code hl_enumvalue" href="group__udp.html#gga2124eae8cec6709a67be265f14da3bddac9a017cf1d4a5f3aff960a3f7e8bffd5">jsocketpp::DatagramReceiveMode::PreflightMax</a> }</div>

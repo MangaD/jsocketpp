@@ -147,8 +147,6 @@ var group__udp =
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga3d08597b24d9c7a3fe43dd291ee85148", null ],
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#gab613123c8bf1aca6aec451b1140e2f82", null ],
     [ "jsocketpp::DatagramSocket::DatagramSocket", "group__udp.html#ga4b4c631816f82eea0b6048a16682079e", null ],
-    [ "jsocketpp::write< std::string >", "group__udp.html#ga5d219ae0c5ace0c42fad1b8295a7c2a1", null ],
-    [ "jsocketpp::write< std::string_view >", "group__udp.html#gaca86a9f7b311fd106801b9e49d01fb27", null ],
     [ "jsocketpp::DatagramSocket::discard", "group__udp.html#ga200fcb7c76784aea710e6dfd5611673f", null ],
     [ "jsocketpp::DatagramSocket::disconnect", "group__udp.html#ga02b08c333a2f109a3b19ec7b3c0cecf9", null ],
     [ "jsocketpp::DatagramSocket::getLastPeerSockAddr", "group__udp.html#gac19051ec24961addb059f01f1e7f28c7", null ],
