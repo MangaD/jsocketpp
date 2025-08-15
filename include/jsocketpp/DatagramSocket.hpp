@@ -1575,9 +1575,9 @@ class DatagramSocket : public SocketOptions
      *   if the socket is unconnected, enabling later use of `getRemoteIp()` and `getRemotePort()`.
      * - Throws if all address candidates fail.
      *
-     * @param[in] message The UDP payload to send. If empty, this method is a no-op.
      * @param[in] host    Destination hostname or IP address (IPv4, IPv6, or DNS).
      * @param[in] port    Destination UDP port number.
+     * @param[in] message The UDP payload to send. If empty, this method is a no-op.
      *
      * @throws SocketException If:
      * - The socket is not open
@@ -1595,7 +1595,67 @@ class DatagramSocket : public SocketOptions
      * @see connect() To establish a persistent default peer
      * @see isConnected(), getRemoteIp(), getRemotePort(), getRemoteSocketAddress()
      */
-    void write(std::string_view message, std::string_view host, Port port) const;
+    void write(std::string_view host, Port port, std::string_view message) const;
+
+    /**
+     * @brief Sends a contiguous buffer of bytes as a UDP datagram to the specified destination address and port.
+     * @ingroup udp
+     *
+     * This method transmits the contents of a caller-provided buffer (as a `std::span<const std::byte>`)
+     * as a single UDP datagram to the specified host and port, without requiring the socket to be connected.
+     *
+     * ---
+     *
+     * ### ⚙️ Core Behavior
+     * - Resolves the destination address using @ref internal::resolveAddress (supports IPv4, IPv6, DNS).
+     * - Iterates through all resolved addresses, attempting to send the full payload to each using @ref
+     * internal::sendExactTo.
+     * - On the first successful send, updates the internal `_remoteAddr` and `_remoteAddrLen` if the socket is
+     * unconnected, enabling later use of `getRemoteIp()` and `getRemotePort()`.
+     * - Throws if all address candidates fail.
+     *
+     * ---
+     *
+     * ### 📋 Requirements
+     * - The socket must be open.
+     * - The buffer must remain valid for the duration of the call.
+     *
+     * ---
+     *
+     * ### 🧪 Example
+     * @code
+     * std::vector<std::byte> payload = ...;
+     * jsocketpp::DatagramSocket sock(0); // unbound UDP socket
+     * sock.writeTo("192.168.1.10", 5555, std::span<const std::byte>(payload));
+     * std::cout << sock.getRemoteSocketAddress() << std::endl; // "192.168.1.10:5555"
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] host    Destination hostname or IP address (IPv4, IPv6, or DNS).
+     * @param[in] port    Destination UDP port number.
+     * @param[in] data    Read-only span of bytes to send as the datagram payload.
+     *
+     * @throws SocketException If:
+     * - The socket is not open
+     * - Address resolution fails
+     * - All resolved destinations fail to accept the datagram
+     * - The underlying send operation fails or reports a partial datagram
+     *
+     * @note No fragmentation or retries are performed — the payload is sent as a single datagram.
+     *       If `data.size()` exceeds the path MTU, it may be dropped or truncated by the network.
+     * @note When used on an unconnected socket, this method updates the internal remote address state for use
+     *       with `getRemoteIp()` and `getRemotePort()`.
+     *
+     * @warning No byte-order or encoding transformations are applied; the payload is transmitted as raw bytes.
+     *
+     * @see write(std::string_view, Port, std::string_view) For string payloads
+     * @see write(const DatagramPacket&) For sending a datagram object with buffer + destination
+     * @see connect() To establish a persistent default peer
+     * @see isConnected(), getRemoteIp(), getRemotePort(), getRemoteSocketAddress()
+     * @since 1.0
+     */
+    void writeTo(std::string_view host, Port port, std::span<const std::byte> data) const;
 
     /**
      * @brief Receive a single UDP datagram into a @ref DatagramPacket with full control and telemetry.
