@@ -587,11 +587,14 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <ul>
 <li>Closes the socket if it is valid (<span class="tt"><a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a> != INVALID_SOCKET</span>)</li>
 <li>Sets the socket descriptor to <span class="tt">INVALID_SOCKET</span></li>
-<li>Releases resolved address information (<span class="tt">_addrInfoPtr</span>)</li>
-<li>Clears <span class="tt">_selectedAddrInfo</span></li>
 <li>Resets internal flags:<ul>
 <li><span class="tt">_isBound = false</span></li>
 <li><span class="tt">_isConnected = false</span></li>
+</ul>
+</li>
+<li>Clears cached local and remote address structures:<ul>
+<li><span class="tt">_localAddr</span>, <span class="tt">_localAddrLen</span></li>
+<li><span class="tt">_remoteAddr</span>, <span class="tt">_remoteAddrLen</span></li>
 </ul>
 </li>
 </ul>
@@ -639,13 +642,12 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <p>Internally calls <span class="tt"><a class="el" href="#gaa0727094596347aa858629f6e5c7febf" title="Internal helper that releases socket resources and resets all internal state.">cleanup()</a></span>, which:</p><ul>
 <li>Closes the socket if it is open</li>
 <li>Sets the socket descriptor to <span class="tt">INVALID_SOCKET</span></li>
-<li>Frees any resolved address information (<span class="tt">_addrInfoPtr</span>)</li>
-<li>Clears <span class="tt">_selectedAddrInfo</span></li>
 <li>Resets connection state flags:<ul>
 <li><span class="tt">_isBound = false</span></li>
 <li><span class="tt">_isConnected = false</span></li>
 </ul>
 </li>
+<li>Clears cached local/remote address structures</li>
 </ul>
 <p>Then rethrows the active exception using <span class="tt">throw;</span>.</p>
 <hr  />
@@ -711,13 +713,12 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <p>Internally delegates to <span class="tt"><a class="el" href="#gaa0727094596347aa858629f6e5c7febf" title="Internal helper that releases socket resources and resets all internal state.">cleanup()</a></span>, which:</p><ul>
 <li>Closes the socket if open</li>
 <li>Resets the socket descriptor to <span class="tt">INVALID_SOCKET</span></li>
-<li>Releases address resolution results (<span class="tt">_addrInfoPtr</span>)</li>
-<li>Clears <span class="tt">_selectedAddrInfo</span></li>
 <li>Resets internal state flags:<ul>
 <li><span class="tt">_isBound = false</span></li>
 <li><span class="tt">_isConnected = false</span></li>
 </ul>
 </li>
+<li>Clears cached local/remote address structures</li>
 </ul>
 <p>After cleanup, throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> with:</p><ul>
 <li>The provided <span class="tt">errorCode</span></li>
