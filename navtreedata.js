@@ -81,7 +81,7 @@ var NAVTREEINDEX =
 [
 "BufferView_8hpp.html",
 "group__jsocketpp.html",
-"index.html#autotoc_md482"
+"index.html#autotoc_md480"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

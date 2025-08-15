@@ -50,6 +50,6 @@ var searchData=
   ['guide_20to_20ioctl_20fcntl_20ioctlsocket_47',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;,',['../md_docs_2markdown_2ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
   ['guide_20to_20ioctl_20fcntl_20ioctlsocket_20wsaioctl_20and_20related_20functions_3a_20commands_20use_20cases_20and_20windows_20support_48',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;WSAIoctl&lt;/span&gt;, and Related Functions: Commands, Use Cases, and Windows Support',['../group__ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
   ['guide_20to_20the_20socket_20api_49',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['guidelines_50',['Guidelines',['../group__socketopts.html#autotoc_md1047',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md526',1,'3. Code Style Guidelines']]],
+  ['guidelines_50',['Guidelines',['../group__socketopts.html#autotoc_md1054',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md526',1,'3. Code Style Guidelines']]],
   ['guides_51',['User Guides',['../group__docs.html',1,'']]]
 ];

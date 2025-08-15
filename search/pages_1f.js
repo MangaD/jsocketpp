@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['value_0',['Value',['../group__internal.html#autotoc_md571',1,'Return Value'],['../group__socketopts.html#autotoc_md1112',1,'Return Value']]],
+  ['value_0',['Value',['../group__internal.html#autotoc_md571',1,'Return Value'],['../group__socketopts.html#autotoc_md1119',1,'Return Value']]],
   ['values_1',['Values',['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md212',1,'Return Values'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md225',1,'Return Values'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md236',1,'Return Values'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md247',1,'Return Values']]],
   ['vcpkg_2',['vcpkg',['../index.html#autotoc_md476',1,'✅ vcpkg'],['../group__vcpkg__publish__guide.html#autotoc_md442',1,'2. Prepare Your Library for vcpkg']]],
   ['vcpkg_20json_3',['Example &lt;span class=&quot;tt&quot;&gt;vcpkg.json&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md445',1,'']]],
