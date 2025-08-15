@@ -501,27 +501,18 @@ class DatagramSocket : public SocketOptions
                             std::string_view remoteAddress = "", Port remotePort = 0, int connectTimeoutMillis = -1);
 
     /**
-     * @brief Destructor. Closes the socket and releases all associated resources.
+     * @brief Destructor for DatagramSocket. Ensures socket resources are released.
      * @ingroup udp
      *
-     * Cleans up system resources associated with the UDP socket, including:
-     * - Closing the socket file descriptor (via `closesocket()` or `close()`)
-     * - Freeing address resolution memory (`freeaddrinfo`)
+     * Automatically closes the underlying UDP socket and releases all associated system resources.
+     * This follows RAII principles, guaranteeing cleanup when the object goes out of scope.
      *
-     * This destructor ensures that sockets are properly closed on destruction,
-     * following the RAII (Resource Acquisition Is Initialization) pattern. If
-     * any errors occur during cleanup, they are caught and logged to `std::cerr`
-     * but will not propagate exceptions, preserving `noexcept` semantics.
+     * - Closes the socket file descriptor (using `close()` or platform equivalent)
+     * - Suppresses all exceptions during cleanup to maintain noexcept guarantees
+     * - Prevents resource leaks even in exception scenarios
      *
-     * ### RAII Guarantees
-     * - Automatically releases system resources when the object goes out of scope
-     * - Prevents socket leaks in exception paths or early returns
-     * - Ensures consistent teardown behavior across platforms
-     *
-     * @note If you require custom error handling for cleanup failures, call
-     * `close()` manually before destruction.
-     *
-     * @warning Do not reuse a `DatagramSocket` after it has been destroyed or moved from.
+     * @note Errors during destruction are ignored. For explicit error handling, call `close()` manually.
+     * @note Do not use a DatagramSocket after destruction or move.
      *
      * @see close()
      */
@@ -1073,15 +1064,17 @@ class DatagramSocket : public SocketOptions
      * @brief Retrieves the local socket address as a formatted string in the form `"IP:port"`.
      * @ingroup udp
      *
-     * Returns the socket's local IP address and port in a human-readable format, such as
-     * `"127.0.0.1:12345"` or `"[::1]:54321"`. This method works for both explicitly bound
-     * sockets and sockets where the OS has auto-assigned an ephemeral port.
+     * This method returns the local IP address and port that this socket is bound to, formatted
+     * as a human-readable string (e.g., `"192.168.1.42:12345"` or `"[::1]:9999"`). It works for
+     * both explicitly bound sockets and those where the operating system has auto-assigned an
+     * ephemeral port.
      *
      * ---
      *
-     * ### ⚙️ Behavior
-     * - Uses `getsockname()` to query the bound address
-     * - Formats IPv6 addresses with square brackets: `"[2001:db8::1]:80"`
+     * ### ⚙️ Core Behavior
+     * - Uses `getsockname()` to query the bound local address and port
+     * - Formats IPv4 addresses as `"ip:port"` (e.g., "127.0.0.1:8080")
+     * - Formats IPv6 addresses with square brackets: `"[ipv6]:port"` (e.g., "[::1]:8080")
      * - For unbound sockets, throws `SocketException`
      * - Works with both IPv4 and IPv6 address families
      * - Safe to call after automatic port assignment
@@ -1090,8 +1083,8 @@ class DatagramSocket : public SocketOptions
      *
      * ### 🧪 Example
      * @code
-     * DatagramSocket sock(AF_INET);
-     * sock.bind("0.0.0.0", 0);  // OS assigns port
+     * DatagramSocket sock;
+     * sock.bind("0.0.0.0", 0);  // Let OS pick ephemeral port
      *
      * std::cout << "Bound to: " << sock.getLocalSocketAddress() << "\n";
      * // Output: "0.0.0.0:50432"
@@ -1119,116 +1112,92 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] std::string getLocalSocketAddress(bool convertIPv4Mapped = true) const;
 
     /**
-     * @brief Retrieves the IP address of the remote peer for the most recent datagram exchange.
+     * @brief Retrieves the IP address of the remote peer from the socket's current state.
      * @ingroup udp
      *
-     * This method returns the remote IP address as a string (e.g., `"192.168.1.42"` or `"::1"`),
-     * depending on the current connection state and prior socket activity:
+     * Returns the remote peer's IP address based on the socket's connection state and prior
+     * communication history. The address is returned as a human-readable string (e.g., "192.168.1.42"
+     * or "::1").
      *
      * ---
      *
      * ### 🔁 Behavior Based on Connection Mode
-     * - **Connected DatagramSocket**: Uses `getpeername()` to obtain the IP address of the fixed remote peer,
-     *   as set by an explicit call to `connect()`.
+     * - **Connected Socket:**
+     *   - Returns the connected peer's IP as set by `connect()`
+     *   - Uses `getpeername()` to obtain the fixed peer address
      *
-     * - **Unconnected DatagramSocket**: Returns the IP address of the most recent peer, which is updated after:
-     *   - A successful `read()` or `read<T>()`
-     *   - A successful `recvFrom()` call
-     *   - A successful `writeTo()` or `write(DatagramPacket)` call with destination
-     *
-     *   If no such operation has occurred yet, this method throws a `SocketException`.
+     * - **Unconnected Socket:**
+     *   - Returns the most recently active peer's IP, updated after:
+     *     - Receiving via `read()` or `readInto()`
+     *     - Receiving via `readFrom()`
+     *     - Sending via `writeTo()` or `write(DatagramPacket)`
      *
      * ---
      *
      * ### IPv6 Handling
-     * If the returned address is an IPv4-mapped IPv6 address (e.g., `::ffff:192.0.2.1`) and
-     * `@p convertIPv4Mapped` is `true` (default), it will be simplified to a standard IPv4 string (e.g., `192.0.2.1`).
+     * If the peer address is an IPv4-mapped IPv6 address (e.g., "::ffff:192.0.2.1") and
+     * `convertIPv4Mapped` is true (default), it is simplified to standard IPv4 form ("192.0.2.1").
      *
      * ---
      *
-     * ### Example (Unconnected Mode)
+     * ### Example
      * @code
-     * DatagramSocket sock(AF_INET);
-     * sock.bind(4567);
+     * // Unconnected mode
+     * DatagramSocket sock(12345);
+     * sock.bind();
      *
      * DatagramPacket packet(1024);
-     * sock.read(packet); // receives message from a peer
+     * sock.read(packet);
+     * std::cout << "Last sender: " << sock.getRemoteIp() << "\n";
      *
-     * std::string peerIp = sock.getRemoteIp();
-     * std::cout << "Last datagram was from: " << peerIp << "\n";
+     * // Connected mode
+     * sock.connect("example.com", 9999);
+     * std::cout << "Connected to: " << sock.getRemoteIp() << "\n";
      * @endcode
      *
      * ---
      *
-     * @param[in] convertIPv4Mapped Whether to simplify IPv4-mapped IPv6 addresses to IPv4 form (default: true).
-     * @return IP address of the connected peer or last known datagram sender.
+     * @param[in] convertIPv4Mapped If true, simplify IPv4-mapped IPv6 addresses to IPv4 form.
+     * @return The remote peer's IP address as a string.
      *
      * @throws SocketException If:
      * - The socket is not open
      * - In connected mode, `getpeername()` fails
-     * - In unconnected mode, no datagram has been sent or received yet
+     * - In unconnected mode, no peer information is available yet
+     * - Address conversion fails
      *
      * @see getRemotePort()
      * @see getRemoteSocketAddress()
      * @see isConnected()
-     * @see writeTo(), write(DatagramPacket), read()
+     * @see connect()
+     * @since 1.0
      */
     [[nodiscard]] std::string getRemoteIp(bool convertIPv4Mapped = true) const;
 
     /**
-     * @brief Retrieves the port number of the remote peer for the most recent datagram exchange.
+     * @brief Retrieves the remote peer's UDP port number in host byte order.
      * @ingroup udp
      *
-     * This method returns the remote port number in **host byte order**, based on the socket’s connection mode
-     * and prior communication history:
+     * Returns the port number of the remote peer associated with this socket, depending on its connection state:
      *
-     * ---
+     * - **Connected socket:** Returns the port of the peer set via `connect()`, using `getpeername()`.
+     * - **Unconnected socket:** Returns the port of the most recent sender or destination, as updated by
+     *   `read()`, `readInto()`, `readFrom()`, `writeTo()`, or `write(DatagramPacket)`.
      *
-     * ### 🔁 Behavior Based on Mode
-     * - **Connected DatagramSocket**: Uses `getpeername()` to retrieve the remote peer’s port as established via
-     * `connect()`.
+     * If no communication has occurred yet in unconnected mode, this method throws a `SocketException`.
      *
-     * - **Unconnected DatagramSocket**: Returns the port of the most recent peer, which is updated after:
-     *   - A successful `read()` or `read<T>()`
-     *   - A successful `recvFrom()` call
-     *   - A successful `writeTo()` or `write(DatagramPacket)` call with destination
-     *
-     *   If no such operation has occurred yet, this method throws a `SocketException`.
-     *
-     * ---
-     *
-     * ### Use Cases
-     * - Debugging or logging the origin of a datagram
-     * - Protocol dispatching based on sender’s port
-     * - Maintaining peer state or statistics per source
-     * - Constructing complete remote socket addresses (`IP:port`)
-     *
-     * ---
-     *
-     * ### Example (Unconnected Mode)
-     * @code
-     * DatagramSocket sock(AF_INET);
-     * sock.bind(9876);
-     *
-     * DatagramPacket packet(1024);
-     * sock.read(packet);
-     *
-     * std::cout << "Sender port: " << sock.getRemotePort() << "\n";
-     * @endcode
-     *
-     * ---
-     *
-     * @return Port number of the connected peer or last known datagram sender, in host byte order.
+     * @return The remote UDP port number in host byte order.
      *
      * @throws SocketException If:
-     * - The socket is invalid or closed
+     * - The socket is not open
      * - In connected mode, `getpeername()` fails
-     * - In unconnected mode, no datagram has been sent or received yet
+     * - In unconnected mode, no peer information is available yet
      *
      * @see getRemoteIp()
      * @see getRemoteSocketAddress()
      * @see isConnected()
-     * @see writeTo(), write(DatagramPacket), read()
+     * @see connect()
+     * @since 1.0
      */
     [[nodiscard]] Port getRemotePort() const;
 
@@ -1264,8 +1233,7 @@ class DatagramSocket : public SocketOptions
      *
      * ### Example (Unconnected Mode)
      * @code
-     * DatagramSocket sock(AF_INET);
-     * sock.bind(12345);
+     * DatagramSocket sock(12345);
      *
      * DatagramPacket packet(1024);
      * sock.read(packet); // Wait for a sender
@@ -1301,30 +1269,30 @@ class DatagramSocket : public SocketOptions
      *
      * ---
      *
-     * ### Constraints
-     * - The socket **must be connected** via `connect()`.
-     * - The type `T` must be:
+     * ### ⚙️ Core Behavior
+     * - Uses `std::bit_cast` to convert `T` into raw bytes
+     * - Sends exactly `sizeof(T)` bytes in a single datagram
+     * - No padding removal, field conversion, or alignment adjustment is performed
+     * - No retries: failure to send will throw immediately
+     *
+     * ---
+     *
+     * ### 📋 Requirements
+     * - The socket must be **connected** via `connect()`
+     * - Type `T` must satisfy both:
      *   - `std::is_trivially_copyable_v<T> == true`
      *   - `std::is_standard_layout_v<T> == true`
      *
      * ---
      *
-     * ### Behavior
-     * - Performs a `bit_cast` of the object into a raw byte array
-     * - Sends exactly `sizeof(T)` bytes in a single datagram
-     * - No padding removal, field conversion, or alignment adjustment is performed
-     * - No retries: failure to send will throw
-     *
-     * ---
-     *
-     * ### Example
+     * ### 🧪 Example
      * @code
      * struct Packet {
      *     uint32_t type;
      *     uint16_t length;
      * };
      *
-     * DatagramSocket sock(AF_INET);
+     * DatagramSocket sock(12345);
      * sock.connect("192.168.1.100", 9000);
      *
      * Packet p{1, 64};
@@ -1339,20 +1307,19 @@ class DatagramSocket : public SocketOptions
      * @throws SocketException If:
      * - The socket is not open
      * - The socket is not connected
-     * - `send()` fails (e.g. unreachable, interrupted, closed)
+     * - `send()` fails (e.g., unreachable, interrupted, closed)
      *
-     * @warning Byte Order:
-     * No endianness normalization is applied. You must convert fields manually.
-     * Use the provided `jsocketpp::net::fromNetwork()` and `toNetwork()` helpers
-     * for safe and portable conversion of integers between host and network byte order.
-     * These replace platform-specific calls like `ntohl()` or `htons()`.
-     *
-     * @warning Padding bytes will be included in transmission. Avoid structs with padding unless explicitly managed.
-     * @warning This method does not fragment — objects larger than the MTU may be dropped by the network.
+     * @warning **Byte Order**: No endianness conversion is performed. Use `jsocketpp::net::fromNetwork()`
+     *          and `toNetwork()` helpers to safely convert integers between host and network byte order.
+     * @warning **Padding**: All bytes, including padding, are transmitted. Avoid structs with padding
+     *          unless explicitly managed.
+     * @warning **Size**: This method does not fragment. Objects larger than the MTU may be dropped
+     *          by the network.
      *
      * @see read<T>() For receiving structured objects
      * @see writeTo() For unconnected datagram transmission
      * @see connect() To establish peer before writing
+     * @since 1.0
      */
     template <typename T> void write(const T& value)
     {
@@ -2722,43 +2689,51 @@ class DatagramSocket : public SocketOptions
      * @brief Closes the datagram socket and releases its underlying system resources.
      * @ingroup udp
      *
-     * This method shuts down and closes the underlying UDP socket file descriptor or handle.
-     * Once closed, the socket can no longer send or receive packets. This is a terminal operation —
-     * any further use of the socket (e.g. `sendTo()`, `bind()`, or `setOption()`) will result in exceptions.
+     * This method performs a full teardown of the datagram socket, closing the underlying file
+     * descriptor/handle and releasing all associated resources. After closure, the socket becomes
+     * invalid and cannot be reused.
      *
      * ---
      *
-     * ### 🧱 Effects
-     * - The socket becomes invalid (`_sockFd == INVALID_SOCKET`)
-     * - Any pending operations are aborted
-     * - The operating system reclaims the socket descriptor
+     * ### ⚙️ Core Behavior
+     * - Invalidates the socket descriptor (`_sockFd = INVALID_SOCKET`)
+     * - Releases system-level socket resources via `::close()` or `::closesocket()`
+     * - Resets all internal state flags (`_isBound`, `_isConnected`)
+     * - Clears address resolution data and remote peer information
+     * - Makes the socket unsuitable for further I/O operations
      *
      * ---
      *
-     * ### 💡 Platform Notes
-     * - On **POSIX**, this calls `::close(_sockFd)`
-     * - On **Windows**, this calls `::closesocket(_sockFd)`
-     * - If the socket was already closed, calling this again has no effect (safe)
+     * ### 🔒 Safety
+     * - Safe to call multiple times (idempotent)
+     * - Thread-safe with respect to other instances
+     * - Ensures no resource leaks even after errors
+     * - Preserves exception safety guarantees
      *
      * ---
      *
-     * ### Example
-     * @code
-     * DatagramSocket sock(AF_INET);
-     * sock.bind("0.0.0.0", 9999);
+     * ### 🧪 Example
+     * ```cpp
+     * DatagramSocket sock;
+     * sock.bind(12345);
      *
-     * // ... use the socket ...
+     * // ... use socket ...
      *
-     * sock.close(); // Fully tear down the socket
-     * @endcode
+     * sock.close(); // Release all resources
+     * assert(sock.isClosed());
+     * ```
      *
-     * @throws SocketException only if the system close operation fails unexpectedly.
+     * @throws SocketException If the underlying close operation fails unexpectedly.
      *
-     * @note After calling `close()`, the socket becomes unusable and must not be reused.
-     *       Use `isClosed()` to verify socket state before performing further operations.
+     * @note
+     * - Any pending operations on the socket will be aborted
+     * - Subsequent operations will throw `SocketException`
+     * - Use `isClosed()` to check socket state
      *
-     * @see isClosed() To check whether the socket has already been closed
-     * @see setOption() To configure socket options before or after bind
+     * @see isClosed() To verify socket state
+     * @see isValid() Alternative check for usability
+     * @see cleanup() Internal cleanup helper
+     * @since 1.0
      */
     void close();
 
@@ -2802,33 +2777,30 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] bool isValid() const noexcept { return getSocketFd() != INVALID_SOCKET; }
 
     /**
-     * @brief Checks whether the socket has been closed or is otherwise invalid.
-     * @ingroup tcp
+     * @brief Checks whether the datagram socket has been closed or is otherwise invalid.
+     * @ingroup udp
      *
      * Returns `true` if the socket is no longer usable—either because it was explicitly closed
      * via `close()`, or because it was never successfully initialized (i.e., holds an invalid
      * file descriptor).
      *
-     * This method does **not** perform any system-level query (such as `poll()` or `getsockopt()`).
-     * Instead, it inspects the internal socket descriptor using `getSocketFd()` and returns `true`
-     * if it equals `INVALID_SOCKET`. This is the same invariant used throughout the library for
-     * ensuring safe socket operations.
+     * This method does **not** perform any system-level query. It simply checks whether the internal
+     * socket descriptor equals `INVALID_SOCKET`. This is the standard invariant for resource management
+     * in the jsocketpp UDP API.
      *
      * ### Common Scenarios
      * - The socket was default-initialized or failed during construction
      * - The socket was explicitly closed via `close()`
      * - The socket was moved-from, leaving the source in a valid but unusable state
      *
-     * @note Once a socket is closed, it cannot be reused. You must create a new instance if
-     *       you wish to open a new connection.
+     * @note Once a datagram socket is closed, it cannot be reused. Create a new instance to open a new socket.
      *
      * @return `true` if the socket is closed or invalid, `false` if it is open and usable.
      *
      * ### Example
      * @code
-     * Socket sock("example.com", 443);
+     * jsocketpp::DatagramSocket sock(12345);
      * assert(!sock.isClosed());
-     * sock.connect();
      * sock.close();
      * assert(sock.isClosed()); // ✅
      * @endcode
@@ -2985,11 +2957,12 @@ class DatagramSocket : public SocketOptions
      * ### ⚙️ Behavior
      * - Closes the socket if it is valid (`getSocketFd() != INVALID_SOCKET`)
      * - Sets the socket descriptor to `INVALID_SOCKET`
-     * - Releases resolved address information (`_addrInfoPtr`)
-     * - Clears `_selectedAddrInfo`
      * - Resets internal flags:
      *   - `_isBound = false`
      *   - `_isConnected = false`
+     * - Clears cached local and remote address structures:
+     *   - `_localAddr`, `_localAddrLen`
+     *   - `_remoteAddr`, `_remoteAddrLen`
      *
      * ---
      *
@@ -3019,11 +2992,10 @@ class DatagramSocket : public SocketOptions
      * Internally delegates to `cleanup()`, which:
      * - Closes the socket if open
      * - Resets the socket descriptor to `INVALID_SOCKET`
-     * - Releases address resolution results (`_addrInfoPtr`)
-     * - Clears `_selectedAddrInfo`
      * - Resets internal state flags:
      *   - `_isBound = false`
      *   - `_isConnected = false`
+     * - Clears cached local/remote address structures
      *
      * After cleanup, throws a `SocketException` with:
      * - The provided `errorCode`
@@ -3064,11 +3036,10 @@ class DatagramSocket : public SocketOptions
      * Internally calls `cleanup()`, which:
      * - Closes the socket if it is open
      * - Sets the socket descriptor to `INVALID_SOCKET`
-     * - Frees any resolved address information (`_addrInfoPtr`)
-     * - Clears `_selectedAddrInfo`
      * - Resets connection state flags:
      *   - `_isBound = false`
      *   - `_isConnected = false`
+     * - Clears cached local/remote address structures
      *
      * Then rethrows the active exception using `throw;`.
      *
@@ -3183,54 +3154,54 @@ class DatagramSocket : public SocketOptions
 };
 
 /**
- * @brief Specialization of `write<T>()` to send a `std::string` as a UDP datagram.
+ * @brief Specialization of `write<T>()` to send a UDP datagram from a `std::string`.
  * @ingroup udp
  *
- * Sends the contents of a string as a datagram to the connected peer.
- * This overload is intended for sending text-based or binary-safe string data.
- *
- * ---
- *
- * ### Constraints
- * - The socket **must be connected** via `connect()`
- * - The string will be sent **as-is**, with no null termination added
- * - Strings containing embedded nulls (`'\0'`) are fully preserved
+ * This method transmits the string's contents as a single datagram to the connected peer.
+ * It is optimized for text and binary string data, supporting both text-based protocols and
+ * raw binary payloads.
  *
  * ---
  *
  * ### Behavior
- * - Calls `send()` to transmit the entire string buffer in one datagram
- * - If the string exceeds the MTU, it may be fragmented or dropped depending on the network
- * - No retries or buffering: failures throw immediately
+ * - Uses a single `send()` call to transmit the entire string atomically
+ * - No automatic framing, fragmentation, or retries
+ * - Preserves embedded null characters (`\0`) if present
+ * - Fails fast on errors or partial sends
+ *
+ * ---
+ *
+ * ### Requirements
+ * - Socket must be **connected** via `connect()`
+ * - For unconnected sends, use `writeTo()` instead
  *
  * ---
  *
  * ### Example
- * @code
- * DatagramSocket sock(AF_INET);
- * sock.connect("127.0.0.1", 9999);
+ * ```cpp
+ * DatagramSocket sock;
+ * sock.connect("example.com", 9999);
  *
- * std::string message = "Hello, UDP!";
- * sock.write(message); // sends 11-byte datagram
- * @endcode
+ * std::string message = "Hello UDP!";
+ * sock.write(message); // Sends 9 bytes
+ * ```
  *
- * ---
- *
- * @param[in] value The string to send. Null characters are preserved.
+ * @param[in] value The string to transmit. May contain nulls. Empty strings result in a no-op.
  *
  * @throws SocketException If:
  * - The socket is not open
  * - The socket is not connected
- * - `send()` fails (e.g., ECONNRESET, network unreachable)
- * - A partial datagram is sent (less than string length)
+ * - `send()` fails (e.g., network errors)
+ * - Only part of the string was sent
  *
- * @warning This method does not add a trailing `'\0'`. If you need null-terminated data,
- * append it manually.
+ * @note No null terminator is appended. The exact bytes in the string are sent.
+ * @note For large strings exceeding path MTU, the datagram may be fragmented or dropped.
  *
- * @see read<std::string>() For receiving a string datagram
- * @see write<T>() For sending binary POD data
- * @see sendTo() For unconnected datagram transmission
- * @see connect() To establish remote peer before sending
+ * @see write<std::string_view>() Zero-copy string sending
+ * @see read<std::string>() String-optimized receive
+ * @see writeTo() For unconnected sending
+ * @see DatagramPacket For more control over destinations
+ * @since 1.0
  */
 template <> inline void DatagramSocket::write<std::string>(const std::string& value)
 {
@@ -3250,48 +3221,54 @@ template <> inline void DatagramSocket::write<std::string>(const std::string& va
  * @brief Specialization of `write<T>()` to send a `std::string_view` as a UDP datagram.
  * @ingroup udp
  *
- * Sends the contents of a `std::string_view` to the connected peer without copying or
- * modifying the underlying data. This method is ideal for zero-copy transmission of
- * constant or non-owning string data, such as protocol commands or log lines.
+ * This method transmits the contents of a `std::string_view` as a single datagram to the
+ * connected peer. It provides zero-copy optimization for constant or non-owning string data
+ * such as protocol messages, fixed command strings, or log lines.
  *
  * ---
  *
- * ### Constraints
- * - The socket **must be connected** via `connect()`
- * - The string view must reference valid memory that remains alive during the call
- * - Embedded nulls (`'\0'`) are sent as-is
+ * ### ⚙️ Behavior
+ * - Uses a single `send()` syscall to transmit the view's contents atomically
+ * - No framing, fragmentation, or auto-retry on failure
+ * - Preserves embedded null bytes (`\0`) if present
+ * - For empty views, performs a no-op (no syscall)
  *
  * ---
  *
- * ### Behavior
- * - Calls `send()` with the raw buffer of the `string_view`
- * - Sends the exact number of bytes as `view.size()`
- * - Does not append null terminators or modify the view
- * - If the view exceeds the MTU, fragmentation may occur or the datagram may be dropped
+ * ### 📋 Requirements
+ * - The socket must be **connected** via `connect()`
+ * - For unconnected sends, use `writeTo()` instead
+ * - The memory referenced by the view must remain valid during `send()`
  *
  * ---
  *
- * ### Example
+ * ### 🧪 Example
  * @code
- * DatagramSocket sock(AF_INET);
- * sock.connect("localhost", 9000);
- * sock.write(std::string_view("PING")); // sends 4 bytes
+ * DatagramSocket sock;
+ * sock.connect("example.com", 9999);
+ *
+ * const char* cmd = "PING\n";
+ * sock.write(std::string_view(cmd, 5)); // Zero-copy send
  * @endcode
  *
- * ---
- *
- * @param[in] value The string view to send (raw bytes).
+ * @param[in] value The string view to transmit. May contain nulls. Empty views result in a no-op.
  *
  * @throws SocketException If:
  * - The socket is not open
  * - The socket is not connected
- * - `send()` fails
- * - A partial datagram is sent
+ * - `send()` fails or reports partial transmission
  *
- * @warning The caller must ensure that the memory referenced by the `string_view` is valid
- * for the duration of the call. Do not pass views to temporaries.
+ * @warning Do not pass views to temporary strings or buffers that may be destroyed before
+ *          the send completes.
  *
- * @see write<std::string>(), read<std::string>(), sendTo()
+ * @note No null terminator is appended. The exact bytes in the view are transmitted.
+ * @note For views exceeding path MTU, the datagram may be fragmented or dropped.
+ *
+ * @see write<std::string>() String-owning sending
+ * @see writeTo() For unconnected sends
+ * @see read<std::string>() For string-optimized receive
+ * @see DatagramPacket For more control over destinations
+ * @since 1.0
  */
 template <> inline void DatagramSocket::write<std::string_view>(const std::string_view& value)
 {
