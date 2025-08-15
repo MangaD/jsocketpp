@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['latency_0',['Example: Disable Nagle’s algorithm to reduce latency',['../group__socketopts.html#autotoc_md1170',1,'']]],
+  ['latency_0',['Example: Disable Nagle’s algorithm to reduce latency',['../group__socketopts.html#autotoc_md1169',1,'']]],
   ['leavegroup_1',['leaveGroup',['../classjsocketpp_1_1MulticastSocket.html#af7317567ceae9b90967ec5a29d003af3',1,'jsocketpp::MulticastSocket']]],
   ['level_20timeouts_2',['OS-Level Timeouts',['../group__async__io.html#autotoc_md142',1,'']]],
   ['libraries_3',['Comparison: &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; vs Other C++ Socket Libraries',['../group__socket__library__comparison.html',1,'']]],
@@ -13,10 +13,10 @@ var searchData=
   ['license_10',['License',['../index.html#autotoc_md502',1,'⚖️ License'],['../group__BUILD__AND__USAGE.html#autotoc_md24',1,'License']]],
   ['lifecycle_11',['Lifecycle',['../group__sockets__theory.html#autotoc_md375',1,'4. How Sockets Work: The Lifecycle'],['../group__socket__states.html#autotoc_md339',1,'TCP Socket Lifecycle']]],
   ['lifetime_12',['Does the Local Binding Persist for the Socket’s Lifetime?',['../group__socket__binding.html#autotoc_md72',1,'']]],
-  ['lifetime_20warning_13',['Lifetime Warning',['../group__tcp.html#autotoc_md853',1,'⚠️ Lifetime Warning'],['../group__tcp.html#autotoc_md866',1,'⚠️ Lifetime Warning']]],
-  ['limitations_14',['Limitations',['../group__address__reuse.html#autotoc_md109',1,'⚠️ Java’s Approach and Its Limitations'],['../index.html#autotoc_md473',1,'⚠️ Limitations'],['../group__tcp.html#autotoc_md948',1,'Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md1230',1,'Limitations']]],
+  ['lifetime_20warning_13',['Lifetime Warning',['../group__tcp.html#autotoc_md852',1,'⚠️ Lifetime Warning'],['../group__tcp.html#autotoc_md865',1,'⚠️ Lifetime Warning']]],
+  ['limitations_14',['Limitations',['../group__address__reuse.html#autotoc_md109',1,'⚠️ Java’s Approach and Its Limitations'],['../index.html#autotoc_md473',1,'⚠️ Limitations'],['../group__tcp.html#autotoc_md947',1,'Limitations'],['../classjsocketpp_1_1UnixSocket.html#autotoc_md1229',1,'Limitations']]],
   ['limitations_3a_15',['Limitations:',['../group__async__io.html#autotoc_md167',1,'']]],
-  ['linger_20for_205_20seconds_20on_20close_16',['Example: Set &lt;span class=&quot;tt&quot;&gt;SO_LINGER&lt;/span&gt; to linger for 5 seconds on close',['../group__socketopts.html#autotoc_md1068',1,'']]],
+  ['linger_20for_205_20seconds_20on_20close_16',['Example: Set &lt;span class=&quot;tt&quot;&gt;SO_LINGER&lt;/span&gt; to linger for 5 seconds on close',['../group__socketopts.html#autotoc_md1067',1,'']]],
   ['linking_20the_20library_17',['Linking the Library',['../group__BUILD__AND__USAGE.html#autotoc_md14',1,'']]],
   ['linux_18',['Linux',['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md208',1,'1. ioctl (Unix/Linux)'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md221',1,'2. fcntl (Unix/Linux)'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md217',1,'Example: Custom Device Driver (Linux)'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md228',1,'Example: Set Non-Blocking Socket (Linux)'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md216',1,'Example: Terminal Window Size (Linux)'],['../group__address__reuse.html#autotoc_md99',1,'Unix/Linux']]],
   ['linux_20macos_20unix_19',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md382',1,'']]],
@@ -28,7 +28,7 @@ var searchData=
   ['listen_20explicit_25',['3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit',['../group__ServerSocket__Lifecycle.html#autotoc_md42',1,'']]],
   ['listening_3a_20design_20patterns_20and_20best_20practices_26',['ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices',['../group__ServerSocket__Lifecycle.html',1,'']]],
   ['local_20address_27',['Does &lt;span class=&quot;tt&quot;&gt;connect()&lt;/span&gt; Bind to a Local Address?',['../group__socket__binding.html#autotoc_md68',1,'']]],
-  ['local_20binding_20parameters_20used_20only_20if_20autobind_20true_28',['🌐 Local Binding Parameters (used only if &lt;span class=&quot;tt&quot;&gt;autoBind == true&lt;/span&gt;)',['../group__tcp.html#autotoc_md901',1,'']]],
+  ['local_20binding_20parameters_20used_20only_20if_20autobind_20true_28',['🌐 Local Binding Parameters (used only if &lt;span class=&quot;tt&quot;&gt;autoBind == true&lt;/span&gt;)',['../group__tcp.html#autotoc_md900',1,'']]],
   ['local_20binding_20persist_20for_20the_20socket’s_20lifetime_29',['Does the Local Binding Persist for the Socket’s Lifetime?',['../group__socket__binding.html#autotoc_md72',1,'']]],
   ['local_20ipc_30',['2.4. Unix Domain Sockets (Local IPC)',['../group__sockets__theory.html#autotoc_md361',1,'']]],
   ['locally_31',['Locally',['../group__vcpkg__publish__guide.html#autotoc_md448',1,'4. Test the Port Locally'],['../group__conan__publish__guide.html#autotoc_md191',1,'4. Test the Recipe Locally']]]
