@@ -174,8 +174,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga96bc239f42265d5c408c8f15046f24c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a string message as a UDP datagram to the connected peer.  <br /></td></tr>
 <tr class="memitem:ga22f349cb1f93f2fc18e4c6e19d7ba1ff" id="r_ga22f349cb1f93f2fc18e4c6e19d7ba1ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga22f349cb1f93f2fc18e4c6e19d7ba1ff">jsocketpp::DatagramSocket::write</a> (std::span&lt; const std::byte &gt; data) const</td></tr>
 <tr class="memdesc:ga22f349cb1f93f2fc18e4c6e19d7ba1ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a contiguous buffer of bytes as a UDP datagram to the connected peer.  <br /></td></tr>
-<tr class="memitem:gae35d979f14580914a44432b521e03f1a" id="r_gae35d979f14580914a44432b521e03f1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae35d979f14580914a44432b521e03f1a">jsocketpp::DatagramSocket::write</a> (std::string_view host, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::string_view message) const</td></tr>
-<tr class="memdesc:gae35d979f14580914a44432b521e03f1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a message as a UDP datagram to the specified destination address and port.  <br /></td></tr>
+<tr class="memitem:ga86591c2e94a5fee616275b5896e0d19f" id="r_ga86591c2e94a5fee616275b5896e0d19f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga86591c2e94a5fee616275b5896e0d19f">jsocketpp::DatagramSocket::writeTo</a> (std::string_view host, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::string_view message) const</td></tr>
+<tr class="memdesc:ga86591c2e94a5fee616275b5896e0d19f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a message as a UDP datagram to the specified destination address and port.  <br /></td></tr>
 <tr class="memitem:ga76774c1317417fa6f02d7af48ee906a8" id="r_ga76774c1317417fa6f02d7af48ee906a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga76774c1317417fa6f02d7af48ee906a8">jsocketpp::DatagramSocket::writeTo</a> (std::string_view host, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::span&lt; const std::byte &gt; data) const</td></tr>
 <tr class="memdesc:ga76774c1317417fa6f02d7af48ee906a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a contiguous buffer of bytes as a UDP datagram to the specified destination address and port.  <br /></td></tr>
 <tr class="memitem:gaf32c08318404f8850dd539e1a4c637ce" id="r_gaf32c08318404f8850dd539e1a4c637ce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce">jsocketpp::DatagramSocket::read</a> (<a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a> &amp;packet, const <a class="el" href="structjsocketpp_1_1DatagramReadOptions.html">DatagramReadOptions</a> &amp;opts={}) const</td></tr>
@@ -3631,7 +3631,7 @@ Parameters</h3>
 </div>
 </div>
 <a id="ga485bc199c5e495cfc20e1d5485d4eaf9" name="ga485bc199c5e495cfc20e1d5485d4eaf9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga485bc199c5e495cfc20e1d5485d4eaf9">&#9670;&#160;</a></span>write() <span class="overload">[1/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga485bc199c5e495cfc20e1d5485d4eaf9">&#9670;&#160;</a></span>write() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3678,7 +3678,7 @@ This method does not fragment or retransmit. Use application-level framing for l
 </div>
 </div>
 <a id="ga87c837cd891ddd8b4daeacc61e1326df" name="ga87c837cd891ddd8b4daeacc61e1326df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga87c837cd891ddd8b4daeacc61e1326df">&#9670;&#160;</a></span>write() <span class="overload">[2/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga87c837cd891ddd8b4daeacc61e1326df">&#9670;&#160;</a></span>write() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3776,7 +3776,7 @@ template&lt;typename T&gt; </div>
 </div>
 </div>
 <a id="ga22f349cb1f93f2fc18e4c6e19d7ba1ff" name="ga22f349cb1f93f2fc18e4c6e19d7ba1ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga22f349cb1f93f2fc18e4c6e19d7ba1ff">&#9670;&#160;</a></span>write() <span class="overload">[3/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga22f349cb1f93f2fc18e4c6e19d7ba1ff">&#9670;&#160;</a></span>write() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3845,72 +3845,8 @@ If <span class="tt">data.size()</span> exceeds the path MTU, the datagram may be
 
 </div>
 </div>
-<a id="gae35d979f14580914a44432b521e03f1a" name="gae35d979f14580914a44432b521e03f1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae35d979f14580914a44432b521e03f1a">&#9670;&#160;</a></span>write() <span class="overload">[4/5]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void DatagramSocket::write </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>host</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>message</em></span>&#160;) const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sends a message as a UDP datagram to the specified destination address and port. </p>
-<p>Transmits the given <span class="tt">std::string_view</span> as a single UDP datagram to a specific host and port, without requiring the socket to be connected.</p>
-<p>Internally, this method:</p><ul>
-<li>Resolves the destination via <a class="el" href="group__internal.html#gab7cbd90f4b6d2e5f506de1b7fd5c6331">internal::resolveAddress</a> (IPv4, IPv6, DNS supported).</li>
-<li>Iterates through all resolved addresses, attempting to send the full payload to each using <a class="el" href="group__internal.html#ga434728a067f6d58ea22b6d9c53824cd3">internal::sendExactTo</a>.</li>
-<li>On the first successful send, updates the internal <span class="tt">_remoteAddr</span> and <span class="tt">_remoteAddrLen</span> if the socket is unconnected, enabling later use of <span class="tt"><a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer from the socket&#39;s current state.">getRemoteIp()</a></span> and <span class="tt"><a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the remote peer&#39;s UDP port number in host byte order.">getRemotePort()</a></span>.</li>
-<li>Throws if all address candidates fail.</li>
-</ul>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">host</td><td>Destination hostname or IP address (IPv4, IPv6, or DNS). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">port</td><td>Destination UDP port number. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">message</td><td>The UDP payload to send. If empty, this method is a no-op.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
-<li>The socket is not open</li>
-<li>Address resolution fails</li>
-<li>All resolved destinations fail to accept the datagram</li>
-<li>The underlying send operation fails or reports a partial datagram</li>
-</ul>
-</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>No fragmentation or retries are performed — the payload is sent as a single datagram. If <span class="tt">message.size()</span> exceeds the path MTU, it may be dropped or truncated by the network.</dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>No byte-order or encoding transformations are applied; the payload is transmitted as raw bytes.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd>write(const DatagramPacket&amp;) For sending a datagram object with buffer + destination </dd>
-<dd>
-<a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a> For sending binary POD data to a per-call destination </dd>
-<dd>
-<a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a> To establish a persistent default peer </dd>
-<dd>
-<a class="el" href="#gac3b7c4a5fc5a21372c4a9cadb3e85efb" title="Indicates whether the datagram socket is connected to a specific remote peer.">isConnected()</a>, <a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer from the socket&#39;s current state.">getRemoteIp()</a>, <a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the remote peer&#39;s UDP port number in host byte order.">getRemotePort()</a>, <a class="el" href="#gacb3c554671141c0370445b2b7e9a6061" title="Retrieves the remote peer’s socket address in the form &quot;IP:port&quot;.">getRemoteSocketAddress()</a> </dd></dl>
-
-</div>
-</div>
 <a id="ga96bc239f42265d5c408c8f15046f24c8" name="ga96bc239f42265d5c408c8f15046f24c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga96bc239f42265d5c408c8f15046f24c8">&#9670;&#160;</a></span>write() <span class="overload">[5/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga96bc239f42265d5c408c8f15046f24c8">&#9670;&#160;</a></span>write() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4188,7 +4124,7 @@ template&lt;typename T&gt; </div>
 </div>
 </div>
 <a id="gae61e0fd22b7a69d6b5f706141fff8934" name="gae61e0fd22b7a69d6b5f706141fff8934"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae61e0fd22b7a69d6b5f706141fff8934">&#9670;&#160;</a></span>writeTo() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#gae61e0fd22b7a69d6b5f706141fff8934">&#9670;&#160;</a></span>writeTo() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4307,7 +4243,7 @@ receiveFrom() For receiving from arbitrary peers </dd>
 </div>
 </div>
 <a id="ga76774c1317417fa6f02d7af48ee906a8" name="ga76774c1317417fa6f02d7af48ee906a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga76774c1317417fa6f02d7af48ee906a8">&#9670;&#160;</a></span>writeTo() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga76774c1317417fa6f02d7af48ee906a8">&#9670;&#160;</a></span>writeTo() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4380,7 +4316,7 @@ receiveFrom() For receiving from arbitrary peers </dd>
 <dd>
 When used on an unconnected socket, this method updates the internal remote address state for use with <span class="tt"><a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer from the socket&#39;s current state.">getRemoteIp()</a></span> and <span class="tt"><a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the remote peer&#39;s UDP port number in host byte order.">getRemotePort()</a></span>.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>No byte-order or encoding transformations are applied; the payload is transmitted as raw bytes.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd>write(std::string_view, Port, std::string_view) For string payloads </dd>
+<dl class="section see"><dt>See also</dt><dd>writeTo(std::string_view, Port, std::string_view) For string payloads </dd>
 <dd>
 write(const DatagramPacket&amp;) For sending a datagram object with buffer + destination </dd>
 <dd>
@@ -4388,6 +4324,70 @@ write(const DatagramPacket&amp;) For sending a datagram object with buffer + des
 <dd>
 <a class="el" href="#gac3b7c4a5fc5a21372c4a9cadb3e85efb" title="Indicates whether the datagram socket is connected to a specific remote peer.">isConnected()</a>, <a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer from the socket&#39;s current state.">getRemoteIp()</a>, <a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the remote peer&#39;s UDP port number in host byte order.">getRemotePort()</a>, <a class="el" href="#gacb3c554671141c0370445b2b7e9a6061" title="Retrieves the remote peer’s socket address in the form &quot;IP:port&quot;.">getRemoteSocketAddress()</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>1.0 </dd></dl>
+
+</div>
+</div>
+<a id="ga86591c2e94a5fee616275b5896e0d19f" name="ga86591c2e94a5fee616275b5896e0d19f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga86591c2e94a5fee616275b5896e0d19f">&#9670;&#160;</a></span>writeTo() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DatagramSocket::writeTo </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>host</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>message</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends a message as a UDP datagram to the specified destination address and port. </p>
+<p>Transmits the given <span class="tt">std::string_view</span> as a single UDP datagram to a specific host and port, without requiring the socket to be connected.</p>
+<p>Internally, this method:</p><ul>
+<li>Resolves the destination via <a class="el" href="group__internal.html#gab7cbd90f4b6d2e5f506de1b7fd5c6331">internal::resolveAddress</a> (IPv4, IPv6, DNS supported).</li>
+<li>Iterates through all resolved addresses, attempting to send the full payload to each using <a class="el" href="group__internal.html#ga434728a067f6d58ea22b6d9c53824cd3">internal::sendExactTo</a>.</li>
+<li>On the first successful send, updates the internal <span class="tt">_remoteAddr</span> and <span class="tt">_remoteAddrLen</span> if the socket is unconnected, enabling later use of <span class="tt"><a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer from the socket&#39;s current state.">getRemoteIp()</a></span> and <span class="tt"><a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the remote peer&#39;s UDP port number in host byte order.">getRemotePort()</a></span>.</li>
+<li>Throws if all address candidates fail.</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">host</td><td>Destination hostname or IP address (IPv4, IPv6, or DNS). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">port</td><td>Destination UDP port number. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">message</td><td>The UDP payload to send. If empty, this method is a no-op.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The socket is not open</li>
+<li>Address resolution fails</li>
+<li>All resolved destinations fail to accept the datagram</li>
+<li>The underlying send operation fails or reports a partial datagram</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>No fragmentation or retries are performed — the payload is sent as a single datagram. If <span class="tt">message.size()</span> exceeds the path MTU, it may be dropped or truncated by the network.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>No byte-order or encoding transformations are applied; the payload is transmitted as raw bytes.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd>write(const DatagramPacket&amp;) For sending a datagram object with buffer + destination </dd>
+<dd>
+<a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a> For sending binary POD data to a per-call destination </dd>
+<dd>
+<a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a> To establish a persistent default peer </dd>
+<dd>
+<a class="el" href="#gac3b7c4a5fc5a21372c4a9cadb3e85efb" title="Indicates whether the datagram socket is connected to a specific remote peer.">isConnected()</a>, <a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer from the socket&#39;s current state.">getRemoteIp()</a>, <a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the remote peer&#39;s UDP port number in host byte order.">getRemotePort()</a>, <a class="el" href="#gacb3c554671141c0370445b2b7e9a6061" title="Retrieves the remote peer’s socket address in the form &quot;IP:port&quot;.">getRemoteSocketAddress()</a> </dd></dl>
 
 </div>
 </div>
