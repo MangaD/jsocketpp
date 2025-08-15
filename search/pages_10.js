@@ -8,5 +8,5 @@ var searchData=
   ['google_20mock_20to_20mock_20recv_20and_20send_3a_5',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md426',1,'']]],
   ['google_20mock_3a_6',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md434',1,'']]],
   ['guide_20to_20ioctl_20fcntl_20ioctlsocket_7',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;,',['../md_docs_2markdown_2ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
-  ['guidelines_8',['Guidelines',['../group__socketopts.html#autotoc_md1040',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md526',1,'3. Code Style Guidelines']]]
+  ['guidelines_8',['Guidelines',['../group__socketopts.html#autotoc_md1047',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md526',1,'3. Code Style Guidelines']]]
 ];

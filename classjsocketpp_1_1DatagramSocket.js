@@ -55,6 +55,7 @@ var classjsocketpp_1_1DatagramSocket =
     [ "waitReady", "group__udp.html#ga0deb65a2e7c215e0e46ace579c702f6e", null ],
     [ "write", "group__udp.html#ga485bc199c5e495cfc20e1d5485d4eaf9", null ],
     [ "write", "group__udp.html#ga87c837cd891ddd8b4daeacc61e1326df", null ],
+    [ "write", "group__udp.html#ga22f349cb1f93f2fc18e4c6e19d7ba1ff", null ],
     [ "write", "group__udp.html#ga96bc239f42265d5c408c8f15046f24c8", null ],
     [ "write", "group__udp.html#ga0984dc19731a6b3baf8ad9205d3183b4", null ],
     [ "writeAll", "group__udp.html#gacf3dfdb3a7fb01f4a6dfd0cf2d43f47b", null ],
