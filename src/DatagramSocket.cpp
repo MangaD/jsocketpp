@@ -663,16 +663,66 @@ DatagramReadResult DatagramSocket::readInto(void* buffer, const std::size_t len,
     return result;
 }
 
-std::string DatagramSocket::readExact(std::size_t n, const DatagramReceiveMode mode) const
+DatagramReadResult DatagramSocket::readExact(void* buffer, const std::size_t exactLen,
+                                             const ReadExactOptions& opts) const
 {
-    DatagramPacket packet(n);
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::readExact(void*,size_t): socket is not open.");
+    if (buffer == nullptr)
+        throw SocketException("DatagramSocket::readExact(void*,size_t): buffer is null.");
+    if (exactLen == 0)
+        throw SocketException("DatagramSocket::readExact(void*,size_t): exactLen must be > 0.");
 
-    if (const std::size_t bytesReceived = read(packet, false /* preserve size */, mode); bytesReceived != n)
+    // Compose base options; default to preflighting so we can validate early when possible.
+    DatagramReadOptions base = opts.base;
+    if (base.mode == DatagramReceiveMode::NoPreflight)
+        base.mode = DatagramReceiveMode::PreflightSize;
+
+    // Raw-buffer call; capacity is exactLen (caller promises that much).
+    auto res = readInto(buffer, exactLen, base);
+
+    // Prefer probed size for validation when available; fall back to actual bytes + truncation flag.
+    const bool knownProbed = (res.datagramSize != 0);
+    const std::size_t fullSize = knownProbed ? res.datagramSize : res.bytes;
+
+    // Enforce policy
+    if (opts.requireExact)
     {
-        throw SocketException("Datagram size mismatch in readExact(); expected exact length.");
+        // Too small?
+        if (fullSize < exactLen)
+        {
+            if (opts.padIfSmaller)
+            {
+                // Caller’s buffer is already zero-filled or not; we do not write beyond res.bytes.
+                // If they need explicit zeroing, they can memset the tail; we avoid extra work here.
+            }
+            else
+            {
+                throwSizeMismatch(exactLen, fullSize, knownProbed);
+            }
+        }
+
+        // Too big?
+        if (fullSize > exactLen)
+        {
+            if (opts.errorOnTruncate || !res.truncated)
+            {
+                // If OS didn’t truncate (because buffer was big) we still reject oversize unless allowed
+                throwSizeMismatch(exactLen, fullSize, knownProbed);
+            }
+            // else: OS truncated to exactLen capacity already; allowed by policy
+        }
+    }
+    else
+    {
+        // Not requiring exact: if the datagram is smaller and padding requested, zero the tail.
+        if (opts.padIfSmaller && res.bytes < exactLen)
+        {
+            std::memset(static_cast<char*>(buffer) + res.bytes, 0, exactLen - res.bytes);
+        }
     }
 
-    return {packet.buffer.data(), n};
+    return res;
 }
 
 std::string DatagramSocket::readAtMost(const std::size_t n) const

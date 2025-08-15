@@ -275,6 +275,88 @@ struct DatagramReadResult
 };
 
 /**
+ * @brief Policy for enforcing an exact-byte receive on a single UDP datagram.
+ * @ingroup udp
+ *
+ * This structure defines the policy for reading a UDP datagram that must match a specific
+ * size requirement. It provides fine-grained control over the handling of datagrams that
+ * are larger or smaller than the expected size, including padding behavior and error handling.
+ *
+ * ### Key Features
+ * - Enforces exact datagram size matching
+ * - Controls zero-padding behavior for undersized datagrams
+ * - Manages truncation vs error behavior for oversized datagrams
+ * - Supports automatic buffer resizing for dynamic containers
+ *
+ * @see DatagramSocket::readExact()
+ * @see DatagramSocket::readIntoExact()
+ * @since 1.0
+ */
+struct ReadExactOptions
+{
+    /**
+     * @brief Base receive options for controlling preflight behavior, system flags, and side effects.
+     *
+     * This field inherits the core receive options from @ref DatagramReadOptions, including:
+     * - Datagram sizing mode (@ref DatagramReceiveMode)
+     * - Buffer growth/shrink policies
+     * - Additional receive flags (e.g., MSG_PEEK)
+     * - Remote peer tracking and address resolution
+     *
+     * @see DatagramReadOptions
+     */
+    DatagramReadOptions base{};
+
+    /**
+     * @brief Controls whether the datagram size must match exactly.
+     *
+     * When true, the datagram's payload size must match the requested size exactly;
+     * otherwise, a @ref SocketException is thrown. This enforces strict size matching
+     * for protocols that require fixed-size messages.
+     *
+     * @note This is independent of @ref padIfSmaller and @ref errorOnTruncate, which
+     * control how size mismatches are handled when this is false.
+     */
+    bool requireExact = true;
+
+    /**
+     * @brief Controls zero-padding behavior for undersized datagrams.
+     *
+     * When true and the received datagram is smaller than the requested size:
+     * - For raw buffers: fill remaining bytes with zeros
+     * - For fixed-size containers: zero-initialize unused space
+     * - For dynamic containers: no effect (container is sized to actual data)
+     *
+     * @note Only meaningful when @ref requireExact is false.
+     */
+    bool padIfSmaller = false;
+
+    /**
+     * @brief Controls error handling for oversized datagrams.
+     *
+     * When true, receiving a datagram larger than the requested size will throw
+     * a @ref SocketException. When false, the datagram is silently truncated to
+     * the requested size.
+     *
+     * @note Only meaningful when @ref requireExact is false.
+     */
+    bool errorOnTruncate = true;
+
+    /**
+     * @brief Controls automatic resizing of dynamic containers.
+     *
+     * When true and receiving into a dynamic container (e.g., std::string,
+     * std::vector), the container will be automatically resized to the exact
+     * size before the receive operation.
+     *
+     * This ensures efficient memory use but may trigger reallocation.
+     *
+     * @note Has no effect on fixed-size containers or raw buffers.
+     */
+    bool autoResizeDynamic = true;
+};
+
+/**
  * @class DatagramSocket
  * @ingroup udp
  * @brief Cross-platform UDP socket class with Java-style interface.
@@ -912,17 +994,19 @@ class DatagramSocket : public SocketOptions
 
     /**
      * @brief Retrieves the local IP address this socket is bound to.
-     * @ingroup socketopts
+     * @ingroup udp
      *
-     * This method queries the system to determine which local IP address has been assigned
-     * to the socket, typically as a result of a successful `bind()` or `connect()` call.
+     * This method returns the IP address that this socket is bound to on the local system.
+     * The address may have been set explicitly via `bind()` or automatically assigned
+     * by the operating system.
      *
      * ---
      *
-     * ### 🌍 Applicability
-     * - `DatagramSocket`: ✅ Always safe to call after `bind()`
-     * - Works for both IPv4 and IPv6 sockets
-     * - Also works if the socket was auto-bound to a port by the OS (`bind(0)`)
+     * ### Behavior
+     * - For explicitly bound sockets, returns the address specified in `bind()`
+     * - For auto-bound sockets, returns the OS-assigned interface address
+     * - For unbound sockets or if `getsockname()` fails, throws `SocketException`
+     * - For IPv6 sockets, may return IPv4-mapped addresses (e.g., "::ffff:127.0.0.1")
      *
      * ---
      *
@@ -930,26 +1014,17 @@ class DatagramSocket : public SocketOptions
      *                              will be returned as plain IPv4 strings (`192.0.2.1`). If `false`,
      *                              the raw mapped form is preserved.
      *
-     * ---
+     * @return A string representation of the local IP address (e.g., "192.168.1.10" or "::1").
      *
-     * ### Example
-     * @code
-     * DatagramSocket sock(AF_INET);
-     * sock.bind("0.0.0.0", 12345);
+     * @throws SocketException If:
+     * - The socket is not open
+     * - The socket is not bound
+     * - The system call `getsockname()` fails
+     * - Address conversion fails
      *
-     * std::string localIP = sock.getLocalIp();
-     * std::cout << "Bound to local IP: " << localIP << "\n";
-     * @endcode
-     *
-     * ---
-     *
-     * @return A string representing the local IP address (e.g., "192.168.1.10", "::1").
-     *
-     * @throws SocketException if the socket is invalid, unbound, or the system call fails.
-     *
-     * @see getLocalPort()
-     * @see getLocalSocketAddress()
-     * @see https://man7.org/linux/man-pages/man2/getsockname.2.html
+     * @see getLocalPort() Get the local port number
+     * @see getLocalSocketAddress() Get the combined "IP:port" string
+     * @see bind() Explicitly bind to an address
      */
     [[nodiscard]] std::string getLocalIp(bool convertIPv4Mapped = true) const;
 
@@ -962,31 +1037,35 @@ class DatagramSocket : public SocketOptions
      *
      * ---
      *
-     * ### 🌍 Applicability
-     * - Valid after a successful `bind()` or `connect()`
-     * - Works for both IPv4 and IPv6 UDP sockets
-     * - Safe for sockets that were automatically bound to ephemeral ports (`port = 0`)
+     * ### ⚙️ Behavior
+     * - Uses `getsockname()` to query the underlying bound port
+     * - Returns the port in host byte order
+     * - Works for both IPv4 and IPv6 sockets
+     * - Safe for auto-assigned ephemeral ports (`port = 0` in bind)
      *
      * ---
      *
-     * ### Example
+     * ### 🧪 Example
      * @code
-     * DatagramSocket sock(AF_INET);
-     * sock.bind("0.0.0.0", 0); // Let OS pick an ephemeral port
+     * DatagramSocket sock;
+     * sock.bind("0.0.0.0", 0);  // Let OS pick an ephemeral port
      *
      * Port port = sock.getLocalPort();
-     * std::cout << "Dynamically bound to port: " << port << "\n";
+     * std::cout << "Bound to port: " << port << "\n";
      * @endcode
      *
      * ---
      *
-     * @return The local UDP port number (in host byte order).
+     * @return The local UDP port number in host byte order.
      *
-     * @throws SocketException if the socket is not open or the system call fails.
+     * @throws SocketException If:
+     * - The socket is not open
+     * - The socket is not bound
+     * - The `getsockname()` call fails
      *
-     * @see getLocalIp() To retrieve the bound IP address
-     * @see getLocalSocketAddress() For a formatted "IP:port" string
-     * @see https://man7.org/linux/man-pages/man2/getsockname.2.html
+     * @see getLocalIp() Get the bound IP address
+     * @see getLocalSocketAddress() Get the combined "IP:port" string
+     * @see bind() Explicitly bind to an address/port
      */
     [[nodiscard]] Port getLocalPort() const;
 
@@ -994,44 +1073,48 @@ class DatagramSocket : public SocketOptions
      * @brief Retrieves the local socket address as a formatted string in the form `"IP:port"`.
      * @ingroup udp
      *
-     * This method returns the socket's local IP address and port in a human-readable format,
-     * such as `"127.0.0.1:12345"` or `"::1:54321"`. It works for both explicitly bound sockets
-     * and sockets where the OS has auto-assigned an ephemeral port after the first `sendTo()`
-     * or `connect()` call.
+     * Returns the socket's local IP address and port in a human-readable format, such as
+     * `"127.0.0.1:12345"` or `"[::1]:54321"`. This method works for both explicitly bound
+     * sockets and sockets where the OS has auto-assigned an ephemeral port.
      *
      * ---
      *
-     * ### Use Cases
-     * - Logging which interface and port the socket is bound to
-     * - Debugging multicast or broadcast socket behavior
-     * - Confirming OS-assigned ports in dynamic binding scenarios
-     * - Introspection during runtime for monitoring tools or metrics
+     * ### ⚙️ Behavior
+     * - Uses `getsockname()` to query the bound address
+     * - Formats IPv6 addresses with square brackets: `"[2001:db8::1]:80"`
+     * - For unbound sockets, throws `SocketException`
+     * - Works with both IPv4 and IPv6 address families
+     * - Safe to call after automatic port assignment
      *
      * ---
      *
-     * ### IPv6 Handling
-     * If the socket is bound to an IPv4-mapped IPv6 address (e.g., `::ffff:192.0.2.1`) and
-     * `@p convertIPv4Mapped` is true (default), the method simplifies it to standard IPv4 format.
-     *
-     * ---
-     *
-     * ### Example
+     * ### 🧪 Example
      * @code
-     * DatagramSocket sock(AF_INET6);
-     * sock.bind(0); // OS assigns an ephemeral port
+     * DatagramSocket sock(AF_INET);
+     * sock.bind("0.0.0.0", 0);  // OS assigns port
      *
-     * std::cout << "Local socket: " << sock.getLocalSocketAddress() << "\n";
-     * // Output: "192.0.2.5:50437"
+     * std::cout << "Bound to: " << sock.getLocalSocketAddress() << "\n";
+     * // Output: "0.0.0.0:50432"
      * @endcode
      *
-     * @param[in] convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to IPv4 (default: true).
-     * @return A string in the form `"IP:port"` representing the local address and port.
+     * ---
      *
-     * @throws SocketException if the socket is not bound or the local address cannot be retrieved.
+     * @param[in] convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to IPv4
+     *                             format (e.g., "::ffff:127.0.0.1" → "127.0.0.1").
+     *                             Default is true.
      *
-     * @see getLocalIp()
-     * @see getLocalPort()
-     * @see bind()
+     * @return A string in the format `"IP:port"` or `"[IPv6]:port"`.
+     *
+     * @throws SocketException If:
+     * - The socket is not open
+     * - The socket is not bound
+     * - `getsockname()` fails
+     * - Address conversion fails
+     *
+     * @see getLocalIp() Get just the IP portion
+     * @see getLocalPort() Get just the port number
+     * @see bind() Explicitly bind to an address/port
+     * @since 1.0
      */
     [[nodiscard]] std::string getLocalSocketAddress(bool convertIPv4Mapped = true) const;
 
@@ -1607,11 +1690,9 @@ class DatagramSocket : public SocketOptions
      *           - **Fixed-size containers** (e.g., `std::array<char, N>`,
      *             `std::array<std::byte, N>`): must satisfy `detail::is_fixed_buffer_v<T>`.
      *
-     * @param[in] opts
-     *        [in] Datagram read options controlling preflight sizing, timeouts, source
+     * @param[in] opts Datagram read options controlling preflight sizing, timeouts, source
      *        address capture, and low-level receive flags.
-     * @param[in] minCapacity
-     *        [in] (Dynamic containers only) Minimum initial capacity to reserve before reading.
+     * @param[in] minCapacity (Dynamic containers only) Minimum initial capacity to reserve before reading.
      *        Defaults to `DefaultDatagramReceiveSize`.
      *        - If zero, defaults to `1` to allow reception of zero-length datagrams.
      *        - The capacity is clamped to `MaxDatagramPayloadSafe` and may be increased
@@ -1716,91 +1797,373 @@ class DatagramSocket : public SocketOptions
     }
 
     /**
-     * @brief Receive one UDP datagram directly into a trivially copyable type.
+     * @brief Receive a single UDP datagram into a container and capture the sender's address/port.
      * @ingroup udp
      *
-     * @tparam T Trivially copyable type to receive (e.g. POD structs, fixed-size arrays).
-     * @param[out] senderAddr Optional pointer to store sender's numeric address.
-     * @param[out] senderPort Optional pointer to store sender's numeric port.
-     * @param[in]  mode       Sizing policy for the receive (default = NoPreflight).
+     * @tparam T The container type to receive into.
+     *           - **Dynamic containers**: e.g., `std::string`, `std::vector<char>`,
+     *             `std::vector<std::byte>` (must satisfy `detail::is_dynamic_buffer_v<T>`).
+     *           - **Fixed-size containers**: e.g., `std::array<char, N>`,
+     *             `std::array<std::byte, N>` (must satisfy `detail::is_fixed_buffer_v<T>`).
      *
-     * @return The received value of type T. If the datagram is smaller than sizeof(T),
-     *         the remainder of the value is zero-initialized. If larger, the excess
-     *         is discarded (standard UDP truncation).
+     * @param[out] buffer Destination container for the received datagram. For dynamic containers,
+     *        it is resized to exactly the number of bytes received. For fixed-size containers,
+     *        up to `T::size()` bytes are written and any remaining bytes are left value-initialized.
+     * @param[out] senderAddr Optional pointer to a `std::string` to receive the sender's numeric IP address.
+     *        Only set if provided and the socket is unconnected.
+     * @param[out] senderPort Optional pointer to a `Port` to receive the sender's port number.
+     *        Only set if provided and the socket is unconnected.
+     * @param[in] opts Datagram read options controlling preflight sizing, timeouts,
+     *        low-level receive flags, and whether to update the socket's last remote.
+     *        Defaults to safe, no-preflight behavior with last-remote updates enabled.
+     *
+     * @return A @ref DatagramReadResult containing:
+     *         - `bytes`: actual bytes received
+     *         - `datagramSize`: probed datagram size if available
+     *         - `truncated`: whether the payload was cut off
+     *         - `src` / `srcLen`: raw sender address info
      *
      * @throws SocketException
-     *         - If the socket is not open.
-     *         - On receive error; thrown via `internal::throwLastSockError()`.
-     *         - On numeric host/port resolution failure (if supported by platform).
+     *         If the socket is not open, arguments are invalid, or a non-timeout error occurs.
+     * @throws SocketTimeoutException
+     *         If the receive times out or, in non-blocking mode, no data is available.
      *
-     * @note This is a convenience wrapper over `DatagramSocket::read()` that enforces type safety
-     *       and uses the same sender resolution logic.
-     * @see DatagramReceiveMode
+     * @details
+     * This is a convenience overload of @ref readInto(void*,size_t,const DatagramReadOptions&)
+     * that also captures the sender's numeric address and port without requiring a @ref DatagramPacket.
+     *
+     * - Delegates all socket I/O to @ref readInto(void*,size_t,const DatagramReadOptions&).
+     * - Uses the same preflight/timeout/error handling as other `read*` methods.
+     * - Does not allocate for fixed-size containers; dynamic containers are resized once before
+     *   and once after the receive.
+     *
+     * ### Example — dynamic container
+     * @code
+     * std::string senderIp;
+     * Port senderPort;
+     * auto payload = sock.readFrom<std::vector<char>>(&senderIp, &senderPort);
+     * @endcode
+     *
+     * ### Example — fixed-size container
+     * @code
+     * std::array<char, 1024> buf{};
+     * std::string sender;
+     * Port port;
+     * sock.readFrom(buf, &sender, &port);
+     * @endcode
+     *
+     * @note
+     * - If the socket is connected, `senderAddr` and `senderPort` are not populated.
+     * - If you only need the payload and not the sender, use @ref read instead.
+     *
      * @since 1.0
      */
     template <typename T>
-    T recvFrom(std::string* senderAddr = nullptr, Port* senderPort = nullptr,
-               const DatagramReceiveMode mode = DatagramReceiveMode::NoPreflight) const
+    DatagramReadResult readFrom(T& buffer, std::string* senderAddr, Port* senderPort,
+                                const DatagramReadOptions& opts) const
     {
-        static_assert(std::is_trivially_copyable_v<T>, "recvFrom<T>() only supports trivially copyable types");
-
         if (getSocketFd() == INVALID_SOCKET)
+            throw SocketException("DatagramSocket::readFrom(): socket is not open.");
+
+        DatagramReadResult result{};
+
+        if constexpr (detail::is_dynamic_buffer_v<T>)
         {
-            throw SocketException("DatagramSocket::recvFrom<T>(): socket is not open.");
+            if (buffer.empty())
+                buffer.resize((std::min) (DefaultDatagramReceiveSize, MaxDatagramPayloadSafe));
+
+            result = readInto(static_cast<void*>(buffer.data()), buffer.size(), opts);
+
+            // Shrink to actual received size
+            if (result.bytes < buffer.size())
+                buffer.resize(result.bytes);
+        }
+        else if constexpr (detail::is_fixed_buffer_v<T>)
+        {
+            result = readInto(static_cast<void*>(buffer.data()), buffer.size(), opts);
+        }
+        else
+        {
+            static_assert(detail::is_dynamic_buffer_v<T> || detail::is_fixed_buffer_v<T>,
+                          "T must be a supported dynamic or fixed-size byte container");
         }
 
-        // Prepare a DatagramPacket of the exact type size
-        DatagramPacket packet(sizeof(T));
+        // Populate sender info if requested and available
+        if (!_isConnected && (senderAddr || senderPort))
+        {
+            const sockaddr_storage tmpSrc = result.src;
+            const socklen_t tmpLen = result.srcLen;
+            std::string addrStr;
+            Port portNum;
+            internal::resolveNumericHostPort(reinterpret_cast<const sockaddr*>(&tmpSrc), tmpLen, addrStr, portNum);
 
-        // Perform the receive using the unified read() implementation
-        read(packet, false /* resizeBuffer */, mode);
+            if (senderAddr)
+                *senderAddr = std::move(addrStr);
+            if (senderPort)
+                *senderPort = portNum;
+        }
 
-        // Copy into the return value, zero-fill if short
-        T value{};
-        const std::size_t toCopy = (std::min) (packet.size(), sizeof(T));
-        std::memcpy(&value, packet.buffer.data(), toCopy);
-
-        // Fill sender info if requested
-        if (senderAddr)
-            *senderAddr = packet.address;
-        if (senderPort)
-            *senderPort = packet.port;
-
-        return value;
+        return result;
     }
 
     /**
-     * @brief Read a UDP datagram of exactly `n` bytes into a std::string.
+     * @brief Receive exactly @p exactLen bytes (per policy) into a caller-provided buffer.
      * @ingroup udp
      *
-     * @details
-     * Performs exactly **one** receive and enforces that the datagram payload length
-     * matches `n` exactly. If the datagram is smaller or larger, a `SocketException`
-     * is thrown. This method is a strict fixed-size variant of
-     * `read(DatagramPacket&, bool, DatagramReceiveMode)`.
+     * This method provides fine-grained control over datagram size matching and reception behavior.
+     * It implements the exact-size policy specified in @ref ReadExactOptions for matching datagram
+     * size against the caller's requirements, including zero-padding for undersized datagrams
+     * and error handling for oversized ones.
      *
-     * **Semantics**
-     * - Consumes exactly one datagram (no looping).
-     * - Zero-length datagrams are only valid if `n == 0`.
-     * - Works in both connected and unconnected modes; for unconnected sockets, the
-     *   sender is remembered so `getRemoteIp()` / `getRemotePort()` reflect the most
-     *   recent peer.
-     * - No endianness conversion or decoding is performed.
+     * ---
      *
-     * @param[in] n    Exact number of bytes to receive.
-     * @param[in] mode Receive-time sizing policy (default = `DatagramReceiveMode::NoPreflight`).
+     * ### 📦 Core Behaviors
+     * - Enforces datagram size requirements based on @p opts.requireExact:
+     *   - When true, the datagram **must** be exactly @p exactLen bytes
+     *   - When false, size handling is controlled by @p opts.padIfSmaller and @p opts.errorOnTruncate
+     * - Optionally zero-pads undersized datagrams (@p opts.padIfSmaller)
+     * - Controls error vs truncation for oversized datagrams (@p opts.errorOnTruncate)
      *
-     * @return Payload as a `std::string` containing exactly `n` bytes.
+     * ---
      *
-     * @throws SocketException
-     *         - If the socket is not open.
-     *         - If the datagram is not exactly `n` bytes in length.
-     *         - On receive failure; thrown via `internal::throwLastSockError()`.
+     * ### 🔍 Size Policy Effects
+     * - **Exact match (opts.requireExact = true)**
+     *   - Throws if datagram size ≠ exactLen
+     * - **Undersized datagram handling**
+     *   - If padIfSmaller: fills remaining space with zeros
+     *   - If !padIfSmaller: returns actual size
+     * - **Oversized datagram handling**
+     *   - If errorOnTruncate: throws SocketException
+     *   - If !errorOnTruncate: silently truncates to exactLen
      *
+     * ---
+     *
+     * ### 🧪 Example
+     * @code
+     * DatagramSocket sock(9999);
+     * sock.bind();
+     *
+     * char buf[256];
+     * auto result = sock.readExact(buf, 256, {
+     *     .requireExact = true,      // must be exactly 256 bytes
+     *     .padIfSmaller = false,     // no padding if smaller
+     *     .errorOnTruncate = true    // throw if larger
+     * });
+     * @endcode
+     *
+     * @param[out] buffer Destination memory (must have at least @p exactLen capacity).
+     * @param[in]  exactLen Required byte count to satisfy for this datagram.
+     * @param[in]  opts Exact-match policy and base datagram options.
+     *
+     * @return A @ref DatagramReadResult with telemetry (bytes received, probed size, truncation, sender).
+     *
+     * @throws SocketTimeoutException On timeout / would-block.
+     * @throws SocketException On invalid socket, invalid arguments, or size policy violation
+     *                         (when `requireExact == true` and the datagram size differs).
+     *
+     * @note This method will receive exactly one datagram, regardless of size policy.
+     * @note Buffer padding (if enabled) uses secure zero-initialization.
+     *
+     * @see readExact<T>() Container-based variant
+     * @see DatagramReadOptions Base receive options
+     * @see ReadExactOptions Size matching policy
      * @since 1.0
      */
-    [[nodiscard]] std::string readExact(std::size_t n,
-                                        DatagramReceiveMode mode = DatagramReceiveMode::NoPreflight) const;
+    DatagramReadResult readExact(void* buffer, std::size_t exactLen, const ReadExactOptions& opts = {}) const;
+
+    /**
+     * @brief Receive exactly @p exactLen bytes (per policy) into a container `T`.
+     * @ingroup udp
+     *
+     * This method provides granular control over datagram size matching and reception into
+     * contiguous byte containers. It implements the exact-size policy specified in @ref ReadExactOptions
+     * for matching the datagram size against the caller's requirements, including zero-padding for
+     * undersized datagrams and error handling for oversized ones.
+     *
+     * ---
+     *
+     * ### 📦 Container Requirements
+     * @tparam T A contiguous byte container:
+     *           - **Dynamic containers** (must satisfy `detail::is_dynamic_buffer_v<T>`):
+     *             - `std::string`
+     *             - `std::vector<char>`
+     *             - `std::vector<std::byte>`
+     *           - **Fixed-size containers** (must satisfy `detail::is_fixed_buffer_v<T>`):
+     *             - `std::array<char, N>`
+     *             - `std::array<std::byte, N>`
+     *
+     * ---
+     *
+     * ### ⚙️ Core Behaviors
+     * - **Dynamic containers:**
+     *   - If `opts.autoResizeDynamic`, resizes to exactly @p exactLen before receive
+     *   - Throws if capacity is insufficient and auto-resize is disabled
+     *   - Final size matches actual bytes received
+     *
+     * - **Fixed containers:**
+     *   - Must have `T::size() >= exactLen`
+     *   - Never resizes
+     *   - Zero-fills unused space if datagram is smaller and `opts.padIfSmaller == true`
+     *
+     * ---
+     *
+     * ### 🔍 Size Policy Effects
+     * - **Exact match** (`opts.requireExact == true`):
+     *   - Throws if datagram size ≠ exactLen
+     * - **Undersized handling**:
+     *   - If padIfSmaller: fills remaining space with zeros
+     *   - If !padIfSmaller: returns actual size
+     * - **Oversized handling**:
+     *   - If errorOnTruncate: throws SocketException
+     *   - If !errorOnTruncate: silently truncates to exactLen
+     *
+     * ---
+     *
+     * ### 🧪 Examples
+     * ```cpp
+     * // Dynamic container (std::string)
+     * std::string msg;
+     * auto result = sock.readExact(msg, 256, {
+     *     .requireExact = true,      // must be exactly 256 bytes
+     *     .padIfSmaller = false,     // no padding if smaller
+     *     .errorOnTruncate = true    // throw if larger
+     * });
+     *
+     * // Fixed container (std::array)
+     * std::array<char, 1024> buf;
+     * auto result = sock.readExact(buf, 512, {
+     *     .requireExact = false,     // allow size mismatch
+     *     .padIfSmaller = true,      // zero-pad if smaller
+     *     .errorOnTruncate = false   // truncate if larger
+     * });
+     * ```
+     *
+     * @param[in,out] buffer Destination container. For dynamic types, capacity must be sufficient
+     *                       or `opts.autoResizeDynamic` must be true. For fixed types, `size()`
+     *                       must be >= @p exactLen.
+     * @param[in] exactLen Required byte count for this datagram.
+     * @param[in] opts Exact-match policy and base datagram options controlling size matching,
+     *                padding, truncation, and container resizing behavior.
+     *
+     * @return A @ref DatagramReadResult with telemetry:
+     *         - bytes: actual bytes received
+     *         - datagramSize: probed size if available (via preflight)
+     *         - truncated: whether payload was cut off
+     *         - src/srcLen: raw sender info when captured
+     *
+     * @throws SocketTimeoutException On timeout / would-block.
+     * @throws SocketException On invalid socket, invalid arguments, insufficient capacity
+     *                        (when dynamic auto-resize is disabled), or size policy violation.
+     *
+     * @see readExact() Raw buffer variant
+     * @see DatagramReadOptions Base receive options
+     * @see ReadExactOptions Size matching policy
+     * @see detail::is_dynamic_buffer_v
+     * @see detail::is_fixed_buffer_v
+     * @since 1.0
+     */
+    template <typename T>
+    DatagramReadResult readExact(T& buffer, const std::size_t exactLen, const ReadExactOptions& opts) const
+    {
+        if (getSocketFd() == INVALID_SOCKET)
+            throw SocketException("DatagramSocket::readExact(T&,size_t): socket is not open.");
+        if (exactLen == 0)
+            throw SocketException("DatagramSocket::readExact(T&,size_t): exactLen must be > 0.");
+
+        DatagramReadOptions base = opts.base;
+        if (base.mode == DatagramReceiveMode::NoPreflight)
+            base.mode = DatagramReceiveMode::PreflightSize;
+
+        if constexpr (detail::is_dynamic_buffer_v<T>)
+        {
+            // Ensure capacity matches policy
+            if (opts.autoResizeDynamic)
+            {
+                if (exactLen > MaxDatagramPayloadSafe)
+                    throw SocketException(
+                        "DatagramSocket::readExact(T&,size_t): exactLen exceeds MaxDatagramPayloadSafe.");
+                buffer.resize(exactLen);
+            }
+            else
+            {
+                if (buffer.size() < exactLen)
+                    throw SocketException(
+                        "DatagramSocket::readExact(T&,size_t): buffer too small and autoResizeDynamic=false.");
+            }
+
+            auto res = readInto(static_cast<void*>(buffer.data()), (std::min) (buffer.size(), exactLen), base);
+
+            // Apply the same size policy as the raw-buffer version
+            const bool knownProbed = (res.datagramSize != 0);
+            const std::size_t fullSize = knownProbed ? res.datagramSize : res.bytes;
+
+            if (opts.requireExact)
+            {
+                if (fullSize < exactLen)
+                {
+                    if (opts.padIfSmaller)
+                    {
+                        if (res.bytes < exactLen && buffer.size() >= exactLen)
+                        {
+                            std::memset(buffer.data() + res.bytes, 0, exactLen - res.bytes);
+                        }
+                    }
+                    else
+                    {
+                        throwSizeMismatch(exactLen, fullSize, knownProbed);
+                    }
+                }
+                if (fullSize > exactLen)
+                {
+                    if (opts.errorOnTruncate || !res.truncated)
+                        throwSizeMismatch(exactLen, fullSize, knownProbed);
+                }
+            }
+            // Finally, resize dynamic container to exactLen (policyful “exact” surface)
+            if (buffer.size() != exactLen)
+                buffer.resize(exactLen);
+
+            return res;
+        }
+        else if constexpr (detail::is_fixed_buffer_v<T>)
+        {
+            if (buffer.size() < exactLen)
+                throw SocketException("DatagramSocket::readExact(T&,size_t): fixed buffer smaller than exactLen.");
+
+            auto res = readInto(static_cast<void*>(buffer.data()), exactLen, base);
+
+            const bool knownProbed = (res.datagramSize != 0);
+            const std::size_t fullSize = knownProbed ? res.datagramSize : res.bytes;
+
+            if (opts.requireExact)
+            {
+                if (fullSize < exactLen)
+                {
+                    if (!opts.padIfSmaller)
+                        throwSizeMismatch(exactLen, fullSize, knownProbed);
+                    // else: leave tail zeroed (value-initialized container recommended)
+                }
+                if (fullSize > exactLen)
+                {
+                    if (opts.errorOnTruncate || !res.truncated)
+                        throwSizeMismatch(exactLen, fullSize, knownProbed);
+                }
+            }
+            else
+            {
+                if (opts.padIfSmaller && res.bytes < exactLen)
+                    std::memset(buffer.data() + res.bytes, 0, exactLen - res.bytes);
+            }
+
+            return res;
+        }
+        else
+        {
+            static_assert(detail::is_dynamic_buffer_v<T> || detail::is_fixed_buffer_v<T>,
+                          "T must be a supported dynamic or fixed-size contiguous byte container");
+        }
+        return {};
+    }
 
     /**
      * @brief Receive up to the specified number of bytes from the socket.
@@ -2796,6 +3159,16 @@ class DatagramSocket : public SocketOptions
         _remoteAddrLen = len;
     }
 
+    static void throwSizeMismatch(const std::size_t expected, const std::size_t actual, const bool isProbedKnown)
+    {
+        // Two-arg pattern with wrapped message for consistency across the project
+        constexpr int err = 0; // logical (not a system error)
+        const std::string msg =
+            "UDP datagram size mismatch: expected " + std::to_string(expected) +
+            (isProbedKnown ? (", probed " + std::to_string(actual)) : (", received " + std::to_string(actual)));
+        throw SocketException(err, msg);
+    }
+
   private:
     mutable sockaddr_storage
         _remoteAddr{}; ///< Storage for the address of the most recent sender (used in unconnected mode).
@@ -2808,44 +3181,6 @@ class DatagramSocket : public SocketOptions
     bool _isBound = false;               ///< True if the socket is bound to an address
     bool _isConnected = false;           ///< True if the socket is connected to a remote host.
 };
-
-/**
- * @brief Receive a UDP datagram into a std::string.
- * @ingroup udp
- *
- * @param[out] senderAddr Optional pointer to store sender's numeric address.
- * @param[out] senderPort Optional pointer to store sender's numeric port.
- * @param[in]  mode       Sizing policy for the receive (default = NoPreflight).
- *
- * @return The received message as a std::string (may be empty for zero-length datagrams).
- *
- * @throws SocketException
- *         - If the socket is not open.
- *         - On receive error; thrown via `internal::throwLastSockError()`.
- *         - On numeric host/port resolution failure (if supported by platform).
- *
- * @see DatagramReceiveMode
- * @since 1.0
- */
-template <>
-inline std::string DatagramSocket::recvFrom<std::string>(std::string* senderAddr, Port* senderPort,
-                                                         const DatagramReceiveMode mode) const
-{
-    // Start with internal buffer capacity; resizing handled by read()
-    DatagramPacket packet(_internalBuffer.size());
-
-    // Perform the receive using the unified read() implementation
-    read(packet, true /* resizeBuffer */, mode);
-
-    // Fill sender info if requested
-    if (senderAddr)
-        *senderAddr = packet.address;
-    if (senderPort)
-        *senderPort = packet.port;
-
-    // Return the payload as a string
-    return {packet.buffer.data(), packet.size()};
-}
 
 /**
  * @brief Specialization of `write<T>()` to send a `std::string` as a UDP datagram.
