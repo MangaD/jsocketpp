@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['🚦_20blocking_20vs_20non_20blocking_20sockets_0',['🚦 Blocking vs Non-Blocking Sockets',['../group__async__io.html#autotoc_md137',1,'']]]
+  ['🚀_20combining_20with_20so_5freuseport_0',['🚀 Combining with &lt;span class=&quot;tt&quot;&gt;SO_REUSEPORT&lt;/span&gt;',['../group__address__reuse.html#autotoc_md84',1,'']]],
+  ['🚀_20performance_20footprint_1',['🚀 Performance &amp;amp; Footprint',['../index.html#autotoc_md471',1,'']]],
+  ['🚀_20quick_20start_20examples_2',['🚀 Quick Start Examples',['../index.html#autotoc_md482',1,'']]]
 ];

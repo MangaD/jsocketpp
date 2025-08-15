@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🧿_20unixsocket_20specific_20notes_0',['🧿 UnixSocket specific Notes',['../group__socketopts.html#autotoc_md1072',1,'🧿 UnixSocket-specific Notes'],['../group__socketopts.html#autotoc_md1081',1,'🧿 UnixSocket-specific Notes'],['../group__socketopts.html#autotoc_md1092',1,'🧿 UnixSocket-specific Notes'],['../group__socketopts.html#autotoc_md1103',1,'🧿 UnixSocket-specific Notes']]]
+  ['🧿_20unixsocket_20specific_20notes_0',['🧿 UnixSocket specific Notes',['../group__socketopts.html#autotoc_md1063',1,'🧿 UnixSocket-specific Notes'],['../group__socketopts.html#autotoc_md1072',1,'🧿 UnixSocket-specific Notes'],['../group__socketopts.html#autotoc_md1083',1,'🧿 UnixSocket-specific Notes'],['../group__socketopts.html#autotoc_md1094',1,'🧿 UnixSocket-specific Notes']]]
 ];

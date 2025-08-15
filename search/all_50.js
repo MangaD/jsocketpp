@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🧱_20effects_0',['🧱 Effects',['../group__udp.html#autotoc_md748',1,'']]]
+  ['🧰_20typical_20use_20cases_0',['🧰 Typical Use Cases',['../index.html#autotoc_md461',1,'']]]
 ];

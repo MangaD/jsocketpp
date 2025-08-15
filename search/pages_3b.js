@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['🔄_20java_20↔_20jsocketpp_20class_20mapping_0',['🔄 Java ↔ jsocketpp Class Mapping',['../index.html#autotoc_md491',1,'']]],
-  ['🔄_20operation_20specific_20behavior_3a_20connect_20accept_20recv_20and_20send_1',['🔄 Operation-Specific Behavior: &lt;span class=&quot;tt&quot;&gt;connect&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;accept&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt;, and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;',['../group__async__io.html#autotoc_md148',1,'']]],
-  ['🔄_20what_20it_20actually_20does_2',['🔄 What it actually does',['../group__address__reuse.html#autotoc_md79',1,'']]]
+  ['🔁_20applicability_0',['🔁 Applicability',['../group__socketopts.html#autotoc_md1114',1,'🔁 Applicability'],['../group__socketopts.html#autotoc_md1117',1,'🔁 Applicability'],['../group__socketopts.html#autotoc_md1120',1,'🔁 Applicability'],['../group__socketopts.html#autotoc_md1124',1,'🔁 Applicability']]],
+  ['🔁_20behavior_20based_20on_20connection_20mode_1',['🔁 Behavior Based on Connection Mode',['../group__udp.html#autotoc_md666',1,'🔁 Behavior Based on Connection Mode'],['../group__udp.html#autotoc_md673',1,'🔁 Behavior Based on Connection Mode']]],
+  ['🔁_20behavior_20based_20on_20mode_2',['🔁 Behavior Based on Mode',['../group__udp.html#autotoc_md750',1,'']]],
+  ['🔁_20blocking_20behavior_3',['🔁 Blocking Behavior',['../group__tcp.html#autotoc_md840',1,'']]],
+  ['🔁_20callback_20signature_4',['🔁 Callback Signature',['../group__tcp.html#autotoc_md862',1,'']]],
+  ['🔁_20jsocketpp_20vs_20boost_20asio_5',['🔁 jsocketpp vs Boost.Asio',['../index.html#autotoc_md469',1,'']]]
 ];

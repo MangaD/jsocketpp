@@ -46,11 +46,11 @@ var searchData=
   ['glance_43',['✨ Features at a Glance',['../index.html#autotoc_md465',1,'']]],
   ['google_20mock_20to_20mock_20recv_20and_20send_3a_44',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md426',1,'']]],
   ['google_20mock_3a_45',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md434',1,'']]],
-  ['guarantees_46',['RAII Guarantees',['../group__udp.html#autotoc_md628',1,'']]],
+  ['guarantees_46',['RAII Guarantees',['../group__udp.html#autotoc_md626',1,'']]],
   ['guide_47',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
   ['guide_20to_20ioctl_20fcntl_20ioctlsocket_48',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;,',['../md_docs_2markdown_2ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
   ['guide_20to_20ioctl_20fcntl_20ioctlsocket_20wsaioctl_20and_20related_20functions_3a_20commands_20use_20cases_20and_20windows_20support_49',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;WSAIoctl&lt;/span&gt;, and Related Functions: Commands, Use Cases, and Windows Support',['../group__ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
   ['guide_20to_20the_20socket_20api_50',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['guidelines_51',['Guidelines',['../group__socketopts.html#autotoc_md1062',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md526',1,'3. Code Style Guidelines']]],
+  ['guidelines_51',['Guidelines',['../group__socketopts.html#autotoc_md1053',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md526',1,'3. Code Style Guidelines']]],
   ['guides_52',['User Guides',['../group__docs.html',1,'']]]
 ];
