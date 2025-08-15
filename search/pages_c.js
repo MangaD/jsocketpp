@@ -52,7 +52,7 @@ var searchData=
   ['common_20commands_49',['Common Commands',['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md214',1,'Common Commands'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md224',1,'Common Commands'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md235',1,'Common Commands'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md246',1,'Common Commands']]],
   ['common_20errors_50',['Common Errors',['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md213',1,'Common Errors'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md226',1,'Common Errors'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md237',1,'Common Errors'],['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md248',1,'Common Errors']]],
   ['common_20options_20by_20socket_20type_51',['Common Options by Socket Type',['../group__socket-options.html#autotoc_md300',1,'']]],
-  ['common_20scenarios_52',['Common Scenarios',['../group__tcp.html#autotoc_md746',1,'']]],
+  ['common_20scenarios_52',['Common Scenarios',['../group__udp.html#autotoc_md746',1,'']]],
   ['common_20use_20cases_53',['Common Use Cases',['../group__socketopts.html#autotoc_md1056',1,'🔧 Common Use Cases'],['../group__udp.html#autotoc_md631',1,'Common Use Cases'],['../group__udp.html#autotoc_md633',1,'Common Use Cases'],['../group__udp.html#autotoc_md635',1,'Common Use Cases']]],
   ['common_20use_20cases_54',['📦 Common use cases',['../group__address__reuse.html#autotoc_md80',1,'']]],
   ['common_20use_20cases_3a_55',['Common Use Cases:',['../group__tcp.html#autotoc_md904',1,'']]],

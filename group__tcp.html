@@ -108,8 +108,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gae91f746fb4cffa0eb8460c816a476d65" id="r_gae91f746fb4cffa0eb8460c816a476d65"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae91f746fb4cffa0eb8460c816a476d65">jsocketpp::DatagramSocket::isClosed</a> () const noexcept</td></tr>
-<tr class="memdesc:gae91f746fb4cffa0eb8460c816a476d65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the socket has been closed or is otherwise invalid.  <br /></td></tr>
 <tr class="memitem:ga58290010ec759550485b8eeede8d931a" id="r_ga58290010ec759550485b8eeede8d931a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga58290010ec759550485b8eeede8d931a">jsocketpp::ServerSocket::ServerSocket</a> ()=delete</td></tr>
 <tr class="memdesc:ga58290010ec759550485b8eeede8d931a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (deleted) for <a class="el" href="classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross-platform C++ networking.">ServerSocket</a> class.  <br /></td></tr>
 <tr class="memitem:gad389848c3e0fcadcfe5f581ab8c8fbb8" id="r_gad389848c3e0fcadcfe5f581ab8c8fbb8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad389848c3e0fcadcfe5f581ab8c8fbb8">jsocketpp::ServerSocket::ServerSocket</a> (<a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port, std::string_view localAddress={}, bool autoBindListen=true, bool reuseAddress=true, int soTimeoutMillis=-1, bool dualStack=true)</td></tr>
@@ -2683,54 +2681,8 @@ Example</h3>
 
 </div>
 </div>
-<a id="gae91f746fb4cffa0eb8460c816a476d65" name="gae91f746fb4cffa0eb8460c816a476d65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae91f746fb4cffa0eb8460c816a476d65">&#9670;&#160;</a></span>isClosed() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool jsocketpp::DatagramSocket::isClosed </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Checks whether the socket has been closed or is otherwise invalid. </p>
-<p>Returns <span class="tt">true</span> if the socket is no longer usable—either because it was explicitly closed via <span class="tt"><a class="el" href="group__udp.html#ga9d0a9582b3a2a72bf62f182dbc33c352" title="Closes the datagram socket and releases its underlying system resources.">close()</a></span>, or because it was never successfully initialized (i.e., holds an invalid file descriptor).</p>
-<p>This method does <b>not</b> perform any system-level query (such as <span class="tt">poll()</span> or <span class="tt">getsockopt()</span>). Instead, it inspects the internal socket descriptor using <span class="tt"><a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a></span> and returns <span class="tt">true</span> if it equals <span class="tt">INVALID_SOCKET</span>. This is the same invariant used throughout the library for ensuring safe socket operations.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md746"></a>
-Common Scenarios</h3>
-<ul>
-<li>The socket was default-initialized or failed during construction</li>
-<li>The socket was explicitly closed via <span class="tt"><a class="el" href="group__udp.html#ga9d0a9582b3a2a72bf62f182dbc33c352" title="Closes the datagram socket and releases its underlying system resources.">close()</a></span></li>
-<li>The socket was moved-from, leaving the source in a valid but unusable state</li>
-</ul>
-<dl class="section note"><dt>Note</dt><dd>Once a socket is closed, it cannot be reused. You must create a new instance if you wish to open a new connection.</dd></dl>
-<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if the socket is closed or invalid, <span class="tt">false</span> if it is open and usable.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md747"></a>
-Example</h3>
-<div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1Socket.html">Socket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 443);</div>
-<div class="line">assert(!sock.isClosed());</div>
-<div class="line">sock.connect();</div>
-<div class="line">sock.close();</div>
-<div class="line">assert(sock.isClosed()); <span class="comment">// ✅</span></div>
-</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="group__udp.html#ga9d0a9582b3a2a72bf62f182dbc33c352" title="Closes the datagram socket and releases its underlying system resources.">close()</a>, <a class="el" href="group__udp.html#gac3b7c4a5fc5a21372c4a9cadb3e85efb" title="Indicates whether the datagram socket is connected to a specific remote peer.">isConnected()</a>, <a class="el" href="group__udp.html#gadd6a72af69e4e8e1e8701c60a7e728f1" title="Indicates whether the datagram socket has been explicitly bound to a local address or port.">isBound()</a>, <a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a> </dd></dl>
-
-</div>
-</div>
 <a id="gaeb5adb24bd7f50eaf8b52aa4441ffe71" name="gaeb5adb24bd7f50eaf8b52aa4441ffe71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaeb5adb24bd7f50eaf8b52aa4441ffe71">&#9670;&#160;</a></span>isClosed() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeb5adb24bd7f50eaf8b52aa4441ffe71">&#9670;&#160;</a></span>isClosed() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2760,7 +2712,7 @@ Example</h3>
 </div>
 </div>
 <a id="ga368ea24012b68fcf6db4f9a75d6d1940" name="ga368ea24012b68fcf6db4f9a75d6d1940"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga368ea24012b68fcf6db4f9a75d6d1940">&#9670;&#160;</a></span>isClosed() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga368ea24012b68fcf6db4f9a75d6d1940">&#9670;&#160;</a></span>isClosed() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

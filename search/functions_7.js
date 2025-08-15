@@ -6,7 +6,7 @@ var searchData=
   ['ipaddressesequal_3',['ipAddressesEqual',['../namespacejsocketpp_1_1internal.html#a9ec0f69551a2510b87db8ea21042ea42',1,'jsocketpp::internal']]],
   ['ipfromsockaddr_4',['ipFromSockaddr',['../namespacejsocketpp.html#a18428d088b7f3b2e55efe9adc49e10a9',1,'jsocketpp']]],
   ['isbound_5',['isBound',['../group__udp.html#gadd6a72af69e4e8e1e8701c60a7e728f1',1,'jsocketpp::DatagramSocket::isBound()'],['../group__tcp.html#ga0b3a5cb732c669b678e03549e5af2427',1,'jsocketpp::ServerSocket::isBound()'],['../group__tcp.html#gac5d9708cad057d6d608fb732eb1bb117',1,'jsocketpp::Socket::isBound()']]],
-  ['isclosed_6',['isClosed',['../group__tcp.html#gae91f746fb4cffa0eb8460c816a476d65',1,'jsocketpp::DatagramSocket::isClosed()'],['../group__tcp.html#gaeb5adb24bd7f50eaf8b52aa4441ffe71',1,'jsocketpp::ServerSocket::isClosed()'],['../group__tcp.html#ga368ea24012b68fcf6db4f9a75d6d1940',1,'jsocketpp::Socket::isClosed()']]],
+  ['isclosed_6',['isClosed',['../group__udp.html#gae91f746fb4cffa0eb8460c816a476d65',1,'jsocketpp::DatagramSocket::isClosed()'],['../group__tcp.html#gaeb5adb24bd7f50eaf8b52aa4441ffe71',1,'jsocketpp::ServerSocket::isClosed()'],['../group__tcp.html#ga368ea24012b68fcf6db4f9a75d6d1940',1,'jsocketpp::Socket::isClosed()']]],
   ['isconnected_7',['isConnected',['../group__udp.html#gac3b7c4a5fc5a21372c4a9cadb3e85efb',1,'jsocketpp::DatagramSocket::isConnected()'],['../group__tcp.html#gab1e4f32614be9a3609820f75dbcb4fc2',1,'jsocketpp::Socket::isConnected() const noexcept']]],
   ['isinputshutdown_8',['isInputShutdown',['../group__tcp.html#ga402fc4a398e670854cbb4edf791c1916',1,'jsocketpp::Socket']]],
   ['isipv4mappedipv6_9',['isIPv4MappedIPv6',['../group__core.html#gab0ac1b9850480abafeb047a4f96792a0',1,'jsocketpp']]],

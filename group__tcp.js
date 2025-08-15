@@ -167,7 +167,6 @@ var group__tcp =
     [ "jsocketpp::Socket::getRemoteSocketAddress", "group__tcp.html#ga92c62bf727779c6d7395809084f9e4dc", null ],
     [ "jsocketpp::ServerSocket::isBound", "group__tcp.html#ga0b3a5cb732c669b678e03549e5af2427", null ],
     [ "jsocketpp::Socket::isBound", "group__tcp.html#gac5d9708cad057d6d608fb732eb1bb117", null ],
-    [ "jsocketpp::DatagramSocket::isClosed", "group__tcp.html#gae91f746fb4cffa0eb8460c816a476d65", null ],
     [ "jsocketpp::ServerSocket::isClosed", "group__tcp.html#gaeb5adb24bd7f50eaf8b52aa4441ffe71", null ],
     [ "jsocketpp::Socket::isClosed", "group__tcp.html#ga368ea24012b68fcf6db4f9a75d6d1940", null ],
     [ "jsocketpp::Socket::isConnected", "group__tcp.html#gab1e4f32614be9a3609820f75dbcb4fc2", null ],
