@@ -420,7 +420,7 @@ void DatagramSocket::write(const std::span<const std::byte> data) const
     internal::sendExact(getSocketFd(), reinterpret_cast<const char*>(data.data()), data.size());
 }
 
-void DatagramSocket::write(const std::string_view host, const Port port, const std::string_view message) const
+void DatagramSocket::writeTo(const std::string_view host, const Port port, const std::string_view message) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("DatagramSocket::write(std::string_view, host, port): socket is not open.");
@@ -459,7 +459,7 @@ void DatagramSocket::write(const std::string_view host, const Port port, const s
 void DatagramSocket::writeTo(const std::string_view host, const Port port, const std::span<const std::byte> data) const
 {
     const std::string_view message_view(reinterpret_cast<const char*>(data.data()), data.size());
-    write(host, port, message_view);
+    writeTo(host, port, message_view);
 }
 
 std::size_t DatagramSocket::readIntoBuffer(char* buf, const std::size_t len, const DatagramReceiveMode mode,

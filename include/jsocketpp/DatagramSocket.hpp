@@ -1595,7 +1595,7 @@ class DatagramSocket : public SocketOptions
      * @see connect() To establish a persistent default peer
      * @see isConnected(), getRemoteIp(), getRemotePort(), getRemoteSocketAddress()
      */
-    void write(std::string_view host, Port port, std::string_view message) const;
+    void writeTo(std::string_view host, Port port, std::string_view message) const;
 
     /**
      * @brief Sends a contiguous buffer of bytes as a UDP datagram to the specified destination address and port.
@@ -1649,7 +1649,7 @@ class DatagramSocket : public SocketOptions
      *
      * @warning No byte-order or encoding transformations are applied; the payload is transmitted as raw bytes.
      *
-     * @see write(std::string_view, Port, std::string_view) For string payloads
+     * @see writeTo(std::string_view, Port, std::string_view) For string payloads
      * @see write(const DatagramPacket&) For sending a datagram object with buffer + destination
      * @see connect() To establish a persistent default peer
      * @see isConnected(), getRemoteIp(), getRemotePort(), getRemoteSocketAddress()
