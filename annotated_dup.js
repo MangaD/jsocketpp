@@ -20,6 +20,7 @@ var annotated_dup =
       [ "DatagramReadResult", "structjsocketpp_1_1DatagramReadResult.html", "structjsocketpp_1_1DatagramReadResult" ],
       [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html", "classjsocketpp_1_1DatagramSocket" ],
       [ "MulticastSocket", "classjsocketpp_1_1MulticastSocket.html", "classjsocketpp_1_1MulticastSocket" ],
+      [ "ReadExactOptions", "structjsocketpp_1_1ReadExactOptions.html", "structjsocketpp_1_1ReadExactOptions" ],
       [ "ServerSocket", "classjsocketpp_1_1ServerSocket.html", "classjsocketpp_1_1ServerSocket" ],
       [ "Socket", "classjsocketpp_1_1Socket.html", "classjsocketpp_1_1Socket" ],
       [ "SocketException", "classjsocketpp_1_1SocketException.html", "classjsocketpp_1_1SocketException" ],

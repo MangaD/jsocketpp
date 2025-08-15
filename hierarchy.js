@@ -16,6 +16,7 @@ var hierarchy =
       [ "jsocketpp::detail::has_resize< typename, typename >", "structjsocketpp_1_1detail_1_1has__resize.html", null ],
       [ "jsocketpp::detail::has_size< typename, typename >", "structjsocketpp_1_1detail_1_1has__size.html", null ]
     ] ],
+    [ "jsocketpp::ReadExactOptions", "structjsocketpp_1_1ReadExactOptions.html", null ],
     [ "std::runtime_error", null, [
       [ "jsocketpp::SocketException", "classjsocketpp_1_1SocketException.html", [
         [ "jsocketpp::SocketTimeoutException", "classjsocketpp_1_1SocketTimeoutException.html", null ]

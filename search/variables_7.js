@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['recvflags_0',['recvFlags',['../structjsocketpp_1_1DatagramReadOptions.html#ae165365764844b3d87e0b1767bca3121',1,'jsocketpp::DatagramReadOptions']]],
-  ['resolvenumeric_1',['resolveNumeric',['../structjsocketpp_1_1DatagramReadOptions.html#a1e0a5d17aeaa7205658058cfd218f8eb',1,'jsocketpp::DatagramReadOptions']]]
+  ['padifsmaller_0',['padIfSmaller',['../structjsocketpp_1_1ReadExactOptions.html#a1b3dca16ac543ff80a42b9468fd11759',1,'jsocketpp::ReadExactOptions']]],
+  ['port_1',['port',['../classjsocketpp_1_1DatagramPacket.html#a6619b7fcd476199e4a9c454d06f1bcd4',1,'jsocketpp::DatagramPacket']]]
 ];

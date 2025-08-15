@@ -16,7 +16,7 @@ var searchData=
   ['getipv6only_13',['getIPv6Only',['../group__socketopts.html#ga1d44e7f23739c1ef4a9ad550b4a1ff1d',1,'jsocketpp::SocketOptions']]],
   ['getkeepalive_14',['getKeepAlive',['../group__socketopts.html#ga1193748a866e07a7f25e97a0640ad8dd',1,'jsocketpp::SocketOptions']]],
   ['getlastpeersockaddr_15',['getLastPeerSockAddr',['../group__udp.html#gac19051ec24961addb059f01f1e7f28c7',1,'jsocketpp::DatagramSocket']]],
-  ['getlocalip_16',['getLocalIp',['../group__socketopts.html#ga93a142cf918c58f939454b296baf0963',1,'jsocketpp::DatagramSocket::getLocalIp()'],['../classjsocketpp_1_1ServerSocket.html#a4aa141b9b1bb274d582dba05f2fee136',1,'jsocketpp::ServerSocket::getLocalIp()'],['../group__tcp.html#ga6cd36845f959c2bf075c475e5fdc7620',1,'jsocketpp::Socket::getLocalIp()']]],
+  ['getlocalip_16',['getLocalIp',['../group__udp.html#ga93a142cf918c58f939454b296baf0963',1,'jsocketpp::DatagramSocket::getLocalIp()'],['../classjsocketpp_1_1ServerSocket.html#a4aa141b9b1bb274d582dba05f2fee136',1,'jsocketpp::ServerSocket::getLocalIp()'],['../group__tcp.html#ga6cd36845f959c2bf075c475e5fdc7620',1,'jsocketpp::Socket::getLocalIp()']]],
   ['getlocalport_17',['getLocalPort',['../group__udp.html#gaacb1d9e513c65bd800769d5194a4559f',1,'jsocketpp::DatagramSocket::getLocalPort()'],['../group__tcp.html#gad3b2807577129c652044f17626c6e01a',1,'jsocketpp::ServerSocket::getLocalPort()'],['../group__tcp.html#gac10f731a7d1e90c18688266fe5db969e',1,'jsocketpp::Socket::getLocalPort()']]],
   ['getlocalsocketaddress_18',['getLocalSocketAddress',['../group__udp.html#ga9a7f8475868acca97f90dcd66df7f943',1,'jsocketpp::DatagramSocket::getLocalSocketAddress()'],['../group__tcp.html#ga5e035235b554db37df4492b5725e78cc',1,'jsocketpp::ServerSocket::getLocalSocketAddress()'],['../group__tcp.html#gab716648ffb451640b18f4f4363a22eb3',1,'jsocketpp::Socket::getLocalSocketAddress()']]],
   ['getloopbackmode_19',['getLoopbackMode',['../classjsocketpp_1_1MulticastSocket.html#aef04ca6c33896469f8be76b3f2f9da1c',1,'jsocketpp::MulticastSocket']]],
@@ -46,11 +46,11 @@ var searchData=
   ['glance_43',['✨ Features at a Glance',['../index.html#autotoc_md465',1,'']]],
   ['google_20mock_20to_20mock_20recv_20and_20send_3a_44',['Example: Using Google Mock to Mock &lt;span class=&quot;tt&quot;&gt;recv&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;send&lt;/span&gt;:',['../group__unit__tests.html#autotoc_md426',1,'']]],
   ['google_20mock_3a_45',['Mock Example with Google Mock:',['../group__unit__tests.html#autotoc_md434',1,'']]],
-  ['guarantees_46',['RAII Guarantees',['../group__udp.html#autotoc_md627',1,'']]],
+  ['guarantees_46',['RAII Guarantees',['../group__udp.html#autotoc_md628',1,'']]],
   ['guide_47',['Guide',['../group__BUILD__AND__USAGE.html',1,'jsocketpp: Build, Test, and Usage Guide'],['../group__unit__tests.html',1,'Unit Testing and Integration Guide']]],
   ['guide_20to_20ioctl_20fcntl_20ioctlsocket_48',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;,',['../md_docs_2markdown_2ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
   ['guide_20to_20ioctl_20fcntl_20ioctlsocket_20wsaioctl_20and_20related_20functions_3a_20commands_20use_20cases_20and_20windows_20support_49',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;WSAIoctl&lt;/span&gt;, and Related Functions: Commands, Use Cases, and Windows Support',['../group__ioctl__fcntl__ioctlsocket__guide.html',1,'']]],
   ['guide_20to_20the_20socket_20api_50',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
-  ['guidelines_51',['Guidelines',['../group__socketopts.html#autotoc_md1049',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md526',1,'3. Code Style Guidelines']]],
+  ['guidelines_51',['Guidelines',['../group__socketopts.html#autotoc_md1062',1,'✅ Safe Usage Guidelines'],['../md_CONTRIBUTING.html#autotoc_md526',1,'3. Code Style Guidelines']]],
   ['guides_52',['User Guides',['../group__docs.html',1,'']]]
 ];

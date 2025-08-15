@@ -105,6 +105,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options controlling a single UDP receive operation.  <a href="structjsocketpp_1_1DatagramReadOptions.html#details">More...</a><br /></td></tr>
 <tr class="memitem:jsocketpp_3A_3ADatagramReadResult" id="r_jsocketpp_3A_3ADatagramReadResult"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjsocketpp_1_1DatagramReadResult.html">jsocketpp::DatagramReadResult</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Telemetry data about a single UDP datagram receive operation.  <a href="structjsocketpp_1_1DatagramReadResult.html#details">More...</a><br /></td></tr>
+<tr class="memitem:jsocketpp_3A_3AReadExactOptions" id="r_jsocketpp_3A_3AReadExactOptions"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjsocketpp_1_1ReadExactOptions.html">jsocketpp::ReadExactOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Policy for enforcing an exact-byte receive on a single UDP datagram.  <a href="structjsocketpp_1_1ReadExactOptions.html#details">More...</a><br /></td></tr>
 <tr class="memitem:jsocketpp_3A_3ADatagramPacket" id="r_jsocketpp_3A_3ADatagramPacket"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1DatagramPacket.html">jsocketpp::DatagramPacket</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a UDP datagram packet, encapsulating both payload and addressing information.  <a href="classjsocketpp_1_1DatagramPacket.html#details">More...</a><br /></td></tr>
 <tr class="memitem:jsocketpp_3A_3ADatagramSocket" id="r_jsocketpp_3A_3ADatagramSocket"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a></td></tr>
@@ -148,6 +150,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga02b08c333a2f109a3b19ec7b3c0cecf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disconnects the datagram socket from its currently connected peer.  <br /></td></tr>
 <tr class="memitem:gac3b7c4a5fc5a21372c4a9cadb3e85efb" id="r_gac3b7c4a5fc5a21372c4a9cadb3e85efb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac3b7c4a5fc5a21372c4a9cadb3e85efb">jsocketpp::DatagramSocket::isConnected</a> () const noexcept</td></tr>
 <tr class="memdesc:gac3b7c4a5fc5a21372c4a9cadb3e85efb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the datagram socket is connected to a specific remote peer.  <br /></td></tr>
+<tr class="memitem:ga93a142cf918c58f939454b296baf0963" id="r_ga93a142cf918c58f939454b296baf0963"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga93a142cf918c58f939454b296baf0963">jsocketpp::DatagramSocket::getLocalIp</a> (bool convertIPv4Mapped=true) const</td></tr>
+<tr class="memdesc:ga93a142cf918c58f939454b296baf0963"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the local IP address this socket is bound to.  <br /></td></tr>
 <tr class="memitem:gaacb1d9e513c65bd800769d5194a4559f" id="r_gaacb1d9e513c65bd800769d5194a4559f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaacb1d9e513c65bd800769d5194a4559f">jsocketpp::DatagramSocket::getLocalPort</a> () const</td></tr>
 <tr class="memdesc:gaacb1d9e513c65bd800769d5194a4559f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the local port number this datagram socket is bound to.  <br /></td></tr>
 <tr class="memitem:ga9a7f8475868acca97f90dcd66df7f943" id="r_ga9a7f8475868acca97f90dcd66df7f943"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9a7f8475868acca97f90dcd66df7f943">jsocketpp::DatagramSocket::getLocalSocketAddress</a> (bool convertIPv4Mapped=true) const</td></tr>
@@ -177,11 +181,14 @@ Functions</h2></td></tr>
 <tr class="memitem:ga9f9e08f58d50d29e0f3fa9ccf83c1c97" id="r_ga9f9e08f58d50d29e0f3fa9ccf83c1c97"><td class="memTemplParams" colspan="2">template&lt;typename T, std::enable_if_t&lt; <a class="el" href="namespacejsocketpp_1_1detail.html#aa46a9243f021ef54b04645f354feea30">detail::is_dynamic_buffer_v</a>&lt; T &gt;, int &gt; = 0&gt; </td></tr>
 <tr class="memitem:ga9f9e08f58d50d29e0f3fa9ccf83c1c97 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9f9e08f58d50d29e0f3fa9ccf83c1c97">jsocketpp::DatagramSocket::read</a> (const <a class="el" href="structjsocketpp_1_1DatagramReadOptions.html">DatagramReadOptions</a> &amp;opts={}, std::size_t minCapacity=<a class="el" href="group__core.html#ga2fb9d73742801c62e90aeb505c618c43">DefaultDatagramReceiveSize</a>) const</td></tr>
 <tr class="memdesc:ga9f9e08f58d50d29e0f3fa9ccf83c1c97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a single UDP datagram into a caller-provided container type.  <br /></td></tr>
-<tr class="memitem:gaca78d1a91c373c1f7a14f7954f306a06" id="r_gaca78d1a91c373c1f7a14f7954f306a06"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:gaca78d1a91c373c1f7a14f7954f306a06 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaca78d1a91c373c1f7a14f7954f306a06">jsocketpp::DatagramSocket::recvFrom</a> (std::string *senderAddr=nullptr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort=nullptr, const <a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> mode=<a class="el" href="#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f">DatagramReceiveMode::NoPreflight</a>) const</td></tr>
-<tr class="memdesc:gaca78d1a91c373c1f7a14f7954f306a06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive one UDP datagram directly into a trivially copyable type.  <br /></td></tr>
-<tr class="memitem:ga8554412d81524f04b70bebfc26f22db0" id="r_ga8554412d81524f04b70bebfc26f22db0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8554412d81524f04b70bebfc26f22db0">jsocketpp::DatagramSocket::readExact</a> (std::size_t n, <a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> mode=<a class="el" href="#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f">DatagramReceiveMode::NoPreflight</a>) const</td></tr>
-<tr class="memdesc:ga8554412d81524f04b70bebfc26f22db0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a UDP datagram of exactly <span class="tt">n</span> bytes into a std::string.  <br /></td></tr>
+<tr class="memitem:ga7fbd62107244e308dc0436f11fae7dad" id="r_ga7fbd62107244e308dc0436f11fae7dad"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ga7fbd62107244e308dc0436f11fae7dad template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7fbd62107244e308dc0436f11fae7dad">jsocketpp::DatagramSocket::readFrom</a> (T &amp;buffer, std::string *senderAddr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort, const <a class="el" href="structjsocketpp_1_1DatagramReadOptions.html">DatagramReadOptions</a> &amp;opts) const</td></tr>
+<tr class="memdesc:ga7fbd62107244e308dc0436f11fae7dad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a single UDP datagram into a container and capture the sender's address/port.  <br /></td></tr>
+<tr class="memitem:gab34fd67ebc17563f286dde70ba456cf9" id="r_gab34fd67ebc17563f286dde70ba456cf9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab34fd67ebc17563f286dde70ba456cf9">jsocketpp::DatagramSocket::readExact</a> (void *buffer, std::size_t exactLen, const <a class="el" href="structjsocketpp_1_1ReadExactOptions.html">ReadExactOptions</a> &amp;opts={}) const</td></tr>
+<tr class="memdesc:gab34fd67ebc17563f286dde70ba456cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive exactly <code class="param">exactLen</code> bytes (per policy) into a caller-provided buffer.  <br /></td></tr>
+<tr class="memitem:gaf961e06614e7508ff868badc1a63f582" id="r_gaf961e06614e7508ff868badc1a63f582"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:gaf961e06614e7508ff868badc1a63f582 template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf961e06614e7508ff868badc1a63f582">jsocketpp::DatagramSocket::readExact</a> (T &amp;buffer, const std::size_t exactLen, const <a class="el" href="structjsocketpp_1_1ReadExactOptions.html">ReadExactOptions</a> &amp;opts) const</td></tr>
+<tr class="memdesc:gaf961e06614e7508ff868badc1a63f582"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive exactly <code class="param">exactLen</code> bytes (per policy) into a container <span class="tt">T</span>.  <br /></td></tr>
 <tr class="memitem:ga275fcbd57095c32ff7009624fcb48679" id="r_ga275fcbd57095c32ff7009624fcb48679"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga275fcbd57095c32ff7009624fcb48679">jsocketpp::DatagramSocket::readAtMost</a> (std::size_t n) const</td></tr>
 <tr class="memdesc:ga275fcbd57095c32ff7009624fcb48679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive up to the specified number of bytes from the socket.  <br /></td></tr>
 <tr class="memitem:ga85c18071cceb1c0c679b7a444cfa9f65" id="r_ga85c18071cceb1c0c679b7a444cfa9f65"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga85c18071cceb1c0c679b7a444cfa9f65">jsocketpp::DatagramSocket::readAvailable</a> () const</td></tr>
@@ -252,9 +259,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga6608c56d08ccdb2807bd47cc862af24a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up the datagram socket and rethrows the currently active exception.  <br /></td></tr>
 <tr class="memitem:ga1ff1dc3fb9ed36e31bc62941edf1d44c" id="r_ga1ff1dc3fb9ed36e31bc62941edf1d44c"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1ff1dc3fb9ed36e31bc62941edf1d44c">jsocketpp::DatagramSocket::chooseReceiveSize</a> () const</td></tr>
 <tr class="memdesc:ga1ff1dc3fb9ed36e31bc62941edf1d44c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decide how many bytes to attempt to receive for the next UDP datagram.  <br /></td></tr>
-<tr class="memitem:ga0f789073f7aed835bc701c359e33a391" id="r_ga0f789073f7aed835bc701c359e33a391"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:ga0f789073f7aed835bc701c359e33a391 template"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0f789073f7aed835bc701c359e33a391">jsocketpp::DatagramSocket::recvFrom&lt; std::string &gt;</a> (std::string *senderAddr, <a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *senderPort, const <a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a> mode) const</td></tr>
-<tr class="memdesc:ga0f789073f7aed835bc701c359e33a391"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a UDP datagram into a std::string.  <br /></td></tr>
 <tr class="memitem:ga5d219ae0c5ace0c42fad1b8295a7c2a1" id="r_ga5d219ae0c5ace0c42fad1b8295a7c2a1"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:ga5d219ae0c5ace0c42fad1b8295a7c2a1 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5d219ae0c5ace0c42fad1b8295a7c2a1">jsocketpp::DatagramSocket::write&lt; std::string &gt;</a> (const std::string &amp;value)</td></tr>
 <tr class="memdesc:ga5d219ae0c5ace0c42fad1b8295a7c2a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <span class="tt">write&lt;T&gt;()</span> to send a <span class="tt">std::string</span> as a UDP datagram.  <br /></td></tr>
@@ -364,14 +368,14 @@ Functions</h2></td></tr>
 
 <p>Binds the datagram socket to all available interfaces on an ephemeral port. </p>
 <p>This method binds the <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> to an ephemeral (auto-assigned) local port on all local network interfaces (<span class="tt">0.0.0.0</span> for IPv4 or <span class="tt">::</span> for IPv6), depending on system configuration and address resolution.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md633"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md634"></a>
 Common Use Cases</h3>
 <ul>
 <li>UDP client sockets that do not require a specific local port</li>
 <li>Transient sockets used for fire-and-forget messages, RPC, or NAT traversal</li>
 <li>Applications that allow the OS to choose a source port dynamically</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md634"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md635"></a>
 Behavior</h3>
 <ul>
 <li>Uses <span class="tt">getaddrinfo()</span> with <span class="tt">AI_PASSIVE</span> and a wildcard local address (<span class="tt">0.0.0.0</span> or <span class="tt">::</span>)</li>
@@ -412,19 +416,19 @@ If the socket was constructed with an already-resolved address, this will overri
 
 <p>Binds the datagram socket to a specific local port on all network interfaces. </p>
 <p>This overload binds the socket to the given UDP <span class="tt">localPort</span> across all available network interfaces, using a wildcard address (<span class="tt">0.0.0.0</span> for IPv4 or <span class="tt">::</span> for IPv6).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md635"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md636"></a>
 Common Use Cases</h3>
 <ul>
 <li>Server-side sockets that need to receive packets on a known port</li>
 <li>P2P or NAT traversal clients using fixed source ports</li>
 <li>Test setups or replay systems where the port number must be predictable</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md636"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md637"></a>
 Behavior</h3>
 <ul>
 <li>Uses <span class="tt">getaddrinfo()</span> with <span class="tt">AI_PASSIVE</span> and a null host to resolve wildcard binding addresses</li>
 <li>Attempts all resolved addresses until <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> succeeds</li>
-<li>If successful, sets <span class="tt">_isBound = true</span> and enables subsequent <span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a></span> or <span class="tt"><a class="el" href="#gaca78d1a91c373c1f7a14f7954f306a06" title="Receive one UDP datagram directly into a trivially copyable type.">recvFrom()</a></span> operations</li>
+<li>If successful, sets <span class="tt">_isBound = true</span> and enables subsequent <span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a></span> or <span class="tt">recvFrom()</span> operations</li>
 </ul>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -468,7 +472,7 @@ If the specified port is already in use, a <span class="tt"><a class="el" href="
 
 <p>Binds the datagram socket to a specific local IP address and port. </p>
 <p>This method allows full control over the local binding interface by specifying both the local IP address (<span class="tt">host</span>) and port. It supports IPv4 and IPv6 addresses, including loopback, multicast-capable interfaces, and link-local addresses.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md637"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md638"></a>
 Common Use Cases</h3>
 <ul>
 <li>Multihomed systems binding to a specific NIC/interface</li>
@@ -476,7 +480,7 @@ Common Use Cases</h3>
 <li>Binding to loopback or link-local addresses</li>
 <li>Low-level networking tools (e.g., packet sniffers, trace clients)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md638"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md639"></a>
 Behavior</h3>
 <ul>
 <li>Uses <span class="tt">getaddrinfo()</span> to resolve the provided IP/hostname and port</li>
@@ -578,7 +582,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <p>Internal helper that releases socket resources and resets all internal state. </p>
 <p>This method safely resets the <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> to an uninitialized state. It is used during error recovery to release partially constructed socket state, and ensures the object no longer appears bound or connected after failure.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md751"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md764"></a>
 ⚙️ Behavior</h3>
 <ul>
 <li>Closes the socket if it is valid (<span class="tt"><a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a> != INVALID_SOCKET</span>)</li>
@@ -592,7 +596,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md753"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md766"></a>
 🔒 Safety</h3>
 <ul>
 <li>Safe to call multiple times</li>
@@ -630,7 +634,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <p>Cleans up the datagram socket and rethrows the currently active exception. </p>
 <p>This method is intended to be used inside a <span class="tt">catch</span> block when an exception occurs during socket construction or setup. It ensures all internal resources are safely released before rethrowing the original exception, leaving the socket in an uninitialized and safe state.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md759"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md772"></a>
 ⚙️ Behavior</h3>
 <p>Internally calls <span class="tt"><a class="el" href="#gaa0727094596347aa858629f6e5c7febf" title="Internal helper that releases socket resources and resets all internal state.">cleanup()</a></span>, which:</p><ul>
 <li>Closes the socket if it is open</li>
@@ -645,7 +649,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 </ul>
 <p>Then rethrows the active exception using <span class="tt">throw;</span>.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md761"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md774"></a>
 ⚠️ Usage Notes</h3>
 <ul>
 <li>Must be invoked only from within a valid <span class="tt">catch</span> block</li>
@@ -653,7 +657,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <li>Never accepts an exception object — <span class="tt">throw;</span> preserves full type and context</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md763"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md776"></a>
 🧠 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">try</span> {</div>
 <div class="line">    <a class="code hl_function" href="group__socketopts.html#ga5f2dffc2949b06b1d945e590bce7f05b">setNonBlocking</a>(<span class="keyword">true</span>);</div>
@@ -702,7 +706,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <p>Releases all socket resources and throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> with the given error code. </p>
 <p>This method performs complete internal cleanup of the datagram socket and then throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>. It is typically invoked when construction, binding, or configuration of the socket fails, ensuring the object is left in a safe, uninitialized state.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md755"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md768"></a>
 ⚙️ Behavior</h3>
 <p>Internally delegates to <span class="tt"><a class="el" href="#gaa0727094596347aa858629f6e5c7febf" title="Internal helper that releases socket resources and resets all internal state.">cleanup()</a></span>, which:</p><ul>
 <li>Closes the socket if open</li>
@@ -720,7 +724,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <li>A descriptive message from <span class="tt">SocketErrorMessage(errorCode)</span></li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md757"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md770"></a>
 🧠 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">::bind</a>(<a class="code hl_function" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794">getSocketFd</a>(), ...) == <a class="code hl_variable" href="namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2">SOCKET_ERROR</a>)</div>
 <div class="line">{</div>
@@ -768,7 +772,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <p>Closes the datagram socket and releases its underlying system resources. </p>
 <p>This method shuts down and closes the underlying UDP socket file descriptor or handle. Once closed, the socket can no longer send or receive packets. This is a terminal operation — any further use of the socket (e.g. <span class="tt">sendTo()</span>, <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span>, or <span class="tt"><a class="el" href="group__socketopts.html#ga1b7061a0f4d13e8d33d3065b8ad4998b" title="Sets a low-level socket option on the underlying socket.">setOption()</a></span>) will result in exceptions.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md735"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md748"></a>
 🧱 Effects</h3>
 <ul>
 <li>The socket becomes invalid (<span class="tt">_sockFd == INVALID_SOCKET</span>)</li>
@@ -776,7 +780,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <li>The operating system reclaims the socket descriptor</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md737"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md750"></a>
 💡 Platform Notes</h3>
 <ul>
 <li>On <b>POSIX</b>, this calls <span class="tt">::close(_sockFd)</span></li>
@@ -784,7 +788,7 @@ If resolution fails, or no address can be bound, a <span class="tt"><a class="el
 <li>If the socket was already closed, calling this again has no effect (safe)</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md739"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md752"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(AF_INET);</div>
 <div class="line">sock.bind(<span class="stringliteral">&quot;0.0.0.0&quot;</span>, 9999);</div>
@@ -832,7 +836,7 @@ Example</h3>
 <p>Resolves and connects the datagram socket to a remote UDP peer with optional timeout. </p>
 <p>Although UDP is a connectionless protocol, calling <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span> on a datagram socket sets a default remote peer. This operation internally performs a <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span> syscall, which offers the following advantages:</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md641"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md642"></a>
 🔌 What Is Connected UDP?</h3>
 <p>A UDP socket normally uses <span class="tt">sendto()</span> to send data to any arbitrary destination and <span class="tt">recvfrom()</span> to receive from any source. When a socket is "connected" to a fixed peer:</p>
 <ul>
@@ -844,7 +848,7 @@ Example</h3>
 </ul>
 <p>This mode is ideal for client-side UDP protocols like DNS, QUIC, RTP, STUN/TURN, or custom request/response protocols.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md643"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md644"></a>
 🧠 Example Use Cases</h3>
 <ul>
 <li><b>DNS client</b>:<ul>
@@ -865,7 +869,7 @@ Example</h3>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md645"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md646"></a>
 ⚙️ Behavior</h3>
 <p>This method resolves the target <span class="tt">host:port</span> using DNS (<span class="tt">getaddrinfo()</span>), selects the best available address, and performs a <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span> syscall. After success:</p>
 <ul>
@@ -875,7 +879,7 @@ Example</h3>
 <li>Internal <span class="tt">_isConnected</span> is set to <span class="tt">true</span></li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md647"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md648"></a>
 ⏱ Timeout Handling</h3>
 <p>This method supports both blocking and timeout-aware non-blocking connect:</p>
 <ul>
@@ -884,7 +888,7 @@ Example</h3>
 </ul>
 <p>After timeout-based connect, the socket’s original blocking mode is restored automatically.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md649"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md650"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(0, <span class="stringliteral">&quot;&quot;</span>, ..., <span class="keyword">true</span>, <span class="keyword">false</span>); <span class="comment">// bind to ephemeral port, no connect yet</span></div>
 <div class="line">sock.connect(<span class="stringliteral">&quot;8.8.8.8&quot;</span>, 53);                  <span class="comment">// blocking connect</span></div>
@@ -979,7 +983,7 @@ Any existing connection will be overwritten.</dd></dl>
 
 <p>Move constructor for <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a>. </p>
 <p>Transfers ownership of the underlying socket file descriptor and internal state from another <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> instance. After the move, the source object is left in a valid but unspecified state and should not be used.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md628"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md629"></a>
 What Is Transferred</h3>
 <ul>
 <li>Native socket handle (<span class="tt">_sockFd</span>)</li>
@@ -988,7 +992,7 @@ What Is Transferred</h3>
 <li>Internal receive buffer</li>
 <li><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md629"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md630"></a>
 Rationale</h3>
 <ul>
 <li>Enables safe transfer of socket ownership</li>
@@ -1108,7 +1112,7 @@ Rationale</h3>
 <li>Optional non-blocking mode</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md621"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md622"></a>
 Usage Modes</h3>
 <ul>
 <li><p class="startli"><b>Bound UDP Server</b> Useful for listening on a specific port/interface for datagrams from any peer.</p>
@@ -1119,7 +1123,7 @@ Usage Modes</h3>
 </div><!-- fragment --></li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md623"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md624"></a>
 Configuration Parameters</h3>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1146,7 +1150,7 @@ Configuration Parameters</h3>
   </dd>
 </dl>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md625"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md626"></a>
 Throws</h3>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
@@ -1157,66 +1161,6 @@ Throws</h3>
 </dl>
 <hr  />
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a>, <a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a>, <a class="el" href="group__socketopts.html#ga5ad18e598507d04059bdaff086b01721" title="Sets the socket receive timeout (SO_RCVTIMEO) in milliseconds.">setSoRecvTimeout()</a>, <a class="el" href="group__socketopts.html#ga7107a9da459b00bf39ec2fe4d3e83396" title="Sets the socket send timeout (SO_SNDTIMEO) in milliseconds.">setSoSendTimeout()</a>, <a class="el" href="#gac3b7c4a5fc5a21372c4a9cadb3e85efb" title="Indicates whether the datagram socket is connected to a specific remote peer.">isConnected()</a>, <a class="el" href="#ga87c837cd891ddd8b4daeacc61e1326df" title="Writes a trivially copyable object of type T to the connected remote peer.">write()</a>, <a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a> </dd></dl>
-
-</div>
-</div>
-<a id="ga0f789073f7aed835bc701c359e33a391" name="ga0f789073f7aed835bc701c359e33a391"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0f789073f7aed835bc701c359e33a391">&#9670;&#160;</a></span>DatagramSocket::recvFrom&lt; std::string &gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string <a class="el" href="#gaca78d1a91c373c1f7a14f7954f306a06">jsocketpp::DatagramSocket::recvFrom</a>&lt; std::string &gt; </td>
-          <td>(</td>
-          <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>senderAddr</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *</td>          <td class="paramname"><span class="paramname"><em>senderPort</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Receive a UDP datagram into a std::string. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">senderAddr</td><td>Optional pointer to store sender's numeric address. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">senderPort</td><td>Optional pointer to store sender's numeric port. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>Sizing policy for the receive (default = NoPreflight).</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The received message as a std::string (may be empty for zero-length datagrams).</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td><ul>
-<li>If the socket is not open.</li>
-<li>On receive error; thrown via <span class="tt"><a class="el" href="namespacejsocketpp_1_1internal.html#a8a49e143a6246874f572bde7254e09b6" title="Throw a SocketException for the last socket error, with optional source-location context.">internal::throwLastSockError()</a></span>.</li>
-<li>On numeric host/port resolution failure (if supported by platform).</li>
-</ul>
-</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd" title="Receive-time sizing policy for UDP datagrams.">DatagramReceiveMode</a> </dd></dl>
-<dl class="section since"><dt>Since</dt><dd>1.0 </dd></dl>
 
 </div>
 </div>
@@ -1248,7 +1192,7 @@ template&lt;&gt; </div>
 <p>Specialization of <span class="tt">write&lt;T&gt;()</span> to send a <span class="tt">std::string</span> as a UDP datagram. </p>
 <p>Sends the contents of a string as a datagram to the connected peer. This overload is intended for sending text-based or binary-safe string data.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md607"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md608"></a>
 Constraints</h3>
 <ul>
 <li>The socket <b>must be connected</b> via <span class="tt">connect()</span></li>
@@ -1256,7 +1200,7 @@ Constraints</h3>
 <li>Strings containing embedded nulls (&lsquo;&rsquo;\0'`) are fully preserved</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md609"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md610"></a>
 Behavior</h3>
 <ul>
 <li>Calls <span class="tt">send()</span> to transmit the entire string buffer in one datagram</li>
@@ -1264,14 +1208,14 @@ Behavior</h3>
 <li>No retries or buffering: failures throw immediately</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md611"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md612"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> sock(AF_INET);</div>
 <div class="line">sock.connect(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 9999);</div>
 <div class="line"> </div>
 <div class="line">std::string message = <span class="stringliteral">&quot;Hello, UDP!&quot;</span>;</div>
 <div class="line">sock.write(message); <span class="comment">// sends 11-byte datagram</span></div>
-<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a></div><div class="ttdoc">Cross-platform UDP socket class with Java-style interface.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:342</div></div>
+<div class="ttc" id="aclassjsocketpp_1_1DatagramSocket_html"><div class="ttname"><a href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a></div><div class="ttdoc">Cross-platform UDP socket class with Java-style interface.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:424</div></div>
 </div><!-- fragment --><hr  />
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1330,7 +1274,7 @@ template&lt;&gt; </div>
 <p>Specialization of <span class="tt">write&lt;T&gt;()</span> to send a <span class="tt">std::string_view</span> as a UDP datagram. </p>
 <p>Sends the contents of a <span class="tt">std::string_view</span> to the connected peer without copying or modifying the underlying data. This method is ideal for zero-copy transmission of constant or non-owning string data, such as protocol commands or log lines.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md614"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md615"></a>
 Constraints</h3>
 <ul>
 <li>The socket <b>must be connected</b> via <span class="tt">connect()</span></li>
@@ -1338,7 +1282,7 @@ Constraints</h3>
 <li>Embedded nulls (&lsquo;&rsquo;\0'`) are sent as-is</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md616"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md617"></a>
 Behavior</h3>
 <ul>
 <li>Calls <span class="tt">send()</span> with the raw buffer of the <span class="tt">string_view</span></li>
@@ -1347,7 +1291,7 @@ Behavior</h3>
 <li>If the view exceeds the MTU, fragmentation may occur or the datagram may be dropped</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md618"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md619"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1DatagramSocket.html">DatagramSocket</a> sock(AF_INET);</div>
 <div class="line">sock.connect(<span class="stringliteral">&quot;localhost&quot;</span>, 9000);</div>
@@ -1431,7 +1375,7 @@ Example</h3>
 <li>The internal <span class="tt">_isConnected</span> flag is cleared.</li>
 </ul>
 <p>This is useful for switching from connected-mode (e.g., unicast-only) to connectionless mode (e.g., dynamic peer-to-peer or server-mode behavior).</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md650"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md651"></a>
 Behavior</h3>
 <ul>
 <li>Internally calls <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span> with a null address (or <span class="tt">AF_UNSPEC</span>) to break the association.</li>
@@ -1441,7 +1385,7 @@ Behavior</h3>
 <dl class="section note"><dt>Note</dt><dd>This method is a no-op if the socket is already unconnected. </dd>
 <dd>
 After disconnection, calling <span class="tt"><a class="el" href="#ga87c837cd891ddd8b4daeacc61e1326df" title="Writes a trivially copyable object of type T to the connected remote peer.">write()</a></span> without a destination will throw.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md651"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md652"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 9999);</div>
 <div class="line">sock.connect();</div>
@@ -1490,7 +1434,7 @@ Example</h3>
 <li>Avoiding repeated DNS resolution</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md746"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md759"></a>
 🔁 Behavior Based on Mode</h3>
 <ul>
 <li><b>Connected <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a>:</b><ul>
@@ -1501,7 +1445,7 @@ Example</h3>
 <li><b>Unconnected <a class="el" href="classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java-like interface).">Socket</a>:</b><ul>
 <li>Reflects the peer involved in the most recent:<ul>
 <li><span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a></span></li>
-<li><span class="tt"><a class="el" href="#gaca78d1a91c373c1f7a14f7954f306a06" title="Receive one UDP datagram directly into a trivially copyable type.">recvFrom()</a></span></li>
+<li><span class="tt">recvFrom()</span></li>
 <li><span class="tt"><a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a></span></li>
 <li><span class="tt">write(DatagramPacket)</span></li>
 </ul>
@@ -1511,7 +1455,7 @@ Example</h3>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md748"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md761"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> remote = sock.getLastPeerSockAddr();</div>
 <div class="line"><span class="keywordflow">if</span> (remote) {</div>
@@ -1532,6 +1476,68 @@ Example</h3>
 <dd>
 The returned structure is a <b>copy</b>; modifying it has no effect on socket state.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer for the most recent datagram exchange.">getRemoteIp()</a>, <a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the port number of the remote peer for the most recent datagram exchange.">getRemotePort()</a>, <a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a>, <a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a>, <a class="el" href="#gac3b7c4a5fc5a21372c4a9cadb3e85efb" title="Indicates whether the datagram socket is connected to a specific remote peer.">isConnected()</a>, <a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga93a142cf918c58f939454b296baf0963" name="ga93a142cf918c58f939454b296baf0963"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga93a142cf918c58f939454b296baf0963">&#9670;&#160;</a></span>getLocalIp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string DatagramSocket::getLocalIp </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>convertIPv4Mapped</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves the local IP address this socket is bound to. </p>
+<p>This method returns the IP address that this socket is bound to on the local system. The address may have been set explicitly via <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> or automatically assigned by the operating system.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md655"></a>
+Behavior</h3>
+<ul>
+<li>For explicitly bound sockets, returns the address specified in <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span></li>
+<li>For auto-bound sockets, returns the OS-assigned interface address</li>
+<li>For unbound sockets or if <span class="tt">getsockname()</span> fails, throws <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span></li>
+<li>For IPv6 sockets, may return IPv4-mapped addresses (e.g., "::ffff:127.0.0.1")</li>
+</ul>
+<hr  />
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>If <span class="tt">true</span>, IPv4-mapped IPv6 addresses (e.g., <span class="tt">::ffff:192.0.2.1</span>) will be returned as plain IPv4 strings (<span class="tt">192.0.2.1</span>). If <span class="tt">false</span>, the raw mapped form is preserved.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string representation of the local IP address (e.g., "192.168.1.10" or "::1").</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The socket is not open</li>
+<li>The socket is not bound</li>
+<li>The system call <span class="tt">getsockname()</span> fails</li>
+<li>Address conversion fails</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaacb1d9e513c65bd800769d5194a4559f" title="Retrieves the local port number this datagram socket is bound to.">getLocalPort()</a> Get the local port number </dd>
+<dd>
+<a class="el" href="#ga9a7f8475868acca97f90dcd66df7f943" title="Retrieves the local socket address as a formatted string in the form &quot;IP:port&quot;.">getLocalSocketAddress()</a> Get the combined "IP:port" string </dd>
+<dd>
+<a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a> Explicitly <a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind</a> to an address </dd></dl>
 
 </div>
 </div>
@@ -1561,35 +1567,42 @@ The returned structure is a <b>copy</b>; modifying it has no effect on socket st
 <p>Retrieves the local port number this datagram socket is bound to. </p>
 <p>This method returns the local UDP port that the socket is currently bound to, either explicitly via <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> or implicitly assigned by the operating system.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md660"></a>
-🌍 Applicability</h3>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md658"></a>
+⚙️ Behavior</h3>
 <ul>
-<li>Valid after a successful <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> or <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span></li>
-<li>Works for both IPv4 and IPv6 UDP sockets</li>
-<li>Safe for sockets that were automatically bound to ephemeral ports (<span class="tt">port = 0</span>)</li>
+<li>Uses <span class="tt">getsockname()</span> to query the underlying bound port</li>
+<li>Returns the port in host byte order</li>
+<li>Works for both IPv4 and IPv6 sockets</li>
+<li>Safe for auto-assigned ephemeral ports (<span class="tt">port = 0</span> in bind)</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md662"></a>
-Example</h3>
-<div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(AF_INET);</div>
-<div class="line">sock.bind(<span class="stringliteral">&quot;0.0.0.0&quot;</span>, 0); <span class="comment">// Let OS pick an ephemeral port</span></div>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md660"></a>
+🧪 Example</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock;</div>
+<div class="line">sock.<a class="code hl_function" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">bind</a>(<span class="stringliteral">&quot;0.0.0.0&quot;</span>, 0);  <span class="comment">// Let OS pick an ephemeral port</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port = sock.getLocalPort();</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Dynamically bound to port: &quot;</span> &lt;&lt; port &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><a class="code hl_typedef" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port = sock.<a class="code hl_function" href="#gaacb1d9e513c65bd800769d5194a4559f">getLocalPort</a>();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Bound to port: &quot;</span> &lt;&lt; port &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="ttc" id="agroup__core_html_ga1a7be273748ae3d91bc5ebe6499788a7"><div class="ttname"><a href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">jsocketpp::Port</a></div><div class="ttdeci">std::uint16_t Port</div><div class="ttdoc">Type alias representing a TCP or UDP port number (1–65535).</div><div class="ttdef"><b>Definition</b> common.hpp:358</div></div>
+<div class="ttc" id="agroup__udp_html_gaacb1d9e513c65bd800769d5194a4559f"><div class="ttname"><a href="#gaacb1d9e513c65bd800769d5194a4559f">jsocketpp::DatagramSocket::getLocalPort</a></div><div class="ttdeci">Port getLocalPort() const</div><div class="ttdoc">Retrieves the local port number this datagram socket is bound to.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:763</div></div>
 </div><!-- fragment --><hr  />
-<dl class="section return"><dt>Returns</dt><dd>The local UDP port number (in host byte order).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The local UDP port number in host byte order.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is not open or the system call fails.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The socket is not open</li>
+<li>The socket is not bound</li>
+<li>The <span class="tt">getsockname()</span> call fails</li>
+</ul>
+</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__socketopts.html#ga93a142cf918c58f939454b296baf0963" title="Retrieves the local IP address this socket is bound to.">getLocalIp()</a> To retrieve the bound IP address </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga93a142cf918c58f939454b296baf0963" title="Retrieves the local IP address this socket is bound to.">getLocalIp()</a> Get the bound IP address </dd>
 <dd>
-<a class="el" href="#ga9a7f8475868acca97f90dcd66df7f943" title="Retrieves the local socket address as a formatted string in the form &quot;IP:port&quot;.">getLocalSocketAddress()</a> For a formatted "IP:port" string </dd>
+<a class="el" href="#ga9a7f8475868acca97f90dcd66df7f943" title="Retrieves the local socket address as a formatted string in the form &quot;IP:port&quot;.">getLocalSocketAddress()</a> Get the combined "IP:port" string </dd>
 <dd>
-<a href="https://man7.org/linux/man-pages/man2/getsockname.2.html">https://man7.org/linux/man-pages/man2/getsockname.2.html</a> </dd></dl>
+<a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a> Explicitly <a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind</a> to an address/port </dd></dl>
 
 </div>
 </div>
@@ -1617,46 +1630,51 @@ Example</h3>
 </div><div class="memdoc">
 
 <p>Retrieves the local socket address as a formatted string in the form <span class="tt">"IP:port"</span>. </p>
-<p>This method returns the socket's local IP address and port in a human-readable format, such as <span class="tt">"127.0.0.1:12345"</span> or <span class="tt">"::1:54321"</span>. It works for both explicitly bound sockets and sockets where the OS has auto-assigned an ephemeral port after the first <span class="tt">sendTo()</span> or <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span> call.</p>
+<p>Returns the socket's local IP address and port in a human-readable format, such as <span class="tt">"127.0.0.1:12345"</span> or <span class="tt">"[::1]:54321"</span>. This method works for both explicitly bound sockets and sockets where the OS has auto-assigned an ephemeral port.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md665"></a>
-Use Cases</h3>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md663"></a>
+⚙️ Behavior</h3>
 <ul>
-<li>Logging which interface and port the socket is bound to</li>
-<li>Debugging multicast or broadcast socket behavior</li>
-<li>Confirming OS-assigned ports in dynamic binding scenarios</li>
-<li>Introspection during runtime for monitoring tools or metrics</li>
+<li>Uses <span class="tt">getsockname()</span> to query the bound address</li>
+<li>Formats IPv6 addresses with square brackets: <span class="tt">"[2001:db8::1]:80"</span></li>
+<li>For unbound sockets, throws <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span></li>
+<li>Works with both IPv4 and IPv6 address families</li>
+<li>Safe to call after automatic port assignment</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md667"></a>
-IPv6 Handling</h3>
-<p>If the socket is bound to an IPv4-mapped IPv6 address (e.g., <span class="tt">::ffff:192.0.2.1</span>) and <span class="tt">@p convertIPv4Mapped</span> is true (default), the method simplifies it to standard IPv4 format.</p>
-<hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md669"></a>
-Example</h3>
-<div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(AF_INET6);</div>
-<div class="line">sock.bind(0); <span class="comment">// OS assigns an ephemeral port</span></div>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md665"></a>
+🧪 Example</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(AF_INET);</div>
+<div class="line">sock.bind(<span class="stringliteral">&quot;0.0.0.0&quot;</span>, 0);  <span class="comment">// OS assigns port</span></div>
 <div class="line"> </div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Local socket: &quot;</span> &lt;&lt; sock.getLocalSocketAddress() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><span class="comment">// Output: &quot;192.0.2.5:50437&quot;</span></div>
-</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Bound to: &quot;</span> &lt;&lt; sock.getLocalSocketAddress() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><span class="comment">// Output: &quot;0.0.0.0:50432&quot;</span></div>
+</div><!-- fragment --><hr  />
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to IPv4 (default: true). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">convertIPv4Mapped</td><td>Whether to convert IPv4-mapped IPv6 addresses to IPv4 format (e.g., "::ffff:127.0.0.1" → "127.0.0.1"). Default is true.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A string in the form <span class="tt">"IP:port"</span> representing the local address and port.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A string in the format <span class="tt">"IP:port"</span> or <span class="tt">"[IPv6]:port"</span>.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>if the socket is not bound or the local address cannot be retrieved.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If:<ul>
+<li>The socket is not open</li>
+<li>The socket is not bound</li>
+<li><span class="tt">getsockname()</span> fails</li>
+<li>Address conversion fails</li>
+</ul>
+</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__socketopts.html#ga93a142cf918c58f939454b296baf0963" title="Retrieves the local IP address this socket is bound to.">getLocalIp()</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga93a142cf918c58f939454b296baf0963" title="Retrieves the local IP address this socket is bound to.">getLocalIp()</a> Get just the IP portion </dd>
 <dd>
-<a class="el" href="#gaacb1d9e513c65bd800769d5194a4559f" title="Retrieves the local port number this datagram socket is bound to.">getLocalPort()</a> </dd>
+<a class="el" href="#gaacb1d9e513c65bd800769d5194a4559f" title="Retrieves the local port number this datagram socket is bound to.">getLocalPort()</a> Get just the port number </dd>
 <dd>
-<a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a> </dd></dl>
+<a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a> Explicitly <a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind</a> to an address/port </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>1.0 </dd></dl>
 
 </div>
 </div>
@@ -1686,11 +1704,11 @@ Example</h3>
 <p>Retrieves the Maximum Transmission Unit (MTU) of the local interface associated with the socket. </p>
 <p>This method attempts to query the MTU of the network interface to which the socket is currently bound. It supports both Windows and POSIX platforms using appropriate system APIs and returns the result as an optional integer.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md719"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md732"></a>
 🔍 What is the MTU?</h3>
 <p>The MTU is the largest size (in bytes) of a datagram that can be sent over a network interface without fragmentation. For example, Ethernet IPv4 commonly uses an MTU of 1500 bytes, while the payload limit for UDP is typically 1472 bytes after IP/UDP headers.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md721"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md734"></a>
 ⚙️ Platform Behavior</h3>
 <ul>
 <li><b>Windows:</b><ul>
@@ -1708,7 +1726,7 @@ Example</h3>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md723"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md736"></a>
 ✅ Use Cases</h3>
 <ul>
 <li>Enforce maximum UDP payload size to avoid fragmentation</li>
@@ -1765,24 +1783,24 @@ On some platforms, this requires the socket to be explicitly bound or connected.
 <p>Retrieves the IP address of the remote peer for the most recent datagram exchange. </p>
 <p>This method returns the remote IP address as a string (e.g., <span class="tt">"192.168.1.42"</span> or <span class="tt">"::1"</span>), depending on the current connection state and prior socket activity:</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md671"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md668"></a>
 🔁 Behavior Based on Connection Mode</h3>
 <ul>
 <li><b>Connected <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></b>: Uses <span class="tt">getpeername()</span> to obtain the IP address of the fixed remote peer, as set by an explicit call to <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span>.</li>
 <li><p class="startli"><b>Unconnected <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></b>: Returns the IP address of the most recent peer, which is updated after:</p><ul>
 <li>A successful <span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a></span> or <span class="tt">read&lt;T&gt;()</span></li>
-<li>A successful <span class="tt"><a class="el" href="#gaca78d1a91c373c1f7a14f7954f306a06" title="Receive one UDP datagram directly into a trivially copyable type.">recvFrom()</a></span> call</li>
+<li>A successful <span class="tt">recvFrom()</span> call</li>
 <li>A successful <span class="tt"><a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a></span> or <span class="tt">write(DatagramPacket)</span> call with destination</li>
 </ul>
 <p class="startli">If no such operation has occurred yet, this method throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</p>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md673"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md670"></a>
 IPv6 Handling</h3>
 <p>If the returned address is an IPv4-mapped IPv6 address (e.g., <span class="tt">::ffff:192.0.2.1</span>) and <span class="tt">@p convertIPv4Mapped</span> is <span class="tt">true</span> (default), it will be simplified to a standard IPv4 string (e.g., <span class="tt">192.0.2.1</span>).</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md675"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md672"></a>
 Example (Unconnected Mode)</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(AF_INET);</div>
 <div class="line">sock.bind(4567);</div>
@@ -1847,20 +1865,20 @@ Example (Unconnected Mode)</h3>
 <p>Retrieves the port number of the remote peer for the most recent datagram exchange. </p>
 <p>This method returns the remote port number in <b>host byte order</b>, based on the socket’s connection mode and prior communication history:</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md678"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md675"></a>
 🔁 Behavior Based on Mode</h3>
 <ul>
 <li><b>Connected <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></b>: Uses <span class="tt">getpeername()</span> to retrieve the remote peer’s port as established via <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span>.</li>
 <li><p class="startli"><b>Unconnected <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></b>: Returns the port of the most recent peer, which is updated after:</p><ul>
 <li>A successful <span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a></span> or <span class="tt">read&lt;T&gt;()</span></li>
-<li>A successful <span class="tt"><a class="el" href="#gaca78d1a91c373c1f7a14f7954f306a06" title="Receive one UDP datagram directly into a trivially copyable type.">recvFrom()</a></span> call</li>
+<li>A successful <span class="tt">recvFrom()</span> call</li>
 <li>A successful <span class="tt"><a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a></span> or <span class="tt">write(DatagramPacket)</span> call with destination</li>
 </ul>
 <p class="startli">If no such operation has occurred yet, this method throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</p>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md680"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md677"></a>
 Use Cases</h3>
 <ul>
 <li>Debugging or logging the origin of a datagram</li>
@@ -1869,7 +1887,7 @@ Use Cases</h3>
 <li>Constructing complete remote socket addresses (<span class="tt">IP:port</span>)</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md682"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md679"></a>
 Example (Unconnected Mode)</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(AF_INET);</div>
 <div class="line">sock.bind(9876);</div>
@@ -1930,24 +1948,24 @@ Example (Unconnected Mode)</h3>
 <li><b>Most recently communicated with</b> using <span class="tt">recvfrom()</span>, <span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a></span>, <span class="tt"><a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a></span>, or <span class="tt">write(DatagramPacket)</span> in unconnected mode.</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md685"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md682"></a>
 🔁 Behavior Based on Connection Mode</h3>
 <ul>
 <li><b>Connected <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></b>: Uses <span class="tt">getpeername()</span> to retrieve the connected remote address.</li>
 <li><p class="startli"><b>Unconnected <a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></b>: Returns the IP and port of the most recent sender or destination, as updated by:</p><ul>
 <li><span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a></span> or <span class="tt">read&lt;T&gt;()</span></li>
-<li><span class="tt"><a class="el" href="#gaca78d1a91c373c1f7a14f7954f306a06" title="Receive one UDP datagram directly into a trivially copyable type.">recvFrom()</a></span></li>
+<li><span class="tt">recvFrom()</span></li>
 <li><span class="tt"><a class="el" href="#gae61e0fd22b7a69d6b5f706141fff8934" title="Sends a trivially copyable object of type T as a UDP datagram to the specified destination.">writeTo()</a></span> or <span class="tt">write(DatagramPacket)</span></li>
 </ul>
 <p class="startli">If no such operation has occurred yet, the method throws a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span>.</p>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md687"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md684"></a>
 IPv6 Handling</h3>
 <p>If the returned IP is an IPv4-mapped IPv6 address (e.g., <span class="tt">::ffff:192.0.2.1</span>) and <span class="tt">@p convertIPv4Mapped</span> is <span class="tt">true</span> (default), the IP portion is simplified to IPv4 form.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md689"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md686"></a>
 Example (Unconnected Mode)</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(AF_INET);</div>
 <div class="line">sock.bind(12345);</div>
@@ -2012,10 +2030,10 @@ Example (Unconnected Mode)</h3>
 <p>Checks whether data is available to be read from the socket within a timeout window. </p>
 <p>This method performs a non-blocking poll using <span class="tt">select()</span> to determine whether the socket has at least one datagram available for reading.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md716"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md729"></a>
 Use Cases</h3>
 <ul>
-<li>Avoid blocking in <span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a></span> or <span class="tt"><a class="el" href="#gaca78d1a91c373c1f7a14f7954f306a06" title="Receive one UDP datagram directly into a trivially copyable type.">recvFrom()</a></span> if no data is available</li>
+<li>Avoid blocking in <span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a></span> or <span class="tt">recvFrom()</span> if no data is available</li>
 <li>Implement custom polling, timers, or event loops</li>
 <li>Integrate into latency-sensitive or real-time applications</li>
 </ul>
@@ -2034,7 +2052,7 @@ Use Cases</h3>
   </dd>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>This method does not consume or modify the receive buffer. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga7d75f33d62df3b393096e97600fee25f" title="Peeks at the next available UDP datagram without removing it from the socket&#39;s receive queue.">peek()</a>, <a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a>, <a class="el" href="#gaca78d1a91c373c1f7a14f7954f306a06" title="Receive one UDP datagram directly into a trivially copyable type.">recvFrom()</a>, <a class="el" href="#ga0deb65a2e7c215e0e46ace579c702f6e" title="Waits for the socket to become ready for reading or writing.">waitReady()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga7d75f33d62df3b393096e97600fee25f" title="Peeks at the next available UDP datagram without removing it from the socket&#39;s receive queue.">peek()</a>, <a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a>, recvFrom(), <a class="el" href="#ga0deb65a2e7c215e0e46ace579c702f6e" title="Waits for the socket to become ready for reading or writing.">waitReady()</a> </dd></dl>
 
 </div>
 </div>
@@ -2074,15 +2092,15 @@ Use Cases</h3>
 If the socket was constructed with a port but <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> is never called, it remains unbound. </dd>
 <dd>
 Binding must occur before calling <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span> or sending datagrams from an unconnected socket.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md639"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md640"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock;</div>
 <div class="line">sock.<a class="code hl_function" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">bind</a>(12345);</div>
 <div class="line"><span class="keywordflow">if</span> (sock.<a class="code hl_function" href="#gadd6a72af69e4e8e1e8701c60a7e728f1">isBound</a>()) {</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Listening on &quot;</span> &lt;&lt; sock.<a class="code hl_function" href="#ga9a7f8475868acca97f90dcd66df7f943">getLocalSocketAddress</a>() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__udp_html_ga9a7f8475868acca97f90dcd66df7f943"><div class="ttname"><a href="#ga9a7f8475868acca97f90dcd66df7f943">jsocketpp::DatagramSocket::getLocalSocketAddress</a></div><div class="ttdeci">std::string getLocalSocketAddress(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Retrieves the local socket address as a formatted string in the form &quot;IP:port&quot;.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:730</div></div>
-<div class="ttc" id="agroup__udp_html_gadd6a72af69e4e8e1e8701c60a7e728f1"><div class="ttname"><a href="#gadd6a72af69e4e8e1e8701c60a7e728f1">jsocketpp::DatagramSocket::isBound</a></div><div class="ttdeci">bool isBound() const noexcept</div><div class="ttdoc">Indicates whether the datagram socket has been explicitly bound to a local address or port.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:753</div></div>
+<div class="ttc" id="agroup__udp_html_ga9a7f8475868acca97f90dcd66df7f943"><div class="ttname"><a href="#ga9a7f8475868acca97f90dcd66df7f943">jsocketpp::DatagramSocket::getLocalSocketAddress</a></div><div class="ttdeci">std::string getLocalSocketAddress(bool convertIPv4Mapped=true) const</div><div class="ttdoc">Retrieves the local socket address as a formatted string in the form &quot;IP:port&quot;.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:780</div></div>
+<div class="ttc" id="agroup__udp_html_gadd6a72af69e4e8e1e8701c60a7e728f1"><div class="ttname"><a href="#gadd6a72af69e4e8e1e8701c60a7e728f1">jsocketpp::DatagramSocket::isBound</a></div><div class="ttdeci">bool isBound() const noexcept</div><div class="ttdoc">Indicates whether the datagram socket has been explicitly bound to a local address or port.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:835</div></div>
 </div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if the socket has been bound to a local address/port, <span class="tt">false</span> otherwise.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a>, <a class="el" href="#gac3b7c4a5fc5a21372c4a9cadb3e85efb" title="Indicates whether the datagram socket is connected to a specific remote peer.">isConnected()</a>, <a class="el" href="#ga9a7f8475868acca97f90dcd66df7f943" title="Retrieves the local socket address as a formatted string in the form &quot;IP:port&quot;.">getLocalSocketAddress()</a> </dd></dl>
 
@@ -2123,7 +2141,7 @@ Example</h3>
 It does not verify whether the remote host is reachable or alive. </dd>
 <dd>
 Unconnected sockets may still send and receive using <span class="tt">write(host, port)</span> or <span class="tt">write(DatagramPacket)</span>.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md652"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md653"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 9999);</div>
 <div class="line">sock.connect();</div>
@@ -2165,14 +2183,14 @@ Example</h3>
 <li>It does <b>not</b> verify whether the socket is connected (see <span class="tt"><a class="el" href="#gac3b7c4a5fc5a21372c4a9cadb3e85efb" title="Indicates whether the datagram socket is connected to a specific remote peer.">isConnected()</a></span>)</li>
 <li>It does <b>not</b> query the operating system or socket state</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md740"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md753"></a>
 Use Cases</h3>
 <ul>
 <li>Guarding against use-after-close</li>
 <li>Early validation in test or utility code</li>
 <li>Precondition checks before <span class="tt"><a class="el" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49" title="Binds the datagram socket to all available interfaces on an ephemeral port.">bind()</a></span> or <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md741"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md754"></a>
 Implementation Details</h3>
 <ul>
 <li>Returns <span class="tt">true</span> if <span class="tt"><a class="el" href="group__socketopts.html#gaced4c6dc799564ece9ce4e6766b1d794" title="Retrieves the native socket handle (file descriptor or OS-level handle).">getSocketFd()</a> != INVALID_SOCKET</span></li>
@@ -2180,7 +2198,7 @@ Implementation Details</h3>
 </ul>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if the socket is open and usable; <span class="tt">false</span> if it was closed, moved-from, or failed to initialize.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>A valid socket may be unbound or unconnected. Use <span class="tt"><a class="el" href="#gadd6a72af69e4e8e1e8701c60a7e728f1" title="Indicates whether the datagram socket has been explicitly bound to a local address or port.">isBound()</a></span> and <span class="tt"><a class="el" href="#gac3b7c4a5fc5a21372c4a9cadb3e85efb" title="Indicates whether the datagram socket is connected to a specific remote peer.">isConnected()</a></span> to query those states.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md742"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md755"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(<span class="stringliteral">&quot;example.com&quot;</span>, 9999);</div>
 <div class="line">assert(sock.isValid());</div>
@@ -2294,7 +2312,7 @@ Example</h3>
   </dd>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>This constructor does not automatically join a multicast group. Use <a class="el" href="classjsocketpp_1_1MulticastSocket.html#ad0efe916fe4a309dca8889112ddbdf3f">joinGroup()</a> after construction to receive multicast traffic.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md777"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md790"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacejsocketpp.html">jsocketpp</a>;</div>
 <div class="line"> </div>
@@ -2396,7 +2414,7 @@ Example</h3>
 <li>The source object is left in a valid but unspecified state (<span class="tt">INVALID_SOCKET</span>)</li>
 <li>Existing resources in the destination socket are released via <span class="tt"><a class="el" href="#ga9d0a9582b3a2a72bf62f182dbc33c352" title="Closes the datagram socket and releases its underlying system resources.">close()</a></span></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md630"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md631"></a>
 Ownership Transferred</h3>
 <ul>
 <li>Native socket handle (<span class="tt">_sockFd</span>)</li>
@@ -2404,21 +2422,21 @@ Ownership Transferred</h3>
 <li>Internal read buffer</li>
 <li><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a> number (for tracking purposes)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md631"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md632"></a>
 Notes</h3>
 <dl class="section note"><dt>Note</dt><dd>This method is <span class="tt">noexcept</span> and safe to use in container scenarios (e.g., <span class="tt">std::vector&lt;<a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a>&gt;</span>). </dd>
 <dd>
 After the move, <span class="tt">rhs</span> will be left in an uninitialized state and should not be used except for destruction or reassignment. </dd>
 <dd>
 If <span class="tt"><a class="el" href="#ga9d0a9582b3a2a72bf62f182dbc33c352" title="Closes the datagram socket and releases its underlying system resources.">close()</a></span> throws during cleanup, the exception is suppressed to preserve noexcept guarantees.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md632"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md633"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> a(12345);</div>
 <div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> b;</div>
 <div class="line">b = std::move(a); <span class="comment">// b now owns the socket previously held by a</span></div>
 <div class="line">assert(!a.isValid());</div>
 <div class="line">assert(b.<a class="code hl_function" href="#gab33da807656e2ab920707d60605844f5">isValid</a>());</div>
-<div class="ttc" id="agroup__udp_html_gab33da807656e2ab920707d60605844f5"><div class="ttname"><a href="#gab33da807656e2ab920707d60605844f5">jsocketpp::DatagramSocket::isValid</a></div><div class="ttdeci">bool isValid() const noexcept</div><div class="ttdoc">Checks whether the datagram socket is valid and ready for use.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:2439</div></div>
+<div class="ttc" id="agroup__udp_html_gab33da807656e2ab920707d60605844f5"><div class="ttname"><a href="#gab33da807656e2ab920707d60605844f5">jsocketpp::DatagramSocket::isValid</a></div><div class="ttdeci">bool isValid() const noexcept</div><div class="ttdoc">Checks whether the datagram socket is valid and ready for use.</div><div class="ttdef"><b>Definition</b> DatagramSocket.hpp:2802</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">rhs</td><td>The source <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span> to move from. </td></tr>
@@ -2462,7 +2480,7 @@ Example</h3>
 <p>Peeks at the next available UDP datagram without removing it from the socket's receive queue. </p>
 <p>This method behaves like <span class="tt">read(<a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a>&amp;)</span>, but uses <span class="tt">MSG_PEEK</span> to inspect the next datagram without consuming it. The datagram remains available for subsequent <span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a></span> calls.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md711"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md724"></a>
 Use Cases</h3>
 <ul>
 <li>Inspect headers without committing to a full receive</li>
@@ -2470,7 +2488,7 @@ Use Cases</h3>
 <li>Non-destructive receive in protocols that support retries or probing</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md713"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md726"></a>
 Behavior</h3>
 <ul>
 <li>Calls <span class="tt">recvfrom()</span> with the <span class="tt">MSG_PEEK</span> flag</li>
@@ -2501,7 +2519,7 @@ Behavior</h3>
 <dl class="section note"><dt>Note</dt><dd>This method does not remove the datagram from the socket buffer. </dd>
 <dd>
 Peeking does not update the internal <span class="tt">_remoteAddr</span> state, so <span class="tt"><a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer for the most recent datagram exchange.">getRemoteIp()</a></span> is unaffected.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a>, <a class="el" href="#gaca78d1a91c373c1f7a14f7954f306a06" title="Receive one UDP datagram directly into a trivially copyable type.">recvFrom()</a>, <a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer for the most recent datagram exchange.">getRemoteIp()</a>, <a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the port number of the remote peer for the most recent datagram exchange.">getRemotePort()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">read()</a>, recvFrom(), <a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer for the most recent datagram exchange.">getRemoteIp()</a>, <a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the port number of the remote peer for the most recent datagram exchange.">getRemotePort()</a> </dd></dl>
 
 </div>
 </div>
@@ -2547,8 +2565,8 @@ template&lt;typename T, std::enable_if_t&lt; <a class="el" href="namespacejsocke
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">opts</td><td>[in] Datagram read options controlling preflight sizing, timeouts, source address capture, and low-level receive flags. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">minCapacity</td><td>[in] (Dynamic containers only) Minimum initial capacity to reserve before reading. Defaults to <span class="tt">DefaultDatagramReceiveSize</span>.<ul>
+    <tr><td class="paramdir">[in]</td><td class="paramname">opts</td><td>Datagram read options controlling preflight sizing, timeouts, source address capture, and low-level receive flags. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">minCapacity</td><td>(Dynamic containers only) Minimum initial capacity to reserve before reading. Defaults to <span class="tt">DefaultDatagramReceiveSize</span>.<ul>
 <li>If zero, defaults to <span class="tt">1</span> to allow reception of zero-length datagrams.</li>
 <li>The capacity is clamped to <span class="tt">MaxDatagramPayloadSafe</span> and may be increased by a preflight probe when <span class="tt">opts.mode</span> requests it.</li>
 </ul>
@@ -2574,7 +2592,7 @@ template&lt;typename T, std::enable_if_t&lt; <a class="el" href="namespacejsocke
 <li>For fixed-size containers, the compile-time size is respected; no resizing occurs.</li>
 <li>Truncation detection is available through <a class="el" href="#gada22ab72b367e5123600bb3276422940">readInto</a> when you need telemetry such as full datagram size and sender address.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md708"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md705"></a>
 Example — dynamic container (<span class="tt">std::string</span>)</h3>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classjsocketpp_1_1DatagramSocket.html">jsocketpp::DatagramSocket</a> sock(12345);</div>
 <div class="line">sock.bind();</div>
@@ -2584,7 +2602,7 @@ Example — dynamic container (<span class="tt">std::string</span>)</h3>
 <div class="line">);</div>
 <div class="line"> </div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Received &quot;</span> &lt;&lt; msg.size() &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md709"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md706"></a>
 Example — fixed-size container (<span class="tt">std::array&lt;char, 512&gt;</span>)</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> buf = sock.read&lt;std::array&lt;char, 512&gt;&gt;(</div>
 <div class="line">    { .mode = <a class="code hl_enumvalue" href="#gga2124eae8cec6709a67be265f14da3bddac9a017cf1d4a5f3aff960a3f7e8bffd5">jsocketpp::DatagramReceiveMode::PreflightMax</a> }</div>
@@ -2685,7 +2703,7 @@ Example — fixed-size container (<span class="tt">std::array&lt;char, 512&gt;</
 <li><b>Unconnected:</b> Data is read from any sender; the sender's address and port are stored internally and can be retrieved via <span class="tt"><a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer for the most recent datagram exchange.">getRemoteIp()</a></span> / <span class="tt"><a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the port number of the remote peer for the most recent datagram exchange.">getRemotePort()</a></span>.</li>
 </ul>
 </li>
-<li>Unlike <span class="tt"><a class="el" href="#ga8554412d81524f04b70bebfc26f22db0" title="Read a UDP datagram of exactly n bytes into a std::string.">readExact()</a></span>, this method does not throw if fewer than <code class="param">n</code> bytes are received.</li>
+<li>Unlike <span class="tt"><a class="el" href="#gab34fd67ebc17563f286dde70ba456cf9" title="Receive exactly exactLen bytes (per policy) into a caller-provided buffer.">readExact()</a></span>, this method does not throw if fewer than <code class="param">n</code> bytes are received.</li>
 <li>If <code class="param">n</code> is zero, an empty string is returned immediately.</li>
 </ul>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -2710,7 +2728,7 @@ Example — fixed-size container (<span class="tt">std::array&lt;char, 512&gt;</
 <div class="line">socket.<a class="code hl_function" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">bind</a>(12345);</div>
 <div class="line"><span class="keyword">auto</span> data = socket.<a class="code hl_function" href="#ga275fcbd57095c32ff7009624fcb48679">readAtMost</a>(512);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Received: &quot;</span> &lt;&lt; data &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__udp_html_ga275fcbd57095c32ff7009624fcb48679"><div class="ttname"><a href="#ga275fcbd57095c32ff7009624fcb48679">jsocketpp::DatagramSocket::readAtMost</a></div><div class="ttdeci">std::string readAtMost(std::size_t n) const</div><div class="ttdoc">Receive up to the specified number of bytes from the socket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:678</div></div>
+<div class="ttc" id="agroup__udp_html_ga275fcbd57095c32ff7009624fcb48679"><div class="ttname"><a href="#ga275fcbd57095c32ff7009624fcb48679">jsocketpp::DatagramSocket::readAtMost</a></div><div class="ttdeci">std::string readAtMost(std::size_t n) const</div><div class="ttdoc">Receive up to the specified number of bytes from the socket.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:728</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -2816,64 +2834,349 @@ Example — fixed-size container (<span class="tt">std::array&lt;char, 512&gt;</
 <div class="line">socket.<a class="code hl_function" href="#ga550b67d7ad08c5cb068bb2b66d2c2c49">bind</a>(12345);</div>
 <div class="line"><span class="keyword">auto</span> data = socket.<a class="code hl_function" href="#ga85c18071cceb1c0c679b7a444cfa9f65">readAvailable</a>();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Received &quot;</span> &lt;&lt; data.size() &lt;&lt; <span class="stringliteral">&quot; bytes&quot;</span> &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__udp_html_ga85c18071cceb1c0c679b7a444cfa9f65"><div class="ttname"><a href="#ga85c18071cceb1c0c679b7a444cfa9f65">jsocketpp::DatagramSocket::readAvailable</a></div><div class="ttdeci">std::string readAvailable() const</div><div class="ttdoc">Receive the next available datagram in its entirety.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:689</div></div>
+<div class="ttc" id="agroup__udp_html_ga85c18071cceb1c0c679b7a444cfa9f65"><div class="ttname"><a href="#ga85c18071cceb1c0c679b7a444cfa9f65">jsocketpp::DatagramSocket::readAvailable</a></div><div class="ttdeci">std::string readAvailable() const</div><div class="ttdoc">Receive the next available datagram in its entirety.</div><div class="ttdef"><b>Definition</b> DatagramSocket.cpp:739</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
-<a id="ga8554412d81524f04b70bebfc26f22db0" name="ga8554412d81524f04b70bebfc26f22db0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8554412d81524f04b70bebfc26f22db0">&#9670;&#160;</a></span>readExact()</h2>
+<a id="gaf961e06614e7508ff868badc1a63f582" name="gaf961e06614e7508ff868badc1a63f582"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf961e06614e7508ff868badc1a63f582">&#9670;&#160;</a></span>readExact() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string DatagramSocket::readExact </td>
+          <td class="memname"><a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a> jsocketpp::DatagramSocket::readExact </td>
           <td>(</td>
-          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+          <td class="paramtype">T &amp;</td>          <td class="paramname"><span class="paramname"><em>buffer</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f">DatagramReceiveMode::NoPreflight</a></span>&#160;) const</td>
+          <td class="paramtype">const std::size_t</td>          <td class="paramname"><span class="paramname"><em>exactLen</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structjsocketpp_1_1ReadExactOptions.html">ReadExactOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>opts</em></span>&#160;) const</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Read a UDP datagram of exactly <span class="tt">n</span> bytes into a std::string. </p>
-<p>Performs exactly <b>one</b> receive and enforces that the datagram payload length matches <span class="tt">n</span> exactly. If the datagram is smaller or larger, a <span class="tt"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></span> is thrown. This method is a strict fixed-size variant of <span class="tt">read(<a class="el" href="classjsocketpp_1_1DatagramPacket.html" title="Represents a UDP datagram packet, encapsulating both payload and addressing information.">DatagramPacket</a>&amp;, bool, <a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd" title="Receive-time sizing policy for UDP datagrams.">DatagramReceiveMode</a>)</span>.</p>
-<p><b>Semantics</b></p><ul>
-<li>Consumes exactly one datagram (no looping).</li>
-<li>Zero-length datagrams are only valid if <span class="tt">n == 0</span>.</li>
-<li>Works in both connected and unconnected modes; for unconnected sockets, the sender is remembered so <span class="tt"><a class="el" href="#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer for the most recent datagram exchange.">getRemoteIp()</a></span> / <span class="tt"><a class="el" href="#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the port number of the remote peer for the most recent datagram exchange.">getRemotePort()</a></span> reflect the most recent peer.</li>
-<li>No endianness conversion or decoding is performed.</li>
+<p>Receive exactly <code class="param">exactLen</code> bytes (per policy) into a container <span class="tt">T</span>. </p>
+<p>This method provides granular control over datagram size matching and reception into contiguous byte containers. It implements the exact-size policy specified in <a class="el" href="structjsocketpp_1_1ReadExactOptions.html">ReadExactOptions</a> for matching the datagram size against the caller's requirements, including zero-padding for undersized datagrams and error handling for oversized ones.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md716"></a>
+📦 Container Requirements</h3>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>A contiguous byte container:<ul>
+<li><b>Dynamic containers</b> (must satisfy <span class="tt"><a class="el" href="namespacejsocketpp_1_1detail.html#aa46a9243f021ef54b04645f354feea30" title="Type trait for dynamic buffer types.">detail::is_dynamic_buffer_v</a>&lt;T&gt;</span>):<ul>
+<li><span class="tt">std::string</span></li>
+<li><span class="tt">std::vector&lt;char&gt;</span></li>
+<li><span class="tt">std::vector&lt;std::byte&gt;</span></li>
 </ul>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">n</td><td>Exact number of bytes to receive. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>Receive-time sizing policy (default = <span class="tt"><a class="el" href="#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f" title="Do not probe the datagram size; call recvfrom() directly.">DatagramReceiveMode::NoPreflight</a></span>).</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Payload as a <span class="tt">std::string</span> containing exactly <span class="tt">n</span> bytes.</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td><ul>
-<li>If the socket is not open.</li>
-<li>If the datagram is not exactly <span class="tt">n</span> bytes in length.</li>
-<li>On receive failure; thrown via <span class="tt"><a class="el" href="namespacejsocketpp_1_1internal.html#a8a49e143a6246874f572bde7254e09b6" title="Throw a SocketException for the last socket error, with optional source-location context.">internal::throwLastSockError()</a></span>.</li>
+</li>
+<li><b>Fixed-size containers</b> (must satisfy <span class="tt"><a class="el" href="namespacejsocketpp_1_1detail.html#a18306b136e94e5aaf18c6dd6d5f06f33" title="Type trait for fixed-size buffer types.">detail::is_fixed_buffer_v</a>&lt;T&gt;</span>):<ul>
+<li><span class="tt">std::array&lt;char, N&gt;</span></li>
+<li><span class="tt">std::array&lt;std::byte, N&gt;</span></li>
+</ul>
+</li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md718"></a>
+⚙️ Core Behaviors</h3>
+<ul>
+<li><b>Dynamic containers:</b><ul>
+<li>If <span class="tt">opts.autoResizeDynamic</span>, resizes to exactly <code class="param">exactLen</code> before receive</li>
+<li>Throws if capacity is insufficient and auto-resize is disabled</li>
+<li>Final size matches actual bytes received</li>
+</ul>
+</li>
+<li><b>Fixed containers:</b><ul>
+<li>Must have <span class="tt">T::size() &gt;= exactLen</span></li>
+<li>Never resizes</li>
+<li>Zero-fills unused space if datagram is smaller and <span class="tt">opts.padIfSmaller == true</span></li>
+</ul>
+</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md720"></a>
+🔍 Size Policy Effects</h3>
+<ul>
+<li><b>Exact match</b> (<span class="tt">opts.requireExact == true</span>):<ul>
+<li>Throws if datagram size ≠ exactLen</li>
+</ul>
+</li>
+<li><b>Undersized handling</b>:<ul>
+<li>If padIfSmaller: fills remaining space with zeros</li>
+<li>If !padIfSmaller: returns actual size</li>
+</ul>
+</li>
+<li><b>Oversized handling</b>:<ul>
+<li>If errorOnTruncate: throws <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></li>
+<li>If !errorOnTruncate: silently truncates to exactLen</li>
+</ul>
+</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md722"></a>
+🧪 Examples</h3>
+<div class="fragment"><div class="line"><span class="comment">// Dynamic container (std::string)</span></div>
+<div class="line">std::string msg;</div>
+<div class="line"><span class="keyword">auto</span> result = sock.readExact(msg, 256, {</div>
+<div class="line">    .requireExact = <span class="keyword">true</span>,      <span class="comment">// must be exactly 256 bytes</span></div>
+<div class="line">    .padIfSmaller = <span class="keyword">false</span>,     <span class="comment">// no padding if smaller</span></div>
+<div class="line">    .errorOnTruncate = <span class="keyword">true</span>    <span class="comment">// throw if larger</span></div>
+<div class="line">});</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Fixed container (std::array)</span></div>
+<div class="line">std::array&lt;char, 1024&gt; buf;</div>
+<div class="line"><span class="keyword">auto</span> result = sock.readExact(buf, 512, {</div>
+<div class="line">    .requireExact = <span class="keyword">false</span>,     <span class="comment">// allow size mismatch</span></div>
+<div class="line">    .padIfSmaller = <span class="keyword">true</span>,      <span class="comment">// zero-pad if smaller</span></div>
+<div class="line">    .errorOnTruncate = <span class="keyword">false</span>   <span class="comment">// truncate if larger</span></div>
+<div class="line">});</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">buffer</td><td>Destination container. For dynamic types, capacity must be sufficient or <span class="tt">opts.autoResizeDynamic</span> must be true. For fixed types, <span class="tt">size()</span> must be &gt;= <code class="param">exactLen</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">exactLen</td><td>Required byte count for this datagram. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">opts</td><td>Exact-match policy and base datagram options controlling size matching, padding, truncation, and container resizing behavior.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a> with telemetry:<ul>
+<li>bytes: actual bytes received</li>
+<li>datagramSize: probed size if available (via preflight)</li>
+<li>truncated: whether payload was cut off</li>
+<li>src/srcLen: raw sender info when captured</li>
+</ul>
+</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a></td><td>On timeout / would-block. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>On invalid socket, invalid arguments, insufficient capacity (when dynamic auto-resize is disabled), or size policy violation.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gab34fd67ebc17563f286dde70ba456cf9" title="Receive exactly exactLen bytes (per policy) into a caller-provided buffer.">readExact()</a> Raw buffer variant </dd>
+<dd>
+<a class="el" href="structjsocketpp_1_1DatagramReadOptions.html" title="Options controlling a single UDP receive operation.">DatagramReadOptions</a> Base receive options </dd>
+<dd>
+<a class="el" href="structjsocketpp_1_1ReadExactOptions.html" title="Policy for enforcing an exact-byte receive on a single UDP datagram.">ReadExactOptions</a> Size matching policy </dd>
+<dd>
+<a class="el" href="namespacejsocketpp_1_1detail.html#aa46a9243f021ef54b04645f354feea30" title="Type trait for dynamic buffer types.">detail::is_dynamic_buffer_v</a> </dd>
+<dd>
+<a class="el" href="namespacejsocketpp_1_1detail.html#a18306b136e94e5aaf18c6dd6d5f06f33" title="Type trait for fixed-size buffer types.">detail::is_fixed_buffer_v</a> </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>1.0 </dd></dl>
+
+</div>
+</div>
+<a id="gab34fd67ebc17563f286dde70ba456cf9" name="gab34fd67ebc17563f286dde70ba456cf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab34fd67ebc17563f286dde70ba456cf9">&#9670;&#160;</a></span>readExact() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a> DatagramSocket::readExact </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>buffer</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>exactLen</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structjsocketpp_1_1ReadExactOptions.html">ReadExactOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>opts</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Receive exactly <code class="param">exactLen</code> bytes (per policy) into a caller-provided buffer. </p>
+<p>This method provides fine-grained control over datagram size matching and reception behavior. It implements the exact-size policy specified in <a class="el" href="structjsocketpp_1_1ReadExactOptions.html">ReadExactOptions</a> for matching datagram size against the caller's requirements, including zero-padding for undersized datagrams and error handling for oversized ones.</p>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md710"></a>
+📦 Core Behaviors</h3>
+<ul>
+<li>Enforces datagram size requirements based on <code class="param">opts.requireExact:</code> <ul>
+<li>When true, the datagram <b>must</b> be exactly <code class="param">exactLen</code> bytes</li>
+<li>When false, size handling is controlled by <code class="param">opts.padIfSmaller</code> and <code class="param">opts.errorOnTruncate</code> </li>
+</ul>
+</li>
+<li>Optionally zero-pads undersized datagrams (<code class="param">opts.padIfSmaller</code>)</li>
+<li>Controls error vs truncation for oversized datagrams (<code class="param">opts.errorOnTruncate</code>)</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md712"></a>
+🔍 Size Policy Effects</h3>
+<ul>
+<li><b>Exact match (opts.requireExact = true)</b><ul>
+<li>Throws if datagram size ≠ exactLen</li>
+</ul>
+</li>
+<li><b>Undersized datagram handling</b><ul>
+<li>If padIfSmaller: fills remaining space with zeros</li>
+<li>If !padIfSmaller: returns actual size</li>
+</ul>
+</li>
+<li><b>Oversized datagram handling</b><ul>
+<li>If errorOnTruncate: throws <a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></li>
+<li>If !errorOnTruncate: silently truncates to exactLen</li>
+</ul>
+</li>
+</ul>
+<hr  />
+<h3 class="doxsection"><a class="anchor" id="autotoc_md714"></a>
+🧪 Example</h3>
+<div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> sock(9999);</div>
+<div class="line">sock.bind();</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">char</span> buf[256];</div>
+<div class="line"><span class="keyword">auto</span> result = sock.readExact(buf, 256, {</div>
+<div class="line">    .requireExact = <span class="keyword">true</span>,      <span class="comment">// must be exactly 256 bytes</span></div>
+<div class="line">    .padIfSmaller = <span class="keyword">false</span>,     <span class="comment">// no padding if smaller</span></div>
+<div class="line">    .errorOnTruncate = <span class="keyword">true</span>    <span class="comment">// throw if larger</span></div>
+<div class="line">});</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>Destination memory (must have at least <code class="param">exactLen</code> capacity). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">exactLen</td><td>Required byte count to satisfy for this datagram. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">opts</td><td>Exact-match policy and base datagram options.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a> with telemetry (bytes received, probed size, truncation, sender).</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a></td><td>On timeout / would-block. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>On invalid socket, invalid arguments, or size policy violation (when <span class="tt">requireExact == true</span> and the datagram size differs).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This method will receive exactly one datagram, regardless of size policy. </dd>
+<dd>
+Buffer padding (if enabled) uses secure zero-initialization.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gab34fd67ebc17563f286dde70ba456cf9" title="Receive exactly exactLen bytes (per policy) into a caller-provided buffer.">readExact&lt;T&gt;()</a> Container-based variant </dd>
+<dd>
+<a class="el" href="structjsocketpp_1_1DatagramReadOptions.html" title="Options controlling a single UDP receive operation.">DatagramReadOptions</a> Base receive options </dd>
+<dd>
+<a class="el" href="structjsocketpp_1_1ReadExactOptions.html" title="Policy for enforcing an exact-byte receive on a single UDP datagram.">ReadExactOptions</a> Size matching policy </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>1.0 </dd></dl>
+
+</div>
+</div>
+<a id="ga7fbd62107244e308dc0436f11fae7dad" name="ga7fbd62107244e308dc0436f11fae7dad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7fbd62107244e308dc0436f11fae7dad">&#9670;&#160;</a></span>readFrom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a> jsocketpp::DatagramSocket::readFrom </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;</td>          <td class="paramname"><span class="paramname"><em>buffer</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>senderAddr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *</td>          <td class="paramname"><span class="paramname"><em>senderPort</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structjsocketpp_1_1DatagramReadOptions.html">DatagramReadOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>opts</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Receive a single UDP datagram into a container and capture the sender's address/port. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The container type to receive into.<ul>
+<li><b>Dynamic containers</b>: e.g., <span class="tt">std::string</span>, <span class="tt">std::vector&lt;char&gt;</span>, <span class="tt">std::vector&lt;std::byte&gt;</span> (must satisfy <span class="tt"><a class="el" href="namespacejsocketpp_1_1detail.html#aa46a9243f021ef54b04645f354feea30" title="Type trait for dynamic buffer types.">detail::is_dynamic_buffer_v</a>&lt;T&gt;</span>).</li>
+<li><b>Fixed-size containers</b>: e.g., <span class="tt">std::array&lt;char, N&gt;</span>, <span class="tt">std::array&lt;std::byte, N&gt;</span> (must satisfy <span class="tt"><a class="el" href="namespacejsocketpp_1_1detail.html#a18306b136e94e5aaf18c6dd6d5f06f33" title="Type trait for fixed-size buffer types.">detail::is_fixed_buffer_v</a>&lt;T&gt;</span>).</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>Destination container for the received datagram. For dynamic containers, it is resized to exactly the number of bytes received. For fixed-size containers, up to <span class="tt">T::size()</span> bytes are written and any remaining bytes are left value-initialized. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">senderAddr</td><td>Optional pointer to a <span class="tt">std::string</span> to receive the sender's numeric IP address. Only set if provided and the socket is unconnected. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">senderPort</td><td>Optional pointer to a <span class="tt"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7" title="Type alias representing a TCP or UDP port number (1–65535).">Port</a></span> to receive the sender's port number. Only set if provided and the socket is unconnected. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">opts</td><td>Datagram read options controlling preflight sizing, timeouts, low-level receive flags, and whether to update the socket's last remote. Defaults to safe, no-preflight behavior with last-remote updates enabled.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structjsocketpp_1_1DatagramReadResult.html">DatagramReadResult</a> containing:<ul>
+<li><span class="tt">bytes</span>: actual bytes received</li>
+<li><span class="tt">datagramSize</span>: probed datagram size if available</li>
+<li><span class="tt">truncated</span>: whether the payload was cut off</li>
+<li><span class="tt">src</span> / <span class="tt">srcLen</span>: raw sender address info</li>
+</ul>
+</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td>If the socket is not open, arguments are invalid, or a non-timeout error occurs. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out.">SocketTimeoutException</a></td><td>If the receive times out or, in non-blocking mode, no data is available.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This is a convenience overload of readInto(void*,size_t,const DatagramReadOptions&amp;) that also captures the sender's numeric address and port without requiring a <a class="el" href="classjsocketpp_1_1DatagramPacket.html">DatagramPacket</a>.</p>
+<ul>
+<li>Delegates all socket I/O to readInto(void*,size_t,const DatagramReadOptions&amp;).</li>
+<li>Uses the same preflight/timeout/error handling as other <span class="tt">read*</span> methods.</li>
+<li>Does not allocate for fixed-size containers; dynamic containers are resized once before and once after the receive.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md707"></a>
+Example — dynamic container</h3>
+<div class="fragment"><div class="line">std::string senderIp;</div>
+<div class="line"><a class="code hl_typedef" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> senderPort;</div>
+<div class="line"><span class="keyword">auto</span> payload = sock.readFrom&lt;std::vector&lt;char&gt;&gt;(&amp;senderIp, &amp;senderPort);</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md708"></a>
+Example — fixed-size container</h3>
+<div class="fragment"><div class="line">std::array&lt;char, 1024&gt; buf{};</div>
+<div class="line">std::string sender;</div>
+<div class="line"><a class="code hl_typedef" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> port;</div>
+<div class="line">sock.readFrom(buf, &amp;sender, &amp;port);</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><ul>
+<li>If the socket is connected, <span class="tt">senderAddr</span> and <span class="tt">senderPort</span> are not populated.</li>
+<li>If you only need the payload and not the sender, use <a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce">read</a> instead.</li>
+</ul>
+</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>1.0 </dd></dl>
 
 </div>
@@ -3079,7 +3382,7 @@ Example — fixed-size container (<span class="tt">std::array&lt;char, 512&gt;</
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga8554412d81524f04b70bebfc26f22db0" title="Read a UDP datagram of exactly n bytes into a std::string.">readExact()</a> String-returning variant </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gab34fd67ebc17563f286dde70ba456cf9" title="Receive exactly exactLen bytes (per policy) into a caller-provided buffer.">readExact()</a> String-returning variant </dd></dl>
 
 </div>
 </div>
@@ -3322,73 +3625,6 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="gaca78d1a91c373c1f7a14f7954f306a06" name="gaca78d1a91c373c1f7a14f7954f306a06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaca78d1a91c373c1f7a14f7954f306a06">&#9670;&#160;</a></span>recvFrom()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">T jsocketpp::DatagramSocket::recvFrom </td>
-          <td>(</td>
-          <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>senderAddr</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7">Port</a> *</td>          <td class="paramname"><span class="paramname"><em>senderPort</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd">DatagramReceiveMode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f">DatagramReceiveMode::NoPreflight</a></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Receive one UDP datagram directly into a trivially copyable type. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Trivially copyable type to receive (e.g. POD structs, fixed-size arrays). </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">senderAddr</td><td>Optional pointer to store sender's numeric address. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">senderPort</td><td>Optional pointer to store sender's numeric port. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>Sizing policy for the receive (default = NoPreflight).</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The received value of type T. If the datagram is smaller than sizeof(T), the remainder of the value is zero-initialized. If larger, the excess is discarded (standard UDP truncation).</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classjsocketpp_1_1SocketException.html" title="Represents socket-related errors in the jsocketpp library.">SocketException</a></td><td><ul>
-<li>If the socket is not open.</li>
-<li>On receive error; thrown via <span class="tt"><a class="el" href="namespacejsocketpp_1_1internal.html#a8a49e143a6246874f572bde7254e09b6" title="Throw a SocketException for the last socket error, with optional source-location context.">internal::throwLastSockError()</a></span>.</li>
-<li>On numeric host/port resolution failure (if supported by platform).</li>
-</ul>
-</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>This is a convenience wrapper over <span class="tt"><a class="el" href="#gaf32c08318404f8850dd539e1a4c637ce" title="Receive a single UDP datagram into a DatagramPacket with full control and telemetry.">DatagramSocket::read()</a></span> that enforces type safety and uses the same sender resolution logic. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga2124eae8cec6709a67be265f14da3bdd" title="Receive-time sizing policy for UDP datagrams.">DatagramReceiveMode</a> </dd></dl>
-<dl class="section since"><dt>Since</dt><dd>1.0 </dd></dl>
-
-</div>
-</div>
 <a id="ga1b017c1366655d32a2ec5d19deef9d37" name="ga1b017c1366655d32a2ec5d19deef9d37"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga1b017c1366655d32a2ec5d19deef9d37">&#9670;&#160;</a></span>setInternalBufferSize()</h2>
 
@@ -3407,7 +3643,7 @@ template&lt;typename T&gt; </div>
 <p>Sets the size of the internal buffer used for string-based UDP receive operations. </p>
 <p>This method controls the size of the internal buffer used internally by <span class="tt">read&lt;std::string&gt;()</span>. It does <b>not</b> affect the operating system's socket-level receive buffer (<span class="tt">SO_RCVBUF</span>), nor does it apply to fixed-size <span class="tt">read&lt;T&gt;()</span> calls.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md728"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md741"></a>
 🧠 Purpose</h3>
 <ul>
 <li>Limits the maximum number of bytes <span class="tt">read&lt;std::string&gt;()</span> can receive in a single call</li>
@@ -3415,7 +3651,7 @@ template&lt;typename T&gt; </div>
 <li>Affects only high-level string reads from <b>connected</b> UDP sockets</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md730"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md743"></a>
 ⚙️ Implementation Details</h3>
 <ul>
 <li>Resizes an internal <span class="tt">std::vector&lt;char&gt;</span> used exclusively by <span class="tt">read&lt;std::string&gt;()</span></li>
@@ -3424,7 +3660,7 @@ template&lt;typename T&gt; </div>
 <li>Safe to call at any time after construction</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md732"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md745"></a>
 🧪 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#ga4b4c631816f82eea0b6048a16682079e">DatagramSocket</a> udp(12345);</div>
 <div class="line">udp.setInternalBufferSize(8192); <span class="comment">// set 8 KB for string reads</span></div>
@@ -3484,7 +3720,7 @@ receiveFrom() Uses its own <a class="el" href="namespacejsocketpp_1_1internal.ht
 <p>Waits for the socket to become ready for reading or writing. </p>
 <p>This method uses <span class="tt">select()</span> to check whether the socket is ready for I/O within the given timeout. It can be used to avoid blocking reads or writes.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md726"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md739"></a>
 Parameters</h3>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -3580,7 +3816,7 @@ template&lt;typename T&gt; </div>
 <p>Writes a trivially copyable object of type <span class="tt">T</span> to the connected remote peer. </p>
 <p>This method serializes a fixed-size object of type <span class="tt">T</span> into raw binary form and sends it as a datagram to the socket's connected peer. It is intended for use with POD structures, protocol headers, or compact binary messages.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md692"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md689"></a>
 Constraints</h3>
 <ul>
 <li>The socket <b>must be connected</b> via <span class="tt"><a class="el" href="#ga5b12269efa5bc3a56ec53ea1fed9e468" title="Resolves and connects the datagram socket to a remote UDP peer with optional timeout.">connect()</a></span>.</li>
@@ -3591,7 +3827,7 @@ Constraints</h3>
 </li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md694"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md691"></a>
 Behavior</h3>
 <ul>
 <li>Performs a <span class="tt">bit_cast</span> of the object into a raw byte array</li>
@@ -3600,7 +3836,7 @@ Behavior</h3>
 <li>No retries: failure to send will throw</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md696"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md693"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Packet {</div>
 <div class="line">    uint32_t type;</div>
@@ -4028,7 +4264,7 @@ template&lt;typename T&gt; </div>
 <p>Sends a trivially copyable object of type <span class="tt">T</span> as a UDP datagram to the specified destination. </p>
 <p>This method serializes a POD object into raw binary form and transmits it using <span class="tt">sendto()</span> to a remote IP address and port. It works independently of whether the socket is connected and performs its own address resolution per call.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md699"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md696"></a>
 📦 Serialization Constraints</h3>
 <ul>
 <li>The type <span class="tt">T</span> must be:<ul>
@@ -4040,14 +4276,14 @@ template&lt;typename T&gt; </div>
 <li>No endianness conversion is performed — you must normalize fields manually</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md701"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md698"></a>
 🌐 Address Resolution</h3>
 <ul>
 <li>Performs per-call resolution of the <span class="tt">host</span> and <span class="tt">port</span> using <span class="tt">getaddrinfo()</span></li>
 <li>Iterates through all resolved addresses until one <span class="tt">sendto()</span> call successfully transmits the full object</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md703"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md700"></a>
 ⚙️ Behavior</h3>
 <ul>
 <li><span class="tt">value</span> is bit-cast into a <span class="tt">std::array&lt;std::byte, sizeof(T)&gt;</span></li>
@@ -4056,7 +4292,7 @@ template&lt;typename T&gt; </div>
 <li>The socket’s connected state is not changed by this operation</li>
 </ul>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md705"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md702"></a>
 🧪 Example</h3>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Packet {</div>
 <div class="line">    std::uint32_t seq;</div>
@@ -4245,7 +4481,7 @@ receiveFrom() For receiving from arbitrary peers </dd>
 <li>Freeing address resolution memory (<span class="tt">freeaddrinfo</span>)</li>
 </ul>
 <p>This destructor ensures that sockets are properly closed on destruction, following the RAII (Resource Acquisition Is Initialization) pattern. If any errors occur during cleanup, they are caught and logged to <span class="tt">std::cerr</span> but will not propagate exceptions, preserving <span class="tt">noexcept</span> semantics.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md627"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md628"></a>
 RAII Guarantees</h3>
 <ul>
 <li>Automatically releases system resources when the object goes out of scope</li>

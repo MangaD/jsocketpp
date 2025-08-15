@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['updatelastremote_0',['updateLastRemote',['../structjsocketpp_1_1DatagramReadOptions.html#acc981c9de41d7deb5bf3a14a006bb430',1,'jsocketpp::DatagramReadOptions']]]
+  ['truncated_0',['truncated',['../structjsocketpp_1_1DatagramReadResult.html#a830a7a1e1451dd93f23f44ddb063c4f3',1,'jsocketpp::DatagramReadResult']]]
 ];
