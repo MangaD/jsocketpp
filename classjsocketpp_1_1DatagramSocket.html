@@ -547,8 +547,8 @@ Example — fixed-size container (<span class="tt">std::array&lt;char, 512&gt;</
 <p>Copies <code class="param">src</code> into @_remoteAddr and sets @_remoteAddrLen to <code class="param">len</code>. This updates the values returned by <code><a class="el" href="group__udp.html#ga204770d3dea411d09d5f0efd8bac5725" title="Retrieves the IP address of the remote peer from the socket&#39;s current state.">getRemoteIp()</a></code>, <code><a class="el" href="group__udp.html#ga6d1dbfd5b854e120b352a27b541e5841" title="Retrieves the remote peer&#39;s UDP port number in host byte order.">getRemotePort()</a></code>, and <code><a class="el" href="group__udp.html#gacb3c554671141c0370445b2b7e9a6061" title="Retrieves the remote peer’s socket address in the form &quot;IP:port&quot;.">getRemoteSocketAddress()</a></code> to reflect the most recent sender on unconnected sockets.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">src</td><td>[in] Sender address as returned by <code>recvfrom()</code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>[in] Length of <code class="param">src</code>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">src</td><td>Sender address as returned by <code>recvfrom()</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>Length of <code class="param">src</code>.</td></tr>
   </table>
   </dd>
 </dl>

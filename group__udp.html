@@ -3185,7 +3185,7 @@ Example — fixed-size container</h3>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel protected">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3212,14 +3212,14 @@ Example — fixed-size container</h3>
 <p><b>Thread safety:</b> This method is not inherently thread-safe; callers must provide their own synchronization if multiple threads may access the same <span class="tt"><a class="el" href="classjsocketpp_1_1DatagramSocket.html" title="Cross-platform UDP socket class with Java-style interface.">DatagramSocket</a></span>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">buf</td><td>[in,out] Pointer to a writable buffer with at least <code class="param">len</code> bytes capacity. Must be non-null if <code class="param">len</code> &gt; 0. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>[in] Capacity of <code class="param">buf</code> in bytes. Zero is allowed for zero-length datagrams but still requires a valid pointer on some platforms. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>[in] Datagram receive mode policy controlling preflight behavior. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">recvFlags</td><td>[in] Additional flags passed to <span class="tt">recv()</span>/<span class="tt">recvfrom()</span> (e.g., <span class="tt">MSG_PEEK</span>). Typically <span class="tt">0</span> for normal reads. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">outSrc</td><td>[out] Optional pointer to a <span class="tt">sockaddr_storage</span> to receive the sender's address (only used in unconnected mode). If <span class="tt">nullptr</span>, uses <span class="tt">recv()</span>. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">outSrcLen</td><td>[in,out] On input, size of <code class="param">outSrc</code> in bytes; on output, size actually written. Ignored if <code class="param">outSrc</code> is <span class="tt">nullptr</span>. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">outDatagramSz</td><td>[out] Optional pointer to receive the total datagram size (from preflight or actual receive). Set to <span class="tt">0</span> if unknown. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">outTruncated</td><td>[out] Optional pointer set to <span class="tt">true</span> if the datagram was larger than <code class="param">len</code> and was truncated by the OS; otherwise set to <span class="tt">false</span>.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buf</td><td>Pointer to a writable buffer with at least <code class="param">len</code> bytes capacity. Must be non-null if <code class="param">len</code> &gt; 0. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>Capacity of <code class="param">buf</code> in bytes. Zero is allowed for zero-length datagrams but still requires a valid pointer on some platforms. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>Datagram receive mode policy controlling preflight behavior. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recvFlags</td><td>Additional flags passed to <span class="tt">recv()</span>/<span class="tt">recvfrom()</span> (e.g., <span class="tt">MSG_PEEK</span>). Typically <span class="tt">0</span> for normal reads. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">outSrc</td><td>Optional pointer to a <span class="tt">sockaddr_storage</span> to receive the sender's address (only used in unconnected mode). If <span class="tt">nullptr</span>, uses <span class="tt">recv()</span>. </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">outSrcLen</td><td>On input, size of <code class="param">outSrc</code> in bytes; on output, size actually written. Ignored if <code class="param">outSrc</code> is <span class="tt">nullptr</span>. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">outDatagramSz</td><td>Optional pointer to receive the total datagram size (from preflight or actual receive). Set to <span class="tt">0</span> if unknown. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">outTruncated</td><td>Optional pointer set to <span class="tt">true</span> if the datagram was larger than <code class="param">len</code> and was truncated by the OS; otherwise set to <span class="tt">false</span>.</td></tr>
   </table>
   </dd>
 </dl>
