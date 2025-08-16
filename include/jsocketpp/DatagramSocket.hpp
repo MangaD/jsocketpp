@@ -3014,29 +3014,21 @@ class DatagramSocket : public SocketOptions
      * **Thread safety:** This method is not inherently thread-safe; callers must provide their
      * own synchronization if multiple threads may access the same `DatagramSocket`.
      *
-     * @param[out] buf
-     *        [in,out] Pointer to a writable buffer with at least @p len bytes capacity.
-     *        Must be non-null if @p len > 0.
-     * @param[in] len
-     *        [in] Capacity of @p buf in bytes. Zero is allowed for zero-length datagrams but
-     *        still requires a valid pointer on some platforms.
-     * @param[in] mode
-     *        [in] Datagram receive mode policy controlling preflight behavior.
-     * @param[in] recvFlags
-     *        [in] Additional flags passed to `recv()`/`recvfrom()` (e.g., `MSG_PEEK`).
-     *        Typically `0` for normal reads.
-     * @param[out] outSrc
-     *        [out] Optional pointer to a `sockaddr_storage` to receive the sender's address
-     *        (only used in unconnected mode). If `nullptr`, uses `recv()`.
-     * @param[in,out] outSrcLen
-     *        [in,out] On input, size of @p outSrc in bytes; on output, size actually written.
-     *        Ignored if @p outSrc is `nullptr`.
-     * @param[out] outDatagramSz
-     *        [out] Optional pointer to receive the total datagram size (from preflight or
-     *        actual receive). Set to `0` if unknown.
-     * @param[out] outTruncated
-     *        [out] Optional pointer set to `true` if the datagram was larger than @p len and
-     *        was truncated by the OS; otherwise set to `false`.
+     * @param[out] buf Pointer to a writable buffer with at least @p len bytes capacity.
+     *                 Must be non-null if @p len > 0.
+     * @param[in] len Capacity of @p buf in bytes. Zero is allowed for zero-length datagrams but
+     *                still requires a valid pointer on some platforms.
+     * @param[in] mode Datagram receive mode policy controlling preflight behavior.
+     * @param[in] recvFlags Additional flags passed to `recv()`/`recvfrom()` (e.g., `MSG_PEEK`).
+     *                      Typically `0` for normal reads.
+     * @param[out] outSrc Optional pointer to a `sockaddr_storage` to receive the sender's address
+     *                    (only used in unconnected mode). If `nullptr`, uses `recv()`.
+     * @param[in,out] outSrcLen On input, size of @p outSrc in bytes; on output, size actually written.
+     *                          Ignored if @p outSrc is `nullptr`.
+     * @param[out] outDatagramSz Optional pointer to receive the total datagram size (from preflight or
+     *                           actual receive). Set to `0` if unknown.
+     * @param[out] outTruncated Optional pointer set to `true` if the datagram was larger than @p len and
+     *                          was truncated by the OS; otherwise set to `false`.
      *
      * @return Number of bytes actually stored in @p buf. May be less than @p len if the datagram
      *         is smaller or if truncation occurred.
@@ -3051,9 +3043,9 @@ class DatagramSocket : public SocketOptions
      *
      * @since 1.0
      */
-    std::size_t readIntoBuffer(char* buf, std::size_t len, DatagramReceiveMode mode, int recvFlags,
-                               sockaddr_storage* outSrc, socklen_t* outSrcLen, std::size_t* outDatagramSz,
-                               bool* outTruncated) const;
+    [[nodiscard]] std::size_t readIntoBuffer(char* buf, std::size_t len, DatagramReceiveMode mode, int recvFlags,
+                                             sockaddr_storage* outSrc, socklen_t* outSrcLen, std::size_t* outDatagramSz,
+                                             bool* outTruncated) const;
 
     /**
      * @brief Internal helper that releases socket resources and resets all internal state.
@@ -3229,8 +3221,8 @@ class DatagramSocket : public SocketOptions
      * returned by @c getRemoteIp(), @c getRemotePort(), and @c getRemoteSocketAddress() to reflect
      * the most recent sender on unconnected sockets.
      *
-     * @param[in] src [in] Sender address as returned by @c recvfrom().
-     * @param[in] len [in] Length of @p src.
+     * @param[in] src Sender address as returned by @c recvfrom().
+     * @param[in] len Length of @p src.
      *
      * @note Callers should only invoke this after a successful receive with @c recvfrom().
      * @since 1.0
