@@ -126,6 +126,51 @@ class DatagramPacket
         address.clear();
         port = 0;
     }
+
+    /**
+     * @brief Report whether this packet specifies an explicit destination (address + port).
+     * @ingroup udp
+     *
+     * @details
+     * Returns `true` if the packet’s destination fields are set to a usable value for sending:
+     * a non-blank `address` (not just whitespace) **and** a non-zero UDP `port`.
+     * This is a **syntactic** check only; it does not validate that the address string is a
+     * resolvable host/IP or that the port is reachable.
+     *
+     * Typical uses:
+     * - In `DatagramSocket::write(const DatagramPacket&)`, choose between sending to the socket’s
+     *   connected peer (when this returns `false`) or sending to the packet’s explicit destination
+     *   via `sendto` (when this returns `true`).
+     * - After a receive, indicates whether the source endpoint fields (`address`, `port`) were filled.
+     *
+     * @return `true` if `address` contains any non-whitespace character and `port != 0`; otherwise `false`.
+     *
+     * @code
+     * DatagramPacket p;
+     * p.buffer.assign(data.begin(), data.end());
+     *
+     * // No destination yet:
+     * assert(!p.hasDestination());
+     *
+     * // Set destination for send:
+     * p.address = "2001:db8::1";
+     * p.port    = 5353;
+     * assert(p.hasDestination());
+     * @endcode
+     */
+    [[nodiscard]] bool hasDestination() const noexcept
+    {
+        if (port == 0)
+            return false;
+
+        // Treat strings that are empty or only whitespace as "no address".
+        for (const unsigned char ch : address)
+        {
+            if (!std::isspace(ch))
+                return true;
+        }
+        return false;
+    }
 };
 
 } // namespace jsocketpp

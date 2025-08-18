@@ -357,6 +357,35 @@ struct ReadExactOptions
 };
 
 /**
+ * @enum Direction
+ * @brief I/O readiness selector used by waitReady().
+ * @ingroup udp
+ *
+ * @details
+ * Specifies which readiness condition to wait for on a datagram socket when calling
+ * `waitReady()`. On POSIX systems this corresponds to polling for `POLLIN` (readable)
+ * and/or `POLLOUT` (writable). On Windows, it maps to `POLLRDNORM` and/or `POLLWRNORM`
+ * via `WSAPoll`. For UDP sockets:
+ *
+ * - **Read** means at least one complete datagram is queued and can be received without blocking.
+ * - **Write** generally indicates the socket is writable (datagrams can be sent without blocking),
+ *   though UDP sockets are often immediately writable unless the send buffer is full or an error is pending.
+ * - **ReadWrite** requests readiness for either read or write (logical OR of the above conditions).
+ *
+ * @note This selector controls *which* condition is awaited; timeout behavior and error
+ *       reporting are defined by `waitReady()` itself. Exceptional poll conditions
+ *       (e.g., error flags) are surfaced by `waitReady()` as exceptions.
+ *
+ * @see waitReady()
+ */
+enum class Direction : std::uint8_t
+{
+    Read,     ///< Wait until the socket is readable (one or more datagrams available).
+    Write,    ///< Wait until the socket is writable (can send a datagram without blocking).
+    ReadWrite ///< Wait until the socket is readable **or** writable (logical OR).
+};
+
+/**
  * @class DatagramSocket
  * @ingroup udp
  * @brief Cross-platform UDP socket class with Java-style interface.
@@ -1260,68 +1289,131 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] std::string getRemoteSocketAddress(bool convertIPv4Mapped = true) const;
 
     /**
-     * @brief Writes a trivially copyable object of type `T` to the connected remote peer.
+     * @brief Send one UDP datagram to the currently connected peer (no pre-wait).
      * @ingroup udp
      *
-     * This method serializes a fixed-size object of type `T` into raw binary form and sends it
-     * as a datagram to the socket's connected peer. It is intended for use with POD structures,
-     * protocol headers, or compact binary messages.
+     * @details
+     * Emits exactly one datagram containing the bytes in @p message. This method performs
+     * an immediate send attempt:
      *
-     * ---
+     * 1. Validates that the socket is **open** and **connected**.
+     * 2. If the payload is empty, it returns immediately (zero-length datagrams are valid
+     *    per UDP, but this implementation avoids the syscall as a micro-optimization).
+     * 3. Enforces protocol-level size limits for the connected peer’s address family via
+     *    `enforceSendCapConnected(message.size())` (prevents guaranteed `EMSGSIZE` failures).
+     * 4. Calls the internal single-syscall sender to transmit the datagram.
      *
-     * ### ⚙️ Core Behavior
-     * - Uses `std::bit_cast` to convert `T` into raw bytes
-     * - Sends exactly `sizeof(T)` bytes in a single datagram
-     * - No padding removal, field conversion, or alignment adjustment is performed
-     * - No retries: failure to send will throw immediately
+     * This function does **not** poll or wait for writability. On non-blocking sockets,
+     * if the send buffer is temporarily full, the underlying send may fail (e.g.,
+     * `EWOULDBLOCK`/`WSAEWOULDBLOCK`) and a `SocketException` is thrown. If you need the
+     * method to wait until the socket is writable, use `writeAll()` or one of the timeout
+     * variants instead.
      *
-     * ---
+     * **Atomicity:** UDP is message-oriented; on success, the *entire* payload is sent in
+     * one datagram (no partial sends). Failures are reported via exceptions—no bytes are
+     * considered transmitted on exception.
      *
-     * ### 📋 Requirements
-     * - The socket must be **connected** via `connect()`
-     * - Type `T` must satisfy both:
-     *   - `std::is_trivially_copyable_v<T> == true`
-     *   - `std::is_standard_layout_v<T> == true`
+     * @param[in] message  Bytes to send as a single datagram. Accepts `std::string`,
+     *                     string literals, and other contiguous character sequences via
+     *                     implicit conversion to `std::string_view`.
      *
-     * ---
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
      *
-     * ### 🧪 Example
+     * @post On success, exactly `message.size()` bytes are handed to the kernel as a
+     *       single datagram. The connection state and socket options are unchanged.
+     *
+     * @throws SocketException
+     *   - **Logical errors (error code = 0):**
+     *     - Socket is not open or not connected.
+     *     - Payload exceeds the permitted maximum for the connected peer’s family
+     *       (detected by `enforceSendCapConnected()`).
+     *   - **System errors (OS error code + `SocketErrorMessageWrap(...)`):**
+     *     - Transient non-blocking condition (`EWOULDBLOCK` / `WSAEWOULDBLOCK`).
+     *     - Resource/network issues (`ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.).
+     *     - Other send failures surfaced by the OS.
+     *
+     * @note Zero-length payloads: this method returns without sending. If you need to
+     *       intentionally transmit an empty datagram as a signal, use an explicit flag
+     *       in your protocol or send a 1-byte marker instead.
+     *
+     * @see writeAll(), writeWithTimeout(), writeTo(), enforceSendCapConnected()
+     *
      * @code
-     * struct Packet {
-     *     uint32_t type;
-     *     uint16_t length;
-     * };
-     *
-     * DatagramSocket sock(12345);
-     * sock.connect("192.168.1.100", 9000);
-     *
-     * Packet p{1, 64};
-     * sock.write(p); // sends binary packet
+     * DatagramSocket sock;
+     * // ... socket opened and connected elsewhere ...
+     * sock.write("ping");                      // immediate attempt; may throw on EWOULDBLOCK
+     * sock.write(std::string_view{"hello"});   // same, using string_view explicitly
      * @endcode
      *
-     * ---
-     *
-     * @tparam T A trivially copyable type with standard layout
-     * @param[in] value The object to send. Copied by value.
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - The socket is not connected
-     * - `send()` fails (e.g., unreachable, interrupted, closed)
-     *
-     * @warning **Byte Order**: No endianness conversion is performed. Use `jsocketpp::net::fromNetwork()`
-     *          and `toNetwork()` helpers to safely convert integers between host and network byte order.
-     * @warning **Padding**: All bytes, including padding, are transmitted. Avoid structs with padding
-     *          unless explicitly managed.
-     * @warning **Size**: This method does not fragment. Objects larger than the MTU may be dropped
-     *          by the network.
-     *
-     * @see read<T>() For receiving structured objects
-     * @see writeTo() For unconnected datagram transmission
-     * @see connect() To establish peer before writing
      * @since 1.0
      */
-    template <typename T> void write(const T& value)
+    void write(std::string_view message) const;
+
+    /**
+     * @brief Send one UDP datagram whose payload is the raw object representation of @p value.
+     * @ingroup udp
+     *
+     * @tparam T
+     *   Trivially copyable, standard-layout type whose in-memory object representation
+     *   will be sent verbatim as the datagram payload. (See Implementation notes.)
+     *
+     * @details
+     * Emits exactly one datagram containing the bytes of @p value. This method performs
+     * an **immediate** send attempt (no pre-wait). Use `writeAll()` or `writeWithTimeout()`
+     * if you need the call to block until the socket is writable.
+     *
+     * Processing steps:
+     *  1. Verifies the socket is **open** and **connected**.
+     *  2. Computes `sizeof(T)` and enforces address-family maxima via
+     *     `enforceSendCapConnected(sizeof(T))` to preempt guaranteed `EMSGSIZE` failures.
+     *  3. Transmits the payload in a **single** system call; on success, the *entire* object
+     *     representation is handed to the kernel as one UDP datagram (no partial sends).
+     *
+     * ⚠️ **Serialization & portability**
+     * - The bytes sent are the raw object representation of `T` (including padding).
+     *   Endianness, padding, and ABI differences make this suitable mainly for homogeneous
+     *   peers or debugging. For interoperable protocols, prefer explicit serialization
+     *   (fixed-width integers in network byte order, packed layouts, etc.).
+     * - If `T` contains padding, ensure it is initialized to avoid leaking stale memory.
+     *
+     * **Atomicity:** UDP is message-oriented; on success, there are no partial sends.
+     * Any failure is reported via exception and **no** bytes are considered transmitted.
+     *
+     * @param[in] value
+     *   The value to send; its bytes (object representation) become the datagram payload.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
+     *
+     * @post On success, exactly `sizeof(T)` bytes are queued to the kernel as a single datagram.
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):**
+     *     - Socket is not open or not connected.
+     *     - Payload exceeds the permitted maximum for the connected peer’s family
+     *       (detected by `enforceSendCapConnected()`).
+     *   - **System (OS error code + `SocketErrorMessageWrap(...)`):**
+     *     - Transient non-blocking condition (`EWOULDBLOCK` / `WSAEWOULDBLOCK`).
+     *     - Resource/network issues (`ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.).
+     *
+     * @note This method does **not** wait for writability. Use `writeAll()` (infinite wait)
+     *       or `writeWithTimeout()` (bounded wait) for backpressure handling.
+     *
+     * @since 1.0
+     *
+     * @see write(std::string_view), writeAll(), writeWithTimeout(),
+     *      writeTo(std::string_view, Port, std::string_view), enforceSendCapConnected()
+     *
+     * @par Implementation notes
+     * Uses `std::bit_cast<std::array<std::byte, sizeof(T)>>` (C++20) to capture the exact
+     * object representation. Compile-time constraints:
+     * @code
+     * static_assert(std::is_trivially_copyable_v<T>);
+     * static_assert(std::is_standard_layout_v<T>);
+     * @endcode
+     */
+    template <typename T> void write(const T& value) const
     {
         static_assert(std::is_trivially_copyable_v<T>, "DatagramSocket::write<T>() requires trivially copyable type");
         static_assert(std::is_standard_layout_v<T>, "DatagramSocket::write<T>() requires standard layout type");
@@ -1330,85 +1422,784 @@ class DatagramSocket : public SocketOptions
             throw SocketException("DatagramSocket::write<T>(): socket is not open.");
 
         if (!_isConnected)
-            throw SocketException("DatagramSocket::write<T>(): socket is not connected.");
+            throw SocketException("DatagramSocket::write<T>(): socket is not connected. Use writeTo() instead.");
+
+        enforceSendCapConnected(sizeof(T));
 
         const auto buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
         internal::sendExact(getSocketFd(), buffer.data(), buffer.size());
     }
 
     /**
-     * @brief Sends a trivially copyable object of type `T` as a UDP datagram to the specified destination.
+     * @brief Send one UDP datagram to the connected peer from a raw byte span (no pre-wait).
      * @ingroup udp
      *
-     * This method serializes a POD object into raw binary form and transmits it using `sendto()` to a
-     * remote IP address and port. It works independently of whether the socket is connected and
-     * performs its own address resolution per call.
+     * @details
+     * Emits exactly one datagram containing the bytes referenced by @p data. This method
+     * performs an **immediate** send attempt:
      *
-     * ---
+     * 1. Verifies the socket is **open** and **connected**.
+     * 2. If the span is empty, it returns immediately (zero-length datagrams are valid in UDP,
+     *    but this implementation skips the syscall as a micro-optimization).
+     * 3. Enforces protocol-level size limits for the connected peer’s address family via
+     *    `enforceSendCapConnected(data.size())` to preempt guaranteed `EMSGSIZE` failures.
+     * 4. Transmits the payload in a **single** system call (no partial sends).
      *
-     * ### 📦 Serialization Constraints
-     * - The type `T` must be:
-     *   - `std::is_trivially_copyable_v<T> == true`
-     *   - `std::is_standard_layout_v<T> == true`
-     * - Any internal padding in `T` is preserved and transmitted without modification
-     * - No endianness conversion is performed — you must normalize fields manually
+     * This function does **not** poll for writability. On non-blocking sockets, if the send
+     * buffer is full, the send may fail (e.g., `EWOULDBLOCK`/`WSAEWOULDBLOCK`) and a
+     * `SocketException` is thrown. If you need backpressure handling, use `writeAll()` (infinite
+     * wait) or `writeWithTimeout()` (bounded wait) instead.
      *
-     * ---
+     * **Atomicity:** UDP is message-oriented; on success the *entire* span is sent as one
+     * datagram. On exception, no bytes are considered transmitted.
      *
-     * ### 🌐 Address Resolution
-     * - Performs per-call resolution of the `host` and `port` using `getaddrinfo()`
-     * - Iterates through all resolved addresses until one `sendto()` call successfully transmits the full object
+     * @param[in] data  Contiguous read-only bytes to send as a single datagram.
      *
-     * ---
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
      *
-     * ### ⚙️ Behavior
-     * - `value` is bit-cast into a `std::array<std::byte, sizeof(T)>`
-     * - The buffer is transmitted via `sendto()` to the first address that accepts the full datagram
-     * - If the socket is unconnected, the internal `_remoteAddr` and `_remoteAddrLen` are updated
-     *   to reflect the last destination address, enabling `getRemoteIp()` and `getRemotePort()`
-     * - The socket’s connected state is not changed by this operation
+     * @post On success, exactly `data.size()` bytes are handed to the kernel as one datagram.
      *
-     * ---
+     * @throws SocketException
+     *   - **Logical (error code = 0):**
+     *     - Socket is not open or not connected.
+     *     - Payload exceeds the permitted maximum for the connected peer’s family
+     *       (detected by `enforceSendCapConnected()`).
+     *   - **System (OS error code + `SocketErrorMessageWrap(...)`):**
+     *     - Transient non-blocking condition (`EWOULDBLOCK` / `WSAEWOULDBLOCK`).
+     *     - Resource/network issues (`ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.).
      *
-     * ### 🧪 Example
+     * @note This overload is ideal when you already have binary data as bytes. For textual
+     *       data, prefer `write(std::string_view)`. For POD types, see `write<T>(const T&)`.
+     * @note Zero-length payloads: this method returns without sending. If you must signal an
+     *       “empty message,” consider a protocol marker instead of an empty datagram.
+     *
+     * @since 1.0
+     *
+     * @see write(std::string_view), writeAll(), writeWithTimeout(),
+     *      write(const T&), writeFrom(const void*, std::size_t),
+     *      writev(std::span<const std::string_view>), enforceSendCapConnected()
+     *
      * @code
-     * struct Packet {
-     *     std::uint32_t seq;
-     *     std::uint16_t flags;
-     * };
+     * // Example: send raw binary using std::byte
+     * std::array<std::byte, 4> magic{ std::byte{0xDE}, std::byte{0xAD},
+     *                                 std::byte{0xBE}, std::byte{0xEF} };
+     * sock.write(std::span<const std::byte>{magic});
      *
-     * jsocketpp::DatagramSocket udp(0); // unbound UDP socket
-     * Packet p{42, 0x01};
-     * udp.writeTo("192.168.1.10", 5555, p); // Send to peer
-     * std::cout << udp.getRemoteSocketAddress() << std::endl; // "192.168.1.10:5555"
+     * // From an existing buffer:
+     * const std::byte* p = reinterpret_cast<const std::byte*>(buffer.data());
+     * sock.write(std::span<const std::byte>{p, buffer.size()});
      * @endcode
-     *
-     * ---
-     *
-     * @tparam T A trivially copyable, standard layout POD type
-     * @param[in] host Remote hostname or IP address to send to
-     * @param[in] port Remote UDP port number
-     * @param[in] value Object of type `T` to be serialized and transmitted
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - Address resolution fails
-     * - No destination accepts the datagram
-     * - `sendto()` fails with a system error
-     *
-     * @warning This method does not perform fragmentation or retries. Large objects may exceed MTU.
-     * @warning No byte-order normalization is performed. Use `jsocketpp::net::toNetwork()` helpers for integers.
-     *
-     * @note When used on an unconnected socket, this method updates the internal remote address state for use
-     *       with `getRemoteIp()` and `getRemotePort()`.
-     *
-     * @see write<T>() For connected send
-     * @see connect() To establish a default peer
-     * @see read<T>() For receiving structured objects
-     * @see receiveFrom() For receiving from arbitrary peers
-     * @see getRemoteIp(), getRemotePort(), getRemoteSocketAddress()
      */
-    template <typename T> void writeTo(const std::string_view host, const Port port, const T& value)
+    void write(std::span<const std::byte> data) const;
+
+    /**
+     * @brief Send one UDP datagram to the connected peer, waiting indefinitely for writability.
+     * @ingroup udp
+     *
+     * @details
+     * Emits exactly one datagram containing @p message. Unlike `write()`, this method
+     * **pre-waits** for the socket to become writable so it behaves consistently on
+     * both blocking and non-blocking sockets:
+     *
+     * 1. Verifies the socket is **open** and **connected**.
+     * 2. If the payload is empty, returns immediately (zero-length UDP datagrams are valid,
+     *    but this implementation skips the syscall as a micro-optimization).
+     * 3. Enforces protocol-level size limits for the connected peer via
+     *    `enforceSendCapConnected(message.size())`.
+     * 4. Calls `waitReady(Direction::Write, -1)` to wait **without timeout** until writable.
+     * 5. Transmits the datagram in a **single** syscall (no partial sends).
+     *
+     * **Atomicity:** On success the *entire* payload is sent in one datagram. On exception,
+     * no bytes are considered transmitted.
+     *
+     * @param[in] message  Bytes to send as a single datagram.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
+     *
+     * @post On success, exactly `message.size()` bytes are handed to the kernel as one datagram.
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):** socket not open/connected; payload exceeds permitted maximum
+     *     for the connected family (via `enforceSendCapConnected()`).
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** polling or send failures.
+     *
+     * @note This method never throws `SocketTimeoutException` because it waits indefinitely.
+     *       For a bounded wait, use `writeWithTimeout()`.
+     *
+     * @since 1.0
+     *
+     * @see write(std::string_view), writeWithTimeout(std::string_view, int),
+     *      writevAll(std::span<const std::string_view>), enforceSendCapConnected(), waitReady()
+     */
+    void writeAll(std::string_view message) const;
+
+    /**
+     * @brief Send a length-prefixed UDP datagram to the connected peer from text bytes (no pre-wait).
+     * @ingroup udp
+     *
+     * @tparam T
+     *   Unsigned integral type for the length prefix (e.g., `std::uint8_t`, `std::uint16_t`,
+     *   `std::uint32_t`, `std::uint64_t`). A compile-time check in the helper enforces this.
+     *
+     * @details
+     * Wraps the payload as **[ prefix(T, big-endian) | payload ]** and forwards to
+     * `sendPrefixedConnected<T>()`. Zero-length payloads are valid: a prefix-only
+     * datagram is sent. This method performs an **immediate** send attempt (no pre-wait).
+     *
+     * @param[in] payload  Text bytes to send after the length prefix.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
+     *
+     * @throws SocketException
+     *   - **Logical (error=0):** socket not open/connected; `payload.size()` exceeds
+     *     `std::numeric_limits<T>::max()`; total size exceeds the connected family’s limit.
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** send failures (e.g., `EWOULDBLOCK`, `ENOBUFS`).
+     *
+     * @since 1.0
+     *
+     * @see sendPrefixedConnected<T>(std::span<const std::byte>),
+     *      writePrefixedTo<T>(std::string_view, Port, std::string_view),
+     *      encodeLengthPrefixBE<T>(std::size_t),
+     *      enforceSendCapConnected(std::size_t)
+     */
+    template <typename T> void writePrefixed(const std::string_view payload) const
+    {
+        sendPrefixedConnected<T>(asBytes(payload));
+    }
+
+    /**
+     * @brief Send a length-prefixed UDP datagram to the connected peer from a byte span (no pre-wait).
+     * @ingroup udp
+     *
+     * @tparam T  Unsigned integral type for the length prefix.
+     *
+     * @details
+     * Builds **[ prefix(T, big-endian) | payload ]** and forwards to
+     * `sendPrefixedConnected<T>()`. Zero-length payloads yield a prefix-only datagram.
+     * This method performs an **immediate** send attempt (no pre-wait).
+     *
+     * @param[in] payload  Binary payload to append after the length prefix.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
+     *
+     * @throws SocketException  (same categories as the `std::string_view` overload).
+     *
+     * @since 1.0
+     *
+     * @see sendPrefixedConnected<T>(std::span<const std::byte>),
+     *      writePrefixed<T>(std::string_view),
+     *      encodeLengthPrefixBE<T>(std::size_t),
+     *      enforceSendCapConnected(std::size_t)
+     */
+    template <typename T> void writePrefixed(const std::span<const std::byte> payload) const
+    {
+        sendPrefixedConnected<T>(payload);
+    }
+
+    /**
+     * @brief Send a length-prefixed UDP datagram to (host, port) from text bytes (unconnected path).
+     * @ingroup udp
+     *
+     * @tparam T  Unsigned integral type for the length prefix.
+     *
+     * @details
+     * Builds **[ prefix(T, big-endian) | payload ]** and forwards to
+     * `sendPrefixedUnconnected<T>()`, which resolves A/AAAA, skips families that cannot
+     * carry the frame, and sends once to the first compatible destination. Zero-length
+     * payloads produce a prefix-only datagram.
+     *
+     * @param[in] host     Destination hostname or numeric address (IPv4/IPv6).
+     * @param[in] port     Destination UDP port (> 0).
+     * @param[in] payload  Text bytes to append after the length prefix.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     *
+     * @throws SocketException
+     *   - **Logical (error=0):** socket not open; `payload.size()` exceeds `std::numeric_limits<T>::max()`;
+     *     or no address family can carry the total size (surfaced by the helper).
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** resolution/send failures.
+     *
+     * @since 1.0
+     *
+     * @see sendPrefixedUnconnected<T>(std::string_view, Port, std::span<const std::byte>),
+     *      writePrefixedTo<T>(std::string_view, Port, std::span<const std::byte>),
+     *      encodeLengthPrefixBE<T>(std::size_t),
+     *      sendUnconnectedTo(std::string_view, Port, const void*, std::size_t)
+     */
+    template <typename T>
+    void writePrefixedTo(const std::string_view host, const Port port, const std::string_view payload) const
+    {
+        sendPrefixedUnconnected<T>(host, port, asBytes(payload));
+    }
+
+    /**
+     * @brief Send a length-prefixed UDP datagram to (host, port) from a byte span (unconnected path).
+     * @ingroup udp
+     *
+     * @tparam T  Unsigned integral type for the length prefix.
+     *
+     * @details
+     * Builds **[ prefix(T, big-endian) | payload ]** and forwards to
+     * `sendPrefixedUnconnected<T>()`. The helper resolves and selects a compatible
+     * destination (skipping families that can’t carry the frame) and sends once.
+     *
+     * @param[in] host     Destination hostname or numeric address (IPv4/IPv6).
+     * @param[in] port     Destination UDP port (> 0).
+     * @param[in] payload  Binary payload to append after the length prefix.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     *
+     * @throws SocketException  (same categories as the text overload).
+     *
+     * @since 1.0
+     *
+     * @see sendPrefixedUnconnected<T>(std::string_view, Port, std::span<const std::byte>),
+     *      writePrefixedTo<T>(std::string_view, Port, std::string_view),
+     *      encodeLengthPrefixBE<T>(std::size_t),
+     *      sendUnconnectedTo(std::string_view, Port, const void*, std::size_t)
+     */
+    template <typename T>
+    void writePrefixedTo(const std::string_view host, const Port port, const std::span<const std::byte> payload) const
+    {
+        sendPrefixedUnconnected<T>(host, port, payload);
+    }
+
+    /**
+     * @brief Send one UDP datagram to the connected peer by concatenating multiple fragments (no pre-wait).
+     * @ingroup udp
+     *
+     * @details
+     * Emits exactly one datagram whose payload is the concatenation of all strings in @p buffers.
+     * This method performs an **immediate** send attempt (it does not wait for writability):
+     *
+     * 1. Verifies the socket is **open** and **connected**.
+     * 2. Computes the total byte count `sum(buffers[i].size())`. If the sum is zero, returns immediately
+     *    (zero-length UDP datagrams are valid, but this implementation skips the syscall).
+     * 3. Enforces protocol-level maxima for the connected peer’s family via
+     *    `enforceSendCapConnected(total)` to preempt guaranteed `EMSGSIZE`.
+     * 4. Sends in a **single** syscall:
+     *    - Fast path: if there is exactly one fragment, it is sent directly.
+     *    - Otherwise, the fragments are coalesced into a temporary contiguous buffer and sent once.
+     *
+     * This function does **not** pre-wait for writability. On non-blocking sockets, if the send
+     * buffer is full, the send may fail (e.g., `EWOULDBLOCK` / `WSAEWOULDBLOCK`) and a
+     * `SocketException` is thrown. Use `writevAll()` or `writeWithTimeout()` for blocking behavior.
+     *
+     * **Atomicity:** UDP is message-oriented; on success the *entire* concatenated payload is sent
+     * as a single datagram. On exception, no bytes are considered transmitted.
+     *
+     * @param[in] buffers  Sequence of string fragments that will be concatenated in-order into the
+     *                     datagram payload. Individual elements may be empty.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
+     *
+     * @post On success, exactly the sum of all fragment sizes is handed to the kernel as one datagram.
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):** socket not open/connected; total payload exceeds the
+     *     permitted maximum for the connected peer’s family (detected by `enforceSendCapConnected()`).
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** send failures such as
+     *     `EWOULDBLOCK`, `ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.
+     *
+     * @note If you later add a scatter/gather `internal::sendExactv(...)`, this method can switch
+     *       to a vectored send to avoid the temporary copy in the multi-fragment case.
+     *
+     * @since 1.0
+     *
+     * @see writevAll(std::span<const std::string_view>), write(std::string_view),
+     *      writeAll(std::string_view), writeWithTimeout(std::string_view, int),
+     *      enforceSendCapConnected(std::size_t)
+     *
+     * @code
+     * // Example: send header + body as one UDP datagram
+     * std::string_view header = "HDR:";
+     * std::string_view body   = "payload";
+     * sock.writev({header, body});  // immediate attempt; may throw on EWOULDBLOCK
+     * @endcode
+     */
+    void writev(std::span<const std::string_view> buffers) const;
+
+    /**
+     * @brief Send one UDP datagram to the connected peer by concatenating multiple fragments, waiting indefinitely.
+     * @ingroup udp
+     *
+     * @details
+     * Emits exactly one datagram whose payload is the concatenation of all strings in @p buffers.
+     * Unlike `writev()`, this method **pre-waits** for writability so it behaves consistently on
+     * both blocking and non-blocking sockets:
+     *
+     * 1. Verifies the socket is **open** and **connected**.
+     * 2. Computes the total byte count `sum(buffers[i].size())`. If the sum is zero, returns immediately
+     *    (zero-length UDP datagrams are valid, but this implementation skips the syscall).
+     * 3. Enforces protocol-level maxima for the connected peer’s family via
+     *    `enforceSendCapConnected(total)` to preempt guaranteed `EMSGSIZE`.
+     * 4. Calls `waitReady(Direction::Write, -1)` to wait **without timeout** until the socket is writable
+     *    (poll errors are surfaced as `SocketException`).
+     * 5. Sends in a **single** syscall:
+     *    - Fast path: if there is exactly one fragment, it is sent directly.
+     *    - Otherwise, the fragments are coalesced into a temporary contiguous buffer and sent once.
+     *
+     * **Atomicity:** UDP is message-oriented; on success, the *entire* concatenated payload is sent as a
+     * single datagram. On exception, no bytes are considered transmitted.
+     *
+     * @param[in] buffers  Sequence of string fragments concatenated in-order into the datagram payload.
+     *                     Individual elements may be empty.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
+     *
+     * @post On success, exactly the sum of all fragment sizes is handed to the kernel as one datagram.
+     *       Socket state and options are unchanged.
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):** socket not open/connected; total payload exceeds the permitted
+     *     maximum for the connected peer’s family (detected by `enforceSendCapConnected()`).
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** polling or send failures
+     *     (e.g., `POLLERR`, `POLLNVAL`, `POLLHUP`, `ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.).
+     *
+     * @note This method never throws `SocketTimeoutException` because it waits indefinitely. For a bounded
+     *       wait, use `writeWithTimeout()`.
+     * @note If you later add a scatter/gather `internal::sendExactv(...)`, this method can switch to a
+     *       vectored send to avoid the temporary copy in the multi-fragment case.
+     *
+     * @since 1.0
+     *
+     * @see writev(std::span<const std::string_view>), write(std::string_view), writeAll(std::string_view),
+     *      writeWithTimeout(std::string_view, int), enforceSendCapConnected(std::size_t), waitReady(Direction, int)
+     *
+     * @code
+     * // Example: send header + separator + body as one UDP datagram, blocking until writable
+     * std::string_view hdr = "HDR";
+     * std::string_view sep = ":";
+     * std::string_view body = "payload";
+     * sock.writevAll({hdr, sep, body});
+     * @endcode
+     */
+    void writevAll(std::span<const std::string_view> buffers) const;
+
+    /**
+     * @brief Send one UDP datagram to the connected peer from a raw memory buffer (no pre-wait).
+     * @ingroup udp
+     *
+     * @details
+     * Emits exactly one datagram containing the first @p len bytes starting at @p data.
+     * This method performs an **immediate** send attempt (it does not poll for writability):
+     *
+     * 1. Verifies the socket is **open** and **connected**.
+     * 2. If @p len is zero, returns immediately (zero-length UDP datagrams are valid,
+     *    but this implementation skips the syscall as a micro-optimization).
+     * 3. Enforces protocol-level size limits for the connected peer’s family via
+     *    `enforceSendCapConnected(len)` to preempt guaranteed `EMSGSIZE`.
+     * 4. Transmits the datagram in a **single** system call (no partial sends).
+     *
+     * This function does **not** pre-wait for writability. On non-blocking sockets, if the send
+     * buffer is temporarily full, the underlying send may fail (e.g., `EWOULDBLOCK` / `WSAEWOULDBLOCK`)
+     * and a `SocketException` is thrown. For blocking behavior, use `writeAll()` (infinite wait)
+     * or `writeWithTimeout()` (bounded wait).
+     *
+     * **Ownership/Lifetime:** The memory referenced by @p data is not copied or retained beyond
+     * the duration of the call; it must remain valid and readable until the call returns.
+     *
+     * **Atomicity:** UDP is message-oriented; on success, the *entire* buffer is sent as one
+     * datagram. On exception, no bytes are considered transmitted.
+     *
+     * @param[in] data  Pointer to the first byte of the payload. May be `nullptr` iff @p len == 0.
+     * @param[in] len   Number of bytes to send as a single datagram.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
+     * @pre `data != nullptr || len == 0`
+     *
+     * @post On success, exactly @p len bytes are handed to the kernel as one datagram. Socket state
+     *       and options are unchanged.
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):**
+     *     - Socket is not open or not connected.
+     *     - Payload exceeds the permitted maximum for the connected peer’s family
+     *       (detected by `enforceSendCapConnected()`).
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):**
+     *     - Transient non-blocking condition (`EWOULDBLOCK`, `WSAEWOULDBLOCK`).
+     *     - Resource/network issues (`ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.).
+     *
+     * @note If your payload is already in `std::byte` form, prefer `write(std::span<const std::byte>)`.
+     *       For text, prefer `write(std::string_view)`. For POD objects, consider `write<T>(const T&)`.
+     *
+     * @since 1.0
+     *
+     * @see write(std::string_view), write(std::span<const std::byte>),
+     *      writeAll(std::string_view), writeWithTimeout(std::string_view, int),
+     *      writev(std::span<const std::string_view>), enforceSendCapConnected(std::size_t)
+     *
+     * @code
+     * // Example: send a raw buffer
+     * std::array<std::uint8_t, 4> buf{0xDE, 0xAD, 0xBE, 0xEF};
+     * sock.writeFrom(buf.data(), buf.size());
+     *
+     * // From a std::vector<char>
+     * std::vector<char> payload = get_payload();
+     * sock.writeFrom(payload.data(), payload.size());
+     * @endcode
+     */
+    void writeFrom(const void* data, std::size_t len) const;
+
+    /**
+     * @brief Send one UDP datagram to the connected peer, waiting up to @p timeoutMillis for writability.
+     * @ingroup udp
+     *
+     * @details
+     * Emits exactly one datagram containing @p data. This method **bounds** the wait for socket
+     * writability, then performs a single send:
+     *
+     * 1. Verifies the socket is **open** and **connected**.
+     * 2. If the payload is empty, returns immediately (zero-length UDP datagrams are valid, but this
+     *    implementation skips the syscall as a micro-optimization).
+     * 3. Enforces protocol-level size limits for the connected peer’s address family via
+     *    `enforceSendCapConnected(data.size())` to preempt guaranteed `EMSGSIZE`.
+     * 4. Calls `waitReady(Direction::Write, timeoutMillis)`; if the socket does not become writable
+     *    before the timeout, a `SocketTimeoutException` is thrown.
+     * 5. On readiness, transmits the datagram in a **single** system call (no partial sends).
+     *
+     * **Timeout semantics** (delegated to `waitReady()`):
+     * - `timeoutMillis > 0`  — wait up to the specified milliseconds.
+     * - `timeoutMillis == 0` — non-blocking poll (immediate).
+     * - `timeoutMillis < 0`  — wait indefinitely (equivalent to `writeAll()` behavior).
+     *
+     * **Atomicity:** UDP is message-oriented; on success, the *entire* payload is sent as one
+     * datagram. On exception, no bytes are considered transmitted.
+     *
+     * @param[in] data           Bytes to send as a single datagram (accepts `std::string`,
+     *                           string literals, etc., via implicit conversion to `std::string_view`).
+     * @param[in] timeoutMillis  See timeout semantics above.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
+     *
+     * @post On success, exactly `data.size()` bytes are handed to the kernel as one datagram.
+     *       Socket state and options are unchanged.
+     *
+     * @throws SocketTimeoutException
+     *   If the socket does not become writable within @p timeoutMillis (when it is >= 0).
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):** socket not open/connected; payload exceeds the permitted
+     *     maximum for the connected peer’s family (detected by `enforceSendCapConnected()`).
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** polling or send failures
+     *     (e.g., `POLLERR`, `POLLNVAL`, `POLLHUP`, `EWOULDBLOCK`, `ENOBUFS`, `ENETUNREACH`, etc.).
+     *
+     * @note Prefer `writeAll()` when you intentionally want an infinite wait; pass a negative
+     *       @p timeoutMillis to mimic that behavior if you must stick to a single API.
+     * @note For an immediate, no-wait attempt, use `write()` instead.
+     *
+     * @since 1.0
+     *
+     * @see write(std::string_view), writeAll(std::string_view), writevAll(std::span<const std::string_view>),
+     *      enforceSendCapConnected(std::size_t), waitReady(Direction, int)
+     *
+     * @code
+     * // Example: send with a 500 ms bound
+     * sock.writeWithTimeout("payload", 500);   // throws SocketTimeoutException on timeout
+     *
+     * // Immediate attempt (non-blocking poll)
+     * sock.writeWithTimeout("ping", 0);
+     *
+     * // Equivalent to writeAll() (infinite wait)
+     * sock.writeWithTimeout("large message", -1);
+     * @endcode
+     */
+    void writeWithTimeout(std::string_view data, int timeoutMillis) const;
+
+    /**
+     * @brief Send one UDP datagram using a packet’s buffer and optional explicit destination.
+     * @ingroup udp
+     *
+     * @details
+     * Emits exactly one datagram whose payload is `packet.buffer`. Behavior depends on whether
+     * the packet specifies a destination:
+     *
+     * - **Packet has a destination (`packet.hasDestination()` is true):**
+     *   Uses the **unconnected** send path via `sendUnconnectedTo(packet.address, packet.port, ...)`.
+     *   That helper resolves A/AAAA, **skips** families that cannot carry the payload size, attempts
+     *   one send to the first compatible candidate, and caches the last destination (without marking
+     *   the socket as connected).
+     *
+     * - **Packet has no destination:**
+     *   Requires the socket to be **already connected**. The method enforces the connected peer’s
+     *   protocol maxima via `enforceSendCapConnected(packet.buffer.size())` and sends once.
+     *
+     * Processing steps:
+     *  1) Verify the socket is **open**.
+     *  2) If `packet.buffer.empty()`, return immediately (zero-length datagrams are valid but skipped).
+     *  3) If the packet carries a destination, forward to `sendUnconnectedTo(...)`.
+     *  4) Otherwise, require `isConnected() == true`, guard size with `enforceSendCapConnected(...)`, and send.
+     *
+     * **Atomicity:** UDP is message-oriented; on success, the *entire* `packet.buffer` is sent as one
+     * datagram. On exception, no bytes are considered transmitted.
+     *
+     * @param[in] packet
+     *   The packet whose `buffer` supplies the payload and whose `address`/`port` (if present)
+     *   select the destination for unconnected sends.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre If `!packet.hasDestination()`, then `isConnected() == true`
+     *
+     * @post On success, exactly `packet.buffer.size()` bytes are handed to the kernel as one datagram.
+     *       Socket state and options are unchanged. Unconnected sends may update the cached last-remote
+     *       endpoint for diagnostics, but do not connect the socket.
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):**
+     *     - Socket is not open.
+     *     - No destination in the packet **and** socket is not connected.
+     *     - For connected sends, payload exceeds the permitted maximum for the peer’s family
+     *       (detected by `enforceSendCapConnected()`).
+     *     - For unconnected sends, no address family can carry the payload size (surfaced by `sendUnconnectedTo()`).
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):**
+     *     - Resolution or send failures reported by the OS (e.g., `ENETUNREACH`, `EHOSTUNREACH`, `ENOBUFS`,
+     *       `EWOULDBLOCK` / `WSAEWOULDBLOCK` on non-blocking sockets), or poll-derived errors inside helpers.
+     *
+     * @note Zero-length payloads: this method returns without sending. If your protocol needs to signal
+     *       an empty frame, consider a prefix/marker instead of an empty datagram.
+     *
+     * @since 1.0
+     *
+     * @see write(std::string_view), writeFrom(const void*, std::size_t),
+     *      writeTo(std::string_view, Port, std::string_view),
+     *      sendUnconnectedTo(std::string_view, Port, const void*, std::size_t),
+     *      enforceSendCapConnected(std::size_t)
+     */
+    void write(const DatagramPacket& packet) const;
+
+    /**
+     * @brief Send one unconnected UDP datagram to (host, port) from text bytes (no pre-wait).
+     * @ingroup udp
+     *
+     * @details
+     * Emits exactly one datagram containing @p message to the specified destination. This
+     * overload uses the unconnected send path and delegates the heavy lifting to
+     * `sendUnconnectedTo()`, which:
+     *
+     *  - Resolves A/AAAA candidates for @p host.
+     *  - **Skips** any address family whose theoretical UDP maximum cannot carry the payload
+     *    size (IPv4 vs IPv6 caps).
+     *  - Attempts a single send to the first compatible candidate, returning on success.
+     *  - Caches the last destination endpoint for diagnostics (does **not** mark the socket
+     *    as connected).
+     *
+     * Steps performed by this method:
+     *  1) Verify the socket is **open**.
+     *  2) If `message.empty()`, return immediately (zero-length UDP datagrams are valid, but
+     *     this implementation skips the syscall as a micro-optimization).
+     *  3) Forward to `sendUnconnectedTo(host, port, message.data(), message.size())`.
+     *
+     * This function does **not** poll for writability. On non-blocking sockets, if an attempt
+     * is made and the send buffer is full, the underlying send may fail
+     * (`EWOULDBLOCK` / `WSAEWOULDBLOCK`) and will be surfaced as a `SocketException`.
+     * For blocking semantics on a *connected* socket, prefer `writeAll()` or
+     * `writeWithTimeout()`.
+     *
+     * **Atomicity:** UDP is message-oriented; on success, the *entire* payload is sent as one
+     * datagram. On exception, no bytes are considered transmitted.
+     *
+     * @param[in] host     Destination hostname or numeric address (IPv4/IPv6).
+     * @param[in] port     Destination UDP port (> 0).
+     * @param[in] message  Bytes to send as a single datagram (accepts `std::string`,
+     *                     string literals, etc., via implicit conversion to `std::string_view`).
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     *
+     * @post On success, exactly `message.size()` bytes are handed to the kernel as one datagram.
+     *       Socket state and options are unchanged. The last-remote endpoint may be cached
+     *       internally for diagnostics.
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):**
+     *     - Socket is not open.
+     *     - No address family can carry the datagram size (e.g., payload exceeds IPv4 limit and
+     *       only A records are available; surfaced by `sendUnconnectedTo()` with a clear message).
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):**
+     *     - Resolution or send failures reported by the OS (e.g., `EAI_*`, `ENETUNREACH`,
+     *       `EHOSTUNREACH`, `ENOBUFS`, `EWOULDBLOCK`).
+     *
+     * @note Family-specific size enforcement (IPv4 vs IPv6) and destination selection are handled
+     *       inside `sendUnconnectedTo()`. This method performs no pre-wait; if you need bounded or
+     *       indefinite waiting, connect the socket and use `writeWithTimeout()` or `writeAll()`.
+     *
+     * @since 1.0
+     *
+     * @see write(std::string_view), writeAll(std::string_view), writeWithTimeout(std::string_view, int),
+     *      writePrefixedTo<T>(std::string_view, Port, std::string_view),
+     *      sendUnconnectedTo(std::string_view, Port, const void*, std::size_t)
+     *
+     * @code
+     * // Example: send a message to a host/port without connecting the socket
+     * sock.writeTo("example.com", 8125, "metric:1|c");
+     *
+     * // IPv6 numeric address is fine too:
+     * sock.writeTo("2001:db8::1", 5000, "hello");
+     * @endcode
+     */
+    void writeTo(std::string_view host, Port port, std::string_view message) const;
+
+    /**
+     * @brief Send one unconnected UDP datagram to (host, port) from a raw byte span (no pre-wait).
+     * @ingroup udp
+     *
+     * @details
+     * Emits exactly one datagram containing @p data to the specified destination. This overload
+     * uses the unconnected send path and delegates to `sendUnconnectedTo()`, which:
+     *
+     *  - Resolves A/AAAA candidates for @p host.
+     *  - Skips any address family whose theoretical UDP maximum cannot carry the payload size
+     *    (IPv4 vs IPv6 caps).
+     *  - Attempts a single send to the first compatible candidate, returning on success.
+     *  - Caches the last destination endpoint for diagnostics (does not connect the socket).
+     *
+     * Steps performed by this method:
+     *  1) Verify the socket is open.
+     *  2) If `data.empty()`, return immediately (zero-length UDP datagrams are valid, but this
+     *     implementation skips the syscall as a micro-optimization).
+     *  3) Forward to `sendUnconnectedTo(host, port, data.data(), data.size())`.
+     *
+     * This function does not poll for writability. On non-blocking sockets, if an attempt is
+     * made and the send buffer is full, the underlying send may fail (`EWOULDBLOCK` /
+     * `WSAEWOULDBLOCK`) and will be surfaced as a `SocketException`. For blocking semantics on a
+     * connected socket, prefer `writeAll()` or `writeWithTimeout()`.
+     *
+     * **Atomicity:** UDP is message-oriented; on success, the entire span is sent as one
+     * datagram. On exception, no bytes are considered transmitted.
+     *
+     * @param[in] host  Destination hostname or numeric address (IPv4/IPv6).
+     * @param[in] port  Destination UDP port (> 0).
+     * @param[in] data  Contiguous read-only bytes to send as a single datagram.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     *
+     * @post On success, exactly `data.size()` bytes are handed to the kernel as one datagram.
+     *       Socket state and options are unchanged. The last-remote endpoint may be cached
+     *       internally for diagnostics.
+     *
+     * @throws SocketException
+     *   - Logical (error code = 0):
+     *     - Socket is not open.
+     *     - No address family can carry the datagram size (for example, payload exceeds IPv4
+     *       limit and only A records are available; surfaced by `sendUnconnectedTo()` with a
+     *       clear message).
+     *   - System (OS error + `SocketErrorMessageWrap(...)`):
+     *     - Resolution or send failures reported by the OS (for example, `EAI_*`, `ENETUNREACH`,
+     *       `EHOSTUNREACH`, `ENOBUFS`, `EWOULDBLOCK`).
+     *
+     * @note Family-specific size enforcement (IPv4 vs IPv6) and destination selection are handled
+     *       inside `sendUnconnectedTo()`. This method performs no pre-wait; if you need bounded or
+     *       indefinite waiting, connect the socket and use `writeWithTimeout()` or `writeAll()`.
+     *
+     * @since 1.0
+     *
+     * @see writeTo(std::string_view, Port, std::string_view),
+     *      write(std::span<const std::byte>), writeAll(std::string_view),
+     *      writeWithTimeout(std::string_view, int),
+     *      sendUnconnectedTo(std::string_view, Port, const void*, std::size_t)
+     *
+     * @code
+     * // Example: send binary payload to a destination without connecting the socket
+     * std::array<std::byte, 4> magic{std::byte{0xDE}, std::byte{0xAD},
+     *                                std::byte{0xBE}, std::byte{0xEF}};
+     * sock.writeTo("239.0.0.1", 5000, std::span<const std::byte>{magic});
+     *
+     * // From a dynamic buffer
+     * std::vector<std::byte> payload(3);
+     * payload[0] = std::byte{0x01};
+     * payload[1] = std::byte{0x02};
+     * payload[2] = std::byte{0x03};
+     * sock.writeTo("2001:db8::1", 6000, std::span<const std::byte>{payload.data(), payload.size()});
+     * @endcode
+     */
+    void writeTo(std::string_view host, Port port, std::span<const std::byte> data) const;
+
+    /**
+     * @brief Send one unconnected UDP datagram to (host, port) containing the raw bytes of @p value.
+     * @ingroup udp
+     *
+     * @tparam T
+     *   Trivially copyable, standard-layout type whose in-memory object representation
+     *   will be sent verbatim as the datagram payload. Compile-time checks in the
+     *   implementation enforce these constraints.
+     *
+     * @details
+     * Emits exactly one datagram whose payload is the raw bytes of @p value. This overload
+     * uses the unconnected send path and delegates to `sendUnconnectedTo()`, which:
+     *
+     *  - Resolves A/AAAA candidates for @p host.
+     *  - Skips any address family whose theoretical UDP maximum cannot carry `sizeof(T)`.
+     *  - Attempts a single send to the first compatible candidate, returning on success.
+     *  - Caches the last destination endpoint for diagnostics (does not connect the socket).
+     *
+     * Steps performed by this method:
+     *  1) Verify the socket is open.
+     *  2) If `sizeof(T) == 0`, return immediately.
+     *  3) Bit-cast @p value to a contiguous byte buffer.
+     *  4) Forward to `sendUnconnectedTo(host, port, buf, sizeof(T))`.
+     *
+     * This function does not poll for writability. On non-blocking sockets, if a send is
+     * attempted and the send buffer is full, the underlying send may fail
+     * (`EWOULDBLOCK` / `WSAEWOULDBLOCK`) and will be surfaced as a `SocketException`.
+     * For blocking semantics on a connected socket, prefer `writeAll()` or `writeWithTimeout()`.
+     *
+     * Serialization and portability:
+     *  - The bytes sent are the raw object representation of `T` (including any padding).
+     *    Endianness, padding, and ABI differences mean this is typically suitable only for
+     *    homogeneous peers or debugging. For interoperable protocols, use explicit
+     *    serialization (fixed-width integers in network byte order, packed layouts, and so on).
+     *  - If `T` contains padding, ensure it is initialized to avoid leaking stale memory.
+     *
+     * Atomicity:
+     *  - UDP is message-oriented; on success, the entire `sizeof(T)` bytes are sent as one
+     *    datagram. On exception, no bytes are considered transmitted.
+     *
+     * @param[in] host  Destination hostname or numeric address (IPv4/IPv6).
+     * @param[in] port  Destination UDP port (> 0).
+     * @param[in] value The value whose bytes form the datagram payload.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     *
+     * @post On success, exactly `sizeof(T)` bytes are handed to the kernel as one datagram.
+     *       Socket state and options are unchanged. The last-remote endpoint may be cached
+     *       internally for diagnostics.
+     *
+     * @throws SocketException
+     *   - Logical (error code = 0):
+     *     - Socket is not open.
+     *     - No address family can carry `sizeof(T)` (for example, payload exceeds IPv4 limit
+     *       and only A records are available; surfaced by `sendUnconnectedTo()` with a clear message).
+     *   - System (OS error + `SocketErrorMessageWrap(...)`):
+     *     - Resolution or send failures reported by the OS (for example, `EAI_*`, `ENETUNREACH`,
+     *       `EHOSTUNREACH`, `ENOBUFS`, `EWOULDBLOCK`).
+     *
+     * @since 1.0
+     *
+     * @see writeTo(std::string_view, Port, std::string_view),
+     *      write(std::string_view), writeFrom(const void*, std::size_t),
+     *      sendUnconnectedTo(std::string_view, Port, const void*, std::size_t)
+     *
+     * @code
+     * // Example: send a POD header to a destination without connecting the socket
+     * struct Header {
+     *   std::uint32_t magic;
+     *   std::uint16_t version;
+     *   std::uint16_t flags;
+     * };
+     * static_assert(std::is_trivially_copyable_v<Header> && std::is_standard_layout_v<Header>);
+     *
+     * Header h{0xABCD1234u, 1u, 0u};
+     * sock.writeTo("example.com", 5000, h);
+     * @endcode
+     */
+    template <typename T> void writeTo(const std::string_view host, const Port port, const T& value) const
     {
         static_assert(std::is_trivially_copyable_v<T>, "DatagramSocket::writeTo<T>() requires trivially copyable type");
         static_assert(std::is_standard_layout_v<T>, "DatagramSocket::writeTo<T>() requires standard layout type");
@@ -1416,246 +2207,12 @@ class DatagramSocket : public SocketOptions
         if (getSocketFd() == INVALID_SOCKET)
             throw SocketException("DatagramSocket::writeTo<T>(): socket is not open.");
 
-        const auto addrInfo = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
+        if constexpr (sizeof(T) == 0)
+            return;
 
-        const auto buffer = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
-
-        int lastError = 0;
-        for (const addrinfo* ai = addrInfo.get(); ai != nullptr; ai = ai->ai_next)
-        {
-            try
-            {
-                internal::sendExactTo(getSocketFd(), buffer.data(), buffer.size(), ai->ai_addr,
-                                      static_cast<socklen_t>(ai->ai_addrlen));
-
-                if (!_isConnected)
-                {
-                    _remoteAddr = *reinterpret_cast<const sockaddr_storage*>(ai->ai_addr);
-                    _remoteAddrLen = static_cast<socklen_t>(ai->ai_addrlen);
-                }
-                return; // success
-            }
-            catch (const SocketException&)
-            {
-                // Preserve the last OS error to report if none of the candidates succeed.
-                lastError = GetSocketError();
-                // Try next addrinfo candidate.
-            }
-        }
-
-        // If we got here, all candidates failed.
-        throw SocketException(lastError, SocketErrorMessageWrap(lastError));
+        const auto buf = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
+        sendUnconnectedTo(host, port, buf.data(), buf.size());
     }
-
-    /**
-     * @brief Sends a UDP datagram using the provided DatagramPacket.
-     * @ingroup udp
-     *
-     * Sends the contents of a `DatagramPacket` either to a specified destination or
-     * to the connected peer, depending on the packet's fields:
-     *
-     * - **Explicit destination:** If `packet.address` is non-empty and `packet.port`
-     *   is non-zero, the address is resolved via @ref internal::resolveAddress and
-     *   the payload is sent using @ref internal::sendExactTo. If the socket is not
-     *   connected, the resolved destination is stored internally for future
-     *   `getRemoteIp()` and `getRemotePort()` calls.
-     *
-     * - **Connected mode:** If the packet has no destination, the socket must be
-     *   connected. The payload is sent to the connected peer using
-     *   @ref internal::sendExact.
-     *
-     * ---
-     *
-     * @param[in] packet The packet containing destination and payload. If the buffer
-     *                   is empty, this method does nothing.
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - No destination is specified and the socket is not connected
-     * - Address resolution fails
-     * - The underlying send operation fails or reports a partial datagram
-     *
-     * @note UDP datagrams are sent atomically. If the payload exceeds the path MTU,
-     *       it may be dropped or truncated by the network.
-     * @note This method does not fragment or retransmit. Use application-level
-     *       framing for large data.
-     *
-     * @see connect(), isConnected(), write(std::string_view), writeTo(), DatagramPacket,
-     *      getRemoteIp(), getRemotePort()
-     */
-    void write(const DatagramPacket& packet) const;
-
-    /**
-     * @brief Sends a string message as a UDP datagram to the connected peer.
-     * @ingroup udp
-     *
-     * Transmits the given `std::string_view` as a single UDP datagram using the
-     * socket's connected peer, which must have been previously set via @ref connect().
-     * Guarantees that either the full message is sent or an exception is thrown.
-     *
-     * @param[in] message The message payload to send. May be empty (in which case this
-     *                    function does nothing).
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - The socket is not connected
-     * - A system-level `send()` error occurs
-     * - A partial datagram is sent (unexpected)
-     *
-     * @warning This method does not fragment large payloads. If `message.size() > MTU`,
-     * the datagram may be dropped or truncated by the network.
-     *
-     * @see connect(), writeTo(), write(DatagramPacket), write<T>(), write<std::string>()
-     */
-    void write(std::string_view message) const;
-
-    /**
-     * @brief Sends a contiguous buffer of bytes as a UDP datagram to the connected peer.
-     * @ingroup udp
-     *
-     * This method transmits the contents of a caller-provided buffer (as a `std::span<const std::byte>`)
-     * as a single UDP datagram to the socket's connected peer. It guarantees that either the entire
-     * buffer is sent or an exception is thrown if the operation fails.
-     *
-     * ---
-     *
-     * ### ⚙️ Core Behavior
-     * - Requires the socket to be connected via `connect()`
-     * - Sends exactly `data.size()` bytes in one datagram using the underlying system call
-     * - Throws on partial sends or system-level errors
-     * - Does not fragment or retry; the payload is sent as a single atomic datagram
-     *
-     * ---
-     *
-     * ### 📋 Requirements
-     * - The socket must be open and connected
-     * - The buffer must remain valid for the duration of the call
-     *
-     * ---
-     *
-     * ### 🧪 Example
-     * @code
-     * std::vector<std::byte> payload = ...;
-     * jsocketpp::DatagramSocket sock("192.168.1.100", 9000);
-     * sock.connect();
-     * sock.write(std::span<const std::byte>(payload));
-     * @endcode
-     *
-     * ---
-     *
-     * @param[in] data Read-only span of bytes to send as the datagram payload.
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - The socket is not connected
-     * - The underlying send operation fails or reports a partial datagram
-     *
-     * @warning No delivery, ordering, or reliability guarantees are provided by UDP.
-     * @warning If `data.size()` exceeds the path MTU, the datagram may be dropped or fragmented by the network.
-     *
-     * @see write(std::string_view) For string payloads
-     * @see writeTo() For sending to arbitrary destinations
-     * @see connect() To establish a default peer
-     * @since 1.0
-     */
-    void write(std::span<const std::byte> data) const;
-
-    /**
-     * @brief Sends a message as a UDP datagram to the specified destination address and port.
-     * @ingroup udp
-     *
-     * Transmits the given `std::string_view` as a single UDP datagram to a specific host and port,
-     * without requiring the socket to be connected.
-     *
-     * Internally, this method:
-     * - Resolves the destination via @ref internal::resolveAddress (IPv4, IPv6, DNS supported).
-     * - Iterates through all resolved addresses, attempting to send the full payload to each
-     *   using @ref internal::sendExactTo.
-     * - On the first successful send, updates the internal `_remoteAddr` and `_remoteAddrLen`
-     *   if the socket is unconnected, enabling later use of `getRemoteIp()` and `getRemotePort()`.
-     * - Throws if all address candidates fail.
-     *
-     * @param[in] host    Destination hostname or IP address (IPv4, IPv6, or DNS).
-     * @param[in] port    Destination UDP port number.
-     * @param[in] message The UDP payload to send. If empty, this method is a no-op.
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - Address resolution fails
-     * - All resolved destinations fail to accept the datagram
-     * - The underlying send operation fails or reports a partial datagram
-     *
-     * @note No fragmentation or retries are performed — the payload is sent as a single datagram.
-     *       If `message.size()` exceeds the path MTU, it may be dropped or truncated by the network.
-     *
-     * @warning No byte-order or encoding transformations are applied; the payload is transmitted as raw bytes.
-     *
-     * @see write(const DatagramPacket&) For sending a datagram object with buffer + destination
-     * @see writeTo() For sending binary POD data to a per-call destination
-     * @see connect() To establish a persistent default peer
-     * @see isConnected(), getRemoteIp(), getRemotePort(), getRemoteSocketAddress()
-     */
-    void writeTo(std::string_view host, Port port, std::string_view message) const;
-
-    /**
-     * @brief Sends a contiguous buffer of bytes as a UDP datagram to the specified destination address and port.
-     * @ingroup udp
-     *
-     * This method transmits the contents of a caller-provided buffer (as a `std::span<const std::byte>`)
-     * as a single UDP datagram to the specified host and port, without requiring the socket to be connected.
-     *
-     * ---
-     *
-     * ### ⚙️ Core Behavior
-     * - Resolves the destination address using @ref internal::resolveAddress (supports IPv4, IPv6, DNS).
-     * - Iterates through all resolved addresses, attempting to send the full payload to each using @ref
-     * internal::sendExactTo.
-     * - On the first successful send, updates the internal `_remoteAddr` and `_remoteAddrLen` if the socket is
-     * unconnected, enabling later use of `getRemoteIp()` and `getRemotePort()`.
-     * - Throws if all address candidates fail.
-     *
-     * ---
-     *
-     * ### 📋 Requirements
-     * - The socket must be open.
-     * - The buffer must remain valid for the duration of the call.
-     *
-     * ---
-     *
-     * ### 🧪 Example
-     * @code
-     * std::vector<std::byte> payload = ...;
-     * jsocketpp::DatagramSocket sock(0); // unbound UDP socket
-     * sock.writeTo("192.168.1.10", 5555, std::span<const std::byte>(payload));
-     * std::cout << sock.getRemoteSocketAddress() << std::endl; // "192.168.1.10:5555"
-     * @endcode
-     *
-     * ---
-     *
-     * @param[in] host    Destination hostname or IP address (IPv4, IPv6, or DNS).
-     * @param[in] port    Destination UDP port number.
-     * @param[in] data    Read-only span of bytes to send as the datagram payload.
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - Address resolution fails
-     * - All resolved destinations fail to accept the datagram
-     * - The underlying send operation fails or reports a partial datagram
-     *
-     * @note No fragmentation or retries are performed — the payload is sent as a single datagram.
-     *       If `data.size()` exceeds the path MTU, it may be dropped or truncated by the network.
-     * @note When used on an unconnected socket, this method updates the internal remote address state for use
-     *       with `getRemoteIp()` and `getRemotePort()`.
-     *
-     * @warning No byte-order or encoding transformations are applied; the payload is transmitted as raw bytes.
-     *
-     * @see writeTo(std::string_view, Port, std::string_view) For string payloads
-     * @see write(const DatagramPacket&) For sending a datagram object with buffer + destination
-     * @see connect() To establish a persistent default peer
-     * @see isConnected(), getRemoteIp(), getRemotePort(), getRemoteSocketAddress()
-     * @since 1.0
-     */
-    void writeTo(std::string_view host, Port port, std::span<const std::byte> data) const;
 
     /**
      * @brief Receive a single UDP datagram into a @ref DatagramPacket with full control and telemetry.
@@ -2461,146 +3018,6 @@ class DatagramSocket : public SocketOptions
     std::size_t readvAllWithTotalTimeout(std::span<BufferView> buffers, int timeoutMillis) const;
 
     /**
-     * @brief Writes the entire message to the connected peer as a single datagram.
-     * @ingroup udp
-     *
-     * Connected-only. Ensures the whole @p message is sent in one send(); throws on partial
-     * datagram or error. (Note: the OS may drop/fragment; this only guarantees local send().)
-     *
-     * @param[in] message Payload to send (may be empty to send a zero-length datagram).
-     * @return Number of bytes sent (== message.size() on success).
-     *
-     * @throws SocketException If not connected or send() fails.
-     *
-     * @see write(std::string_view) Best-effort single send
-     */
-    std::size_t writeAll(std::string_view message) const;
-
-    /**
-     * @brief Sends a length-prefixed datagram using an integral prefix type @p T.
-     * @ingroup udp
-     *
-     * Builds a datagram as [prefix(T, network byte order)] + [payload], then sends it to
-     * the connected peer. Throws if payload size does not fit in @p T.
-     *
-     * @tparam T Unsigned, trivially copyable integral type (e.g., uint32_t).
-     * @param[in] payload The payload bytes to send.
-     * @return Total bytes sent (sizeof(T) + payload.size()).
-     *
-     * @throws SocketException On size overflow, not connected, or send failure.
-     *
-     * @see readPrefixed<T>() Matching receiver
-     */
-    template <typename T> std::size_t writePrefixed(std::string_view payload);
-
-    /**
-     * @brief Sends a length-prefixed datagram from a raw buffer using prefix type @p T.
-     * @ingroup udp
-     *
-     * @tparam T Unsigned integral type for the prefix (network byte order).
-     * @param[in] data Pointer to payload (may be null iff len == 0).
-     * @param[in] len  Number of bytes to send from @p data.
-     * @return Total bytes sent (sizeof(T) + len).
-     *
-     * @throws SocketException If len exceeds T max, not connected, or send fails.
-     */
-    template <typename T> std::size_t writePrefixed(const void* data, std::size_t len) const;
-
-    /**
-     * @brief Vectorized single-datagram send (scatter/gather) to the connected peer.
-     * @ingroup udp
-     *
-     * Performs one WSASend()/sendmsg() over the provided buffer views. May send fewer bytes
-     * if the platform reports partial datagram (treated as error and throws).
-     *
-     * @param[in] buffers Span of string views forming one logical datagram.
-     * @return Total bytes sent.
-     *
-     * @throws SocketException If not connected or send fails/partial.
-     */
-    std::size_t writev(std::span<const std::string_view> buffers) const;
-
-    /**
-     * @brief Guarantees full transmission of all buffers as a single datagram.
-     * @ingroup udp
-     *
-     * Connected-only. Retries as needed until the full datagram is accepted by the kernel
-     * or throws on error.
-     *
-     * @param[in] buffers Span of fragments composing the datagram.
-     * @return Total bytes sent (sum of sizes).
-     *
-     * @throws SocketException On send error.
-     */
-    std::size_t writevAll(std::span<const std::string_view> buffers) const;
-
-    /**
-     * @brief Best-effort single send with a timeout (connected-only).
-     * @ingroup udp
-     *
-     * Waits up to @p timeoutMillis for writability, then performs one send() of @p data.
-     * Returns the number of bytes the kernel accepted (throws on error). No retries.
-     *
-     * @param[in] data           Payload to send.
-     * @param[in] timeoutMillis  >0 wait; 0 poll; <0 throws.
-     * @return Bytes sent (may be 0).
-     *
-     * @throws SocketTimeoutException On timeout.
-     * @throws SocketException On invalid socket or send error.
-     *
-     * @see writeWithTotalTimeout() Full-delivery under deadline
-     */
-    std::size_t writeAtMostWithTimeout(std::string_view data, int timeoutMillis) const;
-
-    /**
-     * @brief Sends up to @p len bytes from a raw buffer (single send).
-     * @ingroup udp
-     *
-     * Connected-only. Best-effort; returns bytes accepted by the kernel in one call.
-     *
-     * @param[in] data Pointer to payload (nullable iff len==0).
-     * @param[in] len  Number of bytes to send.
-     * @return Bytes sent (<= len).
-     *
-     * @throws SocketException If not connected or send fails.
-     *
-     * @see writeFromAll() Retry-until-full variant
-     */
-    std::size_t writeFrom(const void* data, std::size_t len) const;
-
-    /**
-     * @brief Sends exactly @p len bytes from a raw buffer in one datagram, retrying as needed.
-     * @ingroup udp
-     *
-     * Connected-only. Ensures kernel accepts the full datagram (throws otherwise).
-     *
-     * @param[in] data Pointer to payload (nullable iff len==0).
-     * @param[in] len  Payload size.
-     * @return Bytes sent (== len on success).
-     *
-     * @throws SocketException On send failure.
-     */
-    std::size_t writeFromAll(const void* data, std::size_t len) const;
-
-    /**
-     * @brief Sends the full @p data as one datagram within a total timeout.
-     * @ingroup udp
-     *
-     * Connected-only. Repeatedly waits for writability and sends until the entire datagram
-     * is accepted or the deadline expires.
-     *
-     * @param[in] data          Payload to send.
-     * @param[in] timeoutMillis Total time budget in milliseconds.
-     * @return Total bytes sent (== data.size() on success).
-     *
-     * @throws SocketTimeoutException If not fully sent before the deadline.
-     * @throws SocketException On socket/send errors.
-     *
-     * @see writeAll() Unbounded full-delivery
-     */
-    std::size_t writeWithTotalTimeout(std::string_view data, int timeoutMillis) const;
-
-    /**
      * @brief Peeks at the next available UDP datagram without removing it from the socket's receive queue.
      * @ingroup udp
      *
@@ -2728,26 +3145,41 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] std::optional<int> getMTU() const;
 
     /**
-     * @brief Waits for the socket to become ready for reading or writing.
+     * @brief Block until the socket is ready for I/O or a timeout occurs.
      * @ingroup udp
      *
-     * This method uses `select()` to check whether the socket is ready for I/O
-     * within the given timeout. It can be used to avoid blocking reads or writes.
+     * @details
+     * Waits for the connected UDP socket to become ready for the requested operation(s)
+     * using a portable polling primitive (`poll` on POSIX, `WSAPoll` on Windows).
+     * This method does **not** change the socket’s blocking mode and is safe to call
+     * on both blocking and non-blocking sockets.
      *
-     * ---
+     * **Timeout semantics**
+     * - `timeoutMillis < 0`  → wait indefinitely (no timeout).
+     * - `timeoutMillis == 0` → non-blocking poll (immediate). If not ready, throws `SocketTimeoutException`.
+     * - `timeoutMillis > 0`  → wait up to the specified milliseconds.
      *
-     * ### Parameters
-     * @param[in] forWrite If true, waits for socket to be writable. If false, waits for readability.
-     * @param[in] timeoutMillis Timeout in milliseconds to wait. Use 0 for non-blocking poll.
+     * If an exceptional condition is reported by the OS (e.g., `POLLERR`, `POLLNVAL`,
+     * `POLLHUP`), this function retrieves `SO_ERROR` when available and throws a
+     * `SocketException` with that error code/message.
      *
-     * @return `true` if the socket is ready for the requested operation before timeout, `false` otherwise.
+     * @param[in] dir            Readiness to wait for: `Direction::Read`, `Direction::Write`,
+     *                           or `Direction::ReadWrite`.
+     * @param[in] timeoutMillis  Timeout in milliseconds (see semantics above).
      *
-     * @throws SocketException If the socket is invalid or `select()` fails.
+     * @pre `getSocketFd() != INVALID_SOCKET`
      *
-     * @note This method does not perform any I/O. It only checks readiness.
-     * @see peek(), hasPendingData(), read(), write()
+     * @throws SocketTimeoutException  If the requested readiness is not achieved before the timeout.
+     * @throws SocketException         On polling failure or detected socket error
+     *                                 (uses `GetSocketError()` and `SocketErrorMessageWrap()`).
+     *
+     * @code
+     * // Example: wait up to 500 ms to become writable, then send one datagram
+     * waitReady(Direction::Write, 500);
+     * internal::sendExact(getSocketFd(), data, len);
+     * @endcode
      */
-    [[nodiscard]] bool waitReady(bool forWrite, int timeoutMillis = 0) const;
+    void waitReady(Direction dir, int timeoutMillis) const;
 
     /**
      * @brief Sets the size of the internal buffer used for string-based UDP receive operations.
@@ -3233,6 +3665,48 @@ class DatagramSocket : public SocketOptions
         _remoteAddrLen = len;
     }
 
+    /**
+     * @brief Throw a descriptive exception when a UDP datagram’s size differs from what was expected.
+     * @ingroup udp
+     *
+     * @details
+     * Emits a uniform, user-friendly error when the size of the next datagram does not match the
+     * caller’s expectation. This is typically used after either:
+     *  - A **size probe** (e.g., via `FIONREAD` or `MSG_PEEK|MSG_TRUNC`) indicated an expected size, or
+     *  - The caller required an **exact** payload size (e.g., fixed-size read into a POD object).
+     *
+     * The exception message intentionally distinguishes whether the `actual` value came from a prior
+     * **probe** versus a **receive** operation, to aid debugging (reordering, truncation, or races
+     * between probe and read).
+     *
+     * This function does not perform any I/O and does not modify socket state; it simply constructs
+     * and throws a `SocketException` with a clear message.
+     *
+     * @param[in] expected        The number of bytes the caller expected to be present in the next datagram.
+     * @param[in] actual          The number of bytes observed (either probed or received).
+     * @param[in] isProbedKnown   Set to `true` if @p actual comes from a size probe; set to `false` if it
+     *                            reflects the size actually received from a `recv`/`recvfrom` call.
+     *
+     * @throws SocketException
+     * - Always throws (logical error; not a system error).
+     * - Uses error code `0` and a message of the form:
+     *   `"UDP datagram size mismatch: expected <E>, <probed|received> <A>"`.
+     *
+     * @note This function **always throws** and never returns.
+     * @note No system error is consulted or reported; this represents a violated size invariant in the
+     *       caller’s logic rather than a kernel failure.
+     *
+     * @code
+     * // Example: after probing size, enforce exact-size semantics
+     * const std::size_t probed = probeNextDatagramSize();
+     * const std::size_t received = recvExact(buf, probed);
+     * if (received != probed) {
+     *     DatagramSocket::throwSizeMismatch(probed, received, true);
+     * }
+     * @endcode
+     *
+     * @see readIntoBuffer(), DefaultDatagramReceiveSize, MaxDatagramPayloadSafe
+     */
     static void throwSizeMismatch(const std::size_t expected, const std::size_t actual, const bool isProbedKnown)
     {
         // Two-arg pattern with wrapped message for consistency across the project
@@ -3241,6 +3715,424 @@ class DatagramSocket : public SocketOptions
             "UDP datagram size mismatch: expected " + std::to_string(expected) +
             (isProbedKnown ? (", probed " + std::to_string(actual)) : (", received " + std::to_string(actual)));
         throw SocketException(err, msg);
+    }
+
+    /**
+     * @brief Enforce UDP payload size limits for **connected** datagram sends.
+     * @ingroup udp
+     *
+     * @details
+     * Validates that a single datagram of @p payloadSize bytes can be sent to the
+     * **currently connected** peer without exceeding protocol-level maxima.
+     *
+     * The check is conservative by default:
+     * - Always allows up to `MaxDatagramPayloadSafe` (65,507 bytes), which is safe on both IPv4 and IPv6.
+     * - If the connected peer is IPv6 (`AF_INET6`), allows the IPv6 theoretical maximum
+     *   (`MaxUdpPayloadIPv6` = 65,527) while continuing to reject anything larger.
+     *
+     * If the socket is connected to IPv4 (`AF_INET`) and @p payloadSize exceeds the IPv4
+     * limit (`MaxUdpPayloadIPv4` = 65,507), an exception is thrown **before** calling
+     * `send()`, providing a precise, user-friendly error message.
+     *
+     * The remote address family is determined via:
+     *  1) cached last-peer address when available, otherwise
+     *  2) a `getpeername()` query on the connected socket.
+     *
+     * ---
+     *
+     * ### Rationale
+     * Proactive validation yields deterministic, actionable errors (instead of a vague
+     * `EMSGSIZE` from the kernel) and avoids futile syscalls.
+     *
+     * ---
+     *
+     * ### Example (internal use)
+     * @code
+     * // Inside write(std::string_view):
+     * enforceSendCapConnected(value.size());
+     * internal::sendExact(getSocketFd(), value.data(), value.size());
+     * @endcode
+     *
+     * ---
+     *
+     * @param[in] payloadSize  Number of bytes intended for a single datagram.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
+     *
+     * @throws SocketException
+     * - If the socket is not open or not connected (logical error).
+     * - If `getpeername()` fails while determining the connected peer family
+     *   (OS error; uses `GetSocketError()`/`SocketErrorMessageWrap()`).
+     * - If @p payloadSize exceeds the permitted maximum for the connected peer’s family.
+     *
+     * @note This method does **not** enforce path-MTU/non-fragmenting policies; it only
+     *       enforces absolute protocol maxima to prevent guaranteed failures.
+     *
+     * @see MaxDatagramPayloadSafe, MaxUdpPayloadIPv4, MaxUdpPayloadIPv6, write(), writeTo()
+     */
+    void enforceSendCapConnected(const std::size_t payloadSize) const
+    {
+        // Zero-length datagrams are valid (often used as keep-alives); nothing to enforce.
+        if (payloadSize == 0)
+            return;
+
+        if (getSocketFd() == INVALID_SOCKET)
+            throw SocketException(0, "DatagramSocket::enforceSendCapConnected(): socket is not open.");
+
+        if (!_isConnected)
+            throw SocketException(0, "DatagramSocket::enforceSendCapConnected(): socket is not connected.");
+
+        // Determine remote family: prefer cached last-peer, else query getpeername().
+        int family = AF_UNSPEC;
+        if (_remoteAddrLen > 0)
+        {
+            family = reinterpret_cast<const sockaddr*>(&_remoteAddr)->sa_family;
+        }
+        else
+        {
+            sockaddr_storage peer{};
+            auto len = static_cast<socklen_t>(sizeof(peer));
+            if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&peer), &len) == SOCKET_ERROR)
+            {
+                const int err = GetSocketError();
+                throw SocketException(err, SocketErrorMessageWrap(err));
+            }
+            family = reinterpret_cast<const sockaddr*>(&peer)->sa_family;
+        }
+
+        // Always allow the conservative, cross-stack "safe" ceiling.
+        if (payloadSize <= MaxDatagramPayloadSafe)
+            return;
+
+        // If the connected peer is IPv6, allow the IPv6 theoretical headroom.
+        if (family == AF_INET6 && payloadSize <= MaxUdpPayloadIPv6)
+            return;
+
+        // Compose a precise, helpful error message and throw a logical (non-OS) error.
+        std::string msg = "UDP datagram payload (" + std::to_string(payloadSize) + " bytes) ";
+
+        if (payloadSize > MaxUdpPayloadIPv6)
+        {
+            msg += "exceeds IPv6 theoretical maximum (" + std::to_string(MaxUdpPayloadIPv6) + "). ";
+        }
+        else if (family == AF_INET)
+        {
+            msg += "exceeds IPv4 maximum (" + std::to_string(MaxUdpPayloadIPv4) + "). ";
+        }
+        else
+        {
+            // AF_UNSPEC or other: fell through the safe ceiling and not eligible for IPv6 headroom.
+            msg += "exceeds MaxDatagramPayloadSafe (" + std::to_string(MaxDatagramPayloadSafe) + "). ";
+        }
+
+        msg += "Split the payload across multiple datagrams or switch to a stream protocol.";
+
+        // Two-arg form for consistency with other logical throws in the project.
+        throw SocketException(0, msg);
+    }
+
+    /**
+     * @brief Resolve and send one unconnected UDP datagram to the first compatible destination.
+     * @ingroup udp
+     *
+     * @details
+     * Resolves @p host and @p port (AF_UNSPEC, UDP), iterates all A/AAAA candidates, and:
+     *  - **Skips** any family whose theoretical UDP maximum would be exceeded by @p len
+     *    (`MaxUdpPayloadIPv4`/`MaxUdpPayloadIPv6`).
+     *  - Sends the datagram with a single syscall (`internal::sendExactTo`) to the **first**
+     *    compatible candidate that succeeds.
+     *  - On success, remembers the last remote endpoint for helpers (without flipping the
+     *    socket into a connected state).
+     *
+     * If no candidates can even be *attempted* (e.g., payload > IPv6 max or only A records
+     * for a payload that requires IPv6), throws a **logical** `SocketException` with a clear
+     * diagnostic. If at least one attempt is made and all fail, throws a `SocketException`
+     * with the last OS error (`GetSocketError()`/`SocketErrorMessageWrap()`).
+     *
+     * This helper is intended for all **unconnected** write paths (e.g., `writeTo(...)`,
+     * `write(const DatagramPacket&)` when the packet specifies a destination).
+     *
+     * @param[in] host  Destination hostname or numeric address (IPv4/IPv6).
+     * @param[in] port  Destination UDP port (> 0).
+     * @param[in] data  Pointer to payload (may be null iff @p len == 0).
+     * @param[in] len   Number of bytes to send in a single UDP datagram.
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     *
+     * @throws SocketException
+     *   - With code `0` and an explanatory message if no address family can carry the payload.
+     *   - With the last OS error code/message if all attempted sends fail.
+     *
+     * @note Zero-length datagrams are valid; this helper returns `0` without sending.
+     * @see writeTo(), write(const DatagramPacket&), MaxUdpPayloadIPv4, MaxUdpPayloadIPv6
+     */
+    void sendUnconnectedTo(std::string_view host, Port port, const void* data, std::size_t len) const;
+
+    /**
+     * @brief View a textual buffer as raw bytes without copying.
+     * @ingroup udp
+     *
+     * @details
+     * Returns a `std::span<const std::byte>` that references the same memory as the input
+     * `std::string_view` @p sv. This is an **O(1)**, zero-allocation conversion intended
+     * for APIs that operate on binary payloads (e.g., UDP datagram sends) while callers
+     * may naturally hold data as text.
+     *
+     * - The resulting span **does not** include any null terminator; it covers exactly
+     *   `sv.size()` bytes starting at `sv.data()`.
+     * - The span is **non-owning**; its lifetime and validity are tied to the lifetime
+     *   of the storage viewed by @p sv. Callers must ensure that storage remains alive
+     *   until any I/O using the span completes.
+     * - Aliasing/strict-aliasing: viewing `char`/`unsigned char` storage as `std::byte`
+     *   for read-only purposes is well-formed; this helper never writes through the span.
+     *
+     * @param[in] sv   The textual data to re-interpret as bytes. May be empty.
+     *
+     * @return A byte-span referencing the same memory as @p sv (possibly empty).
+     *
+     * @note This function performs no validation or transcoding; it is a shallow view
+     *       conversion only. For structured data, prefer explicit serialization.
+     *
+     * @since 1.0
+     *
+     * @see write(std::span<const std::byte>), write(std::string_view),
+     *      writePrefixed<T>(std::string_view), writePrefixed<T>(std::span<const std::byte>),
+     *      sendPrefixedConnected<T>(std::span<const std::byte>),
+     *      sendPrefixedUnconnected<T>(std::string_view, Port, std::span<const std::byte>)
+     *
+     * @code
+     * // Treat a string payload as raw bytes for binary-oriented send paths:
+     * std::string payload = "hello";
+     * auto bytes = DatagramSocket::asBytes(std::string_view{payload});
+     * sock.write(bytes); // sends as a single UDP datagram
+     * @endcode
+     */
+    static std::span<const std::byte> asBytes(const std::string_view sv) noexcept
+    {
+        return {reinterpret_cast<const std::byte*>(sv.data()), sv.size()};
+    }
+
+    /**
+     * @brief Encode a length value into a fixed-size, big-endian (network-order) byte array.
+     * @ingroup udp
+     *
+     * @tparam T
+     *   Unsigned integral type used for the length prefix. Typical choices are
+     *   `std::uint8_t`, `std::uint16_t`, `std::uint32_t`, or `std::uint64_t`.
+     *   A compile-time check enforces that `T` is an unsigned integral.
+     *
+     * @details
+     * Converts @p n into its big-endian (network byte order) representation using exactly
+     * `sizeof(T)` bytes and returns the result as `std::array<std::byte, sizeof(T)>`.
+     * The function is O(`sizeof(T)`) and allocation-free.
+     *
+     * - When `sizeof(T) == 1`, the result is a single byte: `n & 0xFF`.
+     * - For larger `T`, the most significant byte appears first in the array.
+     * - Only the low `sizeof(T) * 8` bits of @p n are representable; values that do not
+     *   fit are rejected with a logical exception (see Throws).
+     *
+     * This helper is intended for building length-prefixed UDP frames with a prefix followed
+     * by payload bytes, where the prefix must be in network byte order for interoperability.
+     *
+     * @param[in] n  The length value to encode. Must satisfy `n <= std::numeric_limits<T>::max()`.
+     *
+     * @return A `std::array<std::byte, sizeof(T)>` containing @p n encoded in big-endian order.
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):** if @p n exceeds `std::numeric_limits<T>::max()`.
+     *
+     * @since 1.0
+     *
+     * @see writePrefixed<T>(std::string_view),
+     *      writePrefixed<T>(std::span<const std::byte>),
+     *      writePrefixedTo<T>(std::string_view, Port, std::string_view),
+     *      writePrefixedTo<T>(std::string_view, Port, std::span<const std::byte>)
+     *
+     * @code
+     * // Example: encode a 16-bit length (42) as network-order bytes { 0x00, 0x2A }.
+     * auto be = DatagramSocket::encodeLengthPrefixBE<std::uint16_t>(42);
+     * assert(static_cast<unsigned>(be[0]) == 0x00);
+     * assert(static_cast<unsigned>(be[1]) == 0x2A);
+     * @endcode
+     */
+    template <typename T> static std::array<std::byte, sizeof(T)> encodeLengthPrefixBE(std::size_t n)
+    {
+        static_assert(std::is_integral_v<T> && std::is_unsigned_v<T>,
+                      "T must be an unsigned integral type for the length prefix.");
+        if (n > static_cast<std::size_t>((std::numeric_limits<T>::max)()))
+            throw SocketException("writePrefixed<T>(): payload too large for prefix type T.");
+        std::array<std::byte, sizeof(T)> out{};
+        T v = static_cast<T>(n);
+        for (std::size_t i = 0; i < sizeof(T); ++i)
+        {
+            out[sizeof(T) - 1 - i] = static_cast<std::byte>(v & static_cast<T>(0xFF));
+            v = static_cast<T>(v >> 8);
+        }
+        return out;
+    }
+
+    /**
+     * @brief Build and send a length-prefixed UDP datagram to the connected peer (no pre-wait).
+     * @ingroup udp
+     *
+     * @tparam T
+     *   Unsigned integral type used for the length prefix (e.g., `std::uint8_t`, `std::uint16_t`,
+     *   `std::uint32_t`, `std::uint64_t`). A compile-time check enforces that `T` is an
+     *   unsigned integral.
+     *
+     * @details
+     * Constructs a single datagram with layout **[ prefix(T, big-endian) | payload ]** where
+     * the prefix encodes `payload.size()` in **network byte order**. The method:
+     *  1) verifies the socket is **open** and **connected**;
+     *  2) encodes the prefix via `encodeLengthPrefixBE<T>(payload.size())`;
+     *  3) computes `total = sizeof(T) + payload.size()` and enforces the connected peer’s
+     *     protocol maxima via `enforceSendCapConnected(total)` (prevents guaranteed `EMSGSIZE`);
+     *  4) coalesces `[prefix|payload]` into one contiguous buffer and performs **one** send.
+     *
+     * This function does **not** poll for writability. On non-blocking sockets, if the send
+     * buffer is temporarily full, the underlying send may fail (e.g., `EWOULDBLOCK` /
+     * `WSAEWOULDBLOCK`) and will be surfaced as a `SocketException`. For blocking behavior,
+     * prefer `writeAll()` or `writeWithTimeout()`.
+     *
+     * **Atomicity:** UDP is message-oriented; on success, the *entire* `[prefix|payload]`
+     * frame is sent in a single datagram. On exception, no bytes are considered transmitted.
+     *
+     * Zero-length payloads are valid: a datagram containing only the prefix is sent.
+     *
+     * @param[in] payload  Binary bytes to append after the length prefix (may be empty).
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     * @pre `isConnected() == true`
+     *
+     * @post On success, exactly `sizeof(T) + payload.size()` bytes are handed to the kernel
+     *       as one UDP datagram. Socket state and options are unchanged.
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):**
+     *     - Socket is not open or not connected.
+     *     - `payload.size()` exceeds `std::numeric_limits<T>::max()` (from `encodeLengthPrefixBE<T>()`).
+     *     - Total frame exceeds the permitted maximum for the connected peer’s family
+     *       (from `enforceSendCapConnected()`).
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):**
+     *     - Send failures such as `EWOULDBLOCK`, `ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.
+     *
+     * @since 1.0
+     *
+     * @see writePrefixed<T>(std::string_view),
+     *      writePrefixed<T>(std::span<const std::byte>),
+     *      writeWithTimeout(std::string_view, int),
+     *      writeAll(std::string_view),
+     *      encodeLengthPrefixBE<T>(std::size_t),
+     *      enforceSendCapConnected(std::size_t)
+     *
+     * @code
+     * // Example: send a length-prefixed frame with a 16-bit prefix
+     * std::string_view text = "hello";
+     * sock.sendPrefixedConnected<std::uint16_t>(DatagramSocket::asBytes(text));
+     * @endcode
+     */
+    template <typename T> void sendPrefixedConnected(const std::span<const std::byte> payload) const
+    {
+        if (getSocketFd() == INVALID_SOCKET)
+            throw SocketException("DatagramSocket::writePrefixed<T>(): socket is not open.");
+        if (!isConnected())
+            throw SocketException("DatagramSocket::writePrefixed<T>(): socket is not connected. Use write*To().");
+
+        const std::size_t n = payload.size();
+        const auto prefix = encodeLengthPrefixBE<T>(n);
+        const std::size_t total = sizeof(T) + n;
+
+        enforceSendCapConnected(total);
+
+        // Coalesce [prefix | payload] into one datagram and send once.
+        std::vector<std::byte> datagram(total);
+        std::memcpy(datagram.data(), prefix.data(), sizeof(T));
+        if (n != 0)
+        {
+            std::memcpy(datagram.data() + sizeof(T), payload.data(), n);
+        }
+        internal::sendExact(getSocketFd(), datagram.data(), datagram.size());
+    }
+
+    /**
+     * @brief Build and send a length-prefixed UDP datagram to (host, port) on the unconnected path.
+     * @ingroup udp
+     *
+     * @tparam T
+     *   Unsigned integral type for the length prefix (e.g., `std::uint8_t`, `std::uint16_t`,
+     *   `std::uint32_t`, `std::uint64_t`). A compile-time check enforces that `T` is unsigned integral.
+     *
+     * @details
+     * Constructs a single frame **[ prefix(T, big-endian) | payload ]**, where the prefix encodes
+     * `payload.size()` in **network byte order**, then transmits it to the specified destination
+     * using `sendUnconnectedTo()`. That helper resolves A/AAAA records, **skips** address families
+     * whose theoretical UDP maximum cannot carry the frame, attempts a single send to the first
+     * compatible candidate, and caches the last destination (without marking the socket connected).
+     *
+     * Processing steps:
+     *  1) Verify socket is **open**.
+     *  2) Encode prefix via `encodeLengthPrefixBE<T>(payload.size())` (validates that size fits in `T`).
+     *  3) Coalesce `[prefix|payload]` once and dispatch through `sendUnconnectedTo(host, port, ...)`.
+     *
+     * Zero-length payloads are valid: a datagram containing only the prefix is sent.
+     *
+     * **Atomicity:** UDP is message-oriented; on success the entire `[prefix|payload]` frame is sent
+     * in one datagram. On exception, no bytes are considered transmitted.
+     *
+     * @param[in] host     Destination hostname or numeric address (IPv4/IPv6).
+     * @param[in] port     Destination UDP port (> 0).
+     * @param[in] payload  Binary bytes to append after the length prefix (may be empty).
+     *
+     * @pre `getSocketFd() != INVALID_SOCKET`
+     *
+     * @post On success, exactly `sizeof(T) + payload.size()` bytes are handed to the kernel as one datagram.
+     *
+     * @throws SocketException
+     *   - **Logical (error code = 0):**
+     *     - Socket is not open.
+     *     - `payload.size()` exceeds `std::numeric_limits<T>::max()` (from `encodeLengthPrefixBE<T>()`).
+     *     - No address family can carry the frame size (surfaced by `sendUnconnectedTo()`).
+     *   - **System (OS error + `SocketErrorMessageWrap(...)`):**
+     *     - Resolution or send failures reported by the OS (e.g., `ENETUNREACH`, `EHOSTUNREACH`, `ENOBUFS`).
+     *
+     * @note Family-specific size enforcement (IPv4 vs IPv6) and destination caching are handled inside
+     *       `sendUnconnectedTo()`. This method does not pre-wait for writability; if you need blocking
+     *       behavior, perform an explicit readiness wait on a connected socket or design a higher-level retry.
+     *
+     * @since 1.0
+     *
+     * @see writePrefixedTo<T>(std::string_view, Port, std::string_view),
+     *      writePrefixed<T>(std::span<const std::byte>),
+     *      encodeLengthPrefixBE<T>(std::size_t),
+     *      sendUnconnectedTo(std::string_view, Port, const void*, std::size_t),
+     *      MaxUdpPayloadIPv4, MaxUdpPayloadIPv6
+     *
+     * @code
+     * // Example: send a length-prefixed binary frame to a host/port using a 16-bit prefix.
+     * std::array<std::byte, 3> data{std::byte{0xDE}, std::byte{0xAD}, std::byte{0xBE}};
+     * sock.sendPrefixedUnconnected<std::uint16_t>("239.0.0.1", 5000, std::span<const std::byte>{data});
+     * @endcode
+     */
+    template <typename T>
+    void sendPrefixedUnconnected(const std::string_view host, const Port port,
+                                 const std::span<const std::byte> payload) const
+    {
+        if (getSocketFd() == INVALID_SOCKET)
+            throw SocketException("DatagramSocket::writePrefixedTo<T>(): socket is not open.");
+
+        const std::size_t n = payload.size();
+        const auto prefix = encodeLengthPrefixBE<T>(n);
+        const std::size_t total = sizeof(T) + n;
+
+        // Build once; family skipping & send are handled inside sendUnconnectedTo().
+        std::vector<std::byte> datagram(total);
+        std::memcpy(datagram.data(), prefix.data(), sizeof(T));
+        if (n != 0)
+        {
+            std::memcpy(datagram.data() + sizeof(T), payload.data(), n);
+        }
+        sendUnconnectedTo(host, port, datagram.data(), datagram.size());
     }
 
   private:

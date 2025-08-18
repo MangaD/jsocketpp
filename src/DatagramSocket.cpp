@@ -3,6 +3,7 @@
 #include "jsocketpp/SocketException.hpp"
 #include "jsocketpp/SocketTimeoutException.hpp"
 
+#include <numeric>
 #include <optional>
 
 using namespace jsocketpp;
@@ -355,50 +356,17 @@ void DatagramSocket::disconnect()
     _isConnected = false;
 }
 
-void DatagramSocket::write(const DatagramPacket& packet) const
-{
-    if (getSocketFd() == INVALID_SOCKET)
-        throw SocketException("DatagramSocket::write(DatagramPacket): socket is not open.");
-
-    if (packet.buffer.empty())
-        return;
-
-    // Case 1: Explicit destination provided in the packet
-    if (!packet.address.empty() && packet.port != 0)
-    {
-        const auto ai = internal::resolveAddress(packet.address, packet.port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
-
-        internal::sendExactTo(getSocketFd(), packet.buffer.data(), packet.buffer.size(), ai->ai_addr,
-#ifdef _WIN32
-                              static_cast<int>(ai->ai_addrlen)
-#else
-                              ai->ai_addrlen
-#endif
-        );
-
-        if (!_isConnected)
-        {
-            _remoteAddr = *reinterpret_cast<const sockaddr_storage*>(ai->ai_addr);
-            _remoteAddrLen = static_cast<socklen_t>(ai->ai_addrlen);
-        }
-        return;
-    }
-
-    // Case 2: No destination — must be connected
-    if (!_isConnected)
-        throw SocketException(
-            "DatagramSocket::write(DatagramPacket): no destination specified and socket is not connected.");
-
-    internal::sendExact(getSocketFd(), packet.buffer.data(), packet.buffer.size());
-}
-
 void DatagramSocket::write(const std::string_view message) const
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("DatagramSocket::write(std::string_view): socket is not open.");
 
     if (!_isConnected)
-        throw SocketException("DatagramSocket::write(std::string_view): socket is not connected.");
+        throw SocketException(
+            "DatagramSocket::write(std::string_view): socket is not connected. Use writeTo() instead.");
+
+    // Guard the single datagram size for the connected peer.
+    enforceSendCapConnected(message.size());
 
     if (message.empty())
         return;
@@ -412,12 +380,194 @@ void DatagramSocket::write(const std::span<const std::byte> data) const
         throw SocketException("DatagramSocket::write(std::span<const std::byte>): socket is not open.");
 
     if (!_isConnected)
-        throw SocketException("DatagramSocket::write(std::span<const std::byte>): socket is not connected.");
+        throw SocketException(
+            "DatagramSocket::write(std::span<const std::byte>): socket is not connected. Use writeTo() instead.");
+
+    enforceSendCapConnected(data.size());
 
     if (data.empty())
         return;
 
-    internal::sendExact(getSocketFd(), reinterpret_cast<const char*>(data.data()), data.size());
+    internal::sendExact(getSocketFd(), data.data(), data.size());
+}
+
+void DatagramSocket::writeAll(const std::string_view message) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException(0, "DatagramSocket::writeAll(): socket is not open.");
+    if (!isConnected())
+        throw SocketException(0, "DatagramSocket::writeAll(): socket is not connected. Use writeTo() instead.");
+
+    const std::size_t len = message.size();
+    if (len == 0)
+        return;
+
+    enforceSendCapConnected(len);
+    waitReady(Direction::Write, -1);
+    internal::sendExact(getSocketFd(), message.data(), len);
+}
+
+void DatagramSocket::writeWithTimeout(const std::string_view data, const int timeoutMillis) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException(0, "DatagramSocket::writeWithTotalTimeout(): socket is not open.");
+    if (!isConnected())
+        throw SocketException(
+            0, "DatagramSocket::writeWithTotalTimeout(): socket is not connected. Use writeTo() instead.");
+
+    const std::size_t len = data.size();
+    if (len == 0)
+        return;
+
+    enforceSendCapConnected(len);
+    waitReady(Direction::Write, timeoutMillis);
+    internal::sendExact(getSocketFd(), data.data(), len);
+}
+
+void DatagramSocket::write(const DatagramPacket& packet) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::write(DatagramPacket): socket is not open.");
+
+    const std::size_t len = packet.buffer.size();
+    if (len == 0)
+        return;
+
+    if (packet.hasDestination())
+    {
+        sendUnconnectedTo(packet.address, packet.port, packet.buffer.data(), len);
+        return;
+    }
+
+    if (!isConnected())
+        throw SocketException(
+            "DatagramSocket::write(DatagramPacket): no destination specified and socket is not connected.");
+
+    enforceSendCapConnected(len);
+    internal::sendExact(getSocketFd(), packet.buffer.data(), len);
+}
+
+void DatagramSocket::writeFrom(const void* data, const std::size_t len) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException(0, "DatagramSocket::writeFrom(): socket is not open.");
+    if (!isConnected())
+        throw SocketException(0, "DatagramSocket::writeFrom(): socket is not connected. Use writeTo() instead.");
+
+    if (len == 0)
+        return;
+
+    enforceSendCapConnected(len);
+    internal::sendExact(getSocketFd(), data, len);
+}
+
+void DatagramSocket::writev(const std::span<const std::string_view> buffers) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException(0, "DatagramSocket::writev(): socket is not open.");
+    if (!isConnected())
+        throw SocketException(0, "DatagramSocket::writev(): socket is not connected. Use writeTo() instead.");
+
+    // Compute total datagram size (sum of all fragments).
+    std::size_t total = 0;
+    for (const auto& b : buffers)
+        total += b.size();
+
+    if (total == 0)
+        return; // nothing to send (empty datagram is valid, but we skip work)
+
+    // Validate against UDP maxima for the connected peer (IPv4/IPv6-aware).
+    enforceSendCapConnected(total);
+
+    // Fast path: a single fragment — send it directly with no extra copy.
+    if (buffers.size() == 1)
+    {
+        const auto& b = buffers.front();
+        internal::sendExact(getSocketFd(), b.data(), b.size());
+        return;
+    }
+
+    // General path: coalesce fragments into one contiguous buffer, then send once.
+    // Note: We copy because UDP must be sent in a single syscall; if your platform
+    // path uses sendmsg/WSASend with scatter-gather, you could add an SG path here.
+    std::vector<std::byte> datagram;
+    try
+    {
+        datagram.resize(total);
+    }
+    catch (const std::bad_alloc&)
+    {
+        throw SocketException(0, "DatagramSocket::writev(): allocation failed for datagram buffer of size " +
+                                     std::to_string(total));
+    }
+
+    std::byte* dst = datagram.data();
+    for (const auto& b : buffers)
+    {
+        if (!b.empty())
+        {
+            std::memcpy(dst, b.data(), b.size());
+            dst += b.size();
+        }
+    }
+
+    internal::sendExact(getSocketFd(), datagram.data(), datagram.size());
+}
+
+void DatagramSocket::writevAll(const std::span<const std::string_view> buffers) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException(0, "DatagramSocket::writevAll(): socket is not open.");
+    if (!isConnected())
+        throw SocketException(0, "DatagramSocket::writevAll(): socket is not connected. Use writeTo() instead.");
+
+    // Compute the exact datagram size we intend to emit (sum of all fragments).
+    std::size_t total = 0;
+    for (const auto& b : buffers)
+        total += b.size();
+
+    if (total == 0)
+        return; // empty datagram is valid; we choose to no-op for consistency
+
+    // Enforce protocol-level maxima (IPv4/IPv6 aware) for the connected peer.
+    enforceSendCapConnected(total);
+
+    // Honor "All" semantics even on non-blocking sockets: wait until writable.
+    // (-1 means wait indefinitely; adjust if you want a bounded internal timeout.)
+    waitReady(Direction::Write, -1);
+
+    // Fast path: a single fragment — send directly without extra allocation/copy.
+    if (buffers.size() == 1)
+    {
+        const auto& b = buffers.front();
+        internal::sendExact(getSocketFd(), b.data(), b.size());
+        return;
+    }
+
+    // General path: coalesce fragments into one contiguous buffer, then send once.
+    // (If you later add a scatter/gather path (sendmsg/WSASend), you can replace this copy.)
+    std::vector<std::byte> datagram;
+    try
+    {
+        datagram.resize(total);
+    }
+    catch (const std::bad_alloc&)
+    {
+        throw SocketException(0, "DatagramSocket::writevAll(): allocation failed for datagram buffer of size " +
+                                     std::to_string(total));
+    }
+
+    std::byte* dst = datagram.data();
+    for (const auto& b : buffers)
+    {
+        if (!b.empty())
+        {
+            std::memcpy(dst, b.data(), b.size());
+            dst += b.size();
+        }
+    }
+
+    internal::sendExact(getSocketFd(), datagram.data(), datagram.size());
 }
 
 void DatagramSocket::writeTo(const std::string_view host, const Port port, const std::string_view message) const
@@ -425,35 +575,11 @@ void DatagramSocket::writeTo(const std::string_view host, const Port port, const
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("DatagramSocket::write(std::string_view, host, port): socket is not open.");
 
-    if (message.empty())
+    const std::size_t len = message.size();
+    if (len == 0)
         return;
 
-    const auto addrInfo = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
-
-    int lastError = 0;
-    for (const addrinfo* ai = addrInfo.get(); ai != nullptr; ai = ai->ai_next)
-    {
-        try
-        {
-            internal::sendExactTo(getSocketFd(), message.data(), message.size(), ai->ai_addr,
-                                  static_cast<socklen_t>(ai->ai_addrlen));
-
-            // Mirror prior behavior: remember remote on success if not connected.
-            if (!_isConnected)
-            {
-                _remoteAddr = *reinterpret_cast<const sockaddr_storage*>(ai->ai_addr);
-                _remoteAddrLen = static_cast<socklen_t>(ai->ai_addrlen);
-            }
-            return; // success
-        }
-        catch (const SocketException&)
-        {
-            lastError = GetSocketError(); // keep last OS error; try next candidate
-        }
-    }
-
-    // All candidates failed.
-    throw SocketException(lastError, SocketErrorMessageWrap(lastError));
+    sendUnconnectedTo(host, port, message.data(), len);
 }
 
 void DatagramSocket::writeTo(const std::string_view host, const Port port, const std::span<const std::byte> data) const
@@ -1066,42 +1192,140 @@ std::optional<int> DatagramSocket::getMTU() const
 #endif
 }
 
-bool DatagramSocket::waitReady(const bool forWrite, const int timeoutMillis) const
+void DatagramSocket::waitReady(const Direction dir, const int timeoutMillis) const
 {
     if (getSocketFd() == INVALID_SOCKET)
-        throw SocketException("DatagramSocket::waitReady(): socket is not open.");
-
-    if (getSocketFd() >= FD_SETSIZE)
     {
-        throw SocketException("waitReady(): socket descriptor exceeds FD_SETSIZE (" + std::to_string(FD_SETSIZE) + ")");
+        throw SocketException(0, "DatagramSocket::waitReady(): socket is not open.");
     }
 
-    fd_set fds;
-    FD_ZERO(&fds);
-    FD_SET(getSocketFd(), &fds);
+    // Map Direction to platform poll events.
+#if defined(_WIN32)
+    WSAPOLLFD pfd{};
+    pfd.fd = getSocketFd();
+    pfd.events = 0;
+    if (dir == Direction::Read || dir == Direction::ReadWrite)
+        pfd.events |= POLLRDNORM;
+    if (dir == Direction::Write || dir == Direction::ReadWrite)
+        pfd.events |= POLLWRNORM;
 
-    timeval tv{0, 0};
-    if (timeoutMillis >= 0)
-    {
-        tv.tv_sec = timeoutMillis / 1000;
-        tv.tv_usec = (timeoutMillis % 1000) * 1000;
-    }
-
-#ifdef _WIN32
-    const int result = select(0, forWrite ? nullptr : &fds, forWrite ? &fds : nullptr, nullptr, &tv);
+    const int timeout = (timeoutMillis < 0) ? -1 : timeoutMillis;
+    const int rc = ::WSAPoll(&pfd, 1, timeout);
 #else
-    int result;
-    do
-    {
-        result = select(getSocketFd() + 1, forWrite ? nullptr : &fds, forWrite ? &fds : nullptr, nullptr, &tv);
-    } while (result < 0 && errno == EINTR);
+    pollfd pfd{};
+    pfd.fd = getSocketFd();
+    pfd.events = 0;
+    if (dir == Direction::Read || dir == Direction::ReadWrite)
+        pfd.events |= POLLIN;
+    if (dir == Direction::Write || dir == Direction::ReadWrite)
+        pfd.events |= POLLOUT;
+
+    const int timeout = (timeoutMillis < 0) ? -1 : timeoutMillis;
+    const int rc = ::poll(&pfd, 1, timeout);
 #endif
 
-    if (result < 0)
+    if (rc == 0)
     {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        // Timed out before desired readiness was signaled.
+        throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE, "DatagramSocket::waitReady(): operation timed out.");
     }
 
-    return result > 0;
+    if (rc < 0)
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, SocketErrorMessageWrap(err));
+    }
+
+    // rc > 0: some event(s) occurred. Verify that the requested readiness is present,
+    // and handle exceptional conditions by surfacing SO_ERROR when available.
+#if defined(_WIN32)
+    const short wantRead = (dir == Direction::Read || dir == Direction::ReadWrite) ? POLLRDNORM : 0;
+    const short wantWrite = (dir == Direction::Write || dir == Direction::ReadWrite) ? POLLWRNORM : 0;
+    const short re = pfd.revents;
+#else
+    const short wantRead = (dir == Direction::Read || dir == Direction::ReadWrite) ? POLLIN : 0;
+    const short wantWrite = (dir == Direction::Write || dir == Direction::ReadWrite) ? POLLOUT : 0;
+    const short re = pfd.revents;
+#endif
+
+    // If an error-ish condition is flagged, promote it to a SocketException with SO_ERROR.
+    if (re & (POLLERR | POLLNVAL | POLLHUP))
+    {
+        int soerr = 0;
+#if defined(_WIN32)
+        int optlen = static_cast<int>(sizeof(soerr));
+        (void) ::getsockopt(getSocketFd(), SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&soerr), &optlen);
+#else
+        socklen_t optlen = static_cast<socklen_t>(sizeof(soerr));
+        (void) ::getsockopt(getSocketFd(), SOL_SOCKET, SO_ERROR, reinterpret_cast<void*>(&soerr), &optlen);
+#endif
+        if (soerr == 0)
+            soerr = EIO; // fall back if no specific error reported
+        throw SocketException(soerr, SocketErrorMessageWrap(soerr));
+    }
+
+    // If we didn’t get the event we actually asked for, treat it as not-ready.
+    if ((wantRead && !(re & wantRead)) && (wantWrite && !(re & wantWrite)))
+    {
+        // Very rare, but be strict: behave like a timeout-equivalent for the requested op.
+        throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
+                                     "DatagramSocket::waitReady(): not ready for requested operation.");
+    }
+
+    // Ready for requested direction; return to caller.
+}
+
+void DatagramSocket::sendUnconnectedTo(const std::string_view host, const Port port, const void* data,
+                                       const std::size_t len) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException(0, "DatagramSocket::sendUnconnectedTo(): socket is not open.");
+    if (len == 0)
+        return;
+
+    // Resolve destination(s): AF_UNSPEC + UDP
+    const auto addrInfo = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
+    const addrinfo* head = addrInfo.get();
+
+    bool attempted = false;
+    int lastErr = 0;
+
+    for (const addrinfo* ai = head; ai; ai = ai->ai_next)
+    {
+        // Skip families that cannot possibly carry this datagram.
+        if (const std::size_t familyCap = (ai->ai_family == AF_INET6) ? MaxUdpPayloadIPv6 : MaxUdpPayloadIPv4;
+            len > familyCap)
+            continue;
+
+        try
+        {
+            internal::sendExactTo(getSocketFd(), data, len, ai->ai_addr, static_cast<socklen_t>(ai->ai_addrlen));
+
+            // Cache last destination (without marking the socket "connected").
+            if (!_isConnected)
+            {
+                rememberRemote(*reinterpret_cast<const sockaddr_storage*>(ai->ai_addr),
+                               static_cast<socklen_t>(ai->ai_addrlen));
+            }
+            return; // success
+        }
+        catch (const SocketException&)
+        {
+            attempted = true;
+            lastErr = GetSocketError();
+            // Try next candidate
+        }
+    }
+
+    // If we never attempted, nothing could possibly carry this payload.
+    if (!attempted)
+    {
+        const bool fitsV6 = (len <= MaxUdpPayloadIPv6);
+        const std::string msg = fitsV6 ? "Datagram payload exceeds IPv4 limit and no IPv6 candidates were available."
+                                       : "Datagram payload exceeds the theoretical IPv6 UDP limit.";
+        throw SocketException(0, msg);
+    }
+
+    // We attempted at least one send and failed → surface the last OS error.
+    throw SocketException(lastErr, SocketErrorMessageWrap(lastErr));
 }
