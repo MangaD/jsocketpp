@@ -16,7 +16,8 @@ DatagramSocket::DatagramSocket(const Port localPort, const std::string_view loca
                                const bool dualStack, const bool autoBind, const bool autoConnect,
                                const std::string_view remoteAddress, const Port remotePort,
                                const int connectTimeoutMillis)
-    : SocketOptions(INVALID_SOCKET), _internalBuffer(internalBufferSize.value_or(DefaultBufferSize)), _port(localPort)
+    : SocketOptions(INVALID_SOCKET), _internalBuffer(internalBufferSize.value_or(DefaultDatagramReceiveSize)),
+      _port(localPort)
 {
     const auto localAddrInfoPtr = internal::resolveAddress(
         localAddress, _port,
@@ -90,9 +91,9 @@ DatagramSocket::DatagramSocket(const Port localPort, const std::string_view loca
     if (getSocketFd() == INVALID_SOCKET)
         cleanupAndThrow(GetSocketError());
 
-    const auto recvResolved = recvBufferSize.value_or(DefaultBufferSize);
-    const auto sendResolved = sendBufferSize.value_or(DefaultBufferSize);
-    const auto internalResolved = internalBufferSize.value_or(DefaultBufferSize);
+    const auto recvResolved = recvBufferSize.value_or(DefaultDatagramReceiveSize);
+    const auto sendResolved = sendBufferSize.value_or(DefaultDatagramReceiveSize);
+    const auto internalResolved = internalBufferSize.value_or(DefaultDatagramReceiveSize);
 
     // Apply socket-level configuration
     try
