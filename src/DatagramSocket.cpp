@@ -229,12 +229,14 @@ void DatagramSocket::bind(const std::string_view localAddress, const Port localP
 
 void DatagramSocket::bind(const Port localPort)
 {
-    bind("0.0.0.0", localPort);
+    // Empty host + AI_PASSIVE => family-appropriate wildcard (INADDR_ANY or in6addr_any)
+    bind("", localPort);
 }
 
 void DatagramSocket::bind()
 {
-    bind("0.0.0.0", 0);
+    // Empty host + AI_PASSIVE => family-appropriate wildcard
+    bind("", 0);
 }
 
 void DatagramSocket::connect(const std::string_view host, const Port port, const int timeoutMillis)

@@ -154,12 +154,12 @@ void Socket::bind(const std::string_view localHost, const Port port)
 
 void Socket::bind(const Port port)
 {
-    bind("0.0.0.0", port);
+    bind("", port);
 }
 
 void Socket::bind()
 {
-    bind("0.0.0.0", 0);
+    bind("", 0);
 }
 
 void Socket::connect(const int timeoutMillis)

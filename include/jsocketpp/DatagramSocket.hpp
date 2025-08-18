@@ -745,7 +745,7 @@ class DatagramSocket : public SocketOptions
      *
      * @code{.cpp}
      * DatagramSocket sock;
-     * sock.bind(); // Binds to all interfaces on an ephemeral port (e.g., 0.0.0.0:49512)
+     * sock.bind(); // Binds to all interfaces on an ephemeral port (e.g., 0.0.0.0:49512 or [::]:49512)
      * @endcode
      *
      * @see bind(Port localPort), bind(std::string_view localAddress, Port localPort), getLocalSocketAddress()

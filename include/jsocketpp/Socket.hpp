@@ -490,7 +490,7 @@ class Socket : public SocketOptions
      * @ingroup tcp
      *
      * This overload binds to all available network interfaces using a specific local port.
-     * Equivalent to calling `bind("0.0.0.0", port)`.
+     * Equivalent to calling `bind("", port)`.
      *
      * @param[in] port Port number to bind to.
      *
@@ -503,7 +503,7 @@ class Socket : public SocketOptions
      * @ingroup tcp
      *
      * This overload delegates to the default configuration — bind to any interface, with any available port.
-     * Equivalent to calling `bind("0.0.0.0", 0)`.
+     * Equivalent to calling `bind("", 0)`.
      *
      * @throws SocketException if binding fails or the socket is already bound.
      */
