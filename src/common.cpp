@@ -2,50 +2,119 @@
 
 using namespace jsocketpp;
 
-std::string jsocketpp::SocketErrorMessage(int error, [[maybe_unused]] bool gaiStrerror)
+std::string jsocketpp::SocketErrorMessage(int error, [[maybe_unused]] const bool gaiStrerror /* = false */)
 {
-#ifdef _WIN32
+    // 0 means "no error" in both errno and WSA error spaces.
     if (error == 0)
-    {
         return {};
-    }
 
-    // Winsock error codes are in the range 10000-11999
-    if (error >= 10000 && error <= 11999)
-    {
-        // Use strerror for Winsock error codes (including WSAETIMEDOUT)
-        return {strerror(error)};
-    }
+    // Some APIs return negative errno-like values; normalize to positive for lookups.
+    if (error < 0)
+        error = -error;
 
-    LPSTR buffer = nullptr;
-    DWORD size; // Use DWORD for FormatMessageA
+#ifdef _WIN32
+    // ------------------------- Windows path -------------------------
 
-    // Try to get a human-readable error message for the given error code using FormatMessageA
-    if ((size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |              // Allocate buffer for error message
-                                   FORMAT_MESSAGE_FROM_SYSTEM |              // Get error message from system
-                                   FORMAT_MESSAGE_IGNORE_INSERTS,            // Ignore insert sequences in message
-                               nullptr,                                      // No source (system)
-                               error,                                        // Error code
-                               MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), // Use US English language
-                               reinterpret_cast<LPSTR>(&buffer),             // Output buffer
-                               0,                                            // Minimum size (let system decide)
-                               nullptr)) == 0)                               // No arguments
-    {
-        // If FormatMessageA fails, print the error and reset the last error code
-        std::cerr << "Format message failed: " << GetLastError() << std::endl;
-        SetLastError(error);
-        return {};
-    }
-    std::string errString(buffer, size);
-    LocalFree(buffer);
-    return errString;
-#else
+    // If the caller told us this is an EAI_* code (from getaddrinfo/getnameinfo),
+    // first try the dedicated resolver. If it fails or yields an empty/unknown
+    // string, we'll fall through to the general fallbacks below.
     if (gaiStrerror)
     {
-        // Use gai_strerror for getaddrinfo/freeaddrinfo/getnameinfo errors
-        return {gai_strerror(error)};
+        // Windows exposes an ANSI variant: gai_strerrorA.
+        if (const char* m = ::gai_strerrorA(error); m && *m)
+            return {m}; // copy immediately (gai_strerrorA uses a static buffer)
+        // Fall through: try generic system mapping next.
     }
-    return std::strerror(error);
+
+    // Prefer FormatMessageA: it understands many system and WSA* codes (10000–11999).
+    {
+        LPSTR buffer = nullptr;                                  // System-allocated buffer for the message text
+        constexpr DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER   // ask system to allocate 'buffer'
+                                | FORMAT_MESSAGE_FROM_SYSTEM     // look up system message tables
+                                | FORMAT_MESSAGE_IGNORE_INSERTS; // we provide no %1-style inserts
+        constexpr DWORD lang = MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT); // user/system locale
+
+        // Query the OS for a localized message string.
+        const DWORD size = ::FormatMessageA(flags,
+                                            nullptr,                          // no external message source
+                                            static_cast<DWORD>(error),        // the error code we're describing
+                                            lang,                             // language preference
+                                            reinterpret_cast<LPSTR>(&buffer), // (OUT) system allocates this buffer
+                                            0,                                // minimum chars (0 lets OS choose)
+                                            nullptr                           // no inserts
+        );
+
+        if (size != 0 && buffer)
+        {
+            // Copy into std::string before freeing the system buffer.
+            std::string msg(buffer, size);
+            ::LocalFree(buffer);
+
+            // FormatMessage often appends CR/LF and sometimes a trailing period or spaces.
+            while (!msg.empty() && (msg.back() == '\r' || msg.back() == '\n' || msg.back() == ' ' || msg.back() == '.'))
+            {
+                msg.pop_back();
+            }
+
+            if (!msg.empty())
+                return msg; // good, human-readable message obtained
+            // else: keep falling through to additional fallbacks
+        }
+        // If FormatMessage failed, continue to fallbacks.
+    }
+
+    // Fallback #1: C++ standard library mapping for system errors.
+    // This may succeed for a subset of codes depending on the runtime.
+    try
+    {
+        if (std::string m = std::system_category().message(error); !m.empty())
+            return m;
+    }
+    catch (...)
+    {
+        // Never let exceptions escape from an error-to-string helper.
+        // We'll keep trying other fallbacks below.
+    }
+
+    // Fallback #2: MSVC's thread-safe strerror_s (writes into caller-provided buffer).
+    {
+        char buf[256] = {};
+        if (::strerror_s(buf, sizeof buf, error) == 0 && buf[0] != '\0')
+            return {buf};
+    }
+
+    // Ultimate fallback: at least show the numeric code.
+    return "Unknown error " + std::to_string(error);
+
+#else
+    // -------------------------- POSIX path --------------------------
+
+    // If this is a getaddrinfo/getnameinfo return code, gai_strerror() is the canonical mapper.
+    if (gaiStrerror)
+    {
+        if (const char* m = ::gai_strerror(error); m && *m)
+            return {m};
+        // Fall through to generic errno-based mapping if this failed.
+    }
+
+    // Prefer the standard library's system_category() (generally thread-safe and descriptive).
+    try
+    {
+        std::string m = std::system_category().message(error);
+        if (!m.empty())
+            return m;
+    }
+    catch (...)
+    {
+        // Swallow and continue to strerror() below.
+    }
+
+    // Last-ditch POSIX fallback: strerror() (note: may use a static buffer on some libcs).
+    if (const char* m = ::strerror(error); m && *m)
+        return {m};
+
+    // If everything else fails, return a generic string with the numeric code.
+    return "Unknown error " + std::to_string(error);
 #endif
 }
 
@@ -314,11 +383,7 @@ std::string internal::getBoundLocalIp(const SOCKET sockFd)
                                 NI_NUMERICHOST);
     if (ret != 0)
     {
-#ifdef _WIN32
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError(), true));
-#else
         throw SocketException(ret, SocketErrorMessage(ret, true));
-#endif
     }
 
     return {ipStr};
@@ -367,12 +432,7 @@ std::string jsocketpp::addressToString(const sockaddr_storage& addr)
                                          port, sizeof(port), NI_NUMERICHOST | NI_NUMERICSERV);
             ret != 0)
         {
-            throw SocketException(
-#ifdef _WIN32
-                GetSocketError(), SocketErrorMessage(GetSocketError(), true));
-#else
-                ret, SocketErrorMessage(ret, true));
-#endif
+            throw SocketException(ret, SocketErrorMessage(ret, true));
         }
     }
     else if (addr.ss_family == AF_INET6)

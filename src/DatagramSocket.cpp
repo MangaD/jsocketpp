@@ -1045,11 +1045,7 @@ std::size_t DatagramSocket::peek(DatagramPacket& packet, const bool resizeBuffer
                                 sizeof(portBuf), NI_NUMERICHOST | NI_NUMERICSERV);
     if (ret != 0)
     {
-#ifdef _WIN32
-        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError(), true));
-#else
         throw SocketException(ret, SocketErrorMessage(ret, true));
-#endif
     }
 
     packet.address = std::string(hostBuf);

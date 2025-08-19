@@ -298,20 +298,66 @@ inline int ioctlsocket(const SOCKET fd, const long cmd, u_long* argp)
 std::vector<std::string> getHostAddr();
 
 /**
- * @brief Returns a human-readable error message for a socket error code.
+ * @brief Convert a socket-related error code to a human-readable message.
  *
- * On Windows:
- *   - For Winsock error codes (10000-11999), uses strerror (these include WSAETIMEDOUT).
- *   - For system error codes (from GetLastError()), uses FormatMessageA.
- * On POSIX:
- *   - For getaddrinfo-related errors, uses gai_strerror if gaiStrerror is true.
- *   - Otherwise, uses strerror.
+ * @details
+ * This helper produces best-effort, descriptive text for errors originating from:
+ * - Traditional socket/Winsock APIs that report failure via errno or WSAGetLastError().
+ * - Modern address APIs (getaddrinfo/getnameinfo) that return EAI_* codes directly.
  *
- * @param error The error code (platform-specific).
- * @param gaiStrerror If true, interpret error as a getaddrinfo error code (POSIX only).
- * @return A string describing the error.
+ * Usage rules:
+ * - For APIs that set errno or WSAGetLastError(), pass that code with @p gaiStrerror set to false.
+ * - For getaddrinfo/getnameinfo failures, pass the function's return value with @p gaiStrerror set to true.
+ *   Do not call WSAGetLastError() for getaddrinfo/getnameinfo, as those functions return their error code.
+ *
+ * Platform behavior:
+ * - Windows: Attempts FormatMessageA for system and WSA* codes; for EAI_* codes, uses gai_strerrorA.
+ *   The returned text is trimmed of trailing newlines/spaces. Fallbacks include std::system_category().message()
+ *   and strerror_s(). The function is written to avoid throwing; if resolution fails, it returns a generic message.
+ * - POSIX: Uses std::system_category().message() for errno values and gai_strerror() for EAI_* codes,
+ *   falling back to strerror() when necessary. The function is written to avoid throwing.
+ *
+ * Thread-safety notes:
+ * - The implementation copies any message obtained from gai_strerror/gai_strerrorA immediately into a std::string,
+ *   avoiding reliance on static internal buffers after return.
+ *
+ * @param[in] error
+ *     Numeric error code. For errno/WSA* paths, pass errno or GetSocketError() (WSAGetLastError()).
+ *     For getaddrinfo/getnameinfo, pass the function's non-zero return value (an EAI_* code).
+ *
+ * @param[in] gaiStrerror
+ *     Set to true if @p error is an address-resolution error from getaddrinfo/getnameinfo (EAI_* domain).
+ *     Set to false for traditional socket/Winsock errors (errno/WSA* domain). Default is false.
+ *
+ * @return
+ *     A best-effort, human-readable description of the error. Returns an empty string when @p error is zero.
+ *
+ * @note
+ *     Some environments may produce localized messages. Message content is not guaranteed to be stable
+ *     across operating systems, C libraries, or language settings.
+ *
+ * @throws
+ *     This function is designed not to throw. In failure cases, it returns a conservative string
+ *     such as "Unknown error <code>".
+ *
+ * @code{.cpp}
+ * // Example: traditional socket/Winsock error
+ * if (sendto(sock, buf, len, 0, addr, addrlen) == SOCKET_ERROR) {
+ *     const int err = GetSocketError(); // wraps WSAGetLastError() on Windows, errno elsewhere
+ *     std::string msg = SocketErrorMessage(err, false);
+ *     // handle or log 'msg'
+ * }
+ *
+ * // Example: getaddrinfo failure (EAI_* code)
+ * addrinfo* ai = nullptr;
+ * const int ret = ::getaddrinfo(host, service, &hints, &ai);
+ * if (ret != 0) {
+ *     std::string msg = SocketErrorMessage(ret, true);
+ *     // handle or log 'msg'
+ * }
+ * @endcode
  */
-std::string SocketErrorMessage(int error, [[maybe_unused]] bool gaiStrerror = false);
+std::string SocketErrorMessage(int error, bool gaiStrerror = false);
 
 /**
  * @brief Enum for socket shutdown modes.
@@ -910,13 +956,7 @@ using AddrinfoPtr = std::unique_ptr<addrinfo, AddrinfoDeleter>;
 
     if (const int ret = ::getaddrinfo(host.empty() ? nullptr : host.data(), portStr.c_str(), &hints, &raw); ret != 0)
     {
-        throw SocketException(
-#ifdef _WIN32
-            GetSocketError(), SocketErrorMessage(GetSocketError(), true)
-#else
-            ret, SocketErrorMessage(ret, true)
-#endif
-        );
+        throw SocketException(ret, SocketErrorMessage(ret, true));
     }
 
     return AddrinfoPtr{raw};
@@ -1379,12 +1419,7 @@ inline void resolveNumericHostPort(const sockaddr* sa, const socklen_t len, std:
 
     if (const int ret = ::getnameinfo(sa, len, hostBuf, sizeof(hostBuf), servBuf, sizeof(servBuf), flags); ret != 0)
     {
-        throw SocketException(
-#ifdef _WIN32
-            GetSocketError(), SocketErrorMessage(GetSocketError(), true));
-#else
-            ret, SocketErrorMessage(ret, true));
-#endif
+        throw SocketException(ret, SocketErrorMessage(ret, true));
     }
 
     // service is numeric due to NI_NUMERICSERV; parse without locale.
