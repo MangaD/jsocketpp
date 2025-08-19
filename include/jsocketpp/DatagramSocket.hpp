@@ -46,9 +46,9 @@ namespace jsocketpp
  *
  * @code
  * DatagramPacket pkt;
- * pkt.resize(4096); // provision capacity
+ * pkt.resize(8192); // provision capacity
  *
- * // Default (no preflight): fastest path; may truncate if a datagram > 4096 arrives
+ * // Default (no preflight): fastest path; may truncate if a datagram > 8192 arrives
  * std::size_t n = sock.read(pkt, true, jsocketpp::DatagramReceiveMode::NoPreflight);
  *
  * // Preflight: probe exact size and (if allowed) grow pkt before receiving to avoid truncation
@@ -4035,9 +4035,10 @@ class DatagramSocket : public SocketOptions
     template <typename T> void sendPrefixedConnected(const std::span<const std::byte> payload) const
     {
         if (getSocketFd() == INVALID_SOCKET)
-            throw SocketException("DatagramSocket::writePrefixed<T>(): socket is not open.");
+            throw SocketException("DatagramSocket::sendPrefixedConnected<T>(): socket is not open.");
         if (!isConnected())
-            throw SocketException("DatagramSocket::writePrefixed<T>(): socket is not connected. Use write*To().");
+            throw SocketException(
+                "DatagramSocket::sendPrefixedConnected<T>(): socket is not connected. Use write*To().");
 
         const std::size_t n = payload.size();
         const auto prefix = encodeLengthPrefixBE<T>(n);
@@ -4119,7 +4120,7 @@ class DatagramSocket : public SocketOptions
                                  const std::span<const std::byte> payload) const
     {
         if (getSocketFd() == INVALID_SOCKET)
-            throw SocketException("DatagramSocket::writePrefixedTo<T>(): socket is not open.");
+            throw SocketException("DatagramSocket::sendPrefixedUnconnected<T>(): socket is not open.");
 
         const std::size_t n = payload.size();
         const auto prefix = encodeLengthPrefixBE<T>(n);

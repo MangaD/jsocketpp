@@ -413,10 +413,9 @@ void DatagramSocket::writeAll(const std::string_view message) const
 void DatagramSocket::writeWithTimeout(const std::string_view data, const int timeoutMillis) const
 {
     if (getSocketFd() == INVALID_SOCKET)
-        throw SocketException(0, "DatagramSocket::writeWithTotalTimeout(): socket is not open.");
+        throw SocketException(0, "DatagramSocket::writeWithTimeout(): socket is not open.");
     if (!isConnected())
-        throw SocketException(
-            0, "DatagramSocket::writeWithTotalTimeout(): socket is not connected. Use writeTo() instead.");
+        throw SocketException(0, "DatagramSocket::writeWithTimeout(): socket is not connected. Use writeTo() instead.");
 
     const std::size_t len = data.size();
     if (len == 0)
@@ -576,7 +575,7 @@ void DatagramSocket::writevAll(const std::span<const std::string_view> buffers) 
 void DatagramSocket::writeTo(const std::string_view host, const Port port, const std::string_view message) const
 {
     if (getSocketFd() == INVALID_SOCKET)
-        throw SocketException("DatagramSocket::write(std::string_view, host, port): socket is not open.");
+        throw SocketException("DatagramSocket::writeTo(host, port, std::string_view): socket is not open.");
 
     const std::size_t len = message.size();
     if (len == 0)
@@ -587,8 +586,14 @@ void DatagramSocket::writeTo(const std::string_view host, const Port port, const
 
 void DatagramSocket::writeTo(const std::string_view host, const Port port, const std::span<const std::byte> data) const
 {
-    const std::string_view message_view(reinterpret_cast<const char*>(data.data()), data.size());
-    writeTo(host, port, message_view);
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::writeTo(host, port, std::span<const std::byte>): socket is not open.");
+
+    const std::size_t len = data.size();
+    if (len == 0)
+        return;
+
+    sendUnconnectedTo(host, port, data.data(), len);
 }
 
 std::size_t DatagramSocket::readIntoBuffer(char* buf, const std::size_t len, const DatagramReceiveMode mode,
