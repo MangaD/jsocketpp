@@ -49,27 +49,6 @@ std::string jsocketpp::SocketErrorMessage(int error, [[maybe_unused]] bool gaiSt
 #endif
 }
 
-std::string jsocketpp::SocketErrorMessageWrap(const int error, [[maybe_unused]] const bool gaiStrerror)
-{
-    std::string errString{};
-    try
-    {
-        errString = SocketErrorMessage(error, gaiStrerror);
-    }
-    catch (std::exception& e)
-    {
-        std::cerr << e.what() << std::endl;
-#ifdef _WIN32
-        // Fallback: try strerror for Winsock codes
-        if (error >= 10000 && error <= 11999)
-        {
-            errString = std::string(strerror(error));
-        }
-#endif
-    }
-    return errString;
-}
-
 #ifdef _WIN32
 /**
  * Redefine because not available on Windows XP
@@ -276,7 +255,7 @@ std::string jsocketpp::ipFromSockaddr(const sockaddr* addr, const bool convertIP
         if (!inet_ntop(AF_INET, &sa->sin_addr, buf, sizeof(buf)))
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
     }
     else if (addr->sa_family == AF_INET6)
@@ -293,7 +272,7 @@ std::string jsocketpp::ipFromSockaddr(const sockaddr* addr, const bool convertIP
         if (!inet_ntop(AF_INET6, &sa6->sin6_addr, buf, sizeof(buf)))
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
     }
     else
@@ -327,7 +306,7 @@ std::string internal::getBoundLocalIp(const SOCKET sockFd)
     if (getsockname(sockFd, reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int err = GetSocketError();
-        throw SocketException(err, SocketErrorMessageWrap(err));
+        throw SocketException(err, SocketErrorMessage(err));
     }
 
     char ipStr[NI_MAXHOST] = {};
@@ -336,9 +315,9 @@ std::string internal::getBoundLocalIp(const SOCKET sockFd)
     if (ret != 0)
     {
 #ifdef _WIN32
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError(), true));
 #else
-        throw SocketException(ret, SocketErrorMessageWrap(ret, true));
+        throw SocketException(ret, SocketErrorMessage(ret, true));
 #endif
     }
 
@@ -390,9 +369,9 @@ std::string jsocketpp::addressToString(const sockaddr_storage& addr)
         {
             throw SocketException(
 #ifdef _WIN32
-                GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+                GetSocketError(), SocketErrorMessage(GetSocketError(), true));
 #else
-                ret, SocketErrorMessageWrap(ret, true));
+                ret, SocketErrorMessage(ret, true));
 #endif
         }
     }
@@ -405,9 +384,9 @@ std::string jsocketpp::addressToString(const sockaddr_storage& addr)
         {
             throw SocketException(
 #ifdef _WIN32
-                GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+                GetSocketError(), SocketErrorMessage(GetSocketError(), true));
 #else
-                ret, SocketErrorMessageWrap(ret, true));
+                ret, SocketErrorMessage(ret, true));
 #endif
         }
     }
@@ -456,7 +435,7 @@ void internal::sendExact(const SOCKET fd, const void* data, std::size_t size)
     if (sent == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     if (static_cast<std::size_t>(sent) != size)
@@ -485,7 +464,7 @@ void internal::sendExactTo(const SOCKET fd, const void* data, std::size_t size, 
     if (sent == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     if (static_cast<std::size_t>(sent) != size)

@@ -39,8 +39,8 @@ class SocketInitializer
     ~SocketInitializer() noexcept
     {
         if (CleanupSockets() != 0)
-            std::cerr << "Socket cleanup failed: " << SocketErrorMessageWrap(GetSocketError()) << ": "
-                      << GetSocketError() << std::endl;
+            std::cerr << "Socket cleanup failed: " << SocketErrorMessage(GetSocketError()) << ": " << GetSocketError()
+                      << std::endl;
     }
 
     /**

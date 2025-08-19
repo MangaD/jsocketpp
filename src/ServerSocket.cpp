@@ -149,7 +149,7 @@ std::string ServerSocket::getLocalIp(const bool convertIPv4Mapped) const
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
@@ -166,7 +166,7 @@ Port ServerSocket::getLocalPort() const
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
@@ -350,7 +350,7 @@ Socket ServerSocket::acceptBlocking(const std::optional<std::size_t> recvBufferS
     if (clientSocket == INVALID_SOCKET)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     const auto [recvResolved, sendResolved, internalResolved] =
@@ -463,7 +463,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     if (result < 0)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
     // poll() returns the number of fds with events. Check for POLLIN.
     return result > 0 && (pfd.revents & POLLIN);
@@ -505,7 +505,7 @@ bool ServerSocket::waitReady(const std::optional<int> timeoutMillis) const
     if (result < 0)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
     // select() returns the number of sockets that are ready.
     // If it's greater than 0, our server socket is ready to accept a connection.

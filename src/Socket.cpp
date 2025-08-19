@@ -149,7 +149,7 @@ void Socket::bind(const std::string_view localHost, const Port port)
     }
 
     const int error = GetSocketError();
-    throw SocketException(error, SocketErrorMessageWrap(error));
+    throw SocketException(error, SocketErrorMessage(error));
 }
 
 void Socket::bind(const Port port)
@@ -243,7 +243,7 @@ void Socket::connect(const int timeoutMillis)
         if (selectResult < 0)
         {
             const int selectError = GetSocketError();
-            throw SocketException(selectError, SocketErrorMessageWrap(selectError));
+            throw SocketException(selectError, SocketErrorMessage(selectError));
         }
 
         // Even if select() reports writable, we must check if the connection actually succeeded
@@ -332,7 +332,7 @@ void Socket::shutdown(const ShutdownMode how) const
         if (::shutdown(getSocketFd(), shutdownType))
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
     }
 }
@@ -348,7 +348,7 @@ std::string Socket::getLocalIp(const bool convertIPv4Mapped) const
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
@@ -365,7 +365,7 @@ Port Socket::getLocalPort() const
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
@@ -387,7 +387,7 @@ std::string Socket::getRemoteIp(const bool convertIPv4Mapped) const
     if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&remoteAddr), &addrLen) == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr), convertIPv4Mapped);
@@ -404,7 +404,7 @@ Port Socket::getRemotePort() const
     if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&remoteAddr), &addrLen) == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&remoteAddr));

@@ -33,7 +33,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
     if (const int ret = getaddrinfo(groupAddr.c_str(), nullptr, &hints, &res); ret != 0 || !res)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error, true));
+        throw SocketException(error, SocketErrorMessage(error, true));
     }
 
     if (res->ai_family == AF_INET)
@@ -86,7 +86,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
         {
             const int err = GetSocketError();
             freeaddrinfo(res);
-            throw SocketException(err, "Failed to join IPv4 multicast group: " + SocketErrorMessageWrap(err));
+            throw SocketException(err, "Failed to join IPv4 multicast group: " + SocketErrorMessage(err));
         }
     }
     else if (res->ai_family == AF_INET6)
@@ -148,7 +148,7 @@ void MulticastSocket::joinGroup(const std::string& groupAddr, const std::string&
         {
             const int err = GetSocketError();
             freeaddrinfo(res);
-            throw SocketException(err, "Failed to join IPv6 multicast group: " + SocketErrorMessageWrap(err));
+            throw SocketException(err, "Failed to join IPv6 multicast group: " + SocketErrorMessage(err));
         }
     }
     else
@@ -182,7 +182,7 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
 #else
             ret,
 #endif
-            SocketErrorMessageWrap(
+            SocketErrorMessage(
 #ifdef _WIN32
                 GetSocketError(),
 #else
@@ -238,7 +238,7 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
         {
             const int err = GetSocketError();
             freeaddrinfo(res);
-            throw SocketException(err, "Failed to leave IPv4 multicast group: " + SocketErrorMessageWrap(err));
+            throw SocketException(err, "Failed to leave IPv4 multicast group: " + SocketErrorMessage(err));
         }
     }
     else if (res->ai_family == AF_INET6)
@@ -296,7 +296,7 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
         {
             const int err = GetSocketError();
             freeaddrinfo(res);
-            throw SocketException(err, "Failed to leave IPv6 multicast group: " + SocketErrorMessageWrap(err));
+            throw SocketException(err, "Failed to leave IPv6 multicast group: " + SocketErrorMessage(err));
         }
     }
     else
@@ -326,7 +326,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
             0)
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
         // IPv6: set to 0
         DWORD idx = 0;
@@ -334,7 +334,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
                        sizeof(idx)) < 0)
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
 #else
         // IPv4: set to INADDR_ANY
@@ -343,14 +343,14 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
         if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, &addr, sizeof(addr)) < 0)
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
         // IPv6: set to 0
         unsigned int idx = 0;
         if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
 #endif
         _currentInterface.clear();
@@ -368,13 +368,13 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
             0)
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
 #else
         if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, &v4addr, sizeof(v4addr)) < 0)
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
 #endif
         _currentInterface = iface;
@@ -392,7 +392,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
                        sizeof(idx)) < 0)
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
         _currentInterface = iface;
         return;
@@ -412,7 +412,7 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
     if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
     _currentInterface = iface;
 #endif
@@ -434,14 +434,14 @@ void MulticastSocket::setTimeToLive(const int ttl)
         0)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 #else
     int v4ttl = ttl;
     if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_TTL, &v4ttl, sizeof(v4ttl)) < 0)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 #endif
 
@@ -452,14 +452,14 @@ void MulticastSocket::setTimeToLive(const int ttl)
                    sizeof(v6hops)) < 0)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 #else
     int v6hops = ttl;
     if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_HOPS, &v6hops, sizeof(v6hops)) < 0)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 #endif
 
@@ -477,7 +477,7 @@ void MulticastSocket::setLoopbackMode(const bool enable)
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     const int family = addr.ss_family;
@@ -508,7 +508,7 @@ void MulticastSocket::setLoopbackMode(const bool enable)
     if (result == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     _loopbackEnabled = enable;

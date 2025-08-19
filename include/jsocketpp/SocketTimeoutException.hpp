@@ -24,7 +24,7 @@ namespace jsocketpp
  * - Windows: `WSAETIMEDOUT`
  * - POSIX: `ETIMEDOUT`
  *
- * The default message is generated using @ref SocketErrorMessageWrap for the given timeout error code.
+ * The default message is generated using @ref SocketErrorMessage for the given timeout error code.
  *
  * ### Example
  * @code
@@ -44,7 +44,7 @@ class SocketTimeoutException final : public SocketException
      * @param message Optional error message. If omitted, it will be generated from the error code.
      */
     explicit SocketTimeoutException(const int errorCode = JSOCKETPP_TIMEOUT_CODE, std::string message = "")
-        : SocketException(errorCode, message.empty() ? SocketErrorMessageWrap(errorCode) : std::move(message))
+        : SocketException(errorCode, message.empty() ? SocketErrorMessage(errorCode) : std::move(message))
     {
     }
 };

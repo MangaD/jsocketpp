@@ -1328,7 +1328,7 @@ class DatagramSocket : public SocketOptions
      *     - Socket is not open or not connected.
      *     - Payload exceeds the permitted maximum for the connected peer’s family
      *       (detected by `enforceSendCapConnected()`).
-     *   - **System errors (OS error code + `SocketErrorMessageWrap(...)`):**
+     *   - **System errors (OS error code + `SocketErrorMessage(...)`):**
      *     - Transient non-blocking condition (`EWOULDBLOCK` / `WSAEWOULDBLOCK`).
      *     - Resource/network issues (`ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.).
      *     - Other send failures surfaced by the OS.
@@ -1393,7 +1393,7 @@ class DatagramSocket : public SocketOptions
      *     - Socket is not open or not connected.
      *     - Payload exceeds the permitted maximum for the connected peer’s family
      *       (detected by `enforceSendCapConnected()`).
-     *   - **System (OS error code + `SocketErrorMessageWrap(...)`):**
+     *   - **System (OS error code + `SocketErrorMessage(...)`):**
      *     - Transient non-blocking condition (`EWOULDBLOCK` / `WSAEWOULDBLOCK`).
      *     - Resource/network issues (`ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.).
      *
@@ -1465,7 +1465,7 @@ class DatagramSocket : public SocketOptions
      *     - Socket is not open or not connected.
      *     - Payload exceeds the permitted maximum for the connected peer’s family
      *       (detected by `enforceSendCapConnected()`).
-     *   - **System (OS error code + `SocketErrorMessageWrap(...)`):**
+     *   - **System (OS error code + `SocketErrorMessage(...)`):**
      *     - Transient non-blocking condition (`EWOULDBLOCK` / `WSAEWOULDBLOCK`).
      *     - Resource/network issues (`ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.).
      *
@@ -1523,7 +1523,7 @@ class DatagramSocket : public SocketOptions
      * @throws SocketException
      *   - **Logical (error code = 0):** socket not open/connected; payload exceeds permitted maximum
      *     for the connected family (via `enforceSendCapConnected()`).
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** polling or send failures.
+     *   - **System (OS error + `SocketErrorMessage(...)`):** polling or send failures.
      *
      * @note This method never throws `SocketTimeoutException` because it waits indefinitely.
      *       For a bounded wait, use `writeWithTimeout()`.
@@ -1556,7 +1556,7 @@ class DatagramSocket : public SocketOptions
      * @throws SocketException
      *   - **Logical (error=0):** socket not open/connected; `payload.size()` exceeds
      *     `std::numeric_limits<T>::max()`; total size exceeds the connected family’s limit.
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** send failures (e.g., `EWOULDBLOCK`, `ENOBUFS`).
+     *   - **System (OS error + `SocketErrorMessage(...)`):** send failures (e.g., `EWOULDBLOCK`, `ENOBUFS`).
      *
      * @since 1.0
      *
@@ -1621,7 +1621,7 @@ class DatagramSocket : public SocketOptions
      * @throws SocketException
      *   - **Logical (error=0):** socket not open; `payload.size()` exceeds `std::numeric_limits<T>::max()`;
      *     or no address family can carry the total size (surfaced by the helper).
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** resolution/send failures.
+     *   - **System (OS error + `SocketErrorMessage(...)`):** resolution/send failures.
      *
      * @since 1.0
      *
@@ -1703,7 +1703,7 @@ class DatagramSocket : public SocketOptions
      * @throws SocketException
      *   - **Logical (error code = 0):** socket not open/connected; total payload exceeds the
      *     permitted maximum for the connected peer’s family (detected by `enforceSendCapConnected()`).
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** send failures such as
+     *   - **System (OS error + `SocketErrorMessage(...)`):** send failures such as
      *     `EWOULDBLOCK`, `ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.
      *
      * @note If you later add a scatter/gather `internal::sendExactv(...)`, this method can switch
@@ -1759,7 +1759,7 @@ class DatagramSocket : public SocketOptions
      * @throws SocketException
      *   - **Logical (error code = 0):** socket not open/connected; total payload exceeds the permitted
      *     maximum for the connected peer’s family (detected by `enforceSendCapConnected()`).
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** polling or send failures
+     *   - **System (OS error + `SocketErrorMessage(...)`):** polling or send failures
      *     (e.g., `POLLERR`, `POLLNVAL`, `POLLHUP`, `ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.).
      *
      * @note This method never throws `SocketTimeoutException` because it waits indefinitely. For a bounded
@@ -1823,7 +1823,7 @@ class DatagramSocket : public SocketOptions
      *     - Socket is not open or not connected.
      *     - Payload exceeds the permitted maximum for the connected peer’s family
      *       (detected by `enforceSendCapConnected()`).
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):**
+     *   - **System (OS error + `SocketErrorMessage(...)`):**
      *     - Transient non-blocking condition (`EWOULDBLOCK`, `WSAEWOULDBLOCK`).
      *     - Resource/network issues (`ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.).
      *
@@ -1889,7 +1889,7 @@ class DatagramSocket : public SocketOptions
      * @throws SocketException
      *   - **Logical (error code = 0):** socket not open/connected; payload exceeds the permitted
      *     maximum for the connected peer’s family (detected by `enforceSendCapConnected()`).
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):** polling or send failures
+     *   - **System (OS error + `SocketErrorMessage(...)`):** polling or send failures
      *     (e.g., `POLLERR`, `POLLNVAL`, `POLLHUP`, `EWOULDBLOCK`, `ENOBUFS`, `ENETUNREACH`, etc.).
      *
      * @note Prefer `writeAll()` when you intentionally want an infinite wait; pass a negative
@@ -1959,7 +1959,7 @@ class DatagramSocket : public SocketOptions
      *     - For connected sends, payload exceeds the permitted maximum for the peer’s family
      *       (detected by `enforceSendCapConnected()`).
      *     - For unconnected sends, no address family can carry the payload size (surfaced by `sendUnconnectedTo()`).
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):**
+     *   - **System (OS error + `SocketErrorMessage(...)`):**
      *     - Resolution or send failures reported by the OS (e.g., `ENETUNREACH`, `EHOSTUNREACH`, `ENOBUFS`,
      *       `EWOULDBLOCK` / `WSAEWOULDBLOCK` on non-blocking sockets), or poll-derived errors inside helpers.
      *
@@ -2022,7 +2022,7 @@ class DatagramSocket : public SocketOptions
      *     - Socket is not open.
      *     - No address family can carry the datagram size (e.g., payload exceeds IPv4 limit and
      *       only A records are available; surfaced by `sendUnconnectedTo()` with a clear message).
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):**
+     *   - **System (OS error + `SocketErrorMessage(...)`):**
      *     - Resolution or send failures reported by the OS (e.g., `EAI_*`, `ENETUNREACH`,
      *       `EHOSTUNREACH`, `ENOBUFS`, `EWOULDBLOCK`).
      *
@@ -2090,7 +2090,7 @@ class DatagramSocket : public SocketOptions
      *     - No address family can carry the datagram size (for example, payload exceeds IPv4
      *       limit and only A records are available; surfaced by `sendUnconnectedTo()` with a
      *       clear message).
-     *   - System (OS error + `SocketErrorMessageWrap(...)`):
+     *   - System (OS error + `SocketErrorMessage(...)`):
      *     - Resolution or send failures reported by the OS (for example, `EAI_*`, `ENETUNREACH`,
      *       `EHOSTUNREACH`, `ENOBUFS`, `EWOULDBLOCK`).
      *
@@ -2176,7 +2176,7 @@ class DatagramSocket : public SocketOptions
      *     - Socket is not open.
      *     - No address family can carry `sizeof(T)` (for example, payload exceeds IPv4 limit
      *       and only A records are available; surfaced by `sendUnconnectedTo()` with a clear message).
-     *   - System (OS error + `SocketErrorMessageWrap(...)`):
+     *   - System (OS error + `SocketErrorMessage(...)`):
      *     - Resolution or send failures reported by the OS (for example, `EAI_*`, `ENETUNREACH`,
      *       `EHOSTUNREACH`, `ENOBUFS`, `EWOULDBLOCK`).
      *
@@ -3171,7 +3171,7 @@ class DatagramSocket : public SocketOptions
      *
      * @throws SocketTimeoutException  If the requested readiness is not achieved before the timeout.
      * @throws SocketException         On polling failure or detected socket error
-     *                                 (uses `GetSocketError()` and `SocketErrorMessageWrap()`).
+     *                                 (uses `GetSocketError()` and `SocketErrorMessage()`).
      *
      * @code
      * // Example: wait up to 500 ms to become writable, then send one datagram
@@ -3763,7 +3763,7 @@ class DatagramSocket : public SocketOptions
      * @throws SocketException
      * - If the socket is not open or not connected (logical error).
      * - If `getpeername()` fails while determining the connected peer family
-     *   (OS error; uses `GetSocketError()`/`SocketErrorMessageWrap()`).
+     *   (OS error; uses `GetSocketError()`/`SocketErrorMessage()`).
      * - If @p payloadSize exceeds the permitted maximum for the connected peer’s family.
      *
      * @note This method does **not** enforce path-MTU/non-fragmenting policies; it only
@@ -3796,7 +3796,7 @@ class DatagramSocket : public SocketOptions
             if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&peer), &len) == SOCKET_ERROR)
             {
                 const int err = GetSocketError();
-                throw SocketException(err, SocketErrorMessageWrap(err));
+                throw SocketException(err, SocketErrorMessage(err));
             }
             family = reinterpret_cast<const sockaddr*>(&peer)->sa_family;
         }
@@ -3848,7 +3848,7 @@ class DatagramSocket : public SocketOptions
      * If no candidates can even be *attempted* (e.g., payload > IPv6 max or only A records
      * for a payload that requires IPv6), throws a **logical** `SocketException` with a clear
      * diagnostic. If at least one attempt is made and all fail, throws a `SocketException`
-     * with the last OS error (`GetSocketError()`/`SocketErrorMessageWrap()`).
+     * with the last OS error (`GetSocketError()`/`SocketErrorMessage()`).
      *
      * This helper is intended for all **unconnected** write paths (e.g., `writeTo(...)`,
      * `write(const DatagramPacket&)` when the packet specifies a destination).
@@ -4014,7 +4014,7 @@ class DatagramSocket : public SocketOptions
      *     - `payload.size()` exceeds `std::numeric_limits<T>::max()` (from `encodeLengthPrefixBE<T>()`).
      *     - Total frame exceeds the permitted maximum for the connected peer’s family
      *       (from `enforceSendCapConnected()`).
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):**
+     *   - **System (OS error + `SocketErrorMessage(...)`):**
      *     - Send failures such as `EWOULDBLOCK`, `ENOBUFS`, `ENETUNREACH`, `EHOSTUNREACH`, etc.
      *
      * @since 1.0
@@ -4093,7 +4093,7 @@ class DatagramSocket : public SocketOptions
      *     - Socket is not open.
      *     - `payload.size()` exceeds `std::numeric_limits<T>::max()` (from `encodeLengthPrefixBE<T>()`).
      *     - No address family can carry the frame size (surfaced by `sendUnconnectedTo()`).
-     *   - **System (OS error + `SocketErrorMessageWrap(...)`):**
+     *   - **System (OS error + `SocketErrorMessage(...)`):**
      *     - Resolution or send failures reported by the OS (e.g., `ENETUNREACH`, `EHOSTUNREACH`, `ENOBUFS`).
      *
      * @note Family-specific size enforcement (IPv4 vs IPv6) and destination caching are handled inside

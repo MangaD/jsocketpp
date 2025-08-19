@@ -314,19 +314,6 @@ std::vector<std::string> getHostAddr();
 std::string SocketErrorMessage(int error, [[maybe_unused]] bool gaiStrerror = false);
 
 /**
- * @brief Returns a human-readable error message for a socket error code, with exception safety.
- *
- * Like SocketErrorMessage, but guarantees not to throw exceptions (e.g., for use in destructors).
- * If an error occurs while generating the message, returns a fallback string (on Windows, uses strerror for Winsock
- * codes).
- *
- * @param error The error code (platform-specific).
- * @param gaiStrerror If true, interpret error as a getaddrinfo error code (POSIX only).
- * @return A string describing the error, or a fallback if an exception occurs.
- */
-std::string SocketErrorMessageWrap(int error, [[maybe_unused]] bool gaiStrerror = false);
-
-/**
  * @brief Enum for socket shutdown modes.
  *
  * Used to specify how to shutdown a socket (read, write, or both).
@@ -925,9 +912,9 @@ using AddrinfoPtr = std::unique_ptr<addrinfo, AddrinfoDeleter>;
     {
         throw SocketException(
 #ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true)
+            GetSocketError(), SocketErrorMessage(GetSocketError(), true)
 #else
-            ret, SocketErrorMessageWrap(ret, true)
+            ret, SocketErrorMessage(ret, true)
 #endif
         );
     }
@@ -1183,7 +1170,7 @@ inline bool tryCloseNoexcept(const SOCKET fd) noexcept
  * If `CloseSocket()` fails, the function retrieves the platform error code
  * via `GetSocketError()` and throws a `SocketException` containing both
  * the numeric error and a descriptive message produced by
- * `SocketErrorMessageWrap(error)`.
+ * `SocketErrorMessage(error)`.
  *
  * This function is intended for use in public `close()` methods or other
  * contexts where socket closure errors must be explicitly reported to the
@@ -1213,7 +1200,7 @@ inline void closeOrThrow(const SOCKET fd)
     if (CloseSocket(fd) != 0)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 }
 
@@ -1311,7 +1298,7 @@ inline ssize_t recvInto(const SOCKET fd, std::span<std::byte> dst, const int fla
  * project’s canonical two-argument pattern:
  *
  * @code
- * throw SocketException(err, SocketErrorMessageWrap(err));
+ * throw SocketException(err, SocketErrorMessage(err));
  * @endcode
  *
  * When internal error-context is enabled (see build-time switch `JSOCKETPP_INCLUDE_ERROR_CONTEXT`),
@@ -1323,7 +1310,7 @@ inline ssize_t recvInto(const SOCKET fd, std::span<std::byte> dst, const int fla
  *
  * @throws SocketException Always thrown. The first argument is the integer error code returned
  *         by `GetSocketError()`. The second argument is the human-readable message produced by
- *         `SocketErrorMessageWrap(err)`, optionally suffixed with the source location when enabled.
+ *         `SocketErrorMessage(err)`, optionally suffixed with the source location when enabled.
  *
  * @note Requires C++20 (`<source_location>`).
  * @note Thread-safe: reads a thread-local error code (`GetSocketError()` should return the error
@@ -1337,14 +1324,14 @@ inline ssize_t recvInto(const SOCKET fd, std::span<std::byte> dst, const int fla
  * }
  * @endcode
  *
- * @see GetSocketError(), SocketErrorMessageWrap(int), SocketException
+ * @see GetSocketError(), SocketErrorMessage(int), SocketException
  * @since 1.0
  */
 [[noreturn]] inline void throwLastSockError(const std::source_location& loc = std::source_location::current())
 {
     const int err = GetSocketError();
 #if JSOCKETPP_INCLUDE_ERROR_CONTEXT
-    std::string msg = SocketErrorMessageWrap(err);
+    std::string msg = SocketErrorMessage(err);
     msg.append(" [at ")
         .append(loc.file_name())
         .append(":")
@@ -1355,7 +1342,7 @@ inline ssize_t recvInto(const SOCKET fd, std::span<std::byte> dst, const int fla
     throw SocketException(err, std::move(msg));
 #else
     (void) loc;
-    throw SocketException(err, SocketErrorMessageWrap(err));
+    throw SocketException(err, SocketErrorMessage(err));
 #endif
 }
 
@@ -1394,9 +1381,9 @@ inline void resolveNumericHostPort(const sockaddr* sa, const socklen_t len, std:
     {
         throw SocketException(
 #ifdef _WIN32
-            GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+            GetSocketError(), SocketErrorMessage(GetSocketError(), true));
 #else
-            ret, SocketErrorMessageWrap(ret, true));
+            ret, SocketErrorMessage(ret, true));
 #endif
     }
 

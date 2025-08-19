@@ -966,7 +966,7 @@ class Socket : public SocketOptions
             if (len == SOCKET_ERROR)
             {
                 const int error = GetSocketError();
-                throw SocketException(error, SocketErrorMessageWrap(error));
+                throw SocketException(error, SocketErrorMessage(error));
             }
 
             if (len == 0)

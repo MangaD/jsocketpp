@@ -224,7 +224,7 @@ void DatagramSocket::bind(const std::string_view localAddress, const Port localP
     }
 
     const int error = GetSocketError();
-    throw SocketException(error, SocketErrorMessageWrap(error));
+    throw SocketException(error, SocketErrorMessage(error));
 }
 
 void DatagramSocket::bind(const Port localPort)
@@ -322,7 +322,7 @@ void DatagramSocket::connect(const std::string_view host, const Port port, const
         if (selectResult < 0)
         {
             const int errorSelect = GetSocketError();
-            throw SocketException(errorSelect, SocketErrorMessageWrap(errorSelect));
+            throw SocketException(errorSelect, SocketErrorMessage(errorSelect));
         }
 
         // Even if select() reports writable, we must check if the connection actually succeeded
@@ -677,11 +677,11 @@ std::size_t DatagramSocket::readIntoBuffer(char* buf, const std::size_t len, con
         if (wouldBlock)
         {
             // Non-blocking “no data yet” → still signal as a timeout-style condition, but keep real code.
-            throw SocketTimeoutException(err, SocketErrorMessageWrap(err));
+            throw SocketTimeoutException(err, SocketErrorMessage(err));
         }
 
         // Everything else → canonical two-arg throw
-        throw SocketException(err, SocketErrorMessageWrap(err));
+        throw SocketException(err, SocketErrorMessage(err));
     }
 }
 
@@ -903,7 +903,7 @@ std::string DatagramSocket::getLocalIp(const bool convertIPv4Mapped) const
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&localAddr), &addrLen) == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&localAddr), convertIPv4Mapped);
@@ -920,7 +920,7 @@ Port DatagramSocket::getLocalPort() const
     if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
     {
         const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
     }
 
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
@@ -944,7 +944,7 @@ std::string DatagramSocket::getRemoteIp(const bool convertIPv4Mapped) const
         if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
     }
     else
@@ -972,7 +972,7 @@ Port DatagramSocket::getRemotePort() const
         if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
         {
             const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessageWrap(error));
+            throw SocketException(error, SocketErrorMessage(error));
         }
     }
     else
@@ -1034,7 +1034,7 @@ std::size_t DatagramSocket::peek(DatagramPacket& packet, const bool resizeBuffer
 
     const int error = GetSocketError();
     if (received == SOCKET_ERROR)
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
 
     if (received == 0)
         throw SocketException("DatagramSocket::peek(): connection closed by remote host.");
@@ -1046,9 +1046,9 @@ std::size_t DatagramSocket::peek(DatagramPacket& packet, const bool resizeBuffer
     if (ret != 0)
     {
 #ifdef _WIN32
-        throw SocketException(GetSocketError(), SocketErrorMessageWrap(GetSocketError(), true));
+        throw SocketException(GetSocketError(), SocketErrorMessage(GetSocketError(), true));
 #else
-        throw SocketException(ret, SocketErrorMessageWrap(ret, true));
+        throw SocketException(ret, SocketErrorMessage(ret, true));
 #endif
     }
 
@@ -1087,7 +1087,7 @@ bool DatagramSocket::hasPendingData(const int timeoutMillis) const
 
     const int error = GetSocketError();
     if (result == SOCKET_ERROR)
-        throw SocketException(error, SocketErrorMessageWrap(error));
+        throw SocketException(error, SocketErrorMessage(error));
 
     return result > 0 && FD_ISSET(getSocketFd(), &readFds);
 }
@@ -1142,7 +1142,7 @@ std::optional<int> DatagramSocket::getMTU() const
     if (getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&localAddr), &addrLen) != 0)
     {
         const int err = GetSocketError();
-        throw SocketException(err, SocketErrorMessageWrap(err));
+        throw SocketException(err, SocketErrorMessage(err));
     }
 
     // Convert IP to interface name via getnameinfo + getifaddrs
@@ -1236,7 +1236,7 @@ void DatagramSocket::waitReady(const Direction dir, const int timeoutMillis) con
     if (rc < 0)
     {
         const int err = GetSocketError();
-        throw SocketException(err, SocketErrorMessageWrap(err));
+        throw SocketException(err, SocketErrorMessage(err));
     }
 
     // rc > 0: some event(s) occurred. Verify that the requested readiness is present,
@@ -1264,7 +1264,7 @@ void DatagramSocket::waitReady(const Direction dir, const int timeoutMillis) con
 #endif
         if (soerr == 0)
             soerr = EIO; // fall back if no specific error reported
-        throw SocketException(soerr, SocketErrorMessageWrap(soerr));
+        throw SocketException(soerr, SocketErrorMessage(soerr));
     }
 
     // If we didn’t get the event we actually asked for, treat it as not-ready.
@@ -1330,5 +1330,5 @@ void DatagramSocket::sendUnconnectedTo(const std::string_view host, const Port p
     }
 
     // We attempted at least one send and failed → surface the last OS error.
-    throw SocketException(lastErr, SocketErrorMessageWrap(lastErr));
+    throw SocketException(lastErr, SocketErrorMessage(lastErr));
 }
