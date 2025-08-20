@@ -606,8 +606,18 @@ std::size_t DatagramSocket::readIntoBuffer(char* buf, const std::size_t len, con
     if ((buf == nullptr && len != 0) || (len == 0 && buf != nullptr))
         throw SocketException("DatagramSocket::readIntoBuffer(): invalid buffer/length.");
 
+    // Fast path: avoid zero-length recv that could block on some platforms.
+    if (len == 0)
+    {
+        if (outDatagramSz)
+            *outDatagramSz = 0;
+        if (outTruncated)
+            *outTruncated = false;
+        return 0;
+    }
+
     // Preflight (safe clamp only — never exceeds len or MaxDatagramPayloadSafe)
-    std::size_t request = len;
+    std::size_t request = (std::min) (len, MaxDatagramPayloadSafe);
     std::size_t probed = 0;
 
     if (mode != DatagramReceiveMode::NoPreflight)
@@ -617,7 +627,7 @@ std::size_t DatagramSocket::readIntoBuffer(char* buf, const std::size_t len, con
             if (const std::size_t exact = internal::nextDatagramSize(getSocketFd()); exact > 0)
             {
                 probed = exact;
-                request = (std::min) ((std::min) (probed, MaxDatagramPayloadSafe), request);
+                request = (std::min) ((std::min) (probed, MaxDatagramPayloadSafe), len);
             }
         }
         catch (const SocketException&)
@@ -631,62 +641,124 @@ std::size_t DatagramSocket::readIntoBuffer(char* buf, const std::size_t len, con
     if (outTruncated)
         *outTruncated = false;
 
-    // Receive (EINTR-safe)
+    // EINTR-safe receive loop
     for (;;)
     {
-        const ssize_t n = internal::recvInto(getSocketFd(), std::span(reinterpret_cast<std::byte*>(buf), request),
-                                             recvFlags, outSrc, outSrcLen);
+        ssize_t n = SOCKET_ERROR;
+
+#if defined(__unix__) || defined(__APPLE__) || defined(__linux__)
+        // --- POSIX path: use recvmsg to get precise truncation info ---
+        ::msghdr msg{};
+        ::iovec iov{};
+        iov.iov_base = buf;
+        iov.iov_len = request;
+        msg.msg_iov = &iov;
+        msg.msg_iovlen = 1;
+
+        if (outSrc)
+        {
+            msg.msg_name = outSrc;
+            msg.msg_namelen = (outSrcLen ? *outSrcLen : 0);
+        }
+
+        int flags = recvFlags;
+#if defined(__linux__)
+        // On Linux, passing MSG_TRUNC causes recvmsg(...) to return the *full* datagram size,
+        // even if it exceeds iov_len. msg_flags will still indicate MSG_TRUNC when truncated.
+        flags |= MSG_TRUNC;
+#endif
+
+        n = ::recvmsg(getSocketFd(), &msg, flags);
+
+        if (n == SOCKET_ERROR)
+        {
+            const int err = GetSocketError();
+#ifndef _WIN32
+            if (err == EINTR)
+            {
+                continue; // retry
+            }
+            const bool wouldBlock = (err == EAGAIN || err == EWOULDBLOCK);
+            const bool timedOut = wouldBlock; // SO_RCVTIMEO maps here on POSIX
+#else
+            const bool wouldBlock = (err == WSAEWOULDBLOCK);
+            const bool timedOut = (err == WSAETIMEDOUT);
+#endif
+            if (timedOut)
+                throw SocketTimeoutException();
+            if (wouldBlock)
+                throw SocketTimeoutException(err, SocketErrorMessage(err));
+            throw SocketException(err, SocketErrorMessage(err));
+        }
+
+        // Success: compute copied bytes, truncation, and datagram size.
+        if (outSrcLen)
+            *outSrcLen = msg.msg_namelen;
+
+        const bool msgTrunc = (msg.msg_flags & MSG_TRUNC) != 0;
+
+#if defined(__linux__)
+        // On Linux, n == FULL datagram size when MSG_TRUNC is passed.
+        const std::size_t fullSize = static_cast<std::size_t>(n);
+        const std::size_t copied = (std::min) (request, fullSize);
+
+        if (outTruncated)
+            *outTruncated = msgTrunc && (fullSize > len);
+        if (outDatagramSz && *outDatagramSz == 0)
+            *outDatagramSz = fullSize;
+
+        return copied;
+#else
+        // Other POSIX: n is the *copied* byte count. MSG_TRUNC indicates truncation occurred.
+        const std::size_t copied = static_cast<std::size_t>(n);
+
+        if (outTruncated)
+            *outTruncated = msgTrunc || (copied == len);
+        if (outDatagramSz && *outDatagramSz == 0)
+            *outDatagramSz = copied; // full size unknown here
+
+        return copied;
+#endif
+
+#else
+        // --- Non-POSIX path (e.g., Windows): fallback to existing internal primitive ---
+        n = internal::recvInto(getSocketFd(), std::span(reinterpret_cast<std::byte*>(buf), request), recvFlags, outSrc,
+                               outSrcLen);
 
         if (n != SOCKET_ERROR)
         {
             const auto received = static_cast<std::size_t>(n);
 
-            // Truncation signal
+            // Truncation reporting (best effort on this path)
             if (outTruncated)
             {
                 if (probed > 0)
                 {
                     *outTruncated = (probed > len);
                 }
-                else if (len > 0)
+                else
                 {
-                    // Heuristic when not probed: if we filled the buffer, assume possible truncation.
-                    *outTruncated = (received == len);
+                    *outTruncated = (received == len); // heuristic
                 }
             }
 
             if (outDatagramSz && *outDatagramSz == 0)
-                *outDatagramSz = received;
+                *outDatagramSz = (probed > 0 ? probed : received);
 
             return received;
         }
 
-        // Error path
-        const int err = GetSocketError(); // platform-specific last error
-#ifndef _WIN32
-        if (err == EINTR)
-            continue; // retry
-        const bool wouldBlock = (err == EAGAIN || err == EWOULDBLOCK);
-        const bool timedOut = wouldBlock; // SO_RCVTIMEO maps here on POSIX
-#else
+        // Error path (Windows)
+        const int err = GetSocketError();
         const bool wouldBlock = (err == WSAEWOULDBLOCK);
         const bool timedOut = (err == WSAETIMEDOUT);
-#endif
 
-        // Map would-block and timeout to SocketTimeoutException, preserving the actual code when useful.
         if (timedOut)
-        {
-            // True timeout → standardized code/message (ETIMEDOUT/WSAETIMEDOUT)
             throw SocketTimeoutException();
-        }
         if (wouldBlock)
-        {
-            // Non-blocking “no data yet” → still signal as a timeout-style condition, but keep real code.
             throw SocketTimeoutException(err, SocketErrorMessage(err));
-        }
-
-        // Everything else → canonical two-arg throw
         throw SocketException(err, SocketErrorMessage(err));
+#endif
     }
 }
 
@@ -696,9 +768,9 @@ DatagramReadResult DatagramSocket::read(DatagramPacket& packet, const DatagramRe
         throw SocketException("DatagramSocket::read(DatagramPacket&,DatagramReadOptions): socket is not open.");
 
     DatagramReadResult result{};
-    std::size_t capacity = packet.size();
 
     // Ensure some capacity exists (provision if allowed)
+    std::size_t capacity = packet.size();
     if (capacity == 0)
     {
         if (opts.allowGrow)
@@ -713,54 +785,70 @@ DatagramReadResult DatagramSocket::read(DatagramPacket& packet, const DatagramRe
         }
     }
 
-    // Optional preflight: only influences capacity and growth; the actual I/O goes through readIntoBuffer()
-    if (opts.mode == DatagramReceiveMode::PreflightSize || opts.mode == DatagramReceiveMode::PreflightMax)
+    // Never request beyond our safety cap
+    capacity = (std::min) (capacity, MaxDatagramPayloadSafe);
+
+    // Decide whether a preflight would be beneficial:
+    //  - explicit preflight mode, or
+    //  - we want exact sizing to honor errorOnTruncate early, or
+    //  - we’re allowed to grow and want to size precisely.
+    const bool wantPreflight =
+        (opts.mode != DatagramReceiveMode::NoPreflight) || opts.errorOnTruncate || opts.allowGrow;
+
+    if (wantPreflight)
     {
+        std::size_t probed = 0;
         try
         {
             if (const std::size_t exact = internal::nextDatagramSize(getSocketFd()); exact > 0)
             {
-                const std::size_t probe = (std::min) (exact, MaxDatagramPayloadSafe);
+                probed = (std::min) (exact, MaxDatagramPayloadSafe);
 
-                if (opts.mode == DatagramReceiveMode::PreflightSize)
+                if (opts.allowGrow && probed > capacity)
                 {
-                    if (opts.allowGrow && probe > capacity)
-                    {
-                        packet.resize(probe);
-                        capacity = probe;
-                    }
-                    else
-                    {
-                        capacity = (std::min) (capacity, probe);
-                    }
+                    packet.resize(probed);
+                    capacity = probed;
                 }
-                else // PreflightMax: never grow
+                else if (opts.errorOnTruncate && capacity < probed)
                 {
-                    capacity = (std::min) (capacity, probe);
+                    // Early, non-destructive failure — datagram remains queued.
+                    throw SocketException("DatagramPacket buffer too small for incoming datagram (preflight).");
+                }
+                else
+                {
+                    // Keep current capacity but don’t ask for more than the datagram size.
+                    capacity = (std::min) (capacity, probed);
                 }
             }
         }
         catch (const SocketException&)
         {
-            // degrade gracefully
+            // Preflight not available; fall back to single recv below.
+            probed = 0;
         }
     }
 
-    // Receive via backbone
+    // Receive exactly once via the low-level primitive.
     sockaddr_storage src{};
     auto srcLen = static_cast<socklen_t>(sizeof(src));
     std::size_t datagramSize = 0;
     bool truncated = false;
 
-    const std::size_t n = readIntoBuffer(packet.buffer.data(), capacity,
-                                         DatagramReceiveMode::NoPreflight, // capacity already chosen above
-                                         opts.recvFlags, &src, &srcLen, &datagramSize, &truncated);
+    const std::size_t n =
+        readIntoBuffer(packet.buffer.data(), capacity,
+                       /*mode=*/DatagramReceiveMode::NoPreflight, // avoid double work; we already probed if possible
+                       opts.recvFlags, &src, &srcLen, &datagramSize, &truncated);
 
+    // Enforce strict no-truncation if requested and we couldn’t fail early.
+    if (opts.errorOnTruncate && (truncated || (datagramSize > 0 && datagramSize > capacity)))
+    {
+        throw SocketException("DatagramPacket receive truncated into destination buffer.");
+    }
+
+    // Fill result
     result.bytes = n;
-    result.datagramSize = datagramSize ? datagramSize : n;
+    result.datagramSize = (datagramSize > 0 ? datagramSize : n);
     result.truncated = truncated;
-    result.src = src;
-    result.srcLen = srcLen;
 
     // Side effects as requested
     if (opts.updateLastRemote)
@@ -776,45 +864,85 @@ DatagramReadResult DatagramSocket::read(DatagramPacket& packet, const DatagramRe
     return result;
 }
 
-DatagramReadResult DatagramSocket::readInto(void* buffer, const std::size_t len, const DatagramReadOptions& opts) const
+[[nodiscard]] DatagramReadResult DatagramSocket::readInto(void* buffer, const std::size_t len,
+                                                          const DatagramReadOptions& opts) const
 {
     if (getSocketFd() == INVALID_SOCKET)
-        throw SocketException("DatagramSocket::readInto(void*,size_t,DatagramReadOptions): socket is not open.");
-    if (buffer == nullptr || len == 0)
-        throw SocketException(
-            "DatagramSocket::readInto(void*,size_t,DatagramReadOptions): destination buffer is empty.");
+        throw SocketException("DatagramSocket::readInto(void*,size_t): socket is not open.");
 
-    DatagramReadResult result{};
-    auto* buf = static_cast<char*>(buffer);
+    if ((buffer == nullptr && len != 0) || (buffer != nullptr && len == 0))
+        throw SocketException("DatagramSocket::readInto(void*,size_t): invalid buffer/length.");
 
-    // For raw buffers, there is no growth; preflight will only clamp the request.
-    sockaddr_storage src{};
-    auto srcLen = static_cast<socklen_t>(sizeof(src));
-    std::size_t datagramSize = 0;
-    bool truncated = false;
+    // Decide whether we can/should preflight size *here* to enforce early failure on truncation.
+    // We only preflight here if:
+    //  - caller requested PreflightSize, OR
+    //  - caller allows NoPreflight but *demands* errorOnTruncate (so we try to avoid a post-read throw).
+    const bool wantPreflight = (opts.mode != DatagramReceiveMode::NoPreflight) || opts.errorOnTruncate;
 
-    // If connected and caller won’t need source address, we can skip capturing it:
-    sockaddr_storage* outSrc = _isConnected ? nullptr : &src;
-    socklen_t* outLen = _isConnected ? nullptr : &srcLen;
-
-    const std::size_t n =
-        readIntoBuffer(buf, len, opts.mode, opts.recvFlags, outSrc, outLen, &datagramSize, &truncated);
-
-    result.bytes = n;
-    result.datagramSize = datagramSize ? datagramSize : n;
-    result.truncated = truncated;
-
-    if (!_isConnected)
+    std::size_t probed = 0;
+    if (wantPreflight)
     {
-        result.src = src;
-        result.srcLen = srcLen;
-
-        if (opts.updateLastRemote)
-            rememberRemote(src, srcLen);
-        // Note: no packet here to populate address/port fields; caller can use result.src.
+        try
+        {
+            if (const std::size_t exact = internal::nextDatagramSize(getSocketFd()); exact > 0)
+            {
+                probed = exact;
+                if (opts.errorOnTruncate && len < probed)
+                {
+                    // Early, non-destructive failure: datagram remains in the kernel queue.
+                    throw SocketException(
+                        "DatagramSocket::readInto(void*,size_t): buffer too small for incoming datagram.");
+                }
+            }
+        }
+        catch (const SocketException&)
+        {
+            // If the probe fails, we’ll fall back to single-recv below.
+            probed = 0;
+        }
     }
 
-    return result;
+    // If we already probed, we can avoid double work by forcing NoPreflight for the actual read.
+    const DatagramReceiveMode effectiveMode = (probed > 0 ? DatagramReceiveMode::NoPreflight : opts.mode);
+
+    // Perform exactly one receive via the low-level primitive.
+    sockaddr_storage src{};
+    socklen_t srcLen = sizeof(src);
+    std::size_t outSize = 0;
+    bool truncated = false;
+
+    const std::size_t n = readIntoBuffer(static_cast<char*>(buffer), len, effectiveMode,
+                                         /*recvFlags=*/0, &src, &srcLen, &outSize, &truncated);
+
+    // If caller demands strict no-truncation and we didn’t fail early, enforce now.
+    if (opts.errorOnTruncate && (truncated || (outSize > 0 && outSize > len)))
+    {
+        throw SocketException("DatagramSocket::readInto(void*,size_t): datagram truncated into destination buffer.");
+    }
+
+    // Update "last remote" if requested and we have a source address.
+    if (opts.updateLastRemote && srcLen > 0)
+    {
+        // If you resolve lazily, you can pass opts.resolveNumeric as needed.
+        rememberRemote(src, srcLen);
+    }
+
+    DatagramReadResult res{};
+    res.bytes = n;
+    res.datagramSize = (outSize > 0 ? outSize : n);
+    res.truncated = (truncated || (res.datagramSize > res.bytes));
+
+    return res;
+}
+
+[[nodiscard]] DatagramReadResult DatagramSocket::readInto(std::span<char> out, const DatagramReadOptions& opts) const
+{
+    if (out.empty())
+    {
+        // Zero-length span: early exit, no syscalls, no state changes.
+        return DatagramReadResult{0u, 0u, false};
+    }
+    return readInto(out.data(), out.size(), opts);
 }
 
 DatagramReadResult DatagramSocket::readExact(void* buffer, const std::size_t exactLen,
@@ -827,56 +955,110 @@ DatagramReadResult DatagramSocket::readExact(void* buffer, const std::size_t exa
     if (exactLen == 0)
         throw SocketException("DatagramSocket::readExact(void*,size_t): exactLen must be > 0.");
 
-    // Compose base options; default to preflighting so we can validate early when possible.
+    // Compose base options; prefer preflight so we can fail early on size policy.
     DatagramReadOptions base = opts.base;
     if (base.mode == DatagramReceiveMode::NoPreflight)
         base.mode = DatagramReceiveMode::PreflightSize;
 
-    // Raw-buffer call; capacity is exactLen (caller promises that much).
+    // Try to learn the datagram size first for early, non-destructive checks.
+    std::size_t probed = 0;
+    try
+    {
+        if (const std::size_t exact = internal::nextDatagramSize(getSocketFd()); exact > 0)
+            probed = (std::min) (exact, MaxDatagramPayloadSafe);
+    }
+    catch (const SocketException&)
+    {
+        // No reliable probe; we’ll enforce policy after the read if needed.
+        probed = 0;
+    }
+
+    // Early strict policy when we know the size.
+    if (probed > 0 && opts.requireExact)
+    {
+        if (probed > exactLen)
+        {
+            // Oversized datagram can never satisfy "exact"
+            throw SocketException("DatagramSocket::readExact: datagram larger than requested exactLen.");
+        }
+        if (probed < exactLen && !opts.padIfSmaller)
+        {
+            // Undersized and no padding allowed
+            throw SocketException(
+                "DatagramSocket::readExact: datagram smaller than requested exactLen and padding disabled.");
+        }
+    }
+
+    // Avoid double preflight on the actual read if we already probed.
+    if (probed > 0)
+        base.mode = DatagramReceiveMode::NoPreflight;
+
+    // If we might need to reject truncation post-read (when probe failed), enable strict truncation in the base.
+    // - For requireExact: any oversize must be treated as an error → strict truncation.
+    // - Otherwise: respect caller's existing base.errorOnTruncate (already part of base).
+    if (probed == 0 && opts.requireExact)
+        base.errorOnTruncate = true;
+
+    // Perform the single receive via the policy-aware backbone.
     auto res = readInto(buffer, exactLen, base);
 
-    // Prefer probed size for validation when available; fall back to actual bytes + truncation flag.
-    const bool knownProbed = (res.datagramSize != 0);
-    const std::size_t fullSize = knownProbed ? res.datagramSize : res.bytes;
-
-    // Enforce policy
+    // Post-read enforcement (covers probe-less and undersize-with-padding cases).
     if (opts.requireExact)
     {
-        // Too small?
-        if (fullSize < exactLen)
+        // If truncated (oversize) we must fail (strict "exact" semantics).
+        if (res.truncated || (res.datagramSize > 0 && res.datagramSize > exactLen))
+        {
+            throw SocketException("DatagramSocket::readExact: datagram larger than requested exactLen.");
+        }
+        // If smaller than exactLen, either pad or fail.
+        if (res.bytes < exactLen)
         {
             if (opts.padIfSmaller)
             {
-                // Caller’s buffer is already zero-filled or not; we do not write beyond res.bytes.
-                // If they need explicit zeroing, they can memset the tail; we avoid extra work here.
+                std::memset(static_cast<char*>(buffer) + res.bytes, 0, exactLen - res.bytes);
+                // Adjust the reported byte count to reflect logical exact fill.
+                res.bytes = exactLen;
             }
             else
             {
-                throwSizeMismatch(exactLen, fullSize, knownProbed);
+                throw SocketException("DatagramSocket::readExact: datagram smaller than requested exactLen.");
             }
-        }
-
-        // Too big?
-        if (fullSize > exactLen)
-        {
-            if (opts.errorOnTruncate || !res.truncated)
-            {
-                // If OS didn’t truncate (because buffer was big) we still reject oversize unless allowed
-                throwSizeMismatch(exactLen, fullSize, knownProbed);
-            }
-            // else: OS truncated to exactLen capacity already; allowed by policy
         }
     }
     else
     {
-        // Not requiring exact: if the datagram is smaller and padding requested, zero the tail.
+        // Not strict: optionally pad when asked.
         if (opts.padIfSmaller && res.bytes < exactLen)
         {
             std::memset(static_cast<char*>(buffer) + res.bytes, 0, exactLen - res.bytes);
+            res.bytes = exactLen;
         }
+        // Truncation behavior (oversize) was already handled by base.errorOnTruncate.
     }
 
     return res;
+}
+
+DatagramReadResult DatagramSocket::readExact(std::span<char> out, const ReadExactOptions& opts) const
+{
+    if (out.empty())
+        throw SocketException("DatagramSocket::readExact(span): span must have positive size.");
+    return readExact(out.data(), out.size(), opts);
+}
+
+std::size_t DatagramSocket::readAtMost(const std::span<char> out, const DatagramReadOptions& opts) const
+{
+    // Zero-length destination: no syscalls, no side effects.
+    if (out.empty())
+        return 0;
+
+    // Force single-recv, best-effort semantics; honor all other options (timeouts, updateLastRemote, etc.).
+    DatagramReadOptions local = opts;
+    local.mode = DatagramReceiveMode::NoPreflight;
+
+    // Delegate to the policy-aware backbone; returns bytes copied (≤ out.size()).
+    const auto res = readInto(out, local);
+    return res.bytes;
 }
 
 std::string DatagramSocket::readAtMost(const std::size_t n) const
@@ -884,17 +1066,118 @@ std::string DatagramSocket::readAtMost(const std::size_t n) const
     if (n == 0)
         return {};
 
-    DatagramPacket pkt(n);
-    auto got = read(pkt, /*resizeBuffer=*/true, DatagramReceiveMode::NoPreflight);
+    std::string out;
+    out.resize(n);
 
-    return {pkt.buffer.data(), got};
+    DatagramReadOptions opts{};
+    opts.mode = DatagramReceiveMode::NoPreflight; // single recv, best-effort
+
+    const auto res = readInto(std::span(out.data(), out.size()), opts);
+    out.resize(res.bytes);
+    return out;
 }
 
-std::string DatagramSocket::readAvailable() const
+[[nodiscard]] std::string DatagramSocket::readAvailable() const
 {
-    DatagramPacket pkt;
-    read(pkt, /*resizeBuffer=*/true, DatagramReceiveMode::PreflightSize);
-    return {pkt.buffer.data(), pkt.buffer.size()};
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::readAvailable(): socket is not open.");
+
+    // Try to learn the exact next datagram size.
+
+    // If the size is known, allocate exactly that (clamped to our safety cap) and do one recv.
+    if (const std::size_t exact = internal::nextDatagramSize(getSocketFd()); exact > 0)
+    {
+        const std::size_t cap = (std::min) (exact, MaxDatagramPayloadSafe);
+        std::string out(cap, '\0');
+
+        DatagramReadOptions opts{};
+        opts.mode = DatagramReceiveMode::NoPreflight; // we already probed, avoid double work
+
+        const auto res = readInto(out.data(), out.size(), opts);
+        out.resize(res.bytes);
+        return out;
+    }
+
+    // Fallback: allocate the safe maximum and do one recv. This still avoids extra syscalls.
+    std::string out(MaxDatagramPayloadSafe, '\0');
+
+    DatagramReadOptions opts{};
+    opts.mode = DatagramReceiveMode::NoPreflight;
+
+    const auto res = readInto(out.data(), out.size(), opts);
+    out.resize(res.bytes);
+    return out;
+}
+
+std::size_t DatagramSocket::readAvailable(std::span<char> out, const DatagramReadOptions& opts) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::readAvailable(span): socket is not open.");
+    if (out.empty())
+        return 0;
+
+    // Probe the exact size if the platform supports it.
+    const std::size_t exact = internal::nextDatagramSize(getSocketFd());
+
+    // We’ll avoid a second preflight by forcing NoPreflight on the actual read.
+    DatagramReadOptions noPre = opts;
+    noPre.mode = DatagramReceiveMode::NoPreflight;
+
+    if (exact > 0)
+    {
+        // Exact size is known up front, so we can enforce "no truncation" before reading.
+        if (opts.errorOnTruncate && out.size() < exact)
+            throw SocketException("DatagramSocket::readAvailable(span): buffer too small for incoming datagram.");
+
+        const std::size_t request = (std::min) (out.size(), (std::min) (exact, MaxDatagramPayloadSafe));
+        const auto res = readInto(out.data(), request, noPre);
+        return res.bytes; // should equal request when not truncated
+    }
+
+    // Fallback: size not known. Do one recv into the provided buffer.
+    // If truncation is disallowed, we check the result flag and throw after the read if needed.
+    const auto res = readInto(out.data(), out.size(), noPre);
+    if (opts.errorOnTruncate && res.truncated)
+        throw SocketException("DatagramSocket::readAvailable(span): datagram truncated into caller buffer.");
+    return res.bytes;
+}
+
+std::size_t DatagramSocket::readIntoExact(void* buffer, const std::size_t len) const
+{
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::readIntoExact(void*,size_t): socket is not open.");
+    if (buffer == nullptr)
+        throw SocketException("DatagramSocket::readIntoExact(void*,size_t): buffer is null.");
+    if (len == 0)
+        throw SocketException("DatagramSocket::readIntoExact(void*,size_t): len must be > 0.");
+
+    ReadExactOptions opts{};
+    opts.requireExact = true;
+    opts.padIfSmaller = false;
+    opts.errorOnTruncate = true;
+    opts.base.mode = DatagramReceiveMode::PreflightSize; // early size check when possible
+
+    (void) readExact(buffer, len, opts); // will throw on any mismatch per policy
+    return len;
+}
+
+std::string DatagramSocket::readAtMostWithTimeout(const std::size_t n, const int timeoutMillis) const
+{
+    if (n == 0)
+        return {};
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("DatagramSocket::readAtMostWithTimeout(size_t,int): socket is not open.");
+    if (timeoutMillis < 0)
+        throw SocketException("DatagramSocket::readAtMostWithTimeout(size_t,int): timeoutMillis must be >= 0.");
+    if (!_isConnected)
+        throw SocketException(
+            "DatagramSocket::readAtMostWithTimeout(size_t,int): connected-only (use read(DatagramPacket&)).");
+
+    // Poll first to avoid blocking beyond timeout; map no-data to SocketTimeoutException.
+    if (!hasPendingData(timeoutMillis))
+        throw SocketTimeoutException();
+
+    return readAtMost(n); // reuses existing best-effort single recv path
 }
 
 std::string DatagramSocket::getLocalIp(const bool convertIPv4Mapped) const
