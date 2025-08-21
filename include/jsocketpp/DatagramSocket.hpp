@@ -664,8 +664,8 @@ class DatagramSocket : public SocketOptions
      */
     DatagramSocket(DatagramSocket&& rhs) noexcept
         : SocketOptions(rhs.getSocketFd()), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
-          _localAddr(rhs._localAddr), _localAddrLen(rhs._localAddrLen),
-          _haveLocalAddr(rhs._haveLocalAddr.load(std::memory_order_relaxed)),
+          _haveRemoteAddr(rhs._haveRemoteAddr.load(std::memory_order_relaxed)), _localAddr(rhs._localAddr),
+          _localAddrLen(rhs._localAddrLen), _haveLocalAddr(rhs._haveLocalAddr.load(std::memory_order_relaxed)),
           _internalBuffer(std::move(rhs._internalBuffer)), _port(rhs._port), _isBound(rhs._isBound),
           _isConnected(rhs._isConnected)
     {
@@ -730,6 +730,7 @@ class DatagramSocket : public SocketOptions
             setSocketFd(rhs.getSocketFd());
             _remoteAddr = rhs._remoteAddr;
             _remoteAddrLen = rhs._remoteAddrLen;
+            _haveRemoteAddr.store(rhs._haveRemoteAddr.load(std::memory_order_relaxed));
             _localAddr = rhs._localAddr;
             _localAddrLen = rhs._localAddrLen;
             _haveLocalAddr.store(rhs._haveLocalAddr.load(std::memory_order_relaxed));
@@ -944,39 +945,42 @@ class DatagramSocket : public SocketOptions
     void connect(std::string_view host, Port port, int timeoutMillis);
 
     /**
-     * @brief Disconnects the datagram socket from its currently connected peer.
+     * @brief Disconnect this UDP socket from its current default peer.
      * @ingroup udp
      *
-     * This method disassociates the datagram socket from the previously connected
-     * remote host and port, returning it to an unconnected state. After disconnection:
+     * @details
+     * Dissolves the association set by a prior `connect()` without closing the socket.
+     * Internally, this issues `::connect(fd, { .sa_family = AF_UNSPEC }, sizeof(sockaddr))`,
+     * which is the standard UDP “disconnect” idiom on POSIX and Winsock. The socket remains
+     * open and (if previously bound) stays bound to its local address/port; only the default
+     * remote peer is cleared.
      *
-     * - The socket can receive datagrams from any remote source.
-     * - You must specify a destination when calling `write()` or `sendto()`.
-     * - The internal `_isConnected` flag is cleared.
+     * This implementation:
+     * - Treats a not-currently-connected socket as a no-op.
+     * - Throws if the socket handle is invalid or if the kernel `connect(AF_UNSPEC)` call fails.
+     * - **Preserves** the cached local endpoint and `_isBound` state.
+     * - **Clears** any cached remote endpoint (`_haveRemoteAddr = false`, zeroes `_remoteAddr`,
+     *   and `_remoteAddrLen = 0`).
      *
-     * This is useful for switching from connected-mode (e.g., unicast-only) to
-     * connectionless mode (e.g., dynamic peer-to-peer or server-mode behavior).
+     * @pre The socket must be open. If `_isConnected == false`, the call is a no-op.
      *
-     * ### Behavior
-     * - Internally calls `::connect()` with a null address (or `AF_UNSPEC`) to break the association.
-     * - This is supported on most platforms (e.g., Linux, Windows).
-     * - No data is lost or flushed—this only affects connection state.
+     * @post `_isConnected == false`. Local bind (if any) and its cache remain intact.
+     *       Remote-endpoint cache is cleared.
      *
-     * @note This method is a no-op if the socket is already unconnected.
-     * @note After disconnection, calling `write()` without a destination will throw.
+     * @throws SocketException
+     *         If the socket is not open, or if the underlying `connect(AF_UNSPEC)` fails.
+     *         The exception carries `GetSocketError()` and `SocketErrorMessage(GetSocketError())`.
      *
-     * ### Example
-     * @code{.cpp}
-     * DatagramSocket sock("example.com", 9999);
-     * sock.connect();
-     * sock.write("hello"); // connected mode
-     * sock.disconnect();
-     * sock.write("hello", "example.org", 8888); // connectionless mode
+     * @note Thread-safety: intended for the socket’s owning thread. Do not call concurrently
+     *       with `close()` or other operations that mutate connection state.
+     * @note POSIX: the call may be retried internally if interrupted by a signal (`EINTR`).
+     *
+     * @code
+     * DatagramSocket s;
+     * s.connect("203.0.113.5", 9999, 1000);
+     * // ... use connected send/recv ...
+     * s.disconnect();  // clears default peer; socket remains open and bound
      * @endcode
-     *
-     * @throws SocketException if the underlying disconnect operation fails.
-     *
-     * @see connect(), isConnected(), write(), read<T>()
      */
     void disconnect();
 
@@ -1140,152 +1144,116 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] std::string getLocalSocketAddress(bool convertIPv4Mapped);
 
     /**
-     * @brief Retrieves the IP address of the remote peer from the socket's current state.
+     * @brief Return the remote peer IP address for this socket.
      * @ingroup udp
      *
-     * Returns the remote peer's IP address based on the socket's connection state and prior
-     * communication history. The address is returned as a human-readable string (e.g., "192.168.1.42"
-     * or "::1").
+     * @details
+     * Produces the textual IP address (IPv4 or IPv6) of the current remote endpoint.
+     * The source of truth is:
+     * - **Connected sockets:** use the cached peer if available; otherwise perform one
+     *   `getpeername()` to query the OS.
+     * - **Unconnected sockets:** return the last-seen sender if your receive path has
+     *   cached one; otherwise this method fails because no remote is known yet.
      *
-     * ---
+     * When @p convertIPv4Mapped is `true` and the address is IPv6 IPv4-mapped
+     * (`::ffff:a.b.c.d`), the result is converted to an IPv4 literal (`a.b.c.d`).
      *
-     * ### 🔁 Behavior Based on Connection Mode
-     * - **Connected Socket:**
-     *   - Returns the connected peer's IP as set by `connect()`
-     *   - Uses `getpeername()` to obtain the fixed peer address
+     * @param[in] convertIPv4Mapped  Convert IPv4-mapped IPv6 addresses to IPv4 text if `true`.
      *
-     * - **Unconnected Socket:**
-     *   - Returns the most recently active peer's IP, updated after:
-     *     - Receiving via `read()` or `readInto()`
-     *     - Receiving via `readFrom()`
-     *     - Sending via `writeTo()` or `write(DatagramPacket)`
+     * @return std::string  Remote IP address in presentation form.
      *
-     * ---
+     * @pre The socket must be open (`isOpen() == true`).
      *
-     * ### IPv6 Handling
-     * If the peer address is an IPv4-mapped IPv6 address (e.g., "::ffff:192.0.2.1") and
-     * `convertIPv4Mapped` is true (default), it is simplified to standard IPv4 form ("192.0.2.1").
+     * @throws SocketException
+     *         - If the socket is not open.
+     *         - If the socket is unconnected and no last-seen sender is cached.
+     *         - If `getpeername()` is needed (connected, no cache) and it fails; the
+     *           exception carries `GetSocketError()` and `SocketErrorMessage(GetSocketError())`.
      *
-     * ---
+     * @note Complexity: O(1) when the peer is cached; otherwise one `getpeername()` call.
+     * @note Thread-safety: call from the socket’s owning thread; do not race with `disconnect()` or `close()`.
      *
-     * ### Example
      * @code
-     * // Unconnected mode
-     * DatagramSocket sock(12345);
-     * sock.bind();
-     *
-     * DatagramPacket packet(1024);
-     * sock.read(packet);
-     * std::cout << "Last sender: " << sock.getRemoteIp() << "\n";
-     *
-     * // Connected mode
-     * sock.connect("example.com", 9999);
-     * std::cout << "Connected to: " << sock.getRemoteIp() << "\n";
+     * DatagramSocket s;
+     * s.connect("2001:db8::10", 5353, 1000);
+     * std::string ip = s.getRemoteIp(true); // e.g., "2001:db8::10"
      * @endcode
-     *
-     * ---
-     *
-     * @param[in] convertIPv4Mapped If true, simplify IPv4-mapped IPv6 addresses to IPv4 form.
-     * @return The remote peer's IP address as a string.
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - In connected mode, `getpeername()` fails
-     * - In unconnected mode, no peer information is available yet
-     * - Address conversion fails
-     *
-     * @see getRemotePort()
-     * @see getRemoteSocketAddress()
-     * @see isConnected()
-     * @see connect()
-     * @since 1.0
      */
-    [[nodiscard]] std::string getRemoteIp(bool convertIPv4Mapped = true) const;
+    [[nodiscard]] std::string getRemoteIp(bool convertIPv4Mapped) const;
 
     /**
-     * @brief Retrieves the remote peer's UDP port number in host byte order.
+     * @brief Return the remote peer UDP port for this socket.
      * @ingroup udp
      *
-     * Returns the port number of the remote peer associated with this socket, depending on its connection state:
+     * @details
+     * Obtains the numeric port of the current remote endpoint. The source of truth is:
+     * - **Connected sockets:** use the cached peer (if available); otherwise perform a single
+     *   `getpeername()` to query the OS.
+     * - **Unconnected sockets:** return the last-seen sender if your receive path has cached one;
+     *   otherwise this method fails because no remote is known yet.
      *
-     * - **Connected socket:** Returns the port of the peer set via `connect()`, using `getpeername()`.
-     * - **Unconnected socket:** Returns the port of the most recent sender or destination, as updated by
-     *   `read()`, `readInto()`, `readFrom()`, `writeTo()`, or `write(DatagramPacket)`.
+     * @return Port  The remote UDP port number.
      *
-     * If no communication has occurred yet in unconnected mode, this method throws a `SocketException`.
+     * @pre `isOpen() == true`.
      *
-     * @return The remote UDP port number in host byte order.
+     * @throws SocketException
+     *         - If the socket is not open.
+     *         - If the socket is unconnected and no last-seen sender is cached.
+     *         - If `getpeername()` is required (connected, no cache) and it fails; the exception
+     *           carries `GetSocketError()` and `SocketErrorMessage(GetSocketError())`.
      *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - In connected mode, `getpeername()` fails
-     * - In unconnected mode, no peer information is available yet
+     * @note Complexity: O(1) when the remote is cached; otherwise one `getpeername()` call.
+     * @note Thread-safety: intended for the socket’s owning thread. Do not call concurrently with
+     *       `disconnect()` or `close()` or other operations that mutate connection state.
      *
-     * @see getRemoteIp()
-     * @see getRemoteSocketAddress()
-     * @see isConnected()
-     * @see connect()
-     * @since 1.0
+     * @code
+     * DatagramSocket s;
+     * s.connect("203.0.113.7", 9999, 1000);
+     * Port rp = s.getRemotePort();  // e.g., 9999
+     * @endcode
      */
     [[nodiscard]] Port getRemotePort() const;
 
     /**
-     * @brief Retrieves the remote peer’s socket address in the form `"IP:port"`.
+     * @brief Return the remote endpoint as a single "ip:port" string.
      * @ingroup udp
      *
-     * This method returns the formatted address of the remote peer that this datagram socket
-     * is either:
-     * - **Connected to** via `connect()` —or—
-     * - **Most recently communicated with** using `recvfrom()`, `read()`, `writeTo()`, or `write(DatagramPacket)`
-     *   in unconnected mode.
+     * @details
+     * Formats the current remote endpoint into a presentation string. The source of truth is:
+     * - **Connected sockets:** use the cached peer if available; otherwise perform at most one
+     *   `getpeername()` to obtain it.
+     * - **Unconnected sockets:** use the last-seen sender cached by receive paths; if none is
+     *   available, the method fails because no remote is known yet.
      *
-     * ---
+     * When @p convertIPv4Mapped is `true` and the address is an IPv6 IPv4-mapped form
+     * (`::ffff:a.b.c.d`), the IP portion is converted to an IPv4 literal (`a.b.c.d`) before
+     * concatenation. If your IP formatter brackets IPv6 addresses, the result may look like
+     * `"[2001:db8::1]:5353"`.
      *
-     * ### 🔁 Behavior Based on Connection Mode
-     * - **Connected DatagramSocket**: Uses `getpeername()` to retrieve the connected remote address.
-     * - **Unconnected DatagramSocket**: Returns the IP and port of the most recent sender or destination,
-     *   as updated by:
-     *   - `read()` or `read<T>()`
-     *   - `recvFrom()`
-     *   - `writeTo()` or `write(DatagramPacket)`
+     * @param[in] convertIPv4Mapped  If `true`, convert IPv4-mapped IPv6 addresses to IPv4 text
+     *                               before building the result.
      *
-     *   If no such operation has occurred yet, the method throws a `SocketException`.
+     * @return std::string  The remote endpoint string, e.g., `"192.0.2.10:54321"` or
+     *                      `"[2001:db8::1]:54321"`.
      *
-     * ---
+     * @pre The socket must be open (`isOpen() == true`).
      *
-     * ### IPv6 Handling
-     * If the returned IP is an IPv4-mapped IPv6 address (e.g., `::ffff:192.0.2.1`) and
-     * `@p convertIPv4Mapped` is `true` (default), the IP portion is simplified to IPv4 form.
+     * @throws SocketException
+     *         - If the socket is not open.
+     *         - If the socket is unconnected and no last-seen sender is cached.
+     *         - If `getpeername()` is required (connected, no cache) and it fails; the exception
+     *           carries `GetSocketError()` and `SocketErrorMessage(GetSocketError())`.
      *
-     * ---
+     * @note Complexity: O(1) when the remote is cached; otherwise at most one `getpeername()` call.
+     * @note Thread-safety: call from the socket’s owning thread; do not race with `disconnect()` or `close()`.
      *
-     * ### Example (Unconnected Mode)
      * @code
-     * DatagramSocket sock(12345);
-     *
-     * DatagramPacket packet(1024);
-     * sock.read(packet); // Wait for a sender
-     *
-     * std::string remote = sock.getRemoteSocketAddress();
-     * std::cout << "Received from: " << remote << "\n"; // e.g., "192.168.0.42:56789"
+     * DatagramSocket s;
+     * s.connect("example.net", 5353, 2000);
+     * auto ep = s.getRemoteSocketAddress(true);   // e.g., "[2001:db8::10]:5353"
      * @endcode
-     *
-     * ---
-     *
-     * @param[in] convertIPv4Mapped Whether to simplify IPv4-mapped IPv6 addresses (default: true).
-     * @return Remote socket address as a string in the format `"IP:port"`.
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - In unconnected mode, no datagram has been sent or received yet
-     * - In connected mode, if `getpeername()` fails
-     *
-     * @see getRemoteIp()
-     * @see getRemotePort()
-     * @see isConnected()
-     * @see writeTo(), write(DatagramPacket), read()
      */
-    [[nodiscard]] std::string getRemoteSocketAddress(bool convertIPv4Mapped = true) const;
+    [[nodiscard]] std::string getRemoteSocketAddress(bool convertIPv4Mapped) const;
 
     /**
      * @brief Send one UDP datagram to the currently connected peer (no pre-wait).
@@ -4074,7 +4042,7 @@ class DatagramSocket : public SocketOptions
      */
     [[nodiscard]] std::optional<std::pair<sockaddr_storage, socklen_t>> getLastPeerSockAddr() const
     {
-        if (_remoteAddrLen == 0)
+        if (!_haveRemoteAddr)
         {
             // No communication has occurred; no peer info available
             return std::nullopt;
@@ -4327,6 +4295,7 @@ class DatagramSocket : public SocketOptions
     {
         _remoteAddr = src;
         _remoteAddrLen = len;
+        _haveRemoteAddr.store(true, std::memory_order_relaxed);
     }
 
     /**
@@ -4833,14 +4802,63 @@ class DatagramSocket : public SocketOptions
         _haveLocalAddr.store(true, std::memory_order_relaxed); // or set your existing flag
     }
 
+    /**
+     * @brief Retrieve the remote endpoint sockaddr for this socket, if available.
+     * @ingroup udp
+     *
+     * @details
+     * Determines the current remote peer (address + port) and writes it to the provided
+     * output buffers. The method prefers already-cached information:
+     * - If the socket is **connected** and a remote endpoint was cached (e.g., by `connect()`),
+     *   it copies the cached value to the outputs with **no syscall**.
+     * - If the socket is **connected** but no cache is present, it performs a single
+     *   `getpeername()` to obtain the peer and writes it to the outputs.
+     * - If the socket is **unconnected**, it returns the **last-seen sender** only if your
+     *   receive paths have cached one; otherwise it indicates that no remote is known yet.
+     *
+     * This function is `const` and **does not** mutate any internal cache; it only reads
+     * cached values if present, or queries the OS once when connected.
+     *
+     * @param[out] out     Destination for the remote endpoint (`sockaddr_storage`).
+     * @param[out] outLen  Receives the byte size of @p out (e.g., `sizeof(sockaddr_in)` or
+     *                     `sizeof(sockaddr_in6)`).
+     *
+     * @retval true   A remote endpoint was available and has been written to @p out/@p outLen.
+     * @retval false  The socket is unconnected and no last-seen sender has been cached yet.
+     *
+     * @pre The socket must be open (`isOpen() == true`).
+     *
+     * @throws SocketException
+     *         - If the socket is not open.
+     *         - If `getpeername()` is required (connected, no cache) and it fails; the exception
+     *           carries `GetSocketError()` and `SocketErrorMessage(GetSocketError())`.
+     *
+     * @note Complexity: O(1) when the remote is cached; otherwise one `getpeername()` call.
+     * @note Thread-safety: intended for the socket’s owning thread. Do not call concurrently with
+     *       `close()` or state mutations such as `disconnect()`.
+     *
+     * @code
+     * sockaddr_storage peer{};
+     * socklen_t        peerLen{};
+     * if (!sock.tryGetRemoteSockaddr(peer, peerLen)) {
+     *     // Unconnected socket and no datagrams seen yet — no remote known.
+     * } else {
+     *     // Use peer / peerLen (e.g., for logging or formatting).
+     * }
+     * @endcode
+     */
+    [[nodiscard]] bool tryGetRemoteSockaddr(sockaddr_storage& out, socklen_t& outLen) const;
+
   private:
     mutable sockaddr_storage
         _remoteAddr{}; ///< Storage for the address of the most recent sender (used in unconnected mode).
     mutable socklen_t _remoteAddrLen =
-        0;                             ///< Length of the valid address data in `_remoteAddr` (0 if none received yet).
-    sockaddr_storage _localAddr{};     ///< Cached local socket address (set by bind()/UDP connect() via getsockname()).
-    socklen_t _localAddrLen = 0;       ///< Size in bytes of the cached local address stored in _localAddr.
-    std::atomic_bool _haveLocalAddr;   ///< True if _localAddr/_localAddrLen contain a valid endpoint; reset on close().
+        0; ///< Length of the valid address data in `_remoteAddr` (0 if none received yet).
+    mutable std::atomic_bool _haveRemoteAddr = false;
+    sockaddr_storage _localAddr{}; ///< Cached local socket address (set by bind()/UDP connect() via getsockname()).
+    socklen_t _localAddrLen = 0;   ///< Size in bytes of the cached local address stored in _localAddr.
+    std::atomic_bool _haveLocalAddr =
+        false;                         ///< True if _localAddr/_localAddrLen contain a valid endpoint; reset on close().
     std::vector<char> _internalBuffer; ///< Internal buffer for read operations.
     Port _port;                        ///< Port number the socket is bound to (if applicable).
     bool _isBound = false;             ///< True if the socket is bound to an address

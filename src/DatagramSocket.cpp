@@ -17,8 +17,8 @@ DatagramSocket::DatagramSocket(const Port localPort, const std::string_view loca
                                const bool dualStack, const bool autoBind, const bool autoConnect,
                                const std::string_view remoteAddress, const Port remotePort,
                                const int connectTimeoutMillis)
-    : SocketOptions(INVALID_SOCKET), _haveLocalAddr(false),
-      _internalBuffer(internalBufferSize.value_or(DefaultDatagramReceiveSize)), _port(localPort)
+    : SocketOptions(INVALID_SOCKET), _internalBuffer(internalBufferSize.value_or(DefaultDatagramReceiveSize)),
+      _port(localPort)
 {
     const auto localAddrInfoPtr = internal::resolveAddress(
         localAddress, _port,
@@ -162,6 +162,7 @@ void DatagramSocket::cleanup()
     _haveLocalAddr.store(false, std::memory_order_relaxed);
     _localAddrLen = 0;
     std::memset(&_localAddr, 0, sizeof(_localAddr));
+    _haveRemoteAddr.store(false, std::memory_order_relaxed);
     _remoteAddrLen = 0;
     std::memset(&_remoteAddr, 0, sizeof(_remoteAddr));
 }
@@ -288,8 +289,7 @@ void DatagramSocket::connect(const std::string_view host, const Port port, const
         // Quick check: if we have a deadline and it's gone, throw timeout now.
         if (useNonBlocking)
         {
-            const int rem = remaining_ms();
-            if (rem == 0)
+            if (const int rem = remaining_ms(); rem == 0)
                 throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
                                              "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
         }
@@ -306,6 +306,12 @@ void DatagramSocket::connect(const std::string_view host, const Port port, const
         {
             // Success (UDP connect sets default peer; may implicitly bind a local port).
             cacheLocalEndpoint();
+
+            // Cache remote peer
+            std::memcpy(&_remoteAddr, p->ai_addr, p->ai_addrlen);
+            _remoteAddrLen = static_cast<socklen_t>(p->ai_addrlen);
+            _haveRemoteAddr = true;
+
             _isBound = true; // reflect implicit bind if we weren't bound before
             _isConnected = true;
             return;
@@ -383,6 +389,11 @@ void DatagramSocket::connect(const std::string_view host, const Port port, const
         if (so_error == 0)
         {
             cacheLocalEndpoint();
+
+            // Cache remote peer
+            std::memcpy(&_remoteAddr, p->ai_addr, p->ai_addrlen);
+            _remoteAddrLen = static_cast<socklen_t>(p->ai_addrlen);
+            _haveRemoteAddr = true;
             _isBound = true;
             _isConnected = true;
             return;
@@ -408,20 +419,40 @@ void DatagramSocket::connect(const std::string_view host, const Port port, const
 void DatagramSocket::disconnect()
 {
     if (!_isConnected)
-        return; // Already disconnected — no-op
+        return; // no-op
 
-    // Disconnect using AF_UNSPEC to break the peer association
-    sockaddr_storage nullAddr{};
-    nullAddr.ss_family = AF_UNSPEC;
+    if (getSocketFd() == INVALID_SOCKET)
+        throw SocketException("disconnect() failed: socket is not open.");
 
-    if (const int res = ::connect(getSocketFd(), reinterpret_cast<sockaddr*>(&nullAddr), sizeof(nullAddr));
-        res == SOCKET_ERROR)
+    // Per connect(2): datagram sockets may dissolve the association by
+    // connecting to an address with sa_family = AF_UNSPEC.
+    // Use sizeof(sockaddr) here.
+    sockaddr unspec{};
+    std::memset(&unspec, 0, sizeof(unspec));
+    unspec.sa_family = AF_UNSPEC;
+
+    int rc;
+#ifdef _WIN32
+    rc = ::connect(getSocketFd(), &unspec, sizeof(sockaddr));
+#else
+    do
     {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
+        rc = ::connect(getSocketFd(), &unspec, static_cast<socklen_t>(sizeof(sockaddr)));
+    } while (rc == -1 && errno == EINTR);
+#endif
+
+    if (rc == SOCKET_ERROR)
+    {
+        const int err = GetSocketError();
+        throw SocketException(err, SocketErrorMessage(err));
     }
 
     _isConnected = false;
+
+    // Keep local bind + cache; drop any cached *remote* endpoint
+    _haveRemoteAddr = false;
+    _remoteAddrLen = 0;
+    std::memset(&_remoteAddr, 0, sizeof(_remoteAddr));
 }
 
 void DatagramSocket::write(const std::string_view message) const
@@ -1679,65 +1710,77 @@ std::string DatagramSocket::getLocalSocketAddress(const bool convertIPv4Mapped)
     return getLocalIp(convertIPv4Mapped) + ":" + std::to_string(getLocalPort());
 }
 
-std::string DatagramSocket::getRemoteIp(const bool convertIPv4Mapped) const
+bool DatagramSocket::tryGetRemoteSockaddr(sockaddr_storage& out, socklen_t& outLen) const
 {
     if (getSocketFd() == INVALID_SOCKET)
-        throw SocketException("getRemoteIp() failed: socket is not open.");
+        throw SocketException("remote endpoint query failed: socket is not open.");
 
-    sockaddr_storage addr{};
-    socklen_t addrLen = sizeof(addr);
-
-    if (isConnected())
+    // If connected and we cached the peer (from connect()), use it.
+    if (_isConnected && _haveRemoteAddr)
     {
-        if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+        out = _remoteAddr;
+        outLen = _remoteAddrLen;
+        return true;
+    }
+
+    if (_isConnected)
+    {
+        // Connected but no cache (e.g., older sockets): ask the OS once.
+        auto len = static_cast<socklen_t>(sizeof(out));
+        if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&out), &len) == SOCKET_ERROR)
         {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessage(error));
+            const int err = GetSocketError();
+            throw SocketException(err, SocketErrorMessage(err));
         }
+        outLen = len;
+        return true;
     }
-    else
-    {
-        if (_remoteAddrLen == 0)
-            throw SocketException("getRemoteIp() failed: no datagram received yet (unconnected socket).");
 
-        addr = _remoteAddr;
-        addrLen = _remoteAddrLen;
+    // Unconnected: fall back to "last-seen sender" cache populated by recv paths.
+    if (_haveRemoteAddr)
+    {
+        out = _remoteAddr;
+        outLen = _remoteAddrLen;
+        return true;
     }
+
+    // No info available yet for an unconnected socket.
+    return false;
+}
+
+[[nodiscard]] std::string DatagramSocket::getRemoteIp(const bool convertIPv4Mapped) const
+{
+    sockaddr_storage addr{};
+    if (socklen_t addrLen{}; !tryGetRemoteSockaddr(addr, addrLen))
+        throw SocketException("getRemoteIp() failed: no datagram received yet (unconnected socket).");
 
     return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
 }
 
-Port DatagramSocket::getRemotePort() const
+[[nodiscard]] Port DatagramSocket::getRemotePort() const
 {
-    if (getSocketFd() == INVALID_SOCKET)
-        throw SocketException("getRemotePort() failed: socket is not open.");
-
     sockaddr_storage addr{};
-    socklen_t addrLen = sizeof(addr);
-
-    if (isConnected())
-    {
-        if (::getpeername(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessage(error));
-        }
-    }
-    else
-    {
-        if (_remoteAddrLen == 0)
-            throw SocketException("getRemotePort() failed: no datagram received yet (unconnected socket).");
-
-        addr = _remoteAddr;
-        addrLen = _remoteAddrLen;
-    }
+    if (socklen_t addrLen{}; !tryGetRemoteSockaddr(addr, addrLen))
+        throw SocketException("getRemotePort() failed: no datagram received yet (unconnected socket).");
 
     return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
 }
 
-std::string DatagramSocket::getRemoteSocketAddress(const bool convertIPv4Mapped) const
+[[nodiscard]] std::string DatagramSocket::getRemoteSocketAddress(const bool convertIPv4Mapped) const
 {
-    return getRemoteIp(convertIPv4Mapped) + ":" + std::to_string(getRemotePort());
+    // Avoid doing two lookups/syscalls—fetch once and format.
+    sockaddr_storage addr{};
+    if (socklen_t addrLen{}; !tryGetRemoteSockaddr(addr, addrLen))
+        throw SocketException("getRemoteSocketAddress() failed: no datagram received yet (unconnected socket).");
+
+    const std::string ip = ipFromSockaddr(reinterpret_cast<const sockaddr*>(&addr), convertIPv4Mapped);
+    const Port port = portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
+
+    // If your ipFromSockaddr doesn't bracket IPv6, you can optionally add:
+    // const bool needsBrackets = (ip.find(':') != std::string::npos) && (ip.empty() || ip.front() != '[');
+    // return (needsBrackets ? "[" + ip + "]" : ip) + ":" + std::to_string(port);
+
+    return ip + ":" + std::to_string(port);
 }
 
 void DatagramSocket::setInternalBufferSize(const std::size_t newLen)
