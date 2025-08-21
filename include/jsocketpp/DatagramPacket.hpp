@@ -164,7 +164,7 @@ class DatagramPacket
             return false;
 
         // Treat strings that are empty or only whitespace as "no address".
-        for (const unsigned char ch : address)
+        for (const auto ch : address)
         {
             if (!std::isspace(ch))
                 return true;

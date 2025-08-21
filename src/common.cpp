@@ -503,7 +503,7 @@ void internal::sendExact(const SOCKET fd, const void* data, std::size_t size)
 }
 
 void internal::sendExactTo(const SOCKET fd, const void* data, std::size_t size, const sockaddr* addr,
-                           const socklen_t addrLen)
+                           const socklen_t addrLen, void (*afterSuccess)(void* ctx), void* ctx)
 {
     if (fd == INVALID_SOCKET)
         throw SocketException("sendExactTo(): invalid socket");
@@ -529,4 +529,7 @@ void internal::sendExactTo(const SOCKET fd, const void* data, std::size_t size, 
 
     if (static_cast<std::size_t>(sent) != size)
         throw SocketException("sendExactTo(): partial datagram was sent.");
+
+    if (afterSuccess)
+        afterSuccess(ctx);
 }

@@ -27,6 +27,7 @@
 #include <cstring> // Use std::memset()
 #include <exception>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -1137,6 +1138,8 @@ void sendExact(SOCKET fd, const void* data, std::size_t size);
  * @param[in] size     Number of bytes to send from @p data.
  * @param[in] addr     Pointer to the destination address structure (IPv4 or IPv6).
  * @param[in] addrLen  Length of the address structure in bytes.
+ * @param[in] afterSuccess Optional callback invoked after a successful send (may be nullptr).
+ * @param[in] ctx        Opaque pointer passed to @p afterSuccess (e.g., `this`).
  *
  * @throws SocketException
  *         If the socket is invalid, if `sendto()` returns an error,
@@ -1150,7 +1153,8 @@ void sendExact(SOCKET fd, const void* data, std::size_t size);
  * @see sendExact() For sending to a connected peer without specifying an address.
  * @see writeTo() For type-safe per-call destination sends.
  */
-void sendExactTo(SOCKET fd, const void* data, std::size_t size, const sockaddr* addr, socklen_t addrLen);
+void sendExactTo(SOCKET fd, const void* data, std::size_t size, const sockaddr* addr, socklen_t addrLen,
+                 void (*afterSuccess)(void* ctx), void* ctx);
 
 /**
  * @brief Attempts to close a socket descriptor without throwing exceptions.

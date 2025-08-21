@@ -14,6 +14,7 @@
 #include "detail/buffer_traits.hpp"
 #include "SocketOptions.hpp"
 
+#include <atomic>
 #include <bit>
 #include <optional>
 #include <span>
@@ -663,15 +664,12 @@ class DatagramSocket : public SocketOptions
      */
     DatagramSocket(DatagramSocket&& rhs) noexcept
         : SocketOptions(rhs.getSocketFd()), _remoteAddr(rhs._remoteAddr), _remoteAddrLen(rhs._remoteAddrLen),
-          _localAddr(rhs._localAddr), _localAddrLen(rhs._localAddrLen), _internalBuffer(std::move(rhs._internalBuffer)),
-          _port(rhs._port), _isBound(rhs._isBound), _isConnected(rhs._isConnected)
+          _localAddr(rhs._localAddr), _localAddrLen(rhs._localAddrLen),
+          _haveLocalAddr(rhs._haveLocalAddr.load(std::memory_order_relaxed)),
+          _internalBuffer(std::move(rhs._internalBuffer)), _port(rhs._port), _isBound(rhs._isBound),
+          _isConnected(rhs._isConnected)
     {
-        rhs.setSocketFd(INVALID_SOCKET);
-        rhs._remoteAddrLen = 0;
-        rhs._localAddrLen = 0;
-        rhs._port = 0;
-        rhs._isBound = false;
-        rhs._isConnected = false;
+        rhs.cleanup();
     }
 
     /**
@@ -734,18 +732,14 @@ class DatagramSocket : public SocketOptions
             _remoteAddrLen = rhs._remoteAddrLen;
             _localAddr = rhs._localAddr;
             _localAddrLen = rhs._localAddrLen;
+            _haveLocalAddr.store(rhs._haveLocalAddr.load(std::memory_order_relaxed));
             _internalBuffer = std::move(rhs._internalBuffer);
             _port = rhs._port;
             _isBound = rhs._isBound;
             _isConnected = rhs._isConnected;
 
             // Reset source
-            rhs.setSocketFd(INVALID_SOCKET);
-            rhs._remoteAddrLen = 0;
-            rhs._localAddrLen = 0;
-            rhs._port = 0;
-            rhs._isBound = false;
-            rhs._isConnected = false;
+            rhs.cleanup();
         }
         return *this;
     }
@@ -1043,132 +1037,132 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] bool isConnected() const noexcept { return _isConnected; }
 
     /**
-     * @brief Retrieves the local IP address this socket is bound to.
+     * @brief Return the local interface IP address for this UDP socket.
      * @ingroup udp
      *
-     * This method returns the IP address that this socket is bound to on the local system.
-     * The address may have been set explicitly via `bind()` or automatically assigned
-     * by the operating system.
+     * @details
+     * Returns the textual IP address (IPv4 or IPv6) currently bound to this socket.
+     * If a cached local endpoint is available, it is used without a syscall.
+     * Otherwise, this method performs a single `getsockname()` and, on success,
+     * updates the internal cache (only if the kernel reports a non-zero port,
+     * i.e., the socket is actually bound). This method is non-const because it
+     * may refresh and persist the cached local endpoint.
      *
-     * ---
+     * When @p convertIPv4Mapped is `true` and the underlying address is an IPv6
+     * IPv4-mapped address (`::ffff:a.b.c.d`), the returned string is converted to
+     * an IPv4 literal (`a.b.c.d`). For IPv6 link-local addresses, the scope ID
+     * may be included if available (e.g., `fe80::1%eth0`), depending on platform
+     * conventions and the socket's bound interface.
      *
-     * ### Behavior
-     * - For explicitly bound sockets, returns the address specified in `bind()`
-     * - For auto-bound sockets, returns the OS-assigned interface address
-     * - For unbound sockets or if `getsockname()` fails, throws `SocketException`
-     * - For IPv6 sockets, may return IPv4-mapped addresses (e.g., "::ffff:127.0.0.1")
+     * @param[in] convertIPv4Mapped  If `true`, convert IPv4-mapped IPv6 addresses
+     *                               to IPv4 text form; if `false`, return the
+     *                               canonical address text as reported by the OS.
      *
-     * ---
+     * @return std::string  The local IP address in presentation form.
      *
-     * @param[in] convertIPv4Mapped If `true`, IPv4-mapped IPv6 addresses (e.g., `::ffff:192.0.2.1`)
-     *                              will be returned as plain IPv4 strings (`192.0.2.1`). If `false`,
-     *                              the raw mapped form is preserved.
+     * @pre `isOpen() == true`.
      *
-     * @return A string representation of the local IP address (e.g., "192.168.1.10" or "::1").
+     * @post If the socket is bound to a non-zero port, the internal local-endpoint
+     *       cache is updated and marked valid.
      *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - The socket is not bound
-     * - The system call `getsockname()` fails
-     * - Address conversion fails
+     * @throws SocketException
+     *         - If the socket is not open.
+     *         - If `getsockname()` fails; the exception carries `GetSocketError()`
+     *           and `SocketErrorMessage(GetSocketError())`.
      *
-     * @see getLocalPort() Get the local port number
-     * @see getLocalSocketAddress() Get the combined "IP:port" string
-     * @see bind() Explicitly bind to an address
+     * @note Complexity: O(1) on a warm cache; otherwise one `getsockname()` call.
+     * @note Thread-safety: intended for the socket's owning thread. Do not call
+     *       concurrently with `close()` or other operations that tear down the
+     *       descriptor.
+     *
+     * @code
+     * DatagramSocket s;
+     * s.bind("0.0.0.0", 0);                 // OS assigns an address/port
+     * auto ip = s.getLocalIp(true);         // e.g., "192.0.2.10"
+     * @endcode
      */
-    [[nodiscard]] std::string getLocalIp(bool convertIPv4Mapped = true) const;
+    [[nodiscard]] std::string getLocalIp(bool convertIPv4Mapped);
 
     /**
-     * @brief Retrieves the local port number this datagram socket is bound to.
+     * @brief Return the local UDP port this socket is bound to.
      * @ingroup udp
      *
-     * This method returns the local UDP port that the socket is currently bound to,
-     * either explicitly via `bind()` or implicitly assigned by the operating system.
+     * @details
+     * Returns the numeric port currently bound to this socket. If a cached local
+     * endpoint is available, it is used without a syscall. Otherwise, this method
+     * performs a single `getsockname()` and, on success, updates the internal cache
+     * **only if** the kernel reports a non-zero port (i.e., the socket is actually
+     * bound). This method is non-const because it may refresh and persist the cached
+     * local endpoint.
      *
-     * ---
+     * @return Port  The local UDP port number.
      *
-     * ### ⚙️ Behavior
-     * - Uses `getsockname()` to query the underlying bound port
-     * - Returns the port in host byte order
-     * - Works for both IPv4 and IPv6 sockets
-     * - Safe for auto-assigned ephemeral ports (`port = 0` in bind)
+     * @pre `isOpen() == true`.
      *
-     * ---
+     * @post If the socket is bound to a non-zero port, the internal local-endpoint
+     *       cache is updated and marked valid.
      *
-     * ### 🧪 Example
+     * @throws SocketException
+     *         - If the socket is not open.
+     *         - If `getsockname()` fails; the exception carries `GetSocketError()` and
+     *           `SocketErrorMessage(GetSocketError())`.
+     *
+     * @note Complexity: O(1) with a warm cache; otherwise one `getsockname()` call.
+     * @note Thread-safety: intended for the socket’s owning thread. Do not call
+     *       concurrently with `close()` or other teardown operations.
+     *
      * @code
-     * DatagramSocket sock;
-     * sock.bind("0.0.0.0", 0);  // Let OS pick an ephemeral port
-     *
-     * Port port = sock.getLocalPort();
-     * std::cout << "Bound to port: " << port << "\n";
+     * DatagramSocket s;
+     * s.bind("::", 0);                   // OS selects an ephemeral port
+     * Port p = s.getLocalPort();         // e.g., 54321
      * @endcode
-     *
-     * ---
-     *
-     * @return The local UDP port number in host byte order.
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - The socket is not bound
-     * - The `getsockname()` call fails
-     *
-     * @see getLocalIp() Get the bound IP address
-     * @see getLocalSocketAddress() Get the combined "IP:port" string
-     * @see bind() Explicitly bind to an address/port
      */
-    [[nodiscard]] Port getLocalPort() const;
+    [[nodiscard]] Port getLocalPort();
 
     /**
-     * @brief Retrieves the local socket address as a formatted string in the form `"IP:port"`.
+     * @brief Return the local endpoint as a single "ip:port" string.
      * @ingroup udp
      *
-     * This method returns the local IP address and port that this socket is bound to, formatted
-     * as a human-readable string (e.g., `"192.168.1.42:12345"` or `"[::1]:9999"`). It works for
-     * both explicitly bound sockets and those where the operating system has auto-assigned an
-     * ephemeral port.
+     * @details
+     * Builds a presentation string for the socket’s current local endpoint by combining
+     * the local IP and port. If a cached local endpoint is available, it is used without
+     * a syscall. Otherwise, this method performs a single `getsockname()` and, on success,
+     * updates the internal cache **only if** the kernel reports a non-zero port (i.e., the
+     * socket is actually bound). This method is non-const because it may refresh and persist
+     * the cached local endpoint. For IPv6 addresses, the IP may be bracketed (e.g.,
+     * `[2001:db8::1]:54321`) depending on the formatting used by the underlying helpers.
      *
-     * ---
+     * When @p convertIPv4Mapped is `true` and the underlying address is an IPv6
+     * IPv4-mapped address (`::ffff:a.b.c.d`), the IP portion is converted to an IPv4
+     * literal (`a.b.c.d`) before concatenation.
      *
-     * ### ⚙️ Core Behavior
-     * - Uses `getsockname()` to query the bound local address and port
-     * - Formats IPv4 addresses as `"ip:port"` (e.g., "127.0.0.1:8080")
-     * - Formats IPv6 addresses with square brackets: `"[ipv6]:port"` (e.g., "[::1]:8080")
-     * - For unbound sockets, throws `SocketException`
-     * - Works with both IPv4 and IPv6 address families
-     * - Safe to call after automatic port assignment
+     * @param[in] convertIPv4Mapped  If `true`, convert IPv4-mapped IPv6 addresses
+     *                               to IPv4 text form in the result.
      *
-     * ---
+     * @return std::string  The local endpoint string, e.g., `"192.0.2.10:54321"` or
+     *                      `"[2001:db8::1]:54321"`.
      *
-     * ### 🧪 Example
+     * @pre `isOpen() == true`.
+     *
+     * @post If the socket is bound to a non-zero port, the internal local-endpoint cache
+     *       is updated and marked valid.
+     *
+     * @throws SocketException
+     *         - If the socket is not open.
+     *         - If `getsockname()` fails; the exception carries `GetSocketError()` and
+     *           `SocketErrorMessage(GetSocketError())`.
+     *
+     * @note Complexity: O(1) on a warm cache; otherwise one `getsockname()` call.
+     * @note Thread-safety: intended for the socket’s owning thread. Do not call
+     *       concurrently with `close()` or other teardown operations.
+     *
      * @code
-     * DatagramSocket sock;
-     * sock.bind("0.0.0.0", 0);  // Let OS pick ephemeral port
-     *
-     * std::cout << "Bound to: " << sock.getLocalSocketAddress() << "\n";
-     * // Output: "0.0.0.0:50432"
+     * DatagramSocket s;
+     * s.bind("0.0.0.0", 0);                         // OS assigns an address/port
+     * auto ep = s.getLocalSocketAddress(true);      // e.g., "192.0.2.10:54321"
      * @endcode
-     *
-     * ---
-     *
-     * @param[in] convertIPv4Mapped Whether to convert IPv4-mapped IPv6 addresses to IPv4
-     *                             format (e.g., "::ffff:127.0.0.1" → "127.0.0.1").
-     *                             Default is true.
-     *
-     * @return A string in the format `"IP:port"` or `"[IPv6]:port"`.
-     *
-     * @throws SocketException If:
-     * - The socket is not open
-     * - The socket is not bound
-     * - `getsockname()` fails
-     * - Address conversion fails
-     *
-     * @see getLocalIp() Get just the IP portion
-     * @see getLocalPort() Get just the port number
-     * @see bind() Explicitly bind to an address/port
-     * @since 1.0
      */
-    [[nodiscard]] std::string getLocalSocketAddress(bool convertIPv4Mapped = true) const;
+    [[nodiscard]] std::string getLocalSocketAddress(bool convertIPv4Mapped);
 
     /**
      * @brief Retrieves the IP address of the remote peer from the socket's current state.
@@ -2003,7 +1997,7 @@ class DatagramSocket : public SocketOptions
      *      sendUnconnectedTo(std::string_view, Port, const void*, std::size_t),
      *      enforceSendCapConnected(std::size_t)
      */
-    void write(const DatagramPacket& packet) const;
+    void write(const DatagramPacket& packet);
 
     /**
      * @brief Send one unconnected UDP datagram to (host, port) from text bytes (no pre-wait).
@@ -2074,7 +2068,7 @@ class DatagramSocket : public SocketOptions
      * sock.writeTo("2001:db8::1", 5000, "hello");
      * @endcode
      */
-    void writeTo(std::string_view host, Port port, std::string_view message) const;
+    void writeTo(std::string_view host, Port port, std::string_view message);
 
     /**
      * @brief Send one unconnected UDP datagram to (host, port) from a raw byte span (no pre-wait).
@@ -2149,7 +2143,7 @@ class DatagramSocket : public SocketOptions
      * sock.writeTo("2001:db8::1", 6000, std::span<const std::byte>{payload.data(), payload.size()});
      * @endcode
      */
-    void writeTo(std::string_view host, Port port, std::span<const std::byte> data) const;
+    void writeTo(std::string_view host, Port port, std::span<const std::byte> data);
 
     /**
      * @brief Send one unconnected UDP datagram to (host, port) containing the raw bytes of @p value.
@@ -4562,7 +4556,7 @@ class DatagramSocket : public SocketOptions
      * @note Zero-length datagrams are valid; this helper returns `0` without sending.
      * @see writeTo(), write(const DatagramPacket&), MaxUdpPayloadIPv4, MaxUdpPayloadIPv6
      */
-    void sendUnconnectedTo(std::string_view host, Port port, const void* data, std::size_t len) const;
+    void sendUnconnectedTo(std::string_view host, Port port, const void* data, std::size_t len);
 
     /**
      * @brief View a textual buffer as raw bytes without copying.
@@ -4811,8 +4805,7 @@ class DatagramSocket : public SocketOptions
      * @endcode
      */
     template <typename T>
-    void sendPrefixedUnconnected(const std::string_view host, const Port port,
-                                 const std::span<const std::byte> payload) const
+    void sendPrefixedUnconnected(const std::string_view host, const Port port, const std::span<const std::byte> payload)
     {
         if (getSocketFd() == INVALID_SOCKET)
             throw SocketException("DatagramSocket::sendPrefixedUnconnected<T>(): socket is not open.");
@@ -4831,17 +4824,52 @@ class DatagramSocket : public SocketOptions
         sendUnconnectedTo(host, port, datagram.data(), datagram.size());
     }
 
+    /**
+     * @brief Cache the actual local endpoint assigned by the OS.
+     * @ingroup udp
+     *
+     * @details Invokes `getsockname()` on the socket and stores the result in
+     *          `_localAddr`/`_localAddrLen`, setting `_haveLocalAddr` to `true` on success.
+     *          Call this immediately after a successful `bind()` or after a UDP `connect()`
+     *          that implicitly binds an ephemeral port. If `getsockname()` fails, the
+     *          existing cached values are left unchanged.
+     *
+     * @post On success: `_haveLocalAddr == true` and `_localAddr`/`_localAddrLen` contain a
+     *       valid `AF_INET` or `AF_INET6` endpoint. On failure: cache remains as it was.
+     *
+     * @thread_safety Intended for the owning thread of the socket. Not synchronized against
+     *                concurrent `close()`; coordinate externally if those may race.
+     *
+     * @throws None. This function is `noexcept` and never throws.
+     */
+    void cacheLocalEndpoint() noexcept
+    {
+        sockaddr_storage ss{};
+        auto len = static_cast<socklen_t>(sizeof(ss));
+#if defined(_WIN32)
+        if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&ss), &len) == SOCKET_ERROR)
+            return;
+#else
+        if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&ss), &len) == -1)
+            return;
+#endif
+        _localAddr = ss;
+        _localAddrLen = len;
+        _haveLocalAddr.store(true, std::memory_order_relaxed); // or set your existing flag
+    }
+
   private:
     mutable sockaddr_storage
         _remoteAddr{}; ///< Storage for the address of the most recent sender (used in unconnected mode).
     mutable socklen_t _remoteAddrLen =
-        0;                         ///< Length of the valid address data in `_remoteAddr` (0 if none received yet).
-    sockaddr_storage _localAddr{}; ///< Local address structure.
-    mutable socklen_t _localAddrLen = 0; ///< Length of local address.
-    std::vector<char> _internalBuffer;   ///< Internal buffer for read operations.
-    Port _port;                          ///< Port number the socket is bound to (if applicable).
-    bool _isBound = false;               ///< True if the socket is bound to an address
-    bool _isConnected = false;           ///< True if the socket is connected to a remote host.
+        0;                             ///< Length of the valid address data in `_remoteAddr` (0 if none received yet).
+    sockaddr_storage _localAddr{};     ///< Cached local socket address (set by bind()/UDP connect() via getsockname()).
+    socklen_t _localAddrLen = 0;       ///< Size in bytes of the cached local address stored in _localAddr.
+    std::atomic_bool _haveLocalAddr;   ///< True if _localAddr/_localAddrLen contain a valid endpoint; reset on close().
+    std::vector<char> _internalBuffer; ///< Internal buffer for read operations.
+    Port _port;                        ///< Port number the socket is bound to (if applicable).
+    bool _isBound = false;             ///< True if the socket is bound to an address
+    bool _isConnected = false;         ///< True if the socket is connected to a remote host.
 };
 
 } // namespace jsocketpp

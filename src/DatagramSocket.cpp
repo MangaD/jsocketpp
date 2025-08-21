@@ -16,8 +16,8 @@ DatagramSocket::DatagramSocket(const Port localPort, const std::string_view loca
                                const bool dualStack, const bool autoBind, const bool autoConnect,
                                const std::string_view remoteAddress, const Port remotePort,
                                const int connectTimeoutMillis)
-    : SocketOptions(INVALID_SOCKET), _internalBuffer(internalBufferSize.value_or(DefaultDatagramReceiveSize)),
-      _port(localPort)
+    : SocketOptions(INVALID_SOCKET), _haveLocalAddr(false),
+      _internalBuffer(internalBufferSize.value_or(DefaultDatagramReceiveSize)), _port(localPort)
 {
     const auto localAddrInfoPtr = internal::resolveAddress(
         localAddress, _port,
@@ -25,7 +25,7 @@ DatagramSocket::DatagramSocket(const Port localPort, const std::string_view loca
         // addresses to be returned by getaddrinfo, enabling the server to support dual-stack networking
         // (accepting connections over both protocols). This makes the code portable and future-proof,
         // as it can handle whichever protocol is available on the system or preferred by clients.
-        AF_UNSPEC,
+        dualStack ? AF_UNSPEC : AF_INET,
         // Specifies the desired socket type. Setting it to `SOCK_DGRAM` requests a datagram socket (UDP),
         // which provides connectionless, unreliable, message-oriented communication—this is the standard
         // socket type for UDP. By specifying `SOCK_DGRAM`, the code ensures that only address results suitable
@@ -60,11 +60,11 @@ DatagramSocket::DatagramSocket(const Port localPort, const std::string_view loca
         if (dualStack && p->ai_family == AF_INET6)
             sorted.push_back(p);
     for (addrinfo* p = localAddrInfoPtr.get(); p; p = p->ai_next)
-        if (p->ai_family == AF_INET || !dualStack)
+        if (p->ai_family == AF_INET)
             sorted.push_back(p);
 
     // Attempt to create a socket using the sorted list of preferred addresses
-    for (auto* p : sorted)
+    for (const auto* p : sorted)
     {
         setSocketFd(::socket(p->ai_family, p->ai_socktype, p->ai_protocol));
         if (getSocketFd() != INVALID_SOCKET)
@@ -155,8 +155,14 @@ void DatagramSocket::cleanup()
 {
     internal::tryCloseNoexcept(getSocketFd());
     setSocketFd(INVALID_SOCKET);
+    _port = 0;
     _isBound = false;
     _isConnected = false;
+    _haveLocalAddr.store(false, std::memory_order_relaxed);
+    _localAddrLen = 0;
+    std::memset(&_localAddr, 0, sizeof(_localAddr));
+    _remoteAddrLen = 0;
+    std::memset(&_remoteAddr, 0, sizeof(_remoteAddr));
 }
 
 void DatagramSocket::cleanupAndThrow(const int errorCode)
@@ -188,9 +194,7 @@ DatagramSocket::~DatagramSocket() noexcept
 void DatagramSocket::close()
 {
     internal::closeOrThrow(getSocketFd());
-    setSocketFd(INVALID_SOCKET);
-    _isBound = false;
-    _isConnected = false;
+    cleanup();
 }
 
 void DatagramSocket::bind(const std::string_view localAddress, const Port localPort)
@@ -218,6 +222,7 @@ void DatagramSocket::bind(const std::string_view localAddress, const Port localP
 #endif
                        ) == 0)
         {
+            cacheLocalEndpoint();
             _isBound = true;
             return;
         }
@@ -336,6 +341,7 @@ void DatagramSocket::connect(const std::string_view host, const Port port, const
         }
     }
 
+    cacheLocalEndpoint();
     _isConnected = true;
     // Socket mode will be restored automatically via ScopedBlockingMode destructor
 }
@@ -426,7 +432,7 @@ void DatagramSocket::writeWithTimeout(const std::string_view data, const int tim
     internal::sendExact(getSocketFd(), data.data(), len);
 }
 
-void DatagramSocket::write(const DatagramPacket& packet) const
+void DatagramSocket::write(const DatagramPacket& packet)
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("DatagramSocket::write(DatagramPacket): socket is not open.");
@@ -572,7 +578,7 @@ void DatagramSocket::writevAll(const std::span<const std::string_view> buffers) 
     internal::sendExact(getSocketFd(), datagram.data(), datagram.size());
 }
 
-void DatagramSocket::writeTo(const std::string_view host, const Port port, const std::string_view message) const
+void DatagramSocket::writeTo(const std::string_view host, const Port port, const std::string_view message)
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("DatagramSocket::writeTo(host, port, std::string_view): socket is not open.");
@@ -584,7 +590,7 @@ void DatagramSocket::writeTo(const std::string_view host, const Port port, const
     sendUnconnectedTo(host, port, message.data(), len);
 }
 
-void DatagramSocket::writeTo(const std::string_view host, const Port port, const std::span<const std::byte> data) const
+void DatagramSocket::writeTo(const std::string_view host, const Port port, const std::span<const std::byte> data)
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("DatagramSocket::writeTo(host, port, std::span<const std::byte>): socket is not open.");
@@ -1552,41 +1558,64 @@ DatagramReadResult DatagramSocket::readvAllWithTotalTimeout(const std::span<Buff
     return readv(buffers, strict);
 }
 
-std::string DatagramSocket::getLocalIp(const bool convertIPv4Mapped) const
+std::string DatagramSocket::getLocalIp(const bool convertIPv4Mapped)
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("getLocalIp() failed: socket is not open.");
 
-    sockaddr_storage localAddr{};
-    socklen_t addrLen = sizeof(localAddr);
+    // Fast path: use cache if we have it.
+    if (_haveLocalAddr.load(std::memory_order_acquire))
+        return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&_localAddr), convertIPv4Mapped);
 
-    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&localAddr), &addrLen) == SOCKET_ERROR)
+    // Slow path: single syscall, then (optionally) persist if it looks bound.
+    sockaddr_storage tmp{};
+    auto len = static_cast<socklen_t>(sizeof(tmp));
+    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&tmp), &len) == SOCKET_ERROR)
     {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
+        const int err = GetSocketError();
+        throw SocketException(err, SocketErrorMessage(err));
     }
 
-    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&localAddr), convertIPv4Mapped);
+    // Persist only if it looks truly bound (port != 0), avoiding caching placeholder endpoints.
+    const auto port = portFromSockaddr(reinterpret_cast<const sockaddr*>(&tmp));
+    if (port != 0)
+    {
+        _localAddr = tmp;
+        _localAddrLen = len;
+        _haveLocalAddr.store(true, std::memory_order_release);
+    }
+
+    return ipFromSockaddr(reinterpret_cast<const sockaddr*>(&tmp), convertIPv4Mapped);
 }
 
-Port DatagramSocket::getLocalPort() const
+Port DatagramSocket::getLocalPort()
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException("getLocalPort() failed: socket is not open.");
 
-    sockaddr_storage addr{};
-    socklen_t addrLen = sizeof(addr);
+    if (_haveLocalAddr.load(std::memory_order_acquire))
+        return portFromSockaddr(reinterpret_cast<const sockaddr*>(&_localAddr));
 
-    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
+    sockaddr_storage tmp{};
+    auto len = static_cast<socklen_t>(sizeof(tmp));
+    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&tmp), &len) == SOCKET_ERROR)
     {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
+        const int err = GetSocketError();
+        throw SocketException(err, SocketErrorMessage(err));
     }
 
-    return portFromSockaddr(reinterpret_cast<const sockaddr*>(&addr));
+    const auto port = portFromSockaddr(reinterpret_cast<const sockaddr*>(&tmp));
+    if (port != 0)
+    {
+        _localAddr = tmp;
+        _localAddrLen = len;
+        _haveLocalAddr.store(true, std::memory_order_release);
+    }
+
+    return port;
 }
 
-std::string DatagramSocket::getLocalSocketAddress(const bool convertIPv4Mapped) const
+std::string DatagramSocket::getLocalSocketAddress(const bool convertIPv4Mapped)
 {
     return getLocalIp(convertIPv4Mapped) + ":" + std::to_string(getLocalPort());
 }
@@ -2035,7 +2064,7 @@ void DatagramSocket::waitReady(const Direction dir, const int timeoutMillis) con
 }
 
 void DatagramSocket::sendUnconnectedTo(const std::string_view host, const Port port, const void* data,
-                                       const std::size_t len) const
+                                       const std::size_t len)
 {
     if (getSocketFd() == INVALID_SOCKET)
         throw SocketException(0, "DatagramSocket::sendUnconnectedTo(): socket is not open.");
@@ -2058,12 +2087,23 @@ void DatagramSocket::sendUnconnectedTo(const std::string_view host, const Port p
 
         try
         {
-            internal::sendExactTo(getSocketFd(), data, len, ai->ai_addr, ai->ai_addrlen);
+            internal::sendExactTo(
+                getSocketFd(), data, len, ai->ai_addr, static_cast<socklen_t>(ai->ai_addrlen),
+                [](void* p)
+                {
+                    if (auto* self = static_cast<DatagramSocket*>(p); !self->_isBound)
+                    {
+                        self->cacheLocalEndpoint(); // sets _localAddr/_localAddrLen/_haveLocalAddr
+                        self->_isBound = true;
+                    }
+                },
+                this);
 
             // Cache last destination (without marking the socket "connected").
             if (!_isConnected)
             {
-                rememberRemote(*reinterpret_cast<const sockaddr_storage*>(ai->ai_addr), ai->ai_addrlen);
+                rememberRemote(*reinterpret_cast<const sockaddr_storage*>(ai->ai_addr),
+                               static_cast<socklen_t>(ai->ai_addrlen));
             }
             return; // success
         }
