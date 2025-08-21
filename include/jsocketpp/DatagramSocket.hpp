@@ -879,94 +879,69 @@ class DatagramSocket : public SocketOptions
     [[nodiscard]] bool isBound() const noexcept { return _isBound; }
 
     /**
-     * @brief Resolves and connects the datagram socket to a remote UDP peer with optional timeout.
+     * @brief Connect this UDP socket to a default peer (set the default destination).
      * @ingroup udp
      *
-     * Although UDP is a connectionless protocol, calling `connect()` on a datagram socket sets a default remote
-     * peer. This operation internally performs a `::connect()` syscall, which offers the following advantages:
+     * @details
+     * Establishes a default remote endpoint for the datagram socket. After a successful call,
+     * send/receive operations that use the connected variants (e.g., `send`, `recv`) no longer
+     * require an explicit destination address. Unlike TCP, UDP "connect" performs **no** handshake;
+     * it simply sets the default peer and may implicitly bind the local endpoint (address/port).
      *
-     * ---
+     * This implementation:
+     * - Resolves @p host + @p port to a linked list of address candidates (IPv6 and/or IPv4).
+     * - Iterates **all** candidates in order until one succeeds.
+     * - If @p timeoutMillis ≥ 0, temporarily switches the socket to non-blocking mode and uses
+     *   `select()` to wait for writability, respecting a **single overall** timeout budget across
+     *   all candidates (not per-candidate).
+     * - On success, caches the local endpoint (via `getsockname()`), sets `_isBound = true`
+     *   (if it wasn’t already), and marks the socket as connected.
      *
-     * ### 🔌 What Is Connected UDP?
+     * @param[in] host           Remote hostname or IP literal (IPv4/IPv6).
+     * @param[in] port           Remote UDP port.
+     * @param[in] timeoutMillis  Connection timeout in milliseconds. If `< 0`, the call is
+     *                           blocking. If `0`, the function attempts a non-blocking connect
+     *                           and will time out immediately unless completion is instantaneous.
      *
-     * A UDP socket normally uses `sendto()` to send data to any arbitrary destination and `recvfrom()` to receive
-     * from any source. When a socket is "connected" to a fixed peer:
+     * @pre The socket must be open and not already connected.
      *
-     * - It can use `send()` / `recv()` instead of `sendto()` / `recvfrom()`
-     * - Incoming datagrams are filtered to only accept those from the connected peer
-     * - Outgoing datagrams are always sent to the connected peer
-     * - ICMP errors (e.g., port unreachable) are reliably reported via `recv()` and `send()`
-     * - You may benefit from slightly faster I/O due to simplified kernel bookkeeping
+     * @post On success:
+     *       - The socket has a default peer set (connected UDP).
+     *       - The local endpoint cache is populated to reflect any implicit bind.
+     *       - `_isConnected == true` and `_isBound == true` (if an implicit bind occurred).
      *
-     * This mode is ideal for client-side UDP protocols like DNS, QUIC, RTP, STUN/TURN, or custom request/response
-     * protocols.
+     * @throws SocketException
+     *         - If called when already connected.
+     *         - If name resolution yields no candidates.
+     *         - If a candidate fails synchronously (and other candidates also fail), or if
+     *           `select()`/`getsockopt(SO_ERROR)` reports an error. The exception carries
+     *           `GetSocketError()` and `SocketErrorMessage(GetSocketError())`.
+     * @throws SocketTimeoutException
+     *         - If the connection does not complete within @p timeoutMillis across all
+     *           candidates (including the case `timeoutMillis == 0` and the operation cannot
+     *           complete immediately).
      *
-     * ---
+     * @par Notes
+     * - The total elapsed time across candidate attempts will not exceed @p timeoutMillis.
+     * - On Windows and POSIX, writability after `select()` is not a guarantee of success; this
+     *   method checks `SO_ERROR` to confirm or retrieve the per-candidate failure code.
+     * - If you routinely connect with timeouts, consider replacing `select()` with a `poll()`-based
+     *   wait to avoid `FD_SETSIZE` constraints.
      *
-     * ### 🧠 Example Use Cases
+     * @warning When @p timeoutMillis ≥ 0 and `getSocketFd() >= FD_SETSIZE`, `select()` cannot be used
+     *          and this function throws a `SocketException` before attempting the connection.
      *
-     * - **DNS client**:
-     *   - Connect to `"8.8.8.8:53"` and send queries using `write()`
+     * @note Thread-safety: intended for the socket’s owning thread. Do not call concurrently with
+     *       `close()` or other operations that mutate connection state.
      *
-     * - **UDP echo or ping client**:
-     *   - Use `write("ping")` / `read()` loop with a known server
-     *
-     * - **QUIC or DTLS over UDP**:
-     *   - Secure transport over a connected datagram channel
-     *
-     * - **Firewall/NAT diagnostics**:
-     *   - By connecting, ICMP errors are reliably propagated for unreachable peers
-     *
-     * ---
-     *
-     * ### ⚙️ Behavior
-     *
-     * This method resolves the target `host:port` using DNS (`getaddrinfo()`), selects the best available
-     * address, and performs a `::connect()` syscall. After success:
-     *
-     * - The socket is considered **connected**
-     * - Only datagrams from the connected peer are received
-     * - `write()` and `read()` may be used
-     * - Internal `_isConnected` is set to `true`
-     *
-     * ---
-     *
-     * ### ⏱ Timeout Handling
-     *
-     * This method supports both blocking and timeout-aware non-blocking connect:
-     *
-     * - `timeoutMillis < 0`: Performs a standard blocking `connect()`
-     * - `timeoutMillis >= 0`: Temporarily switches to non-blocking mode and uses `select()` to wait
-     *
-     * After timeout-based connect, the socket’s original blocking mode is restored automatically.
-     *
-     * ---
-     *
-     * ### Example
      * @code
-     * DatagramSocket sock(0, "", ..., true, false); // bind to ephemeral port, no connect yet
-     * sock.connect("8.8.8.8", 53);                  // blocking connect
-     * sock.write("dns query");                     // implicit sendto(8.8.8.8:53)
-     * auto response = sock.read();                 // only accepts from 8.8.8.8
+     * DatagramSocket s;
+     * s.open(AF_UNSPEC);                  // create socket
+     * s.connect("example.net", 5353, 2000); // iterate v6/v4 candidates, 2s overall timeout
+     * s.send(data, len);                  // now uses the default peer
      * @endcode
-     *
-     * @param[in] host     Hostname or IP address of the remote UDP peer
-     * @param[in] port     Port number of the remote UDP peer
-     * @param[in] timeoutMillis Optional timeout for connect:
-     *                          - `< 0` performs a blocking `connect()`
-     *                          - `>= 0` uses non-blocking `connect()` with timeout
-     *
-     * @throws SocketTimeoutException If the connection times out before completion
-     * @throws SocketException If resolution, socket creation, or `connect()` fails
-     *
-     * @note This operation does not perform any UDP handshaking — it simply sets the default destination.
-     *       The UDP socket remains datagram-based and unreliable.
-     *
-     * @note Any existing connection will be overwritten.
-     *
-     * @see read(), write(), disconnect(), isConnected(), ScopedBlockingMode, resolveAddress()
      */
-    void connect(std::string_view host, Port port, int timeoutMillis = -1);
+    void connect(std::string_view host, Port port, int timeoutMillis);
 
     /**
      * @brief Disconnects the datagram socket from its currently connected peer.

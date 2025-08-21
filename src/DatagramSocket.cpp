@@ -3,6 +3,7 @@
 #include "jsocketpp/SocketException.hpp"
 #include "jsocketpp/SocketTimeoutException.hpp"
 
+#include <chrono>
 #include <numeric>
 #include <optional>
 
@@ -247,103 +248,161 @@ void DatagramSocket::bind()
 void DatagramSocket::connect(const std::string_view host, const Port port, const int timeoutMillis)
 {
     if (_isConnected)
-    {
         throw SocketException("connect() called on an already-connected socket");
-    }
 
-    // Check FD_SETSIZE limit up-front if using select()
+    // If you keep using select(), guard FD_SETSIZE up front.
     if (timeoutMillis >= 0 && getSocketFd() >= FD_SETSIZE)
-    {
         throw SocketException("connect(): socket descriptor exceeds FD_SETSIZE (" + std::to_string(FD_SETSIZE) +
                               "), select() cannot be used");
-    }
 
-    // Resolve the remote address
+    // Resolve all candidates (IPv6/IPv4 as available)
     const auto remoteInfo = internal::resolveAddress(host, port, AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP);
-    const addrinfo* target = remoteInfo.get();
-    if (!target)
-    {
+    const addrinfo* ai = remoteInfo.get();
+    if (!ai)
         throw SocketException("connect() failed: could not resolve target address");
-    }
 
-    // Determine if we should use non-blocking connect logic
     const bool useNonBlocking = (timeoutMillis >= 0);
 
-    // Automatically switch to non-blocking if needed, and restore original mode later
+    // Temporarily switch to non-blocking if we need a timeout; RAII restores mode.
     // NOLINTNEXTLINE - Temporarily switch to non-blocking mode (RAII-reverted)
     std::optional<internal::ScopedBlockingMode> blockingGuard;
     if (useNonBlocking)
+        blockingGuard.emplace(getSocketFd(), true);
+
+    // Track deadline so multiple candidates don't exceed the total timeout.
+    const auto start = std::chrono::steady_clock::now();
+    auto remaining_ms = [&]() -> int
     {
-        blockingGuard.emplace(getSocketFd(), true); // Set non-blocking temporarily
-    }
+        if (!useNonBlocking)
+            return -1;
+        const auto elapsed =
+            std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
+        const long rem = static_cast<long>(timeoutMillis) - static_cast<long>(elapsed);
+        return rem > 0 ? static_cast<int>(rem) : 0;
+    };
 
-    // Attempt to connect
-    const int res = ::connect(getSocketFd(), target->ai_addr,
-#ifdef _WIN32
-                              static_cast<int>(target->ai_addrlen)
-#else
-                              target->ai_addrlen
-#endif
-    );
+    int lastErr = 0;
 
-    if (res == SOCKET_ERROR)
+    for (const addrinfo* p = ai; p != nullptr; p = p->ai_next)
     {
-        auto error = GetSocketError();
-
-        // On most platforms, these errors indicate a non-blocking connection in progress
-#ifdef _WIN32
-        const bool wouldBlock = (error == WSAEINPROGRESS || error == WSAEWOULDBLOCK);
-#else
-        const bool wouldBlock = (error == EINPROGRESS || error == EWOULDBLOCK);
-#endif
-
-        if (!useNonBlocking || !wouldBlock)
+        // Quick check: if we have a deadline and it's gone, throw timeout now.
+        if (useNonBlocking)
         {
-            throw SocketException(error, SocketErrorMessage(error));
+            const int rem = remaining_ms();
+            if (rem == 0)
+                throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
+                                             "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
         }
 
-        // Wait until socket becomes writable (connection ready or failed)
+        const int rc = ::connect(getSocketFd(), p->ai_addr,
+#ifdef _WIN32
+                                 static_cast<int>(p->ai_addrlen)
+#else
+                                 p->ai_addrlen
+#endif
+        );
+
+        if (rc == 0)
+        {
+            // Success (UDP connect sets default peer; may implicitly bind a local port).
+            cacheLocalEndpoint();
+            _isBound = true; // reflect implicit bind if we weren't bound before
+            _isConnected = true;
+            return;
+        }
+
+        // Handle error / possible non-blocking-in-progress
+        const int err = GetSocketError();
+
+#ifdef _WIN32
+        const bool wouldBlock = (err == WSAEINPROGRESS || err == WSAEWOULDBLOCK);
+#else
+        const bool wouldBlock = (err == EINPROGRESS || err == EWOULDBLOCK);
+#endif
+
+        if (!(useNonBlocking && wouldBlock))
+        {
+            // Hard failure for this candidate; try next.
+            lastErr = err;
+            continue;
+        }
+
+        // Non-blocking connect in progress — wait for writability within remaining time.
+        const int rem_ms = remaining_ms();
+        if (rem_ms == 0)
+            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
+                                         "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
+
         timeval tv{};
-        tv.tv_sec = timeoutMillis / 1000;
-        tv.tv_usec = (timeoutMillis % 1000) * 1000;
+        tv.tv_sec = rem_ms / 1000;
+        tv.tv_usec = (rem_ms % 1000) * 1000;
 
         fd_set writeFds;
         FD_ZERO(&writeFds);
         FD_SET(getSocketFd(), &writeFds);
 
 #ifdef _WIN32
-        const int selectResult = ::select(0, nullptr, &writeFds, nullptr, &tv);
+        const int sel = ::select(0, nullptr, &writeFds, nullptr, &tv);
 #else
-        int selectResult;
+        int sel;
         do
         {
-            selectResult = ::select(getSocketFd() + 1, nullptr, &writeFds, nullptr, &tv);
-        } while (selectResult < 0 && errno == EINTR);
+            sel = ::select(getSocketFd() + 1, nullptr, &writeFds, nullptr, &tv);
+        } while (sel < 0 && errno == EINTR);
 #endif
 
-        if (selectResult == 0)
-            throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
-                                         "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
-        if (selectResult < 0)
+        if (sel == 0)
         {
-            const int errorSelect = GetSocketError();
-            throw SocketException(errorSelect, SocketErrorMessage(errorSelect));
+            // Timed out waiting for this candidate — try next if any time remains, else throw.
+            // We *don’t* immediately throw here to give other candidates a chance within the total timeout.
+            // If this was the last candidate or time is up, the loop tail will handle it.
+            lastErr = JSOCKETPP_TIMEOUT_CODE;
+            continue;
+        }
+        if (sel < 0)
+        {
+            const int selErr = GetSocketError();
+            throw SocketException(selErr, SocketErrorMessage(selErr));
         }
 
-        // Even if select() reports writable, we must check if the connection actually succeeded
+        // Writable: check SO_ERROR to determine success/failure of the connect attempt.
         int so_error = 0;
-        socklen_t len = sizeof(so_error);
-        // SO_ERROR is always retrieved as int (POSIX & Windows agree on semantics)
-        if (::getsockopt(getSocketFd(), SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&so_error), &len) < 0 ||
-            so_error != 0)
+        auto len = static_cast<socklen_t>(sizeof(so_error));
+        if (::getsockopt(getSocketFd(), SOL_SOCKET, SO_ERROR,
+#ifdef _WIN32
+                         reinterpret_cast<char*>(&so_error),
+#else
+                         &so_error,
+#endif
+                         &len) < 0)
         {
-            throw SocketException(so_error, SocketErrorMessage(so_error));
+            const int optErr = GetSocketError();
+            throw SocketException(optErr, SocketErrorMessage(optErr));
         }
+
+        if (so_error == 0)
+        {
+            cacheLocalEndpoint();
+            _isBound = true;
+            _isConnected = true;
+            return;
+        }
+
+        // Candidate failed; remember error and continue.
+        lastErr = so_error;
     }
 
-    cacheLocalEndpoint();
-    _isConnected = true;
-    // Socket mode will be restored automatically via ScopedBlockingMode destructor
+    // No candidate succeeded.
+    if (useNonBlocking && remaining_ms() == 0 && lastErr == JSOCKETPP_TIMEOUT_CODE)
+    {
+        throw SocketTimeoutException(JSOCKETPP_TIMEOUT_CODE,
+                                     "Connection timed out after " + std::to_string(timeoutMillis) + " ms");
+    }
+    if (lastErr != 0)
+        throw SocketException(lastErr, SocketErrorMessage(lastErr));
+
+    // Fallback (shouldn’t happen): generic failure.
+    throw SocketException("connect() failed for all address candidates");
 }
 
 void DatagramSocket::disconnect()
