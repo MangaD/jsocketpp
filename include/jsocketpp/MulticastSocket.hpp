@@ -265,7 +265,7 @@ class MulticastSocket : public DatagramSocket
      *
      * @return true if loopback is enabled, false if disabled.
      */
-    int getLoopbackMode() const { return _loopbackEnabled; }
+    bool getLoopbackMode() const { return _loopbackEnabled; }
 
     /**
      * @brief Returns the last multicast group joined (for reference/debug).

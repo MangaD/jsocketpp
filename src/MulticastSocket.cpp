@@ -2,10 +2,6 @@
 
 using namespace jsocketpp;
 
-#include "jsocketpp/MulticastSocket.hpp"
-
-using namespace jsocketpp;
-
 MulticastSocket::MulticastSocket(const Port localPort, const std::string_view localAddress,
                                  const std::optional<std::size_t> recvBufferSize,
                                  const std::optional<std::size_t> sendBufferSize,
