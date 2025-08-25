@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['java’s_20approach_20and_20its_20limitations_0',['⚠️ Java’s Approach and Its Limitations',['../group__address__reuse.html#autotoc_md109',1,'']]],
+  ['java’s_20design_20trade_20off_1',['Summary of Java’s Design Trade-Off',['../group__address__reuse.html#autotoc_md113',1,'']]],
+  ['java_20↔_20jsocketpp_20class_20mapping_2',['🔄 Java ↔ jsocketpp Class Mapping',['../index.html#autotoc_md522',1,'']]],
+  ['java_20comparison_3',['📚 Java Comparison',['../group__async__io.html#autotoc_md166',1,'']]],
+  ['java_20default_20style_4',['&lt;b&gt;a) Constructor Does All (Java Default Style)&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md51',1,'']]],
+  ['java_20does_5',['What Java Does',['../group__address__reuse.html#autotoc_md110',1,'']]],
+  ['java_20serversocket_3a_20constructor_20does_20all_20steps_6',['2. Java ServerSocket: Constructor Does All Steps',['../group__ServerSocket__Lifecycle.html#autotoc_md40',1,'']]],
+  ['java_20style_20cross_20platform_20socket_20library_20for_20modern_20c_2020_7',['jsocketpp: Java-Style Cross-Platform Socket Library for Modern C++20',['../index.html',1,'']]],
+  ['java_3a_8',['Java:',['../group__async__io.html#autotoc_md152',1,'Java:'],['../group__async__io.html#autotoc_md156',1,'Java:']]],
+  ['jsocketpp_9',['jsocketpp',['../group__address__reuse.html#autotoc_md117',1,'✅ Smarter Strategy for jsocketpp'],['../index.html#autotoc_md494',1,'💡 Why jsocketpp?'],['../md_CONTRIBUTING.html',1,'Contributing to jsocketpp'],['../group__socket__states.html#autotoc_md379',1,'How This Relates to <span class="tt">jsocketpp</span>']]],
+  ['jsocketpp_20_3a_10',['&lt;b&gt;With &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt; (default in jsocketpp)&lt;/b&gt;:',['../group__address__reuse.html#autotoc_md105',1,'']]],
+  ['jsocketpp_20api_20notes_11',['jsocketpp API Notes',['../group__bind__interfaces.html#autotoc_md180',1,'']]],
+  ['jsocketpp_20approach_3a_20port_20in_20constructor_20bind_20listen_20explicit_12',['3. The jsocketpp Approach: Port in Constructor, Bind/Listen Explicit',['../group__ServerSocket__Lifecycle.html#autotoc_md42',1,'']]],
+  ['jsocketpp_20async_13',['Is jsocketpp async?',['../index.html#autotoc_md538',1,'']]],
+  ['jsocketpp_20class_20mapping_14',['🔄 Java ↔ jsocketpp Class Mapping',['../index.html#autotoc_md522',1,'']]],
+  ['jsocketpp_20does_15',['A Better Alternative: What &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; Does',['../group__address__reuse.html#autotoc_md115',1,'']]],
+  ['jsocketpp_20gets_20right_16',['✔ What jsocketpp Gets Right',['../group__address__reuse.html#autotoc_md130',1,'']]],
+  ['jsocketpp_20handles_20blocking_20and_20timeouts_17',['⏱ How jsocketpp Handles Blocking and Timeouts',['../group__async__io.html#autotoc_md145',1,'']]],
+  ['jsocketpp_20hybrid_18',['&lt;b&gt;c) jsocketpp Hybrid&lt;/b&gt;',['../group__ServerSocket__Lifecycle.html#autotoc_md53',1,'']]],
+  ['jsocketpp_20in_20production_19',['Can I use jsocketpp in production?',['../index.html#autotoc_md542',1,'']]],
+  ['jsocketpp_20this_20library_20',['1. jsocketpp (this library)',['../group__socket__library__comparison.html#autotoc_md353',1,'']]],
+  ['jsocketpp_20vs_20boost_20asio_21',['🔁 jsocketpp vs Boost.Asio',['../index.html#autotoc_md500',1,'']]],
+  ['jsocketpp_3a_20java_20style_20cross_20platform_20socket_20library_20for_20modern_20c_2020_22',['jsocketpp: Java-Style Cross-Platform Socket Library for Modern C++20',['../index.html',1,'']]],
+  ['json_23',['Example &lt;span class=&quot;tt&quot;&gt;vcpkg.json&lt;/span&gt;',['../group__vcpkg__publish__guide.html#autotoc_md476',1,'']]]
+];
