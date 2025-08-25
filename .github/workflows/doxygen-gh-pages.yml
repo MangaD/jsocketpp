@@ -111,6 +111,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/doxygen/html
+          publish_branch: gh-pages          # explicit (default)
+          keep_files: false                 # remove anything that isn't in publish_dir
+          force_orphan: true                # recreate gh-pages as a single clean commit
       # In the repository settings, go to Actions -> General -> Workflow permissions
       # and enable Read and write permissions.
       # After the workflow runs successfully, go to Settings -> Pages -> Branch
