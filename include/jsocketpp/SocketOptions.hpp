@@ -1756,6 +1756,289 @@ class SocketOptions
 
 #endif
 
+    /**
+     * @brief Set the default multicast hop limit / TTL for this socket.
+     * @ingroup socketopts
+     *
+     * Sets the per-socket *default* scope for **multicast** transmissions:
+     * - For IPv4 sockets, maps to `IP_MULTICAST_TTL` (time-to-live).
+     * - For IPv6 sockets, maps to `IPV6_MULTICAST_HOPS` (hop limit).
+     *
+     * The value controls how far outbound **multicast** packets may travel:
+     * - `0` confines delivery to the local host (no transmission beyond the sender).
+     * - `1` confines delivery to the local link / subnet.
+     * - Higher values permit traversal across additional multicast routers up to the limit.
+     *
+     * This setting applies to subsequent multicast sends on this socket until changed again.
+     * It does **not** affect unicast traffic—use `IP_TTL` / `IPV6_UNICAST_HOPS` for that.
+     *
+     * @param[in] ttl
+     *     Hop limit (IPv6) or TTL (IPv4), in the range `[0, 255]`.
+     *
+     * @pre
+     * - The underlying socket must be a valid IPv4 (`AF_INET`) or IPv6 (`AF_INET6`) socket.
+     * - The socket is intended for multicast transmission (typically a datagram/UDP socket).
+     *
+     * @post
+     * - The socket’s default multicast TTL / hop limit is updated; subsequent multicast
+     *   transmissions use this value unless a per-message override is supplied via ancillary
+     *   data (e.g., `IP_MULTICAST_TTL` / `IPV6_HOPLIMIT` control messages).
+     *
+     * @par Platform mapping
+     * - **IPv4:** `setsockopt(fd, IPPROTO_IP,  IP_MULTICAST_TTL,  ...)`
+     * - **IPv6:** `setsockopt(fd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, ...)`
+     *
+     * @par Error conditions
+     * - `ttl` is outside `[0, 255]`.
+     * - The socket is invalid or closed.
+     * - The socket family is unsupported for multicast TTL/hops on the current platform.
+     * - The underlying `setsockopt` call fails (e.g., `ENOTSOCK`, `EINVAL`, `ENOPROTOOPT`,
+     *   or their Windows equivalents such as `WSAENOTSOCK`, `WSAEINVAL`, `WSAENOPROTOOPT`).
+     *
+     * @throws SocketException
+     *     If @p ttl is out of range, the socket state is invalid, or the operating system
+     *     rejects the option. The exception contains the OS error code and a descriptive
+     *     message produced by `SocketErrorMessage(...)`.
+     *
+     * @note
+     * - This is a **per-socket default**. If your application uses `sendmsg` with ancillary
+     *   data to specify a hop limit/TTL per packet, those per-message values take precedence.
+     * - Changing this value concurrently with active sends may produce a mix of old and new
+     *   limits across packets that are in-flight during the update; set it during initialization
+     *   for deterministic behavior.
+     *
+     * @par Related options
+     * - @ref setMulticastLoopback(bool) — controls whether the socket receives its own
+     *   multicast transmissions.
+     * - @ref setMulticastInterfaceIPv4(in_addr) / @ref setMulticastInterfaceIPv6(unsigned)
+     *   — choose the outgoing interface for multicast.
+     * - Unicast scope: `IP_TTL` / `IPV6_UNICAST_HOPS` (not affected by this function).
+     *
+     * @code
+     * // Example: restrict multicast to the local link and send
+     * MulticastSocket sock;               // or your UDP-capable socket wrapper
+     * sock.setMulticastInterface("eth0"); // choose an egress interface
+     * sock.setMulticastTTL(1);            // 1 = link-local only
+     * sock.joinGroup("239.1.2.3");        // join if you also receive on this socket
+     * sock.sendTo("239.1.2.3", 5000, dataSpan);
+     * @endcode
+     */
+    void setMulticastTTL(int ttl);
+
+    /**
+     * @brief Get the socket’s default multicast hop limit / TTL.
+     * @ingroup socketopts
+     *
+     * Returns the current **per-socket default** scope used for outbound **multicast**
+     * transmissions:
+     * - For IPv4 sockets, this queries `IP_MULTICAST_TTL` (time-to-live).
+     * - For IPv6 sockets, this queries `IPV6_MULTICAST_HOPS` (hop limit).
+     *
+     * The returned value determines how far multicast packets sent from this socket
+     * may propagate by default:
+     * - `0` confines delivery to the local host.
+     * - `1` confines delivery to the local link / subnet.
+     * - Larger values permit traversal across additional multicast routers, up to the limit.
+     *
+     * This query does **not** affect unicast traffic—use `IP_TTL` / `IPV6_UNICAST_HOPS`
+     * for unicast scope—and does **not** consider any per-message overrides supplied via
+     * ancillary data (e.g., `IP_MULTICAST_TTL` / `IPV6_HOPLIMIT` control messages). It
+     * reports the socket’s default only.
+     *
+     * @return
+     *   TTL / hop-limit in the range `[0, 255]` currently configured on this socket for
+     *   multicast transmissions.
+     *
+     * @pre
+     * - The underlying descriptor is a valid socket of family `AF_INET` or `AF_INET6`.
+     *
+     * @post
+     * - Socket state is unchanged; this is a read-only query.
+     *
+     * @par Platform mapping
+     * - **IPv4:** `getsockopt(fd, IPPROTO_IP,  IP_MULTICAST_TTL,  ...)`
+     * - **IPv6:** `getsockopt(fd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, ...)`
+     *
+     * @par Error conditions
+     * - The socket is invalid or closed.
+     * - The socket family cannot be determined or is unsupported.
+     * - The underlying `getsockopt` call fails (e.g., `ENOTSOCK`, `ENOPROTOOPT`, `EINVAL`,
+     *   or Windows equivalents such as `WSAENOTSOCK`, `WSAENOPROTOOPT`, `WSAEINVAL`).
+     *
+     * @throws SocketException
+     *   If the query fails for any of the reasons above. The exception carries the OS
+     *   error code and a descriptive message produced by `SocketErrorMessage(...)`.
+     *
+     * @note
+     * - The initial value is implementation-defined (commonly `1`); applications that
+     *   require a specific scope should call @ref setMulticastTTL(int) during initialization.
+     * - Concurrent calls to @ref setMulticastTTL(int) may race with this query; the value
+     *   returned is a snapshot at the time of the call.
+     *
+     * @par Related options
+     * - @ref setMulticastTTL(int) — set the default multicast scope.
+     * - @ref setMulticastLoopback(bool) — control whether this socket receives its own
+     *   multicast transmissions.
+     * - @ref setMulticastInterfaceIPv4(in_addr) / @ref setMulticastInterfaceIPv6(unsigned)
+     *   — choose the outgoing interface for multicast.
+     *
+     * @code
+     * // Example: read current default, ensure at least link-local reach (>= 1)
+     * [[maybe_unused]] auto current = sock.getMulticastTTL();
+     * if (current < 1) {
+     *     sock.setMulticastTTL(1);
+     * }
+     * @endcode
+     */
+    [[nodiscard]] int getMulticastTTL() const;
+
+    /**
+     * @brief Enable or disable multicast loopback for this socket.
+     * @ingroup socketopts
+     *
+     * Controls whether **multicast datagrams transmitted by this socket** are
+     * delivered back to the local host (“looped back”). This affects only **local
+     * delivery**; it does not influence what remote receivers get.
+     *
+     * - **IPv4:** maps to `IP_MULTICAST_LOOP`.
+     * - **IPv6:** maps to `IPV6_MULTICAST_LOOP`.
+     *
+     * Semantics (effective for packets *sent by this socket*):
+     * - `enable == true` (loopback on): the kernel may deliver a local copy of each
+     *   outbound multicast to sockets on the same host that have joined the group
+     *   (including this socket, if it has joined).
+     * - `enable == false` (loopback off): the kernel suppresses local delivery of
+     *   those packets on this host—no local socket will receive the copies of
+     *   *this socket’s* outbound multicast frames.
+     *
+     * This setting is **per-socket** and applies to subsequent sends until changed.
+     * It does **not** affect unicast traffic, and it does **not** force other
+     * sockets to receive or drop multicast that originates elsewhere.
+     *
+     * @param[in] enable
+     *     `true` to enable local loopback of this socket’s multicast transmissions;
+     *     `false` to suppress local loopback.
+     *
+     * @pre
+     * - The underlying descriptor is a valid datagram (UDP) socket created for
+     *   `AF_INET` or `AF_INET6`.
+     *
+     * @post
+     * - The socket’s multicast loopback policy is updated. Future multicast sends
+     *   from this socket follow the new policy; in-flight packets are unaffected.
+     *
+     * @par Platform mapping
+     * - **IPv4:** `setsockopt(fd, IPPROTO_IP,  IP_MULTICAST_LOOP,  &flag, sizeof(flag))`
+     * - **IPv6:** `setsockopt(fd, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, &flag, sizeof(flag))`
+     *
+     * @par Error conditions
+     * - The socket is invalid or closed.
+     * - The socket family cannot be determined or is unsupported on this platform.
+     * - The underlying `setsockopt` fails (e.g., `ENOTSOCK`, `ENOPROTOOPT`, `EINVAL`,
+     *   or Windows equivalents `WSAENOTSOCK`, `WSAENOPROTOOPT`, `WSAEINVAL`).
+     *
+     * @throws SocketException
+     *   If the option cannot be set for any of the reasons above. The exception
+     *   includes the OS error code and a descriptive message from `SocketErrorMessage(...)`.
+     *
+     * @note
+     * - Typical default is **enabled** (1) on most stacks, but it is
+     *   implementation-defined; call @ref getMulticastLoopback() to confirm.
+     * - Disabling loopback is useful when a sender also listens on the same group
+     *   and you want to avoid processing your own announcements.
+     * - This control concerns **local delivery** only; it has no impact on what
+     *   remote hosts receive.
+     *
+     * @par Related options
+     * - @ref getMulticastLoopback() — query the current loopback flag.
+     * - @ref setMulticastTTL(int) / @ref getMulticastTTL() — control and query the
+     *   default multicast scope (TTL/hop-limit).
+     * - @ref setMulticastInterfaceIPv4(in_addr) / @ref setMulticastInterfaceIPv6(unsigned)
+     *   — choose the outgoing interface for multicast.
+     *
+     * @code
+     * // Example: avoid receiving our own announcements
+     * MulticastSocket sock;
+     * sock.setMulticastInterface("eth0");
+     * sock.joinGroup("239.1.2.3");
+     *
+     * sock.setMulticastLoopback(false);   // suppress local copies of our sends
+     * sock.sendTo("239.1.2.3", 5000, payload);
+     * @endcode
+     */
+    void setMulticastLoopback(bool enable);
+
+    /**
+     * @brief Read the socket’s multicast loopback flag.
+     * @ingroup socketopts
+     *
+     * Queries whether **multicast datagrams transmitted by this socket** are eligible
+     * for **local delivery back to the host** (“loopback”).
+     *
+     * - **IPv4:** reads `IP_MULTICAST_LOOP`.
+     * - **IPv6:** reads `IPV6_MULTICAST_LOOP`.
+     *
+     * Semantics of the returned flag:
+     * - `true` — the kernel may deliver local copies of this socket’s outbound multicast
+     *   to sockets on the same host that have joined the destination group (including
+     *   this socket if it has joined).
+     * - `false` — the kernel suppresses local delivery of this socket’s outbound multicast.
+     *
+     * This is a read-only query of the **per-socket default** and does not affect unicast
+     * traffic, nor does it consider any per-message control data. It reports the socket’s
+     * current loopback policy only.
+     *
+     * @return
+     *   `true` if multicast loopback is enabled for this socket; otherwise `false`.
+     *
+     * @pre
+     * - The underlying descriptor is a valid socket of family `AF_INET` or `AF_INET6`.
+     *
+     * @post
+     * - Socket state is unchanged; this call performs no modifications.
+     *
+     * @par Platform mapping
+     * - **IPv4:** `getsockopt(fd, IPPROTO_IP,  IP_MULTICAST_LOOP,  ...)`
+     * - **IPv6:** `getsockopt(fd, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, ...)`
+     *
+     * @par Error conditions
+     * - The socket is invalid or closed.
+     * - The socket family cannot be determined or is unsupported on this platform.
+     * - The underlying `getsockopt` call fails (e.g., `ENOTSOCK`, `ENOPROTOOPT`, `EINVAL`,
+     *   or Windows equivalents `WSAENOTSOCK`, `WSAENOPROTOOPT`, `WSAEINVAL`).
+     *
+     * @throws SocketException
+     *   If the query fails for any of the reasons above. The exception carries the OS
+     *   error code and a descriptive message produced by `SocketErrorMessage(...)`.
+     *
+     * @note
+     * - Typical default is **enabled** on many stacks, but this is implementation-defined;
+     *   applications that rely on a specific policy should call
+     *   @ref setMulticastLoopback(bool) during initialization.
+     * - Loopback controls **local delivery only**. Remote receivers are unaffected.
+     * - To receive your own transmissions on this socket, both conditions must hold:
+     *   (1) loopback is enabled, and (2) the socket has joined the destination group.
+     * - Concurrent calls to @ref setMulticastLoopback(bool) may race with this query; the
+     *   value returned is a snapshot at the time of the call.
+     *
+     * @par Related options
+     * - @ref setMulticastLoopback(bool) — enable/disable local delivery of this socket’s
+     *   outbound multicast.
+     * - @ref setMulticastTTL(int) / @ref getMulticastTTL() — control and query the default
+     *   multicast scope (TTL/hop-limit).
+     * - @ref setMulticastInterfaceIPv4(in_addr) / @ref setMulticastInterfaceIPv6(unsigned)
+     *   — select the outgoing interface for multicast.
+     *
+     * @code
+     * // Example: ensure loopback is enabled so we can observe our own group traffic
+     * if (!sock.getMulticastLoopback()) {
+     *     sock.setMulticastLoopback(true);
+     * }
+     * // Now, if this socket has joined the group, it can receive its own sends.
+     * @endcode
+     */
+    [[nodiscard]] bool getMulticastLoopback() const;
+
   protected:
     /**
      * @brief Updates the socket descriptor used by this object.

@@ -1,12 +1,7 @@
 // SocketOptions.cpp
+
 #include "jsocketpp/SocketOptions.hpp"
 #include "jsocketpp/SocketException.hpp"
-
-#ifdef _WIN32
-#include <winsock2.h>
-#else
-#include <sys/socket.h>
-#endif
 
 namespace jsocketpp
 {
@@ -76,7 +71,7 @@ void SocketOptions::getOption(const int level, const int optName, void* result, 
 }
 
 // NOLINTNEXTLINE(readability-make-member-function-const) – modifies socket state
-void SocketOptions::setReuseAddress(bool on)
+void SocketOptions::setReuseAddress(const bool on)
 {
 #ifdef _WIN32
     if (isPassiveSocket())
@@ -162,7 +157,7 @@ bool SocketOptions::getKeepAlive() const
     return getOption(SOL_SOCKET, SO_KEEPALIVE) != 0;
 }
 
-void SocketOptions::setSoRecvTimeout(int millis)
+void SocketOptions::setSoRecvTimeout(const int millis)
 {
     if (millis < 0)
         throw SocketException("setSoRecvTimeout() failed: timeout must be non-negative.");
@@ -180,7 +175,7 @@ void SocketOptions::setSoRecvTimeout(int millis)
 #endif
 }
 
-void SocketOptions::setSoSendTimeout(int millis)
+void SocketOptions::setSoSendTimeout(const int millis)
 {
     if (millis < 0)
         throw SocketException("setSoSendTimeout() failed: timeout must be non-negative.");
@@ -341,5 +336,75 @@ bool SocketOptions::getReusePort() const
 }
 
 #endif
+
+namespace
+{
+
+// Detect the bound family for this socket (AF_INET or AF_INET6).
+int detect_family(const SOCKET fd)
+{
+    sockaddr_storage ss{};
+    socklen_t len = sizeof(ss);
+    if (::getsockname(fd, reinterpret_cast<sockaddr*>(&ss), &len) == SOCKET_ERROR)
+    {
+        const int error = GetSocketError();
+        throw SocketException(error, SocketErrorMessage(error));
+    }
+    return ss.ss_family;
+}
+
+} // namespace
+
+// NOLINTNEXTLINE(readability-make-member-function-const) – modifies socket state
+void SocketOptions::setMulticastTTL(const int ttl)
+{
+    if (ttl < 0 || ttl > 255)
+        throw SocketException("setMulticastTTL() failed: TTL must be in [0,255].");
+
+    const int family = detect_family(_sockFd);
+
+#if defined(_WIN32)
+    using sockopt_multicast_t = DWORD;
+#else
+    using sockopt_multicast_t = int;
+#endif
+
+    const auto v = static_cast<sockopt_multicast_t>(ttl);
+    const int level = (family == AF_INET) ? IPPROTO_IP : IPPROTO_IPV6;
+    const int optName = (family == AF_INET) ? IP_MULTICAST_TTL : IPV6_MULTICAST_HOPS;
+
+    setOption(level, optName, &v, sizeof(v));
+}
+
+int SocketOptions::getMulticastTTL() const
+{
+    if (const int family = detect_family(_sockFd); family == AF_INET)
+    {
+        return getOption(IPPROTO_IP, IP_MULTICAST_TTL);
+    }
+    return getOption(IPPROTO_IPV6, IPV6_MULTICAST_HOPS);
+}
+
+// NOLINTNEXTLINE(readability-make-member-function-const) – modifies socket state
+void SocketOptions::setMulticastLoopback(const bool enable)
+{
+    const int family = detect_family(_sockFd);
+
+    const int level = (family == AF_INET6) ? IPPROTO_IPV6 : IPPROTO_IP;
+    // NOLINTNEXTLINE - same value on some OS's6666
+    const int optName = (family == AF_INET6) ? IPV6_MULTICAST_LOOP : IP_MULTICAST_LOOP;
+
+    const int v = enable ? 1 : 0;
+    setOption(level, optName, &v, sizeof(v));
+}
+
+bool SocketOptions::get3MulticastLoopback() const
+{
+    if (const int family = detect_family(_sockFd); family == AF_INET6)
+    {
+        return getOption(IPPROTO_IPV6, IPV6_MULTICAST_LOOP) != 0;
+    }
+    return getOption(IPPROTO_IP, IP_MULTICAST_LOOP) != 0;
+}
 
 } // namespace jsocketpp
