@@ -416,48 +416,10 @@ void MulticastSocket::setMulticastInterface(const std::string& iface)
 
 void MulticastSocket::setTimeToLive(const int ttl)
 {
-    if (ttl < 0 || ttl > 255)
-        throw SocketException("TTL value must be between 0 and 255");
-
     if (ttl == _ttl)
         return;
 
-    // Set TTL for IPv4 multicast
-    // Windows wants a DWORD, Linux wants an int
-#ifdef _WIN32
-    auto v4ttl = static_cast<DWORD>(ttl);
-    if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_TTL, reinterpret_cast<const char*>(&v4ttl), sizeof(v4ttl)) <
-        0)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
-    }
-#else
-    int v4ttl = ttl;
-    if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_TTL, &v4ttl, sizeof(v4ttl)) < 0)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
-    }
-#endif
-
-    // Set hop limit for IPv6 multicast
-#ifdef _WIN32
-    auto v6hops = static_cast<DWORD>(ttl);
-    if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_HOPS, reinterpret_cast<const char*>(&v6hops),
-                   sizeof(v6hops)) < 0)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
-    }
-#else
-    int v6hops = ttl;
-    if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_HOPS, &v6hops, sizeof(v6hops)) < 0)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
-    }
-#endif
+    setMulticastTTL(ttl);
 
     _ttl = ttl;
 }

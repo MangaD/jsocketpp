@@ -371,6 +371,7 @@ void SocketOptions::setMulticastTTL(const int ttl)
 
     const auto v = static_cast<sockopt_multicast_t>(ttl);
     const int level = (family == AF_INET) ? IPPROTO_IP : IPPROTO_IPV6;
+    // NOLINTNEXTLINE - same value on some operating systems
     const int optName = (family == AF_INET) ? IP_MULTICAST_TTL : IPV6_MULTICAST_HOPS;
 
     setOption(level, optName, &v, sizeof(v));
@@ -398,7 +399,7 @@ void SocketOptions::setMulticastLoopback(const bool enable)
     setOption(level, optName, &v, sizeof(v));
 }
 
-bool SocketOptions::get3MulticastLoopback() const
+bool SocketOptions::getMulticastLoopback() const
 {
     if (const int family = detect_family(_sockFd); family == AF_INET6)
     {
