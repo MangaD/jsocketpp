@@ -37,7 +37,7 @@ project(
 # 📚 Optional Documentation
 # ───────────────────────────────────────────────
 if(BUILD_DOCS)
-    find_package(Doxygen QUIET)
+    find_package(Doxygen)
     if(DOXYGEN_FOUND)
         include(cmake/doxygen.cmake)
     else()
