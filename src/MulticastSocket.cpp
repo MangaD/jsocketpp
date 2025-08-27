@@ -426,48 +426,10 @@ void MulticastSocket::setTimeToLive(const int ttl)
 
 void MulticastSocket::setLoopbackMode(const bool enable)
 {
-    if (getSocketFd() == INVALID_SOCKET)
-        throw SocketException("setLoopbackMode() called on invalid socket");
+    if (enable == _loopbackEnabled)
+        return;
 
-    sockaddr_storage addr{};
-    socklen_t addrLen = sizeof(addr);
-
-    if (::getsockname(getSocketFd(), reinterpret_cast<sockaddr*>(&addr), &addrLen) == SOCKET_ERROR)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
-    }
-
-    const int family = addr.ss_family;
-    const int flag = enable ? 1 : 0;
-
-    int result = 0;
-    if (family == AF_INET6)
-    {
-        result = setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_LOOP,
-#ifdef _WIN32
-                            reinterpret_cast<const char*>(&flag),
-#else
-                            &flag,
-#endif
-                            sizeof(flag));
-    }
-    else
-    {
-        result = setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_LOOP,
-#ifdef _WIN32
-                            reinterpret_cast<const char*>(&flag),
-#else
-                            &flag,
-#endif
-                            sizeof(flag));
-    }
-
-    if (result == SOCKET_ERROR)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
-    }
+    setMulticastLoopback(enable);
 
     _loopbackEnabled = enable;
 }
