@@ -1,5 +1,7 @@
 #include "jsocketpp/MulticastSocket.hpp"
 
+#include <charconv>
+
 using namespace jsocketpp;
 
 MulticastSocket::MulticastSocket(const Port localPort, const std::string_view localAddress,
@@ -312,105 +314,60 @@ void MulticastSocket::leaveGroup(const std::string& groupAddr, const std::string
 
 void MulticastSocket::setMulticastInterface(const std::string& iface)
 {
+    // Fast path: no change
+    if (iface == _currentInterface)
+        return;
+
+    // Case 1: empty => reset to defaults for both families
     if (iface.empty())
     {
-        // Default: OS selects the interface automatically
-#ifdef _WIN32
-        // IPv4: set to INADDR_ANY
-        auto addr = INADDR_ANY;
-        if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char*>(&addr), sizeof(addr)) <
-            0)
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessage(error));
-        }
-        // IPv6: set to 0
-        DWORD idx = 0;
-        if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, reinterpret_cast<const char*>(&idx),
-                       sizeof(idx)) < 0)
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessage(error));
-        }
-#else
-        // IPv4: set to INADDR_ANY
-        in_addr addr{};
-        addr.s_addr = htonl(INADDR_ANY);
-        if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, &addr, sizeof(addr)) < 0)
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessage(error));
-        }
-        // IPv6: set to 0
-        unsigned int idx = 0;
-        if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessage(error));
-        }
-#endif
+        in_addr any4{};
+        any4.s_addr = htonl(INADDR_ANY);
+        setMulticastInterfaceIPv4(any4); // SocketOptions helper
+        setMulticastInterfaceIPv6(0);    // default v6 route
         _currentInterface.clear();
         return;
     }
 
-    // Try to interpret as IPv4 address
-    in_addr v4addr{};
-    if (inet_pton(AF_INET, iface.c_str(), &v4addr) == 1)
+    // Case 2: IPv4 literal => use as egress address (IPv4 multicast only)
+    in_addr v4{};
+    if (inet_pton(AF_INET, iface.c_str(), &v4) == 1)
     {
-        // Set IPv4 outgoing interface
-#ifdef _WIN32
-        const DWORD addr = v4addr.s_addr;
-        if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char*>(&addr), sizeof(addr)) <
-            0)
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessage(error));
-        }
-#else
-        if (setsockopt(getSocketFd(), IPPROTO_IP, IP_MULTICAST_IF, &v4addr, sizeof(v4addr)) < 0)
-        {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessage(error));
-        }
-#endif
+        setMulticastInterfaceIPv4(v4);
         _currentInterface = iface;
         return;
     }
 
-    // IPv6: treat as interface name or index
-#ifdef _WIN32
-    char* end = nullptr;
-    const DWORD idx = strtoul(iface.c_str(), &end, 10);
-    if (!iface.empty() && end && *end == '\0' && idx > 0)
+    // Case 3: numeric => treat as IPv6 interface index
     {
-        // Numeric index specified as string
-        if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, reinterpret_cast<const char*>(&idx),
-                       sizeof(idx)) < 0)
+        unsigned int idx = 0;
+        const char* b = iface.data();
+        const char* e = iface.data() + iface.size();
+        if (auto [ptr, ec] = std::from_chars(b, e, idx); ec == std::errc{} && ptr == e)
         {
-            const int error = GetSocketError();
-            throw SocketException(error, SocketErrorMessage(error));
+            setMulticastInterfaceIPv6(idx);
+            _currentInterface = iface;
+            return;
         }
+    }
+
+    // Case 4: POSIX interface name => map to index (Windows: unsupported)
+#if !defined(_WIN32)
+    {
+        const unsigned int idx = if_nametoindex(iface.c_str());
+        if (idx == 0)
+        {
+            throw SocketException(std::string("Unknown interface name: ") + iface);
+        }
+        setMulticastInterfaceIPv6(idx);
         _currentInterface = iface;
-        return;
     }
-    throw SocketException("On Windows, IPv6 multicast interface must be a numeric index (e.g., \"2\").");
 #else
-    // Try as name, fallback to numeric index
-    unsigned int idx = if_nametoindex(iface.c_str());
-    if (idx == 0)
-    {
-        // Try as numeric index string
-        char* end = nullptr;
-        idx = static_cast<unsigned int>(strtoul(iface.c_str(), &end, 10));
-        if (!iface.empty() && (!end || *end != '\0' || idx == 0))
-            throw SocketException("Invalid IPv6 interface: " + iface);
-    }
-    if (setsockopt(getSocketFd(), IPPROTO_IPV6, IPV6_MULTICAST_IF, &idx, sizeof(idx)) < 0)
-    {
-        const int error = GetSocketError();
-        throw SocketException(error, SocketErrorMessage(error));
-    }
-    _currentInterface = iface;
+    // On Windows, interface names are not accepted for IPV6_MULTICAST_IF.
+    // Require a numeric index string instead.
+    throw SocketException(
+        "Invalid multicast interface identifier on Windows. "
+        "Provide an IPv4 address (e.g., \"192.0.2.10\") or a numeric IPv6 interface index (e.g., \"12\").");
 #endif
 }
 

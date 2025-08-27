@@ -2039,6 +2039,155 @@ class SocketOptions
      */
     [[nodiscard]] bool getMulticastLoopback() const;
 
+    /**
+     * @brief Select the outgoing IPv4 interface for multicast.
+     * @ingroup socketopts
+     *
+     * Sets the per-socket **default egress interface** used for **IPv4 multicast**
+     * transmissions. For IPv4, the egress is specified by the interface’s **unicast
+     * IPv4 address**. Passing `INADDR_ANY` (in network byte order) restores the
+     * system default route.
+     *
+     * This call affects only **outbound multicast** selection for the IPv4 family;
+     * it does not join or leave any multicast group, and it does not affect IPv6.
+     *
+     * @param[in] addr
+     *   IPv4 address (network byte order) of the desired egress interface. Use
+     *   `in_addr{ .s_addr = htonl(INADDR_ANY) }` to reset to the system default.
+     *
+     * @pre
+     * - The underlying descriptor is a valid UDP-capable socket opened for `AF_INET`
+     *   or capable of IPv4 multicast sends (e.g., dual-stack if supported).
+     *
+     * @post
+     * - The socket’s default IPv4 multicast egress interface is updated. Subsequent
+     *   IPv4 multicast sends on this socket will use the selected interface until
+     *   changed again or reset to default.
+     *
+     * @par Platform mapping
+     * - `setsockopt(fd, IPPROTO_IP, IP_MULTICAST_IF, ...)`
+     *   - **POSIX:** value is a `struct in_addr` (network byte order).
+     *   - **Windows:** value is a `DWORD` containing the IPv4 address in network byte order.
+     *
+     * @par Error conditions
+     * - The socket is invalid or closed.
+     * - The specified address is malformed or otherwise rejected by the OS.
+     * - The underlying `setsockopt(IP_MULTICAST_IF)` fails (e.g., `ENOTSOCK`, `EINVAL`,
+     *   `ENOPROTOOPT`; Windows: `WSAENOTSOCK`, `WSAEINVAL`, `WSAENOPROTOOPT`).
+     *
+     * @throws SocketException
+     *   If the option cannot be applied. The exception carries the OS error code and a
+     *   descriptive message produced by `SocketErrorMessage(...)`.
+     *
+     * @note
+     * - This function **does not** verify that @p addr is currently assigned to a local
+     *   interface. Some stacks may accept the option but later fail to send if routing
+     *   is not feasible. Prefer to pass an address you know is bound to a local interface.
+     * - This setting is **per-socket** and only influences **multicast** egress selection.
+     *   It does not affect unicast routing nor which local interfaces receive multicast
+     *   (reception depends on group membership on each socket).
+     * - For IPv6 multicast egress, use @ref setMulticastInterfaceIPv6(unsigned int).
+     * - Higher-level convenience: if you need to accept human-friendly identifiers
+     *   (empty string, IPv4 literal, IPv6 index/name on POSIX), consider using
+     *   @ref setMulticastInterface(const std::string&).
+     *
+     * @par Related options
+     * - @ref setMulticastTTL(int) / @ref getMulticastTTL() — control/query multicast scope.
+     * - @ref setMulticastLoopback(bool) / @ref getMulticastLoopback() — control/query local
+     *   delivery of this socket’s own multicast.
+     * - @ref setMulticastInterfaceIPv6(unsigned int) — select the IPv6 multicast egress.
+     * - @ref joinGroup(const std::string&, const std::string&) /
+     *   @ref leaveGroup(const std::string&, const std::string&) — manage group membership.
+     *
+     * @code
+     * // Example: choose IPv4 egress by literal
+     * in_addr eg{};
+     * if (inet_pton(AF_INET, "192.0.2.10", &eg) != 1) {
+     *     throw std::runtime_error("invalid IPv4 address");
+     * }
+     * sock.setMulticastInterfaceIPv4(eg);
+     *
+     * // Example: reset to default IPv4 multicast egress
+     * in_addr any{}; any.s_addr = htonl(INADDR_ANY);
+     * sock.setMulticastInterfaceIPv4(any);
+     * @endcode
+     */
+    void setMulticastInterfaceIPv4(in_addr addr);
+
+    /**
+     * @brief Select the outgoing IPv6 interface for multicast.
+     * @ingroup socketopts
+     *
+     * Sets the per-socket **default egress interface** used for **IPv6 multicast**
+     * transmissions by specifying a **numeric interface index**.
+     * Passing `0` resets to the system default route.
+     *
+     * This call affects only **outbound IPv6 multicast** selection; it does not join
+     * or leave any multicast group and does not affect IPv4 egress.
+     *
+     * @param[in] ifindex
+     *     IPv6 interface index for multicast egress. Use `0` to restore the system
+     *     default. On POSIX systems you can obtain this via `if_nametoindex()`.
+     *
+     * @pre
+     * - The underlying descriptor is a valid UDP-capable socket (typically `AF_INET6`
+     *   or dual-stack if enabled).
+     *
+     * @post
+     * - The socket’s default IPv6 multicast egress interface is updated. Subsequent
+     *   IPv6 multicast sends from this socket will use the selected interface until
+     *   changed again or reset to default.
+     *
+     * @par Platform mapping
+     * - `setsockopt(fd, IPPROTO_IPV6, IPV6_MULTICAST_IF, &ifindex, sizeof(ifindex))`
+     *   - **Windows:** `ifindex` is passed as a `DWORD`.
+     *   - **POSIX:** `ifindex` is an `unsigned int` (commonly the value returned
+     *     by `if_nametoindex()`).
+     *
+     * @par Error conditions
+     * - The socket is invalid or closed.
+     * - The specified interface index is not valid on this host.
+     * - The underlying `setsockopt(IPV6_MULTICAST_IF)` call fails
+     *   (e.g., `ENOTSOCK`, `EINVAL`, `ENOPROTOOPT`; Windows: `WSAENOTSOCK`,
+     *   `WSAEINVAL`, `WSAENOPROTOOPT`).
+     *
+     * @throws SocketException
+     *   If the option cannot be applied. The exception carries the OS error code and
+     *   a descriptive message produced by `SocketErrorMessage(...)`.
+     *
+     * @note
+     * - This setting is **per-socket** and influences only **multicast** egress selection
+     *   for IPv6. It does not affect unicast routing nor which local interfaces receive
+     *   multicast—reception depends on group membership on each socket.
+     * - On Windows, interface **names** are not accepted for `IPV6_MULTICAST_IF`; provide
+     *   a **numeric** index. On POSIX, you may convert an interface name via
+     *   `if_nametoindex()`.
+     * - If the socket was created with `IPV6_V6ONLY` enabled, this setting applies only to
+     *   the IPv6 path; it does not influence IPv4 multicast egress.
+     *
+     * @par Related options
+     * - @ref setMulticastInterfaceIPv4(in_addr) — select the IPv4 multicast egress.
+     * - @ref setMulticastInterface(const std::string&) — convenience wrapper that accepts
+     *   human-friendly identifiers.
+     * - @ref setMulticastTTL(int) / @ref getMulticastTTL() — control/query multicast scope.
+     * - @ref setMulticastLoopback(bool) / @ref getMulticastLoopback() — control/query local
+     *   delivery of this socket’s own multicast.
+     *
+     * @code
+     * // POSIX: choose IPv6 egress by interface name
+     * unsigned int idx = if_nametoindex("eth0");
+     * if (idx == 0) { throw SocketException("Unknown interface: eth0"); }
+     * sock.setMulticastInterfaceIPv6(idx);
+     *
+     * // Windows (or any platform): choose egress by numeric index
+     * sock.setMulticastInterfaceIPv6(12);  // where 12 is the adapter's IPv6 index
+     *
+     * // Reset to default IPv6 multicast egress
+     * sock.setMulticastInterfaceIPv6(0);
+     * @endcode
+     */
+    void setMulticastInterfaceIPv6(unsigned int ifindex);
+
   protected:
     /**
      * @brief Updates the socket descriptor used by this object.

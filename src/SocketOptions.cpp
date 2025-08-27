@@ -408,4 +408,28 @@ bool SocketOptions::getMulticastLoopback() const
     return getOption(IPPROTO_IP, IP_MULTICAST_LOOP) != 0;
 }
 
+void SocketOptions::setMulticastInterfaceIPv4(const in_addr addr)
+{
+#if defined(_WIN32)
+    // Windows expects a DWORD containing the IPv4 address in network byte order
+    const auto v = static_cast<DWORD>(addr.s_addr);
+    setOption(IPPROTO_IP, IP_MULTICAST_IF, &v, sizeof(v));
+#else
+    // POSIX expects struct in_addr
+    setOption(IPPROTO_IP, IP_MULTICAST_IF, &addr, sizeof(addr));
+#endif
+}
+
+void SocketOptions::setMulticastInterfaceIPv6(const unsigned int ifindex)
+{
+#if defined(_WIN32)
+    // Windows expects a DWORD interface index
+    const auto v = static_cast<DWORD>(ifindex);
+    setOption(IPPROTO_IPV6, IPV6_MULTICAST_IF, &v, sizeof(v));
+#else
+    // POSIX expects an unsigned int interface index
+    setOption(IPPROTO_IPV6, IPV6_MULTICAST_IF, &ifindex, sizeof(ifindex));
+#endif
+}
+
 } // namespace jsocketpp
