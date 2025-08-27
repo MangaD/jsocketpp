@@ -25,7 +25,6 @@ jobs:
         with:
           submodules: "true"
 
-
       ##################################
       # 📦 Cache and Install CMake
       ##################################
@@ -46,27 +45,6 @@ jobs:
 
       - name: Add CMake to PATH
         run: echo "${GITHUB_WORKSPACE}/cmake-install/bin" >> $GITHUB_PATH
-
-      ##################################
-      # 📦 Cache and Install Graphviz
-      ##################################
-      - name: Cache Graphviz
-        id: cache-graphviz
-        uses: actions/cache@v4
-        with:
-          path: graphviz-install
-          key: graphviz-cache-${{ env.GRAPHVIZ_VERSION }}
-
-      - name: Install Graphviz
-        if: steps.cache-graphviz.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p graphviz-install
-          curl -LO https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${GRAPHVIZ_VERSION}/graphviz-${GRAPHVIZ_VERSION}.tar.gz
-          tar -xf graphviz-${GRAPHVIZ_VERSION}.tar.gz -C graphviz-install --strip-components=1
-        shell: bash
-
-      - name: Add Graphviz to PATH
-        run: echo "${GITHUB_WORKSPACE}/graphviz-install/bin" >> $GITHUB_PATH
 
       ##################################
       # 📦 Cache and Install Doxygen
@@ -93,6 +71,50 @@ jobs:
 
       - name: Add Doxygen to PATH
         run: echo "${GITHUB_WORKSPACE}/doxygen-${{ env.DOXYGEN_VERSION }}/bin" >> $GITHUB_PATH
+
+      ##################################
+      # 📦 Build Graphviz (dot) from source
+      ##################################
+      - name: Cache Graphviz (built)
+        id: cache-graphviz
+        uses: actions/cache@v4
+        with:
+          path: graphviz-install
+          key: ${{ runner.os }}-graphviz-${{ env.GRAPHVIZ_VERSION }}
+
+      - name: Build & install Graphviz from source
+        if: steps.cache-graphviz.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          # Minimal toolchain + headers (gd/png/jpeg optional but nice to have)
+          sudo apt-get install -y build-essential pkg-config libexpat1-dev \
+                                  libgd-dev libpng-dev libjpeg-dev zlib1g-dev \
+                                  libfreetype6-dev libfontconfig1-dev
+
+          curl -LO https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${GRAPHVIZ_VERSION}/graphviz-${GRAPHVIZ_VERSION}.tar.gz
+          tar -xf graphviz-${GRAPHVIZ_VERSION}.tar.gz
+          cd graphviz-${GRAPHVIZ_VERSION}
+
+          # Keep it lean: disable language bindings to avoid extra deps
+          ./configure --prefix="${GITHUB_WORKSPACE}/graphviz-install" \
+                      --disable-swig --disable-guile --disable-java \
+                      --disable-lua --disable-perl --disable-php \
+                      --disable-python --disable-r --disable-ruby
+
+          make -j"$(nproc)"
+          make install
+
+      - name: Add Graphviz to PATH (and lib path)
+        run: |
+          echo "${GITHUB_WORKSPACE}/graphviz-install/bin" >> $GITHUB_PATH
+          echo "LD_LIBRARY_PATH=${GITHUB_WORKSPACE}/graphviz-install/lib:${LD_LIBRARY_PATH:-}" >> $GITHUB_ENV
+
+      - name: Check Graphviz/Doxygen
+        run: |
+          dot -V
+          which dot
+          doxygen --version
 
       ##################################
       # 📚 Generate Doxygen Documentation
