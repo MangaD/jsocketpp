@@ -953,9 +953,13 @@ using AddrinfoPtr = std::unique_ptr<addrinfo, AddrinfoDeleter>;
     hints.ai_flags = flags;
 
     const std::string portStr = std::to_string(port);
-    addrinfo* raw = nullptr;
 
-    if (const int ret = ::getaddrinfo(host.empty() ? nullptr : host.data(), portStr.c_str(), &hints, &raw); ret != 0)
+    // Ensure NUL-terminated host for getaddrinfo
+    const std::string hostStr = host.empty() ? std::string{} : std::string(host);
+    const char* hostC = hostStr.empty() ? nullptr : hostStr.c_str();
+
+    addrinfo* raw = nullptr;
+    if (const int ret = ::getaddrinfo(hostC, portStr.c_str(), &hints, &raw); ret != 0)
     {
         throw SocketException(ret, SocketErrorMessage(ret, true));
     }

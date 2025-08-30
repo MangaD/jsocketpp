@@ -11,7 +11,10 @@
 #include "common.hpp"
 #include "DatagramSocket.hpp"
 
+#include <cstddef>
+#include <optional>
 #include <string>
+#include <string_view>
 
 namespace jsocketpp
 {
@@ -172,23 +175,164 @@ class MulticastSocket : public DatagramSocket
                     bool dualStack = true, bool autoBind = true);
 
     /**
-     * @brief Joins a multicast group.
-     * @param groupAddr Multicast group address (e.g., "239.255.0.1" or "ff02::1").
-     *                 IPv4 multicast addresses range from 224.0.0.0 to 239.255.255.255.
-     *                 IPv6 multicast addresses start with 'ff'.
-     * @param iface Optional: name or IP of local interface to join on (default: any).
-     *             Useful when the host has multiple network interfaces and you want
-     *             to receive multicast only on a specific one.
-     * @throws SocketException on failure.
+     * @brief Join a multicast group on an optional interface (string-friendly).
+     * @ingroup udp
+     *
+     * Adds this socket to the multicast group identified by @p groupAddr, optionally
+     * scoping the membership to a specific local interface indicated by @p iface.
+     * The method accepts human-friendly identifiers and performs resolution and
+     * validation before delegating to the OS via `setsockopt`.
+     *
+     * Accepted forms
+     * - @p groupAddr:
+     *   - IPv4 literal (e.g., "239.1.2.3") or hostname that resolves to IPv4.
+     *   - IPv6 literal (e.g., "ff15::abcd") or hostname that resolves to IPv6.
+     *   - Must resolve to a **multicast** address (IPv4 224.0.0.0/4 or IPv6 ff00::/8).
+     * - @p iface (optional selector of the local interface used for membership):
+     *   - **IPv4 membership:** IPv4 literal of the interface’s unicast address
+     *     (e.g., "192.0.2.10"). Empty selects the default (`INADDR_ANY`).
+     *   - **IPv6 membership:** decimal **interface index** as a string (e.g., "12").
+     *     On POSIX, an **interface name** (e.g., "eth0") is also accepted and
+     *     converted via `if_nametoindex()`. Empty selects index `0` (default).
+     *     On Windows, interface **names are not supported**; use a numeric index.
+     *
+     * Behavior
+     * - Resolves @p groupAddr to either `in_addr` or `in6_addr` (IPv4/IPv6), using a
+     *   fast literal path first, then the project resolver (`resolveAddress(...)`).
+     * - Verifies the resolved address is multicast (`IN_MULTICAST` / `IN6_IS_ADDR_MULTICAST`).
+     * - Resolves @p iface as described above and binds the membership to that interface.
+     * - Invokes the centralized option helpers:
+     *   - IPv4: `joinGroupIPv4(in_addr group, in_addr iface)`
+     *   - IPv6: `joinGroupIPv6(in6_addr group, unsigned int ifindex)`
+     * - Updates internal caches (e.g., `_currentGroup`, `_currentInterface`) **only
+     *   after** the OS call succeeds.
+     *
+     * Notes
+     * - This method **does not** select the **egress** interface for outbound traffic;
+     *   use @ref setMulticastInterface(const std::string&) (or the per-family variants)
+     *   to choose where your sends go. Membership here controls **what you receive**.
+     * - For link-local IPv6 groups (`ff02::/16`), specifying a correct interface index
+     *   is often required by the OS; prefer a non-empty @p iface in that case.
+     * - Repeat joins of the same (group, interface) may be ignored or rejected by the
+     *   OS depending on the stack; behavior is implementation-defined.
+     *
+     * @param[in] groupAddr  Multicast group (literal or resolvable name), IPv4 or IPv6.
+     * @param[in] iface      Optional interface selector as described above; empty uses the default.
+     *
+     * @throws SocketException
+     * - @p groupAddr is empty or does not resolve to a multicast address.
+     * - @p iface is malformed (e.g., bad IPv4 literal; unknown POSIX name; non-numeric
+     *   index string on Windows).
+     * - Name resolution fails (exception carries the `getaddrinfo` code/message).
+     * - The underlying membership call fails:
+     *   - IPv4: `setsockopt(IP_ADD_MEMBERSHIP)`
+     *   - IPv6 (POSIX): `setsockopt(IPV6_JOIN_GROUP)`
+     *   - IPv6 (Windows): `setsockopt(IPV6_ADD_MEMBERSHIP)`
+     *
+     * @par Related
+     * - @ref leaveGroup(const std::string&, const std::string&) — leave a group.
+     * - @ref setMulticastInterface(const std::string&) — choose egress interface.
+     * - @ref setTimeToLive(int) / @ref getTimeToLive() — control cached TTL/hops.
+     * - @ref setMulticastTTL(int) / @ref getMulticastTTL() — OS-level multicast TTL/hops.
+     *
+     * @code
+     * // IPv4: join on default interface
+     * sock.joinGroup("239.1.2.3", "");
+     *
+     * // IPv4: join on a specific local interface address
+     * sock.joinGroup("239.1.2.3", "192.0.2.10");
+     *
+     * // IPv6: join using numeric interface index (works on all platforms)
+     * sock.joinGroup("ff15::feed", "12");
+     *
+     * // POSIX only: join using interface name
+     * sock.joinGroup("ff15::feed", "eth0");
+     * @endcode
      */
-    void joinGroup(const std::string& groupAddr, const std::string& iface = "");
+    void joinGroup(const std::string& groupAddr, const std::string& iface);
 
     /**
-     * @brief Leaves a multicast group.
-     * @param groupAddr Multicast group address to leave (e.g., "239.255.0.1" or "ff02::1").
-     * @param iface Optional: name or IP of local interface to leave on (default: any).
-     *             Must match the interface specified in joinGroup() if one was used.
-     * @throws SocketException on failure.
+     * @brief Leave a multicast group on an optional interface (string-friendly).
+     * @ingroup udp
+     *
+     * Removes this socket’s membership from the multicast group identified by
+     * @p groupAddr. The interface used for the leave operation can be selected via
+     * @p iface and follows the same conventions as @ref joinGroup.
+     *
+     * Accepted forms
+     * - @p groupAddr:
+     *   - IPv4 literal (e.g., "239.1.2.3") or hostname that resolves to IPv4.
+     *   - IPv6 literal (e.g., "ff15::abcd") or hostname that resolves to IPv6.
+     *   - Must resolve to a multicast address (IPv4 224.0.0.0/4, IPv6 ff00::/8).
+     * - @p iface (optional; selects the local interface whose membership is removed):
+     *   - IPv4 leave: IPv4 literal of the interface’s unicast address (e.g., "192.0.2.10").
+     *     Empty string selects the default interface (INADDR_ANY).
+     *   - IPv6 leave: decimal interface index as a string (e.g., "12"). On POSIX, an
+     *     interface name (e.g., "eth0") is also accepted and mapped via if_nametoindex().
+     *     Empty string selects index 0 (system default). On Windows, names are not
+     *     supported; use a numeric index.
+     *
+     * Behavior
+     * - Resolves @p groupAddr to either an in_addr or in6_addr via a fast literal path
+     *   first, and otherwise through the project resolver (resolveAddress).
+     * - Validates that the resolved address is multicast (IN_MULTICAST / IN6_IS_ADDR_MULTICAST).
+     * - Interprets @p iface as described above to obtain the IPv4 interface address or
+     *   IPv6 interface index used when the membership was created.
+     * - Delegates to centralized option helpers:
+     *   - IPv4: setsockopt(IP_DROP_MEMBERSHIP) via leaveGroupIPv4(in_addr group, in_addr iface)
+     *   - IPv6 (POSIX): setsockopt(IPV6_LEAVE_GROUP) via leaveGroupIPv6(in6_addr group, unsigned ifindex)
+     *   - IPv6 (Windows): setsockopt(IPV6_DROP_MEMBERSHIP) via leaveGroupIPv6(...)
+     *
+     * Notes
+     * - The interface provided to leave should match the one used to join the group on
+     *   this socket. If it does not, some stacks return an error (for example EADDRNOTAVAIL)
+     *   or ignore the request.
+     * - This method affects only **membership** (what the socket can receive). It does not
+     *   change the **egress** interface for sending; use setMulticastInterface(...) for that.
+     * - Repeated leaves for the same (group, interface) may be ignored or may fail depending
+     *   on the OS; behavior is implementation-defined.
+     *
+     * @param[in] groupAddr  Multicast group to leave (literal or resolvable name), IPv4 or IPv6.
+     * @param[in] iface      Optional interface selector as described above; default is the empty
+     *                       string, which uses the system default (IPv4 INADDR_ANY, IPv6 index 0).
+     *
+     * @pre
+     * - The socket was previously joined to the specified group on the selected interface.
+     *
+     * @post
+     * - The socket is no longer a member of the specified group on that interface. Internal
+     *   caches tracking the “current” group/interface may be cleared if they match.
+     *
+     * @throws SocketException
+     * - @p groupAddr is empty or does not resolve to a multicast address.
+     * - @p iface is malformed (invalid IPv4 literal, unknown POSIX interface name, or
+     *   non-numeric index on Windows where names are unsupported).
+     * - Name resolution fails; the exception carries the getaddrinfo code/message.
+     * - The underlying membership removal fails (e.g., ENOTSOCK, EINVAL, EADDRNOTAVAIL,
+     *   ENOPROTOOPT, or Windows equivalents) when invoking:
+     *   - IPv4: IP_DROP_MEMBERSHIP
+     *   - IPv6 (POSIX): IPV6_LEAVE_GROUP
+     *   - IPv6 (Windows): IPV6_DROP_MEMBERSHIP
+     *
+     * @par Related
+     * - @ref joinGroup(const std::string&, const std::string&) — add membership.
+     * - @ref setMulticastInterface(const std::string&) — choose egress interface.
+     * - @ref setLoopbackMode(bool) / @ref getLoopbackMode() — control/query local delivery of
+     *   this socket’s own multicast.
+     *
+     * @code
+     * // IPv4: leave on default interface
+     * sock.leaveGroup("239.1.2.3");
+     *
+     * // IPv4: leave on a specific local interface address
+     * sock.leaveGroup("239.1.2.3", "192.0.2.10");
+     *
+     * // IPv6: leave using numeric interface index (any platform)
+     * sock.leaveGroup("ff15::feed", "12");
+     *
+     * // POSIX-only: leave using interface name
+     * sock.leaveGroup("ff15::feed", "eth0");
+     * @endcode
      */
     void leaveGroup(const std::string& groupAddr, const std::string& iface = "");
 
@@ -196,91 +340,73 @@ class MulticastSocket : public DatagramSocket
      * @brief Select the default outgoing interface for multicast transmissions.
      * @ingroup udp
      *
-     * Sets the per-socket **egress interface** used when sending **multicast** packets.
-     * This is a convenience wrapper that accepts a human-friendly string and maps it
-     * to the appropriate per-family socket option:
+     * Sets the per-socket **egress interface** that will be used for subsequent
+     * **multicast** sends. This is a convenience wrapper that accepts human-friendly
+     * identifiers and delegates to the per-family setters.
      *
-     * - **IPv4 egress** — set by specifying an **IPv4 literal address** of the desired
-     *   interface (e.g., `"192.0.2.10"`). Internally maps to `IP_MULTICAST_IF` with
-     *   a `struct in_addr`.
-     * - **IPv6 egress** — set by specifying an **interface index** as a decimal string
-     *   (e.g., `"12"`). On POSIX you may also pass an **interface name** (e.g., `"eth0"`),
-     *   which is resolved via `if_nametoindex()`. Internally maps to `IPV6_MULTICAST_IF`
-     *   with an unsigned interface index.
-     * - **Reset to defaults** — pass an empty string (`""`) to restore system defaults
-     *   (IPv4: `INADDR_ANY`; IPv6: index `0`).
+     * Accepted forms for @p iface
+     * - Empty string: reset the egress to the **system default** for this socket’s
+     *   family only (IPv4: `INADDR_ANY`; IPv6: index `0`). The family is determined
+     *   via `detectFamily(_sockFd)`, so a single-family socket will not attempt to
+     *   set options for the other family.
+     * - IPv4 literal (e.g., "192.0.2.10"): choose that address as the **IPv4**
+     *   multicast egress; maps to `IP_MULTICAST_IF`.
+     * - IPv6 interface identifier:
+     *   - Decimal **interface index** string (e.g., "12") on any platform.
+     *   - **POSIX only:** an interface **name** (e.g., "eth0"), resolved with
+     *     `if_nametoindex()`.
+     *   These map to `IPV6_MULTICAST_IF`. On Windows, names are **not** supported;
+     *   supply a numeric index string instead.
      *
-     * This function does **not** join any multicast groups; it only selects the default
-     * *outgoing* interface for subsequent multicast sends on this socket. Group membership
-     * is managed via the corresponding join/leave APIs.
+     * Behavior
+     * - If @p iface is empty, the method resets the egress **only** for the socket’s
+     *   actual family (IPv4 or IPv6) and clears the cached `_currentInterface`.
+     * - If @p iface parses as an IPv4 literal, the IPv4 egress is set and the cache
+     *   is updated to the provided string.
+     * - Otherwise, @p iface is interpreted as an IPv6 identifier and converted to an
+     *   index using `toIfIndexFromString(iface)`; the IPv6 egress is set and the cache
+     *   is updated to the provided string.
+     * - The cached `_currentInterface` is updated **only after** the OS call succeeds.
+     *
+     * Notes
+     * - This method does **not** join or leave multicast groups; it affects only
+     *   where *outbound* multicast is sent. Use the join/leave APIs to control what
+     *   the socket receives.
+     * - For link-local IPv6 destinations, using a correct interface index is often
+     *   mandatory; prefer a non-empty IPv6 identifier in those cases.
      *
      * @param[in] iface
-     *   Interface selector:
-     *   - `""` (empty) --- reset IPv4/IPv6 multicast egress to the system defaults;
-     *   - IPv4 literal (e.g., `"192.0.2.10"`) --- choose that address as the IPv4 egress;
-     *   - Decimal number (e.g., `"12"`) --- choose that IPv6 **interface index** as egress;
-     *   - POSIX only: interface name (e.g., `"eth0"`) --- resolved to an index with
-     *     `if_nametoindex()` and used for IPv6 egress.
-     *
-     * @pre
-     * - The underlying descriptor is a valid datagram (UDP) socket.
-     * - For IPv4 selection, @p iface must be a valid IPv4 literal or empty.
-     * - For IPv6 selection, @p iface must be a decimal index string or (on POSIX) an
-     *   interface name recognized by `if_nametoindex()`; empty resets to default.
-     *
-     * @post
-     * - The socket’s default egress interface is updated for the relevant family
-     *   (IPv4 when an IPv4 literal is provided; IPv6 when an index/name is provided).
-     * - Subsequent multicast transmissions from this socket use the selected egress
-     *   for that family until changed again.
-     *
-     * @par Platform mapping
-     * - **IPv4:** `setsockopt(fd, IPPROTO_IP,  IP_MULTICAST_IF,  &in_addr, sizeof(in_addr))`
-     *   - On Windows the value is passed as a `DWORD` containing the IPv4 address
-     *     in network byte order.
-     * - **IPv6:** `setsockopt(fd, IPPROTO_IPV6, IPV6_MULTICAST_IF, &ifindex, sizeof(ifindex))`
-     *   - On Windows, `ifindex` is a `DWORD`; on POSIX it is `unsigned int`.
-     *
-     * @par Error conditions
-     * - The socket is invalid or closed.
-     * - @p iface is malformed or does not denote a valid interface on this host
-     *   (e.g., bad IPv4 literal, unknown interface name, non-numeric index string).
-     * - The operation is unsupported on the current platform (e.g., interface names
-     *   for IPv6 on Windows).
-     * - The underlying `setsockopt` call fails (e.g., `ENOTSOCK`, `EINVAL`, `ENOPROTOOPT`,
-     *   or Windows equivalents `WSAENOTSOCK`, `WSAEINVAL`, `WSAENOPROTOOPT`).
+     *   Interface selector as described above. Pass `""` to reset to the per-family
+     *   system default.
      *
      * @throws SocketException
-     *   If validation fails or the OS rejects the option. The exception includes the
-     *   OS error code and a descriptive message from `SocketErrorMessage(...)`.
+     * - The socket family cannot be determined or is unsupported.
+     * - @p iface is malformed or unsupported on the current platform (e.g., an
+     *   interface name on Windows for IPv6).
+     * - The underlying `setsockopt` call fails (`IP_MULTICAST_IF` for IPv4,
+     *   `IPV6_MULTICAST_IF` for IPv6). The exception includes an OS error code and
+     *   a descriptive message.
      *
-     * @note
-     * - This setting is **per-socket** and affects only **outbound multicast** routing.
-     *   It does not influence which local interfaces receive multicast --- receivers
-     *   are determined by group membership on each socket.
-     * - IPv6 requires an **interface index**; IPv6 literal addresses are not accepted
-     *   for selecting egress. Use a decimal index (any platform) or a name (POSIX only).
-     * - For deterministic behavior, set the egress during initialization, before any
-     *   concurrent sends.
-     *
-     * @par Related options
-     * - @ref setMulticastTTL(int) / @ref getMulticastTTL() --- control/query multicast scope.
-     * - @ref setMulticastLoopback(bool) / @ref getMulticastLoopback() --- control/query local delivery of this socket’s
-     * own multicast.
-     * - @ref joinGroup(const std::string&, const std::string&) / @ref leaveGroup(const std::string&, const
-     * std::string&) --- manage multicast group membership.
+     * @par Related
+     * - setMulticastInterfaceIPv4(in_addr), setMulticastInterfaceIPv6(unsigned int)
+     * - joinGroup(const std::string&, const std::string&)
+     * - setTimeToLive(int) / getTimeToLive()
+     * - setMulticastTTL(int) / getMulticastTTL()
+     * - setLoopbackMode(bool) / getLoopbackMode()
      *
      * @code
-     * // Reset to system defaults for both families
+     * MulticastSocket sock;
+     *
+     * // Reset to system default for this socket's family
      * sock.setMulticastInterface("");
      *
      * // Choose a specific IPv4 egress address
      * sock.setMulticastInterface("192.0.2.10");
      *
-     * // Choose IPv6 egress by index (any platform)
+     * // Choose IPv6 egress by numeric index (any platform)
      * sock.setMulticastInterface("12");
      *
-     * // POSIX only: choose IPv6 egress by interface name
+     * // POSIX: choose IPv6 egress by interface name
      * sock.setMulticastInterface("eth0");
      * @endcode
      */
@@ -591,6 +717,211 @@ class MulticastSocket : public DatagramSocket
      * @return String containing the IP address of the last joined multicast group.
      */
     std::string getCurrentGroup() const;
+
+  protected:
+    /**
+     * @brief Resolve a host string to an IPv4 address (`in_addr`, network byte order).
+     * @ingroup udp
+     *
+     * Converts @p host into an IPv4 address suitable for socket APIs.
+     * Resolution strategy:
+     *  1. Fast path: if @p host is an IPv4 literal (e.g., "239.1.2.3"), parse it with
+     *     `inet_pton(AF_INET, ...)` without any name-service lookup.
+     *  2. Fallback: otherwise, call the project helper
+     *     `resolveAddress(host, Port{0}, AF_INET, SOCK_DGRAM, IPPROTO_UDP, 0)` and
+     *     extract the first `AF_INET` result.
+     *
+     * The returned `in_addr` is in network byte order, ready for `setsockopt`, `sendto`,
+     * and multicast membership structures.
+     *
+     * @param[in] host
+     *     Host string to resolve. Accepts IPv4 literals ("A.B.C.D") or names/hostnames
+     *     resolvable by the system’s name services. Must not be empty.
+     *
+     * @return
+     *     Resolved IPv4 address in network byte order.
+     *
+     * @pre
+     *  - @p host is not empty.
+     *
+     * @post
+     *  - No persistent side effects; this function does not modify socket state.
+     *
+     * @throws SocketException
+     *  - If @p host is empty.
+     *  - If resolution succeeds but yields no `AF_INET` address.
+     *  - If name resolution fails; the exception carries the OS or getaddrinfo error
+     *    code and a descriptive message from `SocketErrorMessage(..., true)`.
+     *
+     * @note
+     *  - CIDR notation and interface suffixes are not supported; pass a single host
+     *    literal or resolvable name.
+     *  - If a name resolves to multiple IPv4 addresses, the first result from
+     *    `resolveAddress` is used.
+     *  - Use this helper before joining IPv4 multicast groups to ensure a correct
+     *    address family and byte order.
+     *
+     * @par Related
+     *  - @ref resolveIPv6(std::string_view) — IPv6 counterpart.
+     *  - @ref is_ipv4_multicast(in_addr) — multicast-range predicate.
+     *  - @ref joinGroupIPv4(in_addr, in_addr) — join IPv4 multicast groups.
+     *
+     * @code
+     * // Parse a literal IPv4 multicast group
+     * in_addr g = resolveIPv4("239.1.2.3");
+     * if (!is_ipv4_multicast(g)) {
+     *     throw SocketException("Expected an IPv4 multicast address");
+     * }
+     *
+     * // Resolve a hostname and join on the default interface
+     * in_addr g2 = resolveIPv4("mcast.example.com");
+     * in_addr any{};
+     * any.s_addr = htonl(INADDR_ANY);
+     * joinGroupIPv4(g2, any);
+     *
+     * // Resolve an interface IPv4 address (egress) by literal
+     * in_addr eg = resolveIPv4("192.0.2.10");
+     * joinGroupIPv4(g, eg);
+     * @endcode
+     */
+    static in_addr resolveIPv4(std::string_view host);
+
+    /**
+     * @brief Resolve a host string to an IPv6 address (`in6_addr`).
+     * @ingroup udp
+     *
+     * Converts @p host into an IPv6 address suitable for socket APIs.
+     * Resolution strategy:
+     *  1. Fast path: if @p host is an IPv6 literal (e.g., "ff02::1"), parse it with
+     *     `inet_pton(AF_INET6, ...)` and avoid any name-service lookup.
+     *  2. Fallback: otherwise, call the project helper
+     *     `resolveAddress(host, Port{0}, AF_INET6, SOCK_DGRAM, IPPROTO_UDP, 0)` and
+     *     extract the first `AF_INET6` result.
+     *
+     * The returned `in6_addr` is in the canonical struct form expected by socket calls,
+     * multicast membership records, and IPv6 `setsockopt` options.
+     *
+     * @param[in] host
+     *     Host string to resolve. Accepts IPv6 literals (e.g., "ff02::1", "2001:db8::1")
+     *     or names/hostnames resolvable by the system’s name services. Must not be empty.
+     *
+     * @return
+     *     Resolved IPv6 address.
+     *
+     * @pre
+     *  - @p host is not empty.
+     *
+     * @post
+     *  - No persistent side effects; this function does not modify socket state.
+     *
+     * @throws SocketException
+     *  - If @p host is empty.
+     *  - If resolution succeeds but yields no `AF_INET6` address.
+     *  - If name resolution fails; the exception carries the OS or getaddrinfo error
+     *    code and a descriptive message from `SocketErrorMessage(..., true)`.
+     *
+     * @note
+     *  - Zone identifiers such as "ff02::1%eth0" are not interpreted here. Supply the
+     *    interface index separately where required (e.g., for multicast membership
+     *    or egress selection).
+     *  - If a name resolves to multiple IPv6 addresses, the first result from
+     *    `resolveAddress` is used.
+     *
+     * @par Related
+     *  - @ref resolveIPv4(std::string_view) — IPv4 counterpart.
+     *  - @ref is_ipv6_multicast(const in6_addr&) — multicast-range predicate.
+     *  - @ref joinGroupIPv6(in6_addr, unsigned int) — join IPv6 multicast groups.
+     *
+     * @code
+     * // Parse a literal IPv6 multicast group and join on interface index 0 (default)
+     * in6_addr g6 = resolveIPv6("ff02::1:3");
+     * if (!is_ipv6_multicast(g6)) {
+     *     throw SocketException("Expected an IPv6 multicast address");
+     * }
+     * joinGroupIPv6(g6, 0); // 0 = default interface
+     *
+     * // Resolve a hostname and join on a specific interface index
+     * unsigned int ifidx = 12; // e.g., result of if_nametoindex("eth0") on POSIX
+     * in6_addr g6host = resolveIPv6("mcast6.example.com");
+     * joinGroupIPv6(g6host, ifidx);
+     * @endcode
+     */
+    static in6_addr resolveIPv6(std::string_view host);
+
+    /**
+     * @brief Convert a human-friendly interface identifier to an IPv6 interface index.
+     *
+     * Interprets @p iface and returns a numeric **interface index** suitable for APIs
+     * that require an IPv6 egress/interface selector (e.g., `IPV6_MULTICAST_IF`,
+     * IPv6 multicast join/leave).
+     *
+     * Accepted forms:
+     * - **Empty string**: returns `0`, meaning “use the system default interface”.
+     * - **Decimal digits** (e.g., `"12"`): parsed with `std::from_chars` and returned
+     *   as the index (no whitespace, signs, or hex prefixes allowed).
+     * - **POSIX only**: an **interface name** (e.g., `"eth0"`, `"en0"`). Resolved via
+     *   `if_nametoindex()`. On Windows, interface **names are not supported** here.
+     *
+     * This helper performs no socket I/O; it only converts/looks up the identifier.
+     *
+     * @param[in] iface
+     *   Interface selector as described above. Pass `""` to request the default (index 0).
+     *
+     * @return
+     *   The IPv6 interface index corresponding to @p iface. Returns `0` for the empty string.
+     *
+     * @pre
+     * - None. The function is total for any input string, but non-conforming inputs will
+     *   raise an exception (see below).
+     *
+     * @post
+     * - No side effects; the function does not modify socket state or global configuration.
+     *
+     * @throws SocketException
+     * - If @p iface contains non-decimal characters when a numeric index is expected,
+     *   or the parsed value overflows the target type.
+     * - On POSIX, if @p iface is a name that `if_nametoindex()` cannot resolve on this host.
+     * - On Windows, if @p iface is a non-empty, non-numeric string (names unsupported).
+     *
+     * @note
+     * - Numeric parsing uses `std::from_chars` and requires the **entire** string to be
+     *   consumed (no trailing characters). Leading `+`/`-`, whitespace, and hex notation
+     *   are not accepted.
+     * - The returned index is not validated for “up/running” status—only that the name
+     *   exists (POSIX) or the string parses as a number.
+     * - Use index `0` to reset to default interface behavior in calls like
+     *   `setsockopt(IPV6_MULTICAST_IF, ...)` or when joining groups.
+     *
+     * @par Related
+     * - `setMulticastInterfaceIPv6(unsigned int)` — set IPv6 multicast egress by index.
+     * - `setMulticastInterface(const std::string&)` — convenience wrapper accepting
+     *   name/index/IPv4 address.
+     * - `joinGroupIPv6(in6_addr, unsigned int)` / `leaveGroupIPv6(in6_addr, unsigned int)`.
+     *
+     * @code
+     * // Example 1: default interface
+     * unsigned int idx = toIfIndexFromString("");
+     * // idx == 0
+     *
+     * // Example 2: numeric index (any platform)
+     * unsigned int idx2 = toIfIndexFromString("12");  // returns 12
+     *
+     * // Example 3 (POSIX): interface name
+     * unsigned int idx3 = toIfIndexFromString("eth0"); // resolves via if_nametoindex()
+     *
+     * // Example 4 (Windows): names unsupported
+     * // toIfIndexFromString("Ethernet") -> throws SocketException
+     *
+     * // Use with IPv6 multicast egress
+     * sock.setMulticastInterfaceIPv6(toIfIndexFromString("12"));
+     *
+     * // Join an IPv6 multicast group on a specific interface
+     * in6_addr grp{};
+     * inet_pton(AF_INET6, "ff02::1:3", &grp);
+     * joinGroupIPv6(grp, toIfIndexFromString("12"));
+     * @endcode
+     */
+    static unsigned int toIfIndexFromString(const std::string& iface);
 
   private:
     std::string _currentGroup{};     ///< Last joined multicast group address.

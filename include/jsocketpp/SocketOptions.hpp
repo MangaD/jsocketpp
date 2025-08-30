@@ -2188,6 +2188,63 @@ class SocketOptions
      */
     void setMulticastInterfaceIPv6(unsigned int ifindex);
 
+    /**
+     * @brief Join an IPv4 any-source multicast (ASM) group on a specific interface.
+     * @ingroup socketopts
+     *
+     * Joins @p group on the IPv4 interface identified by @p iface.
+     * The interface must be specified by its unicast IPv4 address (network order).
+     * Use {INADDR_ANY} to let the stack choose a default interface.
+     *
+     * @param[in] group  Multicast group address (network order). Must satisfy IN_MULTICAST().
+     * @param[in] iface  Local interface address (network order). Use {INADDR_ANY} for default.
+     *
+     * @throws SocketException
+     *   If the socket is invalid, @p group is not multicast, or the underlying
+     *   `setsockopt(IP_ADD_MEMBERSHIP)` fails. Error text is produced by
+     *   `SocketErrorMessage(...)`.
+     */
+    void joinGroupIPv4(in_addr group, in_addr iface);
+
+    /**
+     * @brief Leave a previously joined IPv4 multicast group on a specific interface.
+     * @ingroup socketopts
+     *
+     * @param[in] group  Multicast group address (network order).
+     * @param[in] iface  Interface address used when joining (network order).
+     *
+     * @throws SocketException on failure of `setsockopt(IP_DROP_MEMBERSHIP)`.
+     */
+    void leaveGroupIPv4(in_addr group, in_addr iface);
+
+    /**
+     * @brief Join an IPv6 any-source multicast (ASM) group on a specific interface index.
+     * @ingroup socketopts
+     *
+     * Joins @p group on the interface identified by @p ifindex. Use 0 for the
+     * default interface. @p group must be a multicast address.
+     *
+     * @param[in] group    IPv6 multicast group address.
+     * @param[in] ifindex  IPv6 interface index (0 for default).
+     *
+     * @throws SocketException
+     *   If the socket is invalid, @p group is not multicast, or the underlying
+     *   `setsockopt(IPV6_JOIN_GROUP)` (POSIX) or `IPV6_ADD_MEMBERSHIP` (Windows) fails.
+     */
+    void joinGroupIPv6(in6_addr group, unsigned int ifindex);
+
+    /**
+     * @brief Leave a previously joined IPv6 multicast group on a specific interface index.
+     * @ingroup socketopts
+     *
+     * @param[in] group    IPv6 multicast group address.
+     * @param[in] ifindex  Interface index used when joining.
+     *
+     * @throws SocketException on failure of `IPV6_LEAVE_GROUP` (POSIX) or
+     *         `IPV6_DROP_MEMBERSHIP` (Windows).
+     */
+    void leaveGroupIPv6(in6_addr group, unsigned int ifindex);
+
   protected:
     /**
      * @brief Updates the socket descriptor used by this object.
@@ -2250,6 +2307,182 @@ class SocketOptions
      * @see ServerSocket
      */
     [[nodiscard]] virtual bool isPassiveSocket() const noexcept { return false; }
+
+    /**
+     * @brief Test whether an IPv4 address is in the multicast range (224.0.0.0/4).
+     * @ingroup socketopts
+     *
+     * Lightweight predicate that checks if @p v4 lies within the IPv4 multicast block
+     * **224.0.0.0/4** (i.e., 224.0.0.0–239.255.255.255). Internally uses the standard
+     * `IN_MULTICAST()` macro against the host-order form of the address.
+     *
+     * @param[in] v4
+     *   IPv4 address in a POSIX `in_addr` struct. **Byte order:** `v4.s_addr` must be
+     *   in **network byte order** (as produced by `inet_pton(AF_INET, ...)` or stored
+     *   in socket APIs). This helper converts to host order before evaluation.
+     *
+     * @return
+     *   `true` if the address is multicast; otherwise `false`.
+     *
+     * @pre
+     * - None. The function is total for any `in_addr` value.
+     *
+     * @post
+     * - No side effects. This function is `constexpr`-friendly in spirit (not declared
+     *   `constexpr` purely due to macro use) and **thread-safe**.
+     *
+     * @par Byte order
+     * - `IN_MULTICAST()` expects a host-order 32-bit address. This helper applies
+     *   `ntohl(v4.s_addr)` to ensure correctness regardless of caller endianness.
+     *
+     * @par Implementation notes
+     * - Equivalent to: `return IN_MULTICAST(ntohl(v4.s_addr)) != 0;`
+     * - This check does **not** validate group semantics beyond the range test
+     *   (e.g., administratively scoped subranges). Use it as a fast guard before
+     *   calling join/leave APIs.
+     *
+     * @par Related options
+     * - @ref joinGroupIPv4(in_addr, in_addr)
+     * - @ref leaveGroupIPv4(in_addr, in_addr)
+     *
+     * @code
+     * // Example 1: literal parse and check
+     * in_addr g{};
+     * if (inet_pton(AF_INET, "239.1.2.3", &g) != 1)
+     *     throw std::runtime_error("invalid IPv4 address");
+     * if (!SocketOptions::is_ipv4_multicast(g))
+     *     throw SocketException("Expected an IPv4 multicast address");
+     *
+     * // Example 2: reject non-multicast
+     * in_addr u{};
+     * inet_pton(AF_INET, "192.168.1.10", &u);
+     * if (SocketOptions::is_ipv4_multicast(u)) {
+     *     // unreachable in this example
+     * }
+     *
+     * // Example 3: guard before joining a group
+     * in_addr iface{}; iface.s_addr = htonl(INADDR_ANY);
+     * if (!SocketOptions::is_ipv4_multicast(g))
+     *     throw SocketException("Not a multicast group");
+     * joinGroupIPv4(g, iface);
+     * @endcode
+     */
+    static bool is_ipv4_multicast(const in_addr v4) { return IN_MULTICAST(ntohl(v4.s_addr)) != 0; }
+
+    /**
+     * @brief Test whether an IPv6 address is in the multicast range (ff00::/8).
+     * @ingroup socketopts
+     *
+     * Lightweight predicate that checks if @p v6 lies within the IPv6 multicast
+     * prefix **ff00::/8**. Internally uses the standard `IN6_IS_ADDR_MULTICAST()`
+     * macro.
+     *
+     * @param[in] v6
+     *   IPv6 address in a POSIX `in6_addr` struct. No byte-order adjustment is
+     *   required by the caller; the macro reads the struct fields directly.
+     *
+     * @return
+     *   `true` if the address is multicast; otherwise `false`.
+     *
+     * @pre
+     * - None. The function is total for any `in6_addr` value.
+     *
+     * @post
+     * - No side effects; **thread-safe**.
+     *
+     * @par Scope vs. membership
+     * - This helper only verifies membership in `ff00::/8`. It does **not** report
+     *   the multicast **scope** (node, link, site, org, global). If you need scope,
+     *   consult the standard predicates such as:
+     *   `IN6_IS_ADDR_MC_NODELOCAL`, `IN6_IS_ADDR_MC_LINKLOCAL`, `IN6_IS_ADDR_MC_SITELOCAL`,
+     *   etc., depending on your platform.
+     *
+     * @par Implementation notes
+     * - Equivalent to: `return IN6_IS_ADDR_MULTICAST(&v6) != 0;`
+     * - Use as a fast guard prior to join/leave calls for IPv6 groups.
+     *
+     * @par Related options
+     * - @ref joinGroupIPv6(in6_addr, unsigned int)
+     * - @ref leaveGroupIPv6(in6_addr, unsigned int)
+     *
+     * @code
+     * // Example 1: literal parse and check
+     * in6_addr g6{};
+     * if (inet_pton(AF_INET6, "ff02::1", &g6) != 1)
+     *     throw std::runtime_error("invalid IPv6 address");
+     * if (!SocketOptions::is_ipv6_multicast(g6))
+     *     throw SocketException("Expected an IPv6 multicast address");
+     *
+     * // Example 2: reject non-multicast
+     * in6_addr u6{};
+     * inet_pton(AF_INET6, "2001:db8::1", &u6);
+     * if (SocketOptions::is_ipv6_multicast(u6)) {
+     *     // unreachable in this example
+     * }
+     *
+     * // Example 3: guard before joining a group (interface index 0 = default)
+     * unsigned int ifindex = 0;
+     * if (!SocketOptions::is_ipv6_multicast(g6))
+     *     throw SocketException("Not a multicast group");
+     * joinGroupIPv6(g6, ifindex);
+     * @endcode
+     */
+    static bool is_ipv6_multicast(const in6_addr& v6) { return IN6_IS_ADDR_MULTICAST(&v6) != 0; }
+
+    /**
+     * @brief Determine the address family (AF_INET or AF_INET6) of a socket.
+     * @ingroup socketopts
+     *
+     * Returns the protocol family with which @p fd was created. On platforms that
+     * support it, this first attempts `getsockopt(SOL_SOCKET, SO_DOMAIN, ...)` and
+     * falls back to `getsockname()` for broad compatibility.
+     *
+     * The result is used to pick the correct per-family options for subsequent
+     * operations (e.g., `IP_MULTICAST_TTL` vs `IPV6_MULTICAST_HOPS`,
+     * `IP_MULTICAST_LOOP` vs `IPV6_MULTICAST_LOOP`, `IP_MULTICAST_IF` vs
+     * `IPV6_MULTICAST_IF`, and IPv4/IPv6 group membership APIs).
+     *
+     * @param[in] fd
+     *     The socket handle to inspect. Must be a valid datagram or stream socket.
+     *
+     * @return
+     *     `AF_INET` for IPv4 sockets or `AF_INET6` for IPv6 sockets.
+     *
+     * @pre
+     * - @p fd is a valid, open socket descriptor/handle.
+     *
+     * @post
+     * - No socket state is modified. This is a read-only query.
+     *
+     * @throws SocketException
+     * - If @p fd is invalid (`INVALID_SOCKET` on Windows or negative on POSIX).
+     * - If the underlying `getsockopt(SO_DOMAIN)` or `getsockname()` call fails; the
+     *   exception carries the OS error code and message from `SocketErrorMessage(...)`.
+     * - If the determined family is neither `AF_INET` nor `AF_INET6` (e.g., `AF_UNSPEC`).
+     *
+     * @note
+     * - On dual-stack sockets (created as `AF_INET6` with `IPV6_V6ONLY` disabled),
+     *   this function returns `AF_INET6`. Whether IPv4 behavior is also available is
+     *   governed by the `IPV6_V6ONLY` option and OS capabilities.
+     * - `SO_DOMAIN` is not universally available; the implementation transparently
+     *   falls back to `getsockname()` where necessary.
+     *
+     * @par Related
+     * - `setMulticastTTL(int)` / `getMulticastTTL()` — per-family TTL/hop-limit.
+     * - `setMulticastLoopback(bool)` / `getMulticastLoopback()` — per-family loopback.
+     * - `setMulticastInterfaceIPv4(in_addr)` / `setMulticastInterfaceIPv6(unsigned)` —
+     *   select multicast egress per family.
+     *
+     * @code
+     * // Example: choose the correct loopback optname by family
+     * const int fam = detectFamily(sockFd);
+     * const int level   = (fam == AF_INET6) ? IPPROTO_IPV6 : IPPROTO_IP;
+     * const int optname = (fam == AF_INET6) ? IPV6_MULTICAST_LOOP : IP_MULTICAST_LOOP;
+     * int on = 1;
+     * setsockopt(sockFd, level, optname, reinterpret_cast<const char*>(&on), sizeof(on));
+     * @endcode
+     */
+    static [[nodiscard]] int detectFamily(SOCKET fd);
 
   private:
     SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor

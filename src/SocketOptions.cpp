@@ -197,7 +197,7 @@ int SocketOptions::getSoRecvTimeout() const
     return getOption(SOL_SOCKET, SO_RCVTIMEO);
 #else
     timeval tv{};
-    socklen_t len = static_cast<socklen_t>(sizeof(tv));
+    auto len = static_cast<socklen_t>(sizeof(tv));
 
     getOption(SOL_SOCKET, SO_RCVTIMEO, &tv, &len);
 
@@ -211,7 +211,7 @@ int SocketOptions::getSoSendTimeout() const
     return getOption(SOL_SOCKET, SO_SNDTIMEO);
 #else
     timeval tv{};
-    socklen_t len = static_cast<socklen_t>(sizeof(tv));
+    auto len = static_cast<socklen_t>(sizeof(tv));
 
     getOption(SOL_SOCKET, SO_SNDTIMEO, &tv, &len);
 
@@ -337,12 +337,43 @@ bool SocketOptions::getReusePort() const
 
 #endif
 
-namespace
+[[nodiscard]] int SocketOptions::detectFamily(const SOCKET fd)
 {
+#if defined(_WIN32)
+    if (fd == INVALID_SOCKET)
+    {
+        throw SocketException(WSAENOTSOCK, SocketErrorMessage(WSAENOTSOCK));
+    }
+#else
+    if (fd < 0)
+    {
+        throw SocketException("detectFamily: invalid socket descriptor");
+    }
+#endif
 
-// Detect the bound family for this socket (AF_INET or AF_INET6).
-int detect_family(const SOCKET fd)
-{
+    int family = AF_UNSPEC;
+
+    // Prefer SO_DOMAIN where supported (Linux/BSD; often not on Windows/macOS)
+#if defined(SO_DOMAIN)
+    {
+        socklen_t flen = sizeof(family);
+        if (::getsockopt(fd, SOL_SOCKET, SO_DOMAIN,
+#if defined(_WIN32)
+                         reinterpret_cast<char*>(&family),
+#else
+                         &family,
+#endif
+                         &flen) == 0 &&
+            (family == AF_INET || family == AF_INET6))
+        {
+            return family;
+        }
+        // fall through to getsockname() if SO_DOMAIN is unsupported
+        // or returned AF_UNSPEC / unknown
+        family = AF_UNSPEC;
+    }
+#endif
+
     sockaddr_storage ss{};
     socklen_t len = sizeof(ss);
     if (::getsockname(fd, reinterpret_cast<sockaddr*>(&ss), &len) == SOCKET_ERROR)
@@ -350,10 +381,14 @@ int detect_family(const SOCKET fd)
         const int error = GetSocketError();
         throw SocketException(error, SocketErrorMessage(error));
     }
-    return ss.ss_family;
-}
 
-} // namespace
+    family = ss.ss_family;
+    if (family != AF_INET && family != AF_INET6)
+    {
+        throw SocketException("detectFamily: socket family is not AF_INET/AF_INET6");
+    }
+    return family;
+}
 
 // NOLINTNEXTLINE(readability-make-member-function-const) – modifies socket state
 void SocketOptions::setMulticastTTL(const int ttl)
@@ -361,7 +396,7 @@ void SocketOptions::setMulticastTTL(const int ttl)
     if (ttl < 0 || ttl > 255)
         throw SocketException("setMulticastTTL() failed: TTL must be in [0,255].");
 
-    const int family = detect_family(_sockFd);
+    const int family = detectFamily(_sockFd);
 
 #if defined(_WIN32)
     using sockopt_multicast_t = DWORD;
@@ -379,7 +414,7 @@ void SocketOptions::setMulticastTTL(const int ttl)
 
 int SocketOptions::getMulticastTTL() const
 {
-    if (const int family = detect_family(_sockFd); family == AF_INET)
+    if (const int family = detectFamily(_sockFd); family == AF_INET)
     {
         return getOption(IPPROTO_IP, IP_MULTICAST_TTL);
     }
@@ -389,10 +424,10 @@ int SocketOptions::getMulticastTTL() const
 // NOLINTNEXTLINE(readability-make-member-function-const) – modifies socket state
 void SocketOptions::setMulticastLoopback(const bool enable)
 {
-    const int family = detect_family(_sockFd);
+    const int family = detectFamily(_sockFd);
 
     const int level = (family == AF_INET6) ? IPPROTO_IPV6 : IPPROTO_IP;
-    // NOLINTNEXTLINE - same value on some OS's6666
+    // NOLINTNEXTLINE - same value on some OS's
     const int optName = (family == AF_INET6) ? IPV6_MULTICAST_LOOP : IP_MULTICAST_LOOP;
 
     const int v = enable ? 1 : 0;
@@ -401,7 +436,7 @@ void SocketOptions::setMulticastLoopback(const bool enable)
 
 bool SocketOptions::getMulticastLoopback() const
 {
-    if (const int family = detect_family(_sockFd); family == AF_INET6)
+    if (const int family = detectFamily(_sockFd); family == AF_INET6)
     {
         return getOption(IPPROTO_IPV6, IPV6_MULTICAST_LOOP) != 0;
     }
@@ -429,6 +464,67 @@ void SocketOptions::setMulticastInterfaceIPv6(const unsigned int ifindex)
 #else
     // POSIX expects an unsigned int interface index
     setOption(IPPROTO_IPV6, IPV6_MULTICAST_IF, &ifindex, sizeof(ifindex));
+#endif
+}
+
+void SocketOptions::joinGroupIPv4(const in_addr group, const in_addr iface)
+{
+    if (!is_ipv4_multicast(group))
+    {
+        throw SocketException("joinGroupIPv4: address is not IPv4 multicast");
+    }
+    ip_mreq req{};
+    req.imr_multiaddr = group;
+    req.imr_interface = iface; // {INADDR_ANY} to let OS choose
+
+#if defined(_WIN32)
+    setOption(IPPROTO_IP, IP_ADD_MEMBERSHIP, &req, sizeof(req));
+#else
+    setOption(IPPROTO_IP, IP_ADD_MEMBERSHIP, &req, sizeof(req));
+#endif
+}
+
+void SocketOptions::leaveGroupIPv4(const in_addr group, const in_addr iface)
+{
+    ip_mreq req{};
+    req.imr_multiaddr = group;
+    req.imr_interface = iface;
+
+#if defined(_WIN32)
+    setOption(IPPROTO_IP, IP_DROP_MEMBERSHIP, &req, sizeof(req));
+#else
+    setOption(IPPROTO_IP, IP_DROP_MEMBERSHIP, &req, sizeof(req));
+#endif
+}
+
+void SocketOptions::joinGroupIPv6(const in6_addr group, const unsigned int ifindex)
+{
+    if (!is_ipv6_multicast(group))
+    {
+        throw SocketException("joinGroupIPv6: address is not IPv6 multicast");
+    }
+    ipv6_mreq req{};
+    req.ipv6mr_multiaddr = group;
+    req.ipv6mr_interface = ifindex; // 0 = default
+
+// Windows uses ADD/DROP; POSIX uses JOIN/LEAVE
+#if defined(_WIN32)
+    setOption(IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, &req, sizeof(req));
+#else
+    setOption(IPPROTO_IPV6, IPV6_JOIN_GROUP, &req, sizeof(req));
+#endif
+}
+
+void SocketOptions::leaveGroupIPv6(const in6_addr group, const unsigned int ifindex)
+{
+    ipv6_mreq req{};
+    req.ipv6mr_multiaddr = group;
+    req.ipv6mr_interface = ifindex;
+
+#if defined(_WIN32)
+    setOption(IPPROTO_IPV6, IPV6_DROP_MEMBERSHIP, &req, sizeof(req));
+#else
+    setOption(IPPROTO_IPV6, IPV6_LEAVE_GROUP, &req, sizeof(req));
 #endif
 }
 
