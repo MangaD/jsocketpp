@@ -1,0 +1,11 @@
+<map id="jsocketpp: C++20 cross&#45;platform socket library" name="jsocketpp: C++20 cross&#45;platform socket library">
+<area shape="rect" id="Node000002" href="$group__core.html" title="Internal types, platform abstractions, and utility functions used across the jsocketpp library." alt="" coords="243,5,377,50"/>
+<area shape="rect" id="Node000007" href="$group__exceptions.html" title="Exception types used in jsocketpp for error handling." alt="" coords="240,74,380,102"/>
+<area shape="rect" id="Node000003" href="$group__internal.html" title="Implementation&#45;only utilities for internal use." alt="" coords="247,126,372,154"/>
+<area shape="rect" id="Node000001" title="All core classes and functions of the jsocketpp networking library." alt="" coords="5,196,182,241"/>
+<area shape="rect" id="Node000008" href="$group__socketopts.html" title="Low&#45;level socket configuration options exposed via the Socket and related classes." alt="" coords="251,178,369,206"/>
+<area shape="rect" id="Node000004" href="$group__tcp.html" title="Classes and functions for TCP networking." alt="" coords="260,230,360,258"/>
+<area shape="rect" id="Node000005" href="$group__udp.html" title="Classes and functions for UDP datagram networking." alt="" coords="258,282,362,310"/>
+<area shape="rect" id="Node000006" href="$group__unix.html" title="Classes and functions for Unix domain socket networking." alt="" coords="230,334,390,362"/>
+<area shape="rect" id="Node000009" href="$group__utils.html" title="Public utility functions for working with socket addresses, conversions, and formatting." alt="" coords="246,386,374,414"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="jsocketpp::Socket" name="jsocketpp::Socket">
+<area shape="rect" id="Node000001" title="TCP client connection abstraction (Java&#45;like interface)." alt="" coords="30,81,165,109"/>
+<area shape="rect" id="Node000002" href="$classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt()." alt="" coords="5,5,190,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,49,100,81,95,81,95,49"/>
+</map>

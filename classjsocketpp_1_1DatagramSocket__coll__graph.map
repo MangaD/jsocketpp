@@ -1,0 +1,5 @@
+<map id="jsocketpp::DatagramSocket" name="jsocketpp::DatagramSocket">
+<area shape="rect" id="Node000001" title="Cross&#45;platform UDP socket class with Java&#45;style interface." alt="" coords="5,81,205,109"/>
+<area shape="rect" id="Node000002" href="$classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt()." alt="" coords="13,5,197,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,49,108,81,102,81,102,49"/>
+</map>

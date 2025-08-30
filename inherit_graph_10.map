@@ -1,0 +1,19 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,299,123,326"/>
+<area shape="rect" id="Node000001" href="$structjsocketpp_1_1detail_1_1has__data_3_01T_00_01std_1_1void__t_3_01decltype_07std_1_1declval_3f93c1fe876eb09162017bbda44be3942.html" title=" " alt="" coords="175,5,360,84"/>
+<area shape="poly" id="edge7_Node000000_Node000001" title=" " alt="" coords="75,283,126,174,151,122,169,94,181,83,184,87,173,97,156,125,131,176,80,286"/>
+<area shape="rect" id="Node000003" href="$structjsocketpp_1_1detail_1_1has__resize_3_01T_00_01std_1_1void__t_3_01decltype_07std_1_1declval50e4364e6278c755e7760f0c5a62cea0.html" title=" " alt="" coords="177,108,358,203"/>
+<area shape="poly" id="edge8_Node000000_Node000003" title=" " alt="" coords="87,286,125,250,169,212,184,201,187,206,172,216,128,254,91,290"/>
+<area shape="rect" id="Node000004" href="$structjsocketpp_1_1detail_1_1has__size_3_01T_00_01std_1_1void__t_3_01decltype_07std_1_1declval_3e8ac01a997f35262b94326adf8731b81.html" title=" " alt="" coords="171,227,364,305"/>
+<area shape="poly" id="edge9_Node000000_Node000004" title=" " alt="" coords="137,293,170,286,171,291,138,298"/>
+<area shape="rect" id="Node000005" href="$structjsocketpp_1_1detail_1_1has__data.html" title="Detection helper for data() member function." alt="" coords="185,330,350,392"/>
+<area shape="poly" id="edge10_Node000000_Node000005" title=" " alt="" coords="138,327,185,339,184,344,137,333"/>
+<area shape="rect" id="Node000006" href="$structjsocketpp_1_1detail_1_1has__resize.html" title="Detection helper for resize() member function." alt="" coords="180,415,355,477"/>
+<area shape="poly" id="edge11_Node000000_Node000006" title=" " alt="" coords="92,336,128,369,172,401,192,412,189,417,169,406,125,373,88,340"/>
+<area shape="rect" id="Node000007" href="$structjsocketpp_1_1detail_1_1has__size.html" title="Detection helper for size() member function." alt="" coords="186,500,348,562"/>
+<area shape="poly" id="edge12_Node000000_Node000007" title=" " alt="" coords="78,340,114,412,140,452,172,487,187,498,184,502,169,491,136,455,109,415,73,342"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,142,120,169"/>
+<area shape="poly" id="edge13_Node000002_Node000001" title=" " alt="" coords="102,131,169,93,189,82,192,87,172,98,104,136"/>
+<area shape="poly" id="edge14_Node000002_Node000003" title=" " alt="" coords="135,153,176,153,176,158,135,158"/>
+<area shape="poly" id="edge15_Node000002_Node000004" title=" " alt="" coords="104,175,172,213,192,224,189,228,169,218,102,179"/>
+</map>

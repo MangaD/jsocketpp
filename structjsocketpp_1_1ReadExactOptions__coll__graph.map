@@ -1,0 +1,5 @@
+<map id="jsocketpp::ReadExactOptions" name="jsocketpp::ReadExactOptions">
+<area shape="rect" id="Node000001" title="Policy for enforcing an exact&#45;byte receive on a single UDP datagram." alt="" coords="20,106,230,134"/>
+<area shape="rect" id="Node000002" href="$structjsocketpp_1_1DatagramReadOptions.html" title="Options controlling a single UDP receive operation." alt="" coords="5,5,245,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,49,128,105,122,105,122,49"/>
+</map>

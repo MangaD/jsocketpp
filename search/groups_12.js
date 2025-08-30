@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['segments_20and_20beyond_0',['Understanding Network Data Units: Packets, Datagrams, Segments, and Beyond',['../group__network__data__units.html',1,'']]],
+  ['select_20for_20asynchronous_20i_20o_20operations_20does_20it_20make_20sense_20to_20provide_20poll_20and_20epoll_20as_20alternatives_1',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
+  ['sense_20to_20provide_20poll_20and_20epoll_20as_20alternatives_2',['We use &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; for asynchronous I/O operations. Does it make sense to provide &lt;span class=&quot;tt&quot;&gt;poll&lt;/span&gt; and &lt;span class=&quot;tt&quot;&gt;epoll&lt;/span&gt; as alternatives?',['../group__select__poll__epoll__iocp.html',1,'']]],
+  ['serversocket_20construction_20binding_20and_20listening_3a_20design_20patterns_20and_20best_20practices_3',['ServerSocket Construction, Binding, and Listening: Design Patterns and Best Practices',['../group__ServerSocket__Lifecycle.html',1,'']]],
+  ['so_5fexclusiveaddruse_4',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],
+  ['so_5freuseaddr_20vs_20so_5fexclusiveaddruse_5',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],
+  ['socket_20api_6',['Comprehensive Guide to the Socket API',['../group__underlying__socket__api.html',1,'']]],
+  ['socket_20binding_20in_20tcp_20and_20udp_20connections_7',['Understanding Socket Binding in TCP and UDP Connections',['../group__socket__binding.html',1,'']]],
+  ['socket_20libraries_8',['Comparison: &lt;span class=&quot;tt&quot;&gt;jsocketpp&lt;/span&gt; vs Other C++ Socket Libraries',['../group__socket__library__comparison.html',1,'']]],
+  ['socket_20library_9',['jsocketpp: C++20 cross-platform socket library',['../group__jsocketpp.html',1,'']]],
+  ['socket_20options_10',['Socket Options',['../group__socketopts.html',1,'']]],
+  ['socket_20options_20in_20jsocketpp_11',['Socket Options in jsocketpp',['../group__socket-options.html',1,'']]],
+  ['socket_20programming_20functions_12',['Comprehensive List of Socket Programming Functions',['../group__list__bsd__socket__functions.html',1,'']]],
+  ['socket_20states_13',['Understanding Socket States',['../group__socket__states.html',1,'']]],
+  ['sockets_14',['Sockets',['../group__multicast__sockets.html',1,'Comprehensive Guide to Multicast Sockets'],['../group__tcp.html',1,'TCP Sockets'],['../group__udp.html',1,'UDP Sockets'],['../group__unix.html',1,'Unix Domain Sockets']]],
+  ['sockets_20in_20jsocketpp_15',['Blocking vs Non-Blocking Sockets in jsocketpp',['../group__async__io.html',1,'']]],
+  ['sockets_3a_20so_5freuseaddr_20vs_20so_5fexclusiveaddruse_16',['Address Reuse in Sockets: &lt;span class=&quot;tt&quot;&gt;SO_REUSEADDR&lt;/span&gt; vs &lt;span class=&quot;tt&quot;&gt;SO_EXCLUSIVEADDRUSE&lt;/span&gt;',['../group__address__reuse.html',1,'']]],
+  ['sockets_3a_20theory_20types_20and_20platform_20apis_17',['Sockets: Theory, Types, and Platform APIs',['../group__sockets__theory.html',1,'']]],
+  ['specific_20interfaces_18',['Understanding &lt;span class=&quot;tt&quot;&gt;bind()&lt;/span&gt;: Binding to All Interfaces vs Specific Interfaces',['../group__bind__interfaces.html',1,'']]],
+  ['states_19',['Understanding Socket States',['../group__socket__states.html',1,'']]],
+  ['structure_20and_20capabilities_20',['Structure and Capabilities',['../group__mastering__ipv4.html',1,'Mastering IPv4: A Complete Guide to Its Features, Structure, and Capabilities'],['../group__mastering__ipv6.html',1,'Mastering IPv6: A Complete Guide to Its Features, Structure, and Capabilities']]],
+  ['support_21',['Comprehensive Guide to &lt;span class=&quot;tt&quot;&gt;ioctl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;fcntl&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;ioctlsocket&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;WSAIoctl&lt;/span&gt;, and Related Functions: Commands, Use Cases, and Windows Support',['../group__ioctl__fcntl__ioctlsocket__guide.html',1,'']]]
+];
