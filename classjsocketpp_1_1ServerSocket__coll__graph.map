@@ -1,0 +1,5 @@
+<map id="jsocketpp::ServerSocket" name="jsocketpp::ServerSocket">
+<area shape="rect" id="Node000001" title="TCP server socket abstraction for cross&#45;platform C++ networking." alt="" coords="9,81,186,109"/>
+<area shape="rect" id="Node000002" href="$classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt()." alt="" coords="5,5,190,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,49,100,81,95,81,95,49"/>
+</map>

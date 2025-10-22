@@ -1,0 +1,65 @@
+var namespacejsocketpp =
+[
+    [ "internal", "namespacejsocketpp_1_1internal.html", "namespacejsocketpp_1_1internal" ],
+    [ "net", "namespacejsocketpp_1_1net.html", [
+      [ "fromNetwork", "namespacejsocketpp_1_1net.html#adbc3d8ebcf4347173f61e55e236c8b37", null ],
+      [ "fromNetwork", "namespacejsocketpp_1_1net.html#acca9e860a0a33d2508bfa9986049db8c", null ],
+      [ "toNetwork", "namespacejsocketpp_1_1net.html#a30e0ea56a20c62070f079482d8cabfa5", null ],
+      [ "toNetwork", "namespacejsocketpp_1_1net.html#a933367ad91e111a4e6516e67d6e08c9a", null ]
+    ] ],
+    [ "detail", "namespacejsocketpp_1_1detail.html", "namespacejsocketpp_1_1detail" ],
+    [ "BufferView", "structjsocketpp_1_1BufferView.html", "structjsocketpp_1_1BufferView" ],
+    [ "DatagramPacket", "classjsocketpp_1_1DatagramPacket.html", "classjsocketpp_1_1DatagramPacket" ],
+    [ "DatagramReadOptions", "structjsocketpp_1_1DatagramReadOptions.html", "structjsocketpp_1_1DatagramReadOptions" ],
+    [ "DatagramReadResult", "structjsocketpp_1_1DatagramReadResult.html", "structjsocketpp_1_1DatagramReadResult" ],
+    [ "ReadExactOptions", "structjsocketpp_1_1ReadExactOptions.html", "structjsocketpp_1_1ReadExactOptions" ],
+    [ "DatagramSocket", "classjsocketpp_1_1DatagramSocket.html", "classjsocketpp_1_1DatagramSocket" ],
+    [ "MulticastSocket", "classjsocketpp_1_1MulticastSocket.html", "classjsocketpp_1_1MulticastSocket" ],
+    [ "ServerSocket", "classjsocketpp_1_1ServerSocket.html", "classjsocketpp_1_1ServerSocket" ],
+    [ "Socket", "classjsocketpp_1_1Socket.html", "classjsocketpp_1_1Socket" ],
+    [ "SocketException", "classjsocketpp_1_1SocketException.html", "classjsocketpp_1_1SocketException" ],
+    [ "SocketInitializer", "classjsocketpp_1_1SocketInitializer.html", "classjsocketpp_1_1SocketInitializer" ],
+    [ "SocketOptions", "classjsocketpp_1_1SocketOptions.html", "classjsocketpp_1_1SocketOptions" ],
+    [ "SocketTimeoutException", "classjsocketpp_1_1SocketTimeoutException.html", "classjsocketpp_1_1SocketTimeoutException" ],
+    [ "UnixSocket", "classjsocketpp_1_1UnixSocket.html", "classjsocketpp_1_1UnixSocket" ],
+    [ "Port", "group__core.html#ga1a7be273748ae3d91bc5ebe6499788a7", null ],
+    [ "SOCKADDR_UN", "namespacejsocketpp.html#a981f7d65e550398e8ab29db83092f119", null ],
+    [ "SOCKET", "namespacejsocketpp.html#ac484f9eb8a74658aa491da1d1bc15eda", null ],
+    [ "ssize_t", "namespacejsocketpp.html#af86a15acff146a3ea52fb1c09a598575", null ],
+    [ "DatagramReceiveMode", "group__udp.html#ga2124eae8cec6709a67be265f14da3bdd", [
+      [ "NoPreflight", "group__udp.html#gga2124eae8cec6709a67be265f14da3bdda4f0bde0267e64be026814e98c423c47f", null ],
+      [ "PreflightSize", "group__udp.html#gga2124eae8cec6709a67be265f14da3bdda0882ede215c2d76da1b71837ab80e9bd", null ],
+      [ "PreflightMax", "group__udp.html#gga2124eae8cec6709a67be265f14da3bddac9a017cf1d4a5f3aff960a3f7e8bffd5", null ]
+    ] ],
+    [ "Direction", "group__udp.html#ga8272a360bdf6e0377f31ac8ce251a837", [
+      [ "Read", "group__udp.html#gga8272a360bdf6e0377f31ac8ce251a837a7a1a5f3e79fdc91edf2f5ead9d66abb4", null ],
+      [ "Write", "group__udp.html#gga8272a360bdf6e0377f31ac8ce251a837a1129c0e4d43f2d121652a7302712cff6", null ],
+      [ "ReadWrite", "group__udp.html#gga8272a360bdf6e0377f31ac8ce251a837a70a2a84088d405a2e3f1e3accaa16723", null ]
+    ] ],
+    [ "ShutdownMode", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174", [
+      [ "Read", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a7a1a5f3e79fdc91edf2f5ead9d66abb4", null ],
+      [ "Write", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a1129c0e4d43f2d121652a7302712cff6", null ],
+      [ "Both", "namespacejsocketpp.html#a0d2868e06cd95730d5088336f8c3c174a130c5b3473c57faa76e2a1c54e26f88e", null ]
+    ] ],
+    [ "addressToString", "group__utils.html#ga8501a7d31710bd7b0ef862f97ee318da", null ],
+    [ "CleanupSockets", "namespacejsocketpp.html#a027103bbab1364c1f878d5c49c0af67c", null ],
+    [ "CloseSocket", "namespacejsocketpp.html#a12fd46ba498b19d6102220bc100ef931", null ],
+    [ "convertIPv4MappedIPv6ToIPv4", "group__core.html#ga4da3763b1f8385b27ebbe44cdcfdfc8d", null ],
+    [ "getHostAddr", "namespacejsocketpp.html#a09423d4d9f10bd09813732010662ee43", null ],
+    [ "GetSocketError", "namespacejsocketpp.html#aac009a479ad7c6c77530e5e270cb25ad", null ],
+    [ "inet_ntop_aux", "namespacejsocketpp.html#a403588c277f89591897408faed72a910", null ],
+    [ "InitSockets", "namespacejsocketpp.html#aef7428a3f4d80452442ecf3edfdbc89a", null ],
+    [ "ioctlsocket", "namespacejsocketpp.html#a771a44f3967222b2e3221ed3120220af", null ],
+    [ "ipFromSockaddr", "namespacejsocketpp.html#a18428d088b7f3b2e55efe9adc49e10a9", null ],
+    [ "isIPv4MappedIPv6", "group__core.html#gab0ac1b9850480abafeb047a4f96792a0", null ],
+    [ "portFromSockaddr", "namespacejsocketpp.html#a71637861db9b297572bc1de3df56a59a", null ],
+    [ "SocketErrorMessage", "namespacejsocketpp.html#a1d0357025eb782be52907801696556ca", null ],
+    [ "stringToAddress", "group__utils.html#ga784e6ca4a095b32beb18d2378179cf0b", null ],
+    [ "DefaultBufferSize", "group__core.html#gafa19c7cbeb622b106835021215b8d6b7", null ],
+    [ "DefaultDatagramReceiveSize", "group__core.html#ga2fb9d73742801c62e90aeb505c618c43", null ],
+    [ "INVALID_SOCKET", "namespacejsocketpp.html#a3ddf4938a63ed33a5e2f7d2625cb4405", null ],
+    [ "MaxDatagramPayloadSafe", "group__core.html#ga25eb16703a608853bca500682345bb89", null ],
+    [ "MaxUdpPayloadIPv4", "group__core.html#ga63ed4637719268844616341e0f8908cb", null ],
+    [ "MaxUdpPayloadIPv6", "group__core.html#ga041bcd9d09d1d8e134c7b8af72523d66", null ],
+    [ "SOCKET_ERROR", "namespacejsocketpp.html#adc2dd9860dec2a3c3189e756288d5ba2", null ]
+];

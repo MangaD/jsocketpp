@@ -1,0 +1,7 @@
+<map id="jsocketpp::SocketTimeoutException" name="jsocketpp::SocketTimeoutException">
+<area shape="rect" id="Node000001" title="Exception class for socket operations that time out." alt="" coords="10,157,199,201"/>
+<area shape="rect" id="Node000002" href="$classjsocketpp_1_1SocketException.html" title="Represents socket&#45;related errors in the jsocketpp library." alt="" coords="5,81,204,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,125,107,156,102,156,102,125"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="35,5,174,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,49,107,81,102,81,102,49"/>
+</map>
