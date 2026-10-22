@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['1_201_20mocking_20socket_20behavior_3a_0',['1.1 &lt;b&gt;Mocking Socket Behavior&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md474',1,'']]],
+  ['1_202_20testing_20socket_20initialization_20and_20cleanup_3a_1',['1.2 &lt;b&gt;Testing Socket Initialization and Cleanup&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md476',1,'']]],
+  ['1_20client_20server_20model_2',['3.1 Client-Server Model',['../group__underlying__socket__api.html#autotoc_md447',1,'']]],
+  ['1_20core_20socket_20creation_20and_20management_3',['1. Core Socket Creation and Management',['../group__list__bsd__socket__functions.html#autotoc_md26',1,'']]],
+  ['1_20integration_20test_20with_20mocking_3a_4',['4.1 &lt;b&gt;Integration Test with Mocking&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md484',1,'']]],
+  ['1_20introduction_20to_20the_20socket_20api_5',['1. Introduction to the Socket API',['../group__underlying__socket__api.html#autotoc_md441',1,'']]],
+  ['1_20ioctl_20unix_20linux_6',['1. ioctl (Unix/Linux)',['../group__ioctl__fcntl__ioctlsocket__guide.html#autotoc_md226',1,'']]],
+  ['1_20jsocketpp_20this_20library_7',['1. jsocketpp (this library)',['../group__socket__library__comparison.html#autotoc_md371',1,'']]],
+  ['1_20key_20functions_8',['2.1 Key Functions',['../group__underlying__socket__api.html#autotoc_md443',1,'']]],
+  ['1_20mocking_20socket_20behavior_3a_9',['1.1 &lt;b&gt;Mocking Socket Behavior&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md474',1,'']]],
+  ['1_20non_20blocking_20sockets_10',['1 Non Blocking Sockets',['../group__underlying__socket__api.html#autotoc_md455',1,'6.1 Non-Blocking Sockets'],['../group__underlying__socket__api.html#autotoc_md465',1,'6.1 Non-Blocking Sockets']]],
+  ['1_20options_20for_20all_20sockets_11',['1. Options for All Sockets',['../group__socket-options.html#autotoc_md350',1,'']]],
+  ['1_20posix_20linux_20macos_20unix_12',['6.1. POSIX (Linux, macOS, Unix)',['../group__sockets__theory.html#autotoc_md431',1,'']]],
+  ['1_20prerequisites_13',['1 Prerequisites',['../group__conan__publish__guide.html#autotoc_md203',1,'1. Prerequisites'],['../group__vcpkg__publish__guide.html#autotoc_md489',1,'1. Prerequisites']]],
+  ['1_20reporting_20issues_14',['1. Reporting Issues',['../md_CONTRIBUTING.html#autotoc_md571',1,'']]],
+  ['1_20server_20side_15',['4.1. Server Side',['../group__sockets__theory.html#autotoc_md425',1,'']]],
+  ['1_20setting_20up_20real_20server_20and_20client_3a_16',['2.1 &lt;b&gt;Setting Up Real Server and Client&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md478',1,'']]],
+  ['1_20stream_20sockets_20tcp_17',['2.1. Stream Sockets (TCP)',['../group__sockets__theory.html#autotoc_md407',1,'']]],
+  ['1_20tcp_20server_20and_20client_20python_20af_5finet_18',['5.1 TCP Server and Client (Python, AF_INET)',['../group__underlying__socket__api.html#autotoc_md452',1,'']]],
+  ['1_20traditional_20socket_20initialization_3a_20posix_20approach_19',['1. Traditional Socket Initialization: POSIX Approach',['../group__ServerSocket__Lifecycle.html#autotoc_md56',1,'']]],
+  ['1_20unit_20tests_3a_20',['1. &lt;b&gt;Unit Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md472',1,'']]],
+  ['1_20using_20cmake_20for_20platform_20specific_20tests_3a_21',['3.1 &lt;b&gt;Using CMake for Platform-Specific Tests&lt;/b&gt;:',['../group__unit__tests.html#autotoc_md481',1,'']]],
+  ['1_20what_20is_20a_20socket_22',['1. What is a Socket?',['../group__sockets__theory.html#autotoc_md404',1,'']]],
+  ['1_20why_20select_20is_20used_23',['1. &lt;b&gt;Why &lt;span class=&quot;tt&quot;&gt;select&lt;/span&gt; is Used&lt;/b&gt;',['../group__select__poll__epoll__iocp.html#autotoc_md325',1,'']]],
+  ['10_20conclusion_24',['10. Conclusion',['../group__underlying__socket__api.html#autotoc_md462',1,'']]]
+];

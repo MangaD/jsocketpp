@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,14,144,42"/>
+<area shape="rect" id="Node000001" href="$classjsocketpp_1_1SocketException.html" title="Represents socket&#45;related errors in the jsocketpp library." alt="" coords="192,14,390,42"/>
+<area shape="poly" id="edge16_Node000000_Node000001" title=" " alt="" coords="159,25,191,25,191,30,159,30"/>
+<area shape="rect" id="Node000002" href="$classjsocketpp_1_1SocketTimeoutException.html" title="Exception class for socket operations that time out." alt="" coords="438,5,626,50"/>
+<area shape="poly" id="edge17_Node000001_Node000002" title=" " alt="" coords="406,25,438,25,438,30,406,30"/>
+</map>

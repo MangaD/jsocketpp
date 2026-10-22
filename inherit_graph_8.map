@@ -1,0 +1,13 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classjsocketpp_1_1SocketOptions.html" title="Public base class for raw socket option access via setsockopt() and getsockopt()." alt="" coords="5,84,190,112"/>
+<area shape="rect" id="Node000001" href="$classjsocketpp_1_1DatagramSocket.html" title="Cross&#45;platform UDP socket class with Java&#45;style interface." alt="" coords="238,5,437,33"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="148,75,237,43,278,31,280,36,238,48,150,80"/>
+<area shape="rect" id="Node000003" href="$classjsocketpp_1_1ServerSocket.html" title="TCP server socket abstraction for cross&#45;platform C++ networking." alt="" coords="249,57,426,85"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="205,83,248,78,249,84,205,89"/>
+<area shape="rect" id="Node000004" href="$classjsocketpp_1_1Socket.html" title="TCP client connection abstraction (Java&#45;like interface)." alt="" coords="270,109,404,137"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="206,107,270,113,269,119,205,112"/>
+<area shape="rect" id="Node000005" href="$classjsocketpp_1_1UnixSocket.html" title="Cross&#45;platform abstraction for Unix domain sockets." alt="" coords="255,161,420,189"/>
+<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="151,115,238,146,280,158,279,163,237,151,149,120"/>
+<area shape="rect" id="Node000002" href="$classjsocketpp_1_1MulticastSocket.html" title="Cross&#45;platform multicast UDP socket class (IPv4/IPv6)." alt="" coords="485,5,679,33"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="453,16,485,16,485,22,453,22"/>
+</map>
