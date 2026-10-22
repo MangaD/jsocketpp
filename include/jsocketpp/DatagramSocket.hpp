@@ -740,6 +740,7 @@ class DatagramSocket : public SocketOptions
             _isConnected = rhs._isConnected;
 
             // Reset source
+            rhs.setSocketFd(INVALID_SOCKET);
             rhs.cleanup();
         }
         return *this;
