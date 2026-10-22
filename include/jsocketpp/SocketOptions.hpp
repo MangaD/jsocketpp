@@ -2482,7 +2482,7 @@ class SocketOptions
      * setsockopt(sockFd, level, optname, reinterpret_cast<const char*>(&on), sizeof(on));
      * @endcode
      */
-    static [[nodiscard]] int detectFamily(SOCKET fd);
+    [[nodiscard]] static int detectFamily(SOCKET fd);
 
   private:
     SOCKET _sockFd = INVALID_SOCKET; ///< Underlying socket file descriptor
